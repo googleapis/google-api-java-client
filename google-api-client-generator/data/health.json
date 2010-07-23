@@ -1,0 +1,21 @@
+{
+  "id" : "health",
+  "name" : "Google Health Data API",
+  "className" : "GoogleHealth",
+  "versions" : {
+    "2" : {
+      "rootUrl" : "https://www.google.com/health/feeds/",
+      "atom" : {
+        "namespaces" : {
+          "" : "http://www.w3.org/2005/Atom",
+          "atom" : "http://www.w3.org/2005/Atom",
+          "ccr" : "urn:astm-org:CCR",
+          "gd" : "http://schemas.google.com/g/2005",
+          "h9m" : "http://schemas.google.com/health/metadata",
+          "openSearch" : "http://a9.com/-/spec/opensearch/1.1/",
+          "xml" : "http://www.w3.org/XML/1998/namespace"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id" : "books",
+  "name" : "Google Book Search Data API",
+  "className" : "GoogleBookSearch",
+  "authTokenType" : "print",
+  "versions" : {
+    "1" : {
+      "rootUrl" : "http://www.google.com/books/feeds/",
+      "atom" : {
+        "namespaces" : {
+          "app" : "http://purl.org/atom/app#",
+          "" : "http://www.w3.org/2005/Atom",
+          "atom" : "http://www.w3.org/2005/Atom",
+          "batch" : "http://schemas.google.com/gdata/batch",
+          "dc" : "http://purl.org/dc/terms",
+          "gbs" : "http://schemas.google.com/books/2008",
+          "gd" : "http://schemas.google.com/g/2005",
+          "openSearch" : "http://a9.com/-/spec/opensearchrss/1.0/",
+          "xml" : "http://www.w3.org/XML/1998/namespace"
+        }
+      }
+    }
+  }
+}

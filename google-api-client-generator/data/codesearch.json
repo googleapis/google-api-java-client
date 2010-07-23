@@ -1,0 +1,19 @@
+{
+  "id" : "codesearch",
+  "name" : "Google Code Search Data API",
+  "className" : "GoogleCodeSearch",
+  "versions" : {
+    "2" : {
+      "rootUrl" : "http://www.google.com/codesearch/feeds/",
+      "atom" : {
+        "namespaces" : {
+          "" : "http://www.w3.org/2005/Atom",
+          "atom" : "http://www.w3.org/2005/Atom",
+          "gcs" : "http://schemas.google.com/codesearch/2006",
+          "openSearch" : "http://a9.com/-/spec/opensearch/1.1/",
+          "xml" : "http://www.w3.org/XML/1998/namespace"
+        }
+      }
+    }
+  }
+}
