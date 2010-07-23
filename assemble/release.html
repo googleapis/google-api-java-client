@@ -8,32 +8,18 @@
   <li>Assemble for Distribution: <code>mvn clean javadoc:javadoc
   assembly:assembly</code></li>
   <li>Upload to <a
-    href="http://code.google.com/p/gdata-java-client/downloads/entry">http://code.google.com/p/gdata-java-client/downloads/entry</a>
+    href="http://code.google.com/p/google-api-java-client/downloads/entry">http://code.google.com/p/google-api-java-client/downloads/entry</a>
   <ul>
     <li>Summary: Google API Java Client Library 1.0.0-alpha</li>
-    <li>File: <code>gdata-java-client/gdata/target/google-api-client-1.0.0-alpha-java.zip</code></li>
+    <li>File: <code>google-api-java-client/target/google-api-client-1.0.0-alpha-java.zip</code></li>
     <li>Labels: <code>Type-Archive</code>, <code>OpSys-All</code>, and <code>Featured</code></li>
     <li>click Submit file</li>
   </ul>
   </li>
   <li>Deprecate any obsolete libraries.</li>
-  <li>Create SVN Tag <pre><code>svn cp -m "Tagging 1.0.0-alpha" https://gdata-java-client.googlecode.com/svn/branches/2 https://gdata-java-client.googlecode.com/svn/tags/google-api-client/1.0.0-alpha</code></pre>
-  </li>
-  <li>Upload JavaDoc into Tag <pre><code>svn checkout https://gdata-java-client.googlecode.com/svn/tags/google-api-client/1.0.0-alpha /tmp/tag
-cd gdata-java-client/gdata
-cp -R target/site/apidocs /tmp/tag/javadoc
-cd /tmp/tag
-svn add javadoc
-cd javadoc
-find . -name "*.html" -type f -print0 | xargs -0 svn propset svn:mime-type text/html
-find . -name "*.css" -type f -print0 | xargs -0 svn propset svn:mime-type text/css
-cd ..
-svn commit -m "JavaDoc for google-api-client-1.0.0-alpha"
-cd ..
-rm -rf tag
-</pre></code></li>
-  <li>Put it up on Maven central repository</li>
-  <li>Update <a href="http://code.google.com/p/gdata-java-client/admin">http://code.google.com/p/gdata-java-client/admin</a></li>
+  <li>Create Mercurial Tag: <code>hg tag 1.0.0-alpha</code></li>
+  <li>Put it up on Maven central repository?</li>
+  <li>Update <a href="http://code.google.com/p/google-api-java-client/admin">http://code.google.com/p/google-api-java-client/admin</a></li>
 </ul>
 </body>
 </html>
