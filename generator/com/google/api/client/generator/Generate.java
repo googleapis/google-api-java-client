@@ -40,8 +40,9 @@ public class Generate {
     System.out.println(
         "Google API Java Client Library Generator for version 1.0.0-alpha");
     if (args.length < 2) {
-      System.err.println(
-          "Expected arguments: dataDirectory gdataLibraryDirectory");
+      System.err
+          .println(
+              "Expected arguments: dataDirectory google-api-clientProjectDirectory");
       System.exit(1);
     }
     SortedSet<Client> clients = readClients(args[0]);

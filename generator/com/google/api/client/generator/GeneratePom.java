@@ -27,12 +27,14 @@ import java.util.List;
 public class GeneratePom {
 
   public static void main(String[] args) throws IOException {
-    File gdataDirectory = Generation.getDirectory(args[0]);
+    File googleApiClientDirectory = Generation.getDirectory(args[0]);
     // compute file generators
     List<AbstractFileGenerator> fileGenerators =
         new ArrayList<AbstractFileGenerator>();
-    fileGenerators.add(new PomFileGenerator(new File(gdataDirectory, "src")));
-    Generation.compute(fileGenerators, new File(gdataDirectory, "target"));
+    fileGenerators.add(
+        new PomFileGenerator(new File(googleApiClientDirectory, "src")));
+    Generation.compute(
+        fileGenerators, new File(googleApiClientDirectory, "target"));
   }
 
   private GeneratePom() {
