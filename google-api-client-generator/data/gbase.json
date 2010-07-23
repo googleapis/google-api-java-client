@@ -1,0 +1,25 @@
+{
+  "id" : "gbase",
+  "name" : "Google Base Data API",
+  "className" : "GoogleBase",
+  "authTokenType" : "gbase",
+  "versions" : {
+    "2" : {
+      "rootUrl" : "http://www.google.com/base/feeds/",
+      "atom" : {
+        "namespaces" : {
+          "app" : "http://www.w3.org/2007/app",
+          "" : "http://www.w3.org/2005/Atom",
+          "atom" : "http://www.w3.org/2005/Atom",
+          "batch" : "http://schemas.google.com/gdata/batch",
+          "g" : "http://base.google.com/ns/1.0",
+          "gd" : "http://schemas.google.com/g/2005",
+          "gm" : "http://base.google.com/ns-metadata/1.0",
+          "media" : "http://search.yahoo.com/mrss/",
+          "openSearch" : "http://a9.com/-/spec/opensearch/1.1/",
+          "xml" : "http://www.w3.org/XML/1998/namespace"
+        }
+      }
+    }
+  }
+}

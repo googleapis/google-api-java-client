@@ -1,0 +1,27 @@
+{
+  "id" : "sites",
+  "name" : "Google Sites Data API",
+  "className" : "GoogleSites",
+  "authTokenType" : "jotspot",
+  "versions" : {
+    "1" : {
+      "rootUrl" : "https://sites.google.com/feeds/",
+      "atom" : {
+        "namespaces" : {
+          "app" : "http://www.w3.org/2007/app",
+          "" : "http://www.w3.org/2005/Atom",
+          "atom" : "http://www.w3.org/2005/Atom",
+          "batch" : "http://schemas.google.com/gdata/batch",
+          "dc" : "http://purl.org/dc/terms",
+          "gAcl" : "http://schemas.google.com/acl/2007",
+          "gd" : "http://schemas.google.com/g/2005",
+          "gs" : "http://schemas.google.com/spreadsheets/2006",
+          "openSearch" : "http://a9.com/-/spec/opensearch/1.1/",
+          "sites" : "http://schemas.google.com/sites/2008",
+          "thr" : "http://purl.org/syndication/thread/1.0",
+          "xml" : "http://www.w3.org/XML/1998/namespace"
+        }
+      }
+    }
+  }
+}

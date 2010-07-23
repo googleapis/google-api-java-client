@@ -1,0 +1,25 @@
+{
+  "id" : "calendar",
+  "name" : "Google Calendar Data API",
+  "className" : "GoogleCalendar",
+  "authTokenType" : "cl",
+  "versions" : {
+    "2" : {
+      "rootUrl" : "https://www.google.com/calendar/feeds/",
+      "atom" : {
+        "namespaces" : {
+          "" : "http://www.w3.org/2005/Atom",
+          "atom" : "http://www.w3.org/2005/Atom",
+          "batch" : "http://schemas.google.com/gdata/batch",
+          "gAcl" : "http://schemas.google.com/acl/2007",
+          "gCal" : "http://schemas.google.com/gCal/2005",
+          "gd" : "http://schemas.google.com/g/2005",
+          "georss" : "http://www.georss.org/georss",
+          "gml" : "http://www.opengis.net/gml",
+          "openSearch" : "http://a9.com/-/spec/opensearch/1.1/",
+          "xml" : "http://www.w3.org/XML/1998/namespace"
+        }
+      }
+    }
+  }
+}

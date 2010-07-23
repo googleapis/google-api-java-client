@@ -1,0 +1,23 @@
+{
+  "id" : "blogger",
+  "name" : "Blogger Data API",
+  "className" : "Blogger",
+  "authTokenType" : "blogger",
+  "versions" : {
+    "2" : {
+      "rootUrl" : "http://www.blogger.com/feeds/",
+      "atom" : {
+        "namespaces" : {
+          "app" : "http://www.w3.org/2007/app",
+          "" : "http://www.w3.org/2005/Atom",
+          "atom" : "http://www.w3.org/2005/Atom",
+          "gd" : "http://schemas.google.com/g/2005",
+          "media" : "http://search.yahoo.com/mrss/",
+          "openSearch" : "http://a9.com/-/spec/opensearch/1.1/",
+          "thr" : "http://purl.org/syndication/thread/1.0",
+          "xml" : "http://www.w3.org/XML/1998/namespace"
+        }
+      }
+    }
+  }
+}
