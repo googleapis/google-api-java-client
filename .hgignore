@@ -1,5 +1,3 @@
 
 syntax: regexp
 ^google-api-client/target$
-syntax: regexp
-^google-api-client-generator/target$
