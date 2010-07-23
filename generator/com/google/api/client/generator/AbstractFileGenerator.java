@@ -36,7 +36,7 @@ abstract class AbstractFileGenerator {
   abstract void generate(PrintWriter out);
 
   /**
-   * Returns the output file path relative to the root gdata output directory.
+   * Returns the output file path relative to the root output directory.
    */
   abstract String getOutputFilePath();
 
