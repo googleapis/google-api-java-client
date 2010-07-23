@@ -11,42 +11,26 @@
   Source</a></li>
 </ul>
 
-<h3>Installation Instructions</h3>
+<h3>Checkout Instructions</h3>
 
-<p>Prerequisite: you must first install <a
-  href="http://java.sun.com/products/archive/">Java 5</a>. You may need to set
-your <code>JAVA_HOME</code>.</p>
-
-<p>If you need commit access, you first need to be added as a <a
-  href="http://code.google.com/p/gdata-java-client/people/list">Committer</a>.</p>
+<p>Prerequisite: install <a href="http://java.sun.com/products/archive/">Java
+5</a>. You may need to set your <code>JAVA_HOME</code>.</p>
 
 <h4>Command-Line</h4>
 
-<p>You will need to first install <a
-  href="http://subversion.apache.org/packages.html">Subversion</a> and <a
-  href="http://maven.apache.org/download.html">Maven</a>.</p>
+<p>Prerequisite: install <a href="http://mercurial.selenic.com/">Mercurial</a>
+and <a href="http://maven.apache.org/download.html">Maven</a>.</p>
 
-<ul>
-  <li>SVN checkout
-  <ul>
-    <li>Read only: <code>svn checkout
-    http://gdata-java-client.googlecode.com/svn/branches/2/gdata <i>&lt;some
-    path&gt;</i>/gdata</code></li>
-    <li>Commit access: <code>svn checkout
-    https://gdata-java-client.googlecode.com/svn/branches/2/gdata <i>&lt;some
-    path&gt;</i>/gdata</code></li>
-  </ul>
-  </li>
-  <li><code>cd <i>&lt;some path&gt;</i>/gdata</code></li>
-  <li>Install: <code>mvn install</code></li>
-</ul>
+<pre><code>hg clone https://google-api-java-client.googlecode.com/hg/ google-api-client
+cd google-api-client
+mvn compile
+</code></pre>
 
 <h4>Eclipse 3.5</h4>
 
-<p>You will need to first install <a
-  href="http://www.eclipse.org/downloads/">Eclipse</a>, the <a
-  href="http://www.eclipse.org/subversive/downloads.php">Subversion plugin</a>,
-the <a href="http://m2eclipse.sonatype.org/installing-m2eclipse.html">Maven
+<p>Prerequisite: install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
+the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>, the <a
+  href="http://m2eclipse.sonatype.org/installing-m2eclipse.html">Maven
 plugin</a>, and the <a
   href="http://developer.android.com/sdk/eclipse-adt.html#installing">Android
 plugin</a>.</p>
@@ -56,31 +40,25 @@ plugin</a>.</p>
   <li>SVN checkout
   <ul>
     <li>File &gt; Import...</li>
-    <li>Select "SVN &gt; Project from SVN" and click "Next"</li>
-    <li>"Checkout Project from SVN repository" or "Enter Repository
-    Location Information"
+    <li>"Select"
     <ul>
-      <li>URL:
-      <ul>
-        <li>Read only: <code>http://gdata-java-client.googlecode.com/svn</code></li>
-        <li>Commit access: <code>https://gdata-java-client.googlecode.com/svn</code></li>
-      </ul>
-      </li>
+      <li>Select "Mercurial &gt; Clone Existing Mercurial Repository"</li>
       <li>Click on "Next"</li>
     </ul>
     </li>
-    <li>Select Resource
+    <li>"Clone repository"
     <ul>
-      <li>URL:
-      <ul>
-        <li>Read only: <code>http://gdata-java-client.googlecode.com/svn/branches/2/gdata</code></li>
-        <li>Commit access: <code>https://gdata-java-client.googlecode.com/svn/branches/2/gdata</code></li>
-      </ul>
-      </li>
-      <li>Click on "Head revision" and click on "Finish"</li>
+      <li>URL: <code>https://google-api-java-client.googlecode.com/hg/</code></li>
+      <li>Clone directory name: <code>google-api-client</code></li>
+      <li>Click on "Next"</li>
     </ul>
     </li>
-    <li>Check Out As
+    <li>"Select working directory revision"
+    <ul>
+      <li>Click on "Next"</li>
+    </ul>
+    </li>
+    <li>"Import Projects"
     <ul>
       <li>Click on "Finish"</li>
     </ul>
@@ -90,7 +68,7 @@ plugin</a>.</p>
   <li>Install
   <ul>
     <li>Right-click on project gdata</li>
-    <li>Run As &gt; Maven install</li>
+    <li>Run As &gt; Maven package</li>
   </ul>
   </li>
 </ul>

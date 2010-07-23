@@ -32,7 +32,7 @@
   </files>
   <fileSets>
     <fileSet>
-      <directory>target/site/apidocs</directory>
+      <directory>javadoc</directory>
       <outputDirectory>javadoc</outputDirectory>
     </fileSet>
     <fileSet>
