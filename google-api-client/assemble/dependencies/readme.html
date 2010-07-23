@@ -1,0 +1,36 @@
+<html>
+<title>Dependent libraries for the ${project.name} ${project.version}</title>
+<body>
+<h2>Dependent libraries for the ${project.name} ${project.version}</h2>
+
+<p>When building an application based on this client library, use these
+dependent library jars:</p>
+
+<ul>
+  <li><a href="jackson-core-asl-1.5.3.jar">jackson-core-asl-1.5.3.jar</a>:
+  needed for JSON, or formats based on JSON like JSON-C, JSON-RPC, or POCO. It
+  can be downloaded from <a href="http://wiki.fasterxml.com/JacksonDownload">here</a>.</li>
+</ul>
+
+<p>When building an application for all Java environments <b>except</b> for
+Android (whose SDK already includes these), additionally use these dependent
+library jars:</p>
+
+<ul>
+  <li><a href="java/kxml2-2.3.0.jar">kxml2-2.3.0.jar</a>: needed for XML,
+  or formats based on XML like Atom. It can be downloaded from <a
+    href="http://kxml.sourceforge.net/">here</a>.</li>
+  <li><a href="java/commons-logging-1.1.1.jar">commons-logging-1.1.1.jar</a>,
+  <a href="java/httpcore-4.0.1.jar">httpcore-4.0.1.jar</a>, and <a
+    href="java/httpclient-4.0.1.jar">httpclient-4.0.1.jar</a>: needed only if
+  you prefer to use the Apache HTTP library for the underlying HTTP transport
+  (default is to use the built-in <code>java.net</code> package of the JDK).
+  They can be downloaded from <a
+    href="http://hc.apache.org/httpcomponents-client/">here</a>. <b>Warning:</b>
+  Do not use the Apache HTTP library on App Engine because it won't work. The
+  Apache HTTP library tries to open its own sockets which is not allowed on App
+  Engine.</li>
+</ul>
+
+</body>
+</html>
