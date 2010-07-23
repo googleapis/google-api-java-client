@@ -66,7 +66,7 @@
         <configuration>
           <outputDirectory>${project.basedir}</outputDirectory>
           <reportOutputDirectory>${project.basedir}</reportOutputDirectory>
-          <destDir>javadoc</destDir>
+          <destDir>javadoc/${project.version}</destDir>
           <links>
             <link>http://download.oracle.com/docs/cd/E17476_01/javase/1.5.0/docs/api</link>
             <link>http://jackson.codehaus.org/1.4.2/javadoc</link>
