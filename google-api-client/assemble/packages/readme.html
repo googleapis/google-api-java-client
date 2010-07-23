@@ -1,0 +1,27 @@
+<html>
+<title>Packages for the ${project.name} ${project.version}</title>
+<body>
+<h2>Packages for the ${project.name} ${project.version}</h2>
+
+<p>While developing a Java application for mobile devices (such as on
+Android), it is convenient to use the <code>${project.artifactId}-${project.version}.jar</code>
+from the root directory. Unfortunately, its large size makes it unwieldy,
+especially since you are likely to only use a relatively small subset of the
+library. That results in a slower download of your application, and a slower
+start time for your application as it is loaded into memory. If multiple
+applications on the end-user's mobile device include a copy of the whole, then
+the problem grows worse for the end user for each new application.</p>
+
+<p>One possible solution is to use the packaged jars in this directory
+instead. There is exactly one jar for each Java package in the client library,
+and you only include what you need. Be careful to understand the acyclic package
+dependency structure, as is specified in the <a href="../javadoc/index.html">JavaDoc</a>.
+It is more difficult to set up once, but the end goal is that you release a
+smaller application, and your end users will (hopefully) appreciate it.</p>
+
+<p>Another possible alternative solution that has been proposed is to try to
+use <a href="http://proguard.sourceforge.net/">ProGuard</a>. We do not have any
+experience with it.</p>
+
+</body>
+</html>
