@@ -7,10 +7,10 @@
   </formats>
   <files>
     <file>
-      <source>target/google-api-client-1.0.0-alpha.jar</source>
+      <source>target/${project.artifactId}-${project.version}.jar</source>
     </file>
     <file>
-      <source>target/google-api-client-1.0.0-alpha-src.zip</source>
+      <source>target/${project.artifactId}-${project.version}-src.zip</source>
     </file>
     <file>
       <source>assemble/LICENSE</source>
@@ -32,7 +32,7 @@
   </files>
   <fileSets>
     <fileSet>
-      <directory>javadoc</directory>
+      <directory>javadoc/${project.version}</directory>
       <outputDirectory>javadoc</outputDirectory>
     </fileSet>
     <fileSet>
