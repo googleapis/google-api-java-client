@@ -6,18 +6,19 @@
 <ul>
   <li>Update instructions.html</li>
   <li>Update JavaDoc (if necessary): <code>mvn javadoc:javadoc</code></li>
+  <li>Update <code>javadoc/index.html</code> to new version</li>
   <li>Assemble for Distribution: <code>mvn clean assembly:assembly</code></li>
   <li>Upload to <a
     href="http://code.google.com/p/google-api-java-client/downloads/entry">http://code.google.com/p/google-api-java-client/downloads/entry</a>
   <ul>
-    <li>Summary: Google API Java Client Library 1.0.0-alpha</li>
-    <li>File: <code>google-api-java-client/target/google-api-client-1.0.0-alpha-java.zip</code></li>
+    <li>Summary: Google API Java Client Library ${project.version}</li>
+    <li>File: <code>google-api-java-client/target/google-api-client-${project.version}-java.zip</code></li>
     <li>Labels: <code>Type-Archive</code>, <code>OpSys-All</code>, and <code>Featured</code></li>
     <li>click Submit file</li>
   </ul>
   </li>
   <li>Deprecate any obsolete libraries.</li>
-  <li>Create Mercurial Tag: <code>hg tag 1.0.0-alpha</code></li>
+  <li>Create Mercurial Tag: <code>hg tag ${project.version}</code></li>
   <li>Put it up on Maven central repository?</li>
   <li>Update <a href="http://code.google.com/p/google-api-java-client/admin">http://code.google.com/p/google-api-java-client/admin</a></li>
 </ul>
