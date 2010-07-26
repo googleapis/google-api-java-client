@@ -38,7 +38,7 @@ public class Generate {
 
   public static void main(String[] args) throws IOException {
     System.out.println(
-        "Google API Java Client Library Generator for version 1.0.0-alpha");
+        "Google API Java Client Library Generator");
     if (args.length < 2) {
       System.err
           .println(
