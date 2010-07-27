@@ -166,7 +166,7 @@
                 <include>com/google/api/client/android/xml/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-android-xml-${project.version}</finalName>
+              <classifier>client-android-xml</classifier>
             </configuration>
           </execution>
           <execution>
@@ -179,7 +179,7 @@
                 <include>com/google/api/client/apache/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-apache-${project.version}</finalName>
+              <classifier>client-apache</classifier>
             </configuration>
           </execution>
           <execution>
@@ -192,7 +192,7 @@
                 <include>com/google/api/client/auth/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-auth-${project.version}</finalName>
+              <classifier>client-auth</classifier>
             </configuration>
           </execution>
           <execution>
@@ -205,7 +205,7 @@
                 <include>com/google/api/client/auth/oauth/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-auth-oauth-${project.version}</finalName>
+              <classifier>client-auth-oauth</classifier>
             </configuration>
           </execution>
           <execution>
@@ -218,7 +218,7 @@
                 <include>com/google/api/client/auth/oauth2/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-auth-oauth2-${project.version}</finalName>
+              <classifier>client-auth-oauth2</classifier>
             </configuration>
           </execution>
           <execution>
@@ -231,7 +231,7 @@
                 <include>com/google/api/client/escape/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-escape-${project.version}</finalName>
+              <classifier>client-escape</classifier>
             </configuration>
           </execution>
           <execution>
@@ -244,7 +244,7 @@
                 <include>com/google/api/client/googleapis/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-googleapis-${project.version}</finalName>
+              <classifier>client-googleapis</classifier>
             </configuration>
           </execution>
           <execution>
@@ -257,7 +257,7 @@
                 <include>com/google/api/client/googleapis/auth/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-googleapis-auth-${project.version}</finalName>
+              <classifier>client-googleapis-auth</classifier>
             </configuration>
           </execution>
           <execution>
@@ -270,7 +270,7 @@
                 <include>com/google/api/client/googleapis/auth/authsub/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-googleapis-auth-authsub-${project.version}</finalName>
+              <classifier>client-googleapis-auth-authsub</classifier>
             </configuration>
           </execution>
           <execution>
@@ -283,7 +283,7 @@
                 <include>com/google/api/client/googleapis/auth/clientlogin/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-googleapis-auth-clientlogin-${project.version}</finalName>
+              <classifier>client-googleapis-auth-clientlogin</classifier>
             </configuration>
           </execution>
           <execution>
@@ -296,7 +296,7 @@
                 <include>com/google/api/client/googleapis/auth/oauth/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-googleapis-auth-oauth-${project.version}</finalName>
+              <classifier>client-googleapis-auth-oauth</classifier>
             </configuration>
           </execution>
           <execution>
@@ -309,7 +309,7 @@
                 <include>com/google/api/client/googleapis/auth/storage/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-googleapis-auth-storage-${project.version}</finalName>
+              <classifier>client-googleapis-auth-storage</classifier>
             </configuration>
           </execution>
           <execution>
@@ -322,7 +322,7 @@
                 <include>com/google/api/client/googleapis/json/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-googleapis-json-${project.version}</finalName>
+              <classifier>client-googleapis-json</classifier>
             </configuration>
           </execution>
           <execution>
@@ -335,7 +335,7 @@
                 <include>com/google/api/client/googleapis/xml/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-googleapis-xml-atom-${project.version}</finalName>
+              <classifier>client-googleapis-xml-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -348,7 +348,7 @@
                 <include>com/google/api/client/http/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-http-${project.version}</finalName>
+              <classifier>client-http</classifier>
             </configuration>
           </execution>
           <execution>
@@ -361,7 +361,7 @@
                 <include>com/google/api/client/javanet/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-javanet-${project.version}</finalName>
+              <classifier>client-javanet</classifier>
             </configuration>
           </execution>
           <execution>
@@ -374,7 +374,7 @@
                 <include>com/google/api/client/json/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-json-${project.version}</finalName>
+              <classifier>client-json</classifier>
             </configuration>
           </execution>
           <execution>
@@ -387,7 +387,7 @@
                 <include>com/google/api/client/json/rpc2/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-json-rpc2-${project.version}</finalName>
+              <classifier>client-json-rpc2</classifier>
             </configuration>
           </execution>
           <execution>
@@ -400,7 +400,7 @@
                 <include>com/google/api/client/repackaged/com/google/common/base/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-repackaged-com-google-common-base-${project.version}</finalName>
+              <classifier>client-repackaged-com-google-common-base</classifier>
             </configuration>
           </execution>
           <execution>
@@ -413,7 +413,7 @@
                 <include>com/google/api/client/util/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-util-${project.version}</finalName>
+              <classifier>client-util</classifier>
             </configuration>
           </execution>
           <execution>
@@ -426,7 +426,7 @@
                 <include>com/google/api/client/xml/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-xml-${project.version}</finalName>
+              <classifier>client-xml</classifier>
             </configuration>
           </execution>
           <execution>
@@ -439,7 +439,7 @@
                 <include>com/google/api/client/xml/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-client-xml-atom-${project.version}</finalName>
+              <classifier>client-xml-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -452,7 +452,7 @@
                 <include>com/google/api/data/analytics/v2/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-analytics-v2-${project.version}</finalName>
+              <classifier>data-analytics-v2</classifier>
             </configuration>
           </execution>
           <execution>
@@ -465,7 +465,7 @@
                 <include>com/google/api/data/analytics/v2/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-analytics-v2-atom-${project.version}</finalName>
+              <classifier>data-analytics-v2-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -478,7 +478,7 @@
                 <include>com/google/api/data/blogger/v2/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-blogger-v2-${project.version}</finalName>
+              <classifier>data-blogger-v2</classifier>
             </configuration>
           </execution>
           <execution>
@@ -491,7 +491,7 @@
                 <include>com/google/api/data/blogger/v2/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-blogger-v2-atom-${project.version}</finalName>
+              <classifier>data-blogger-v2-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -504,7 +504,7 @@
                 <include>com/google/api/data/books/v1/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-books-v1-${project.version}</finalName>
+              <classifier>data-books-v1</classifier>
             </configuration>
           </execution>
           <execution>
@@ -517,7 +517,7 @@
                 <include>com/google/api/data/books/v1/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-books-v1-atom-${project.version}</finalName>
+              <classifier>data-books-v1-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -530,7 +530,7 @@
                 <include>com/google/api/data/buzz/v1/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-buzz-v1-${project.version}</finalName>
+              <classifier>data-buzz-v1</classifier>
             </configuration>
           </execution>
           <execution>
@@ -543,7 +543,7 @@
                 <include>com/google/api/data/buzz/v1/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-buzz-v1-atom-${project.version}</finalName>
+              <classifier>data-buzz-v1-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -556,7 +556,7 @@
                 <include>com/google/api/data/calendar/v2/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-calendar-v2-${project.version}</finalName>
+              <classifier>data-calendar-v2</classifier>
             </configuration>
           </execution>
           <execution>
@@ -569,7 +569,7 @@
                 <include>com/google/api/data/calendar/v2/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-calendar-v2-atom-${project.version}</finalName>
+              <classifier>data-calendar-v2-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -582,7 +582,7 @@
                 <include>com/google/api/data/codesearch/v2/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-codesearch-v2-${project.version}</finalName>
+              <classifier>data-codesearch-v2</classifier>
             </configuration>
           </execution>
           <execution>
@@ -595,7 +595,7 @@
                 <include>com/google/api/data/codesearch/v2/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-codesearch-v2-atom-${project.version}</finalName>
+              <classifier>data-codesearch-v2-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -608,7 +608,7 @@
                 <include>com/google/api/data/contacts/v3/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-contacts-v3-${project.version}</finalName>
+              <classifier>data-contacts-v3</classifier>
             </configuration>
           </execution>
           <execution>
@@ -621,7 +621,7 @@
                 <include>com/google/api/data/contacts/v3/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-contacts-v3-atom-${project.version}</finalName>
+              <classifier>data-contacts-v3-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -634,7 +634,7 @@
                 <include>com/google/api/data/docs/v3/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-docs-v3-${project.version}</finalName>
+              <classifier>data-docs-v3</classifier>
             </configuration>
           </execution>
           <execution>
@@ -647,7 +647,7 @@
                 <include>com/google/api/data/docs/v3/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-docs-v3-atom-${project.version}</finalName>
+              <classifier>data-docs-v3-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -660,7 +660,7 @@
                 <include>com/google/api/data/finance/v2/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-finance-v2-${project.version}</finalName>
+              <classifier>data-finance-v2</classifier>
             </configuration>
           </execution>
           <execution>
@@ -673,7 +673,7 @@
                 <include>com/google/api/data/finance/v2/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-finance-v2-atom-${project.version}</finalName>
+              <classifier>data-finance-v2-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -686,7 +686,7 @@
                 <include>com/google/api/data/gbase/v2/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-gbase-v2-${project.version}</finalName>
+              <classifier>data-gbase-v2</classifier>
             </configuration>
           </execution>
           <execution>
@@ -699,7 +699,7 @@
                 <include>com/google/api/data/gbase/v2/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-gbase-v2-atom-${project.version}</finalName>
+              <classifier>data-gbase-v2-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -712,7 +712,7 @@
                 <include>com/google/api/data/health/v2/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-health-v2-${project.version}</finalName>
+              <classifier>data-health-v2</classifier>
             </configuration>
           </execution>
           <execution>
@@ -725,7 +725,7 @@
                 <include>com/google/api/data/health/v2/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-health-v2-atom-${project.version}</finalName>
+              <classifier>data-health-v2-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -738,7 +738,7 @@
                 <include>com/google/api/data/latitude/v1/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-latitude-v1-${project.version}</finalName>
+              <classifier>data-latitude-v1</classifier>
             </configuration>
           </execution>
           <execution>
@@ -751,7 +751,7 @@
                 <include>com/google/api/data/latitude/v1/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-latitude-v1-atom-${project.version}</finalName>
+              <classifier>data-latitude-v1-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -764,7 +764,7 @@
                 <include>com/google/api/data/maps/v2/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-maps-v2-${project.version}</finalName>
+              <classifier>data-maps-v2</classifier>
             </configuration>
           </execution>
           <execution>
@@ -777,7 +777,7 @@
                 <include>com/google/api/data/maps/v2/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-maps-v2-atom-${project.version}</finalName>
+              <classifier>data-maps-v2-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -790,7 +790,7 @@
                 <include>com/google/api/data/migration/v1/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-migration-v1-${project.version}</finalName>
+              <classifier>data-migration-v1</classifier>
             </configuration>
           </execution>
           <execution>
@@ -803,7 +803,7 @@
                 <include>com/google/api/data/migration/v1/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-migration-v1-atom-${project.version}</finalName>
+              <classifier>data-migration-v1-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -816,7 +816,7 @@
                 <include>com/google/api/data/moderator/v1/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-moderator-v1-${project.version}</finalName>
+              <classifier>data-moderator-v1</classifier>
             </configuration>
           </execution>
           <execution>
@@ -829,7 +829,7 @@
                 <include>com/google/api/data/picasa/v2/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-picasa-v2-${project.version}</finalName>
+              <classifier>data-picasa-v2</classifier>
             </configuration>
           </execution>
           <execution>
@@ -842,7 +842,7 @@
                 <include>com/google/api/data/picasa/v2/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-picasa-v2-atom-${project.version}</finalName>
+              <classifier>data-picasa-v2-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -855,7 +855,7 @@
                 <include>com/google/api/data/sidewiki/v2/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-sidewiki-v2-${project.version}</finalName>
+              <classifier>data-sidewiki-v2</classifier>
             </configuration>
           </execution>
           <execution>
@@ -868,7 +868,7 @@
                 <include>com/google/api/data/sidewiki/v2/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-sidewiki-v2-atom-${project.version}</finalName>
+              <classifier>data-sidewiki-v2-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -881,7 +881,7 @@
                 <include>com/google/api/data/sites/v1/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-sites-v1-${project.version}</finalName>
+              <classifier>data-sites-v1</classifier>
             </configuration>
           </execution>
           <execution>
@@ -894,7 +894,7 @@
                 <include>com/google/api/data/sites/v1/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-sites-v1-atom-${project.version}</finalName>
+              <classifier>data-sites-v1-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -907,7 +907,7 @@
                 <include>com/google/api/data/spreadsheet/v3/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-spreadsheet-v3-${project.version}</finalName>
+              <classifier>data-spreadsheet-v3</classifier>
             </configuration>
           </execution>
           <execution>
@@ -920,7 +920,7 @@
                 <include>com/google/api/data/spreadsheet/v3/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-spreadsheet-v3-atom-${project.version}</finalName>
+              <classifier>data-spreadsheet-v3-atom</classifier>
             </configuration>
           </execution>
           <execution>
@@ -933,7 +933,7 @@
                 <include>com/google/api/data/youtube/v2/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-youtube-v2-${project.version}</finalName>
+              <classifier>data-youtube-v2</classifier>
             </configuration>
           </execution>
           <execution>
@@ -946,7 +946,7 @@
                 <include>com/google/api/data/youtube/v2/atom/*</include>
               </includes>
               <outputDirectory>target/packages</outputDirectory>
-              <finalName>google-api-data-youtube-v2-atom-${project.version}</finalName>
+              <classifier>data-youtube-v2-atom</classifier>
             </configuration>
           </execution>
         </executions>

@@ -73,9 +73,8 @@ final class PomFileGenerator extends AbstractFileGenerator {
       out.println("              </includes>");
       out.println(
           "              <outputDirectory>target/packages</outputDirectory>");
-      out.println(
-          "              <finalName>google-api-" + packageName.replace('/', '-')
-              + "-${project.version}</finalName>");
+      out.println("              <classifier>" + packageName.replace('/', '-')
+          + "</classifier>");
       out.println("            </configuration>");
       out.println("         </execution>");
     }
