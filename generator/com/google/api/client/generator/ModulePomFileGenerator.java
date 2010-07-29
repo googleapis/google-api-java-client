@@ -17,17 +17,16 @@
 package com.google.api.client.generator;
 
 import java.io.PrintWriter;
-import java.util.SortedSet;
 
 /**
  * @author Yaniv Inbar
  */
-final class PomFileGenerator extends AbstractFileGenerator {
+final class ModulePomFileGenerator extends AbstractFileGenerator {
 
-  private final SortedSet<String> packageNames;
+  private final String packageName;
 
-  PomFileGenerator(SortedSet<String> packageNames) {
-    this.packageNames = packageNames;
+  ModulePomFileGenerator(String packageName) {
+    this.packageName = packageName;
   }
 
   @Override
@@ -39,27 +38,29 @@ final class PomFileGenerator extends AbstractFileGenerator {
     out.println("  <modelVersion>4.0.0</modelVersion>");
     out.println("  <parent>");
     out.println("    <groupId>com.google.api.client</groupId>");
-    out.println("    <artifactId>google-api-client-parent</artifactId>");
+    out.println(
+        "    <artifactId>google-api-client-modules-parent</artifactId>");
     out.println("    <version>1.0.1-alpha</version>");
-    out.println("    <relativePath>../parent/pom.xml</relativePath>");
     out.println("  </parent>");
-    out.println("  <artifactId>google-api-client-modules-parent</artifactId>");
-    out.println("  <packaging>pom</packaging>");
-    out
-        .println(
-            "  <description>A place to hold common settings for each module.</description>");
-    out.println("  <modules>");
-    for (String packageName : packageNames) {
-      out.println("    <module>" + packageName + "</module>");
-
-    }
-    out.println("  </modules>");
+    out.println("  <artifactId>" + packageName + "</artifactId>");
+    out.println("  <build>");
+    out.println("    <resources>");
+    out.println("      <resource>");
+    out.println("        <filtering>false</filtering>");
+    out.println("        <directory>../../target/classes</directory>");
+    out.println("        <includes>");
+    out.println("          <include>com/" + packageName.replace('-', '/')
+        + "/*</include>");
+    out.println("        </includes>");
+    out.println("      </resource>");
+    out.println("    </resources>");
+    out.println("  </build>");
     out.println("</project>");
     out.close();
   }
 
   @Override
   public String getOutputFilePath() {
-    return "modules/pom.xml";
+    return "modules/" + packageName + "/pom.xml";
   }
 }

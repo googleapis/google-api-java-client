@@ -26,7 +26,9 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Yaniv Inbar
@@ -40,9 +42,15 @@ public class Generation {
     List<FileComputer> fileComputers = new ArrayList<FileComputer>();
     System.out.println();
     System.out.println("Computing " + fileGenerators.size() + " file(s):");
+    Set<String> outputFilePaths = new HashSet<String>();
     for (AbstractFileGenerator fileGenerator : fileGenerators) {
       FileComputer fileComputer =
           new FileComputer(fileGenerator, outputDirectory);
+      if (!outputFilePaths.add(fileComputer.outputFilePath)) {
+        System.err.println("Error: duplicate output file path: "
+            + fileComputer.outputFilePath);
+        System.exit(1);
+      }
       fileComputers.add(fileComputer);
       fileComputer.compute();
       System.out.print('.');
