@@ -5,9 +5,8 @@
 
 <ul>
   <li>Update instructions.html</li>
-  <li>Update JavaDoc (if necessary): <code>mvn javadoc:javadoc</code></li>
-  <li>Update <code>javadoc/index.html</code> to new version</li>
-  <li>Assemble for Distribution: <code>mvn clean assembly:assembly</code></li>
+  <li>Assemble for Distribution: <code>mvn clean javadoc:javadoc
+  assembly:assembly</code></li>
   <li>Upload to <a
     href="http://code.google.com/p/google-api-java-client/downloads/entry">http://code.google.com/p/google-api-java-client/downloads/entry</a>
   <ul>
@@ -20,7 +19,11 @@
   <li>Deprecate any obsolete libraries.</li>
   <li>Create Mercurial Tag: <code>hg tag ${project.version}</code></li>
   <li>Put it up on Maven central repository?</li>
-  <li>Update <a href="http://code.google.com/p/google-api-java-client/admin">http://code.google.com/p/google-api-java-client/admin</a></li>
+  <li>Update javadoc project: copy <code>target/site/apidocs</code> to
+  ${project.version} in javadoc project, and update <code>javadoc/index.html</code>
+  to the new version</li>
+  <li>Update <a
+    href="http://code.google.com/p/google-api-java-client/admin">http://code.google.com/p/google-api-java-client/admin</a></li>
 </ul>
 </body>
 </html>
