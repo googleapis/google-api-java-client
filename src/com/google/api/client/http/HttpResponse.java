@@ -221,8 +221,8 @@ public final class HttpResponse {
         // print content using a buffered input stream that can be re-read
         String contentType = this.contentType;
         if (debugContentByteArray.length != 0 && contentType != null
-            && (contentType.startsWith("application/"))
-            || contentType.startsWith("text/")) {
+            && (contentType.startsWith("application/")
+            || contentType.startsWith("text/"))) {
           logger.config(new String(debugContentByteArray));
         }
       }
