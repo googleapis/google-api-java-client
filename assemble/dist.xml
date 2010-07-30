@@ -10,7 +10,10 @@
       <source>target/${project.artifactId}-${project.version}.jar</source>
     </file>
     <file>
-      <source>target/${project.artifactId}-${project.version}-src.zip</source>
+      <source>target/${project.artifactId}-${project.version}-sources.jar</source>
+    </file>
+    <file>
+      <source>target/${project.artifactId}-${project.version}-javadoc.jar</source>
     </file>
     <file>
       <source>assemble/LICENSE</source>
@@ -31,10 +34,6 @@
     </file>
   </files>
   <fileSets>
-    <fileSet>
-      <directory>target/site/apidocs</directory>
-      <outputDirectory>javadoc</outputDirectory>
-    </fileSet>
     <fileSet>
       <directory>target/packages</directory>
       <outputDirectory>packages</outputDirectory>
