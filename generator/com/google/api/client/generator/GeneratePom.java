@@ -38,8 +38,8 @@ public class GeneratePom {
     List<AbstractFileGenerator> fileGenerators =
         new ArrayList<AbstractFileGenerator>();
     fileGenerators.add(new PomFileGenerator(pkgs));
-    for (PackageModel packageName : pkgs) {
-      fileGenerators.add(new ModulePomFileGenerator(packageName));
+    for (PackageModel pkg : pkgs) {
+      fileGenerators.add(new ModulePomFileGenerator(pkg));
     }
     Generation.compute(fileGenerators, googleApiClientDirectory);
   }
