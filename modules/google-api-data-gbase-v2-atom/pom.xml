@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.google.api.client</groupId>
     <artifactId>google-api-client-modules-parent</artifactId>
-    <version>1.0.4-alpha-SNAPSHOT</version>
+    <version>1.0.4-alpha</version>
   </parent>
   <artifactId>google-api-data-gbase-v2-atom</artifactId>
   <build>
