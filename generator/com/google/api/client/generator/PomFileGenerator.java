@@ -16,6 +16,8 @@
 
 package com.google.api.client.generator;
 
+import com.google.api.client.generator.model.PackageModel;
+
 import java.io.PrintWriter;
 import java.util.SortedSet;
 
@@ -24,10 +26,10 @@ import java.util.SortedSet;
  */
 final class PomFileGenerator extends AbstractFileGenerator {
 
-  private final SortedSet<String> packageNames;
+  private final SortedSet<PackageModel> pkgs;
 
-  PomFileGenerator(SortedSet<String> packageNames) {
-    this.packageNames = packageNames;
+  PomFileGenerator(SortedSet<PackageModel> pkgs) {
+    this.pkgs = pkgs;
   }
 
   @Override
@@ -49,8 +51,8 @@ final class PomFileGenerator extends AbstractFileGenerator {
         .println(
             "  <description>A place to hold common settings for each module.</description>");
     out.println("  <modules>");
-    for (String packageName : packageNames) {
-      out.println("    <module>" + packageName + "</module>");
+    for (PackageModel pkg : pkgs) {
+      out.println("    <module>" + pkg.artifactId + "</module>");
 
     }
     out.println("  </modules>");
@@ -62,4 +64,6 @@ final class PomFileGenerator extends AbstractFileGenerator {
   public String getOutputFilePath() {
     return "modules/pom.xml";
   }
+
+
 }
