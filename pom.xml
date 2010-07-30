@@ -33,7 +33,6 @@
         <version>2.2-beta-5</version>
         <configuration>
           <descriptors>
-            <descriptor>assemble/src.xml</descriptor>
             <descriptor>assemble/dist.xml</descriptor>
           </descriptors>
         </configuration>
