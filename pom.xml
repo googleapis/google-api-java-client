@@ -35,8 +35,6 @@
           <descriptors>
             <descriptor>assemble/src.xml</descriptor>
             <descriptor>assemble/dist.xml</descriptor>
-            <descriptor>assemble/sources.xml</descriptor>
-            <descriptor>assemble/javadoc.xml</descriptor>
           </descriptors>
         </configuration>
       </plugin>
