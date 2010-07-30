@@ -16,6 +16,9 @@
 
 package com.google.api.client.generator;
 
+import com.google.api.client.generator.model.DependencyModel;
+import com.google.api.client.generator.model.PackageModel;
+
 import java.io.PrintWriter;
 
 /**
@@ -23,10 +26,10 @@ import java.io.PrintWriter;
  */
 final class ModulePomFileGenerator extends AbstractFileGenerator {
 
-  private final String packageName;
+  private final PackageModel pkg;
 
-  ModulePomFileGenerator(String packageName) {
-    this.packageName = packageName;
+  ModulePomFileGenerator(PackageModel pkg) {
+    this.pkg = pkg;
   }
 
   @Override
@@ -42,25 +45,38 @@ final class ModulePomFileGenerator extends AbstractFileGenerator {
         "    <artifactId>google-api-client-modules-parent</artifactId>");
     out.println("    <version>1.0.1-alpha</version>");
     out.println("  </parent>");
-    out.println("  <artifactId>" + packageName + "</artifactId>");
+    out.println("  <artifactId>" + pkg.artifactId + "</artifactId>");
     out.println("  <build>");
     out.println("    <resources>");
     out.println("      <resource>");
     out.println("        <filtering>false</filtering>");
     out.println("        <directory>../../target/classes</directory>");
     out.println("        <includes>");
-    out.println("          <include>com/" + packageName.replace('-', '/')
-        + "/*</include>");
+    out.println("          <include>" + pkg.directoryPath + "/*</include>");
     out.println("        </includes>");
     out.println("      </resource>");
     out.println("    </resources>");
     out.println("  </build>");
+    out.println("  <dependencies>");
+    for (DependencyModel dep : pkg.dependencies) {
+      out.println("    <dependency>");
+      out.println("      <groupId>" + dep.groupId + "</groupId>");
+      out.println("      <artifactId>" + dep.artifactId + "</artifactId>");
+      if (dep.version != null) {
+        out.println("      <version>" + dep.version + "</version>");
+      }
+      if (dep.scope != null) {
+        out.println("      <scope>" + dep.scope + "</scope>");
+      }
+      out.println("    </dependency>");
+    }
+    out.println("  </dependencies>");
     out.println("</project>");
     out.close();
   }
 
   @Override
   public String getOutputFilePath() {
-    return "modules/" + packageName + "/pom.xml";
+    return "modules/" + pkg.artifactId + "/pom.xml";
   }
 }
