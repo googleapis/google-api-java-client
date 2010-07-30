@@ -4,3 +4,6 @@ syntax: regexp
 
 syntax: regexp
 ^modules$
+
+syntax: regexp
+^parent/target$
