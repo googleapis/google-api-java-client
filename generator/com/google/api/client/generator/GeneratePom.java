@@ -29,6 +29,8 @@ import java.util.SortedSet;
  */
 public class GeneratePom {
 
+  static final String VERSION = "1.0.1-alpha-SNAPSHOT";
+  
   public static void main(String[] args) throws IOException {
     File googleApiClientDirectory = Generation.getDirectory(args[0]);
     // package names
