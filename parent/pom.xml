@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.google.api.client</groupId>
   <artifactId>google-api-client-parent</artifactId>
-  <version>1.0.1-alpha</version>
+  <version>1.0.1-alpha-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Google API Client - Parent</name>
 
@@ -57,7 +57,10 @@
     <module>../modules</module>
   </modules>
 
-  <!-- This is the parent, so only specify dependencyManagement, not direct dependencies. -->
+  <!--
+    This is the parent, so only specify dependencyManagement, not direct
+    dependencies.
+  -->
   <dependencyManagement>
     <dependencies>
       <dependency>
