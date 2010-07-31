@@ -30,22 +30,22 @@
     <dependency>
       <groupId>com.google.api.client</groupId>
       <artifactId>google-api-client-auth-oauth</artifactId>
-      <version>${project.version}</version>
+      <version>1.0.5-alpha-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.google.api.client</groupId>
       <artifactId>google-api-client-googleapis</artifactId>
-      <version>${project.version}</version>
+      <version>1.0.5-alpha-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.google.api.client</groupId>
       <artifactId>google-api-client-http</artifactId>
-      <version>${project.version}</version>
+      <version>1.0.5-alpha-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.google.api.client</groupId>
       <artifactId>google-api-client-util</artifactId>
-      <version>${project.version}</version>
+      <version>1.0.5-alpha-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
