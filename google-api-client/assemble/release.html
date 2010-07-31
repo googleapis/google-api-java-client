@@ -12,9 +12,9 @@ These instructions assume you are releasing version 1.0.7-alpha.
     href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Sonatype
   OSS Maven Repository Usage Guide</a>):
   <ul>
-    <li>mvn clean deploy</li>
-    <li>mvn release:clean</li>
-    <li>mvn release:prepare -DautoVersionSubmodules=true
+    <li><code>mvn clean deploy</code></li>
+    <li><code>mvn release:clean</code></li>
+    <li><code>mvn release:prepare -DautoVersionSubmodules=true</code>
     <ul>
       <li>Accept default for 'What is the release version for "Google API
       Client - Parent"?'</li>
@@ -24,8 +24,8 @@ These instructions assume you are releasing version 1.0.7-alpha.
       "Google API Client - Parent"?'</li>
     </ul>
     </li>
-    <li>mvn release:perform -Darguments=-Dgpg.passphrase=<i>YOUR GPG
-    PASSPHRASE</i></li>
+    <li><code>mvn release:perform -Darguments=-Dgpg.passphrase=<i>&lt;YOUR GPG
+    PASSPHRASE&gt;</i></code></li>
     <li>Release on oss.sonatype.org
     <ul>
       <li>Log in to <a href="https://oss.sonatype.org">https://oss.sonatype.org</a></li>
@@ -42,9 +42,9 @@ These instructions assume you are releasing version 1.0.7-alpha.
   </li>
   <li>Upload distribution zip to code.google.com
   <ul>
-    <li>hg update -r 1.0.7-alpha</li>
-    <li>cd google-api-client</li>
-    <li>mvn clean source:jar javadoc:jar assembly:assembly</li>
+    <li><code>hg update -r 1.0.7-alpha</code></li>
+    <li><code>cd google-api-client</code></li>
+    <li><code>mvn clean source:jar javadoc:jar assembly:assembly</code></li>
     <li>Upload to <a
       href="http://code.google.com/p/google-api-java-client/downloads/entry">http://code.google.com/p/google-api-java-client/downloads/entry</a>
     <ul>
@@ -62,7 +62,7 @@ These instructions assume you are releasing version 1.0.7-alpha.
   <li>Update javadoc project: copy <code>target/site/apidocs</code> to
   1.0.7-alpha in javadoc project, and update <code>javadoc/index.html</code> to
   the new version</li>
-  <li>hg update</li>
+  <li><code>hg update</code></li>
 </ul>
 </body>
 </html>
