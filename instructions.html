@@ -7,7 +7,7 @@
 
 <ul>
   <li><a
-    href="http://code.google.com/p/google-api-java-client/source/browse/">Browse
+    href="http://code.google.com/p/google-api-java-client/source/browse/?r=1.0.7-alpha">Browse
   Source</a></li>
 </ul>
 
@@ -16,13 +16,13 @@
 <p>Prerequisite: install <a href="http://java.sun.com/products/archive/">Java
 5</a>. You may need to set your <code>JAVA_HOME</code>.</p>
 
-<h4>Command-Line</h4>
-
 <p>Prerequisite: install <a href="http://mercurial.selenic.com/">Mercurial</a>
 and <a href="http://maven.apache.org/download.html">Maven</a>.</p>
 
-<pre><code>hg clone https://google-api-java-client.googlecode.com/hg/ google-api-client
-cd google-api-client
+<h4>Command-Line</h4>
+
+<pre><code>hg clone -r 1.0.7-alpha https://google-api-java-client.googlecode.com/hg/ google-api-java-client
+cd google-api-java-client
 mvn compile
 </code></pre>
 
@@ -37,7 +37,7 @@ plugin</a>.</p>
 
 <ul>
   <li>Preferences: Android; setup SDK location</li>
-  <li>Checkout project
+  <li>Checkout Hg project
   <ul>
     <li>File &gt; Import...</li>
     <li>"Select"
@@ -47,6 +47,7 @@ plugin</a>.</p>
     </ul>
     </li>
     <li>"Clone repository"
+
     <ul>
       <li>URL: <code>https://google-api-java-client.googlecode.com/hg/</code></li>
       <li>Clone directory name: <code>google-api-client</code></li>
@@ -55,6 +56,7 @@ plugin</a>.</p>
     </li>
     <li>"Select working directory revision"
     <ul>
+      <li>1.0.7-alpha</li>
       <li>Click on "Next"</li>
     </ul>
     </li>
@@ -65,10 +67,21 @@ plugin</a>.</p>
     </li>
   </ul>
   </li>
-  <li>Install
+  <li>Import <code>google-api-client</code> project
   <ul>
-    <li>Right-click on project google-api-client</li>
-    <li>Run As &gt; Maven package</li>
+    <li>File &gt; Import...</li>
+    <li>Select "General &gt; Existing Project into Workspace" and click
+    "Next"</li>
+    <li>Click "Browse" next to "Select root directory", find <code>google-api-client</code>
+    under existing <code>google-api-java-client</code> project directory and
+    click "Next"</li>
+    <li>Click "Finish"</li>
+  </ul>
+  </li>
+  <li>Compile
+  <ul>
+    <li>Right-click on project <code>google-api-client</code></li>
+    <li>Run As &gt; Maven build</li>
   </ul>
   </li>
 </ul>
