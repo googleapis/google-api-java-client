@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.google.api.client</groupId>
     <artifactId>google-api-client-parent</artifactId>
-    <version>1.0.9-alpha-SNAPSHOT</version>
+    <version>1.0.9-alpha</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-api-client</artifactId>
