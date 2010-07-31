@@ -43,7 +43,7 @@ final class ModulePomFileGenerator extends AbstractFileGenerator {
     out.println("    <groupId>com.google.api.client</groupId>");
     out.println(
         "    <artifactId>google-api-client-modules-parent</artifactId>");
-    out.println("    <version>" + PackageModel.VERSION + "</version>");
+    out.println("    <version>" + PackageModel.VERSION_SNAPSHOT + "</version>");
     out.println("  </parent>");
     out.println("  <artifactId>" + pkg.artifactId + "</artifactId>");
     out.println("  <build>");

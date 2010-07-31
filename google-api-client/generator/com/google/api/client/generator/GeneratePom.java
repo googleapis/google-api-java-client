@@ -38,6 +38,7 @@ public class GeneratePom {
     List<AbstractFileGenerator> fileGenerators =
         new ArrayList<AbstractFileGenerator>();
     fileGenerators.add(new PomFileGenerator(pkgs));
+    fileGenerators.add(new DistXmlFileGenerator(pkgs));
     for (PackageModel pkg : pkgs) {
       fileGenerators.add(new ModulePomFileGenerator(pkg));
     }

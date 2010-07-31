@@ -42,8 +42,8 @@ final class PomFileGenerator extends AbstractFileGenerator {
     out.println("  <parent>");
     out.println("    <groupId>com.google.api.client</groupId>");
     out.println("    <artifactId>google-api-client-parent</artifactId>");
-    out.println("    <version>" + PackageModel.VERSION + "</version>");
-    out.println("    <relativePath>../parent/pom.xml</relativePath>");
+    out.println("    <version>" + PackageModel.VERSION_SNAPSHOT + "</version>");
+    out.println("    <relativePath>../../pom.xml</relativePath>");
     out.println("  </parent>");
     out.println("  <artifactId>google-api-client-modules-parent</artifactId>");
     out.println("  <packaging>pom</packaging>");
