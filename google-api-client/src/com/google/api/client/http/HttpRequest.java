@@ -35,7 +35,7 @@ public final class HttpRequest {
 
   /** User agent suffix for all requests. */
   private static final String USER_AGENT_SUFFIX =
-      "Google-API-Java-Client/1.0.9-alpha";
+      "Google-API-Java-Client/1.0.10-alpha";
 
   /**
    * HTTP request headers.
