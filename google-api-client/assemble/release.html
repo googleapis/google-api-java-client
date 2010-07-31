@@ -5,7 +5,7 @@
 
 <p>TODO: initial setup instructions</p>
 
-These instructions assume you are releasing version 1.0.8-alpha.
+These instructions assume you are releasing version 1.0.9-alpha.
 <ul>
   <li>Push to central Maven repository (based on instructions from <a
     href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Sonatype
@@ -17,7 +17,7 @@ These instructions assume you are releasing version 1.0.8-alpha.
     <ul>
       <li>Accept default for 'What is the release version for "Google API
       Client - Parent"?'</li>
-      <li>Type <code>1.0.8-alpha</code> for 'What is SCM release tag or
+      <li>Type <code>1.0.9-alpha</code> for 'What is SCM release tag or
       label for "Google API Client - Parent"?'</li>
       <li>Accept default for 'What is the new development version for
       "Google API Client - Parent"?'</li>
@@ -30,9 +30,9 @@ These instructions assume you are releasing version 1.0.8-alpha.
       <li>Log in to <a href="https://oss.sonatype.org">https://oss.sonatype.org</a></li>
       <li>Click on "Staging Repositories"</li>
       <li>check box next to uploaded release</li>
-      <li>click Close button; type <code>1.0.8-alpha</code> and click Close</li>
+      <li>click Close button; type <code>1.0.9-alpha</code> and click Close</li>
       <li>check box next to uploaded release</li>
-      <li>click Release button; type <code>1.0.8-alpha</code> and click
+      <li>click Release button; type <code>1.0.9-alpha</code> and click
       Release</li>
     </ul>
     </li>
@@ -43,15 +43,15 @@ These instructions assume you are releasing version 1.0.8-alpha.
   </li>
   <li>Upload distribution zip to code.google.com
   <ul>
-    <li><code>hg update -r 1.0.8-alpha</code></li>
-    <li><code>mvn clean jar:jar</code></li>
+    <li><code>hg update -r 1.0.9-alpha</code></li>
+    <li><code>mvn clean install</code></li>
     <li><code>cd google-api-client</code></li>
     <li><code>mvn source:jar javadoc:jar assembly:assembly</code></li>
     <li>Upload to <a
       href="http://code.google.com/p/google-api-java-client/downloads/entry">http://code.google.com/p/google-api-java-client/downloads/entry</a>
     <ul>
-      <li>Summary: Google API Client Library for Java, version 1.0.8-alpha</li>
-      <li>File: <code>google-api-java-client/target/google-api-client-1.0.8-alpha-java.zip</code></li>
+      <li>Summary: Google API Client Library for Java, version 1.0.9-alpha</li>
+      <li>File: <code>google-api-java-client/target/google-api-client-1.0.9-alpha-java.zip</code></li>
       <li>Labels: <code>Type-Archive</code>, <code>OpSys-All</code>, and <code>Featured</code></li>
       <li>click Submit file</li>
     </ul>
@@ -62,7 +62,7 @@ These instructions assume you are releasing version 1.0.8-alpha.
   </ul>
   </li>
   <li>Update javadoc project: copy <code>target/site/apidocs</code> to
-  1.0.8-alpha in javadoc project, and update <code>javadoc/index.html</code> to
+  1.0.9-alpha in javadoc project, and update <code>javadoc/index.html</code> to
   the new version</li>
   <li><code>hg update</code></li>
   <li>update <code>instructions.html</code>, <code>google-api-client/assemble/release.html</code>,
