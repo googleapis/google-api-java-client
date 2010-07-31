@@ -1,0 +1,59 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.google.api.client</groupId>
+    <artifactId>google-api-client-parent</artifactId>
+    <version>1.0.6-alpha-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <artifactId>google-api-client</artifactId>
+  <name>Google API Java Client Library</name>
+  <description>
+    Google API Java Client Library.  Supports Java 5 (or higher) desktop (SE)
+    and web (EE), Android, and Google App Engine. 
+  </description>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <links>
+            <link>http://download.oracle.com/docs/cd/E17476_01/javase/1.5.0/docs/api</link>
+            <link>http://jackson.codehaus.org/1.4.2/javadoc</link>
+          </links>
+          <doctitle>${project.name} ${project.version}</doctitle>
+          <windowtitle>${project.name} ${project.version}</windowtitle>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2-beta-5</version>
+        <configuration>
+          <descriptors>
+            <descriptor>assemble/dist.xml</descriptor>
+          </descriptors>
+        </configuration>
+      </plugin>
+    </plugins>
+    <sourceDirectory>src</sourceDirectory>
+    <testSourceDirectory>test</testSourceDirectory>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-core-asl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.android</groupId>
+      <artifactId>android</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>
