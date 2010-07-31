@@ -8,6 +8,7 @@
     href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Directions</a>
   <ul>
     <li>mvn clean deploy</li>
+    <li>mvn release:clean</li>
     <li>mvn release:prepare -DautoVersionSubmodules=true</li>
     <li>mvn release:perform -Darguments=-Dgpg.passphrase=...</li>
   </ul>
