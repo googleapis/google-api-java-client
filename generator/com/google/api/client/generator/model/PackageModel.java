@@ -32,6 +32,8 @@ import java.util.regex.Pattern;
  */
 public final class PackageModel implements Comparable<PackageModel> {
 
+  public static final String VERSION = "1.0.5-alpha-SNAPSHOT";
+
   private static final Pattern IMPORT_PATTERN =
       Pattern.compile("\nimport ([a-zA-Z.]+);");
 
@@ -86,7 +88,7 @@ public final class PackageModel implements Comparable<PackageModel> {
               DependencyModel dep = new DependencyModel();
               dep.groupId = "com.google.api.client";
               dep.artifactId = packageName.substring(4).replace('.', '-');
-              dep.version = "${project.version}";
+              dep.version = VERSION;
               pkg.dependencies.add(dep);
             } else if (className.startsWith("android.")
                 || className.startsWith("org.apache.")) {
