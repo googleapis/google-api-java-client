@@ -3,36 +3,66 @@
 <body>
 <h2>Release Process</h2>
 
+<p>TODO: initial setup instructions</p>
+
+These instructions assume you are releasing version 1.0.7-alpha.
 <ul>
-  <li>Push to central Maven repository: see <a
-    href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Directions</a>
+  <li>Update instructions.html and release.html</li>
+  <li>Push to central Maven repository (based on instructions from <a
+    href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Sonatype
+  OSS Maven Repository Usage Guide</a>):
   <ul>
     <li>mvn clean deploy</li>
     <li>mvn release:clean</li>
-    <li>mvn release:prepare -DautoVersionSubmodules=true</li>
-    <li>mvn release:perform -Darguments=-Dgpg.passphrase=...</li>
+    <li>mvn release:prepare -DautoVersionSubmodules=true
+    <ul>
+      <li>Accept default for 'What is the release version for "Google API
+      Client - Parent"?'</li>
+      <li>Type <code>1.0.7-alpha</code> for 'What is SCM release tag or
+      label for "Google API Client - Parent"?'</li>
+      <li>Accept default for 'What is the new development version for
+      "Google API Client - Parent"?'</li>
+    </ul>
+    </li>
+    <li>mvn release:perform -Darguments=-Dgpg.passphrase=<i>YOUR GPG
+    PASSPHRASE</i></li>
+    <li>Release on oss.sonatype.org
+    <ul>
+      <li>Log in to <a href="https://oss.sonatype.org">https://oss.sonatype.org</a></li>
+      <li>Click on "Staging Repositories"</li>
+      <li>check box next to uploaded release</li>
+      <li>click Close button; type <code>1.0.7-alpha</code> and click Close</li>
+      <li>click Release button; type <code>1.0.7-alpha</code> and click Release</li>
+    </ul>
+    </li>
+    <li>Central Maven repository is synced hourly. Wait for the new version
+    at: <a
+      href="http://repo2.maven.org/maven2/com/google/api/client/google-api-client/">repo2.maven.org</a></li>
   </ul>
   </li>
-  <li>Update instructions.html</li>
-  <li>Assemble for Distribution: <code>mvn clean source:jar
-  javadoc:jar assembly:assembly</code></li>
-  <li>Upload to <a
-    href="http://code.google.com/p/google-api-java-client/downloads/entry">http://code.google.com/p/google-api-java-client/downloads/entry</a>
+  <li>Upload distribution zip to code.google.com
   <ul>
-    <li>Summary: Google API Java Client Library ${project.version}</li>
-    <li>File: <code>google-api-java-client/target/google-api-client-${project.version}-java.zip</code></li>
-    <li>Labels: <code>Type-Archive</code>, <code>OpSys-All</code>, and <code>Featured</code></li>
-    <li>click Submit file</li>
+    <li>hg update -r 1.0.7-alpha</li>
+    <li>cd google-api-client</li>
+    <li>mvn clean source:jar javadoc:jar assembly:assembly</li>
+    <li>Upload to <a
+      href="http://code.google.com/p/google-api-java-client/downloads/entry">http://code.google.com/p/google-api-java-client/downloads/entry</a>
+    <ul>
+      <li>Summary: Google API Client Library for Java, version 1.0.7-alpha</li>
+      <li>File: <code>google-api-java-client/target/google-api-client-1.0.7-alpha-java.zip</code></li>
+      <li>Labels: <code>Type-Archive</code>, <code>OpSys-All</code>, and <code>Featured</code></li>
+      <li>click Submit file</li>
+    </ul>
+    </li>
+    <li>Deprecate any obsolete libraries.</li>
+    <li>Update <a
+      href="http://code.google.com/p/google-api-java-client/admin">http://code.google.com/p/google-api-java-client/admin</a></li>
   </ul>
   </li>
-  <li>Deprecate any obsolete libraries.</li>
-  <li>Create Mercurial Tag: <code>hg tag ${project.version}</code></li>
-  <li>Put it up on Maven central repository?</li>
   <li>Update javadoc project: copy <code>target/site/apidocs</code> to
-  ${project.version} in javadoc project, and update <code>javadoc/index.html</code>
-  to the new version</li>
-  <li>Update <a
-    href="http://code.google.com/p/google-api-java-client/admin">http://code.google.com/p/google-api-java-client/admin</a></li>
+  1.0.7-alpha in javadoc project, and update <code>javadoc/index.html</code> to
+  the new version</li>
+  <li>hg update</li>
 </ul>
 </body>
 </html>
