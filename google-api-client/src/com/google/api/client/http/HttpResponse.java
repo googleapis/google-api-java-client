@@ -222,7 +222,7 @@ public final class HttpResponse {
         String contentType = this.contentType;
         if (debugContentByteArray.length != 0 && contentType != null
             && (contentType.startsWith("application/")
-            || contentType.startsWith("text/"))) {
+                || contentType.startsWith("text/"))) {
           logger.config(new String(debugContentByteArray));
         }
       }
@@ -284,10 +284,8 @@ public final class HttpResponse {
    * Parses the content of the HTTP response from {@link #getContent()} and
    * reads it into a string.
    * <p>
-   * Upgrade warning: in version 2.2 of gdata-java-client library, this method
-   * returned {@code null} for no content. However, in version 1.0 of this
-   * library it now returns {@code ""}. To check for no content, check if
-   * {@link #getContent()} is {@code null}.
+   * Since this method returns {@code ""} for no content, a simpler check for no
+   * content is to check if {@link #getContent()} is {@code null}.
    *
    * @return parsed string or {@code ""} for no content
    * @throws IOException I/O exception

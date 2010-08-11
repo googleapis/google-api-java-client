@@ -42,14 +42,7 @@ public class HttpHeaders extends GenericData {
   @Key("Accept")
   public String accept;
 
-  /**
-   * {@code "Accept-Encoding"} header. By default, this is {@code "gzip"}.
-   * <p>
-   * <b>Warning for users upgrading from version 2.2 of gdata-java-client
-   * library</b>: the default used to be {@code null} but now it is {@code
-   * "gzip"}
-   * </p>
-   */
+  /** {@code "Accept-Encoding"} header. By default, this is {@code "gzip"}. */
   @Key("Accept-Encoding")
   public String acceptEncoding = "gzip";
 

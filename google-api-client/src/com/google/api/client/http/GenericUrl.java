@@ -47,14 +47,6 @@ import java.util.Map;
  * Query parameter values are parsed using
  * {@link UrlEncodedParser#parse(String, Object)}.
  * </p>
- * <p>
- * Warning of an incompatibility for upgrading from version 2.2 of
- * gdata-java-client library: repeated query parameters were not supported in
- * that version, and therefore unknown query parameters (not from declared
- * fields) were parsed as a single String. However, in version 1.0 of this
- * library they are parsed as {@link ArrayList}&lt;String&gt;. Use
- * {@link #getFirst(String)} to get the first value.
- * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
