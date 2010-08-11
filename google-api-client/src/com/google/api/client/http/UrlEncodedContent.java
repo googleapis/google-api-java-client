@@ -56,17 +56,6 @@ public final class UrlEncodedContent implements HttpContent {
 
   private byte[] content;
 
-  /**
-   * Sets the content input from the given key/value data.
-   * 
-   * @param data key/value data (may be {@code null})
-   * @deprecated (scheduled to be removed in version 1.1) Use {@link #data}
-   */
-  @Deprecated
-  public void setData(Object data) {
-    this.data = data;
-  }
-
   public String getEncoding() {
     return null;
   }

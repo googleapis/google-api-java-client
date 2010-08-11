@@ -121,20 +121,6 @@ public final class DiscoveryDocument {
   /**
    * Executes a request for the JSON-formatted discovery document.
    *
-   * @param api API name
-   * @return discovery document
-   * @throws IOException I/O exception executing request
-   * @deprecated (scheduled to be removed in version 1.1) Use
-   *             {@link #load(String)}
-   */
-  @Deprecated
-  public static DiscoveryDocument execute(String api) throws IOException {
-    return load(api);
-  }
-
-  /**
-   * Executes a request for the JSON-formatted discovery document.
-   *
    * @param apiName API name
    * @return discovery document
    * @throws IOException I/O exception executing request
