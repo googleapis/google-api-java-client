@@ -74,20 +74,6 @@ public class GenericUrl extends GenericData {
   public int port = -1;
 
   /**
-   * Unencoded path component or {@code null} for none, for example {@code
-   * "/m8/feeds/contacts/default/full"}.
-   * <p>
-   * This field is ignored if {@link #pathParts} is not {@code null}.
-   *
-   * @deprecated (scheduled to be removed in version 1.1) Use {@link #pathParts}
-   *             for encoded path support, or for unencoded paths use
-   *             {@link #getRawPath()}, {@link #setRawPath(String rawPath)}, or
-   *             {@link #appendRawPath(String)} which
-   */
-  @Deprecated
-  public String path;
-
-  /**
    * Decoded path component by parts with each part separated by a {@code '/'}
    * or {@code null} for none, for example {@code
    * "/m8/feeds/contacts/default/full"} is represented by {@code "", "m8",
@@ -125,7 +111,6 @@ public class GenericUrl extends GenericData {
     this.scheme = uri.getScheme().toLowerCase();
     this.host = uri.getHost();
     this.port = uri.getPort();
-    this.path = uri.getPath();
     this.pathParts = toPathParts(uri.getRawPath());
     this.fragment = uri.getFragment();
     String query = uri.getRawQuery();
@@ -167,7 +152,7 @@ public class GenericUrl extends GenericData {
 
   /**
    * Constructs the string representation of the URL, including the path
-   * specified by {@link #path} and the query parameters specified by this
+   * specified by {@link #pathParts} and the query parameters specified by this
    * generic URL.
    */
   public final String build() {
@@ -181,23 +166,6 @@ public class GenericUrl extends GenericData {
     List<String> pathParts = this.pathParts;
     if (pathParts != null) {
       appendRawPathFromParts(buf);
-    } else {
-      String path = this.path;
-      if (path != null && path.length() != 0) {
-        int cur = 0;
-        boolean notDone = true;
-        while (notDone) {
-          int slash = path.indexOf('/', cur);
-          notDone = slash != -1;
-          String sub =
-              notDone ? path.substring(cur, slash) : path.substring(cur);
-          buf.append(CharEscapers.escapeUriPath(sub));
-          if (notDone) {
-            buf.append('/');
-          }
-          cur = slash + 1;
-        }
-      }
     }
     // query parameters (similar to UrlEncodedContent)
     boolean first = true;

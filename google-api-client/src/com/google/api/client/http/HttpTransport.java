@@ -25,14 +25,11 @@ import java.util.logging.Logger;
 
 /**
  * HTTP transport.
- * <p>
- * Warning: this class must not be sub-classed. It is scheduled to be made final
- * in version 1.1.
  *
  * @since 1.0
  * @author Yaniv Inbar
  */
-public class HttpTransport {
+public final class HttpTransport {
 
   static final Logger LOGGER = Logger.getLogger(HttpTransport.class.getName());
 

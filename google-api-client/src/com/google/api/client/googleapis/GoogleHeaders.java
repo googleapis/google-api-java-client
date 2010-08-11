@@ -119,19 +119,6 @@ public class GoogleHeaders extends HttpHeaders {
   public String methodOverride;
 
   /**
-   * Sets the {@code "Slug"} header for the given file name into the given HTTP
-   * headers, properly escaping the header value. See <a
-   * href="http://tools.ietf.org/html/rfc5023#section-9.7">The Slug Header</a>.
-   *
-   * @deprecated (scheduled to be removed in version 1.1) Use
-   *             {@link #setSlugFromFileName(String)}
-   */
-  @Deprecated
-  public static void setSlug(HttpHeaders headers, String fileName) {
-    headers.set("Slug", SLUG_ESCAPER.escape(fileName));
-  }
-
-  /**
    * Sets the {@code "Slug"} header for the given file name, properly escaping
    * the header value. See <a
    * href="http://tools.ietf.org/html/rfc5023#section-9.7">The Slug Header</a>.
