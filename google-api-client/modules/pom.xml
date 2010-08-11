@@ -32,44 +32,5 @@
     <module>google-api-client-util</module>
     <module>google-api-client-xml</module>
     <module>google-api-client-xml-atom</module>
-    <module>google-api-data-analytics-v2</module>
-    <module>google-api-data-analytics-v2-atom</module>
-    <module>google-api-data-blogger-v2</module>
-    <module>google-api-data-blogger-v2-atom</module>
-    <module>google-api-data-books-v1</module>
-    <module>google-api-data-books-v1-atom</module>
-    <module>google-api-data-buzz-v1</module>
-    <module>google-api-data-buzz-v1-atom</module>
-    <module>google-api-data-calendar-v2</module>
-    <module>google-api-data-calendar-v2-atom</module>
-    <module>google-api-data-codesearch-v2</module>
-    <module>google-api-data-codesearch-v2-atom</module>
-    <module>google-api-data-contacts-v3</module>
-    <module>google-api-data-contacts-v3-atom</module>
-    <module>google-api-data-docs-v3</module>
-    <module>google-api-data-docs-v3-atom</module>
-    <module>google-api-data-finance-v2</module>
-    <module>google-api-data-finance-v2-atom</module>
-    <module>google-api-data-gbase-v2</module>
-    <module>google-api-data-gbase-v2-atom</module>
-    <module>google-api-data-health-v2</module>
-    <module>google-api-data-health-v2-atom</module>
-    <module>google-api-data-latitude-v1</module>
-    <module>google-api-data-latitude-v1-atom</module>
-    <module>google-api-data-maps-v2</module>
-    <module>google-api-data-maps-v2-atom</module>
-    <module>google-api-data-migration-v1</module>
-    <module>google-api-data-migration-v1-atom</module>
-    <module>google-api-data-moderator-v1</module>
-    <module>google-api-data-picasa-v2</module>
-    <module>google-api-data-picasa-v2-atom</module>
-    <module>google-api-data-sidewiki-v2</module>
-    <module>google-api-data-sidewiki-v2-atom</module>
-    <module>google-api-data-sites-v1</module>
-    <module>google-api-data-sites-v1-atom</module>
-    <module>google-api-data-spreadsheet-v3</module>
-    <module>google-api-data-spreadsheet-v3-atom</module>
-    <module>google-api-data-youtube-v2</module>
-    <module>google-api-data-youtube-v2-atom</module>
   </modules>
 </project>
