@@ -90,7 +90,8 @@ public final class CharEscapers {
     try {
       return URLDecoder.decode(uri, "UTF-8");
     } catch (UnsupportedEncodingException e) {
-      throw new AssertionError(e);
+      // UTF-8 encoding guaranteed to be supported by JVM
+      throw new RuntimeException(e);
     }
   }
 

@@ -46,7 +46,8 @@ public final class HmacSha {
       byte[] encoded = Base64.encode(mac.doFinal(data.getBytes("UTF-8")));
       return new String(encoded, "UTF-8");
     } catch (UnsupportedEncodingException e) {
-      throw new AssertionError(e);
+      // UTF-8 encoding guaranteed to be supported by JVM
+      throw new RuntimeException(e);
     }
   }
 
