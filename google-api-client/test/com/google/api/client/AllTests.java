@@ -32,6 +32,7 @@ public class AllTests extends TestSuite {
         .suite());
     result.addTest(com.google.api.client.http.AllTests.suite());
     result.addTest(com.google.api.client.util.AllTests.suite());
+    result.addTest(com.google.api.client.xml.AllTests.suite());
     return result;
   }
 }

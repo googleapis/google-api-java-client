@@ -12,7 +12,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -283,7 +282,8 @@ public class Xml {
                 parser, mapValue, namespaceDictionary, customizeParser);
             if (isMap) {
               @SuppressWarnings("unchecked")
-              List<Object> list = (List<Object>) destinationMap.get(fieldName);
+              Collection<Object> list =
+                  (Collection<Object>) destinationMap.get(fieldName);
               if (list == null) {
                 list = new ArrayList<Object>(1);
                 destinationMap.put(fieldName, list);
@@ -294,7 +294,8 @@ public class Xml {
             } else {
               GenericXml atom = (GenericXml) destination;
               @SuppressWarnings("unchecked")
-              List<Object> list = (List<Object>) atom.get(fieldName);
+              Collection<Object> list =
+                  (Collection<Object>) atom.get(fieldName);
               if (list == null) {
                 list = new ArrayList<Object>(1);
                 atom.set(fieldName, list);
