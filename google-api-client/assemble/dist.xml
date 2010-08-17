@@ -31,247 +31,247 @@
       <filtered>true</filtered>
     </file>
     <file>
-      <source>modules/google-api-client-android-xml/target/google-api-client-android-xml-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-android-xml/target/google-api-client-android-xml-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-apache/target/google-api-client-apache-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-apache/target/google-api-client-apache-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-auth/target/google-api-client-auth-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-auth/target/google-api-client-auth-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-auth-oauth/target/google-api-client-auth-oauth-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-auth-oauth/target/google-api-client-auth-oauth-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-auth-oauth2/target/google-api-client-auth-oauth2-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-auth-oauth2/target/google-api-client-auth-oauth2-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-escape/target/google-api-client-escape-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-escape/target/google-api-client-escape-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-googleapis/target/google-api-client-googleapis-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-googleapis/target/google-api-client-googleapis-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-googleapis-auth/target/google-api-client-googleapis-auth-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-googleapis-auth/target/google-api-client-googleapis-auth-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-googleapis-auth-authsub/target/google-api-client-googleapis-auth-authsub-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-googleapis-auth-authsub/target/google-api-client-googleapis-auth-authsub-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-googleapis-auth-clientlogin/target/google-api-client-googleapis-auth-clientlogin-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-googleapis-auth-clientlogin/target/google-api-client-googleapis-auth-clientlogin-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-googleapis-auth-oauth/target/google-api-client-googleapis-auth-oauth-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-googleapis-auth-oauth/target/google-api-client-googleapis-auth-oauth-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-googleapis-auth-storage/target/google-api-client-googleapis-auth-storage-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-googleapis-auth-storage/target/google-api-client-googleapis-auth-storage-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-googleapis-json/target/google-api-client-googleapis-json-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-googleapis-json/target/google-api-client-googleapis-json-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-googleapis-xml-atom/target/google-api-client-googleapis-xml-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-googleapis-xml-atom/target/google-api-client-googleapis-xml-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-http/target/google-api-client-http-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-http/target/google-api-client-http-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-javanet/target/google-api-client-javanet-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-javanet/target/google-api-client-javanet-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-json/target/google-api-client-json-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-json/target/google-api-client-json-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-json-rpc2/target/google-api-client-json-rpc2-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-json-rpc2/target/google-api-client-json-rpc2-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-repackaged-com-google-common-base/target/google-api-client-repackaged-com-google-common-base-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-repackaged-com-google-common-base/target/google-api-client-repackaged-com-google-common-base-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-util/target/google-api-client-util-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-util/target/google-api-client-util-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-xml/target/google-api-client-xml-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-xml/target/google-api-client-xml-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-xml-atom/target/google-api-client-xml-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-client-xml-atom/target/google-api-client-xml-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-analytics-v2/target/google-api-data-analytics-v2-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-analytics-v2/target/google-api-data-analytics-v2-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-analytics-v2-atom/target/google-api-data-analytics-v2-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-analytics-v2-atom/target/google-api-data-analytics-v2-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-blogger-v2/target/google-api-data-blogger-v2-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-blogger-v2/target/google-api-data-blogger-v2-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-blogger-v2-atom/target/google-api-data-blogger-v2-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-blogger-v2-atom/target/google-api-data-blogger-v2-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-books-v1/target/google-api-data-books-v1-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-books-v1/target/google-api-data-books-v1-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-books-v1-atom/target/google-api-data-books-v1-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-books-v1-atom/target/google-api-data-books-v1-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-buzz-v1/target/google-api-data-buzz-v1-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-buzz-v1/target/google-api-data-buzz-v1-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-buzz-v1-atom/target/google-api-data-buzz-v1-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-buzz-v1-atom/target/google-api-data-buzz-v1-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-calendar-v2/target/google-api-data-calendar-v2-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-calendar-v2/target/google-api-data-calendar-v2-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-calendar-v2-atom/target/google-api-data-calendar-v2-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-calendar-v2-atom/target/google-api-data-calendar-v2-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-codesearch-v2/target/google-api-data-codesearch-v2-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-codesearch-v2/target/google-api-data-codesearch-v2-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-codesearch-v2-atom/target/google-api-data-codesearch-v2-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-codesearch-v2-atom/target/google-api-data-codesearch-v2-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-contacts-v3/target/google-api-data-contacts-v3-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-contacts-v3/target/google-api-data-contacts-v3-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-contacts-v3-atom/target/google-api-data-contacts-v3-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-contacts-v3-atom/target/google-api-data-contacts-v3-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-docs-v3/target/google-api-data-docs-v3-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-docs-v3/target/google-api-data-docs-v3-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-docs-v3-atom/target/google-api-data-docs-v3-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-docs-v3-atom/target/google-api-data-docs-v3-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-finance-v2/target/google-api-data-finance-v2-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-finance-v2/target/google-api-data-finance-v2-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-finance-v2-atom/target/google-api-data-finance-v2-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-finance-v2-atom/target/google-api-data-finance-v2-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-gbase-v2/target/google-api-data-gbase-v2-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-gbase-v2/target/google-api-data-gbase-v2-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-gbase-v2-atom/target/google-api-data-gbase-v2-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-gbase-v2-atom/target/google-api-data-gbase-v2-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-health-v2/target/google-api-data-health-v2-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-health-v2/target/google-api-data-health-v2-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-health-v2-atom/target/google-api-data-health-v2-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-health-v2-atom/target/google-api-data-health-v2-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-latitude-v1/target/google-api-data-latitude-v1-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-latitude-v1/target/google-api-data-latitude-v1-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-latitude-v1-atom/target/google-api-data-latitude-v1-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-latitude-v1-atom/target/google-api-data-latitude-v1-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-maps-v2/target/google-api-data-maps-v2-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-maps-v2/target/google-api-data-maps-v2-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-maps-v2-atom/target/google-api-data-maps-v2-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-maps-v2-atom/target/google-api-data-maps-v2-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-migration-v1/target/google-api-data-migration-v1-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-migration-v1/target/google-api-data-migration-v1-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-migration-v1-atom/target/google-api-data-migration-v1-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-migration-v1-atom/target/google-api-data-migration-v1-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-moderator-v1/target/google-api-data-moderator-v1-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-moderator-v1/target/google-api-data-moderator-v1-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-picasa-v2/target/google-api-data-picasa-v2-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-picasa-v2/target/google-api-data-picasa-v2-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-picasa-v2-atom/target/google-api-data-picasa-v2-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-picasa-v2-atom/target/google-api-data-picasa-v2-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-sidewiki-v2/target/google-api-data-sidewiki-v2-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-sidewiki-v2/target/google-api-data-sidewiki-v2-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-sidewiki-v2-atom/target/google-api-data-sidewiki-v2-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-sidewiki-v2-atom/target/google-api-data-sidewiki-v2-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-sites-v1/target/google-api-data-sites-v1-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-sites-v1/target/google-api-data-sites-v1-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-sites-v1-atom/target/google-api-data-sites-v1-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-sites-v1-atom/target/google-api-data-sites-v1-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-spreadsheet-v3/target/google-api-data-spreadsheet-v3-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-spreadsheet-v3/target/google-api-data-spreadsheet-v3-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-spreadsheet-v3-atom/target/google-api-data-spreadsheet-v3-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-spreadsheet-v3-atom/target/google-api-data-spreadsheet-v3-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-youtube-v2/target/google-api-data-youtube-v2-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-youtube-v2/target/google-api-data-youtube-v2-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-data-youtube-v2-atom/target/google-api-data-youtube-v2-atom-1.0.10-alpha.jar</source>
+      <source>modules/google-api-data-youtube-v2-atom/target/google-api-data-youtube-v2-atom-1.0.11-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
   </files>
