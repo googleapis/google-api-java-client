@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,12 +32,11 @@ import java.util.Set;
  * index (for example {@link #getKey(int)}). However, traditional mapping
  * operations like {@link #get(Object)} and {@link #put(Object, Object)} are
  * slower because they need to look up all key/value pairs in the worst case.
- * 
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
-public final class ArrayMap<K, V> extends AbstractMap<K, V> implements
-    Cloneable {
+public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
   private int size;
   private Object[] data;
   private EntrySet entrySet;
@@ -88,12 +87,12 @@ public final class ArrayMap<K, V> extends AbstractMap<K, V> implements
 
   /** Returns the number of key-value pairs set. */
   @Override
-  public int size() {
+  public final int size() {
     return this.size;
   }
 
   /** Returns the key at the given index or {@code null} if out of bounds. */
-  public K getKey(int index) {
+  public final K getKey(int index) {
     if (index < 0 || index >= this.size) {
       return null;
     }
@@ -103,7 +102,7 @@ public final class ArrayMap<K, V> extends AbstractMap<K, V> implements
   }
 
   /** Returns the value at the given index or {@code null} if out of bounds. */
-  public V getValue(int index) {
+  public final V getValue(int index) {
     if (index < 0 || index >= this.size) {
       return null;
     }
@@ -117,11 +116,11 @@ public final class ArrayMap<K, V> extends AbstractMap<K, V> implements
    * There is no checking done to ensure that the key does not already exist.
    * Therefore, this method is dangerous to call unless the caller can be
    * certain the key does not already exist in the map.
-   * 
+   *
    * @return previous value or {@code null} for none
    * @throws IndexOutOfBoundsException if index is negative
    */
-  public V set(int index, K key, V value) {
+  public final V set(int index, K key, V value) {
     if (index < 0) {
       throw new IndexOutOfBoundsException();
     }
@@ -138,11 +137,11 @@ public final class ArrayMap<K, V> extends AbstractMap<K, V> implements
 
   /**
    * Sets the value at the given index, overriding any existing value mapping.
-   * 
+   *
    * @return previous value or {@code null} for none
    * @throws IndexOutOfBoundsException if index is negative or {@code >=} size
    */
-  public V set(int index, V value) {
+  public final V set(int index, V value) {
     int size = this.size;
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException();
@@ -156,31 +155,31 @@ public final class ArrayMap<K, V> extends AbstractMap<K, V> implements
   /**
    * Adds the key/value mapping at the end of the list. Behaves identically to
    * {@code set(size(), key, value)}.
-   * 
+   *
    * @throws IndexOutOfBoundsException if index is negative
    */
-  public void add(K key, V value) {
+  public final void add(K key, V value) {
     set(this.size, key, value);
   }
 
   /**
    * Removes the key/value mapping at the given index, or ignored if the index
    * is out of bounds.
-   * 
+   *
    * @return previous value or {@code null} for none
    */
-  public V remove(int index) {
+  public final V remove(int index) {
     return removeFromDataIndexOfKey(index << 1);
   }
 
   /** Returns whether there is a mapping for the given key. */
   @Override
-  public boolean containsKey(Object key) {
+  public final boolean containsKey(Object key) {
     return -2 != getDataIndexOfKey(key);
   }
 
   /** Returns the index of the given key or {@code -1} if there is no such key. */
-  public int getIndexOfKey(K key) {
+  public final int getIndexOfKey(K key) {
     return getDataIndexOfKey(key) >> 1;
   }
 
@@ -189,17 +188,17 @@ public final class ArrayMap<K, V> extends AbstractMap<K, V> implements
    * mapping or if the mapping value is {@code null}.
    */
   @Override
-  public V get(Object key) {
+  public final V get(Object key) {
     return valueAtDataIndex(getDataIndexOfKey(key) + 1);
   }
 
   /**
    * Sets the value for the given key, overriding any existing value.
-   * 
+   *
    * @return previous value or {@code null} for none
    */
   @Override
-  public V put(K key, V value) {
+  public final V put(K key, V value) {
     int index = getIndexOfKey(key);
     if (index == -1) {
       index = this.size;
@@ -210,16 +209,16 @@ public final class ArrayMap<K, V> extends AbstractMap<K, V> implements
   /**
    * Removes the key-value pair of the given key, or ignore if the key cannot be
    * found.
-   * 
+   *
    * @return previous value or {@code null} for none
    */
   @Override
-  public V remove(Object key) {
+  public final V remove(Object key) {
     return removeFromDataIndexOfKey(getDataIndexOfKey(key));
   }
 
   /** Trims the internal array storage to minimize memory usage. */
-  public void trim() {
+  public final void trim() {
     setDataCapacity(this.size << 1);
   }
 
@@ -227,7 +226,7 @@ public final class ArrayMap<K, V> extends AbstractMap<K, V> implements
    * Ensures that the capacity of the internal arrays is at least a given
    * capacity.
    */
-  public void ensureCapacity(int minCapacity) {
+  public final void ensureCapacity(int minCapacity) {
     Object[] data = this.data;
     int minDataCapacity = minCapacity << 1;
     int oldDataCapacity = data == null ? 0 : data.length;
@@ -316,7 +315,7 @@ public final class ArrayMap<K, V> extends AbstractMap<K, V> implements
   }
 
   @Override
-  public boolean containsValue(Object value) {
+  public final boolean containsValue(Object value) {
     int dataSize = this.size << 1;
     Object[] data = this.data;
     for (int i = 1; i < dataSize; i += 2) {
@@ -329,7 +328,7 @@ public final class ArrayMap<K, V> extends AbstractMap<K, V> implements
   }
 
   @Override
-  public Set<Map.Entry<K, V>> entrySet() {
+  public final Set<Map.Entry<K, V>> entrySet() {
     EntrySet entrySet = this.entrySet;
     if (entrySet == null) {
       entrySet = this.entrySet = new EntrySet();
