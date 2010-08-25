@@ -16,34 +16,46 @@
 
 package com.google.api.client.googleapis.json;
 
-import com.google.api.client.escape.CharEscapers;
 import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.Json;
-import com.google.api.client.util.DataUtil;
+import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.Key;
 
 import org.codehaus.jackson.JsonParser;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Manages a Google API discovery document based on the JSON format.
+ * Manages a JSON-formatted document from the experimental Google Discovery API
+ * version 0.1.
  *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public final class DiscoveryDocument {
 
+  /**
+   * Defines all versions of an API.
+   *
+   * @since 1.1
+   */
+  public static final class APIDefinition extends ArrayMap<
+      String, ServiceDefinition> {
+  }
+
   /** Defines a specific version of an API. */
   public static final class ServiceDefinition {
-    /** Base URL for service endpoint. */
+    /**
+     * Base URL for service endpoint.
+     *
+     * @since 1.1
+     */
     @Key
-    String baseUrl;
+    public String baseUrl;
 
     /** Map from the resource name to the resource definition. */
     @Key
@@ -81,9 +93,13 @@ public final class DiscoveryDocument {
   /** Defines a method of a service resource. */
   public static final class ServiceMethod {
 
-    /** Path URL relative to base URL. */
+    /**
+     * Path URL relative to base URL.
+     *
+     * @since 1.1
+     */
     @Key
-    String pathUrl;
+    public String pathUrl;
 
     /** HTTP method name. */
     @Key
@@ -93,9 +109,13 @@ public final class DiscoveryDocument {
     @Key
     public Map<String, ServiceParameter> parameters;
 
-    /** Method type. */
+    /**
+     * Method type.
+     *
+     * @since 1.1
+     */
     @Key
-    final String methodType = "rest";
+    public final String methodType = "rest";
   }
 
   /** Defines a parameter to a service method. */
@@ -106,20 +126,43 @@ public final class DiscoveryDocument {
     public boolean required;
   }
 
-  /** API service definition parsed from discovery document. */
-  public final ServiceDefinition serviceDefinition;
+  /**
+   * First API service definition parsed from discovery document.
+   *
+   * @deprecated (scheduled to be removed in version 1.2) Use for example {@code
+   *             get("buzz").get("v1")}
+   */
+  @Deprecated
+  public ServiceDefinition serviceDefinition;
+
+  /** API name. */
+  private String apiName;
+
+  /**
+   * Definition of all versions defined in this Google API.
+   *
+   * @since 1.1
+   */
+  public final APIDefinition apiDefinition = new APIDefinition();
 
   /**
    * Google transport required by {@link #buildRequest}.
+   *
+   * @deprecated (scheduled to be removed in version 1.2) Use
+   *             {@link GoogleApi#transport}
    */
+  @Deprecated
   public HttpTransport transport;
 
-  DiscoveryDocument(ServiceDefinition serviceDefinition) {
-    this.serviceDefinition = serviceDefinition;
+  private DiscoveryDocument() {
   }
 
   /**
-   * Executes a request for the JSON-formatted discovery document.
+   * Executes a request for the JSON-formatted discovery document based on the
+   * <code>0.1</code> version of the API by the given name.
+   * <p>
+   * Most API's do not have a <code>0.1</code> version, so this will usually
+   * fail to return any service documents.
    *
    * @param apiName API name
    * @return discovery document
@@ -134,10 +177,14 @@ public final class DiscoveryDocument {
     request.url = discoveryUrl;
     JsonParser parser = JsonCParser.parserForResponse(request.execute());
     Json.skipToKey(parser, apiName);
-    Json.skipToKey(parser, "1.0");
-    ServiceDefinition serviceDefinition = new ServiceDefinition();
-    Json.parseAndClose(parser, serviceDefinition, null);
-    return new DiscoveryDocument(serviceDefinition);
+    DiscoveryDocument result = new DiscoveryDocument();
+    result.apiName = apiName;
+    APIDefinition apiDefinition = result.apiDefinition;
+    Json.parseAndClose(parser, apiDefinition, null);
+    if (apiDefinition.size() != 0) {
+      result.serviceDefinition = apiDefinition.getValue(0);
+    }
+    return result;
   }
 
   /**
@@ -148,58 +195,17 @@ public final class DiscoveryDocument {
    * @param parameters user defined key / value data mapping
    * @return HTTP request
    * @throws IOException I/O exception reading
+   * @deprecated (scheduled to be removed in version 1.2) Use
+   *             {@link GoogleApi#buildRequest(String, Object)}
    */
+  @Deprecated
   public HttpRequest buildRequest(
       String fullyQualifiedMethodName, Object parameters) throws IOException {
-    HttpTransport transport = this.transport;
-    if (transport == null) {
-      throw new IllegalArgumentException("missing transport");
-    }
-    // Create request for specified method
-    ServiceDefinition serviceDefinition = this.serviceDefinition;
-    ServiceMethod method =
-        serviceDefinition.getResourceMethod(fullyQualifiedMethodName);
-    if (method == null) {
-      throw new IllegalArgumentException(
-          "unrecognized method: " + fullyQualifiedMethodName);
-    }
-    HttpRequest request = transport.buildRequest();
-    request.method = method.httpMethod;
-    HashMap<String, String> requestMap = new HashMap<String, String>();
-    for (Map.Entry<String, Object> entry :
-        DataUtil.mapOf(parameters).entrySet()) {
-      Object value = entry.getValue();
-      if (value != null) {
-        requestMap.put(entry.getKey(), value.toString());
-      }
-    }
-    GenericUrl url = new GenericUrl(serviceDefinition.baseUrl);
-    // parse path URL
-    String pathUrl = method.pathUrl;
-    StringBuilder pathBuf = new StringBuilder();
-    int cur = 0;
-    int length = pathUrl.length();
-    while (cur < length) {
-      int next = pathUrl.indexOf('{', cur);
-      if (next == -1) {
-        pathBuf.append(pathUrl.substring(cur));
-        break;
-      }
-      pathBuf.append(pathUrl.substring(cur, next));
-      int close = pathUrl.indexOf('}', next + 2);
-      String varName = pathUrl.substring(next + 1, close);
-      cur = close + 1;
-      String value = requestMap.remove(varName);
-      if (value == null) {
-        throw new IllegalArgumentException(
-            "missing required path parameter: " + varName);
-      }
-      pathBuf.append(CharEscapers.escapeUriPath(value));
-    }
-    url.appendRawPath(pathBuf.toString());
-    // all other parameters are assumed to be query parameters
-    url.putAll(requestMap);
-    request.url = url;
-    return request;
+    GoogleApi googleAPI = new GoogleApi();
+    googleAPI.transport = this.transport;
+    googleAPI.name = this.apiName;
+    googleAPI.version = this.apiDefinition.getKey(0);
+    googleAPI.serviceDefinition = this.apiDefinition.getValue(0);
+    return googleAPI.buildRequest(fullyQualifiedMethodName, parameters);
   }
 }
