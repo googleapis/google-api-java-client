@@ -42,6 +42,8 @@ public final class MultipartRelatedContent implements HttpContent {
 
   private static final byte[] CR_LF = "\r\n".getBytes();
   private static final byte[] CONTENT_TYPE = "Content-Type: ".getBytes();
+  private static final byte[] CONTENT_TRANSFER_ENCODING =
+    "Content-Transfer-Encoding: binary".getBytes();
   private static final byte[] TWO_DASHES = "--".getBytes();
 
   /**
@@ -74,6 +76,10 @@ public final class MultipartRelatedContent implements HttpContent {
       out.write(CONTENT_TYPE);
       out.write(typeBytes);
       out.write(CR_LF);
+      if (!LogContent.isTextBasedContentType(contentType)) {
+        out.write(CONTENT_TRANSFER_ENCODING);
+        out.write(CR_LF);
+      }
       out.write(CR_LF);
       part.writeTo(out);
       out.write(CR_LF);
