@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,7 +35,7 @@ import java.io.OutputStream;
  * string input use {@link #setByteArrayInput(byte[])}.
  * <p>
  * Sample use with a URL:
- * 
+ *
  * <pre>
  * <code>
  * private static void setRequestJpegContent(HttpRequest request, URL jpegUrl) {
@@ -46,7 +46,7 @@ import java.io.OutputStream;
  * }
  * </code>
  * </pre>
- * 
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -73,7 +73,7 @@ public final class InputStreamContent implements HttpContent {
    * file, and the {@link #length} based on the file's length.
    * <p>
    * Sample use:
-   * 
+   *
    * <pre>
    * <code>
    * private static void setRequestJpegContent(HttpRequest request, File jpegFile) {
@@ -97,7 +97,7 @@ public final class InputStreamContent implements HttpContent {
    * For string input, call the appropriate {@link String#getBytes} method.
    * <p>
    * Sample use:
-   * 
+   *
    * <pre>
    * <code>
    * private static void setRequestJsonContent(HttpRequest request, String json) {
@@ -125,9 +125,8 @@ public final class InputStreamContent implements HttpContent {
         // consume no more than length
         long remaining = contentLength;
         while (remaining > 0) {
-          int read =
-              inputStream.read(buffer, 0, (int) Math
-                  .min(BUFFER_SIZE, remaining));
+          int read = inputStream.read(
+              buffer, 0, (int) Math.min(BUFFER_SIZE, remaining));
           if (read == -1) {
             break;
           }
@@ -157,7 +156,23 @@ public final class InputStreamContent implements HttpContent {
    * destination output stream.
    * <p>
    * The input stream is guaranteed to be closed at the end of the method.
-   * 
+   * </p>
+   * <p>
+   * Sample use:
+   *
+   * <pre><code>
+  static void downloadMedia(HttpResponse response, File file)
+      throws IOException {
+    FileOutputStream out = new FileOutputStream(file);
+    try {
+      InputStreamContent.copy(response.getContent(), out);
+    } finally {
+      out.close();
+    }
+  }
+   * </code></pre>
+   * </p>
+   *
    * @param inputStream source input stream
    * @param outputStream destination output stream
    * @throws IOException I/O exception

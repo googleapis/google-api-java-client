@@ -5,15 +5,14 @@ import java.io.OutputStream;
 
 /**
  * Multi-part related content.
- * 
+ *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in version 1.2) Use
+ *             {@link MultipartRelatedContent}
  */
+@Deprecated
 public final class MultipartContent implements HttpContent {
-
-  // TODO: test it!
-
-  // TODO: instead of getBytes() use getBytes("UTF-8")?
   private static final byte[] CR_LF = "\r\n".getBytes();
   private static final byte[] HEADER = "Media multipart posting".getBytes();
   private static final byte[] CONTENT_TYPE = "Content-Type: ".getBytes();
@@ -89,5 +88,4 @@ public final class MultipartContent implements HttpContent {
   public String getType() {
     return "multipart/related; boundary=\"END_OF_PART\"";
   }
-
 }
