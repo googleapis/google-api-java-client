@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,6 +20,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonHttpParser;
 
+import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 
 import java.io.IOException;
@@ -29,7 +30,7 @@ import java.io.IOException;
  * assuming the data is wrapped in a {@code "data"} envelope.
  * <p>
  * Sample usage:
- * 
+ *
  * <pre>
  * <code>
  * static void setParser(GoogleTransport transport) {
@@ -37,7 +38,7 @@ import java.io.IOException;
  * }
  * </code>
  * </pre>
- * 
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -55,7 +56,7 @@ public final class JsonCParser extends JsonHttpParser {
    * <p>
    * The parser will be closed if any throwable is thrown. The current token
    * will be the value of the {@code "data"} key.
-   * 
+   *
    * @param response HTTP response
    * @return JSON parser
    * @throws IllegalArgumentException if content type is not
@@ -67,13 +68,13 @@ public final class JsonCParser extends JsonHttpParser {
     // check for JSON content type
     String contentType = response.contentType;
     if (!contentType.startsWith(Json.CONTENT_TYPE)) {
-      throw new IllegalArgumentException("Wrong content type: expected <"
-          + Json.CONTENT_TYPE + "> but got <" + contentType + ">");
+      throw new IllegalArgumentException(
+          "Wrong content type: expected <" + Json.CONTENT_TYPE + "> but got <"
+              + contentType + ">");
     }
     // parse
     boolean failed = true;
-    org.codehaus.jackson.JsonParser parser =
-        JsonHttpParser.parserForResponse(response);
+    JsonParser parser = JsonHttpParser.parserForResponse(response);
     try {
       Json.skipToKey(parser, response.isSuccessStatusCode ? "data" : "error");
       if (parser.getCurrentToken() == JsonToken.END_OBJECT) {
