@@ -43,12 +43,14 @@ public final class GoogleTransport {
    * Sample usage:
    * 
    * <pre>
-   * <code>static HttpTransport createTransport() {
-   *   HttpTransport transport = GoogleHeaders.create();
-   *   GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
-   *   headers.setApplicationName("acme-rocket-2");
-   *   headers.gdataVersion = "2";
-   * }
+   * <code>
+  static HttpTransport createTransport() {
+    HttpTransport transport = GoogleTransport.create();
+    GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
+    headers.setApplicationName("acme-rocket-2");
+    headers.gdataVersion = "2";
+    return transport;
+  }
    * </code>
    * </pre>
    * 
