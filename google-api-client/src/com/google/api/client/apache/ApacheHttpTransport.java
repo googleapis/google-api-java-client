@@ -24,6 +24,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.params.ClientPNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -62,6 +63,7 @@ public final class ApacheHttpTransport extends LowLevelHttpTransport {
     HttpConnectionParams.setConnectionTimeout(params, 20 * 1000);
     HttpConnectionParams.setSoTimeout(params, 20 * 1000);
     HttpConnectionParams.setSocketBufferSize(params, 8192);
+    params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
     this.httpClient = new DefaultHttpClient(params);
   }
 
