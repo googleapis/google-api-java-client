@@ -19,6 +19,7 @@ package com.google.api.client.javanet;
 import com.google.api.client.http.LowLevelHttpTransport;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 /**
  * HTTP low-level transport based on the {@code java.net} package.
@@ -32,6 +33,7 @@ public final class NetHttpTransport extends LowLevelHttpTransport {
   public static final NetHttpTransport INSTANCE = new NetHttpTransport();
 
   NetHttpTransport() {
+    HttpURLConnection.setFollowRedirects(false);
   }
 
   @Override
