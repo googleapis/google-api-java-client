@@ -115,7 +115,7 @@ cd google-api-client
 mvn source:jar javadoc:jar assembly:assembly
 cp -R target/apidocs ../../javadoc/1.1.1-alpha
 cd /tmp
-hg clone -r 1.0.10-alpha https://google-api-java-client.googlecode.com/hg/ google-api-java-client
+hg clone -r 1.1.0-alpha https://google-api-java-client.googlecode.com/hg/ google-api-java-client
 cd -
 ant -f assemble/jdiff.xml
 cd ../../javadoc
@@ -123,24 +123,7 @@ hg add
 hg commit -m "1.1.1-alpha"
 hg push
 cd ../google-api-java-client
-hg update
 </code></pre></li>
-  <li>Start development of next minor version
-  <ul>
-    <li>For the following files, find <code>1.1.1-alpha</code> to replace
-    it with the next version number, and find <code>1.1.0-alpha</code> to
-    replace it with <code>1.1.1-alpha</code>:
-    <ul>
-      <li><code>instructions.html</code></li>
-      <li><code>google-api-client/assemble/jdiff.xml</code></li>
-      <li><code>google-api-client/assemble/release.html</code></li>
-      <li><code>google-api-client/generator/com/google/api/client/generator/model/PackageModel.java</code></li>
-      <li><code>google-api-client/src/com/google/api/client/http/HttpRequest.java</code></li>
-    </ul>
-    </li>
-    <li>Re-run <code>GeneratePom</code> in Eclipse</li>
-  </ul>
-  </li>
   <li>Update to new version on <a
     href="http://code.google.com/p/google-api-java-client">http://code.google.com/p/google-api-java-client</a>
   <ul>
@@ -159,6 +142,23 @@ hg update
       href="http://code.google.com/p/google-api-java-client/admin">http://code.google.com/p/google-api-java-client/admin</a>
     changing any reference from the previous version <code>1.1.0-alpha</code> to
     the new version <code>1.1.1-alpha</code></li>
+  </ul>
+  </li>
+  <li>Start development of next minor version
+  <ul>
+    <li><code>hg update</code></li>
+    <li>For the following files, find <code>1.1.1-alpha</code> to replace
+    it with the next version number, and find <code>1.1.0-alpha</code> to
+    replace it with <code>1.1.1-alpha</code>:
+    <ul>
+      <li><code>instructions.html</code></li>
+      <li><code>google-api-client/assemble/jdiff.xml</code></li>
+      <li><code>google-api-client/assemble/release.html</code></li>
+      <li><code>google-api-client/generator/com/google/api/client/generator/model/PackageModel.java</code></li>
+      <li><code>google-api-client/src/com/google/api/client/http/HttpRequest.java</code></li>
+    </ul>
+    </li>
+    <li>Re-run <code>GeneratePom</code> in Eclipse</li>
   </ul>
   </li>
 </ul>
