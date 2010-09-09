@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  */
 public final class PackageModel implements Comparable<PackageModel> {
 
-  public static final String VERSION = "1.1.0-alpha";
+  public static final String VERSION = "1.1.1-alpha";
   public static final String VERSION_SNAPSHOT = VERSION + "-SNAPSHOT";
 
   private static final Pattern IMPORT_PATTERN =
