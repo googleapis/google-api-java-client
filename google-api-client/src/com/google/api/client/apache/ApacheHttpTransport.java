@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,24 +32,25 @@ import org.apache.http.params.HttpParams;
 
 /**
  * HTTP low-level transport based on the Apache HTTP Client library.
- * 
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public final class ApacheHttpTransport extends LowLevelHttpTransport {
 
-  /** Apache HTTP client. */
-  private final HttpClient httpClient;
+  /**
+   * Apache HTTP client.
+   *
+   * @since 1.1
+   */
+  public final HttpClient httpClient;
 
   /**
    * Singleton instance of this transport.
    * <p>
    * Sample usage:
-   * 
-   * <pre>
-   * <code>HttpTransport.setLowLevelHttpTransport(ApacheHttpTransport.INSTANCE);</code>
-   * </pre>
-   * 
+   *
+   * <pre><code>HttpTransport.setLowLevelHttpTransport(ApacheHttpTransport.INSTANCE);</code></pre>
    * </p>
    */
   public static final ApacheHttpTransport INSTANCE = new ApacheHttpTransport();
