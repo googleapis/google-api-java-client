@@ -16,6 +16,7 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.api.client.util.Strings;
 
 import java.io.IOException;
@@ -100,6 +101,8 @@ public final class HttpRequest {
    * @see HttpResponse#isSuccessStatusCode
    */
   public HttpResponse execute() throws IOException {
+    Preconditions.checkNotNull(method);
+    Preconditions.checkNotNull(url);
     HttpTransport transport = this.transport;
     // first run the execute intercepters
     for (HttpExecuteIntercepter intercepter : transport.intercepters) {
