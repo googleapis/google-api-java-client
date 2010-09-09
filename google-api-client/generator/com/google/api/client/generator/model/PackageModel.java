@@ -52,6 +52,12 @@ public final class PackageModel implements Comparable<PackageModel> {
     return artifactId.compareTo(other.artifactId);
   }
 
+  @Override
+  public String toString() {
+    return "PackageModel [artifactId=" + artifactId + ", directoryPath="
+        + directoryPath + ", dependencies=" + dependencies + "]";
+  }
+
   public static SortedSet<PackageModel> compute(File googleApiClientDirectory)
       throws IOException {
     SortedSet<PackageModel> pkgs = new TreeSet<PackageModel>();
@@ -66,18 +72,16 @@ public final class PackageModel implements Comparable<PackageModel> {
       throws IOException {
     PackageModel pkg = null;
     for (File file : dir.listFiles()) {
-      if (".svn".equals(file.getName())) {
-        continue;
-      }
       if (file.isDirectory()) {
         addPackageModels(rootPathLength, file, pkgs);
       } else {
         if (file.getName().endsWith(".java")) {
           if (pkg == null) {
-            pkg =
-                new PackageModel(
-                    file.getParentFile().getCanonicalPath().substring(
-                        1 + rootPathLength).replace('/', '-'));
+            pkg = new PackageModel(file
+                .getParentFile()
+                .getCanonicalPath()
+                .substring(1 + rootPathLength)
+                .replace('/', '-'));
             pkgs.add(pkg);
           }
           String content = readFile(file);
@@ -90,7 +94,9 @@ public final class PackageModel implements Comparable<PackageModel> {
               dep.groupId = "com.google.api.client";
               dep.artifactId = packageName.substring(4).replace('.', '-');
               dep.version = VERSION_SNAPSHOT;
-              pkg.dependencies.add(dep);
+              if (!pkg.artifactId.equals(dep.artifactId)) {
+                pkg.dependencies.add(dep);
+              }
             } else if (className.startsWith("android.")
                 || className.startsWith("org.apache.")) {
               DependencyModel dep = new DependencyModel();

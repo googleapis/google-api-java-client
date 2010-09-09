@@ -49,6 +49,11 @@
     </dependency>
     <dependency>
       <groupId>com.google.api.client</groupId>
+      <artifactId>google-api-client-repackaged-com-google-common-base</artifactId>
+      <version>1.1.0-alpha-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.api.client</groupId>
       <artifactId>google-api-client-util</artifactId>
       <version>1.1.0-alpha-SNAPSHOT</version>
     </dependency>
