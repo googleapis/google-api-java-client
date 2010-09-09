@@ -31,91 +31,91 @@
       <filtered>true</filtered>
     </file>
     <file>
-      <source>modules/google-api-client-android-xml/target/google-api-client-android-xml-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-android-xml/target/google-api-client-android-xml-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-apache/target/google-api-client-apache-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-apache/target/google-api-client-apache-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-auth/target/google-api-client-auth-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-auth/target/google-api-client-auth-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-auth-oauth/target/google-api-client-auth-oauth-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-auth-oauth/target/google-api-client-auth-oauth-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-auth-oauth2/target/google-api-client-auth-oauth2-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-auth-oauth2/target/google-api-client-auth-oauth2-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-escape/target/google-api-client-escape-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-escape/target/google-api-client-escape-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-googleapis/target/google-api-client-googleapis-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-googleapis/target/google-api-client-googleapis-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-googleapis-auth/target/google-api-client-googleapis-auth-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-googleapis-auth/target/google-api-client-googleapis-auth-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-googleapis-auth-authsub/target/google-api-client-googleapis-auth-authsub-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-googleapis-auth-authsub/target/google-api-client-googleapis-auth-authsub-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-googleapis-auth-clientlogin/target/google-api-client-googleapis-auth-clientlogin-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-googleapis-auth-clientlogin/target/google-api-client-googleapis-auth-clientlogin-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-googleapis-auth-oauth/target/google-api-client-googleapis-auth-oauth-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-googleapis-auth-oauth/target/google-api-client-googleapis-auth-oauth-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-googleapis-auth-storage/target/google-api-client-googleapis-auth-storage-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-googleapis-auth-storage/target/google-api-client-googleapis-auth-storage-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-googleapis-json/target/google-api-client-googleapis-json-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-googleapis-json/target/google-api-client-googleapis-json-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-googleapis-xml-atom/target/google-api-client-googleapis-xml-atom-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-googleapis-xml-atom/target/google-api-client-googleapis-xml-atom-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-http/target/google-api-client-http-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-http/target/google-api-client-http-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-javanet/target/google-api-client-javanet-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-javanet/target/google-api-client-javanet-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-json/target/google-api-client-json-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-json/target/google-api-client-json-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-json-rpc2/target/google-api-client-json-rpc2-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-json-rpc2/target/google-api-client-json-rpc2-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-repackaged-com-google-common-base/target/google-api-client-repackaged-com-google-common-base-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-repackaged-com-google-common-base/target/google-api-client-repackaged-com-google-common-base-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-util/target/google-api-client-util-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-util/target/google-api-client-util-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-xml/target/google-api-client-xml-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-xml/target/google-api-client-xml-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
-      <source>modules/google-api-client-xml-atom/target/google-api-client-xml-atom-1.1.0-alpha.jar</source>
+      <source>modules/google-api-client-xml-atom/target/google-api-client-xml-atom-1.1.1-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
   </files>
