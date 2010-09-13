@@ -69,7 +69,7 @@ public class DateTime {
   }
 
   public DateTime(boolean dateOnly, long value, Integer tzShift) {
-    this.dateOnly = false;
+    this.dateOnly = dateOnly;
     this.value = value;
     this.tzShift = tzShift;
   }
