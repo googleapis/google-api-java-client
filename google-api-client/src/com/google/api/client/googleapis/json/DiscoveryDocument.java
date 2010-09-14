@@ -158,11 +158,8 @@ public final class DiscoveryDocument {
   }
 
   /**
-   * Executes a request for the JSON-formatted discovery document based on the
-   * <code>0.1</code> version of the API by the given name.
-   * <p>
-   * Most API's do not have a <code>0.1</code> version, so this will usually
-   * fail to return any service documents.
+   * Executes a request for the JSON-formatted discovery document for the API of
+   * the given name.
    *
    * @param apiName API name
    * @return discovery document
