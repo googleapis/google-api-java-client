@@ -40,6 +40,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
         this.connection = (HttpURLConnection) new URL(url).openConnection();
     connection.setRequestMethod(requestMethod);
     connection.setUseCaches(false);
+    connection.setInstanceFollowRedirects(false);
   }
 
   @Override
