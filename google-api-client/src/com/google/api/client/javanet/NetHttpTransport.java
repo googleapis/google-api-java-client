@@ -32,10 +32,6 @@ public final class NetHttpTransport extends LowLevelHttpTransport {
   /** Singleton instance of this transport. */
   public static final NetHttpTransport INSTANCE = new NetHttpTransport();
 
-  static {
-    HttpURLConnection.setFollowRedirects(false);
-  }
-
   /**
    * Sets the connection timeout to a specified timeout in milliseconds by
    * calling {@link HttpURLConnection#setConnectTimeout(int)}, or a negative
