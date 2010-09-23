@@ -36,7 +36,7 @@ public final class HttpRequest {
 
   /** User agent suffix for all requests. */
   private static final String USER_AGENT_SUFFIX =
-      "Google-API-Java-Client/1.1.2-alpha";
+      "Google-API-Java-Client/1.2.0-alpha";
 
   /**
    * HTTP request headers.
@@ -140,8 +140,11 @@ public final class HttpRequest {
       logbuf = new StringBuilder();
       logbuf.append("-------------- REQUEST  --------------").append(
           Strings.LINE_SEPARATOR);
-      logbuf.append(method).append(' ').append(urlString).append(
-          Strings.LINE_SEPARATOR);
+      logbuf
+          .append(method)
+          .append(' ')
+          .append(urlString)
+          .append(Strings.LINE_SEPARATOR);
     }
     // add to user agent
     HttpHeaders headers = this.headers;

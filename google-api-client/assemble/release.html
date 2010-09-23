@@ -9,7 +9,7 @@
   <li>Make sure you have permission to post to the <a
     href="http://google-api-java-client.blogspot.com/">Announcement Blog</a>.</li>
   <li>Check out the <code>google-api-java-client</code> project using <a
-    href="http://google-api-java-client.googlecode.com/hg/instructions.html?r=1.1.2-alpha">these
+    href="http://google-api-java-client.googlecode.com/hg/instructions.html?r=1.2.0-alpha">these
   instructions</a>.</li>
   <li>Check out the <code>javadoc</code> project using <a
     href="http://javadoc.google-api-java-client.googlecode.com/hg/instructions.html">these
@@ -68,7 +68,7 @@ google-api-java-client.password = <i>[password from <a
   </li>
 </ul>
 
-<h3>Release version 1.1.2-alpha, upgrading from 1.1.1-alpha</h3>
+<h3>Release version 1.2.0-alpha, upgrading from 1.1.1-alpha</h3>
 <ul>
   <li>Prepare the project
   <ul>
@@ -87,7 +87,7 @@ google-api-java-client.password = <i>[password from <a
     <ul>
       <li>Accept default for 'What is the release version for "Google API
       Client - Parent"?'</li>
-      <li>Type <code>1.1.2-alpha</code> for 'What is SCM release tag or
+      <li>Type <code>1.2.0-alpha</code> for 'What is SCM release tag or
       label for "Google API Client - Parent"?'</li>
       <li>Accept default for 'What is the new development version for
       "Google API Client - Parent"?'</li>
@@ -100,9 +100,9 @@ google-api-java-client.password = <i>[password from <a
       <li>Log in to <a href="https://oss.sonatype.org">https://oss.sonatype.org</a></li>
       <li>Click on "Staging Repositories"</li>
       <li>check box next to uploaded release</li>
-      <li>click Close button; type <code>1.1.2-alpha</code> and click Close</li>
+      <li>click Close button; type <code>1.2.0-alpha</code> and click Close</li>
       <li>check box next to uploaded release</li>
-      <li>click Release button; type <code>1.1.2-alpha</code> and click
+      <li>click Release button; type <code>1.2.0-alpha</code> and click
       Release</li>
     </ul>
     </li>
@@ -111,11 +111,11 @@ google-api-java-client.password = <i>[password from <a
       href="http://repo2.maven.org/maven2/com/google/api/client/google-api-client/">repo2.maven.org</a></li>
   </ul>
   </li>
-  <li>Prepare the released library zip file and javadoc <pre><code>hg update -r 1.1.2-alpha
+  <li>Prepare the released library zip file and javadoc <pre><code>hg update -r 1.2.0-alpha
 mvn clean install
 cd google-api-client
 mvn source:jar javadoc:jar assembly:assembly
-cp -R target/apidocs ../../javadoc/1.1.2-alpha
+cp -R target/apidocs ../../javadoc/1.2.0-alpha
 cd /tmp
 rm -rf google-api-java-client
 hg clone -r 1.1.1-alpha https://google-api-java-client.googlecode.com/hg/ google-api-java-client
@@ -123,7 +123,7 @@ cd -
 ant -f assemble/jdiff.xml
 cd ../../javadoc
 hg add
-hg commit -m "1.1.2-alpha"
+hg commit -m "1.2.0-alpha"
 hg push
 cd ../google-api-java-client
 </code></pre></li>
@@ -133,8 +133,8 @@ cd ../google-api-java-client
     <li>Upload to <a
       href="http://code.google.com/p/google-api-java-client/downloads/entry">http://code.google.com/p/google-api-java-client/downloads/entry</a>
     <ul>
-      <li>Summary: Google API Client Library for Java, version 1.1.2-alpha</li>
-      <li>File: <code>google-api-java-client/target/google-api-client-1.1.2-alpha-java.zip</code></li>
+      <li>Summary: Google API Client Library for Java, version 1.2.0-alpha</li>
+      <li>File: <code>google-api-java-client/target/google-api-client-1.2.0-alpha-java.zip</code></li>
       <li>Labels: <code>Type-Archive</code>, <code>OpSys-All</code>, and <code>Featured</code></li>
       <li>click Submit file</li>
     </ul>
@@ -145,7 +145,7 @@ cd ../google-api-java-client
     <li>Update <a
       href="http://code.google.com/p/google-api-java-client/admin">http://code.google.com/p/google-api-java-client/admin</a>
     changing any reference from the previous version <code>1.1.1-alpha</code> to
-    the new version <code>1.1.2-alpha</code></li>
+    the new version <code>1.2.0-alpha</code></li>
   </ul>
   </li>
   <li>Announce new version on the <a
@@ -163,9 +163,9 @@ cd ../google-api-java-client
   <li>Start development of next minor version
   <ul>
     <li><code>hg update</code></li>
-    <li>For the following files, find <code>1.1.2-alpha</code> to replace
+    <li>For the following files, find <code>1.2.0-alpha</code> to replace
     it with the next version number, and find <code>1.1.1-alpha</code> to
-    replace it with <code>1.1.2-alpha</code>:
+    replace it with <code>1.2.0-alpha</code>:
     <ul>
       <li><code>instructions.html</code></li>
       <li><code>google-api-client/assemble/jdiff.xml</code> (only update
