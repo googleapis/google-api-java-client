@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -30,10 +28,9 @@ import java.util.TreeMap;
 /**
  * OAuth 1.0a parameter manager.
  * <p>
- * The only required non-computed fields are {@link #signer} and
- * {@link #consumerKey}. Use {@link #token} to specify token or temporary
- * credentials.
- * 
+ * The only required non-computed fields are {@link #signer} and {@link #consumerKey}. Use
+ * {@link #token} to specify token or temporary credentials.
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -46,14 +43,13 @@ public final class OAuthParameters {
   public OAuthSigner signer;
 
   /**
-   * Absolute URI back to which the server will redirect the resource owner when
-   * the Resource Owner Authorization step is completed.
+   * Absolute URI back to which the server will redirect the resource owner when the Resource Owner
+   * Authorization step is completed.
    */
   public String callback;
 
   /**
-   * Required identifier portion of the client credentials (equivalent to a
-   * username).
+   * Required identifier portion of the client credentials (equivalent to a username).
    */
   public String consumerKey;
 
@@ -67,20 +63,19 @@ public final class OAuthParameters {
   public String signature;
 
   /**
-   * Name of the signature method used by the client to sign the request.
-   * Required, but normally computed using {@link #computeSignature}.
+   * Name of the signature method used by the client to sign the request. Required, but normally
+   * computed using {@link #computeSignature}.
    */
   public String signatureMethod;
 
   /**
-   * Required timestamp value. Should be computed using
-   * {@link #computeTimestamp()}.
+   * Required timestamp value. Should be computed using {@link #computeTimestamp()}.
    */
   public String timestamp;
 
   /**
-   * Token value used to associate the request with the resource owner or
-   * {@code null} if the request is not associated with a resource owner.
+   * Token value used to associate the request with the resource owner or {@code null} if the
+   * request is not associated with a resource owner.
    */
   public String token;
 
@@ -88,35 +83,33 @@ public final class OAuthParameters {
   public String verifier;
 
   /**
-   * Must either be "1.0" or {@code null} to skip. Provides the version of the
-   * authentication process as defined in this specification.
+   * Must either be "1.0" or {@code null} to skip. Provides the version of the authentication
+   * process as defined in this specification.
    */
   public String version;
 
-  private static final PercentEscaper ESCAPER =
-      new PercentEscaper("-_.~", false);
+  private static final PercentEscaper ESCAPER = new PercentEscaper("-_.~", false);
 
   /**
-   * Computes a nonce based on the hex string of a random non-negative long,
-   * setting the value of the {@link #nonce} field.
+   * Computes a nonce based on the hex string of a random non-negative long, setting the value of
+   * the {@link #nonce} field.
    */
   public void computeNonce() {
-    this.nonce = Long.toHexString(Math.abs(RANDOM.nextLong()));
+    nonce = Long.toHexString(Math.abs(RANDOM.nextLong()));
   }
 
   /**
-   * Computes a timestamp based on the current system time, setting the value of
-   * the {@link #timestamp} field.
+   * Computes a timestamp based on the current system time, setting the value of the
+   * {@link #timestamp} field.
    */
   public void computeTimestamp() {
-    this.timestamp = Long.toString(System.currentTimeMillis() / 1000);
+    timestamp = Long.toString(System.currentTimeMillis() / 1000);
   }
 
   /**
-   * Computes a new signature based on the fields and the given request method
-   * and URL, setting the values of the {@link #signature} and
-   * {@link #signatureMethod} fields.
-   * 
+   * Computes a new signature based on the fields and the given request method and URL, setting the
+   * values of the {@link #signature} and {@link #signatureMethod} fields.
+   *
    * @throws GeneralSecurityException general security exception
    */
   public void computeSignature(String requestMethod, GenericUrl requestUrl)
@@ -125,16 +118,14 @@ public final class OAuthParameters {
     String signatureMethod = this.signatureMethod = signer.getSignatureMethod();
     // oauth_* parameters (except oauth_signature)
     TreeMap<String, String> parameters = new TreeMap<String, String>();
-    putParameterIfValueNotNull(parameters, "oauth_callback", this.callback);
-    putParameterIfValueNotNull(parameters, "oauth_consumer_key",
-        this.consumerKey);
-    putParameterIfValueNotNull(parameters, "oauth_nonce", this.nonce);
-    putParameterIfValueNotNull(parameters, "oauth_signature_method",
-        signatureMethod);
-    putParameterIfValueNotNull(parameters, "oauth_timestamp", this.timestamp);
-    putParameterIfValueNotNull(parameters, "oauth_token", this.token);
-    putParameterIfValueNotNull(parameters, "oauth_verifier", this.verifier);
-    putParameterIfValueNotNull(parameters, "oauth_version", this.version);
+    putParameterIfValueNotNull(parameters, "oauth_callback", callback);
+    putParameterIfValueNotNull(parameters, "oauth_consumer_key", consumerKey);
+    putParameterIfValueNotNull(parameters, "oauth_nonce", nonce);
+    putParameterIfValueNotNull(parameters, "oauth_signature_method", signatureMethod);
+    putParameterIfValueNotNull(parameters, "oauth_timestamp", timestamp);
+    putParameterIfValueNotNull(parameters, "oauth_token", token);
+    putParameterIfValueNotNull(parameters, "oauth_verifier", verifier);
+    putParameterIfValueNotNull(parameters, "oauth_version", version);
     // parse request URL for query parameters
     for (Map.Entry<String, Object> fieldEntry : requestUrl.entrySet()) {
       Object value = fieldEntry.getValue();
@@ -171,8 +162,7 @@ public final class OAuthParameters {
     normalized.host = requestUrl.host;
     normalized.pathParts = requestUrl.pathParts;
     int port = requestUrl.port;
-    if ("http".equals(scheme) && port == 80 || "https".equals(scheme)
-        && port == 443) {
+    if ("http".equals(scheme) && port == 80 || "https".equals(scheme) && port == 443) {
       port = -1;
     }
     normalized.port = port;
@@ -183,47 +173,44 @@ public final class OAuthParameters {
     buf.append(escape(normalizedPath)).append('&');
     buf.append(escape(normalizedParameters));
     String signatureBaseString = buf.toString();
-    this.signature = signer.computeSignature(signatureBaseString);
+    signature = signer.computeSignature(signatureBaseString);
   }
 
   /**
-   * Returns the {@code Authorization} header value to use with the OAuth
-   * parameter values found in the fields.
+   * Returns the {@code Authorization} header value to use with the OAuth parameter values found in
+   * the fields.
    */
   public String getAuthorizationHeader() {
     StringBuilder buf = new StringBuilder("OAuth");
-    appendParameter(buf, "realm", this.realm);
-    appendParameter(buf, "oauth_callback", this.callback);
-    appendParameter(buf, "oauth_consumer_key", this.consumerKey);
-    appendParameter(buf, "oauth_nonce", this.nonce);
-    appendParameter(buf, "oauth_signature", this.signature);
-    appendParameter(buf, "oauth_signature_method", this.signatureMethod);
-    appendParameter(buf, "oauth_timestamp", this.timestamp);
-    appendParameter(buf, "oauth_token", this.token);
-    appendParameter(buf, "oauth_verifier", this.verifier);
-    appendParameter(buf, "oauth_version", this.version);
+    appendParameter(buf, "realm", realm);
+    appendParameter(buf, "oauth_callback", callback);
+    appendParameter(buf, "oauth_consumer_key", consumerKey);
+    appendParameter(buf, "oauth_nonce", nonce);
+    appendParameter(buf, "oauth_signature", signature);
+    appendParameter(buf, "oauth_signature_method", signatureMethod);
+    appendParameter(buf, "oauth_timestamp", timestamp);
+    appendParameter(buf, "oauth_token", token);
+    appendParameter(buf, "oauth_verifier", verifier);
+    appendParameter(buf, "oauth_version", version);
     // hack: we have to remove the extra ',' at the end
     return buf.substring(0, buf.length() - 1);
   }
 
   private void appendParameter(StringBuilder buf, String name, String value) {
     if (value != null) {
-      buf.append(' ').append(escape(name)).append("=\"").append(escape(value))
-          .append("\",");
+      buf.append(' ').append(escape(name)).append("=\"").append(escape(value)).append("\",");
     }
   }
 
-  private void putParameterIfValueNotNull(TreeMap<String, String> parameters,
-      String key, String value) {
+  private void putParameterIfValueNotNull(
+      TreeMap<String, String> parameters, String key, String value) {
     if (value != null) {
       putParameter(parameters, key, value);
     }
   }
 
-  private void putParameter(TreeMap<String, String> parameters, String key,
-      Object value) {
-    parameters
-        .put(escape(key), value == null ? null : escape(value.toString()));
+  private void putParameter(TreeMap<String, String> parameters, String key, Object value) {
+    parameters.put(escape(key), value == null ? null : escape(value.toString()));
   }
 
   /** Returns the escaped form of the given value using OAuth escaping rules. */
@@ -232,19 +219,17 @@ public final class OAuthParameters {
   }
 
   /**
-   * Performs OAuth HTTP request signing via the {@code Authorization} header as
-   * the final HTTP request execute intercepter for the given HTTP transport.
+   * Performs OAuth HTTP request signing via the {@code Authorization} header as the final HTTP
+   * request execute intercepter for the given HTTP transport.
    */
   public void signRequestsUsingAuthorizationHeader(HttpTransport transport) {
     for (HttpExecuteIntercepter intercepter : transport.intercepters) {
       if (intercepter.getClass() == OAuthAuthorizationHeaderIntercepter.class) {
-        ((OAuthAuthorizationHeaderIntercepter) intercepter).oauthParameters =
-            this;
+        ((OAuthAuthorizationHeaderIntercepter) intercepter).oauthParameters = this;
         return;
       }
     }
-    OAuthAuthorizationHeaderIntercepter newIntercepter =
-        new OAuthAuthorizationHeaderIntercepter();
+    OAuthAuthorizationHeaderIntercepter newIntercepter = new OAuthAuthorizationHeaderIntercepter();
     newIntercepter.oauthParameters = this;
     transport.intercepters.add(newIntercepter);
   }

@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -35,17 +33,15 @@ public final class PackageModel implements Comparable<PackageModel> {
   public static final String VERSION = "1.2.0-alpha";
   public static final String VERSION_SNAPSHOT = VERSION + "-SNAPSHOT";
 
-  private static final Pattern IMPORT_PATTERN =
-      Pattern.compile("\nimport ([a-zA-Z.]+);");
+  private static final Pattern IMPORT_PATTERN = Pattern.compile("\nimport ([a-zA-Z.]+);");
 
   public final String artifactId;
   public final String directoryPath;
-  public final TreeSet<DependencyModel> dependencies =
-      new TreeSet<DependencyModel>();
+  public final TreeSet<DependencyModel> dependencies = new TreeSet<DependencyModel>();
 
   private PackageModel(String artifactId) {
     this.artifactId = artifactId;
-    this.directoryPath = "com/" + artifactId.replace('-', '/');
+    directoryPath = "com/" + artifactId.replace('-', '/');
   }
 
   public int compareTo(PackageModel other) {
@@ -54,12 +50,11 @@ public final class PackageModel implements Comparable<PackageModel> {
 
   @Override
   public String toString() {
-    return "PackageModel [artifactId=" + artifactId + ", directoryPath="
-        + directoryPath + ", dependencies=" + dependencies + "]";
+    return "PackageModel [artifactId=" + artifactId + ", directoryPath=" + directoryPath
+        + ", dependencies=" + dependencies + "]";
   }
 
-  public static SortedSet<PackageModel> compute(File googleApiClientDirectory)
-      throws IOException {
+  public static SortedSet<PackageModel> compute(File googleApiClientDirectory) throws IOException {
     SortedSet<PackageModel> pkgs = new TreeSet<PackageModel>();
     File srcDirectory = new File(googleApiClientDirectory, "src/com");
     int rootPathLength = srcDirectory.getCanonicalPath().length();
@@ -67,8 +62,7 @@ public final class PackageModel implements Comparable<PackageModel> {
     return pkgs;
   }
 
-  private static void addPackageModels(
-      int rootPathLength, File dir, SortedSet<PackageModel> pkgs)
+  private static void addPackageModels(int rootPathLength, File dir, SortedSet<PackageModel> pkgs)
       throws IOException {
     PackageModel pkg = null;
     for (File file : dir.listFiles()) {
@@ -77,11 +71,12 @@ public final class PackageModel implements Comparable<PackageModel> {
       } else {
         if (file.getName().endsWith(".java")) {
           if (pkg == null) {
-            pkg = new PackageModel(file
-                .getParentFile()
-                .getCanonicalPath()
-                .substring(1 + rootPathLength)
-                .replace('/', '-'));
+            pkg =
+                new PackageModel(file
+                    .getParentFile()
+                    .getCanonicalPath()
+                    .substring(1 + rootPathLength)
+                    .replace('/', '-'));
             pkgs.add(pkg);
           }
           String content = readFile(file);
@@ -97,8 +92,7 @@ public final class PackageModel implements Comparable<PackageModel> {
               if (!pkg.artifactId.equals(dep.artifactId)) {
                 pkg.dependencies.add(dep);
               }
-            } else if (className.startsWith("android.")
-                || className.startsWith("org.apache.")) {
+            } else if (className.startsWith("android.") || className.startsWith("org.apache.")) {
               DependencyModel dep = new DependencyModel();
               dep.groupId = "com.google.android";
               dep.artifactId = "android";
@@ -109,12 +103,10 @@ public final class PackageModel implements Comparable<PackageModel> {
               dep.groupId = "org.codehaus.jackson";
               dep.artifactId = "jackson-core-asl";
               pkg.dependencies.add(dep);
-            } else if (className.startsWith("java.")
-                || className.startsWith("javax.")) {
+            } else if (className.startsWith("java.") || className.startsWith("javax.")) {
               // ignore
             } else {
-              throw new IllegalArgumentException(
-                  "unrecognized package: " + packageName);
+              throw new IllegalArgumentException("unrecognized package: " + packageName);
             }
           }
         }
@@ -131,9 +123,8 @@ public final class PackageModel implements Comparable<PackageModel> {
   }
 
   /**
-   * Returns the package name for the given Java class or package name, assuming
-   * that class names always start with a capital letter and package names
-   * always start with a lowercase letter.
+   * Returns the package name for the given Java class or package name, assuming that class names
+   * always start with a capital letter and package names always start with a lowercase letter.
    */
   public static String getPackageName(String classOrPackageName) {
     int lastDot = classOrPackageName.length();

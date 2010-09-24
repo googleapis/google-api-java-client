@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -32,32 +30,26 @@ import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 /**
- * Google Storage for Developers has a custom authentication method described in
- * <a href=
+ * Google Storage for Developers has a custom authentication method described in <a href=
  * "https://code.google.com/apis/storage/docs/developer-guide.html#authentication"
  * >Authentication</a> .
- * 
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public final class GoogleStorageAuthentication {
 
-  private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
-
   /**
-   * Sets the {@code "Authorization"} header for every executed HTTP request for
-   * the given HTTP transport.
+   * Sets the {@code "Authorization"} header for every executed HTTP request for the given HTTP
+   * transport.
    * <p>
-   * Any existing HTTP request execute intercepter for Google Storage will be
-   * removed.
-   * 
+   * Any existing HTTP request execute intercepter for Google Storage will be removed.
+   *
    * @param transport HTTP transport
-   * @param accessKey 20 character access key that identifies the client
-   *        accessing the stored data
+   * @param accessKey 20 character access key that identifies the client accessing the stored data
    * @param secret secret associated with the access key
    */
-  public static void authorize(HttpTransport transport, String accessKey,
-      String secret) {
+  public static void authorize(HttpTransport transport, String accessKey, String secret) {
     transport.removeIntercepters(Intercepter.class);
     Intercepter intercepter = new Intercepter();
     intercepter.accessKey = accessKey;
@@ -68,6 +60,8 @@ public final class GoogleStorageAuthentication {
   private static final String HOST = "commondatastorage.googleapis.com";
 
   static class Intercepter implements HttpExecuteIntercepter {
+
+    private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
 
     String accessKey;
 
@@ -115,19 +109,20 @@ public final class GoogleStorageAuthentication {
               } else {
                 buf.append(',');
               }
-              buf.append(WHITESPACE_PATTERN.matcher(repeatedValue.toString())
-                  .replaceAll(" "));
+              buf.append(WHITESPACE_PATTERN.matcher(repeatedValue.toString()).replaceAll(" "));
             }
             extensions.put(name, buf.toString());
           } else {
-            extensions.put(name, WHITESPACE_PATTERN.matcher(value.toString())
-                .replaceAll(" "));
+            extensions.put(name, WHITESPACE_PATTERN.matcher(value.toString()).replaceAll(" "));
           }
         }
       }
       for (Map.Entry<String, String> extensionEntry : extensions.entrySet()) {
-        messageBuf.append(extensionEntry.getKey()).append(':').append(
-            extensionEntry.getValue()).append('\n');
+        messageBuf
+            .append(extensionEntry.getKey())
+            .append(':')
+            .append(extensionEntry.getValue())
+            .append('\n');
       }
       // canonical resource
       GenericUrl url = request.url;
@@ -156,8 +151,7 @@ public final class GoogleStorageAuthentication {
       messageBuf.append(url.getRawPath());
       try {
         request.headers.authorization =
-            "GOOG1 " + this.accessKey + ":"
-                + HmacSha.sign(this.secret, messageBuf.toString());
+            "GOOG1 " + accessKey + ":" + HmacSha.sign(secret, messageBuf.toString());
       } catch (GeneralSecurityException e) {
         IOException io = new IOException();
         io.initCause(e);

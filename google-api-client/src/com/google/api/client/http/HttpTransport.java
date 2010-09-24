@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -34,8 +32,8 @@ public final class HttpTransport {
   static final Logger LOGGER = Logger.getLogger(HttpTransport.class.getName());
 
   /**
-   * Low level HTTP transport interface to use or {@code null} to use the
-   * default of {@code java.net} transport.
+   * Low level HTTP transport interface to use or {@code null} to use the default of {@code
+   * java.net} transport.
    */
   private static LowLevelHttpTransport lowLevelHttpTransport;
 
@@ -44,32 +42,28 @@ public final class HttpTransport {
   /**
    * Sets to the given low level HTTP transport.
    * <p>
-   * Must be set before the first HTTP transport is constructed or else the
-   * default will be used as specified in {@link #useLowLevelHttpTransport()}.
+   * Must be set before the first HTTP transport is constructed or else the default will be used as
+   * specified in {@link #useLowLevelHttpTransport()}.
    *
-   * @param lowLevelHttpTransport low level HTTP transport or {@code null} to
-   *        use the default of {@code java.net} transport
+   * @param lowLevelHttpTransport low level HTTP transport or {@code null} to use the default of
+   *        {@code java.net} transport
    */
-  public static void setLowLevelHttpTransport(
-      LowLevelHttpTransport lowLevelHttpTransport) {
+  public static void setLowLevelHttpTransport(LowLevelHttpTransport lowLevelHttpTransport) {
     HttpTransport.lowLevelHttpTransport = lowLevelHttpTransport;
   }
 
   /**
    * Returns the low-level HTTP transport to use. If
-   * {@link #setLowLevelHttpTransport(LowLevelHttpTransport)} hasn't been
-   * called, it uses the default of {@code java.net} transport.
+   * {@link #setLowLevelHttpTransport(LowLevelHttpTransport)} hasn't been called, it uses the
+   * default of {@code java.net} transport.
    */
   public static LowLevelHttpTransport useLowLevelHttpTransport() {
-    LowLevelHttpTransport lowLevelHttpTransportInterface =
-        HttpTransport.lowLevelHttpTransport;
+    LowLevelHttpTransport lowLevelHttpTransportInterface = HttpTransport.lowLevelHttpTransport;
     if (lowLevelHttpTransportInterface == null) {
       try {
         HttpTransport.lowLevelHttpTransport =
-            lowLevelHttpTransportInterface =
-                (LowLevelHttpTransport) Class.forName(
-                    "com.google.api.client.javanet.NetHttpTransport").getField(
-                    "INSTANCE").get(null);
+            lowLevelHttpTransportInterface = (LowLevelHttpTransport) Class.forName(
+                "com.google.api.client.javanet.NetHttpTransport").getField("INSTANCE").get(null);
       } catch (Exception e) {
         throw new IllegalStateException("unable to load NetHttpTrasnport");
       }
@@ -78,37 +72,34 @@ public final class HttpTransport {
   }
 
   /**
-   * Default HTTP headers. These transport default headers are put into a
-   * request's headers when its build method is called.
+   * Default HTTP headers. These transport default headers are put into a request's headers when its
+   * build method is called.
    */
   public HttpHeaders defaultHeaders = new HttpHeaders();
 
   /** Map from content type to HTTP parser. */
-  private final ArrayMap<String, HttpParser> contentTypeToParserMap =
-      ArrayMap.create();
+  private final ArrayMap<String, HttpParser> contentTypeToParserMap = ArrayMap.create();
 
   /**
-   * HTTP request execute intercepters. The intercepters will be invoked in the
-   * order of the {@link List#iterator()}.
+   * HTTP request execute intercepters. The intercepters will be invoked in the order of the
+   * {@link List#iterator()}.
    */
-  public List<HttpExecuteIntercepter> intercepters =
-      new ArrayList<HttpExecuteIntercepter>(1);
+  public List<HttpExecuteIntercepter> intercepters = new ArrayList<HttpExecuteIntercepter>(1);
 
   /**
    * Adds an HTTP response content parser.
    * <p>
-   * If there is already a previous parser defined for this new parser (as
-   * defined by {@link #getParser(String)} then the previous parser will be
-   * removed.
+   * If there is already a previous parser defined for this new parser (as defined by
+   * {@link #getParser(String)} then the previous parser will be removed.
    */
   public void addParser(HttpParser parser) {
     String contentType = getNormalizedContentType(parser.getContentType());
-    this.contentTypeToParserMap.put(contentType, parser);
+    contentTypeToParserMap.put(contentType, parser);
   }
 
   /**
-   * Returns the HTTP response content parser to use for the given content type
-   * or {@code null} if none is defined.
+   * Returns the HTTP response content parser to use for the given content type or {@code null} if
+   * none is defined.
    *
    * @param contentType content type or {@code null} for {@code null} result
    */
@@ -117,7 +108,7 @@ public final class HttpTransport {
       return null;
     }
     contentType = getNormalizedContentType(contentType);
-    return this.contentTypeToParserMap.get(contentType);
+    return contentTypeToParserMap.get(contentType);
   }
 
   private String getNormalizedContentType(String contentType) {
@@ -170,7 +161,7 @@ public final class HttpTransport {
    * @param intercepterClass intercepter class
    */
   public void removeIntercepters(Class<?> intercepterClass) {
-    Iterator<HttpExecuteIntercepter> iterable = this.intercepters.iterator();
+    Iterator<HttpExecuteIntercepter> iterable = intercepters.iterator();
     while (iterable.hasNext()) {
       HttpExecuteIntercepter intercepter = iterable.next();
       if (intercepterClass.isAssignableFrom(intercepter.getClass())) {

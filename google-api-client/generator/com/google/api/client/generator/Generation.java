@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -35,8 +33,7 @@ import java.util.Set;
  */
 public class Generation {
 
-  static void compute(
-      List<AbstractFileGenerator> fileGenerators, File outputDirectory)
+  static void compute(List<AbstractFileGenerator> fileGenerators, File outputDirectory)
       throws IOException {
     int size = 0;
     List<FileComputer> fileComputers = new ArrayList<FileComputer>();
@@ -44,11 +41,9 @@ public class Generation {
     System.out.println("Computing " + fileGenerators.size() + " file(s):");
     Set<String> outputFilePaths = new HashSet<String>();
     for (AbstractFileGenerator fileGenerator : fileGenerators) {
-      FileComputer fileComputer =
-          new FileComputer(fileGenerator, outputDirectory);
+      FileComputer fileComputer = new FileComputer(fileGenerator, outputDirectory);
       if (!outputFilePaths.add(fileComputer.outputFilePath)) {
-        System.err.println("Error: duplicate output file path: "
-            + fileComputer.outputFilePath);
+        System.err.println("Error: duplicate output file path: " + fileComputer.outputFilePath);
         System.exit(1);
       }
       fileComputers.add(fileComputer);
@@ -68,8 +63,9 @@ public class Generation {
       for (FileComputer fileComputer : fileComputers) {
         if (fileComputer.status != FileStatus.UNCHANGED) {
           index++;
-          System.out.println(fileComputer.outputFilePath + " ("
-              + fileComputer.status.toString().toLowerCase() + ")");
+          System.out.println(
+              fileComputer.outputFilePath + " (" + fileComputer.status.toString().toLowerCase()
+                  + ")");
         }
       }
     } else {
@@ -137,7 +133,7 @@ public class Generation {
     }
   }
 
-  private static String readFile(File file) throws IOException {
+  static String readFile(File file) throws IOException {
     InputStream content = new FileInputStream(file);
     try {
       int length = (int) file.length();

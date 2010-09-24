@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -35,24 +33,23 @@ import java.util.logging.Logger;
 public final class HttpRequest {
 
   /** User agent suffix for all requests. */
-  private static final String USER_AGENT_SUFFIX =
-      "Google-API-Java-Client/1.2.0-alpha";
+  private static final String USER_AGENT_SUFFIX = "Google-API-Java-Client/1.2.0-alpha";
 
   /**
    * HTTP request headers.
    * <p>
    * Its value is initialized by calling {@code clone()} on the
-   * {@link HttpTransport#defaultHeaders}. Therefore, it is initialized to be of
-   * the same Java class, i.e. of the same {@link Object#getClass()}.
+   * {@link HttpTransport#defaultHeaders}. Therefore, it is initialized to be of the same Java
+   * class, i.e. of the same {@link Object#getClass()}.
    */
   public HttpHeaders headers;
 
   /**
-   * Whether to disable request content logging during {@link #execute()}
-   * (unless {@link Level#ALL} is loggable which forces all logging).
+   * Whether to disable request content logging during {@link #execute()} (unless {@link Level#ALL}
+   * is loggable which forces all logging).
    * <p>
-   * Useful for example if content has sensitive data such as an authentication
-   * information. Defaults to {@code false}.
+   * Useful for example if content has sensitive data such as an authentication information.
+   * Defaults to {@code false}.
    */
   public boolean disableContentLogging;
 
@@ -76,25 +73,24 @@ public final class HttpRequest {
    */
   HttpRequest(HttpTransport transport, String method) {
     this.transport = transport;
-    this.headers = transport.defaultHeaders.clone();
+    headers = transport.defaultHeaders.clone();
     this.method = method;
   }
 
   /** Sets the {@link #url} based on the given encoded URL string. */
   public void setUrl(String encodedUrl) {
-    this.url = new GenericUrl(encodedUrl);
+    url = new GenericUrl(encodedUrl);
   }
 
   /**
    * Execute the HTTP request and returns the HTTP response.
    * <p>
-   * Note that regardless of the returned status code, the HTTP response content
-   * has not been parsed yet, and must be parsed by the calling code.
+   * Note that regardless of the returned status code, the HTTP response content has not been parsed
+   * yet, and must be parsed by the calling code.
    * <p>
-   * Almost all details of the request and response are logged if
-   * {@link Level#CONFIG} is loggable. The only exception is the value of the
-   * {@code Authorization} header which is only logged if {@link Level#ALL} is
-   * loggable.
+   * Almost all details of the request and response are logged if {@link Level#CONFIG} is loggable.
+   * The only exception is the value of the {@code Authorization} header which is only logged if
+   * {@link Level#ALL} is loggable.
    *
    * @return HTTP response for an HTTP success code
    * @throws HttpResponseException for an HTTP error code
@@ -109,8 +105,7 @@ public final class HttpRequest {
       intercepter.intercept(this);
     }
     // build low-level HTTP request
-    LowLevelHttpTransport lowLevelHttpTransport =
-        HttpTransport.useLowLevelHttpTransport();
+    LowLevelHttpTransport lowLevelHttpTransport = HttpTransport.useLowLevelHttpTransport();
     String method = this.method;
     GenericUrl url = this.url;
     String urlString = url.build();
@@ -121,8 +116,7 @@ public final class HttpRequest {
       lowLevelHttpRequest = lowLevelHttpTransport.buildGetRequest(urlString);
     } else if (method.equals("PATCH")) {
       if (!lowLevelHttpTransport.supportsPatch()) {
-        throw new IllegalArgumentException(
-            "HTTP transport doesn't support PATCH");
+        throw new IllegalArgumentException("HTTP transport doesn't support PATCH");
       }
       lowLevelHttpRequest = lowLevelHttpTransport.buildPatchRequest(urlString);
     } else if (method.equals("POST")) {
@@ -138,13 +132,8 @@ public final class HttpRequest {
     // log method and URL
     if (loggable) {
       logbuf = new StringBuilder();
-      logbuf.append("-------------- REQUEST  --------------").append(
-          Strings.LINE_SEPARATOR);
-      logbuf
-          .append(method)
-          .append(' ')
-          .append(urlString)
-          .append(Strings.LINE_SEPARATOR);
+      logbuf.append("-------------- REQUEST  --------------").append(Strings.LINE_SEPARATOR);
+      logbuf.append(method).append(' ').append(urlString).append(Strings.LINE_SEPARATOR);
     }
     // add to user agent
     HttpHeaders headers = this.headers;
@@ -160,8 +149,7 @@ public final class HttpRequest {
       String lowerCase = name.toLowerCase();
       if (!headerNames.add(lowerCase)) {
         throw new IllegalArgumentException(
-            "multiple headers of the same name (headers are case insensitive): "
-                + lowerCase);
+            "multiple headers of the same name (headers are case insensitive): " + lowerCase);
       }
       Object value = headerEntry.getValue();
       if (value != null) {
@@ -184,10 +172,8 @@ public final class HttpRequest {
       if (contentLength != 0 && contentEncoding == null && contentType != null
           && LogContent.isTextBasedContentType(contentType)) {
         // log content?
-        if (loggable && !this.disableContentLogging
-            || logger.isLoggable(Level.ALL)) {
-          content = new LogContent(
-              content, contentType, contentEncoding, contentLength);
+        if (loggable && !disableContentLogging || logger.isLoggable(Level.ALL)) {
+          content = new LogContent(content, contentType, contentEncoding, contentLength);
         }
         // gzip?
         if (contentLength >= 256) {
@@ -198,15 +184,12 @@ public final class HttpRequest {
       }
       // append content headers to log buffer
       if (loggable) {
-        logbuf.append("Content-Type: " + contentType).append(
-            Strings.LINE_SEPARATOR);
+        logbuf.append("Content-Type: " + contentType).append(Strings.LINE_SEPARATOR);
         if (contentEncoding != null) {
-          logbuf.append("Content-Encoding: " + contentEncoding).append(
-              Strings.LINE_SEPARATOR);
+          logbuf.append("Content-Encoding: " + contentEncoding).append(Strings.LINE_SEPARATOR);
         }
         if (contentLength >= 0) {
-          logbuf.append("Content-Length: " + contentLength).append(
-              Strings.LINE_SEPARATOR);
+          logbuf.append("Content-Length: " + contentLength).append(Strings.LINE_SEPARATOR);
         }
       }
       lowLevelHttpRequest.setContent(content);
@@ -216,8 +199,7 @@ public final class HttpRequest {
       logger.config(logbuf.toString());
     }
     // execute
-    HttpResponse response =
-        new HttpResponse(transport, lowLevelHttpRequest.execute());
+    HttpResponse response = new HttpResponse(transport, lowLevelHttpRequest.execute());
     if (!response.isSuccessStatusCode) {
       throw new HttpResponseException(response);
     }

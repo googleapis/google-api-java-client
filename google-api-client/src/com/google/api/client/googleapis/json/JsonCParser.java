@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -26,8 +24,8 @@ import org.codehaus.jackson.JsonToken;
 import java.io.IOException;
 
 /**
- * Parses HTTP JSON-C response content into an data class of key/value pairs,
- * assuming the data is wrapped in a {@code "data"} envelope.
+ * Parses HTTP JSON-C response content into an data class of key/value pairs, assuming the data is
+ * wrapped in a {@code "data"} envelope.
  * <p>
  * Sample usage:
  *
@@ -45,32 +43,30 @@ import java.io.IOException;
 public final class JsonCParser extends JsonHttpParser {
 
   @Override
-  public <T> T parse(HttpResponse response, Class<T> dataClass)
-      throws IOException {
+  public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
     return Json.parseAndClose(parserForResponse(response), dataClass, null);
   }
 
   /**
-   * Returns a JSON parser to use for parsing the given HTTP response, skipped
-   * over the {@code "data"} envelope.
+   * Returns a JSON parser to use for parsing the given HTTP response, skipped over the {@code
+   * "data"} envelope.
    * <p>
-   * The parser will be closed if any throwable is thrown. The current token
-   * will be the value of the {@code "data"} key.
+   * The parser will be closed if any throwable is thrown. The current token will be the value of
+   * the {@code "data"} key.
    *
    * @param response HTTP response
    * @return JSON parser
-   * @throws IllegalArgumentException if content type is not
-   *         {@link Json#CONTENT_TYPE} or if {@code "data"} key is not found
+   * @throws IllegalArgumentException if content type is not {@link Json#CONTENT_TYPE} or if {@code
+   *         "data"} key is not found
    * @throws IOException I/O exception
    */
-  public static org.codehaus.jackson.JsonParser parserForResponse(
-      HttpResponse response) throws IOException {
+  public static org.codehaus.jackson.JsonParser parserForResponse(HttpResponse response)
+      throws IOException {
     // check for JSON content type
     String contentType = response.contentType;
     if (!contentType.startsWith(Json.CONTENT_TYPE)) {
       throw new IllegalArgumentException(
-          "Wrong content type: expected <" + Json.CONTENT_TYPE + "> but got <"
-              + contentType + ">");
+          "Wrong content type: expected <" + Json.CONTENT_TYPE + "> but got <" + contentType + ">");
     }
     // parse
     boolean failed = true;

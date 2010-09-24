@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -29,19 +27,16 @@ import java.io.IOException;
 
 /**
  * OAuth 2.0 request for an access token as specified in <a
- * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-07#section-5">Obtaining
- * an Access Token</a>.
+ * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-07#section-5">Obtaining an Access Token</a>.
  * <p>
- * This class should be used directly only for the Client Credentials flow
- * specified in <a
- * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-07#section-2.4">Client
- * Credentials Flow</a>.
+ * This class should be used directly only for the Client Credentials flow specified in <a
+ * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-07#section-2.4">Client Credentials Flow</a>.
  * <p>
- * The {@link #clientId} and {@link #clientSecret} fields are required. Call
- * {@link #execute()} to execute the request.
+ * The {@link #clientId} and {@link #clientSecret} fields are required. Call {@link #execute()} to
+ * execute the request.
  * <p>
  * Sample usage for Client Credentials flow:
- * 
+ *
  * <pre>
  * <code>static void requestAccessToken() throws IOException {
  *   try {
@@ -58,10 +53,10 @@ import java.io.IOException;
  *   }
  * }</code>
  * </pre>
- * 
- * Other flows follow the same general approach, but instantiating a different
- * class customized for that flow with additional custom parameters.
- * 
+ *
+ *  Other flows follow the same general approach, but instantiating a different class customized for
+ * that flow with additional custom parameters.
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -72,8 +67,7 @@ public class AccessTokenRequest extends GenericData {
   public String clientId;
 
   /**
-   * (REQUIRED if the client identifier has a matching secret) The client
-   * secret.
+   * (REQUIRED if the client identifier has a matching secret) The client secret.
    */
   @Key("client_secret")
   public String clientSecret;
@@ -87,13 +81,11 @@ public class AccessTokenRequest extends GenericData {
 
   /**
    * Executes request for an access token, and returns the HTTP response.
-   * 
-   * @return HTTP response, which can then be parsed using
-   *         {@link HttpResponse#parseAs(Class)} with
+   *
+   * @return HTTP response, which can then be parsed using {@link HttpResponse#parseAs(Class)} with
    *         {@link AccessTokenResponse}
-   * @throws HttpResponseException for an HTTP error response, which can then be
-   *         parsed using {@link HttpResponse#parseAs(Class)} on
-   *         {@link HttpResponseException#response} using
+   * @throws HttpResponseException for an HTTP error response, which can then be parsed using
+   *         {@link HttpResponse#parseAs(Class)} on {@link HttpResponseException#response} using
    *         {@link AccessTokenErrorResponse}
    * @throws IOException I/O exception
    */
@@ -101,7 +93,7 @@ public class AccessTokenRequest extends GenericData {
     HttpTransport transport = new HttpTransport();
     transport.addParser(new JsonHttpParser());
     HttpRequest request = transport.buildPostRequest();
-    request.setUrl(this.encodedAuthorizationServerUrl);
+    request.setUrl(encodedAuthorizationServerUrl);
     UrlEncodedContent content = new UrlEncodedContent();
     content.data = this;
     request.content = content;

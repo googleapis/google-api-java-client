@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -29,21 +27,21 @@ import java.util.Set;
  * Map that uses {@link ClassInfo} to parse the key/value pairs into a map.
  * <p>
  * Iteration order of the keys is based on the sorted (ascending) key names.
- * 
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public final class ReflectionMap extends AbstractMap<String, Object> {
 
-  private final int size;
+  final int size;
   private EntrySet entrySet;
-  private final ClassInfo classInfo;
-  private final Object object;
+  final ClassInfo classInfo;
+  final Object object;
 
   public ReflectionMap(Object object) {
     this.object = object;
     ClassInfo classInfo = this.classInfo = ClassInfo.of(object.getClass());
-    this.size = classInfo.getKeyCount();
+    size = classInfo.getKeyCount();
   }
 
   // TODO: implement more methods for faster implementation!
@@ -61,18 +59,16 @@ public final class ReflectionMap extends AbstractMap<String, Object> {
 
     @Override
     public Iterator<Map.Entry<String, Object>> iterator() {
-      return new EntryIterator(ReflectionMap.this.classInfo,
-          ReflectionMap.this.object);
+      return new EntryIterator(classInfo, object);
     }
 
     @Override
     public int size() {
-      return ReflectionMap.this.size;
+      return size;
     }
   }
 
-  static final class EntryIterator implements
-      Iterator<Map.Entry<String, Object>> {
+  static final class EntryIterator implements Iterator<Map.Entry<String, Object>> {
 
     private final String[] fieldNames;
     private final int numFields;
@@ -85,9 +81,9 @@ public final class ReflectionMap extends AbstractMap<String, Object> {
       this.object = object;
       // sort the keys
       Collection<String> keyNames = this.classInfo.getKeyNames();
-      int size = this.numFields = keyNames.size();
+      int size = numFields = keyNames.size();
       if (size == 0) {
-        this.fieldNames = null;
+        fieldNames = null;
       } else {
         String[] fieldNames = this.fieldNames = new String[size];
         int i = 0;
@@ -99,17 +95,17 @@ public final class ReflectionMap extends AbstractMap<String, Object> {
     }
 
     public boolean hasNext() {
-      return this.fieldIndex < this.numFields;
+      return fieldIndex < numFields;
     }
 
     public Map.Entry<String, Object> next() {
       int fieldIndex = this.fieldIndex;
-      if (fieldIndex >= this.numFields) {
+      if (fieldIndex >= numFields) {
         throw new NoSuchElementException();
       }
-      String fieldName = this.fieldNames[fieldIndex];
+      String fieldName = fieldNames[fieldIndex];
       this.fieldIndex++;
-      return new Entry(this.object, fieldName);
+      return new Entry(object, fieldName);
     }
 
     public void remove() {
@@ -130,29 +126,29 @@ public final class ReflectionMap extends AbstractMap<String, Object> {
     private final ClassInfo classInfo;
 
     public Entry(Object object, String fieldName) {
-      this.classInfo = ClassInfo.of(object.getClass());
+      classInfo = ClassInfo.of(object.getClass());
       this.object = object;
       this.fieldName = fieldName;
     }
 
     public String getKey() {
-      return this.fieldName;
+      return fieldName;
     }
 
     public Object getValue() {
-      if (this.isFieldValueComputed) {
-        return this.fieldValue;
+      if (isFieldValueComputed) {
+        return fieldValue;
       }
-      this.isFieldValueComputed = true;
-      FieldInfo fieldInfo = this.classInfo.getFieldInfo(this.fieldName);
-      return this.fieldValue = fieldInfo.getValue(this.object);
+      isFieldValueComputed = true;
+      FieldInfo fieldInfo = classInfo.getFieldInfo(fieldName);
+      return fieldValue = fieldInfo.getValue(object);
     }
 
     public Object setValue(Object value) {
-      FieldInfo fieldInfo = this.classInfo.getFieldInfo(this.fieldName);
+      FieldInfo fieldInfo = classInfo.getFieldInfo(fieldName);
       Object oldValue = getValue();
-      fieldInfo.setValue(this.object, value);
-      this.fieldValue = value;
+      fieldInfo.setValue(object, value);
+      fieldValue = value;
       return oldValue;
     }
   }
