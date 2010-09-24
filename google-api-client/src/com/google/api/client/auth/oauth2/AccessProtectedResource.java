@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -26,73 +24,66 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * OAuth 2.0 methods for specifying the access token parameter as specified in
- * <a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-07#section-6">
- * Accessing a Protected Resource</a>.
- * 
+ * OAuth 2.0 methods for specifying the access token parameter as specified in <a
+ * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-07#section-6"> Accessing a Protected
+ * Resource</a>.
+ *
  * @author Yaniv Inbar
  * @since 1.0
  */
 public final class AccessProtectedResource {
 
   /**
-   * Sets the {@code "Authorization"} header using the given access token for
-   * every executed HTTP request for the given HTTP transport.
+   * Sets the {@code "Authorization"} header using the given access token for every executed HTTP
+   * request for the given HTTP transport.
    * <p>
-   * Any existing HTTP request execute intercepters for setting the OAuth 2
-   * access token will be removed.
-   * 
+   * Any existing HTTP request execute intercepters for setting the OAuth 2 access token will be
+   * removed.
+   *
    * @param transport HTTP transport
    * @param accessToken access token
    */
-  public static void usingAuthorizationHeader(HttpTransport transport,
-      String accessToken) {
+  public static void usingAuthorizationHeader(HttpTransport transport, String accessToken) {
     new UsingAuthorizationHeader().authorize(transport, accessToken);
   }
 
   /**
-   * Sets the {@code "oauth_token"} URI query parameter using the given access
-   * token for every executed HTTP request for the given HTTP transport.
+   * Sets the {@code "oauth_token"} URI query parameter using the given access token for every
+   * executed HTTP request for the given HTTP transport.
    * <p>
-   * Any existing HTTP request execute intercepters for setting the OAuth 2
-   * access token will be removed.
-   * 
+   * Any existing HTTP request execute intercepters for setting the OAuth 2 access token will be
+   * removed.
+   *
    * @param transport HTTP transport
    * @param accessToken access token
    */
-  public static void usingQueryParameter(HttpTransport transport,
-      String accessToken) {
+  public static void usingQueryParameter(HttpTransport transport, String accessToken) {
     new UsingQueryParameter().authorize(transport, accessToken);
   }
 
   /**
-   * Sets the {@code "oauth_token"} parameter in the form-encoded HTTP body
-   * using the given access token for every executed HTTP request for the given
-   * HTTP transport.
+   * Sets the {@code "oauth_token"} parameter in the form-encoded HTTP body using the given access
+   * token for every executed HTTP request for the given HTTP transport.
    * <p>
-   * Any existing HTTP request execute intercepters for setting the OAuth 2
-   * access token will be removed. Requirements:
+   * Any existing HTTP request execute intercepters for setting the OAuth 2 access token will be
+   * removed. Requirements:
    * <ul>
    * <li>The HTTP method must be "POST", "PUT", or "DELETE".</li>
    * <li>The HTTP content must be {@code null} or {@link UrlEncodedContent}.</li>
-   * <li>The {@link UrlEncodedContent#data} must be {@code null} or
-   * {@link GenericData}.</li>
+   * <li>The {@link UrlEncodedContent#data} must be {@code null} or {@link GenericData}.</li>
    * </ul>
-   * 
+   *
    * @param transport HTTP transport
    * @param accessToken access token
    */
-  public static void usingFormEncodedBody(HttpTransport transport,
-      String accessToken) {
+  public static void usingFormEncodedBody(HttpTransport transport, String accessToken) {
     new UsingFormEncodedBody().authorize(transport, accessToken);
   }
 
   /**
-   * Abstract class to inject an access token parameter for every executed HTTP
-   * request .
+   * Abstract class to inject an access token parameter for every executed HTTP request .
    */
-  static abstract class AccessTokenIntercepter implements
-      HttpExecuteIntercepter {
+  static abstract class AccessTokenIntercepter implements HttpExecuteIntercepter {
 
     /** Access token to use. */
     String accessToken;
@@ -114,14 +105,13 @@ public final class AccessProtectedResource {
   static final class UsingQueryParameter extends AccessTokenIntercepter {
 
     public void intercept(HttpRequest request) {
-      request.url.set("oauth_token", this.accessToken);
+      request.url.set("oauth_token", accessToken);
     }
   }
 
   static final class UsingFormEncodedBody extends AccessTokenIntercepter {
 
-    private static final List<String> ALLOWED_METHODS =
-        Arrays.asList("POST", "PUT", "DELETE");
+    private static final List<String> ALLOWED_METHODS = Arrays.asList("POST", "PUT", "DELETE");
 
     public void intercept(HttpRequest request) {
       if (!ALLOWED_METHODS.contains(request.method)) {
@@ -140,7 +130,7 @@ public final class AccessProtectedResource {
         data = new GenericData();
         content.data = data;
       }
-      data.put("oauth_token", this.accessToken);
+      data.put("oauth_token", accessToken);
     }
   }
 

@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -30,8 +28,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Manages a JSON-formatted document from the experimental Google Discovery API
- * version 0.1.
+ * Manages a JSON-formatted document from the experimental Google Discovery API version 0.1.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -43,8 +40,7 @@ public final class DiscoveryDocument {
    *
    * @since 1.1
    */
-  public static final class APIDefinition extends ArrayMap<
-      String, ServiceDefinition> {
+  public static final class APIDefinition extends ArrayMap<String, ServiceDefinition> {
   }
 
   /** Defines a specific version of an API. */
@@ -62,20 +58,19 @@ public final class DiscoveryDocument {
     public Map<String, ServiceResource> resources;
 
     /**
-     * Returns {@link ServiceMethod} definition for given method name. Method
-     * identifier is of format "resourceName.methodName".
+     * Returns {@link ServiceMethod} definition for given method name. Method identifier is of
+     * format "resourceName.methodName".
      */
     public ServiceMethod getResourceMethod(String methodIdentifier) {
       int dot = methodIdentifier.indexOf('.');
       String resourceName = methodIdentifier.substring(0, dot);
       String methodName = methodIdentifier.substring(dot + 1);
-      ServiceResource resource = this.resources.get(resourceName);
+      ServiceResource resource = resources.get(resourceName);
       return resource == null ? null : resource.methods.get(methodName);
     }
 
     /**
-     * Returns url for requested method. Method identifier is of format
-     * "resourceName.methodName".
+     * Returns url for requested method. Method identifier is of format "resourceName.methodName".
      */
     String getResourceUrl(String methodIdentifier) {
       return baseUrl + getResourceMethod(methodIdentifier).pathUrl;
@@ -148,8 +143,7 @@ public final class DiscoveryDocument {
   /**
    * Google transport required by {@link #buildRequest}.
    *
-   * @deprecated (scheduled to be removed in version 1.2) Use
-   *             {@link GoogleApi#transport}
+   * @deprecated (scheduled to be removed in version 1.2) Use {@link GoogleApi#transport}
    */
   @Deprecated
   public HttpTransport transport;
@@ -158,16 +152,14 @@ public final class DiscoveryDocument {
   }
 
   /**
-   * Executes a request for the JSON-formatted discovery document for the API of
-   * the given name.
+   * Executes a request for the JSON-formatted discovery document for the API of the given name.
    *
    * @param apiName API name
    * @return discovery document
    * @throws IOException I/O exception executing request
    */
   public static DiscoveryDocument load(String apiName) throws IOException {
-    GenericUrl discoveryUrl =
-        new GenericUrl("http://www.googleapis.com/discovery/0.1/describe");
+    GenericUrl discoveryUrl = new GenericUrl("http://www.googleapis.com/discovery/0.1/describe");
     discoveryUrl.put("api", apiName);
     HttpTransport transport = GoogleTransport.create();
     HttpRequest request = transport.buildGetRequest();
@@ -187,8 +179,8 @@ public final class DiscoveryDocument {
   /**
    * Creates an HTTP request based on the given method name and parameters.
    *
-   * @param fullyQualifiedMethodName name of method as defined in Discovery
-   *        document of format "resourceName.methodName"
+   * @param fullyQualifiedMethodName name of method as defined in Discovery document of format
+   *        "resourceName.methodName"
    * @param parameters user defined key / value data mapping
    * @return HTTP request
    * @throws IOException I/O exception reading
@@ -196,13 +188,13 @@ public final class DiscoveryDocument {
    *             {@link GoogleApi#buildRequest(String, Object)}
    */
   @Deprecated
-  public HttpRequest buildRequest(
-      String fullyQualifiedMethodName, Object parameters) throws IOException {
+  public HttpRequest buildRequest(String fullyQualifiedMethodName, Object parameters)
+      throws IOException {
     GoogleApi googleAPI = new GoogleApi();
-    googleAPI.transport = this.transport;
-    googleAPI.name = this.apiName;
-    googleAPI.version = this.apiDefinition.getKey(0);
-    googleAPI.serviceDefinition = this.apiDefinition.getValue(0);
+    googleAPI.transport = transport;
+    googleAPI.name = apiName;
+    googleAPI.version = apiDefinition.getKey(0);
+    googleAPI.serviceDefinition = apiDefinition.getValue(0);
     return googleAPI.buildRequest(fullyQualifiedMethodName, parameters);
   }
 }

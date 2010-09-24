@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -36,8 +34,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * JSON-RPC 2.0 HTTP transport for RPC requests, including both singleton and
- * batched requests.
+ * JSON-RPC 2.0 HTTP transport for RPC requests, including both singleton and batched requests.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -48,30 +45,28 @@ public final class JsonRpcHttpTransport {
   public GenericUrl rpcServerUrl;
 
   /**
-   * HTTP transport to use for executing HTTP requests. By default this is an
-   * unmodified new instance of {@link HttpTransport}.
+   * HTTP transport to use for executing HTTP requests. By default this is an unmodified new
+   * instance of {@link HttpTransport}.
    */
   public HttpTransport transport = new HttpTransport();
 
   /**
-   * Content type header to use for requests. By default this is {@code
-   * "application/json-rpc"}.
+   * Content type header to use for requests. By default this is {@code "application/json-rpc"}.
    */
   public String contentType = "application/json-rpc";
 
   /**
-   * Accept header to use for requests. By default this is {@code
-   * "application/json-rpc"}.
+   * Accept header to use for requests. By default this is {@code "application/json-rpc"}.
    */
   public String accept = contentType;
 
   /**
-   * Builds a POST HTTP request for the JSON-RPC requests objects specified in
-   * the given JSON-RPC request object.
+   * Builds a POST HTTP request for the JSON-RPC requests objects specified in the given JSON-RPC
+   * request object.
    * <p>
    * You may use {@link JsonHttpParser#parserForResponse(HttpResponse)
-   * JsonHttpParser.parserForResponse}({@link #buildPostRequest(JsonRpcRequest)
-   * execute} (request)) to get the {@link JsonParser}, and
+   * JsonHttpParser.parserForResponse}({@link #buildPostRequest(JsonRpcRequest) execute} (request))
+   * to get the {@link JsonParser}, and
    * {@link Json#parseAndClose(JsonParser, Class, CustomizeJsonParser)} .
    * </p>
    *
@@ -83,16 +78,14 @@ public final class JsonRpcHttpTransport {
   }
 
   /**
-   * Builds a POST HTTP request for the JSON-RPC requests objects specified in
-   * the given JSON-RPC request objects.
+   * Builds a POST HTTP request for the JSON-RPC requests objects specified in the given JSON-RPC
+   * request objects.
    * <p>
-   * Note that the request will always use batching -- i.e. JSON array of
-   * requests -- even if there is only one request. You may use
-   * {@link JsonHttpParser#parserForResponse(HttpResponse)
-   * JsonHttpParser.parserForResponse}({@link #buildPostRequest(List) execute}
-   * (requests)) to get the {@link JsonParser}, and {@link
-   * Json#parseArrayAndClose(JsonParser, Collection, Class,
-   * CustomizeJsonParser)} .
+   * Note that the request will always use batching -- i.e. JSON array of requests -- even if there
+   * is only one request. You may use {@link JsonHttpParser#parserForResponse(HttpResponse)
+   * JsonHttpParser.parserForResponse}({@link #buildPostRequest(List) execute} (requests)) to get
+   * the {@link JsonParser}, and
+   * {@link Json#parseArrayAndClose(JsonParser, Collection, Class, CustomizeJsonParser)} .
    * </p>
    *
    * @param requests JSON-RPC request objects
@@ -103,12 +96,12 @@ public final class JsonRpcHttpTransport {
   }
 
   /**
-   * Builds a GET HTTP request for the JSON-RPC requests objects specified in
-   * the given JSON-RPC request object.
+   * Builds a GET HTTP request for the JSON-RPC requests objects specified in the given JSON-RPC
+   * request object.
    * <p>
    * You may use {@link JsonHttpParser#parserForResponse(HttpResponse)
-   * JsonHttpParser.parserForResponse}( {@link #buildGetRequest(JsonRpcRequest)
-   * executeUsingGet} (request)) to get the {@link JsonParser}, and
+   * JsonHttpParser.parserForResponse}( {@link #buildGetRequest(JsonRpcRequest) executeUsingGet}
+   * (request)) to get the {@link JsonParser}, and
    * {@link Json#parseAndClose(JsonParser, Class, CustomizeJsonParser)} .
    * </p>
    *
@@ -116,34 +109,31 @@ public final class JsonRpcHttpTransport {
    * @return HTTP response
    * @throws IOException I/O exception
    */
-  public HttpRequest buildGetRequest(JsonRpcRequest request)
-      throws IOException {
+  public HttpRequest buildGetRequest(JsonRpcRequest request) throws IOException {
     HttpTransport transport = this.transport;
     HttpRequest httpRequest = transport.buildGetRequest();
-    GenericUrl url = httpRequest.url = this.rpcServerUrl.clone();
+    GenericUrl url = httpRequest.url = rpcServerUrl.clone();
     url.set("method", request.method);
     url.set("id", request.id);
     // base64 encode the params
     ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-    JsonGenerator generator =
-        Json.JSON_FACTORY.createJsonGenerator(byteStream, JsonEncoding.UTF8);
+    JsonGenerator generator = Json.JSON_FACTORY.createJsonGenerator(byteStream, JsonEncoding.UTF8);
     try {
       Json.serialize(generator, request.params);
     } finally {
       generator.close();
     }
-    url.set(
-        "params", new String(Base64.encode(byteStream.toByteArray()), "UTF-8"));
+    url.set("params", new String(Base64.encode(byteStream.toByteArray()), "UTF-8"));
     return httpRequest;
   }
 
   private HttpRequest internalExecute(Object data) {
     HttpTransport transport = this.transport;
     HttpRequest httpRequest = transport.buildPostRequest();
-    httpRequest.url = this.rpcServerUrl;
+    httpRequest.url = rpcServerUrl;
     JsonHttpContent content = new JsonHttpContent();
-    content.contentType = this.contentType;
-    httpRequest.headers.accept = this.accept;
+    content.contentType = contentType;
+    httpRequest.headers.accept = accept;
     content.data = data;
     httpRequest.content = content;
     return httpRequest;

@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -34,14 +32,13 @@ import java.util.HashMap;
 
 /**
  * GData Atom feed parser when the entry class can be computed from the kind.
- * 
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
 
-  private final HashMap<String, Class<?>> kindToEntryClassMap =
-      new HashMap<String, Class<?>>();
+  private final HashMap<String, Class<?>> kindToEntryClassMap = new HashMap<String, Class<?>>();
 
   public void setEntryClasses(Class<?>... entryClasses) {
     int numEntries = entryClasses.length;
@@ -51,8 +48,7 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
       ClassInfo typeInfo = ClassInfo.of(entryClass);
       Field field = typeInfo.getField("@gd:kind");
       if (field == null) {
-        throw new IllegalArgumentException("missing @gd:kind field for "
-            + entryClass.getName());
+        throw new IllegalArgumentException("missing @gd:kind field for " + entryClass.getName());
       }
       Object entry = ClassInfo.newInstance(entryClass);
       String kind = (String) FieldInfo.getFieldValue(field, entry);
@@ -65,8 +61,7 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
   }
 
   @Override
-  protected Object parseEntryInternal() throws IOException,
-      XmlPullParserException {
+  protected Object parseEntryInternal() throws IOException, XmlPullParserException {
     XmlPullParser parser = this.parser;
     String kind = parser.getAttributeValue(GDataHttp.GD_NAMESPACE, "kind");
     Class<?> entryClass = this.kindToEntryClassMap.get(kind);
@@ -74,13 +69,13 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
       throw new IllegalArgumentException("unrecognized kind: " + kind);
     }
     Object result = ClassInfo.newInstance(entryClass);
-    Xml.parseElement(parser, result, this.namespaceDictionary, null);
+    Xml.parseElement(parser, result, namespaceDictionary, null);
     return result;
   }
 
   public static <T, I> MultiKindFeedParser<T> create(HttpResponse response,
-      XmlNamespaceDictionary namespaceDictionary, Class<T> feedClass,
-      Class<?>... entryClasses) throws XmlPullParserException, IOException {
+      XmlNamespaceDictionary namespaceDictionary, Class<T> feedClass, Class<?>... entryClasses)
+      throws XmlPullParserException, IOException {
     InputStream content = response.getContent();
     try {
       Atom.checkContentType(response.contentType);

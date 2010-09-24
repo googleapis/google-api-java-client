@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -22,9 +20,9 @@ import java.io.InputStream;
 /**
  * Low-level HTTP response.
  * <p>
- * This allows providing a different implementation of the HTTP response that is
- * more compatible with the Java environment used.
- * 
+ * This allows providing a different implementation of the HTTP response that is more compatible
+ * with the Java environment used.
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -34,8 +32,7 @@ public abstract class LowLevelHttpResponse {
   public abstract InputStream getContent() throws IOException;
 
   /**
-   * Returns the content encoding (for example {@code "gzip"}) or {@code null}
-   * for none.
+   * Returns the content encoding (for example {@code "gzip"}) or {@code null} for none.
    */
   public abstract String getContentEncoding();
 
@@ -57,8 +54,8 @@ public abstract class LowLevelHttpResponse {
   /**
    * Returns the number of HTTP response headers.
    * <p>
-   * Note that multiple headers of the same name need to be supported, in which
-   * case each header value is treated as a separate header.
+   * Note that multiple headers of the same name need to be supported, in which case each header
+   * value is treated as a separate header.
    */
   public abstract int getHeaderCount();
 

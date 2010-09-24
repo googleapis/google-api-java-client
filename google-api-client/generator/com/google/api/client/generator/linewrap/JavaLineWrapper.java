@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -18,7 +16,7 @@ package com.google.api.client.generator.linewrap;
 
 /**
  * Line wrapper for Java files.
- * 
+ *
  * @author Yaniv Inbar
  */
 public final class JavaLineWrapper extends AbstractLineWrapper {
@@ -31,22 +29,18 @@ public final class JavaLineWrapper extends AbstractLineWrapper {
   /** Java line wrapper computation state. */
   static class JavaComputationState implements ComputationState {
 
-    private final JavaLikeCommentProcessor multiLineComment;
+    final JavaLikeCommentProcessor multiLineComment;
 
-    private final SingleLineCommentProcessor singleLineComment;
+    final SingleLineCommentProcessor singleLineComment;
 
-    JavaComputationState(boolean useJavaMultiLineCommentProcessor,
-        String singleLineCommentPrefix) {
-      multiLineComment =
-          useJavaMultiLineCommentProcessor ? new JavaLikeCommentProcessor()
-              : null;
-      singleLineComment =
-          new SingleLineCommentProcessor(singleLineCommentPrefix);
+    JavaComputationState(boolean useJavaMultiLineCommentProcessor, String singleLineCommentPrefix) {
+      multiLineComment = useJavaMultiLineCommentProcessor ? new JavaLikeCommentProcessor() : null;
+      singleLineComment = new SingleLineCommentProcessor(singleLineCommentPrefix);
     }
 
     /**
-     * Returns whether to cut on the line for a space character. Default
-     * implementation returns {@code true}, but subclasses may override.
+     * Returns whether to cut on the line for a space character. Default implementation returns
+     * {@code true}, but subclasses may override.
      */
     boolean isSpaceCut(String line, int index) {
       return true;
@@ -65,9 +59,9 @@ public final class JavaLineWrapper extends AbstractLineWrapper {
 
   /**
    * {@inheritDoc}
-   * 
-   * @return by default returns {@code new JavaComputationState(true, "//")},
-   *         but subclasses may override.
+   *
+   * @return by default returns {@code new JavaComputationState(true, "//")}, but subclasses may
+   *         override.
    */
   @Override
   ComputationState computationState() {
@@ -75,31 +69,41 @@ public final class JavaLineWrapper extends AbstractLineWrapper {
   }
 
   @Override
-  int getCuttingPoint(ComputationState computationState, String line,
-      StringBuilder prefix, boolean firstCut) {
+  int getCuttingPoint(
+      ComputationState computationState, String line, StringBuilder prefix, boolean firstCut) {
     // don't cut an import
     if (firstCut && line.startsWith("import ")) {
       return line.length();
     }
 
-    return getCuttingPointImpl(computationState, line, prefix, firstCut,
-        MAX_LINE_LENGTH, MAX_LINE_LENGTH);
+    return getCuttingPointImpl(computationState,
+        line,
+        prefix,
+        firstCut,
+        MAX_LINE_LENGTH,
+        MAX_LINE_LENGTH);
   }
 
   /** Cutting algorithm for Java. */
-  static int getCuttingPointImpl(ComputationState computationState,
-      String line, StringBuilder prefix, boolean firstCut) {
-    return getCuttingPointImpl(computationState, line, prefix, firstCut,
-        MAX_LINE_LENGTH, MAX_LINE_LENGTH);
+  static int getCuttingPointImpl(
+      ComputationState computationState, String line, StringBuilder prefix, boolean firstCut) {
+    return getCuttingPointImpl(computationState,
+        line,
+        prefix,
+        firstCut,
+        MAX_LINE_LENGTH,
+        MAX_LINE_LENGTH);
   }
 
   /** Cutting algorithm for Java, with caller specified line lengths. */
   static int getCuttingPointImpl(ComputationState computationState,
-      String line, StringBuilder prefix, boolean firstCut, int maxLineLength,
+      String line,
+      StringBuilder prefix,
+      boolean firstCut,
+      int maxLineLength,
       int maxDocLineLength) {
     // process for a multi-line comment
-    JavaComputationState javaCompState =
-        (JavaComputationState) computationState;
+    JavaComputationState javaCompState = (JavaComputationState) computationState;
     JavaLikeCommentProcessor multiLineComment = javaCompState.multiLineComment;
     if (multiLineComment != null) {
       multiLineComment.processLine(line);
@@ -186,8 +190,7 @@ public final class JavaLineWrapper extends AbstractLineWrapper {
     }
     // is it a JavaDoc comment start?
     boolean isJavaDoc =
-        multiLineComment != null
-            && "/**".equals(multiLineComment.getCommentStart());
+        multiLineComment != null && "/**".equals(multiLineComment.getCommentStart());
 
     int localLength = isJavaDoc ? maxDocLineLength : maxLineLength;
 
@@ -201,8 +204,7 @@ public final class JavaLineWrapper extends AbstractLineWrapper {
     int index = getCutOnSpace(line, maxWidth);
     if (index != -1) {
       // update the prefix so next lines are properly indented
-      if (firstCut && multiLineComment != null
-          && multiLineComment.getCommentStart() != null) {
+      if (firstCut && multiLineComment != null && multiLineComment.getCommentStart() != null) {
         if (line.startsWith("/*")) {
           prefix.append(' ');
         }
@@ -226,9 +228,7 @@ public final class JavaLineWrapper extends AbstractLineWrapper {
       return false;
     }
     index = Strings.indexOfNonSpace(line, index + 1);
-    return index != -1
-        && (line.startsWith("@param ", index) || line.startsWith("@return ",
-            index));
+    return index != -1 && (line.startsWith("@param ", index) || line.startsWith("@return ", index));
   }
 
   private JavaLineWrapper() {

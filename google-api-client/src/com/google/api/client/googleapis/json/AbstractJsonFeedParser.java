@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -25,9 +23,8 @@ import org.codehaus.jackson.JsonToken;
 import java.io.IOException;
 
 /**
- * Abstract base class for a Google JSON-C feed parser when the feed class is
- * known in advance.
- * 
+ * Abstract base class for a Google JSON-C feed parser when the feed class is known in advance.
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -43,8 +40,8 @@ public abstract class AbstractJsonFeedParser<T> {
   }
 
   /**
-   * Parse the feed and return a new parsed instance of the feed class. This
-   * method can be skipped if all you want are the items.
+   * Parse the feed and return a new parsed instance of the feed class. This method can be skipped
+   * if all you want are the items.
    */
   public T parseFeed() throws IOException {
     boolean close = true;
@@ -69,10 +66,9 @@ public abstract class AbstractJsonFeedParser<T> {
   }
 
   /**
-   * Parse the next item in the feed and return a new parsed instanceof of the
-   * item class. If there is no item to parse, it will return {@code null} and
-   * automatically close the parser (in which case there is no need to call
-   * {@link #close()}.
+   * Parse the next item in the feed and return a new parsed instanceof of the item class. If there
+   * is no item to parse, it will return {@code null} and automatically close the parser (in which
+   * case there is no need to call {@link #close()}.
    */
   public Object parseNextItem() throws IOException {
     JsonParser parser = this.parser;

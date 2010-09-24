@@ -8,8 +8,7 @@ import java.io.OutputStream;
  *
  * @since 1.0
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in version 1.2) Use
- *             {@link MultipartRelatedContent}
+ * @deprecated (scheduled to be removed in version 1.2) Use {@link MultipartRelatedContent}
  */
 @Deprecated
 public final class MultipartContent implements HttpContent {
@@ -27,16 +26,14 @@ public final class MultipartContent implements HttpContent {
   private final HttpContent content;
   private final long length;
 
-  public MultipartContent(HttpContent metadata, HttpContent content)
-      throws IOException {
+  public MultipartContent(HttpContent metadata, HttpContent content) throws IOException {
     byte[] metadataContentTypeBytes = metadata.getType().getBytes();
     byte[] mediaTypeBytes = content.getType().getBytes();
     long metadataLength = metadata.getLength();
-    this.length =
-        metadataLength + content.getLength() + mediaTypeBytes.length
-            + metadataContentTypeBytes.length + HEADER.length + 2
-            * CONTENT_TYPE.length + CONTENT_TRANSFER_ENCODING.length + 3
-            * END_OF_PART.length + 10 * CR_LF.length + 4 * TWO_DASHES.length;
+    length = metadataLength + content.getLength() + mediaTypeBytes.length
+        + metadataContentTypeBytes.length + HEADER.length + 2 * CONTENT_TYPE.length
+        + CONTENT_TRANSFER_ENCODING.length + 3 * END_OF_PART.length + 10 * CR_LF.length + 4
+        * TWO_DASHES.length;
     this.metadata = metadata;
     this.content = content;
     this.metadataContentTypeBytes = metadataContentTypeBytes;
@@ -82,7 +79,7 @@ public final class MultipartContent implements HttpContent {
   }
 
   public long getLength() {
-    return this.length;
+    return length;
   }
 
   public String getType() {

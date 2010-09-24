@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -46,19 +44,15 @@ final class DistXmlFileGenerator extends AbstractFileGenerator {
     out.println("  </formats>");
     out.println("  <files>");
     out.println("    <file>");
-    out
-        .println(
-            "      <source>target/${project.artifactId}-${project.version}.jar</source>");
+    out.println("      <source>target/${project.artifactId}-${project.version}.jar</source>");
     out.println("    </file>");
     out.println("    <file>");
-    out
-        .println(
-            "      <source>target/${project.artifactId}-${project.version}-sources.jar</source>");
+    out.println(
+        "      <source>target/${project.artifactId}-${project.version}-sources.jar</source>");
     out.println("    </file>");
     out.println("    <file>");
-    out
-        .println(
-            "      <source>target/${project.artifactId}-${project.version}-javadoc.jar</source>");
+    out.println(
+        "      <source>target/${project.artifactId}-${project.version}-javadoc.jar</source>");
     out.println("    </file>");
     out.println("    <file>");
     out.println("      <source>assemble/LICENSE</source>");
@@ -79,8 +73,8 @@ final class DistXmlFileGenerator extends AbstractFileGenerator {
     out.println("    </file>");
     for (PackageModel pkg : pkgs) {
       out.println("    <file>");
-      out.println("      <source>modules/" + pkg.artifactId + "/target/"
-          + pkg.artifactId + "-" + PackageModel.VERSION + ".jar</source>");
+      out.println("      <source>modules/" + pkg.artifactId + "/target/" + pkg.artifactId + "-"
+          + PackageModel.VERSION + ".jar</source>");
       out.println("      <outputDirectory>packages</outputDirectory>");
       out.println("    </file>");
     }

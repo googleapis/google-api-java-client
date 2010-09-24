@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -29,17 +27,15 @@ import java.util.HashMap;
 
 /**
  * Google JSON-C feed parser when the item class can be computed from the kind.
- * 
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public final class JsonMultiKindFeedParser<T> extends AbstractJsonFeedParser<T> {
 
-  private final HashMap<String, Class<?>> kindToItemClassMap =
-      new HashMap<String, Class<?>>();
+  private final HashMap<String, Class<?>> kindToItemClassMap = new HashMap<String, Class<?>>();
 
-  public JsonMultiKindFeedParser(JsonParser parser, Class<T> feedClass,
-      Class<?>... itemClasses) {
+  public JsonMultiKindFeedParser(JsonParser parser, Class<T> feedClass, Class<?>... itemClasses) {
     super(parser, feedClass);
     int numItems = itemClasses.length;
     HashMap<String, Class<?>> kindToItemClassMap = this.kindToItemClassMap;
@@ -48,14 +44,13 @@ public final class JsonMultiKindFeedParser<T> extends AbstractJsonFeedParser<T> 
       ClassInfo classInfo = ClassInfo.of(itemClass);
       Field field = classInfo.getField("kind");
       if (field == null) {
-        throw new IllegalArgumentException("missing kind field for "
-            + itemClass.getName());
+        throw new IllegalArgumentException("missing kind field for " + itemClass.getName());
       }
       Object item = ClassInfo.newInstance(itemClass);
       String kind = (String) FieldInfo.getFieldValue(field, item);
       if (kind == null) {
-        throw new IllegalArgumentException("missing value for kind field in "
-            + itemClass.getName());
+        throw new IllegalArgumentException(
+            "missing value for kind field in " + itemClass.getName());
       }
       kindToItemClassMap.put(kind, itemClass);
     }
@@ -77,9 +72,9 @@ public final class JsonMultiKindFeedParser<T> extends AbstractJsonFeedParser<T> 
     return Json.parse(parser, itemClass, null);
   }
 
-  public static <T, I> JsonMultiKindFeedParser<T> use(HttpResponse response,
-      Class<T> feedClass, Class<?>... itemClasses) throws IOException {
-    return new JsonMultiKindFeedParser<T>(JsonCParser
-        .parserForResponse(response), feedClass, itemClasses);
+  public static <T, I> JsonMultiKindFeedParser<T> use(
+      HttpResponse response, Class<T> feedClass, Class<?>... itemClasses) throws IOException {
+    return new JsonMultiKindFeedParser<T>(
+        JsonCParser.parserForResponse(response), feedClass, itemClasses);
   }
 }

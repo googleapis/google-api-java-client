@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -26,13 +24,12 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * Implements support for HTTP form content encoding serialization of type
- * {@code application/x-www-form-urlencoded} as specified in the <a href=
- * "http://www.w3.org/TR/REC-html40/interact/forms.html#h-17.13.4.1">HTML 4.0
- * Specification</a>.
+ * Implements support for HTTP form content encoding serialization of type {@code
+ * application/x-www-form-urlencoded} as specified in the <a href=
+ * "http://www.w3.org/TR/REC-html40/interact/forms.html#h-17.13.4.1">HTML 4.0 Specification</a>.
  * <p>
  * Sample usage:
- * 
+ *
  * <pre>
  * <code>
  * static void setContent(HttpRequest request, Object item) {
@@ -42,7 +39,7 @@ import java.util.Map;
  * }
  * </code>
  * </pre>
- * 
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -65,7 +62,7 @@ public final class UrlEncodedContent implements HttpContent {
   }
 
   public String getType() {
-    return this.contentType;
+    return contentType;
   }
 
   public void writeTo(OutputStream out) throws IOException {
@@ -73,11 +70,10 @@ public final class UrlEncodedContent implements HttpContent {
   }
 
   private byte[] computeContent() throws UnsupportedEncodingException {
-    if (this.content == null) {
+    if (content == null) {
       StringBuilder buf = new StringBuilder();
       boolean first = true;
-      for (Map.Entry<String, Object> nameValueEntry : DataUtil.mapOf(this.data)
-          .entrySet()) {
+      for (Map.Entry<String, Object> nameValueEntry : DataUtil.mapOf(data).entrySet()) {
         Object value = nameValueEntry.getValue();
         if (value != null) {
           String name = CharEscapers.escapeUri(nameValueEntry.getKey());
@@ -91,13 +87,12 @@ public final class UrlEncodedContent implements HttpContent {
           }
         }
       }
-      this.content = buf.toString().getBytes("UTF-8");
+      content = buf.toString().getBytes("UTF-8");
     }
-    return this.content;
+    return content;
   }
 
-  private static boolean appendParam(boolean first, StringBuilder buf,
-      String name, Object value) {
+  private static boolean appendParam(boolean first, StringBuilder buf, String name, Object value) {
     if (first) {
       first = false;
     } else {

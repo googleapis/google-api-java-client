@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -29,7 +27,7 @@ import java.io.InputStream;
 
 /**
  * Atom feed parser when the item class is known in advance.
- * 
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -44,16 +42,15 @@ public final class AtomFeedParser<T, I> extends AbstractAtomFeedParser<T> {
   }
 
   @Override
-  protected Object parseEntryInternal() throws IOException,
-      XmlPullParserException {
+  protected Object parseEntryInternal() throws IOException, XmlPullParserException {
     I result = ClassInfo.newInstance(this.entryClass);
-    Xml.parseElement(parser, result, this.namespaceDictionary, null);
+    Xml.parseElement(parser, result, namespaceDictionary, null);
     return result;
   }
 
   public static <T, I> AtomFeedParser<T, I> create(HttpResponse response,
-      XmlNamespaceDictionary namespaceDictionary, Class<T> feedClass,
-      Class<I> entryClass) throws XmlPullParserException, IOException {
+      XmlNamespaceDictionary namespaceDictionary, Class<T> feedClass, Class<I> entryClass)
+      throws XmlPullParserException, IOException {
     InputStream content = response.getContent();
     try {
       Atom.checkContentType(response.contentType);

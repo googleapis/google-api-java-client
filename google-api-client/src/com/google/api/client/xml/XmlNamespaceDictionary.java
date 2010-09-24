@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -35,7 +33,7 @@ import java.util.TreeSet;
 /**
  * XML namespace dictionary that maps namespace aliases to URI.
  * <p>
- * Sample usage: 
+ * Sample usage:
  *
  * <pre>{@code
   static final XmlNamespaceDictionary NAMESPACE_DICTIONARY
@@ -49,17 +47,16 @@ import java.util.TreeSet;
     map.put("thr", "http://purl.org/syndication/thread/1.0");
   }
  *}</pre>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public final class XmlNamespaceDictionary {
 
   /**
-   * Map from XML namespace alias (or {@code ""} for the default namespace) to
-   * XML namespace URI.
+   * Map from XML namespace alias (or {@code ""} for the default namespace) to XML namespace URI.
    */
-  public final HashMap<String, String> namespaceAliasToUriMap =
-      new HashMap<String, String>();
+  public final HashMap<String, String> namespaceAliasToUriMap = new HashMap<String, String>();
 
   /**
    * Adds a known namespace of the given alias and URI.
@@ -71,28 +68,25 @@ public final class XmlNamespaceDictionary {
     if (alias == null || uri == null) {
       throw new NullPointerException();
     }
-    HashMap<String, String> namespaceAliasToUriMap =
-        this.namespaceAliasToUriMap;
+    HashMap<String, String> namespaceAliasToUriMap = this.namespaceAliasToUriMap;
     String knownUri = namespaceAliasToUriMap.get(alias);
     if (!uri.equals(knownUri)) {
       if (knownUri != null) {
         throw new IllegalArgumentException(
-            "expected namespace alias <" + alias + "> to be <" + knownUri
-                + "> but encountered <" + uri + ">");
+            "expected namespace alias <" + alias + "> to be <" + knownUri + "> but encountered <"
+                + uri + ">");
       }
       namespaceAliasToUriMap.put(alias, uri);
     }
   }
 
   /**
-   * Shows a debug string representation of an element data object of key/value
-   * pairs.
+   * Shows a debug string representation of an element data object of key/value pairs.
    *
-   * @param element element data object ({@link GenericXml}, {@link Map}, or any
-   *        object with public fields)
-   * @param elementName optional XML element local name prefixed by its
-   *        namespace alias -- for example {@code "atom:entry"} -- or {@code
-   *        null} to make up something
+   * @param element element data object ({@link GenericXml}, {@link Map}, or any object with public
+   *        fields)
+   * @param elementName optional XML element local name prefixed by its namespace alias -- for
+   *        example {@code "atom:entry"} -- or {@code null} to make up something
    */
   public String toStringOf(String elementName, Object element) {
     try {
@@ -107,58 +101,54 @@ public final class XmlNamespaceDictionary {
   }
 
   /**
-   * Shows a debug string representation of an element data object of key/value
-   * pairs.
+   * Shows a debug string representation of an element data object of key/value pairs.
    *
-   * @param element element data object ({@link GenericXml}, {@link Map}, or any
-   *        object with public fields)
-   * @param elementNamespaceUri XML namespace URI or {@code null} for no
-   *        namespace
+   * @param element element data object ({@link GenericXml}, {@link Map}, or any object with public
+   *        fields)
+   * @param elementNamespaceUri XML namespace URI or {@code null} for no namespace
    * @param elementLocalName XML local name
    * @throws IOException I/O exception
    */
-  public void serialize(XmlSerializer serializer, String elementNamespaceUri,
-      String elementLocalName, Object element) throws IOException {
+  public void serialize(
+      XmlSerializer serializer, String elementNamespaceUri, String elementLocalName, Object element)
+      throws IOException {
     serialize(serializer, elementNamespaceUri, elementLocalName, element, true);
   }
 
   /**
-   * Shows a debug string representation of an element data object of key/value
-   * pairs.
+   * Shows a debug string representation of an element data object of key/value pairs.
    *
-   * @param element element data object ({@link GenericXml}, {@link Map}, or any
-   *        object with public fields)
+   * @param element element data object ({@link GenericXml}, {@link Map}, or any object with public
+   *        fields)
    * @param elementName XML element local name prefixed by its namespace alias
    * @throws IOException I/O exception
    */
-  public void serialize(
-      XmlSerializer serializer, String elementName, Object element)
+  public void serialize(XmlSerializer serializer, String elementName, Object element)
       throws IOException {
     serialize(serializer, elementName, element, true);
   }
 
   private void serialize(XmlSerializer serializer, String elementNamespaceUri,
-      String elementLocalName, Object element, boolean errorOnUnknown)
+      String elementLocalName, Object element, boolean errorOnUnknown) throws IOException {
+    startDoc(serializer, element, errorOnUnknown, elementNamespaceUri).serialize(
+        serializer, elementNamespaceUri, elementLocalName);
+    serializer.endDocument();
+  }
+
+  private void serialize(
+      XmlSerializer serializer, String elementName, Object element, boolean errorOnUnknown)
       throws IOException {
-    startDoc(serializer, element, errorOnUnknown, elementNamespaceUri)
-        .serialize(serializer, elementNamespaceUri, elementLocalName);
+    startDoc(serializer, element, errorOnUnknown, null).serialize(serializer, elementName);
     serializer.endDocument();
   }
 
-  private void serialize(XmlSerializer serializer, String elementName,
-      Object element, boolean errorOnUnknown) throws IOException {
-    startDoc(serializer, element, errorOnUnknown, null).serialize(
-        serializer, elementName);
-    serializer.endDocument();
-  }
-
-  private ElementSerializer startDoc(XmlSerializer serializer, Object element,
-      boolean errorOnUnknown, String extraNamespace) throws IOException {
+  private ElementSerializer startDoc(
+      XmlSerializer serializer, Object element, boolean errorOnUnknown, String extraNamespace)
+      throws IOException {
     serializer.startDocument(null, null);
     SortedSet<String> aliases = new TreeSet<String>();
     computeAliases(element, aliases);
-    HashMap<String, String> namespaceAliasToUriMap =
-        this.namespaceAliasToUriMap;
+    HashMap<String, String> namespaceAliasToUriMap = this.namespaceAliasToUriMap;
     boolean foundExtra = extraNamespace == null;
     for (String alias : aliases) {
       String uri = namespaceAliasToUriMap.get(alias);
@@ -168,8 +158,7 @@ public final class XmlNamespaceDictionary {
       }
     }
     if (!foundExtra) {
-      for (Map.Entry<String, String> entry :
-          namespaceAliasToUriMap.entrySet()) {
+      for (Map.Entry<String, String> entry : namespaceAliasToUriMap.entrySet()) {
         if (extraNamespace.equals(entry.getValue())) {
           serializer.setPrefix(entry.getKey(), extraNamespace);
           break;
@@ -188,8 +177,7 @@ public final class XmlNamespaceDictionary {
           int colon = name.indexOf(':');
           boolean isAttribute = name.charAt(0) == '@';
           if (colon != -1 || !isAttribute) {
-            String alias = colon == -1 ? "" : name.substring(
-                name.charAt(0) == '@' ? 1 : 0, colon);
+            String alias = colon == -1 ? "" : name.substring(name.charAt(0) == '@' ? 1 : 0, colon);
             aliases.add(alias);
           }
           if (!isAttribute && !FieldInfo.isPrimitive(value)) {
@@ -218,21 +206,20 @@ public final class XmlNamespaceDictionary {
       this.errorOnUnknown = errorOnUnknown;
       Class<?> valueClass = elementValue.getClass();
       if (FieldInfo.isPrimitive(valueClass)) {
-        this.textValue = elementValue;
+        textValue = elementValue;
       } else {
-        for (Map.Entry<String, Object> entry :
-            DataUtil.mapOf(elementValue).entrySet()) {
+        for (Map.Entry<String, Object> entry : DataUtil.mapOf(elementValue).entrySet()) {
           Object fieldValue = entry.getValue();
           if (fieldValue != null) {
             String fieldName = entry.getKey();
             if ("text()".equals(fieldName)) {
-              this.textValue = fieldValue;
+              textValue = fieldValue;
             } else if (fieldName.charAt(0) == '@') {
-              this.attributeNames.add(fieldName.substring(1));
-              this.attributeValues.add(fieldValue);
+              attributeNames.add(fieldName.substring(1));
+              attributeValues.add(fieldValue);
             } else {
-              this.subElementNames.add(fieldName);
-              this.subElementValues.add(fieldValue);
+              subElementNames.add(fieldName);
+              subElementValues.add(fieldValue);
             }
           }
         }
@@ -240,20 +227,18 @@ public final class XmlNamespaceDictionary {
     }
 
     String getNamespaceUriForAlias(String alias) {
-      String result =
-          XmlNamespaceDictionary.this.namespaceAliasToUriMap.get(alias);
+      String result = namespaceAliasToUriMap.get(alias);
       if (result == null) {
-        if (this.errorOnUnknown) {
-          throw new IllegalArgumentException("unrecognized alias: "
-              + (alias.length() == 0 ? "(default)" : alias));
+        if (errorOnUnknown) {
+          throw new IllegalArgumentException(
+              "unrecognized alias: " + (alias.length() == 0 ? "(default)" : alias));
         }
         return "http://unknown/" + alias;
       }
       return result;
     }
 
-    void serialize(XmlSerializer serializer, String elementName)
-        throws IOException {
+    void serialize(XmlSerializer serializer, String elementName) throws IOException {
       String elementLocalName = null;
       String elementNamespaceUri = null;
       if (elementName != null) {
@@ -268,8 +253,8 @@ public final class XmlNamespaceDictionary {
       serialize(serializer, elementNamespaceUri, elementLocalName);
     }
 
-    void serialize(XmlSerializer serializer, String elementNamespaceUri,
-        String elementLocalName) throws IOException {
+    void serialize(XmlSerializer serializer, String elementNamespaceUri, String elementLocalName)
+        throws IOException {
       boolean errorOnUnknown = this.errorOnUnknown;
       if (elementLocalName == null) {
         if (errorOnUnknown) {
@@ -287,10 +272,9 @@ public final class XmlNamespaceDictionary {
         int colon = attributeName.indexOf(':');
         String attributeLocalName = attributeName.substring(colon + 1);
         String attributeNamespaceUri =
-            colon == -1 ? null : getNamespaceUriForAlias(
-                attributeName.substring(0, colon));
-        serializer.attribute(attributeNamespaceUri, attributeLocalName,
-            toSerializedValue(attributeValues.get(i)));
+            colon == -1 ? null : getNamespaceUriForAlias(attributeName.substring(0, colon));
+        serializer.attribute(
+            attributeNamespaceUri, attributeLocalName, toSerializedValue(attributeValues.get(i)));
       }
       // text
       Object textValue = this.textValue;
@@ -306,8 +290,7 @@ public final class XmlNamespaceDictionary {
         String subElementName = subElementNames.get(i);
         if (subElementValue instanceof Collection<?>) {
           for (Object subElement : (Collection<?>) subElementValue) {
-            new ElementSerializer(subElement, errorOnUnknown).serialize(
-                serializer, subElementName);
+            new ElementSerializer(subElement, errorOnUnknown).serialize(serializer, subElementName);
           }
         } else {
           new ElementSerializer(subElementValue, errorOnUnknown).serialize(
@@ -337,14 +320,12 @@ public final class XmlNamespaceDictionary {
         return "-INF";
       }
     }
-    if (value instanceof String || value instanceof Number
-        || value instanceof Boolean) {
+    if (value instanceof String || value instanceof Number || value instanceof Boolean) {
       return value.toString();
     }
     if (value instanceof DateTime) {
       return ((DateTime) value).toStringRfc3339();
     }
-    throw new IllegalArgumentException(
-        "unrecognized value type: " + value.getClass());
+    throw new IllegalArgumentException("unrecognized value type: " + value.getClass());
   }
 }

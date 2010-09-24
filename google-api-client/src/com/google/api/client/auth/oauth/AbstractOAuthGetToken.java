@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -26,17 +24,15 @@ import com.google.api.client.http.UrlEncodedParser;
 import java.io.IOException;
 
 /**
- * Generic OAuth 1.0a URL to request a temporary or long-lived token from an
- * authorization server.
- * 
+ * Generic OAuth 1.0a URL to request a temporary or long-lived token from an authorization server.
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public abstract class AbstractOAuthGetToken extends GenericUrl {
 
   /**
-   * Required identifier portion of the client credentials (equivalent to a
-   * username).
+   * Required identifier portion of the client credentials (equivalent to a username).
    */
   public String consumerKey;
 
@@ -55,7 +51,7 @@ public abstract class AbstractOAuthGetToken extends GenericUrl {
 
   /**
    * Executes the HTTP request for a temporary or long-lived token.
-   * 
+   *
    * @return OAuth credentials response object
    * @throws HttpResponseException for an HTTP error code
    * @throws IOException I/O exception
@@ -63,9 +59,7 @@ public abstract class AbstractOAuthGetToken extends GenericUrl {
   public final OAuthCredentialsResponse execute() throws IOException {
     HttpTransport transport = new HttpTransport();
     createParameters().signRequestsUsingAuthorizationHeader(transport);
-    HttpRequest request =
-        this.usePost ? transport.buildPostRequest() : transport
-            .buildGetRequest();
+    HttpRequest request = usePost ? transport.buildPostRequest() : transport.buildGetRequest();
     request.url = this;
     HttpResponse response = request.execute();
     response.disableContentLogging = true;
@@ -75,14 +69,13 @@ public abstract class AbstractOAuthGetToken extends GenericUrl {
   }
 
   /**
-   * Returns a new instance of the OAuth authentication provider. Subclasses may
-   * override by calling this super implementation and then adding OAuth
-   * parameters.
+   * Returns a new instance of the OAuth authentication provider. Subclasses may override by calling
+   * this super implementation and then adding OAuth parameters.
    */
   public OAuthParameters createParameters() {
     OAuthParameters result = new OAuthParameters();
-    result.consumerKey = this.consumerKey;
-    result.signer = this.signer;
+    result.consumerKey = consumerKey;
+    result.signer = signer;
     return result;
   }
 }
