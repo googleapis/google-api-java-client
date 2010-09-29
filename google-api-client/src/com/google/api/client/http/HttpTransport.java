@@ -19,6 +19,7 @@ import com.google.api.client.util.ArrayMap;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -32,8 +33,8 @@ public final class HttpTransport {
   static final Logger LOGGER = Logger.getLogger(HttpTransport.class.getName());
 
   /**
-   * Low level HTTP transport interface to use or {@code null} to use the default of {@code
-   * java.net} transport.
+   * Low level HTTP transport interface to use or {@code null} to use the default as specified in
+   * {@link #useLowLevelHttpTransport()}.
    */
   private static LowLevelHttpTransport lowLevelHttpTransport;
 
@@ -45,8 +46,8 @@ public final class HttpTransport {
    * Must be set before the first HTTP transport is constructed or else the default will be used as
    * specified in {@link #useLowLevelHttpTransport()}.
    *
-   * @param lowLevelHttpTransport low level HTTP transport or {@code null} to use the default of
-   *        {@code java.net} transport
+   * @param lowLevelHttpTransport low level HTTP transport or {@code null} to use the default as
+   *        specified in {@link #useLowLevelHttpTransport()}
    */
   public static void setLowLevelHttpTransport(LowLevelHttpTransport lowLevelHttpTransport) {
     HttpTransport.lowLevelHttpTransport = lowLevelHttpTransport;
@@ -55,17 +56,52 @@ public final class HttpTransport {
   /**
    * Returns the low-level HTTP transport to use. If
    * {@link #setLowLevelHttpTransport(LowLevelHttpTransport)} hasn't been called, it uses the
-   * default of {@code java.net} transport.
+   * default depending on the classpath:
+   * <ul>
+   * <li>Google App Engine: uses {@code com.google.api.client.appengine.UrlFetchTransport}</li>
+   * <li>Apache HTTP Client (e.g. Android): uses {@code
+   * com.google.api.client.apache.ApacheHttpTransport}</li>
+   * <li>Otherwise: uses the standard {@code com.google.api.client.javanet.NetHttpTransport}</li>
+   * </ul>
+   * <p>
+   * Warning: prior to version 1.2 the default was always based on {@code
+   * com.google.api.client.javanet.NetHttpTransport} regardless of environment.
+   * </p>
    */
   public static LowLevelHttpTransport useLowLevelHttpTransport() {
     LowLevelHttpTransport lowLevelHttpTransportInterface = HttpTransport.lowLevelHttpTransport;
     if (lowLevelHttpTransportInterface == null) {
       try {
-        HttpTransport.lowLevelHttpTransport =
+        // check for Google App Engine
+        Class.forName("com.google.appengine.api.urlfetch.URLFetchServiceFactory");
+        lowLevelHttpTransport =
             lowLevelHttpTransportInterface = (LowLevelHttpTransport) Class.forName(
-                "com.google.api.client.javanet.NetHttpTransport").getField("INSTANCE").get(null);
-      } catch (Exception e) {
-        throw new IllegalStateException("unable to load NetHttpTrasnport");
+                "com.google.api.client.appengine.UrlFetchTransport").getField("INSTANCE").get(null);
+      } catch (Exception e0) {
+        try {
+          // check for Apache HTTP client
+          Class.forName("org.apache.http.client.HttpClient");
+          lowLevelHttpTransport =
+              lowLevelHttpTransportInterface =
+                  (LowLevelHttpTransport) Class.forName(
+                      "com.google.api.client.apache.ApacheHttpTransport").getField("INSTANCE").get(
+                      null);
+        } catch (Exception e1) {
+          // use standard {@code java.net} transport.
+          try {
+            lowLevelHttpTransport =
+                lowLevelHttpTransportInterface =
+                    (LowLevelHttpTransport) Class.forName(
+                        "com.google.api.client.javanet.NetHttpTransport").getField("INSTANCE").get(
+                        null);
+          } catch (Exception e2) {
+            throw new IllegalStateException("unable to load NetHttpTrasnport");
+          }
+        }
+      }
+      if (LOGGER.isLoggable(Level.CONFIG)) {
+        LOGGER.config("Using low-level HTTP transport: "
+            + lowLevelHttpTransportInterface.getClass().getName());
       }
     }
     return lowLevelHttpTransportInterface;
