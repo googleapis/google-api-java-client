@@ -85,11 +85,19 @@ public final class PackageModel implements Comparable<PackageModel> {
             String className = matcher.group(1);
             String packageName = getPackageName(className);
             if (className.startsWith("com.google.")) {
-              DependencyModel dep = new DependencyModel();
-              dep.groupId = "com.google.api.client";
-              dep.artifactId = packageName.substring(4).replace('.', '-');
-              dep.version = VERSION_SNAPSHOT;
-              if (!pkg.artifactId.equals(dep.artifactId)) {
+              if (className.startsWith("com.google.api.client")) {
+                DependencyModel dep = new DependencyModel();
+                dep.groupId = "com.google.api.client";
+                dep.artifactId = packageName.substring("com.".length()).replace('.', '-');
+                dep.version = VERSION_SNAPSHOT;
+                if (!pkg.artifactId.equals(dep.artifactId)) {
+                  pkg.dependencies.add(dep);
+                }
+              } else if (className.startsWith("com.google.appengine")) {
+                DependencyModel dep = new DependencyModel();
+                dep.groupId = "com.google.appengine";
+                dep.artifactId = "appengine-api-1.0-sdk";
+                dep.scope = "provided";
                 pkg.dependencies.add(dep);
               }
             } else if (className.startsWith("android.") || className.startsWith("org.apache.")) {

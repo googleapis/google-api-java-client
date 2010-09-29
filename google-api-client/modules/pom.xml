@@ -12,6 +12,7 @@
   <modules>
     <module>google-api-client-android-xml</module>
     <module>google-api-client-apache</module>
+    <module>google-api-client-appengine</module>
     <module>google-api-client-auth</module>
     <module>google-api-client-auth-oauth</module>
     <module>google-api-client-auth-oauth2</module>

@@ -39,6 +39,10 @@
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
+      <source>modules/google-api-client-appengine/target/google-api-client-appengine-1.2.0-alpha.jar</source>
+      <outputDirectory>packages</outputDirectory>
+    </file>
+    <file>
       <source>modules/google-api-client-auth/target/google-api-client-auth-1.2.0-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
