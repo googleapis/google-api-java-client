@@ -28,14 +28,13 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>com.google.android</groupId>
-      <artifactId>android</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>com.google.api.client</groupId>
       <artifactId>google-api-client-http</artifactId>
       <version>1.2.0-alpha-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
     </dependency>
   </dependencies>
 </project>

@@ -47,5 +47,9 @@
       <artifactId>google-api-client-xml-atom</artifactId>
       <version>1.2.0-alpha-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>xpp3</groupId>
+      <artifactId>xpp3</artifactId>
+    </dependency>
   </dependencies>
 </project>
