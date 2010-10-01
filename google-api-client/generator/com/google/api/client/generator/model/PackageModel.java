@@ -33,7 +33,7 @@ public final class PackageModel implements Comparable<PackageModel> {
   public static final String VERSION = "1.2.0-alpha";
   public static final String VERSION_SNAPSHOT = VERSION + "-SNAPSHOT";
 
-  private static final Pattern IMPORT_PATTERN = Pattern.compile("\nimport ([a-zA-Z.]+);");
+  private static final Pattern IMPORT_PATTERN = Pattern.compile("\nimport ([\\w.]+);");
 
   public final String artifactId;
   public final String directoryPath;
@@ -100,11 +100,19 @@ public final class PackageModel implements Comparable<PackageModel> {
                 dep.scope = "provided";
                 pkg.dependencies.add(dep);
               }
-            } else if (className.startsWith("android.") || className.startsWith("org.apache.")) {
+            } else if (className.startsWith("android.")) {
               DependencyModel dep = new DependencyModel();
               dep.groupId = "com.google.android";
               dep.artifactId = "android";
-              dep.scope = "provided";
+              pkg.dependencies.add(dep);
+            } else if (className.startsWith("org.apache.")) {
+              DependencyModel dep = new DependencyModel();
+              dep.groupId = "org.apache.httpcomponents";
+              dep.artifactId = "httpclient";
+              pkg.dependencies.add(dep);
+            } else if (className.startsWith("org.xmlpull.v1.")) {
+              DependencyModel dep = new DependencyModel();
+              dep.groupId = dep.artifactId = "xpp3";
               pkg.dependencies.add(dep);
             } else if (className.startsWith("org.codehaus.jackson.")) {
               DependencyModel dep = new DependencyModel();
