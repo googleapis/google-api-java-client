@@ -122,8 +122,8 @@ public class GoogleHeaders extends HttpHeaders {
   }
 
   /**
-   * Sets the {@code "User-Agent"} header for the given application name of the form {@code
-   * "[company-id]-[app-name]-[app-version]"} into the given HTTP headers.
+   * Sets the {@code "User-Agent"} header of the form {@code
+   * "[company-id]-[app-name]/[app-version]"}, for example {@code "Google-Sample/1.0"}.
    */
   public void setApplicationName(String applicationName) {
     userAgent = applicationName;
