@@ -25,6 +25,13 @@ import java.io.UnsupportedEncodingException;
 public class Strings {
 
   /**
+   * Version of the Google API Client Library for Java.
+   *
+   * @since 1.3
+   */
+  public static final String VERSION = "1.3.0-alpha";
+
+  /**
    * Line separator to use for this OS, i.e. {@code "\n"} or {@code "\r\n"}.
    */
   public static final String LINE_SEPARATOR = System.getProperty("line.separator");
