@@ -122,31 +122,11 @@ public final class DiscoveryDocument {
   }
 
   /**
-   * First API service definition parsed from discovery document.
-   *
-   * @deprecated (scheduled to be removed in version 1.2) Use for example {@code
-   *             get("buzz").get("v1")}
-   */
-  @Deprecated
-  public ServiceDefinition serviceDefinition;
-
-  /** API name. */
-  private String apiName;
-
-  /**
    * Definition of all versions defined in this Google API.
    *
    * @since 1.1
    */
   public final APIDefinition apiDefinition = new APIDefinition();
-
-  /**
-   * Google transport required by {@link #buildRequest}.
-   *
-   * @deprecated (scheduled to be removed in version 1.2) Use {@link GoogleApi#transport}
-   */
-  @Deprecated
-  public HttpTransport transport;
 
   private DiscoveryDocument() {
   }
@@ -167,34 +147,8 @@ public final class DiscoveryDocument {
     JsonParser parser = JsonCParser.parserForResponse(request.execute());
     Json.skipToKey(parser, apiName);
     DiscoveryDocument result = new DiscoveryDocument();
-    result.apiName = apiName;
     APIDefinition apiDefinition = result.apiDefinition;
     Json.parseAndClose(parser, apiDefinition, null);
-    if (apiDefinition.size() != 0) {
-      result.serviceDefinition = apiDefinition.getValue(0);
-    }
     return result;
-  }
-
-  /**
-   * Creates an HTTP request based on the given method name and parameters.
-   *
-   * @param fullyQualifiedMethodName name of method as defined in Discovery document of format
-   *        "resourceName.methodName"
-   * @param parameters user defined key / value data mapping
-   * @return HTTP request
-   * @throws IOException I/O exception reading
-   * @deprecated (scheduled to be removed in version 1.2) Use
-   *             {@link GoogleApi#buildRequest(String, Object)}
-   */
-  @Deprecated
-  public HttpRequest buildRequest(String fullyQualifiedMethodName, Object parameters)
-      throws IOException {
-    GoogleApi googleAPI = new GoogleApi();
-    googleAPI.transport = transport;
-    googleAPI.name = apiName;
-    googleAPI.version = apiDefinition.getKey(0);
-    googleAPI.serviceDefinition = apiDefinition.getValue(0);
-    return googleAPI.buildRequest(fullyQualifiedMethodName, parameters);
   }
 }

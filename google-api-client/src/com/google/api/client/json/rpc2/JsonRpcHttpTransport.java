@@ -23,6 +23,7 @@ import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonHttpContent;
 import com.google.api.client.json.JsonHttpParser;
 import com.google.api.client.util.Base64;
+import com.google.api.client.util.Strings;
 
 import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonGenerator;
@@ -123,7 +124,7 @@ public final class JsonRpcHttpTransport {
     } finally {
       generator.close();
     }
-    url.set("params", new String(Base64.encode(byteStream.toByteArray()), "UTF-8"));
+    url.set("params", Strings.fromBytesUtf8(Base64.encode(byteStream.toByteArray())));
     return httpRequest;
   }
 

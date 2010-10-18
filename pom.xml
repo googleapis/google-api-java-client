@@ -71,7 +71,7 @@
       <dependency>
         <groupId>org.codehaus.jackson</groupId>
         <artifactId>jackson-core-asl</artifactId>
-        <version>1.5.6</version>
+        <version>1.5.7</version>
         <type>jar</type>
       </dependency>
       <dependency>
