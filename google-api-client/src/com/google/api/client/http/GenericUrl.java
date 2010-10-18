@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -32,20 +30,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * URL builder in which the query parameters are specified as generic data
- * key/value pairs, based on the specification <a
- * href="http://tools.ietf.org/html/rfc3986">RFC 3986: Uniform Resource
+ * URL builder in which the query parameters are specified as generic data key/value pairs, based on
+ * the specification <a href="http://tools.ietf.org/html/rfc3986">RFC 3986: Uniform Resource
  * Identifier (URI)</a>.
  * <p>
- * The query parameters are specified with the data key name as the parameter
- * name, and the data value as the parameter value. Subclasses can declare
- * fields for known query parameters using the {@link Key} annotation. {@code
- * null} parameter names are not allowed, but {@code null} query values are
- * allowed.
+ * The query parameters are specified with the data key name as the parameter name, and the data
+ * value as the parameter value. Subclasses can declare fields for known query parameters using the
+ * {@link Key} annotation. {@code null} parameter names are not allowed, but {@code null} query
+ * values are allowed.
  * </p>
  * <p>
- * Query parameter values are parsed using
- * {@link UrlEncodedParser#parse(String, Object)}.
+ * Query parameter values are parsed using {@link UrlEncodedParser#parse(String, Object)}.
  * </p>
  *
  * @since 1.0
@@ -66,13 +61,12 @@ public class GenericUrl extends GenericData {
   public int port = -1;
 
   /**
-   * Decoded path component by parts with each part separated by a {@code '/'}
-   * or {@code null} for none, for example {@code
-   * "/m8/feeds/contacts/default/full"} is represented by {@code "", "m8",
+   * Decoded path component by parts with each part separated by a {@code '/'} or {@code null} for
+   * none, for example {@code "/m8/feeds/contacts/default/full"} is represented by {@code "", "m8",
    * "feeds", "contacts", "default", "full"}.
    * <p>
-   * Use {@link #appendRawPath(String)} to append to the path, which ensures
-   * that no extra slash is added.
+   * Use {@link #appendRawPath(String)} to append to the path, which ensures that no extra slash is
+   * added.
    */
   public List<String> pathParts;
 
@@ -85,12 +79,10 @@ public class GenericUrl extends GenericData {
   /**
    * Constructs from an encoded URL.
    * <p>
-   * Any known query parameters with pre-defined fields as data keys will be
-   * parsed based on their data type. Any unrecognized query parameter will
-   * always be parsed as a string.
+   * Any known query parameters with pre-defined fields as data keys will be parsed based on their
+   * data type. Any unrecognized query parameter will always be parsed as a string.
    *
-   * @param encodedUrl encoded URL, including any existing query parameters that
-   *        should be parsed
+   * @param encodedUrl encoded URL, including any existing query parameters that should be parsed
    * @throws IllegalArgumentException if URL has a syntax error
    */
   public GenericUrl(String encodedUrl) {
@@ -100,11 +92,11 @@ public class GenericUrl extends GenericData {
     } catch (URISyntaxException e) {
       throw new IllegalArgumentException(e);
     }
-    this.scheme = uri.getScheme().toLowerCase();
-    this.host = uri.getHost();
-    this.port = uri.getPort();
-    this.pathParts = toPathParts(uri.getRawPath());
-    this.fragment = uri.getFragment();
+    scheme = uri.getScheme().toLowerCase();
+    host = uri.getHost();
+    port = uri.getPort();
+    pathParts = toPathParts(uri.getRawPath());
+    fragment = uri.getFragment();
     String query = uri.getRawQuery();
     if (query != null) {
       UrlEncodedParser.parse(query, this);
@@ -138,19 +130,18 @@ public class GenericUrl extends GenericData {
   @Override
   public GenericUrl clone() {
     GenericUrl result = (GenericUrl) super.clone();
-    result.pathParts = new ArrayList<String>(this.pathParts);
+    result.pathParts = new ArrayList<String>(pathParts);
     return result;
   }
 
   /**
-   * Constructs the string representation of the URL, including the path
-   * specified by {@link #pathParts} and the query parameters specified by this
-   * generic URL.
+   * Constructs the string representation of the URL, including the path specified by
+   * {@link #pathParts} and the query parameters specified by this generic URL.
    */
   public final String build() {
     // scheme, host, port, and path
     StringBuilder buf = new StringBuilder();
-    buf.append(this.scheme).append("://").append(this.host);
+    buf.append(scheme).append("://").append(host);
     int port = this.port;
     if (port != -1) {
       buf.append(':').append(port);
@@ -222,8 +213,8 @@ public class GenericUrl extends GenericData {
   /**
    * Returns the raw encoded path computed from the {@link #pathParts}.
    *
-   * @return raw encoded path computed from the {@link #pathParts} or {@code
-   *         null} if {@link #pathParts} is {@code null}
+   * @return raw encoded path computed from the {@link #pathParts} or {@code null} if
+   *         {@link #pathParts} is {@code null}
    */
   public String getRawPath() {
     List<String> pathParts = this.pathParts;
@@ -238,21 +229,19 @@ public class GenericUrl extends GenericData {
   /**
    * Sets the {@link #pathParts} from the given raw encoded path.
    *
-   * @param encodedPath raw encoded path or {@code null} to set
-   *        {@link #pathParts} to {@code null}
+   * @param encodedPath raw encoded path or {@code null} to set {@link #pathParts} to {@code null}
    */
   public void setRawPath(String encodedPath) {
-    this.pathParts = toPathParts(encodedPath);
+    pathParts = toPathParts(encodedPath);
   }
 
   /**
-   * Appends the given raw encoded path to the current {@link #pathParts},
-   * setting field only if it is {@code null} or empty.
+   * Appends the given raw encoded path to the current {@link #pathParts}, setting field only if it
+   * is {@code null} or empty.
    * <p>
-   * The last part of the {@link #pathParts} is merged with the first part of
-   * the path parts computed from the given encoded path. Thus, if the current
-   * raw encoded path is {@code "a"}, and the given encoded path is {@code "b"},
-   * then the resulting raw encoded path is {@code "ab"}.
+   * The last part of the {@link #pathParts} is merged with the first part of the path parts
+   * computed from the given encoded path. Thus, if the current raw encoded path is {@code "a"}, and
+   * the given encoded path is {@code "b"}, then the resulting raw encoded path is {@code "ab"}.
    *
    * @param encodedPath raw encoded path or {@code null} to ignore
    */
@@ -264,10 +253,8 @@ public class GenericUrl extends GenericData {
         this.pathParts = appendedPathParts;
       } else {
         int size = pathParts.size();
-        pathParts.set(
-            size - 1, pathParts.get(size - 1) + appendedPathParts.get(0));
-        pathParts.addAll(
-            appendedPathParts.subList(1, appendedPathParts.size()));
+        pathParts.set(size - 1, pathParts.get(size - 1) + appendedPathParts.get(0));
+        pathParts.addAll(appendedPathParts.subList(1, appendedPathParts.size()));
       }
     }
   }
@@ -277,10 +264,9 @@ public class GenericUrl extends GenericData {
    *
    * @param encodedPath slash-prefixed encoded path, for example {@code
    *        "/m8/feeds/contacts/default/full"}
-   * @return decoded path parts, with each part assumed to be preceded by a
-   *         {@code '/'}, for example {@code "", "m8", "feeds", "contacts",
-   *         "default", "full"}, or {@code null} for {@code null} or {@code ""}
-   *         input
+   * @return decoded path parts, with each part assumed to be preceded by a {@code '/'}, for example
+   *         {@code "", "m8", "feeds", "contacts", "default", "full"}, or {@code null} for {@code
+   *         null} or {@code ""} input
    */
   public static List<String> toPathParts(String encodedPath) {
     if (encodedPath == null || encodedPath.length() == 0) {
@@ -318,8 +304,7 @@ public class GenericUrl extends GenericData {
     }
   }
 
-  private static boolean appendParam(
-      boolean first, StringBuilder buf, String name, Object value) {
+  private static boolean appendParam(boolean first, StringBuilder buf, String name, Object value) {
     if (first) {
       first = false;
       buf.append('?');

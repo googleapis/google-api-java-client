@@ -6,23 +6,20 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 /**
- * Default XML parser factory that uses the default specified in
- * {@link XmlPullParserFactory}.
- * 
+ * Default XML parser factory that uses the default specified in {@link XmlPullParserFactory}.
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public final class DefaultXmlParserFactory implements XmlParserFactory {
 
   /**
-   * Only instance or {@code null} if {@link #getInstance()} has not been
-   * called.
+   * Only instance or {@code null} if {@link #getInstance()} has not been called.
    */
   private static DefaultXmlParserFactory INSTANCE;
 
   /** Returns the only instance of the default XML parser factory. */
-  public static DefaultXmlParserFactory getInstance()
-      throws XmlPullParserException {
+  public static DefaultXmlParserFactory getInstance() throws XmlPullParserException {
     if (INSTANCE == null) {
       INSTANCE = new DefaultXmlParserFactory();
     }
@@ -33,17 +30,16 @@ public final class DefaultXmlParserFactory implements XmlParserFactory {
   private final XmlPullParserFactory factory;
 
   private DefaultXmlParserFactory() throws XmlPullParserException {
-    factory =
-        XmlPullParserFactory.newInstance(System
-            .getProperty(XmlPullParserFactory.PROPERTY_NAME), null);
+    factory = XmlPullParserFactory.newInstance(
+        System.getProperty(XmlPullParserFactory.PROPERTY_NAME), null);
     factory.setNamespaceAware(true);
   }
 
   public XmlPullParser createParser() throws XmlPullParserException {
-    return this.factory.newPullParser();
+    return factory.newPullParser();
   }
 
   public XmlSerializer createSerializer() throws XmlPullParserException {
-    return this.factory.newSerializer();
+    return factory.newSerializer();
   }
 }

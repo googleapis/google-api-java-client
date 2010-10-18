@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -22,9 +20,9 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 /**
- * Immutable representation of a date with an optional time and an optional time
- * zone based on RFC 3339.
- * 
+ * Immutable representation of a date with an optional time and an optional time zone based on RFC
+ * 3339.
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -34,9 +32,9 @@ public class DateTime {
 
   /**
    * Date/time value expressed as the number of ms since the Unix epoch.
-   * 
-   * If the time zone is specified, this value is normalized to UTC, so to
-   * format this date/time value, the time zone shift has to be applied.
+   *
+   *  If the time zone is specified, this value is normalized to UTC, so to format this date/time
+   * value, the time zone shift has to be applied.
    */
   public final long value;
 
@@ -44,16 +42,16 @@ public class DateTime {
   public final boolean dateOnly;
 
   /**
-   * Time zone shift from UTC in minutes. If {@code null}, no time zone is set,
-   * and the time is always interpreted as local time.
+   * Time zone shift from UTC in minutes. If {@code null}, no time zone is set, and the time is
+   * always interpreted as local time.
    */
   public final Integer tzShift;
 
   public DateTime(Date date, TimeZone zone) {
     long value = date.getTime();
-    this.dateOnly = false;
+    dateOnly = false;
     this.value = value;
-    this.tzShift = zone.getOffset(value) / 60000;
+    tzShift = zone.getOffset(value) / 60000;
   }
 
   public DateTime(long value) {
@@ -80,7 +78,7 @@ public class DateTime {
     StringBuilder sb = new StringBuilder();
 
     Calendar dateTime = new GregorianCalendar(GMT);
-    long localTime = this.value;
+    long localTime = value;
     Integer tzShift = this.tzShift;
     if (tzShift != null) {
       localTime += tzShift.longValue() * 60000;
@@ -93,7 +91,7 @@ public class DateTime {
     sb.append('-');
     appendInt(sb, dateTime.get(Calendar.DAY_OF_MONTH), 2);
 
-    if (!this.dateOnly) {
+    if (!dateOnly) {
 
       sb.append('T');
       appendInt(sb, dateTime.get(Calendar.HOUR_OF_DAY), 2);
@@ -149,7 +147,7 @@ public class DateTime {
       return false;
     }
     DateTime other = (DateTime) o;
-    return this.dateOnly == other.dateOnly && this.value == other.value;
+    return dateOnly == other.dateOnly && value == other.value;
   }
 
   /**
@@ -163,8 +161,7 @@ public class DateTime {
       int day = Integer.parseInt(str.substring(8, 10));
       int tzIndex;
       int length = str.length();
-      boolean dateOnly =
-          length <= 10 || Character.toUpperCase(str.charAt(10)) != 'T';
+      boolean dateOnly = length <= 10 || Character.toUpperCase(str.charAt(10)) != 'T';
       if (dateOnly) {
         dateTime.set(year, month, day);
         tzIndex = 10;
@@ -188,9 +185,8 @@ public class DateTime {
         if (Character.toUpperCase(str.charAt(tzIndex)) == 'Z') {
           tzShift = 0;
         } else {
-          tzShift =
-              Integer.parseInt(str.substring(tzIndex + 1, tzIndex + 3)) * 60
-                  + Integer.parseInt(str.substring(tzIndex + 4, tzIndex + 6));
+          tzShift = Integer.parseInt(str.substring(tzIndex + 1, tzIndex + 3)) * 60
+              + Integer.parseInt(str.substring(tzIndex + 4, tzIndex + 6));
           if (str.charAt(tzIndex) == '-') {
             tzShift = -tzShift;
           }

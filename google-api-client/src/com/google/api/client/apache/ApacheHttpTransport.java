@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -65,7 +63,7 @@ public final class ApacheHttpTransport extends LowLevelHttpTransport {
     HttpConnectionParams.setSoTimeout(params, 20 * 1000);
     HttpConnectionParams.setSocketBufferSize(params, 8192);
     params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
-    this.httpClient = new DefaultHttpClient(params);
+    httpClient = new DefaultHttpClient(params);
   }
 
   @Override
@@ -80,31 +78,31 @@ public final class ApacheHttpTransport extends LowLevelHttpTransport {
 
   @Override
   public ApacheHttpRequest buildDeleteRequest(String url) {
-    return new ApacheHttpRequest(this.httpClient, new HttpDelete(url));
+    return new ApacheHttpRequest(httpClient, new HttpDelete(url));
   }
 
   @Override
   public ApacheHttpRequest buildGetRequest(String url) {
-    return new ApacheHttpRequest(this.httpClient, new HttpGet(url));
+    return new ApacheHttpRequest(httpClient, new HttpGet(url));
   }
 
   @Override
   public ApacheHttpRequest buildHeadRequest(String url) {
-    return new ApacheHttpRequest(this.httpClient, new HttpHead(url));
+    return new ApacheHttpRequest(httpClient, new HttpHead(url));
   }
 
   @Override
   public ApacheHttpRequest buildPatchRequest(String url) {
-    return new ApacheHttpRequest(this.httpClient, new HttpPatch(url));
+    return new ApacheHttpRequest(httpClient, new HttpPatch(url));
   }
 
   @Override
   public ApacheHttpRequest buildPostRequest(String url) {
-    return new ApacheHttpRequest(this.httpClient, new HttpPost(url));
+    return new ApacheHttpRequest(httpClient, new HttpPost(url));
   }
 
   @Override
   public ApacheHttpRequest buildPutRequest(String url) {
-    return new ApacheHttpRequest(this.httpClient, new HttpPut(url));
+    return new ApacheHttpRequest(httpClient, new HttpPut(url));
   }
 }

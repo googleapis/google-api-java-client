@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.google.api.client</groupId>
     <artifactId>google-api-client-parent</artifactId>
-    <version>1.1.2-alpha-SNAPSHOT</version>
+    <version>1.2.0-alpha-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>google-api-client-modules-parent</artifactId>
@@ -12,6 +12,7 @@
   <modules>
     <module>google-api-client-android-xml</module>
     <module>google-api-client-apache</module>
+    <module>google-api-client-appengine</module>
     <module>google-api-client-auth</module>
     <module>google-api-client-auth-oauth</module>
     <module>google-api-client-auth-oauth2</module>

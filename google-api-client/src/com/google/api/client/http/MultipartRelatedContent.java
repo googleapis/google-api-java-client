@@ -7,8 +7,7 @@ import java.util.Collection;
 
 /**
  * Serializes MIME Multipart/Related content as specified by <a
- * href="http://tools.ietf.org/html/rfc2387">RFC 2387: The MIME
- * Multipart/Related Content-type</a>.
+ * href="http://tools.ietf.org/html/rfc2387">RFC 2387: The MIME Multipart/Related Content-type</a>.
  * <p>
  * Limitations:
  * <ul>
@@ -43,16 +42,15 @@ public final class MultipartRelatedContent implements HttpContent {
   private static final byte[] CR_LF = "\r\n".getBytes();
   private static final byte[] CONTENT_TYPE = "Content-Type: ".getBytes();
   private static final byte[] CONTENT_TRANSFER_ENCODING =
-    "Content-Transfer-Encoding: binary".getBytes();
+      "Content-Transfer-Encoding: binary".getBytes();
   private static final byte[] TWO_DASHES = "--".getBytes();
 
   /**
-   * Returns a new multi-part content serializer as the content for the given
-   * HTTP request.
+   * Returns a new multi-part content serializer as the content for the given HTTP request.
    *
    * <p>
-   * It also sets the {@link HttpHeaders#mimeVersion} of
-   * {@link HttpRequest#headers headers} to {@code "1.0"}.
+   * It also sets the {@link HttpHeaders#mimeVersion} of {@link HttpRequest#headers headers} to
+   * {@code "1.0"}.
    * </p>
    *
    * @param request HTTP request

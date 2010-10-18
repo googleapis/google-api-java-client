@@ -1,9 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.google.api.client</groupId>
     <artifactId>google-api-client-parent</artifactId>
-    <version>1.1.2-alpha-SNAPSHOT</version>
+    <version>1.2.0-alpha-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-api-client</artifactId>
@@ -21,6 +22,7 @@
         <configuration>
           <links>
             <link>http://download.oracle.com/docs/cd/E17476_01/javase/1.5.0/docs/api</link>
+            <link>http://code.google.com/appengine/docs/java/javadoc</link>
             <link>http://jackson.codehaus.org/1.4.2/javadoc</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
@@ -46,6 +48,14 @@
       <artifactId>jackson-core-asl</artifactId>
     </dependency>
     <dependency>
+      <groupId>xpp3</groupId>
+      <artifactId>xpp3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
@@ -53,6 +63,11 @@
     <dependency>
       <groupId>com.google.android</groupId>
       <artifactId>android</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-api-1.0-sdk</artifactId>
       <scope>provided</scope>
     </dependency>
   </dependencies>
