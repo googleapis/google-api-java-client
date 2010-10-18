@@ -14,9 +14,11 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Base64;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
+import com.google.api.client.util.Strings;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -129,6 +131,18 @@ public class HttpHeaders extends GenericData {
   @Override
   public HttpHeaders clone() {
     return (HttpHeaders) super.clone();
+  }
+
+  /**
+   * Sets the {@link #authorization} header as specified in <a
+   * href="http://tools.ietf.org/html/rfc2617#section-2">Basic Authentication Scheme</a>.
+   *
+   * @since 1.2
+   */
+  public void setBasicAuthentication(String username, String password) {
+    String encoded =
+        Strings.fromBytesUtf8(Base64.encode(Strings.toBytesUtf8(username + ":" + password)));
+    authorization = "Basic " + encoded;
   }
 
   /**

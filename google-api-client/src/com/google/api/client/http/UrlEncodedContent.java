@@ -16,10 +16,10 @@ package com.google.api.client.http;
 
 import com.google.api.client.escape.CharEscapers;
 import com.google.api.client.util.DataUtil;
+import com.google.api.client.util.Strings;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Map;
 
@@ -57,7 +57,7 @@ public final class UrlEncodedContent implements HttpContent {
     return null;
   }
 
-  public long getLength() throws UnsupportedEncodingException {
+  public long getLength() {
     return computeContent().length;
   }
 
@@ -69,7 +69,7 @@ public final class UrlEncodedContent implements HttpContent {
     out.write(computeContent());
   }
 
-  private byte[] computeContent() throws UnsupportedEncodingException {
+  private byte[] computeContent() {
     if (content == null) {
       StringBuilder buf = new StringBuilder();
       boolean first = true;
@@ -87,7 +87,7 @@ public final class UrlEncodedContent implements HttpContent {
           }
         }
       }
-      content = buf.toString().getBytes("UTF-8");
+      content = Strings.toBytesUtf8(buf.toString());
     }
     return content;
   }

@@ -45,7 +45,7 @@ public final class GoogleTransport {
   static HttpTransport createTransport() {
     HttpTransport transport = GoogleTransport.create();
     GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
-    headers.setApplicationName("acme-rocket-2");
+    headers.setApplicationName("Google-Sample/1.0");
     headers.gdataVersion = "2";
     return transport;
   }

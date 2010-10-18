@@ -14,23 +14,34 @@
 
 package com.google.api.client.util;
 
-import junit.framework.TestSuite;
+import org.junit.Assert;
+
+import junit.framework.TestCase;
 
 /**
- * All tests for {@link com.google.api.client.util}.
+ * Tests {@link Strings}.
  *
  * @author Yaniv Inbar
  */
-public class AllTests extends TestSuite {
+public class StringsTest extends TestCase {
 
-  public static TestSuite suite() {
-    TestSuite result = new TestSuite(AllTests.class.getPackage().getName());
-    result.addTestSuite(ArrayMapTest.class);
-    result.addTestSuite(ClassInfoTest.class);
-    result.addTestSuite(DateTimeTest.class);
-    result.addTestSuite(FieldInfoTest.class);
-    result.addTestSuite(GenericDataTest.class);
-    result.addTestSuite(StringsTest.class);
-    return result;
+  private static final byte[] SAMPLE_UTF8 =
+      new byte[] {49, 50, 51, -41, -103, -41, -96, -41, -103, -41, -111};
+  private static final String SAMPLE = "123יניב";
+
+  public StringsTest(String testName) {
+    super(testName);
+  }
+
+  public void testLineSeparator() {
+    assertNotNull(Strings.LINE_SEPARATOR);
+  }
+
+  public void testToBytesUtf8() {
+    Assert.assertArrayEquals(SAMPLE_UTF8, Strings.toBytesUtf8(SAMPLE));
+  }
+
+  public void testFromBytesUtf8() {
+    assertEquals(SAMPLE, Strings.fromBytesUtf8(SAMPLE_UTF8));
   }
 }

@@ -14,8 +14,8 @@
 package com.google.api.client.auth;
 
 import com.google.api.client.util.Base64;
+import com.google.api.client.util.Strings;
 
-import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
 import javax.crypto.Mac;
@@ -36,16 +36,11 @@ public final class HmacSha {
    * @throws GeneralSecurityException general security exception
    */
   public static String sign(String key, String data) throws GeneralSecurityException {
-    try {
-      SecretKey secretKey = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA1");
-      Mac mac = Mac.getInstance("HmacSHA1");
-      mac.init(secretKey);
-      byte[] encoded = Base64.encode(mac.doFinal(data.getBytes("UTF-8")));
-      return new String(encoded, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      // UTF-8 encoding guaranteed to be supported by JVM
-      throw new RuntimeException(e);
-    }
+    SecretKey secretKey = new SecretKeySpec(Strings.toBytesUtf8(key), "HmacSHA1");
+    Mac mac = Mac.getInstance("HmacSHA1");
+    mac.init(secretKey);
+    byte[] encoded = Base64.encode(mac.doFinal(Strings.toBytesUtf8(data)));
+    return Strings.fromBytesUtf8(encoded);
   }
 
   private HmacSha() {

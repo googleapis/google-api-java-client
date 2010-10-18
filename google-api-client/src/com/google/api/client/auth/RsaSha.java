@@ -15,13 +15,13 @@
 package com.google.api.client.auth;
 
 import com.google.api.client.util.Base64;
+import com.google.api.client.util.Strings;
 
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.KeyStore;
@@ -87,7 +87,7 @@ public class RsaSha {
       str = str.substring(BEGIN.length(), str.lastIndexOf(END));
     }
     KeyFactory fac = KeyFactory.getInstance("RSA");
-    EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(Base64.decode(str.getBytes("UTF-8")));
+    EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(Base64.decode(Strings.toBytesUtf8(str)));
     return fac.generatePrivate(privKeySpec);
   }
 
@@ -99,12 +99,7 @@ public class RsaSha {
   public static String sign(PrivateKey privateKey, String data) throws GeneralSecurityException {
     Signature signature = Signature.getInstance("SHA1withRSA");
     signature.initSign(privateKey);
-    try {
-      signature.update(data.getBytes("UTF-8"));
-      return new String(Base64.encode(signature.sign()), "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      // UTF-8 encoding guaranteed to be supported by JVM
-      throw new RuntimeException(e);
-    }
+    signature.update(Strings.toBytesUtf8(data));
+    return Strings.fromBytesUtf8(Base64.encode(signature.sign()));
   }
 }

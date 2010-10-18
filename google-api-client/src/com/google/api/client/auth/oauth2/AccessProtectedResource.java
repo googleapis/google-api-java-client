@@ -25,11 +25,11 @@ import java.util.List;
 
 /**
  * OAuth 2.0 methods for specifying the access token parameter as specified in <a
- * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-07#section-6"> Accessing a Protected
+ * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10#section-5">Accessing a Protected
  * Resource</a>.
  *
  * @author Yaniv Inbar
- * @since 1.0
+ * @since 1.2
  */
 public final class AccessProtectedResource {
 
@@ -39,6 +39,7 @@ public final class AccessProtectedResource {
    * <p>
    * Any existing HTTP request execute intercepters for setting the OAuth 2 access token will be
    * removed.
+   * </p>
    *
    * @param transport HTTP transport
    * @param accessToken access token
@@ -98,7 +99,7 @@ public final class AccessProtectedResource {
   static final class UsingAuthorizationHeader extends AccessTokenIntercepter {
 
     public void intercept(HttpRequest request) {
-      request.headers.authorization = "Token token=\"" + accessToken + "\"";
+      request.headers.authorization = "OAuth " + accessToken;
     }
   }
 
