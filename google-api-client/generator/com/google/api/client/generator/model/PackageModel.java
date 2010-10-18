@@ -16,6 +16,7 @@ package com.google.api.client.generator.model;
 
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
+import com.google.api.client.util.Strings;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -30,8 +31,7 @@ import java.util.regex.Pattern;
  */
 public final class PackageModel implements Comparable<PackageModel> {
 
-  public static final String VERSION = "1.2.0-alpha";
-  public static final String VERSION_SNAPSHOT = VERSION + "-SNAPSHOT";
+  public static final String VERSION_SNAPSHOT = Strings.VERSION + "-SNAPSHOT";
 
   private static final Pattern IMPORT_PATTERN = Pattern.compile("\nimport ([\\w.]+);");
 

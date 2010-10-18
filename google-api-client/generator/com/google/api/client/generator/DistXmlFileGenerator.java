@@ -15,6 +15,7 @@
 package com.google.api.client.generator;
 
 import com.google.api.client.generator.model.PackageModel;
+import com.google.api.client.util.Strings;
 
 import java.io.PrintWriter;
 import java.util.SortedSet;
@@ -74,7 +75,7 @@ final class DistXmlFileGenerator extends AbstractFileGenerator {
     for (PackageModel pkg : pkgs) {
       out.println("    <file>");
       out.println("      <source>modules/" + pkg.artifactId + "/target/" + pkg.artifactId + "-"
-          + PackageModel.VERSION + ".jar</source>");
+          + Strings.VERSION + ".jar</source>");
       out.println("      <outputDirectory>packages</outputDirectory>");
       out.println("    </file>");
     }
