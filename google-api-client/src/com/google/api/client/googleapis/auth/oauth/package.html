@@ -10,28 +10,41 @@ OAuth API Reference </a>
 follows:</p>
 <ol>
   <li>For a web application, you should first register your application at
-  the <a
+  the <a href="https://www.google.com/accounts/ManageDomains">Manage Your
+  Domains</a> page. See detailed instructions at the <a
     href="http://code.google.com/apis/accounts/docs/RegistrationForWebAppsAuto.html">registration
-  page</a>. You will be provided with two pieces of information you will need:
+  page</a>. Take note of the following OAuth information you will need:
   <ul>
-    <li>OAuth Consumer Key: use this as the {@code consumerKey} on every
-    OAuth request, for example in {@link
+    <li>OAuth Consumer Key (same as your appspot domain): use this as the
+    {@code consumerKey} on every OAuth request, for example in {@link
     com.google.api.client.auth.oauth.AbstractOAuthGetToken#consumerKey}.</li>
     <li>OAuth Consumer Secret: use this as the {@link
-    com.google.api.client.auth.oauth.OAuthHmacSigner#clientSharedSecret} when
-    using the {@code "HMAC-SHA1"} signature method.</li>
+    com.google.api.client.auth.oauth.OAuthHmacSigner}.{@link
+    com.google.api.client.auth.oauth.OAuthHmacSigner#clientSharedSecret
+    clientSharedSecret} when using the {@code "HMAC-SHA1"} signature method.</li>
+    <li>Upload new X.509 cert: See the instructions for <a
+      href="http://code.google.com/apis/gdata/docs/auth/oauth.html#GeneratingKeyCert">generating
+    a self-signing private key and public certificate</a>. Use {@link
+    com.google.api.client.auth.oauth.OAuthRsaSigner} for this {@code "RSA-SHA1"}
+    signature method.
+    <ul>
+      <li>Example for generating private key and public certificate:<pre><code>
+# Generate the RSA keys and certificate
+keytool -genkey -v -alias Example -keystore ./Example.jks\
+  -keyalg RSA -sigalg SHA1withRSA\
+  -dname "CN=myappname.appspot.com, OU=Engineering, O=My_Company, L=Mountain  View, ST=CA, C=US"\
+  -storepass changeme -keypass changeme
+# Output the public certificate to a file
+keytool -export -rfc -keystore ./Example.jks -storepass changeme \
+  -alias Example -file mycert.pem</code></pre></li>
+    </ul>
+    </li>
   </ul>
   </li>
   <li>For an installed application, an unregistered web application, or a
   web application running on localhost, you must use the {@code "HMAC-SHA1"}
   signature method. Use {@code "anonymous"} for the {@code consumerKey} and
   {@code clientSharedSecret}.</li>
-  <li>For the {@code "HMAC-SHA1"} signature method, use {@link
-  com.google.api.client.auth.oauth.OAuthHmacSigner}.</li>
-  <li>For the {@code "RSA-SHA1"} signature method, use {@link
-  com.google.api.client.auth.oauth.OAuthRsaSigner}. See the instructions for <a
-    href="http://code.google.com/apis/gdata/docs/auth/oauth.html#GeneratingKeyCert">generating
-  a self-signing private key and public certificate </a>.</li>
 </ol>
 <p>After the set up has been completed, the typical application flow is:</p>
 <ol>
@@ -72,175 +85,6 @@ follows:</p>
     href="https://www.google.com/accounts/IssuedAuthSubTokens">change
   authorized websites</a> page.</li>
 </ol>
-For example:
-<pre><code>
-import com.google.api.client.auth.*;
-import com.google.api.client.auth.oauth.*;
-import com.google.api.client.googleapis.*;
-import com.google.api.client.googleapis.auth.oauth.*;
-import com.google.api.client.http.*;
-
-import java.io.*;
-import java.net.*;
-import java.security.*;
-import java.util.*;
-
-import javax.servlet.http.*;
-
-public class PicasaSample extends HttpServlet {
-
-  private static final String CONSUMER_KEY = "...";
-
-  /**
-   * OAuth type. This is only needed for a general-purpose sample. In a real
-   * application, normally only one kind of auth is used.
-   */
-  enum OAuthType {
-    REGISTERED_RSA, REGISTERED_HMAC, UNREGISTERED_HMAC
-  }
-
-  static final OAuthType OAUTH_TYPE = OAuthType.REGISTERED_RSA;
-
-  private static final String CONSUMER_KEY =
-      OAUTH_TYPE == OAuthType.UNREGISTERED_HMAC ? "anonymous" : "...";
-
-  /**
-   * In-memory access token store. But this is bad practice! For example, if the
-   * process dies, all tokens would be lost. Instead, the long-lived access
-   * token credentials should be stored in a long-lived location for example in
-   * a database.
-   */
-  static Map&lt;String , TokenInfo&gt; OAUTH_TOKENS = new HashMap&lt;String, TokenInfo&gt;();
-
-  static final class TokenInfo {
-    final boolean temporary;
-    final String token;
-    final String tokenSecret;
-
-    TokenInfo(OAuthCredentialsResponse response) {
-      this.token = response.token;
-      this.tokenSecret = response.tokenSecret;
-      this.temporary = response.callbackConfirmed != null;
-    }
-
-    OAuthParameters createParameters() throws IOException {
-      OAuthParameters result = new OAuthParameters();
-      result.consumerKey = CONSUMER_KEY;
-      result.signer = createSigner(this);
-      result.token = token;
-      return result;
-    }
-  }
-
-  private static TokenInfo execute(AbstractOAuthGetToken request)
-      throws IOException {
-    OAuthCredentialsResponse response = request.execute(); 
-    TokenInfo result = new TokenInfo(response);
-    OAUTH_TOKENS.put(getCurrentUserId(), result);
-    return result;
-  }
-
-  private static final String SCOPE = "http://picasaweb.google.com/data";
-
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException {
-    PrintWriter writer = response.getWriter();
-    GoogleTransport transport = new GoogleTransport();
-    transport.applicationName = "...";
-    transport.setVersionHeader(PicasaWebAlbums.VERSION);
-    try {
-      String thisURL = request.getRequestURI();
-      String userId = getCurrentUserId();
-      TokenInfo tokenInfo = OAUTH_TOKENS.get(userId);
-      StringBuffer fullUrlBuf = request.getRequestURL();
-      if (request.getQueryString() != null) {
-        fullUrlBuf.append('?').append(request.getQueryString());
-      }
-      String fullUrl = fullUrlBuf.toString();
-      OAuthCallbackUrl authorizeResponse = new OAuthCallbackUrl(fullUrl);
-      if (tokenInfo != null && tokenInfo.temporary
-          && authorizeResponse.verifier == null) {
-        tokenInfo = null;
-      }
-      OAuthSigner signer = createSigner(tokenInfo);
-      if (tokenInfo == null) {
-        GoogleOAuthGetTemporaryToken requestToken =
-            new GoogleOAuthGetTemporaryToken();
-        requestToken.signer = signer;
-        requestToken.consumerKey = CONSUMER_KEY;
-        requestToken.scope = SCOPE;
-        requestToken.callback = request.getRequestURL().toString();
-        tokenInfo = execute(requestToken);
-        GoogleOAuthAuthorizeTemporaryTokenUrl authorizeUrl =
-            new GoogleOAuthAuthorizeTemporaryTokenUrl();
-        authorizeUrl.temporaryToken = tokenInfo.token;
-        response.sendRedirect(authorizeUrl.build());
-        return;
-      }
-      if (tokenInfo.temporary) {
-        GoogleOAuthGetAccessToken accessToken =
-            new GoogleOAuthGetAccessToken();
-        accessToken.temporaryToken = tokenInfo.token;
-        accessToken.signer = signer;
-        accessToken.consumerKey = CONSUMER_KEY;
-        accessToken.verifier = authorizeResponse.verifier;
-        tokenInfo = execute(accessToken);
-        signer = createSigner(tokenInfo);
-      }
-      tokenInfo.createParameters().signRequestsUsingAuthorizationHeader(
-          transport);
-      run(writer, transport);
-    } catch (Exception e) {
-      handleException(writer, e);
-    }
-  }
-
-  private static OAuthSigner createSigner(TokenInfo tokenInfo)
-      throws IOException {
-    if (OAUTH_TYPE == OAuthType.REGISTERED_RSA) {
-      OAuthRsaSigner result = new OAuthRsaSigner();
-      result.privateKey = getPrivateKey();
-      return result;
-    }
-    OAuthHmacSigner result = new OAuthHmacSigner();
-    result.clientSharedSecret =
-        OAUTH_TYPE == OAuthType.UNREGISTERED_HMAC ? "anonymous" : "...";
-    if (tokenInfo != null) {
-      result.tokenSharedSecret = tokenInfo.tokenSecret;
-    }
-    return result;
-  }
-
-  private static PrivateKey getPrivateKey() throws IOException {
-    if (privateKey == null) {
-      try {
-        privateKey =
-            RsaSha.getPrivateKeyFromKeystore(new FileInputStream(
-                "WEB-INF/....jks"), "...", "...", "...");
-      } catch (GeneralSecurityException e) {
-        throw new IOException(e);
-      }
-    }
-    return privateKey;
-  }
-}
-</code></pre>
-To later revoke the token:
-<pre><code>
-    for (Map.Entry&lt;String, TokenInfo&gt; entry : OAUTH_TOKENS.entrySet()) {
-      TokenInfo tokenInfo = entry.getValue();
-      if (!tokenInfo.temporary) {
-        String user = entry.getKey();
-        try {
-          OAuthParameters parameters = tokenInfo.createParameters();
-          GoogleOAuthGetAccessToken.revokeAccessToken(parameters);
-        } catch (Exception e) {
-          handleException(writer, e);
-        }
-      }
-    }
-    OAUTH_TOKENS.clear();
-</code></pre>
 
 <p>This package depends on the {@link com.google.api.client.auth.oauth},
 {@link com.google.api.client.googleapis}, {@link com.google.api.client.http},

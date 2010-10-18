@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -28,8 +26,8 @@ import java.io.IOException;
 
 /**
  * Client Login authentication method as described in <a
- * href="http://code.google.com/apis/accounts/docs/AuthForInstalledApps.html"
- * >ClientLogin for Installed Applications</a>.
+ * href="http://code.google.com/apis/accounts/docs/AuthForInstalledApps.html" >ClientLogin for
+ * Installed Applications</a>.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -54,13 +52,13 @@ public final class ClientLogin {
    * <ul>
    * <li>GOOGLE (get authorization for a Google account only)</li>
    * <li>HOSTED (get authorization for a hosted account only)</li>
-   * <li>HOSTED_OR_GOOGLE (get authorization first for a hosted account; if
-   * attempt fails, get authorization for a Google account)</li>
+   * <li>HOSTED_OR_GOOGLE (get authorization first for a hosted account; if attempt fails, get
+   * authorization for a Google account)</li>
    * </ul>
    *
-   * Use HOSTED_OR_GOOGLE if you're not sure which type of account you want
-   * authorization for. If the user information matches both a hosted and a
-   * Google account, only the hosted account is authorized.
+   * Use HOSTED_OR_GOOGLE if you're not sure which type of account you want authorization for. If
+   * the user information matches both a hosted and a Google account, only the hosted account is
+   * authorized.
    *
    * @since 1.1
    */
@@ -80,16 +78,14 @@ public final class ClientLogin {
     public String auth;
 
     public String getAuthorizationHeaderValue() {
-      return GoogleHeaders.getGoogleLoginValue(this.auth);
+      return GoogleHeaders.getGoogleLoginValue(auth);
     }
 
     /**
-     * Sets the authorization header for the given Google transport using the
-     * authentication token.
+     * Sets the authorization header for the given Google transport using the authentication token.
      */
     public void setAuthorizationHeader(HttpTransport googleTransport) {
-      googleTransport.defaultHeaders.authorization =
-          GoogleHeaders.getGoogleLoginValue(this.auth);
+      googleTransport.defaultHeaders.authorization = GoogleHeaders.getGoogleLoginValue(auth);
     }
   }
 
@@ -112,10 +108,10 @@ public final class ClientLogin {
   /**
    * Authenticates based on the provided field values.
    *
-   * @throws HttpResponseException if the authentication response has an error
-   *         code, such as for a CAPTCHA challenge. Call {@code 
-   *         exception.response.parseAs(ClientLoginAuthenticator.ErrorInfo.class)
-   *         * } to parse the response.
+   * @throws HttpResponseException if the authentication response has an error code, such as for a
+   *         CAPTCHA challenge. Call {@code
+   *         exception.response.parseAs(ClientLoginAuthenticator.ErrorInfo.class) * } to parse the
+   *         response.
    * @throws IOException some other kind of I/O exception
    */
   public Response authenticate() throws HttpResponseException, IOException {

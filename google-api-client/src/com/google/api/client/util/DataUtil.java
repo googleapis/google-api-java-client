@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -23,7 +21,7 @@ import java.util.Map;
 
 /**
  * Utilities for working with key/value data.
- * 
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -31,12 +29,10 @@ public class DataUtil {
 
   /**
    * Returns the map to use for the given key/value data.
-   * 
-   * @param data any key value data, represented by an object or a map, or
-   *        {@code null}
-   * @return if {@code data} is a map returns {@code data}; else if {@code data}
-   *         is {@code null}, returns an empty map; else returns
-   *         {@link ReflectionMap} on the data object
+   *
+   * @param data any key value data, represented by an object or a map, or {@code null}
+   * @return if {@code data} is a map returns {@code data}; else if {@code data} is {@code null},
+   *         returns an empty map; else returns {@link ReflectionMap} on the data object
    */
   public static Map<String, Object> mapOf(Object data) {
     if (data == null) {
@@ -51,14 +47,13 @@ public class DataUtil {
   }
 
   /**
-   * Returns a deep clone of the given key/value data, such that the result is a
-   * completely independent copy.
+   * Returns a deep clone of the given key/value data, such that the result is a completely
+   * independent copy.
    * <p>
-   * Note that final fields cannot be changed and therefore their value won't be
-   * copied.
-   * 
-   * @param data key/value data object or map to clone or {@code null} for a
-   *        {@code null} return value
+   * Note that final fields cannot be changed and therefore their value won't be copied.
+   *
+   * @param data key/value data object or map to clone or {@code null} for a {@code null} return
+   *        value
    * @return deep clone or {@code null} for {@code null} input
    */
   public static <T> T clone(T data) {

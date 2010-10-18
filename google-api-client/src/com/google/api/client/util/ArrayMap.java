@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -24,36 +22,34 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
- * Memory-efficient map of keys to values with list-style random-access
- * semantics.
+ * Memory-efficient map of keys to values with list-style random-access semantics.
  * <p>
- * Conceptually, the keys and values are stored in a simpler array in order to
- * minimize memory use and provide for fast access to a key/value at a certain
- * index (for example {@link #getKey(int)}). However, traditional mapping
- * operations like {@link #get(Object)} and {@link #put(Object, Object)} are
- * slower because they need to look up all key/value pairs in the worst case.
+ * Conceptually, the keys and values are stored in a simpler array in order to minimize memory use
+ * and provide for fast access to a key/value at a certain index (for example {@link #getKey(int)}).
+ * However, traditional mapping operations like {@link #get(Object)} and
+ * {@link #put(Object, Object)} are slower because they need to look up all key/value pairs in the
+ * worst case.
  *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
-  private int size;
+  int size;
   private Object[] data;
   private EntrySet entrySet;
 
   /**
-   * Returns a new instance of an array map with initial capacity of zero.
-   * Equivalent to calling the default constructor, except without the need to
-   * specify the type parameters. For example: {@code ArrayMap<String, String>
-   * map = ArrayMap.create();}.
+   * Returns a new instance of an array map with initial capacity of zero. Equivalent to calling the
+   * default constructor, except without the need to specify the type parameters. For example:
+   * {@code ArrayMap<String, String> map = ArrayMap.create();}.
    */
   public static <K, V> ArrayMap<K, V> create() {
     return new ArrayMap<K, V>();
   }
 
   /**
-   * Returns a new instance of an array map of the given initial capacity. For
-   * example: {@code ArrayMap<String, String> map = ArrayMap.create(8);}.
+   * Returns a new instance of an array map of the given initial capacity. For example: {@code
+   * ArrayMap<String, String> map = ArrayMap.create(8);}.
    */
   public static <K, V> ArrayMap<K, V> create(int initialCapacity) {
     ArrayMap<K, V> result = create();
@@ -62,22 +58,21 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
   }
 
   /**
-   * Returns a new instance of an array map of the given key value pairs in
-   * alternating order. For example: {@code ArrayMap<String, String> map =
-   * ArrayMap.of("key1", "value1", "key2", "value2", ...);}.
+   * Returns a new instance of an array map of the given key value pairs in alternating order. For
+   * example: {@code ArrayMap<String, String> map = ArrayMap.of("key1", "value1", "key2", "value2",
+   * ...);}.
    * <p>
-   * WARNING: there is no compile-time checking of the {@code keyValuePairs}
-   * parameter to ensure that the keys or values have the correct type, so if
-   * the wrong type is passed in, any problems will occur at runtime. Also,
-   * there is no checking that the keys are unique, which the caller must ensure
-   * is true.
+   * WARNING: there is no compile-time checking of the {@code keyValuePairs} parameter to ensure
+   * that the keys or values have the correct type, so if the wrong type is passed in, any problems
+   * will occur at runtime. Also, there is no checking that the keys are unique, which the caller
+   * must ensure is true.
    */
   public static <K, V> ArrayMap<K, V> of(Object... keyValuePairs) {
     ArrayMap<K, V> result = create(1);
     int length = keyValuePairs.length;
-    if (1 == (length % 2)) {
-      throw new IllegalArgumentException("missing value for last key: "
-          + keyValuePairs[length - 1]);
+    if (1 == length % 2) {
+      throw new IllegalArgumentException(
+          "missing value for last key: " + keyValuePairs[length - 1]);
     }
     result.size = keyValuePairs.length / 2;
     Object[] data = result.data = new Object[length];
@@ -110,12 +105,11 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
   }
 
   /**
-   * Sets the key/value mapping at the given index, overriding any existing
-   * key/value mapping.
+   * Sets the key/value mapping at the given index, overriding any existing key/value mapping.
    * <p>
-   * There is no checking done to ensure that the key does not already exist.
-   * Therefore, this method is dangerous to call unless the caller can be
-   * certain the key does not already exist in the map.
+   * There is no checking done to ensure that the key does not already exist. Therefore, this method
+   * is dangerous to call unless the caller can be certain the key does not already exist in the
+   * map.
    *
    * @return previous value or {@code null} for none
    * @throws IndexOutOfBoundsException if index is negative
@@ -153,8 +147,8 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
   }
 
   /**
-   * Adds the key/value mapping at the end of the list. Behaves identically to
-   * {@code set(size(), key, value)}.
+   * Adds the key/value mapping at the end of the list. Behaves identically to {@code set(size(),
+   * key, value)}.
    *
    * @throws IndexOutOfBoundsException if index is negative
    */
@@ -163,8 +157,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
   }
 
   /**
-   * Removes the key/value mapping at the given index, or ignored if the index
-   * is out of bounds.
+   * Removes the key/value mapping at the given index, or ignored if the index is out of bounds.
    *
    * @return previous value or {@code null} for none
    */
@@ -184,8 +177,8 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
   }
 
   /**
-   * Returns the value set for the given key or {@code null} if there is no such
-   * mapping or if the mapping value is {@code null}.
+   * Returns the value set for the given key or {@code null} if there is no such mapping or if the
+   * mapping value is {@code null}.
    */
   @Override
   public final V get(Object key) {
@@ -207,8 +200,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
   }
 
   /**
-   * Removes the key-value pair of the given key, or ignore if the key cannot be
-   * found.
+   * Removes the key-value pair of the given key, or ignore if the key cannot be found.
    *
    * @return previous value or {@code null} for none
    */
@@ -223,8 +215,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
   }
 
   /**
-   * Ensures that the capacity of the internal arrays is at least a given
-   * capacity.
+   * Ensures that the capacity of the internal arrays is at least a given capacity.
    */
   public final void ensureCapacity(int minCapacity) {
     Object[] data = this.data;
@@ -273,8 +264,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
   }
 
   /**
-   * Returns the data index of the given key or {@code -2} if there is no such
-   * key.
+   * Returns the data index of the given key or {@code -2} if there is no such key.
    */
   private int getDataIndexOfKey(Object key) {
     int dataSize = this.size << 1;
@@ -289,8 +279,8 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
   }
 
   /**
-   * Removes the key/value mapping at the given data index of key, or ignored if
-   * the index is out of bounds.
+   * Removes the key/value mapping at the given data index of key, or ignored if the index is out of
+   * bounds.
    */
   private V removeFromDataIndexOfKey(int dataIndexOfKey) {
     int dataSize = this.size << 1;

@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -27,12 +25,11 @@ import java.io.OutputStream;
 /**
  * Serializes HTTP request content from an input stream into an output stream.
  * <p>
- * The {@link #type} and {@link #inputStream} fields are required. The input
- * stream is guaranteed to be closed at the end of
- * {@link #writeTo(OutputStream)}.
+ * The {@link #type} and {@link #inputStream} fields are required. The input stream is guaranteed to
+ * be closed at the end of {@link #writeTo(OutputStream)}.
  * <p>
- * For a file input, use {@link #setFileInput(File)}, and for a byte array or
- * string input use {@link #setByteArrayInput(byte[])}.
+ * For a file input, use {@link #setFileInput(File)}, and for a byte array or string input use
+ * {@link #setByteArrayInput(byte[])}.
  * <p>
  * Sample use with a URL:
  *
@@ -69,8 +66,8 @@ public final class InputStreamContent implements HttpContent {
   public String encoding;
 
   /**
-   * Sets the {@link #inputStream} from a file input stream based on the given
-   * file, and the {@link #length} based on the file's length.
+   * Sets the {@link #inputStream} from a file input stream based on the given file, and the
+   * {@link #length} based on the file's length.
    * <p>
    * Sample use:
    *
@@ -86,13 +83,12 @@ public final class InputStreamContent implements HttpContent {
    * </pre>
    */
   public void setFileInput(File file) throws FileNotFoundException {
-    this.inputStream = new FileInputStream(file);
-    this.length = file.length();
+    inputStream = new FileInputStream(file);
+    length = file.length();
   }
 
   /**
-   * Sets the {@link #inputStream} and {@link #length} from the given byte
-   * array.
+   * Sets the {@link #inputStream} and {@link #length} from the given byte array.
    * <p>
    * For string input, call the appropriate {@link String#getBytes} method.
    * <p>
@@ -110,13 +106,13 @@ public final class InputStreamContent implements HttpContent {
    * </pre>
    */
   public void setByteArrayInput(byte[] content) {
-    this.inputStream = new ByteArrayInputStream(content);
-    this.length = content.length;
+    inputStream = new ByteArrayInputStream(content);
+    length = content.length;
   }
 
   public void writeTo(OutputStream out) throws IOException {
     InputStream inputStream = this.inputStream;
-    long contentLength = this.length;
+    long contentLength = length;
     if (contentLength < 0) {
       copy(inputStream, out);
     } else {
@@ -125,8 +121,7 @@ public final class InputStreamContent implements HttpContent {
         // consume no more than length
         long remaining = contentLength;
         while (remaining > 0) {
-          int read = inputStream.read(
-              buffer, 0, (int) Math.min(BUFFER_SIZE, remaining));
+          int read = inputStream.read(buffer, 0, (int) Math.min(BUFFER_SIZE, remaining));
           if (read == -1) {
             break;
           }
@@ -140,20 +135,20 @@ public final class InputStreamContent implements HttpContent {
   }
 
   public String getEncoding() {
-    return this.encoding;
+    return encoding;
   }
 
   public long getLength() {
-    return this.length;
+    return length;
   }
 
   public String getType() {
-    return this.type;
+    return type;
   }
 
   /**
-   * Writes the content provided by the given source input stream into the given
-   * destination output stream.
+   * Writes the content provided by the given source input stream into the given destination output
+   * stream.
    * <p>
    * The input stream is guaranteed to be closed at the end of the method.
    * </p>
@@ -177,8 +172,7 @@ public final class InputStreamContent implements HttpContent {
    * @param outputStream destination output stream
    * @throws IOException I/O exception
    */
-  public static void copy(InputStream inputStream, OutputStream outputStream)
-      throws IOException {
+  public static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
     try {
       byte[] tmp = new byte[BUFFER_SIZE];
       int bytesRead;

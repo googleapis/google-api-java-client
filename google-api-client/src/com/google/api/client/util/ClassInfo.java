@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -31,9 +29,8 @@ import java.util.TreeSet;
 import java.util.WeakHashMap;
 
 /**
- * Parses class information to determine data key name/value pairs associated
- * with the class.
- * 
+ * Parses class information to determine data key name/value pairs associated with the class.
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -54,7 +51,7 @@ public final class ClassInfo {
 
   /**
    * Returns the class information for the given class.
-   * 
+   *
    * @param clazz class or {@code null} for {@code null} result
    * @return class information or {@code null} for {@code null} input
    */
@@ -73,17 +70,15 @@ public final class ClassInfo {
 
   /**
    * Returns the information for the given data key name.
-   * 
+   *
    * @param keyName data key name or {@code null} for {@code null} result
-   * @return field information or {@code null} for none or for {@code null}
-   *         input
+   * @return field information or {@code null} for none or for {@code null} input
    */
   public FieldInfo getFieldInfo(String keyName) {
     if (keyName == null) {
       return null;
     }
-    IdentityHashMap<String, FieldInfo> keyNameToFieldInfoMap =
-        this.keyNameToFieldInfoMap;
+    IdentityHashMap<String, FieldInfo> keyNameToFieldInfoMap = this.keyNameToFieldInfoMap;
     if (keyNameToFieldInfoMap == null) {
       return null;
     }
@@ -92,7 +87,7 @@ public final class ClassInfo {
 
   /**
    * Returns the field for the given data key name.
-   * 
+   *
    * @param keyName data key name or {@code null} for {@code null} result
    * @return field or {@code null} for none or for {@code null} input
    */
@@ -102,12 +97,10 @@ public final class ClassInfo {
   }
 
   /**
-   * Returns the number of data key name/value pairs associated with this data
-   * class.
+   * Returns the number of data key name/value pairs associated with this data class.
    */
   public int getKeyCount() {
-    IdentityHashMap<String, FieldInfo> keyNameToFieldInfoMap =
-        this.keyNameToFieldInfoMap;
+    IdentityHashMap<String, FieldInfo> keyNameToFieldInfoMap = this.keyNameToFieldInfoMap;
     if (keyNameToFieldInfoMap == null) {
       return 0;
     }
@@ -116,8 +109,7 @@ public final class ClassInfo {
 
   /** Returns the data key names associated with this data class. */
   public Collection<String> getKeyNames() {
-    IdentityHashMap<String, FieldInfo> keyNameToFieldInfoMap =
-        this.keyNameToFieldInfoMap;
+    IdentityHashMap<String, FieldInfo> keyNameToFieldInfoMap = this.keyNameToFieldInfoMap;
     if (keyNameToFieldInfoMap == null) {
       return Collections.emptySet();
     }
@@ -140,13 +132,11 @@ public final class ClassInfo {
   private static IllegalArgumentException handleExceptionForNewInstance(
       Exception e, Class<?> clazz) {
     StringBuilder buf =
-        new StringBuilder("unable to create new instance of class ")
-            .append(clazz.getName());
+        new StringBuilder("unable to create new instance of class ").append(clazz.getName());
     if (Modifier.isAbstract(clazz.getModifiers())) {
       buf.append(" (and) because it is abstract");
     }
-    if (clazz.getEnclosingClass() != null
-        && !Modifier.isStatic(clazz.getModifiers())) {
+    if (clazz.getEnclosingClass() != null && !Modifier.isStatic(clazz.getModifiers())) {
       buf.append(" (and) because it is not static");
     }
     if (!Modifier.isPublic(clazz.getModifiers())) {
@@ -164,34 +154,26 @@ public final class ClassInfo {
   /**
    * Returns a new instance of the given collection class.
    * <p>
-   * If a concrete collection class in the The class of the returned collection
-   * instance depends on the input collection class as follows (first that
-   * matches):
+   * If a concrete collection class in the The class of the returned collection instance depends on
+   * the input collection class as follows (first that matches):
    * <ul>
-   * <li>{@code null} or {@link ArrayList} is an instance of the collection
-   * class: returns an {@link ArrayList}</li>
-   * <li>Concrete subclass of {@link Collection}: returns an instance of that
-   * collection class</li>
-   * <li>{@link HashSet} is an instance of the collection class: returns a
-   * {@link HashSet}</li>
-   * <li>{@link TreeSet} is an instance of the collection class: returns a
-   * {@link TreeSet}</li>
+   * <li>{@code null} or {@link ArrayList} is an instance of the collection class: returns an
+   * {@link ArrayList}</li>
+   * <li>Concrete subclass of {@link Collection}: returns an instance of that collection class</li>
+   * <li>{@link HashSet} is an instance of the collection class: returns a {@link HashSet}</li>
+   * <li>{@link TreeSet} is an instance of the collection class: returns a {@link TreeSet}</li>
    * </ul>
-   * 
-   * @param collectionClass collection class or {@code null} for
-   *        {@link ArrayList}.
+   *
+   * @param collectionClass collection class or {@code null} for {@link ArrayList}.
    * @return new collection instance
    */
-  public static Collection<Object> newCollectionInstance(
-      Class<?> collectionClass) {
-    if (collectionClass == null
-        || collectionClass.isAssignableFrom(ArrayList.class)) {
+  public static Collection<Object> newCollectionInstance(Class<?> collectionClass) {
+    if (collectionClass == null || collectionClass.isAssignableFrom(ArrayList.class)) {
       return new ArrayList<Object>();
     }
     if (0 == (collectionClass.getModifiers() & (Modifier.ABSTRACT | Modifier.INTERFACE))) {
       @SuppressWarnings("unchecked")
-      Collection<Object> result =
-          (Collection<Object>) ClassInfo.newInstance(collectionClass);
+      Collection<Object> result = (Collection<Object>) ClassInfo.newInstance(collectionClass);
       return result;
     }
     if (collectionClass.isAssignableFrom(HashSet.class)) {
@@ -201,8 +183,7 @@ public final class ClassInfo {
       return new TreeSet<Object>();
     }
     throw new IllegalArgumentException(
-        "no default collection class defined for class: "
-            + collectionClass.getName());
+        "no default collection class defined for class: " + collectionClass.getName());
   }
 
   /** Returns a new instance of the given map class. */
@@ -210,14 +191,13 @@ public final class ClassInfo {
     if (mapClass != null
         && 0 == (mapClass.getModifiers() & (Modifier.ABSTRACT | Modifier.INTERFACE))) {
       @SuppressWarnings("unchecked")
-      Map<String, Object> result =
-          (Map<String, Object>) ClassInfo.newInstance(mapClass);
+      Map<String, Object> result = (Map<String, Object>) ClassInfo.newInstance(mapClass);
       return result;
     }
     if (mapClass == null || mapClass.isAssignableFrom(ArrayMap.class)) {
       return ArrayMap.create();
     }
-    if (mapClass == null || mapClass.isAssignableFrom(TreeMap.class)) {
+    if (mapClass.isAssignableFrom(TreeMap.class)) {
       return new TreeMap<String, Object>();
     }
     throw new IllegalArgumentException(
@@ -225,15 +205,13 @@ public final class ClassInfo {
   }
 
   /**
-   * Returns the type parameter for the given field assuming it is of type
-   * collection.
+   * Returns the type parameter for the given field assuming it is of type collection.
    */
   public static Class<?> getCollectionParameter(Field field) {
     if (field != null) {
       Type genericType = field.getGenericType();
       if (genericType instanceof ParameterizedType) {
-        Type[] typeArgs =
-            ((ParameterizedType) genericType).getActualTypeArguments();
+        Type[] typeArgs = ((ParameterizedType) genericType).getActualTypeArguments();
         if (typeArgs.length == 1 && typeArgs[0] instanceof Class<?>) {
           return (Class<?>) typeArgs[0];
         }
@@ -253,13 +231,11 @@ public final class ClassInfo {
   }
 
   /**
-   * Returns the type parameter for the given genericType assuming it is of type
-   * map.
+   * Returns the type parameter for the given genericType assuming it is of type map.
    */
   public static Class<?> getMapValueParameter(Type genericType) {
     if (genericType instanceof ParameterizedType) {
-      Type[] typeArgs =
-          ((ParameterizedType) genericType).getActualTypeArguments();
+      Type[] typeArgs = ((ParameterizedType) genericType).getActualTypeArguments();
       if (typeArgs.length == 2 && typeArgs[1] instanceof Class<?>) {
         return (Class<?>) typeArgs[1];
       }

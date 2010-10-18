@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -29,15 +27,15 @@ import java.util.TreeSet;
 
 /**
  * Utilities for working with the Atom XML of Google Data API's.
- * 
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public class GData {
 
   /**
-   * Returns the fields mask to use for the given data class of key/value pairs.
-   * It cannot be a {@link Map}, {@link GenericData} or a {@link Collection}.
+   * Returns the fields mask to use for the given data class of key/value pairs. It cannot be a
+   * {@link Map}, {@link GenericData} or a {@link Collection}.
    */
   public static String getFieldsFor(Class<?> dataClass) {
     StringBuilder fieldsBuf = new StringBuilder();
@@ -46,10 +44,10 @@ public class GData {
   }
 
   /**
-   * Returns the fields mask to use for the given data class of key/value pairs
-   * for the feed class and for the entry class. This should only be used if the
-   * feed class does not contain the entry class as a field. The data classes
-   * cannot be a {@link Map}, {@link GenericData} or a {@link Collection}.
+   * Returns the fields mask to use for the given data class of key/value pairs for the feed class
+   * and for the entry class. This should only be used if the feed class does not contain the entry
+   * class as a field. The data classes cannot be a {@link Map}, {@link GenericData} or a
+   * {@link Collection}.
    */
   public static String getFeedFields(Class<?> feedClass, Class<?> entryClass) {
     StringBuilder fieldsBuf = new StringBuilder();
@@ -57,13 +55,11 @@ public class GData {
     return fieldsBuf.toString();
   }
 
-  private static void appendFieldsFor(StringBuilder fieldsBuf,
-      Class<?> dataClass, int[] numFields) {
-    if (Map.class.isAssignableFrom(dataClass)
-        || Collection.class.isAssignableFrom(dataClass)) {
+  private static void appendFieldsFor(
+      StringBuilder fieldsBuf, Class<?> dataClass, int[] numFields) {
+    if (Map.class.isAssignableFrom(dataClass) || Collection.class.isAssignableFrom(dataClass)) {
       throw new IllegalArgumentException(
-          "cannot specify field mask for a Map or Collection class: "
-              + dataClass);
+          "cannot specify field mask for a Map or Collection class: " + dataClass);
     }
     ClassInfo classInfo = ClassInfo.of(dataClass);
     for (String name : new TreeSet<String>(classInfo.getKeyNames())) {
@@ -94,15 +90,14 @@ public class GData {
           int openParenIndex = fieldsBuf.length();
           fieldsBuf.append('(');
           appendFieldsFor(fieldsBuf, fieldClass, subNumFields);
-          updateFieldsBasedOnNumFields(fieldsBuf, openParenIndex,
-              subNumFields[0]);
+          updateFieldsBasedOnNumFields(fieldsBuf, openParenIndex, subNumFields[0]);
         }
       }
     }
   }
 
-  private static void appendFeedFields(StringBuilder fieldsBuf,
-      Class<?> feedClass, Class<?> entryClass) {
+  private static void appendFeedFields(
+      StringBuilder fieldsBuf, Class<?> feedClass, Class<?> entryClass) {
     int[] numFields = new int[1];
     appendFieldsFor(fieldsBuf, feedClass, numFields);
     if (numFields[0] != 0) {
@@ -115,8 +110,8 @@ public class GData {
     updateFieldsBasedOnNumFields(fieldsBuf, openParenIndex, numFields[0]);
   }
 
-  private static void updateFieldsBasedOnNumFields(StringBuilder fieldsBuf,
-      int openParenIndex, int numFields) {
+  private static void updateFieldsBasedOnNumFields(
+      StringBuilder fieldsBuf, int openParenIndex, int numFields) {
     switch (numFields) {
       case 0:
         fieldsBuf.deleteCharAt(openParenIndex);
@@ -129,11 +124,9 @@ public class GData {
     }
   }
 
-  public static ArrayMap<String, Object> computePatch(Object patched,
-      Object original) {
+  public static ArrayMap<String, Object> computePatch(Object patched, Object original) {
     FieldsMask fieldsMask = new FieldsMask();
-    ArrayMap<String, Object> result =
-        computePatchInternal(fieldsMask, patched, original);
+    ArrayMap<String, Object> result = computePatchInternal(fieldsMask, patched, original);
     if (fieldsMask.numDifferences != 0) {
       result.put("@gd:fields", fieldsMask.buf.toString());
     }
@@ -154,9 +147,7 @@ public class GData {
       if (originalValue == patchedValue) {
         continue;
       }
-      Class<?> type =
-          originalValue == null ? patchedValue.getClass() : originalValue
-              .getClass();
+      Class<?> type = originalValue == null ? patchedValue.getClass() : originalValue.getClass();
       if (FieldInfo.isPrimitive(type)) {
         if (originalValue != null && originalValue.equals(patchedValue)) {
           continue;
@@ -172,11 +163,9 @@ public class GData {
       } else if (Collection.class.isAssignableFrom(type)) {
         if (originalValue != null && patchedValue != null) {
           @SuppressWarnings("unchecked")
-          Collection<Object> originalCollection =
-              (Collection<Object>) originalValue;
+          Collection<Object> originalCollection = (Collection<Object>) originalValue;
           @SuppressWarnings("unchecked")
-          Collection<Object> patchedCollection =
-              (Collection<Object>) patchedValue;
+          Collection<Object> patchedCollection = (Collection<Object>) patchedValue;
           int size = originalCollection.size();
           if (size == patchedCollection.size()) {
             int i;
@@ -222,7 +211,7 @@ public class GData {
 
     void append(String name) {
       StringBuilder buf = this.buf;
-      if (++this.numDifferences != 1) {
+      if (++numDifferences != 1) {
         buf.append(',');
       }
       buf.append(name);
