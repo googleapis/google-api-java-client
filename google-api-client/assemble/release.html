@@ -9,7 +9,7 @@
   <li>Make sure you have permission to post to the <a
     href="http://google-api-java-client.blogspot.com/">Announcement Blog</a>.</li>
   <li>Check out the <code>google-api-java-client</code> project using <a
-    href="http://google-api-java-client.googlecode.com/hg/instructions.html?r=1.2.0-alpha">these
+    href="http://google-api-java-client.googlecode.com/hg/instructions.html?r=1.2.1-alpha">these
   instructions</a>.</li>
   <li>Check out the <code>javadoc</code> project using <a
     href="http://javadoc.google-api-java-client.googlecode.com/hg/instructions.html">these
@@ -68,7 +68,7 @@ google-api-java-client.password = <i>[password from <a
   </li>
 </ul>
 
-<h3>Release version 1.2.0-alpha, upgrading from 1.1.1-alpha</h3>
+<h3>Release version 1.2.1-alpha (bug fix release)</h3>
 <ul>
   <li>Prepare the project
   <ul>
@@ -80,14 +80,14 @@ google-api-java-client.password = <i>[password from <a
     href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Sonatype
   OSS Maven Repository Usage Guide</a>):
   <ul>
-    <li><code>cd google-api-java-client</code></li>
-    <li><code>mvn clean deploy</code></li>
-    <li><code>mvn release:clean</code></li>
+    <li>Prepare:<pre><code>cd google-api-java-client
+mvn clean deploy
+mvn release:clean</code></pre></li>
     <li><code>mvn release:prepare -DautoVersionSubmodules=true</code>
     <ul>
       <li>Accept default for 'What is the release version for "Google API
       Client - Parent"?'</li>
-      <li>Type <code>1.2.0-alpha</code> for 'What is SCM release tag or
+      <li>Type <code>1.2.1-alpha</code> for 'What is SCM release tag or
       label for "Google API Client - Parent"?'</li>
       <li>Accept default for 'What is the new development version for
       "Google API Client - Parent"?'</li>
@@ -100,9 +100,9 @@ google-api-java-client.password = <i>[password from <a
       <li>Log in to <a href="https://oss.sonatype.org">https://oss.sonatype.org</a></li>
       <li>Click on "Staging Repositories"</li>
       <li>check box next to uploaded release</li>
-      <li>click Close button; type <code>1.2.0-alpha</code> and click Close</li>
+      <li>click Close button; type <code>1.2.1-alpha</code> and click Close</li>
       <li>check box next to uploaded release</li>
-      <li>click Release button; type <code>1.2.0-alpha</code> and click
+      <li>click Release button; type <code>1.2.1-alpha</code> and click
       Release</li>
     </ul>
     </li>
@@ -111,11 +111,15 @@ google-api-java-client.password = <i>[password from <a
       href="http://repo2.maven.org/maven2/com/google/api/client/google-api-client/">repo2.maven.org</a></li>
   </ul>
   </li>
-  <li>Prepare the released library zip file and javadoc <pre><code>hg update -r 1.2.0-alpha
+  <li>Prepare the released library zip file and javadoc
+  <ul>
+    <li>change these constants from assemble/jdiff.xml for your
+    environment: JDIFF_HOME, MAVEN_REPOSITORY_HOME, and PROJECT_ROOT_DIR</li>
+    <li><pre><code>hg update -r 1.2.1-alpha
 mvn clean install
 cd google-api-client
 mvn source:jar javadoc:jar assembly:assembly
-cp -R target/apidocs ../../javadoc/1.2.0-alpha
+cp -R target/apidocs ../../javadoc/1.2.1-alpha
 cd /tmp
 rm -rf google-api-java-client
 hg clone -r 1.1.1-alpha https://google-api-java-client.googlecode.com/hg/ google-api-java-client
@@ -123,29 +127,31 @@ cd -
 ant -f assemble/jdiff.xml
 cd ../../javadoc
 hg add
-hg commit -m "1.2.0-alpha"
+hg commit -m "1.2.1-alpha"
 hg push
 cd ../google-api-java-client
 </code></pre></li>
+  </ul>
+  </li>
   <li>Update to new version on <a
     href="http://code.google.com/p/google-api-java-client">http://code.google.com/p/google-api-java-client</a>
   <ul>
     <li>Upload to <a
       href="http://code.google.com/p/google-api-java-client/downloads/entry">http://code.google.com/p/google-api-java-client/downloads/entry</a>
     <ul>
-      <li>Summary: Google API Client Library for Java, version 1.2.0-alpha</li>
-      <li>File: <code>google-api-java-client/target/google-api-client-1.2.0-alpha-java.zip</code></li>
+      <li>Summary: Google API Client Library for Java, version 1.2.1-alpha</li>
+      <li>File: <code>google-api-java-client/target/google-api-client-1.2.1-alpha-java.zip</code></li>
       <li>Labels: <code>Type-Archive</code>, <code>OpSys-All</code>, and <code>Featured</code></li>
       <li>click Submit file</li>
     </ul>
     </li>
-    <li>If it is a bug fix release, deprecate the library from the previous
-    version <code>1.1.1-alpha</code> by removing any <code>Featured</code> label
-    and adding the <code>Deprecated</code> label.</li>
+    <li>Deprecate the library from the previous version <code>1.2.0-alpha</code>
+    by removing any <code>Featured</code> label and adding the <code>Deprecated</code>
+    label.</li>
     <li>Update <a
       href="http://code.google.com/p/google-api-java-client/admin">http://code.google.com/p/google-api-java-client/admin</a>
-    changing any reference from the previous version <code>1.1.1-alpha</code> to
-    the new version <code>1.2.0-alpha</code></li>
+    changing any reference from the previous version <code>1.2.0-alpha</code> to
+    the new version <code>1.2.1-alpha</code></li>
   </ul>
   </li>
   <li>Announce new version on the <a
@@ -153,24 +159,23 @@ cd ../google-api-java-client
   including links to:
   <ul>
     <li><a
-      href="http://code.google.com/p/google-api-java-client/issues/list?can=1&q=milestone=Version1.1.1%20type=Defect&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary">Bugs
+      href="http://code.google.com/p/google-api-java-client/issues/list?can=1&q=milestone=Version1.2.1%20type=Defect&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary">Bugs
     Fixed</a></li>
     <li><a
-      href="http://code.google.com/p/google-api-java-client/issues/list?can=1&q=milestone=Version1.1.1%20type=Enhancement&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary">Features
+      href="http://code.google.com/p/google-api-java-client/issues/list?can=1&q=milestone=Version1.2.1%20type=Enhancement&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary">Features
     Added</a></li>
   </ul>
   </li>
   <li>Start development of next minor version
   <ul>
     <li><code>hg update</code></li>
-    <li>For the following files, find <code>1.2.0-alpha</code> to replace
-    it with the next version number, and find <code>1.1.1-alpha</code> to
-    replace it with <code>1.2.0-alpha</code>:
+    <li>For the following files, replace <code>1.2.1-alpha</code> with <code>1.2.2-alpha</code>:
     <ul>
       <li><code>instructions.html</code></li>
       <li><code>google-api-client/assemble/jdiff.xml</code> (only update
       old version if it is a feature release, not for a bug fix release)</li>
-      <li><code>google-api-client/assemble/release.html</code></li>
+      <li><code>google-api-client/assemble/release.html</code> (though
+      beforehand replace 1.2.2-alpha with next minor version)</li>
       <li><code>google-api-client/generator/com/google/api/client/generator/model/PackageModel.java</code></li>
       <li><code>google-api-client/src/com/google/api/client/http/HttpRequest.java</code></li>
     </ul>
@@ -183,7 +188,7 @@ cd ../google-api-java-client
       <li>Run <code>GeneratePom</code></li>
     </ul>
     </li>
-    <li>In Eclipse,</li>
+    <li><code>hg commit -m "start 1.2.1-alpha"</code></li>
   </ul>
   </li>
 </ul>
