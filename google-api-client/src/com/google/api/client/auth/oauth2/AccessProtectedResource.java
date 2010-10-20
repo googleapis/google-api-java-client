@@ -14,14 +14,18 @@
 
 package com.google.api.client.auth.oauth2;
 
+import com.google.api.client.auth.oauth2.AccessProtectedResource.UsingAuthorizationHeader;
+import com.google.api.client.auth.oauth2.AccessProtectedResource.UsingFormEncodedBody;
+import com.google.api.client.auth.oauth2.AccessProtectedResource.UsingQueryParameter;
 import com.google.api.client.http.HttpExecuteIntercepter;
+import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.util.GenericData;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.EnumSet;
 
 /**
  * OAuth 2.0 methods for specifying the access token parameter as specified in <a
@@ -112,7 +116,8 @@ public final class AccessProtectedResource {
 
   static final class UsingFormEncodedBody extends AccessTokenIntercepter {
 
-    private static final List<String> ALLOWED_METHODS = Arrays.asList("POST", "PUT", "DELETE");
+    private static final EnumSet<HttpMethod> ALLOWED_METHODS =
+        EnumSet.of(HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE);
 
     public void intercept(HttpRequest request) {
       if (!ALLOWED_METHODS.contains(request.method)) {

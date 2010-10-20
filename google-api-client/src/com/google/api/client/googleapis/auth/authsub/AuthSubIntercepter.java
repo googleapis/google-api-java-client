@@ -45,7 +45,7 @@ final class AuthSubIntercepter implements HttpExecuteIntercepter {
         header = AuthSub.getAuthorizationHeaderValue(token);
       } else {
         header = AuthSub.getAuthorizationHeaderValue(
-            token, privateKey, request.method, request.url.build());
+            token, privateKey, request.method.name(), request.url.build());
       }
       request.headers.authorization = header;
     } catch (GeneralSecurityException e) {

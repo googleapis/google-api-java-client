@@ -59,8 +59,15 @@ public final class HttpRequest {
   /** HTTP transport. */
   public final HttpTransport transport;
 
-  /** HTTP request method. */
-  public String method;
+  /**
+   * HTTP request method.
+   * <p>
+   * <b>Upgrade warning:</b> prior to version 1.3 of the library, this was a string.
+   * </p>
+   *
+   * @since 1.3
+   */
+  public HttpMethod method;
 
   // TODO: support more HTTP methods?
 
@@ -71,7 +78,7 @@ public final class HttpRequest {
    * @param transport HTTP transport
    * @param method HTTP request method (may be {@code null}
    */
-  HttpRequest(HttpTransport transport, String method) {
+  HttpRequest(HttpTransport transport, HttpMethod method) {
     this.transport = transport;
     headers = transport.defaultHeaders.clone();
     this.method = method;
@@ -106,25 +113,35 @@ public final class HttpRequest {
     }
     // build low-level HTTP request
     LowLevelHttpTransport lowLevelHttpTransport = HttpTransport.useLowLevelHttpTransport();
-    String method = this.method;
+    HttpMethod method = this.method;
     GenericUrl url = this.url;
     String urlString = url.build();
     LowLevelHttpRequest lowLevelHttpRequest;
-    if (method.equals("DELETE")) {
-      lowLevelHttpRequest = lowLevelHttpTransport.buildDeleteRequest(urlString);
-    } else if (method.equals("GET")) {
-      lowLevelHttpRequest = lowLevelHttpTransport.buildGetRequest(urlString);
-    } else if (method.equals("PATCH")) {
-      if (!lowLevelHttpTransport.supportsPatch()) {
-        throw new IllegalArgumentException("HTTP transport doesn't support PATCH");
-      }
-      lowLevelHttpRequest = lowLevelHttpTransport.buildPatchRequest(urlString);
-    } else if (method.equals("POST")) {
-      lowLevelHttpRequest = lowLevelHttpTransport.buildPostRequest(urlString);
-    } else if (method.equals("PUT")) {
-      lowLevelHttpRequest = lowLevelHttpTransport.buildPutRequest(urlString);
-    } else {
-      throw new IllegalArgumentException("illegal method: " + method);
+    switch (method) {
+      case DELETE:
+        lowLevelHttpRequest = lowLevelHttpTransport.buildDeleteRequest(urlString);
+        break;
+      default:
+        lowLevelHttpRequest = lowLevelHttpTransport.buildGetRequest(urlString);
+        break;
+      case HEAD:
+        if (!lowLevelHttpTransport.supportsHead()) {
+          throw new IllegalArgumentException("HTTP transport doesn't support HEAD");
+        }
+        lowLevelHttpRequest = lowLevelHttpTransport.buildHeadRequest(urlString);
+        break;
+      case PATCH:
+        if (!lowLevelHttpTransport.supportsPatch()) {
+          throw new IllegalArgumentException("HTTP transport doesn't support PATCH");
+        }
+        lowLevelHttpRequest = lowLevelHttpTransport.buildPatchRequest(urlString);
+        break;
+      case POST:
+        lowLevelHttpRequest = lowLevelHttpTransport.buildPostRequest(urlString);
+        break;
+      case PUT:
+        lowLevelHttpRequest = lowLevelHttpTransport.buildPutRequest(urlString);
+        break;
     }
     Logger logger = HttpTransport.LOGGER;
     boolean loggable = logger.isLoggable(Level.CONFIG);

@@ -19,6 +19,7 @@ import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.googleapis.json.DiscoveryDocument.ServiceDefinition;
 import com.google.api.client.googleapis.json.DiscoveryDocument.ServiceMethod;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
@@ -99,7 +100,7 @@ public final class GoogleApi {
     Preconditions.checkNotNull(method, "method not found: %s", fullyQualifiedMethodName);
     // Create request for specified method
     HttpRequest request = transport.buildRequest();
-    request.method = method.httpMethod;
+    request.method = HttpMethod.valueOf(method.httpMethod);
     HashMap<String, String> requestMap = new HashMap<String, String>();
     for (Map.Entry<String, Object> entry : DataUtil.mapOf(parameters).entrySet()) {
       Object value = entry.getValue();

@@ -163,32 +163,32 @@ public final class HttpTransport {
 
   /** Builds a {@code DELETE} request. */
   public HttpRequest buildDeleteRequest() {
-    return new HttpRequest(this, "DELETE");
+    return new HttpRequest(this, HttpMethod.DELETE);
   }
 
   /** Builds a {@code GET} request. */
   public HttpRequest buildGetRequest() {
-    return new HttpRequest(this, "GET");
+    return new HttpRequest(this, HttpMethod.GET);
   }
 
   /** Builds a {@code POST} request. */
   public HttpRequest buildPostRequest() {
-    return new HttpRequest(this, "POST");
+    return new HttpRequest(this, HttpMethod.POST);
   }
 
   /** Builds a {@code PUT} request. */
   public HttpRequest buildPutRequest() {
-    return new HttpRequest(this, "PUT");
+    return new HttpRequest(this, HttpMethod.PUT);
   }
 
   /** Builds a {@code PATCH} request. */
   public HttpRequest buildPatchRequest() {
-    return new HttpRequest(this, "PATCH");
+    return new HttpRequest(this, HttpMethod.PATCH);
   }
 
   /** Builds a {@code HEAD} request. */
   public HttpRequest buildHeadRequest() {
-    return new HttpRequest(this, "HEAD");
+    return new HttpRequest(this, HttpMethod.HEAD);
   }
 
   /**

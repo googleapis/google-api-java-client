@@ -77,7 +77,7 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
 
   @Override
   public int getStatusCode() {
-    return 0;
+    return 200;
   }
 
   @Override
