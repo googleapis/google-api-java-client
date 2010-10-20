@@ -139,7 +139,7 @@ public final class DiscoveryDocument {
    * @throws IOException I/O exception executing request
    */
   public static DiscoveryDocument load(String apiName) throws IOException {
-    GenericUrl discoveryUrl = new GenericUrl("http://www.googleapis.com/discovery/0.1/describe");
+    GenericUrl discoveryUrl = new GenericUrl("https://www.googleapis.com/discovery/0.1/describe");
     discoveryUrl.put("api", apiName);
     HttpTransport transport = GoogleTransport.create();
     HttpRequest request = transport.buildGetRequest();

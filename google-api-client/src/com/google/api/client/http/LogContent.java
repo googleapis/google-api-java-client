@@ -69,12 +69,13 @@ final class LogContent implements HttpContent {
   /**
    * Returns whether the given content type is text rather than binary data.
    *
-   * @param contentType content type
-   * @return whether it is text
+   * @param contentType content type or {@code null}
+   * @return whether it is not {@code null} and text-based
    * @since 1.1
    */
   public static boolean isTextBasedContentType(String contentType) {
     // TODO: refine this further
-    return contentType.startsWith("text/") || contentType.startsWith("application/");
+    return contentType != null
+        && (contentType.startsWith("text/") || contentType.startsWith("application/"));
   }
 }

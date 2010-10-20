@@ -186,7 +186,7 @@ public final class HttpRequest {
       String contentEncoding = content.getEncoding();
       long contentLength = content.getLength();
       String contentType = content.getType();
-      if (contentLength != 0 && contentEncoding == null && contentType != null
+      if (contentLength != 0 && contentEncoding == null
           && LogContent.isTextBasedContentType(contentType)) {
         // log content?
         if (loggable && !disableContentLogging || logger.isLoggable(Level.ALL)) {
