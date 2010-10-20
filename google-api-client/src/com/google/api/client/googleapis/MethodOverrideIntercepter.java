@@ -45,6 +45,9 @@ public class MethodOverrideIntercepter implements HttpExecuteIntercepter {
     if (!HttpTransport.useLowLevelHttpTransport().supportsPatch()) {
       overriddenMethods.add("PATCH");
     }
+    if (!HttpTransport.useLowLevelHttpTransport().supportsHead()) {
+      overriddenMethods.add("HEAD");
+    }
   }
 
   public void intercept(HttpRequest request) {
