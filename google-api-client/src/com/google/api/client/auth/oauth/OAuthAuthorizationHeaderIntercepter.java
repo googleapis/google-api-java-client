@@ -31,7 +31,7 @@ final class OAuthAuthorizationHeaderIntercepter implements HttpExecuteIntercepte
     oauthParameters.computeNonce();
     oauthParameters.computeTimestamp();
     try {
-      oauthParameters.computeSignature(request.method, request.url);
+      oauthParameters.computeSignature(request.method.name(), request.url);
     } catch (GeneralSecurityException e) {
       IOException io = new IOException();
       io.initCause(e);
