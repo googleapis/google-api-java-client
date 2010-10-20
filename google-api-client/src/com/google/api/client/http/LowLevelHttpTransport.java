@@ -70,7 +70,6 @@ public abstract class LowLevelHttpTransport {
    * @param url URL
    * @throws IOException I/O exception
    */
-  @SuppressWarnings("unused")
   public LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
     throw new UnsupportedOperationException();
   }
@@ -84,7 +83,6 @@ public abstract class LowLevelHttpTransport {
    * @param url URL
    * @throws IOException I/O exception
    */
-  @SuppressWarnings("unused")
   public LowLevelHttpRequest buildPatchRequest(String url) throws IOException {
     throw new UnsupportedOperationException();
   }

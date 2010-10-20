@@ -59,7 +59,7 @@ public final class HttpRequest {
   /** HTTP transport. */
   public final HttpTransport transport;
 
-  /** HTTP request method. */
+  /** HTTP request method. Must be one of: "DELETE", "GET", "HEAD", "PATCH", "PUT", or "POST". */
   public String method;
 
   // TODO: support more HTTP methods?
@@ -114,6 +114,11 @@ public final class HttpRequest {
       lowLevelHttpRequest = lowLevelHttpTransport.buildDeleteRequest(urlString);
     } else if (method.equals("GET")) {
       lowLevelHttpRequest = lowLevelHttpTransport.buildGetRequest(urlString);
+    } else if (method.equals("HEAD")) {
+      if (!lowLevelHttpTransport.supportsHead()) {
+        throw new IllegalArgumentException("HTTP transport doesn't support HEAD");
+      }
+      lowLevelHttpRequest = lowLevelHttpTransport.buildHeadRequest(urlString);
     } else if (method.equals("PATCH")) {
       if (!lowLevelHttpTransport.supportsPatch()) {
         throw new IllegalArgumentException("HTTP transport doesn't support PATCH");
