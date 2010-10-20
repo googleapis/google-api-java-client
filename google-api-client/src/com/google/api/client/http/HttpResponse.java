@@ -206,8 +206,7 @@ public final class HttpResponse {
       if (loggable) {
         // print content using a buffered input stream that can be re-read
         String contentType = this.contentType;
-        if (debugContentByteArray.length != 0 && contentType != null
-            && LogContent.isTextBasedContentType(contentType)) {
+        if (debugContentByteArray.length != 0 && LogContent.isTextBasedContentType(contentType)) {
           logger.config(new String(debugContentByteArray));
         }
       }
