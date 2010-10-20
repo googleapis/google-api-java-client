@@ -15,11 +15,12 @@
 package com.google.api.client.googleapis;
 
 import com.google.api.client.http.HttpExecuteIntercepter;
+import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpTransport;
 
-import java.util.HashSet;
+import java.util.EnumSet;
 
 /**
  * HTTP request execute intercepter for Google API's that wraps HTTP requests -- other than GET or
@@ -39,19 +40,30 @@ public class MethodOverrideIntercepter implements HttpExecuteIntercepter {
    * <p>
    * Any HTTP method not supported by the low level HTTP transport returned by
    * {@link HttpTransport#useLowLevelHttpTransport()} is automatically added.
+   * </p>
+   * <p>
+   * <p>
+   * <b>Upgrade warning:</b> prior to version 1.3 of the library, this was a Set<String>.
+   * </p>
+   * </p>
+   * @since 1.3
    */
-  public static final HashSet<String> overriddenMethods = new HashSet<String>();
+  public static final EnumSet<HttpMethod> overriddenMethods = EnumSet.noneOf(HttpMethod.class);
   static {
-    if (!HttpTransport.useLowLevelHttpTransport().supportsPatch()) {
-      overriddenMethods.add("PATCH");
+    LowLevelHttpTransport lowLevelHttpTransport = HttpTransport.useLowLevelHttpTransport();
+    if (!lowLevelHttpTransport.supportsPatch()) {
+      overriddenMethods.add(HttpMethod.PATCH);
+    }
+    if (!lowLevelHttpTransport.supportsHead()) {
+      overriddenMethods.add(HttpMethod.HEAD);
     }
   }
 
   public void intercept(HttpRequest request) {
-    String method = request.method;
+    HttpMethod method = request.method;
     if (overriddenMethods.contains(method)) {
-      request.method = "POST";
-      request.headers.set("X-HTTP-Method-Override", method);
+      request.method = HttpMethod.POST;
+      request.headers.set("X-HTTP-Method-Override", method.name());
     }
   }
 
