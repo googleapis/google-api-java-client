@@ -47,7 +47,6 @@ final class ModulePomFileGenerator extends AbstractFileGenerator {
     out.println("    <plugins>");
     out.println("      <plugin>");
     out.println("        <artifactId>maven-source-plugin</artifactId>");
-    out.println("        <version>2.0.4</version>");
     out.println("        <configuration>");
     out.println("          <excludeResources>true</excludeResources>");
     out.println("        </configuration>");
