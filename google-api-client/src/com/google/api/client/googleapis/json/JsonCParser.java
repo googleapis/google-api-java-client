@@ -64,7 +64,7 @@ public final class JsonCParser extends JsonHttpParser {
       throws IOException {
     // check for JSON content type
     String contentType = response.contentType;
-    if (!contentType.startsWith(Json.CONTENT_TYPE)) {
+    if (contentType == null || !contentType.startsWith(Json.CONTENT_TYPE)) {
       throw new IllegalArgumentException(
           "Wrong content type: expected <" + Json.CONTENT_TYPE + "> but got <" + contentType + ">");
     }
