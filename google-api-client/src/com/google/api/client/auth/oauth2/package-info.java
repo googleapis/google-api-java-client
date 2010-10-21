@@ -48,9 +48,13 @@
  * </p>
  *
  * <p>
- * This package depends on the {@link com.google.api.client.http},
- * {@link com.google.api.client.json}, and {@link com.google.api.client.util} packages.
+ * This package depends on theses packages:
  * </p>
+ * <ul>
+ * <li>{@link com.google.api.client.http}</li>
+ * <li>{@link com.google.api.client.json}</li>
+ * <li>{@link com.google.api.client.util}</li>
+ * </ul>
  *
  * <p>
  * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
