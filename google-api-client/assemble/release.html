@@ -72,7 +72,16 @@ google-api-java-client.password = <i>[password from <a
 <ul>
   <li>Prepare the project
   <ul>
-    <li>Re-run <code>GeneratePom</code> in Eclipse</li>
+    <li>Re-run <code>GeneratePom</code> in Eclipse
+    <ul>
+      <li>Select project <code>google-api-client</code></li>
+      <li>Project &gt; Clean...</li>
+      <li>OK</li>
+      <li>Run <code>GeneratePom</code></li>
+      <li>If any modules/*/pom.xml file is updated, make sure to also
+      update the corresponding package.html file</li>
+    </ul>
+    </li>
     <li><code>hg commit</code> if you have any uncommitted changes</li>
   </ul>
   </li>
@@ -192,6 +201,8 @@ cd ../google-api-java-client
       <li>Project &gt; Clean...</li>
       <li>OK</li>
       <li>Run <code>GeneratePom</code></li>
+      <li>If any modules/*/pom.xml file is updated, make sure to also
+      update the corresponding package.html file</li>
     </ul>
     </li>
     <li><code>hg commit -m "start 1.2.1-alpha"</code></li>
