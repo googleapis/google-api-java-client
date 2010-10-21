@@ -5,7 +5,7 @@ Protocol</a>
 (see detailed package specification).
 
 
-<p>There are a few features not supported by this implementation:
+<p>There are a few features not supported by this implementation:</p>
 <ul>
   <li>{@code PLAINTEXT} signature algorithm</li>
   <li>{@code "application/x-www-form-urlencoded"} HTTP request body</li>
@@ -62,14 +62,17 @@ follows:</p>
   be stored.</li>
   <li>Use the stored access token to authorize HTTP requests to protected
   resources by setting the {@link
-  com.google.api.client.auth.oauth.OAuthParameters#token} and invoking
-  {@link
+  com.google.api.client.auth.oauth.OAuthParameters#token} and invoking {@link
   com.google.api.client.auth.oauth.OAuthParameters#signRequestsUsingAuthorizationHeader}.</li>
 </ol>
 
-<p>This package depends on the {@link com.google.api.client.auth}, {@link
-com.google.api.client.escape}, {@link com.google.api.client.http}, and {@link
-com.google.api.client.util} packages.</p>
+<p>This package depends on theses packages:</p>
+<ul>
+  <li>{@link com.google.api.client.auth}</li>
+  <li>{@link com.google.api.client.escape}</li>
+  <li>{@link com.google.api.client.http}</li>
+  <li>{@link com.google.api.client.util}</li>
+</ul>
 
 <p><b>Warning: this package is experimental, and its content may be
 changed in incompatible ways or possibly entirely removed in a future version of
