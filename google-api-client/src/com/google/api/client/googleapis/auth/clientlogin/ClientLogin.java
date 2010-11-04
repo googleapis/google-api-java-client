@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.auth.clientlogin;
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.auth.AuthKeyValueParser;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.UrlEncodedContent;
@@ -109,9 +110,9 @@ public final class ClientLogin {
    * Authenticates based on the provided field values.
    *
    * @throws HttpResponseException if the authentication response has an error code, such as for a
-   *         CAPTCHA challenge. Call {@code
-   *         exception.response.parseAs(ClientLoginAuthenticator.ErrorInfo.class) * } to parse the
-   *         response.
+   *         CAPTCHA challenge. Call {@link HttpResponseException#response exception.response}.
+   *         {@link HttpResponse#parseAs(Class) parseAs}({@link ClientLogin.ErrorInfo
+   *         ClientLoginAuthenticator.ErrorInfo}.class) to parse the response.
    * @throws IOException some other kind of I/O exception
    */
   public Response authenticate() throws HttpResponseException, IOException {

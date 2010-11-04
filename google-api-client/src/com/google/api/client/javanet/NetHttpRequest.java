@@ -71,7 +71,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
     }
     int connectTimeout = transport.connectTimeout;
     if (connectTimeout >= 0) {
-      connection.setReadTimeout(connectTimeout);
+      connection.setConnectTimeout(connectTimeout);
     }
     connection.connect();
     return new NetHttpResponse(connection);
