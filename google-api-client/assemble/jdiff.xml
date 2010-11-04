@@ -11,7 +11,7 @@
   <taskdef name="jdiff" 
            classname="jdiff.JDiffAntTask" 
            classpath="${JDIFF_HOME}/antjdiff.jar:${MAVEN_REPOSITORY_HOME}/org/codehaus/jackson/jackson-core-asl/1.5.7/jackson-core-asl-1.5.7.jar" />
-  <jdiff destdir="${PROJECT_ROOT_DIR}/javadoc/1.2.1-alpha/jdiff" 
+  <jdiff destdir="${PROJECT_ROOT_DIR}/javadoc/1.2.2-alpha/jdiff" 
          verbose="on"
          stats="on"
          docchanges="on">
@@ -19,7 +19,7 @@
       <!-- This is the location of your old source files -->
       <dirset dir="${OLD_PROJECT_ROOT_DIR}/google-api-java-client/google-api-client/src" includes="com/**" />
     </old>
-    <new name="Google API Client Library for Java 1.2.1-alpha">
+    <new name="Google API Client Library for Java 1.2.2-alpha">
       <!-- This is the location of your new source files -->
       <dirset dir="${PROJECT_ROOT_DIR}/google-api-java-client/google-api-client/src" includes="com/**" />
     </new>
