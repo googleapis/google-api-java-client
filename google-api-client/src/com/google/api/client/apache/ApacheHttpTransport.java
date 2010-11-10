@@ -23,13 +23,38 @@ import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.params.ClientPNames;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
 /**
  * HTTP low-level transport based on the Apache HTTP Client library.
+ * <p>
+ * Default settings:
+ * </p>
+ * <ul>
+ * <li>The client connection manager is set to {@link ThreadSafeClientConnManager}.</li>
+ * <li>Timeout is set to 20 seconds using {@link ConnManagerParams#setTimeout},
+ * {@link HttpConnectionParams#setConnectionTimeout}, and {@link HttpConnectionParams#setSoTimeout}.
+ * </li>
+ * <li>The socket buffer size is set to 8192 using {@link HttpConnectionParams#setSocketBufferSize}.
+ * </li>
+ * </ul>
+ * <p>
+ * These parameters may be overridden by setting the values on the {@link #httpClient}.
+ * {@link HttpClient#getParams() getParams()}. Please read the <a
+ * href="http://hc.apache.org/httpcomponents-client-ga/tutorial/html/connmgmt.html">Apache HTTP
+ * Client connection management tutorial</a> for more complex configuration questions, such as how
+ * to set up an HTTP proxy.
+ * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -62,8 +87,14 @@ public final class ApacheHttpTransport extends LowLevelHttpTransport {
     HttpConnectionParams.setConnectionTimeout(params, 20 * 1000);
     HttpConnectionParams.setSoTimeout(params, 20 * 1000);
     HttpConnectionParams.setSocketBufferSize(params, 8192);
+    ConnManagerParams.setTimeout(params, 20 * 1000);
     params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
-    httpClient = new DefaultHttpClient(params);
+    // See http://hc.apache.org/httpcomponents-client-ga/tutorial/html/connmgmt.html#d4e596
+    SchemeRegistry registry = new SchemeRegistry();
+    registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+    registry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+    ClientConnectionManager connectionManager = new ThreadSafeClientConnManager(params, registry);
+    httpClient = new DefaultHttpClient(connectionManager, params);
   }
 
   @Override
