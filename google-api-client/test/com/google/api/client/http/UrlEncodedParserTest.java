@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -30,7 +28,7 @@ import java.util.List;
 
 /**
  * Tests {@link UrlEncodedParser}.
- * 
+ *
  * @author Yaniv Inbar
  */
 public class UrlEncodedParserTest extends TestCase {
@@ -58,8 +56,8 @@ public class UrlEncodedParserTest extends TestCase {
     @Override
     public boolean equals(Object obj) {
       Simple other = (Simple) obj;
-      return Objects.equal(a, other.a) && Objects.equal(b, other.b)
-          && Objects.equal(c, other.c) && Objects.equal(q, other.q);
+      return Objects.equal(a, other.a) && Objects.equal(b, other.b) && Objects.equal(c, other.c)
+          && Objects.equal(q, other.q);
     }
 
     public Simple() {
@@ -113,8 +111,7 @@ public class UrlEncodedParserTest extends TestCase {
 
   public void testParse_map() {
     ArrayMap<String, Object> actual = new ArrayMap<String, Object>();
-    UrlEncodedParser.parse(
-        "p=4&q=1&a=x&p=3&b=y&c=z&d=v&q=2&p=5&noval1&noval2=", actual);
+    UrlEncodedParser.parse("p=4&q=1&a=x&p=3&b=y&c=z&d=v&q=2&p=5&noval1&noval2=", actual);
     ArrayMap<String, Object> expected = ArrayMap.create();
     expected.add("p", Arrays.asList("4", "3", "5"));
     expected.add("q", Arrays.asList("1", "2"));
@@ -134,5 +131,11 @@ public class UrlEncodedParserTest extends TestCase {
     ArrayMap<String, Object> expected = ArrayMap.create();
     expected.add("q", Collections.singletonList(" "));
     assertEquals(expected, actual);
+  }
+
+  public void testParse_null() {
+    ArrayMap<String, Object> actual = new ArrayMap<String, Object>();
+    UrlEncodedParser.parse(null, actual);
+    assertTrue(actual.isEmpty());
   }
 }
