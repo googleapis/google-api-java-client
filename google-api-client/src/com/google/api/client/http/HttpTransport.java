@@ -71,16 +71,20 @@ public final class HttpTransport {
   public static LowLevelHttpTransport useLowLevelHttpTransport() {
     LowLevelHttpTransport lowLevelHttpTransportInterface = HttpTransport.lowLevelHttpTransport;
     if (lowLevelHttpTransportInterface == null) {
+      boolean isAppEngineSdkOnClasspath = false;
       try {
         // check for Google App Engine
         Class.forName("com.google.appengine.api.urlfetch.URLFetchServiceFactory");
+        isAppEngineSdkOnClasspath = true;
         lowLevelHttpTransport =
             lowLevelHttpTransportInterface = (LowLevelHttpTransport) Class.forName(
                 "com.google.api.client.appengine.UrlFetchTransport").getField("INSTANCE").get(null);
       } catch (Exception e0) {
+        boolean isApacheHttpClientOnClasspath = false;
         try {
           // check for Apache HTTP client
           Class.forName("org.apache.http.client.HttpClient");
+          isApacheHttpClientOnClasspath = true;
           lowLevelHttpTransport =
               lowLevelHttpTransportInterface =
                   (LowLevelHttpTransport) Class.forName(
@@ -95,7 +99,34 @@ public final class HttpTransport {
                         "com.google.api.client.javanet.NetHttpTransport").getField("INSTANCE").get(
                         null);
           } catch (Exception e2) {
-            throw new IllegalStateException("unable to load NetHttpTrasnport");
+            StringBuilder buf =
+                new StringBuilder("Missing required low-level HTTP transport package.\n");
+            if (isAppEngineSdkOnClasspath) {
+              buf.append("For Google App Engine, the required package is "
+                  + "\"com.google.api.client.appengine\".\n");
+            }
+            if (isApacheHttpClientOnClasspath) {
+              boolean isAndroidOnClasspath = false;
+              try {
+                Class.forName("android.util.Log");
+                isAndroidOnClasspath = true;
+              } catch (Exception e3) {
+              }
+              if (isAndroidOnClasspath) {
+                buf.append("For Android, the preferred package is "
+                    + "\"com.google.api.client.apache\".\n");
+              } else {
+                buf.append("For Apache HTTP Client, the preferred package is "
+                    + "\"com.google.api.client.apache\".\n");
+              }
+            }
+            if (isAppEngineSdkOnClasspath || isApacheHttpClientOnClasspath) {
+              buf.append("Alternatively, use");
+            } else {
+              buf.append("Use");
+            }
+            buf.append(" package \"com.google.api.client.javanet\".");
+            throw new IllegalStateException(buf.toString());
           }
         }
       }
