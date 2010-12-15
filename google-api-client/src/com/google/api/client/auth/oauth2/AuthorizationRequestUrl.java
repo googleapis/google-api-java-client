@@ -83,9 +83,16 @@ public class AuthorizationRequestUrl extends GenericUrl {
    * authorization code, or "code_and_token" to request both. The authorization server MAY decline
    * to provide one or more of these response types. For convenience, you may use
    * {@link ResponseType} to set this value.
+   * <p>
+   * By default, the response type is {@code "code"}, but this may be overridden.
+   * </p>
+   * <p>
+   * Upgrade warning: in prior version 1.2 of the library, the default value was {@code null}. It is
+   * now {@code "code"}.
+   * </p>
    */
   @Key("response_type")
-  public String responseType;
+  public String responseType = "code";
 
   /** (REQUIRED) The client identifier. */
   @Key("client_id")
