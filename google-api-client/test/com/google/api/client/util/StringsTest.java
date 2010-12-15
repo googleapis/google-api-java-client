@@ -27,7 +27,7 @@ public class StringsTest extends TestCase {
 
   private static final byte[] SAMPLE_UTF8 =
       new byte[] {49, 50, 51, -41, -103, -41, -96, -41, -103, -41, -111};
-  private static final String SAMPLE = "123יניב";
+  private static final String SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
 
   public StringsTest(String testName) {
     super(testName);
