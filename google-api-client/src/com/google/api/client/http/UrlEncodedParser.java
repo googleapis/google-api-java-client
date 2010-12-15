@@ -90,12 +90,19 @@ public final class UrlEncodedParser implements HttpParser {
    * value. They are parsed the same as "primitive" fields, except that the generic type parameter
    * of the collection is used as the {@link Class} parameter. For keys not represented by a
    * declared field, the field type is assumed to be {@link ArrayList}&lt;String&gt;.
+   * </p>
+   * <p>
+   * Upgrade warning: in prior version 1.2 of the library, if {@code content} was {@code null}, it
+   * threw a {@link NullPointerException}, but now it simply does nothing and returns normally.
+   * </p>
    *
-   * @param content URL-encoded content
+   * @param content URL-encoded content or {@code null} to ignore content
    * @param data data key name/value pairs
    */
-  @SuppressWarnings("unchecked")
   public static void parse(String content, Object data) {
+    if (content == null) {
+      return;
+    }
     Class<?> clazz = data.getClass();
     ClassInfo classInfo = ClassInfo.of(clazz);
     GenericData genericData = GenericData.class.isAssignableFrom(clazz) ? (GenericData) data : null;
@@ -125,6 +132,7 @@ public final class UrlEncodedParser implements HttpParser {
       if (fieldInfo != null) {
         Class<?> type = fieldInfo.type;
         if (Collection.class.isAssignableFrom(type)) {
+          @SuppressWarnings("unchecked")
           Collection<Object> collection = (Collection<Object>) fieldInfo.getValue(data);
           if (collection == null) {
             collection = ClassInfo.newCollectionInstance(type);
@@ -136,6 +144,7 @@ public final class UrlEncodedParser implements HttpParser {
           fieldInfo.setValue(data, FieldInfo.parsePrimitiveValue(type, stringValue));
         }
       } else {
+        @SuppressWarnings("unchecked")
         ArrayList<String> listValue = (ArrayList<String>) map.get(name);
         if (listValue == null) {
           listValue = new ArrayList<String>();
