@@ -48,7 +48,7 @@ public class JsonHttpParser implements HttpParser {
   }
 
   public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
-    return Json.parse(JsonHttpParser.parserForResponse(response), dataClass, null);
+    return Json.parseAndClose(JsonHttpParser.parserForResponse(response), dataClass, null);
   }
 
   /**
