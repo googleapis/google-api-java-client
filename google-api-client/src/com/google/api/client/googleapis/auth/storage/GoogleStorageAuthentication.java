@@ -137,6 +137,9 @@ public final class GoogleStorageAuthentication {
           messageBuf.append('/').append(bucket);
         }
       }
+      if (url.pathParts != null) {
+        messageBuf.append(url.getRawPath());
+      }
       if (url.get("acl") != null) {
         messageBuf.append("?acl");
       } else if (url.get("location") != null) {
@@ -148,7 +151,6 @@ public final class GoogleStorageAuthentication {
       } else if (url.get("torrent") != null) {
         messageBuf.append("?torrent");
       }
-      messageBuf.append(url.getRawPath());
       try {
         request.headers.authorization =
             "GOOG1 " + accessKey + ":" + HmacSha.sign(secret, messageBuf.toString());
