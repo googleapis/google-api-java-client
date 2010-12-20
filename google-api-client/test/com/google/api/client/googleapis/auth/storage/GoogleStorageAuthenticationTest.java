@@ -1,21 +1,20 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
 package com.google.api.client.googleapis.auth.storage;
 
+import com.google.api.client.auth.HmacSha;
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.http.HttpExecuteIntercepter;
@@ -25,31 +24,48 @@ import com.google.api.client.http.MockHttpContent;
 
 import junit.framework.TestCase;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 /**
  * Tests {@link GoogleStorageAuthentication}.
- * 
+ *
  * @author Yaniv Inbar
  */
 public class GoogleStorageAuthenticationTest extends TestCase {
 
-  public GoogleStorageAuthenticationTest() {
-  }
+  private static final String ACCESS_KEY = "GOOGTS7C7FUP3AIRVJTE";
+  private static final String SECRET = "abc";
 
   public GoogleStorageAuthenticationTest(String name) {
     super(name);
   }
 
-  public void test() throws IOException {
+  public void test() throws Exception {
+    subtest("http://travel-maps.commondatastorage.googleapis.com/europe/france/paris.jpg",
+        "PUT\n" + "\n" + "image/jpg\n" + "Mon, 15 Feb  2010 21:30:39 GMT\n"
+            + "x-goog-acl:public-read\n" + "x-goog-meta-reviewer:bob,jane\n"
+            + "/travel-maps/europe/france/paris.jpg");
+    subtest("http://travel-maps.commondatastorage.googleapis.com/europe/france/paris.jpg?acl",
+        "PUT\n" + "\n" + "image/jpg\n" + "Mon, 15 Feb  2010 21:30:39 GMT\n"
+            + "x-goog-acl:public-read\n" + "x-goog-meta-reviewer:bob,jane\n"
+            + "/travel-maps/europe/france/paris.jpg?acl");
+    subtest("http://travel-maps.commondatastorage.googleapis.com?acl",
+        "PUT\n" + "\n" + "image/jpg\n" + "Mon, 15 Feb  2010 21:30:39 GMT\n"
+            + "x-goog-acl:public-read\n" + "x-goog-meta-reviewer:bob,jane\n" + "/travel-maps?acl");
+    subtest("http://travel-maps.commondatastorage.googleapis.com",
+        "PUT\n" + "\n" + "image/jpg\n" + "Mon, 15 Feb  2010 21:30:39 GMT\n"
+            + "x-goog-acl:public-read\n" + "x-goog-meta-reviewer:bob,jane\n" + "/travel-maps");
+    subtest("http://travel-maps.commondatastorage.googleapis.com/",
+        "PUT\n" + "\n" + "image/jpg\n" + "Mon, 15 Feb  2010 21:30:39 GMT\n"
+            + "x-goog-acl:public-read\n" + "x-goog-meta-reviewer:bob,jane\n" + "/travel-maps/");
+  }
+
+  private void subtest(String url, String messageToSign) throws Exception {
     HttpTransport transport = GoogleTransport.create();
-    GoogleStorageAuthentication.authorize(transport, "GOOGTS7C7FUP3AIRVJTE",
-        "abc");
+    GoogleStorageAuthentication.authorize(transport, ACCESS_KEY, SECRET);
     HttpExecuteIntercepter intercepter = transport.intercepters.get(1);
     HttpRequest request = transport.buildPutRequest();
-    request
-        .setUrl("http://travel-maps.commondatastorage.googleapis.com/europe/france/paris.jpg");
+    request.setUrl(url);
     GoogleHeaders headers = (GoogleHeaders) request.headers;
     headers.date = "Mon, 15 Feb  2010 21:30:39 GMT";
     MockHttpContent content = new MockHttpContent();
@@ -59,7 +75,7 @@ public class GoogleStorageAuthenticationTest extends TestCase {
     headers.googAcl = "public-read";
     headers.set("x-goog-meta-reviewer", Arrays.asList("bob", "jane"));
     intercepter.intercept(request);
-    assertEquals("GOOG1 GOOGTS7C7FUP3AIRVJTE:ovyTUuOaD+E6l/Xu+eOAhZ/8LKk=",
+    assertEquals(messageToSign, "GOOG1 " + ACCESS_KEY + ":" + HmacSha.sign(SECRET, messageToSign),
         request.headers.authorization);
   }
 }
