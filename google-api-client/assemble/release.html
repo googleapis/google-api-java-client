@@ -27,12 +27,13 @@
       href="http://www.sonatype.com/people/2010/01/how-to-generate-pgp-signatures-with-maven/">these
     instructions</a>, making sure to specify a passphrase to be used every time you
     release.</li>
-    <li>Add these lines to your <code>.hg/.hgrc</code>: <pre><code>google-api-java-client.prefix = https://google-api-java-client.googlecode.com/hg/
+    <li>Add these lines to your <code>~/.hgrc</code>: <pre><code>google-api-java-client.prefix = https://google-api-java-client.googlecode.com/hg/
 google-api-java-client.username = <i>[username from <a
       href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i>
 google-api-java-client.password = <i>[password from <a
       href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i></code></pre></li>
-    <li>Add these lines to your <code>.m2/settings.xml</code>: <pre><code>&lt;settings&gt;
+    <li>Add these lines to your <code>~/.m2/settings.xml</code> (create
+    this file if it does not already exist): <pre><code>&lt;settings&gt;
   &lt;servers&gt;
     &lt;server&gt;
       &lt;id&gt;google-snapshots&lt;/id&gt;
