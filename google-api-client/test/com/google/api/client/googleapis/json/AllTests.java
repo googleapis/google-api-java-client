@@ -25,7 +25,8 @@ public class AllTests extends TestSuite {
 
   public static TestSuite suite() {
     TestSuite result = new TestSuite(AllTests.class.getPackage().getName());
-    result.addTestSuite(DiscoveryDocumentTest.class);
+    result.addTestSuite(GoogleApiTest.class);
+    result.addTestSuite(MethodOverrideIntercepterTest.class);
     return result;
   }
 }

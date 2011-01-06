@@ -14,11 +14,9 @@
 
 package com.google.api.client.googleapis.json;
 
-import com.google.api.client.json.Json;
-import com.google.api.client.json.JsonHttpContent;
-
-import org.codehaus.jackson.JsonEncoding;
-import org.codehaus.jackson.JsonGenerator;
+import com.google.api.client.http.json.JsonHttpContent;
+import com.google.api.client.json.JsonEncoding;
+import com.google.api.client.json.JsonGenerator;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -31,11 +29,11 @@ import java.io.OutputStream;
  *
  * <pre>
  * <code>
- * static void setContent(HttpRequest request, Object data) {
- *     JsonCContent content = new JsonCContent();
- *     content.data = data;
- *     request.content = content;
- * }
+  static void setContent(HttpRequest request, Object data) {
+    JsonCContent content = new JsonCContent();
+    content.data = data;
+    request.content = content;
+  }
  * </code>
  * </pre>
  *
@@ -46,11 +44,11 @@ public final class JsonCContent extends JsonHttpContent {
 
   @Override
   public void writeTo(OutputStream out) throws IOException {
-    JsonGenerator generator = Json.JSON_FACTORY.createJsonGenerator(out, JsonEncoding.UTF8);
+    JsonGenerator generator = jsonFactory.createJsonGenerator(out, JsonEncoding.UTF8);
     generator.writeStartObject();
     generator.writeFieldName("data");
-    Json.serialize(generator, data);
+    generator.serialize(data);
     generator.writeEndObject();
-    generator.close();
+    generator.flush();
   }
 }

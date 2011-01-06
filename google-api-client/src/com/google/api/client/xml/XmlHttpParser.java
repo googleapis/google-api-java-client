@@ -31,11 +31,11 @@ import java.io.InputStream;
  *
  * <pre>
  * <code>
- * static void setParser(HttpTransport transport) {
- *   XmlHttpParser parser = new XmlHttpParser();
- *   parser.namespaceDictionary = NAMESPACE_DICTIONARY;
- *   transport.addParser(parser);
- * }
+  static void setParser(HttpTransport transport) {
+    XmlHttpParser parser = new XmlHttpParser();
+    parser.namespaceDictionary = NAMESPACE_DICTIONARY;
+    transport.addParser(parser);
+  }
  * </code>
  * </pre>
  *

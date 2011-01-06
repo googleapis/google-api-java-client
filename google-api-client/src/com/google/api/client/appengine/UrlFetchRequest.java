@@ -57,7 +57,10 @@ final class UrlFetchRequest extends LowLevelHttpRequest {
   public LowLevelHttpResponse execute() throws IOException {
     // write content
     if (content != null) {
-      addHeader("Content-Type", content.getType());
+      String contentType = content.getType();
+      if (contentType != null) {
+        addHeader("Content-Type", contentType);
+      }
       String contentEncoding = content.getEncoding();
       if (contentEncoding != null) {
         addHeader("Content-Encoding", contentEncoding);

@@ -14,7 +14,9 @@
  * the License.
  */
 
-package com.google.api.client.http;
+package com.google.api.client.testing.http;
+
+import com.google.api.client.http.HttpContent;
 
 import java.io.IOException;
 import java.io.OutputStream;

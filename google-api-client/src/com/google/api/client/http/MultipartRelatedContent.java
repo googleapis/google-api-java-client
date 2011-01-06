@@ -36,7 +36,13 @@ public final class MultipartRelatedContent implements HttpContent {
   /** Boundary string to use. By default, it is {@code "END_OF_PART"}. */
   public String boundary = "END_OF_PART";
 
-  /** Collection of HTTP content parts. By default, it is an empty list. */
+  /**
+   * Collection of HTTP content parts.
+   * <p>
+   * By default, it is an empty list. Note that the content type for each part is required, so
+   * {@link HttpContent#getType()} must not be {@code null}.
+   * </p>
+   */
   public Collection<HttpContent> parts = new ArrayList<HttpContent>();
 
   private static final byte[] CR_LF = "\r\n".getBytes();

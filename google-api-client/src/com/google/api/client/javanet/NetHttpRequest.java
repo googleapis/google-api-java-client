@@ -52,7 +52,10 @@ final class NetHttpRequest extends LowLevelHttpRequest {
     HttpContent content = this.content;
     if (content != null) {
       connection.setDoOutput(true);
-      addHeader("Content-Type", content.getType());
+      String contentType = content.getType();
+      if (contentType != null) {
+        addHeader("Content-Type", contentType);
+      }
       String contentEncoding = content.getEncoding();
       if (contentEncoding != null) {
         addHeader("Content-Encoding", contentEncoding);

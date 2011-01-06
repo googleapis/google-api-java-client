@@ -16,11 +16,11 @@ package com.google.api.client.googleapis.auth.storage;
 
 import com.google.api.client.auth.HmacSha;
 import com.google.api.client.googleapis.GoogleHeaders;
-import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.http.HttpExecuteIntercepter;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.MockHttpContent;
+import com.google.api.client.testing.http.MockHttpContent;
+import com.google.api.client.testing.http.MockHttpTransport;
 
 import junit.framework.TestCase;
 
@@ -61,12 +61,12 @@ public class GoogleStorageAuthenticationTest extends TestCase {
   }
 
   private void subtest(String url, String messageToSign) throws Exception {
-    HttpTransport transport = GoogleTransport.create();
+    HttpTransport transport = new MockHttpTransport();
     GoogleStorageAuthentication.authorize(transport, ACCESS_KEY, SECRET);
-    HttpExecuteIntercepter intercepter = transport.intercepters.get(1);
+    HttpExecuteIntercepter intercepter = transport.intercepters.get(0);
     HttpRequest request = transport.buildPutRequest();
     request.setUrl(url);
-    GoogleHeaders headers = (GoogleHeaders) request.headers;
+    GoogleHeaders headers = new GoogleHeaders();
     headers.date = "Mon, 15 Feb  2010 21:30:39 GMT";
     MockHttpContent content = new MockHttpContent();
     content.length = 4539;
@@ -74,6 +74,7 @@ public class GoogleStorageAuthenticationTest extends TestCase {
     request.content = content;
     headers.googAcl = "public-read";
     headers.set("x-goog-meta-reviewer", Arrays.asList("bob", "jane"));
+    request.headers = headers;
     intercepter.intercept(request);
     assertEquals(messageToSign, "GOOG1 " + ACCESS_KEY + ":" + HmacSha.sign(SECRET, messageToSign),
         request.headers.authorization);

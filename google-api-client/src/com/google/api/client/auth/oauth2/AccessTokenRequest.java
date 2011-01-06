@@ -19,7 +19,8 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.JsonHttpParser;
+import com.google.api.client.http.json.JsonHttpParser;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
 
@@ -234,6 +235,22 @@ public class AccessTokenRequest extends GenericData {
   }
 
   /**
+   * (REQUIRED) HTTP transport required for executing request in {@link #execute()}.
+   *
+   * @since 1.3
+   */
+  public HttpTransport transport;
+
+  /**
+   * (REQUIRED) JSON factory to use for parsing response in {@link #execute()}.
+   *
+   * @since 1.3
+   */
+  public JsonFactory jsonFactory;
+
+  // TODO(yanivi): grantType should be an enum (see Issue 3)
+
+  /**
    * (REQUIRED) The access grant type included in the request. Value MUST be one of
    * "authorization_code", "password", "assertion", "refresh_token", or "none".
    */
@@ -285,8 +302,9 @@ public class AccessTokenRequest extends GenericData {
    * @throws IOException I/O exception
    */
   public final HttpResponse execute() throws IOException {
-    HttpTransport transport = new HttpTransport();
-    transport.addParser(new JsonHttpParser());
+    JsonHttpParser parser = new JsonHttpParser();
+    parser.jsonFactory = jsonFactory;
+    transport.addParser(parser);
     HttpRequest request = transport.buildPostRequest();
     if (useBasicAuthorization) {
       request.headers.setBasicAuthentication(clientId, clientSecret);

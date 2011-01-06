@@ -97,7 +97,6 @@ hg branch 1.3</code></pre></li>
     <li>For the following files, replace <code>1.2.0-alpha</code> with <code>1.3.0-alpha</code>:
     <pre><code>pom.xml
 modules/*/pom.xml
-instructions.html
 google-api-client/assemble/jdiff.xml (also change "1.2.0" to "1.3.0")
 google-api-client/assemble/release.html (also change "1.3" to "1.4", "1.2.0" to "1.3.0", and "1.2" to "1.3")
 google-api-client/generator/com/google/api/client/generator/model/PackageModel.java
@@ -192,24 +191,25 @@ cd ../google-api-java-client
       <li>click Submit file</li>
     </ul>
     </li>
-    <li>If it is a bug fix release, deprecate the library from the previous
-    version <code>1.2.0-alpha</code> by removing any <code>Featured</code> label
-    and adding the <code>Deprecated</code> label.</li>
+    <li>If it is a bug fix release, deprecate the library from any previous
+    versions by removing any <code>Featured</code> label and adding the <code>Deprecated</code>
+    label.</li>
     <li>Update the following pages changing any reference from the previous
-    version <code>1.2.*-alpha</code> to the new version <code>1.3.0-alpha</code>:
+    version to the new version <code>1.3.0-alpha</code>:
     <ul>
-      <li><a href="http://code.google.com/p/google-api-java-client/admin">http://code.google.com/p/google-api-java-client/admin</a></li>
+      <li><a href="http://code.google.com/p/google-api-java-client/admin">admin</a></li>
       <li><a
-        href="http://code.google.com/p/google-api-java-client/wiki/Setup">http://code.google.com/p/google-api-java-client/wiki/Setup</a></li>
+        href="http://code.google.com/p/google-api-java-client/w/edit/Setup">wiki/Setup</a></li>
       <li><a
-        href="http://code.google.com/p/google-api-java-client/wiki/SampleProgram">http://code.google.com/p/google-api-java-client/wiki/SampleProgram</a></li>
+        href="http://code.google.com/p/google-api-java-client/w/edit/SampleProgram">wiki/SampleProgram</a></li>
     </ul>
     </li>
   </ul>
   </li>
-  <li>Announce new version on the <a
-    href="http://google-api-java-client.blogspot.com/">announcement blog</a>,
-  including links to:
+  <li><a
+    href="http://www.blogger.com/post-create.g?blogID=4531100327392916335">New
+  Post</a> on the <a href="http://google-api-java-client.blogspot.com/">announcement
+  blog</a> about the new version, including links to:
   <ul>
     <li><a
       href="http://code.google.com/p/google-api-java-client/issues/list?can=1&q=milestone=Version1.3.0%20type=Defect&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary">Bugs
@@ -224,7 +224,6 @@ cd ../google-api-java-client
     <li><code>hg update</code></li>
     <li>For the following files, replace <code>1.2.*-alpha</code> with <code>1.3.0-alpha</code>:
     <ul>
-      <li><code>instructions.html</code></li>
       <li><code>google-api-client/assemble/jdiff.xml</code> (only update
       old version for minor update)</li>
       <li><code>google-api-client/assemble/release.html</code>

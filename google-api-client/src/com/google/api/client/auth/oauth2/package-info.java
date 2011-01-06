@@ -52,19 +52,13 @@
  * </p>
  * <ul>
  * <li>{@link com.google.api.client.http}</li>
- * <li>{@link com.google.api.client.json}</li>
+ * <li>{@link com.google.api.client.http.json}</li>
  * <li>{@link com.google.api.client.util}</li>
  * </ul>
  *
  * <p>
  * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
  * possibly entirely removed in a future version of the library</b>
- * </p>
- * <p>
- * <b>Upgrade warning: in version 1.1 of the library, the implementation was based on draft 07 of
- * the specification, but as of version 1.2 it has been replaced with an implementation based on
- * draft 10. Thus, this implementation is not backwards compatible, and is not safe as a drop-in
- * replacement.</b>
  * </p>
  *
  * @since 1.2

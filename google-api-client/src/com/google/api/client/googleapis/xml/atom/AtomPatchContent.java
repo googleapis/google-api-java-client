@@ -27,13 +27,13 @@ import com.google.api.client.xml.atom.AtomContent;
  *
  * <pre>
  * <code>
- * static void setContent(HttpRequest request,
- *     XmlNamespaceDictionary namespaceDictionary, Object entry) {
- *   AtomPatchContent content = new AtomPatchContent();
- *   content.namespaceDictionary = namespaceDictionary;
- *   content.entry = entry;
- *   request.content = content;
- * }
+  static void setContent(
+      HttpRequest request, XmlNamespaceDictionary namespaceDictionary, Object entry) {
+    AtomPatchContent content = new AtomPatchContent();
+    content.namespaceDictionary = namespaceDictionary;
+    content.entry = entry;
+    request.content = content;
+  }
  * </code>
  * </pre>
  *

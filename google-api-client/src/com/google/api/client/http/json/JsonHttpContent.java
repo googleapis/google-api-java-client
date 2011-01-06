@@ -12,12 +12,13 @@
  * the License.
  */
 
-package com.google.api.client.json;
+package com.google.api.client.http.json;
 
 import com.google.api.client.http.HttpContent;
-
-import org.codehaus.jackson.JsonEncoding;
-import org.codehaus.jackson.JsonGenerator;
+import com.google.api.client.json.Json;
+import com.google.api.client.json.JsonEncoding;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonGenerator;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,15 +30,18 @@ import java.io.OutputStream;
  *
  * <pre>
  * <code>
- * static void setContent(HttpRequest request, Object data) {
- *   JsonHttpContent content = new JsonHttpContent();
- *   content.data = data;
- *   request.content = content;
- * }
+  static void setContent(HttpRequest request, Object data) {
+    JsonHttpContent content = new JsonHttpContent();
+    content.data = data;
+    request.content = content;
+  }
  * </code>
  * </pre>
+ * <p>
+ * Upgrade warning: this class was previously in the {@link com.google.api.client.json} package.
+ * </p>
  *
- * @since 1.0
+ * @since 1.3
  * @author Yaniv Inbar
  */
 public class JsonHttpContent implements HttpContent {
@@ -48,6 +52,13 @@ public class JsonHttpContent implements HttpContent {
 
   /** Key/value pair data. */
   public Object data;
+
+  /**
+   * JSON factory to use.
+   *
+   * @since 1.3
+   */
+  public JsonFactory jsonFactory;
 
   public long getLength() {
     // TODO
@@ -63,8 +74,8 @@ public class JsonHttpContent implements HttpContent {
   }
 
   public void writeTo(OutputStream out) throws IOException {
-    JsonGenerator generator = Json.JSON_FACTORY.createJsonGenerator(out, JsonEncoding.UTF8);
-    Json.serialize(generator, data);
-    generator.close();
+    JsonGenerator generator = jsonFactory.createJsonGenerator(out, JsonEncoding.UTF8);
+    generator.serialize(data);
+    generator.flush();
   }
 }

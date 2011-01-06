@@ -15,13 +15,16 @@
 package com.google.api.client.googleapis.json;
 
 import com.google.api.client.escape.CharEscapers;
-import com.google.api.client.googleapis.GoogleTransport;
+import com.google.api.client.googleapis.GoogleUrl;
+import com.google.api.client.googleapis.json.DiscoveryDocument.APIDefinition;
 import com.google.api.client.googleapis.json.DiscoveryDocument.ServiceDefinition;
 import com.google.api.client.googleapis.json.DiscoveryDocument.ServiceMethod;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonParser;
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.api.client.util.DataUtil;
 
@@ -48,12 +51,8 @@ public final class GoogleApi {
    */
   public String version;
 
-  /**
-   * HTTP transport required for building requests in {@link #buildRequest(String, Object)}.
-   * <p>
-   * It is initialized using {@link GoogleTransport#create()}.
-   */
-  public HttpTransport transport = GoogleTransport.create();
+  /** HTTP transport required for building requests in {@link #buildRequest(String, Object)}. */
+  public HttpTransport transport;
 
   /**
    * Service definition, normally set by {@link #load()}.
@@ -61,11 +60,45 @@ public final class GoogleApi {
   public ServiceDefinition serviceDefinition;
 
   /**
+   * URL for the discovery endpoint.
+   *
+   * <p>
+   * URL must be compatible with behavior for Discovery version 0.1.
+   * </p>
+   *
+   * @since 1.3
+   */
+  public GoogleUrl discoveryUrl =
+      new GoogleUrl("https://www.googleapis.com/discovery/0.1/describe");
+
+  /**
+   * HTTP transport required for loading the discovery document in {@link #load()}.
+   *
+   * @since 1.3
+   */
+  public HttpTransport discoveryTransport;
+
+  /**
+   * JSON factory to use.
+   *
+   * @since 1.3
+   */
+  public JsonFactory jsonFactory;
+
+  /**
    * Forces the discovery document to be loaded, even if the service definition has already been
    * loaded.
    */
   public void load() throws IOException {
-    DiscoveryDocument doc = DiscoveryDocument.load(name);
+    GoogleUrl url = discoveryUrl.clone();
+    url.put("api", name);
+    HttpRequest request = discoveryTransport.buildGetRequest();
+    request.url = url;
+    JsonParser parser = JsonCParser.parserForResponse(jsonFactory, request.execute());
+    parser.skipToKey(name);
+    DiscoveryDocument doc = new DiscoveryDocument();
+    APIDefinition apiDefinition = doc.apiDefinition;
+    parser.parseAndClose(apiDefinition, null);
     serviceDefinition = doc.apiDefinition.get(version);
     Preconditions.checkNotNull(serviceDefinition, "version not found: %s", version);
   }
@@ -87,7 +120,7 @@ public final class GoogleApi {
     // load service method
     String name = this.name;
     String version = this.version;
-    HttpTransport transport = this.transport;
+    HttpTransport transport = this.discoveryTransport;
     ServiceDefinition serviceDefinition = this.serviceDefinition;
     Preconditions.checkNotNull(name);
     Preconditions.checkNotNull(version);

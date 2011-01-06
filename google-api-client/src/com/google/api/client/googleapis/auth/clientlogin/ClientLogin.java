@@ -35,6 +35,13 @@ import java.io.IOException;
  */
 public final class ClientLogin {
 
+  /**
+   * HTTP transport required for executing request in {@link #authenticate()}.
+   *
+   * @since 1.3
+   */
+  public HttpTransport transport;
+
   @Key("source")
   public String applicationName;
 
@@ -116,7 +123,6 @@ public final class ClientLogin {
    * @throws IOException some other kind of I/O exception
    */
   public Response authenticate() throws HttpResponseException, IOException {
-    HttpTransport transport = new HttpTransport();
     transport.addParser(AuthKeyValueParser.INSTANCE);
     HttpRequest request = transport.buildPostRequest();
     request.setUrl("https://www.google.com/accounts/ClientLogin");

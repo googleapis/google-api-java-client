@@ -14,12 +14,12 @@
 
 package com.google.api.client.generator.model;
 
-import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.api.client.util.Strings;
 
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -33,7 +33,8 @@ public final class PackageModel implements Comparable<PackageModel> {
 
   public static final String VERSION_SNAPSHOT = Strings.VERSION + "-SNAPSHOT";
 
-  private static final Pattern IMPORT_PATTERN = Pattern.compile("\nimport ([\\w.]+);");
+  private static final Pattern IMPORT_PATTERN =
+      Pattern.compile("^import (static )?([a-z]\\w*(\\.[a-z]\\w*)*)");
 
   public final String artifactId;
   public final String directoryPath;
@@ -79,50 +80,18 @@ public final class PackageModel implements Comparable<PackageModel> {
                     .replace('/', '-'));
             pkgs.add(pkg);
           }
-          String content = readFile(file);
-          Matcher matcher = IMPORT_PATTERN.matcher(content);
-          while (matcher.find()) {
-            String className = matcher.group(1);
-            String packageName = getPackageName(className);
-            if (className.startsWith("com.google.")) {
-              if (className.startsWith("com.google.api.client")) {
-                DependencyModel dep = new DependencyModel();
-                dep.groupId = "com.google.api.client";
-                dep.artifactId = packageName.substring("com.".length()).replace('.', '-');
-                dep.version = VERSION_SNAPSHOT;
-                if (!pkg.artifactId.equals(dep.artifactId)) {
-                  pkg.dependencies.add(dep);
-                }
-              } else if (className.startsWith("com.google.appengine")) {
-                DependencyModel dep = new DependencyModel();
-                dep.groupId = "com.google.appengine";
-                dep.artifactId = "appengine-api-1.0-sdk";
-                dep.scope = "provided";
-                pkg.dependencies.add(dep);
-              }
-            } else if (className.startsWith("android.")) {
-              DependencyModel dep = new DependencyModel();
-              dep.groupId = "com.google.android";
-              dep.artifactId = "android";
-              pkg.dependencies.add(dep);
-            } else if (className.startsWith("org.apache.")) {
-              DependencyModel dep = new DependencyModel();
-              dep.groupId = "org.apache.httpcomponents";
-              dep.artifactId = "httpclient";
-              pkg.dependencies.add(dep);
-            } else if (className.startsWith("org.xmlpull.v1.")) {
-              DependencyModel dep = new DependencyModel();
-              dep.groupId = dep.artifactId = "xpp3";
-              pkg.dependencies.add(dep);
-            } else if (className.startsWith("org.codehaus.jackson.")) {
-              DependencyModel dep = new DependencyModel();
-              dep.groupId = "org.codehaus.jackson";
-              dep.artifactId = "jackson-core-asl";
-              pkg.dependencies.add(dep);
-            } else if (className.startsWith("java.") || className.startsWith("javax.")) {
-              // ignore
-            } else {
-              throw new IllegalArgumentException("unrecognized package: " + packageName);
+          // hack: jackson is used without an import declaration because otherwise it would have
+          // created a compilation error due to classes having identical names between Jackson and
+          // this library
+          if (file.getParentFile().getName().equals("jackson")) {
+            foundDependency(pkg, "org.codehaus.jackson");
+          }
+          BufferedReader reader = new BufferedReader(new FileReader(file));
+          String line = null;
+          while ((line = reader.readLine()) != null) {
+            Matcher matcher = IMPORT_PATTERN.matcher(line);
+            while (matcher.find()) {
+              foundDependency(pkg, matcher.group(2));
             }
           }
         }
@@ -130,38 +99,58 @@ public final class PackageModel implements Comparable<PackageModel> {
     }
   }
 
-  public static String readFile(File file) throws IOException {
-    InputStreamContent content = new InputStreamContent();
-    content.setFileInput(file);
-    ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-    content.writeTo(byteStream);
-    return new String(byteStream.toByteArray());
+  private static void foundDependency(PackageModel pkg, String packageName) {
+    if (isOrParentPackageOf(packageName, "com.google")) {
+      if (isOrParentPackageOf(packageName, "com.google.api.client")) {
+        DependencyModel dep = new DependencyModel();
+        dep.groupId = "com.google.api.client";
+        dep.artifactId = packageName.substring("com.".length()).replace('.', '-');
+        dep.version = VERSION_SNAPSHOT;
+        if (!pkg.artifactId.equals(dep.artifactId)) {
+          pkg.dependencies.add(dep);
+        }
+      } else if (isOrParentPackageOf(packageName, "com.google.appengine")) {
+        DependencyModel dep = new DependencyModel();
+        dep.groupId = "com.google.appengine";
+        dep.artifactId = "appengine-api-1.0-sdk";
+        dep.scope = "provided";
+        pkg.dependencies.add(dep);
+      } else if (isOrParentPackageOf(packageName, "com.google.gson")) {
+        DependencyModel dep = new DependencyModel();
+        dep.groupId = "com.google.code.gson";
+        dep.artifactId = "gson";
+        pkg.dependencies.add(dep);
+      } else {
+        Preconditions.checkArgument(false, "unrecognized Google package: %s", packageName);
+      }
+    } else if (isOrParentPackageOf(packageName, "android")) {
+      DependencyModel dep = new DependencyModel();
+      dep.groupId = "com.google.android";
+      dep.artifactId = "android";
+      pkg.dependencies.add(dep);
+    } else if (isOrParentPackageOf(packageName, "org.apache")) {
+      DependencyModel dep = new DependencyModel();
+      dep.groupId = "org.apache.httpcomponents";
+      dep.artifactId = "httpclient";
+      pkg.dependencies.add(dep);
+    } else if (isOrParentPackageOf(packageName, "org.xmlpull.v1")) {
+      DependencyModel dep = new DependencyModel();
+      dep.groupId = dep.artifactId = "xpp3";
+      pkg.dependencies.add(dep);
+    } else if (isOrParentPackageOf(packageName, "org.codehaus.jackson")) {
+      DependencyModel dep = new DependencyModel();
+      dep.groupId = "org.codehaus.jackson";
+      dep.artifactId = "jackson-core-asl";
+      pkg.dependencies.add(dep);
+    } else if (isOrParentPackageOf(packageName, "java")
+        || isOrParentPackageOf(packageName, "javax")) {
+      // ignore
+    } else {
+      throw new IllegalArgumentException("unrecognized package: " + packageName);
+    }
   }
 
-  /**
-   * Returns the package name for the given Java class or package name, assuming that class names
-   * always start with a capital letter and package names always start with a lowercase letter.
-   */
-  public static String getPackageName(String classOrPackageName) {
-    int lastDot = classOrPackageName.length();
-    if (lastDot == 0) {
-      return "";
-    }
-    while (true) {
-      int nextDot = classOrPackageName.lastIndexOf('.', lastDot - 1);
-      // check for error case of 2 dots in a row or starts/ends in dot
-      Preconditions.checkArgument(nextDot + 1 < lastDot);
-      if (Character.isLowerCase(classOrPackageName.charAt(nextDot + 1))) {
-        // check for case that input string is already a package
-        if (lastDot == classOrPackageName.length()) {
-          return classOrPackageName;
-        }
-        return classOrPackageName.substring(0, lastDot);
-      }
-      if (nextDot == -1) {
-        return "";
-      }
-      lastDot = nextDot;
-    }
+  private static boolean isOrParentPackageOf(String packageName, String pkg) {
+    return packageName.equals(pkg) || packageName.startsWith(pkg + ".");
   }
 }

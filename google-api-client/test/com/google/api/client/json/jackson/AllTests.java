@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.api.client.json;
+package com.google.api.client.json.jackson;
 
 import junit.framework.TestSuite;
 
@@ -27,7 +27,8 @@ public class AllTests extends TestSuite {
 
   public static TestSuite suite() {
     TestSuite result = new TestSuite(AllTests.class.getPackage().getName());
-    result.addTestSuite(JsonTest.class);
+    result.addTestSuite(JacksonGeneratorTest.class);
+    result.addTestSuite(JacksonParserTest.class);
     return result;
   }
 }

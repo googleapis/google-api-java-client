@@ -46,6 +46,10 @@
       <artifactId>jackson-core-asl</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+    </dependency>
+    <dependency>
       <groupId>xpp3</groupId>
       <artifactId>xpp3</artifactId>
     </dependency>

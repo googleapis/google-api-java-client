@@ -14,21 +14,22 @@
 
 package com.google.api.client.googleapis.json;
 
-import com.google.api.client.googleapis.GoogleTransport;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.Json;
 import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.Key;
 
-import org.codehaus.jackson.JsonParser;
-
-import java.io.IOException;
 import java.util.Map;
 
 /**
  * Manages a JSON-formatted document from the experimental Google Discovery API version 0.1.
+ *
+ * <p>
+ * Warning: this is based on an undocumented experimental Google API that may stop working or change
+ * in behavior at any time. Beware of this risk if running this in production code.
+ * </p>
+ * <p>
+ * Warning: in prior version 1.2 there was a {@code load(String)} method. Instead, you should now
+ * use {@link GoogleApi#load()}.
+ * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -128,27 +129,6 @@ public final class DiscoveryDocument {
    */
   public final APIDefinition apiDefinition = new APIDefinition();
 
-  private DiscoveryDocument() {
-  }
-
-  /**
-   * Executes a request for the JSON-formatted discovery document for the API of the given name.
-   *
-   * @param apiName API name
-   * @return discovery document
-   * @throws IOException I/O exception executing request
-   */
-  public static DiscoveryDocument load(String apiName) throws IOException {
-    GenericUrl discoveryUrl = new GenericUrl("https://www.googleapis.com/discovery/0.1/describe");
-    discoveryUrl.put("api", apiName);
-    HttpTransport transport = GoogleTransport.create();
-    HttpRequest request = transport.buildGetRequest();
-    request.url = discoveryUrl;
-    JsonParser parser = JsonCParser.parserForResponse(request.execute());
-    Json.skipToKey(parser, apiName);
-    DiscoveryDocument result = new DiscoveryDocument();
-    APIDefinition apiDefinition = result.apiDefinition;
-    Json.parseAndClose(parser, apiDefinition, null);
-    return result;
+  DiscoveryDocument() {
   }
 }

@@ -32,11 +32,11 @@ import java.util.Map;
  *
  * <pre>
  * <code>
- * static void setContent(HttpRequest request, Object item) {
- *   UrlEncodedContent content = new UrlEncodedContent();
- *   content.setData(item);
- *   request.content = content;
- * }
+  static void setContent(HttpRequest request, Object item) {
+    UrlEncodedContent content = new UrlEncodedContent();
+    content.data = item;
+    request.content = content;
+  }
  * </code>
  * </pre>
  *

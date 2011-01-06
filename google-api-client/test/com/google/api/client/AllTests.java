@@ -26,11 +26,13 @@ public class AllTests extends TestSuite {
   public static TestSuite suite() {
     TestSuite result = new TestSuite();
     result.addTest(com.google.api.client.auth.oauth.AllTests.suite());
+    result.addTest(com.google.api.client.googleapis.AllTests.suite());
     result.addTest(com.google.api.client.googleapis.auth.oauth2.AllTests.suite());
     result.addTest(com.google.api.client.googleapis.auth.storage.AllTests.suite());
     result.addTest(com.google.api.client.googleapis.json.AllTests.suite());
     result.addTest(com.google.api.client.http.AllTests.suite());
-    result.addTest(com.google.api.client.json.AllTests.suite());
+    result.addTest(com.google.api.client.json.gson.AllTests.suite());
+    result.addTest(com.google.api.client.json.jackson.AllTests.suite());
     result.addTest(com.google.api.client.util.AllTests.suite());
     result.addTest(com.google.api.client.xml.AllTests.suite());
     return result;

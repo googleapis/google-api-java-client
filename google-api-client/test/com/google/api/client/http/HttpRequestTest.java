@@ -14,6 +14,8 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.testing.http.MockHttpTransport;
+
 import junit.framework.TestCase;
 
 import java.io.IOException;
@@ -36,9 +38,7 @@ public class HttpRequestTest extends TestCase {
   }
 
   public void testNotSupportedByDefault() throws IOException {
-    MockLowLevelHttpTransport lowLevelTransport = new MockLowLevelHttpTransport();
-    HttpTransport.setLowLevelHttpTransport(lowLevelTransport);
-    HttpTransport transport = new HttpTransport();
+    MockHttpTransport transport = new MockHttpTransport();
     HttpRequest request = transport.buildHeadRequest();
     request.setUrl("http://www.google.com");
     for (HttpMethod method : BASIC_METHODS) {
@@ -46,14 +46,14 @@ public class HttpRequestTest extends TestCase {
       request.execute();
     }
     for (HttpMethod method : OTHER_METHODS) {
-      lowLevelTransport.supportedOptionalMethods.remove(method);
+      transport.supportedOptionalMethods.remove(method);
       request.method = method;
       try {
         request.execute();
         fail("expected IllegalArgumentException");
       } catch (IllegalArgumentException e) {
       }
-      lowLevelTransport.supportedOptionalMethods.add(method);
+      transport.supportedOptionalMethods.add(method);
       request.execute();
     }
   }
