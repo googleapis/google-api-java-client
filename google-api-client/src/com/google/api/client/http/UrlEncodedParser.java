@@ -38,9 +38,9 @@ import java.util.logging.Level;
  *
  * <pre>
  * <code>
- * static void setParser(HttpTransport transport) {
- *   transport.addParser(new UrlEncodedParser());
- * }
+  static void setParser(HttpTransport transport) {
+    transport.addParser(new UrlEncodedParser());
+  }
  * </code>
  * </pre>
  *

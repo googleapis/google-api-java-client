@@ -7,28 +7,24 @@
 
 <ul>
   <li><a
-    href="http://code.google.com/p/google-api-java-client/source/browse/?r=1.3.0-alpha">Browse
+    href="http://code.google.com/p/google-api-java-client/source/browse/">Browse
   Source</a></li>
 </ul>
 
 <h3>Checkout Instructions</h3>
 
-<p>Prerequisite: install <a href="http://java.sun.com/products/archive/">Java
-5</a>. You may need to set your <code>JAVA_HOME</code>.</p>
+<p><b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
+  href="http://mercurial.selenic.com/">Mercurial</a> and <a
+  href="http://maven.apache.org/download.html">Maven</a>. You may need to set
+your <code>JAVA_HOME</code>.</p>
 
-<p>Prerequisite: install <a href="http://mercurial.selenic.com/">Mercurial</a>
-and <a href="http://maven.apache.org/download.html">Maven</a>.</p>
-
-<h4>Command-Line</h4>
-
-<pre><code>hg clone -r 1.3.0-alpha https://google-api-java-client.googlecode.com/hg/ google-api-java-client
+<pre><code>hg clone https://google-api-java-client.googlecode.com/hg/ google-api-java-client
 cd google-api-java-client
-mvn compile
-</code></pre>
+mvn compile test install</code></pre>
 
-<h4>Eclipse 3.5</h4>
+<h3>Setup Project in Eclipse 3.5</h3>
 
-<p>Prerequisite: install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
+<p><b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
 the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>, the <a
   href="http://m2eclipse.sonatype.org/installing-m2eclipse.html">Maven
 plugin</a>, and the <a
@@ -52,34 +48,14 @@ plugin</a>.</p>
     </li>
   </ul>
   </li>
-  <li>Checkout Hg project
+  <li>Import <code>google-api-java-client</code> project
   <ul>
     <li>File &gt; Import...</li>
-    <li>"Select"
-    <ul>
-      <li>Select "Mercurial &gt; Clone Existing Mercurial Repository"</li>
-      <li>Click on "Next"</li>
-    </ul>
-    </li>
-    <li>"Clone repository"
-
-    <ul>
-      <li>URL: <code>https://google-api-java-client.googlecode.com/hg/</code></li>
-      <li>Clone directory name: <code>google-api-client</code></li>
-      <li>Click on "Next"</li>
-    </ul>
-    </li>
-    <li>"Select working directory revision"
-    <ul>
-      <li>1.3.0-alpha</li>
-      <li>Click on "Next"</li>
-    </ul>
-    </li>
-    <li>"Import Projects"
-    <ul>
-      <li>Click on "Finish"</li>
-    </ul>
-    </li>
+    <li>Select "General &gt; Existing Project into Workspace" and click
+    "Next"</li>
+    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client</code>
+    and click "Next"</li>
+    <li>Click "Finish"</li>
   </ul>
   </li>
   <li>Import <code>google-api-client</code> project
@@ -87,16 +63,9 @@ plugin</a>.</p>
     <li>File &gt; Import...</li>
     <li>Select "General &gt; Existing Project into Workspace" and click
     "Next"</li>
-    <li>Click "Browse" next to "Select root directory", find <code>google-api-client</code>
-    under existing <code>google-api-java-client</code> project directory and
-    click "Next"</li>
+    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client/google-api-client</code>
+    and click "Next"</li>
     <li>Click "Finish"</li>
-  </ul>
-  </li>
-  <li>Compile
-  <ul>
-    <li>Right-click on project <code>google-api-client</code></li>
-    <li>Run As &gt; Maven build</li>
   </ul>
   </li>
 </ul>

@@ -106,41 +106,39 @@ public final class HttpRequest {
   public HttpResponse execute() throws IOException {
     Preconditions.checkNotNull(method);
     Preconditions.checkNotNull(url);
-    HttpTransport transport = this.transport;
     // first run the execute intercepters
     for (HttpExecuteIntercepter intercepter : transport.intercepters) {
       intercepter.intercept(this);
     }
     // build low-level HTTP request
-    LowLevelHttpTransport lowLevelHttpTransport = HttpTransport.useLowLevelHttpTransport();
     HttpMethod method = this.method;
     GenericUrl url = this.url;
     String urlString = url.build();
     LowLevelHttpRequest lowLevelHttpRequest;
     switch (method) {
       case DELETE:
-        lowLevelHttpRequest = lowLevelHttpTransport.buildDeleteRequest(urlString);
+        lowLevelHttpRequest = transport.buildDeleteRequest(urlString);
         break;
       default:
-        lowLevelHttpRequest = lowLevelHttpTransport.buildGetRequest(urlString);
+        lowLevelHttpRequest = transport.buildGetRequest(urlString);
         break;
       case HEAD:
-        if (!lowLevelHttpTransport.supportsHead()) {
+        if (!transport.supportsHead()) {
           throw new IllegalArgumentException("HTTP transport doesn't support HEAD");
         }
-        lowLevelHttpRequest = lowLevelHttpTransport.buildHeadRequest(urlString);
+        lowLevelHttpRequest = transport.buildHeadRequest(urlString);
         break;
       case PATCH:
-        if (!lowLevelHttpTransport.supportsPatch()) {
+        if (!transport.supportsPatch()) {
           throw new IllegalArgumentException("HTTP transport doesn't support PATCH");
         }
-        lowLevelHttpRequest = lowLevelHttpTransport.buildPatchRequest(urlString);
+        lowLevelHttpRequest = transport.buildPatchRequest(urlString);
         break;
       case POST:
-        lowLevelHttpRequest = lowLevelHttpTransport.buildPostRequest(urlString);
+        lowLevelHttpRequest = transport.buildPostRequest(urlString);
         break;
       case PUT:
-        lowLevelHttpRequest = lowLevelHttpTransport.buildPutRequest(urlString);
+        lowLevelHttpRequest = transport.buildPutRequest(urlString);
         break;
     }
     Logger logger = HttpTransport.LOGGER;
@@ -201,7 +199,9 @@ public final class HttpRequest {
       }
       // append content headers to log buffer
       if (loggable) {
-        logbuf.append("Content-Type: " + contentType).append(Strings.LINE_SEPARATOR);
+        if (contentType != null) {
+          logbuf.append("Content-Type: " + contentType).append(Strings.LINE_SEPARATOR);
+        }
         if (contentEncoding != null) {
           logbuf.append("Content-Encoding: " + contentEncoding).append(Strings.LINE_SEPARATOR);
         }

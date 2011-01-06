@@ -15,10 +15,8 @@
 package com.google.api.client.googleapis.json;
 
 import com.google.api.client.json.CustomizeJsonParser;
-import com.google.api.client.json.Json;
-
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonToken;
+import com.google.api.client.json.JsonParser;
+import com.google.api.client.json.JsonToken;
 
 import java.io.IOException;
 
@@ -47,7 +45,7 @@ public abstract class AbstractJsonFeedParser<T> {
     boolean close = true;
     try {
       this.feedParsed = true;
-      T result = Json.parse(this.parser, this.feedClass, new StopAtItems());
+      T result = parser.parse(this.feedClass, new StopAtItems());
       close = false;
       return result;
     } finally {
@@ -66,15 +64,15 @@ public abstract class AbstractJsonFeedParser<T> {
   }
 
   /**
-   * Parse the next item in the feed and return a new parsed instanceof of the item class. If there
-   * is no item to parse, it will return {@code null} and automatically close the parser (in which
-   * case there is no need to call {@link #close()}.
+   * Parse the next item in the feed and return a new parsed instance of the item class. If there is
+   * no item to parse, it will return {@code null} and automatically close the parser (in which case
+   * there is no need to call {@link #close()}.
    */
   public Object parseNextItem() throws IOException {
     JsonParser parser = this.parser;
     if (!this.feedParsed) {
       this.feedParsed = true;
-      Json.skipToKey(parser, "items");
+      parser.skipToKey("items");
     }
     boolean close = true;
     try {

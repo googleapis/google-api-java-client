@@ -47,4 +47,9 @@ public class GoogleUrl extends GenericUrl {
   public GoogleUrl(String encodedUrl) {
     super(encodedUrl);
   }
+
+  @Override
+  public GoogleUrl clone() {
+    return (GoogleUrl) super.clone();
+  }
 }

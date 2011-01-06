@@ -29,9 +29,16 @@ import com.google.api.client.util.Key;
  */
 public class GenericJson extends GenericData implements Cloneable {
 
+  /**
+   * JSON factory to use for {@link #toString()}.
+   *
+   * @since 1.3
+   */
+  public JsonFactory jsonFactory;
+
   @Override
   public String toString() {
-    return Json.toString(this);
+    return jsonFactory.toString(this);
   }
 
   @Override

@@ -25,15 +25,14 @@ import java.io.IOException;
  *
  * <pre>
  * <code>
- * static void setContent(HttpRequest request,
- *     XmlNamespaceDictionary namespaceDictionary, String elementName,
- *     Object data) {
- *   XmlHttpContent content = new XmlHttpContent();
- *   content.namespaceDictionary = namespaceDictionary;
- *   content.elementName = elementName;
- *   content.data = data;
- *   request.content = content;
- * }
+  static void setContent(HttpRequest request, XmlNamespaceDictionary namespaceDictionary,
+      String elementName, Object data) {
+    XmlHttpContent content = new XmlHttpContent();
+    content.namespaceDictionary = namespaceDictionary;
+    content.elementName = elementName;
+    content.data = data;
+    request.content = content;
+  }
  * </code>
  * </pre>
  *

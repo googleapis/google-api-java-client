@@ -26,8 +26,11 @@
     <module>google-api-client-googleapis-json</module>
     <module>google-api-client-googleapis-xml-atom</module>
     <module>google-api-client-http</module>
+    <module>google-api-client-http-json</module>
     <module>google-api-client-javanet</module>
     <module>google-api-client-json</module>
+    <module>google-api-client-json-gson</module>
+    <module>google-api-client-json-jackson</module>
     <module>google-api-client-json-rpc2</module>
     <module>google-api-client-repackaged-com-google-common-base</module>
     <module>google-api-client-util</module>

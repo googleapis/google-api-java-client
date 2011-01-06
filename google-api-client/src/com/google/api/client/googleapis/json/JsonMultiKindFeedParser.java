@@ -15,11 +15,10 @@
 package com.google.api.client.googleapis.json;
 
 import com.google.api.client.http.HttpResponse;
-import com.google.api.client.json.Json;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonParser;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.FieldInfo;
-
-import org.codehaus.jackson.JsonParser;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -59,7 +58,7 @@ public final class JsonMultiKindFeedParser<T> extends AbstractJsonFeedParser<T> 
   @Override
   Object parseItemInternal() throws IOException {
     parser.nextToken();
-    String key = parser.getCurrentName();
+    String key = parser.getText();
     if (key != "kind") {
       throw new IllegalArgumentException("expected kind field: " + key);
     }
@@ -69,12 +68,21 @@ public final class JsonMultiKindFeedParser<T> extends AbstractJsonFeedParser<T> 
     if (itemClass == null) {
       throw new IllegalArgumentException("unrecognized kind: " + kind);
     }
-    return Json.parse(parser, itemClass, null);
+    return parser.parse(itemClass, null);
   }
 
+  /**
+   * <p>
+   * Upgrade warning: prior to version 1.3, there was no {@code jsonFactory} parameter, but now it
+   * is required.
+   * </p>
+   *
+   * @since 1.3
+   */
   public static <T, I> JsonMultiKindFeedParser<T> use(
-      HttpResponse response, Class<T> feedClass, Class<?>... itemClasses) throws IOException {
+      JsonFactory jsonFactory, HttpResponse response, Class<T> feedClass, Class<?>... itemClasses)
+      throws IOException {
     return new JsonMultiKindFeedParser<T>(
-        JsonCParser.parserForResponse(response), feedClass, itemClasses);
+        JsonCParser.parserForResponse(jsonFactory, response), feedClass, itemClasses);
   }
 }

@@ -12,12 +12,14 @@
  * the License.
  */
 
-package com.google.api.client.json;
+package com.google.api.client.http.json;
 
 import com.google.api.client.http.HttpParser;
 import com.google.api.client.http.HttpResponse;
-
-import org.codehaus.jackson.JsonParser;
+import com.google.api.client.json.Json;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonParser;
+import com.google.api.client.json.JsonToken;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,13 +31,17 @@ import java.io.InputStream;
  *
  * <pre>
  * <code>
- * static void setParser(HttpTransport transport) {
- *   transport.addParser(new JsonHttpParser());
- * }
+  static void setParser(HttpTransport transport) {
+    transport.addParser(new JsonHttpParser());
+  }
  * </code>
  * </pre>
  *
- * @since 1.0
+ * <p>
+ * Upgrade warning: this class was previously in the {@link com.google.api.client.json} package.
+ * </p>
+ *
+ * @since 1.3
  * @author Yaniv Inbar
  */
 public class JsonHttpParser implements HttpParser {
@@ -43,29 +49,45 @@ public class JsonHttpParser implements HttpParser {
   /** Content type. Default value is {@link Json#CONTENT_TYPE}. */
   public String contentType = Json.CONTENT_TYPE;
 
+  /**
+   * JSON factory to use.
+   *
+   * @since 1.3
+   */
+  public JsonFactory jsonFactory;
+
   public final String getContentType() {
     return contentType;
   }
 
   public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
-    return Json.parseAndClose(JsonHttpParser.parserForResponse(response), dataClass, null);
+    return parserForResponse(jsonFactory, response).parseAndClose(dataClass, null);
   }
 
   /**
    * Returns a JSON parser to use for parsing the given HTTP response.
    * <p>
    * The response content will be closed if any throwable is thrown. On success, the current token
-   * will be the first key in the JSON object.
+   * will be the first top token, which is normally {@link JsonToken#START_ARRAY} or
+   * {@link JsonToken#START_OBJECT}.
+   * </p>
+   * <p>
+   * Upgrade warning: prior to version 1.3, there was no {@code jsonFactory} parameter, but now it
+   * is required.
+   * </p>
    *
+   * @param jsonFactory JSON factory to use
    * @param response HTTP response
    * @return JSON parser
    * @throws IllegalArgumentException if content type is not {@link Json#CONTENT_TYPE}
    * @throws IOException I/O exception
+   * @since 1.3
    */
-  public static JsonParser parserForResponse(HttpResponse response) throws IOException {
+  public static JsonParser parserForResponse(JsonFactory jsonFactory, HttpResponse response)
+      throws IOException {
     InputStream content = response.getContent();
     try {
-      JsonParser parser = Json.JSON_FACTORY.createJsonParser(content);
+      JsonParser parser = jsonFactory.createJsonParser(content);
       parser.nextToken();
       content = null;
       return parser;

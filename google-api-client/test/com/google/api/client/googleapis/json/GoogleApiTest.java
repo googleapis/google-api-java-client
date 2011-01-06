@@ -14,29 +14,29 @@
 
 package com.google.api.client.googleapis.json;
 
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
-import com.google.api.client.http.MockLowLevelHttpRequest;
-import com.google.api.client.http.MockLowLevelHttpResponse;
-import com.google.api.client.http.MockLowLevelHttpTransport;
+import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.testing.http.MockHttpTransport;
+import com.google.api.client.testing.http.MockLowLevelHttpRequest;
+import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 
 import junit.framework.TestCase;
 
 import java.io.IOException;
 
 /**
- * Tests {@link DiscoveryDocument}.
+ * Tests {@link GoogleApi}.
  *
  * @author Yaniv Inbar
  */
-public class DiscoveryDocumentTest extends TestCase {
+public class GoogleApiTest extends TestCase {
 
-  public DiscoveryDocumentTest(String name) {
+  public GoogleApiTest(String name) {
     super(name);
   }
 
-  static class MyTransport extends MockLowLevelHttpTransport {
+  static class MyTransport extends MockHttpTransport {
     String getUrl;
 
     @Override
@@ -47,7 +47,7 @@ public class DiscoveryDocumentTest extends TestCase {
         @Override
         public LowLevelHttpResponse execute() {
           MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
-          response.setContent("{\"data\":{}}");
+          response.setContent("{\"data\":{\"foo\":{\"v1\":{}}}}");
           return response;
         }
 
@@ -55,10 +55,14 @@ public class DiscoveryDocumentTest extends TestCase {
     }
   }
 
-  public void test() throws IOException {
+  public void testLoad() throws IOException {
+    GoogleApi api = new GoogleApi();
     MyTransport myTransport = new MyTransport();
-    HttpTransport.setLowLevelHttpTransport(myTransport);
-    DiscoveryDocument.load("foo");
+    api.discoveryTransport = myTransport;
+    api.jsonFactory = new JacksonFactory();
+    api.name = "foo";
+    api.version = "v1";
+    api.load();
     assertEquals("https://www.googleapis.com/discovery/0.1/describe?api=foo", myTransport.getUrl);
   }
 }

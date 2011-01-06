@@ -32,6 +32,13 @@ import java.io.IOException;
 public abstract class AbstractOAuthGetToken extends GenericUrl {
 
   /**
+   * HTTP transport required for executing request in {@link #execute()}.
+   *
+   * @since 1.3
+   */
+  public HttpTransport transport;
+
+  /**
    * Required identifier portion of the client credentials (equivalent to a username).
    */
   public String consumerKey;
@@ -57,7 +64,6 @@ public abstract class AbstractOAuthGetToken extends GenericUrl {
    * @throws IOException I/O exception
    */
   public final OAuthCredentialsResponse execute() throws IOException {
-    HttpTransport transport = new HttpTransport();
     createParameters().signRequestsUsingAuthorizationHeader(transport);
     HttpRequest request = usePost ? transport.buildPostRequest() : transport.buildGetRequest();
     request.url = this;

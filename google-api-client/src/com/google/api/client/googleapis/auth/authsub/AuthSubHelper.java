@@ -48,8 +48,12 @@ public final class AuthSubHelper {
    */
   private HttpTransport transport;
 
-  /** HTTP transport for AuthSub requests. */
-  private final HttpTransport authSubTransport = new HttpTransport();
+  /**
+   * HTTP transport required for AuthSub requests.
+   *
+   * @since 1.3
+   */
+  public HttpTransport authSubTransport;
 
   /** Token (may be single use or session). */
   private String token;

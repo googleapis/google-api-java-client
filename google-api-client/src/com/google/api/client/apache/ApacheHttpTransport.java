@@ -14,7 +14,7 @@
 
 package com.google.api.client.apache;
 
-import com.google.api.client.http.LowLevelHttpTransport;
+import com.google.api.client.http.HttpTransport;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
@@ -36,7 +36,7 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
 /**
- * HTTP low-level transport based on the Apache HTTP Client library.
+ * HTTP transport based on the Apache HTTP Client library.
  * <p>
  * Default settings:
  * </p>
@@ -59,7 +59,7 @@ import org.apache.http.params.HttpParams;
  * @since 1.0
  * @author Yaniv Inbar
  */
-public final class ApacheHttpTransport extends LowLevelHttpTransport {
+public final class ApacheHttpTransport extends HttpTransport {
 
   /**
    * Apache HTTP client.
@@ -75,10 +75,16 @@ public final class ApacheHttpTransport extends LowLevelHttpTransport {
    *
    * <pre><code>HttpTransport.setLowLevelHttpTransport(ApacheHttpTransport.INSTANCE);</code></pre>
    * </p>
+   *
+   * @deprecated (scheduled to be removed in 1.4) Use {@link #ApacheHttpTransport()}
    */
+  @Deprecated
   public static final ApacheHttpTransport INSTANCE = new ApacheHttpTransport();
 
-  ApacheHttpTransport() {
+  /**
+   * @since 1.3
+   */
+  public ApacheHttpTransport() {
     // Turn off stale checking. Our connections break all the time anyway,
     // and it's not worth it to pay the penalty of checking every time.
     HttpParams params = new BasicHttpParams();

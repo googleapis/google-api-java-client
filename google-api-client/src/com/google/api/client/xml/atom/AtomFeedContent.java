@@ -29,13 +29,13 @@ import java.io.IOException;
  *
  * <pre>
  * <code>
- * static void setContent(HttpRequest request,
- *     XmlNamespaceDictionary namespaceDictionary, Object feed) {
- *   AtomFeedContent content = new AtomFeedContent();
- *   content.namespaceDictionary = namespaceDictionary;
- *   content.feed = feed;
- *   request.content = content;
- * }
+  static void setContent(
+      HttpRequest request, XmlNamespaceDictionary namespaceDictionary, Object feed) {
+    AtomFeedContent content = new AtomFeedContent();
+    content.namespaceDictionary = namespaceDictionary;
+    content.feed = feed;
+    request.content = content;
+  }
  * </code>
  * </pre>
  *

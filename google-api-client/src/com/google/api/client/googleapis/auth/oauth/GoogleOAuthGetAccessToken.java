@@ -47,11 +47,17 @@ public final class GoogleOAuthGetAccessToken extends OAuthGetAccessToken {
   /**
    * Revokes the long-lived access token.
    *
+   * <p>
+   * Upgrade warning: prior to version 1.3, there was no {@code transport} parameter, but now it is
+   * required.
+   * </p>
+   *
    * @param parameters OAuth parameters
    * @throws IOException I/O exception
+   * @since 1.3
    */
-  public static void revokeAccessToken(OAuthParameters parameters) throws IOException {
-    HttpTransport transport = new HttpTransport();
+  public static void revokeAccessToken(HttpTransport transport, OAuthParameters parameters)
+      throws IOException {
     parameters.signRequestsUsingAuthorizationHeader(transport);
     HttpRequest request = transport.buildGetRequest();
     request.setUrl("https://www.google.com/accounts/AuthSubRevokeToken");

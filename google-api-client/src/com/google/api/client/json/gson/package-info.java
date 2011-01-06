@@ -12,25 +12,26 @@
  * the License.
  */
 
-package com.google.api.client.http;
-
 /**
- * Mock for {@link LowLevelHttpRequest}.
+ * Low-level implementation of the GSON parser library based on the <a
+ * href="http://code.google.com/p/google-gson/">GSON</a> JSON library.
  *
+ * <p>
+ * This package depends on theses packages:
+ * </p>
+ * <ul>
+ * <li>{@link com.google.api.client.json}</li>
+ * <li>{@link com.google.gson}</li>
+ * </ul>
+ *
+ * <p>
+ * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
+ * possibly entirely removed in a future version of the library</b>
+ * </p>
+ *
+ * @since 1.3
  * @author Yaniv Inbar
  */
-public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
 
-  @Override
-  public void addHeader(String name, String value) {
-  }
+package com.google.api.client.json.gson;
 
-  @Override
-  public LowLevelHttpResponse execute() {
-    return new MockLowLevelHttpResponse();
-  }
-
-  @Override
-  public void setContent(HttpContent content) {
-  }
-}

@@ -16,127 +16,69 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.ArrayMap;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * HTTP transport.
+ * Abstract HTTP transport.
+ *
+ * <p>
+ * The recommended concrete implementation HTTP transport library to use depends on what environment
+ * you are running in:
+ * </p>
+ * <ul>
+ * <li>Google App Engine: use {@code com.google.api.client.appengine.UrlFetchTransport}.
+ * <ul>
+ * <li>{@code com.google.api.client.apache.ApacheHttpTransport} doesn't work on App Engine because
+ * the Apache HTTP Client opens its own sockets (though in theory there are ways to hack it to work
+ * on App Engine that might work).</li>
+ * <li>{@code com.google.api.client.javanet.NetHttpTransport} is discouraged due to a bug in the App
+ * Engine SDK itself in how it parses HTTP headers in the response.</li>
+ * </ul>
+ * </li>
+ * <li>Android:
+ * <ul>
+ * <li>Starting with SDK 2.3, strongly recommended to use {@code
+ * com.google.api.client.javanet.NetHttpTransport}. Their Apache HTTP Client implementation is not
+ * as well maintained.</li>
+ * <li>For SDK 2.2 and earlier, use {@code com.google.api.client.apache.ApacheHttpTransport}. {@code
+ * com.google.api.client.javanet.NetHttpTransport} is not recommended due to some bugs in the
+ * Android SDK implementation of HttpURLConnection.</li>
+ * </ul>
+ * </li>
+ * <li>Other Java environments
+ * <ul>
+ * <li>{@code com.google.api.client.javanet.NetHttpTransport} is based on the HttpURLConnection
+ * built into the Java SDK, so it is normally the preferred choice.</li>
+ * <li>{@code com.google.api.client.apache.ApacheHttpTransport} is a good choice for users of the
+ * Apache HTTP Client, especially if you need some of the configuration options available in that
+ * library. Note however that there is a known bug with the Apache HTTP Transport in this library
+ * for some multi-threaded applications that we're still investigating.</li>
+ * </ul>
+ * </li>
+ * </ul>
+ * <p>
+ * Note that this class is not thread safe. The recommended practice for multi-threaded applications
+ * is to store the HTTP transport in a {@link ThreadLocal}.
+ * </p>
+ * <p>
+ * Upgrade warning: prior to version 1.3, there were methods to set and use the low-level HTTP
+ * transport, and this class was not abstract. This caused problems for users of the library that
+ * use it on a package-by-package basis and got exceptions at runtime. It also meant that the
+ * behavior of library could change when there is a change in the classpath, which is unintuitive.
+ * Therefore, now this class is abstract, and the actual concrete implementation must be chosen
+ * explicitly.
+ * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
  */
-public final class HttpTransport {
+public abstract class HttpTransport {
 
   static final Logger LOGGER = Logger.getLogger(HttpTransport.class.getName());
-
-  /**
-   * Low level HTTP transport interface to use or {@code null} to use the default as specified in
-   * {@link #useLowLevelHttpTransport()}.
-   */
-  private static LowLevelHttpTransport lowLevelHttpTransport;
-
-  // TODO: lowLevelHttpTransport: system property or environment variable?
-
-  /**
-   * Sets to the given low level HTTP transport.
-   * <p>
-   * Must be set before the first HTTP transport is constructed or else the default will be used as
-   * specified in {@link #useLowLevelHttpTransport()}.
-   *
-   * @param lowLevelHttpTransport low level HTTP transport or {@code null} to use the default as
-   *        specified in {@link #useLowLevelHttpTransport()}
-   */
-  public static void setLowLevelHttpTransport(LowLevelHttpTransport lowLevelHttpTransport) {
-    HttpTransport.lowLevelHttpTransport = lowLevelHttpTransport;
-  }
-
-  /**
-   * Returns the low-level HTTP transport to use. If
-   * {@link #setLowLevelHttpTransport(LowLevelHttpTransport)} hasn't been called, it uses the
-   * default depending on the classpath:
-   * <ul>
-   * <li>Google App Engine: uses {@code com.google.api.client.appengine.UrlFetchTransport}</li>
-   * <li>Apache HTTP Client (e.g. Android): uses {@code
-   * com.google.api.client.apache.ApacheHttpTransport}</li>
-   * <li>Otherwise: uses the standard {@code com.google.api.client.javanet.NetHttpTransport}</li>
-   * </ul>
-   * <p>
-   * Warning: prior to version 1.2 the default was always based on {@code
-   * com.google.api.client.javanet.NetHttpTransport} regardless of environment.
-   * </p>
-   */
-  public static LowLevelHttpTransport useLowLevelHttpTransport() {
-    LowLevelHttpTransport lowLevelHttpTransportInterface = HttpTransport.lowLevelHttpTransport;
-    if (lowLevelHttpTransportInterface == null) {
-      boolean isAppEngineSdkOnClasspath = false;
-      try {
-        // check for Google App Engine
-        Class.forName("com.google.appengine.api.urlfetch.URLFetchServiceFactory");
-        isAppEngineSdkOnClasspath = true;
-        lowLevelHttpTransport =
-            lowLevelHttpTransportInterface = (LowLevelHttpTransport) Class.forName(
-                "com.google.api.client.appengine.UrlFetchTransport").getField("INSTANCE").get(null);
-      } catch (Exception e0) {
-        boolean isApacheHttpClientOnClasspath = false;
-        try {
-          // check for Apache HTTP client
-          Class.forName("org.apache.http.client.HttpClient");
-          isApacheHttpClientOnClasspath = true;
-          lowLevelHttpTransport =
-              lowLevelHttpTransportInterface =
-                  (LowLevelHttpTransport) Class.forName(
-                      "com.google.api.client.apache.ApacheHttpTransport").getField("INSTANCE").get(
-                      null);
-        } catch (Exception e1) {
-          // use standard {@code java.net} transport.
-          try {
-            lowLevelHttpTransport =
-                lowLevelHttpTransportInterface =
-                    (LowLevelHttpTransport) Class.forName(
-                        "com.google.api.client.javanet.NetHttpTransport").getField("INSTANCE").get(
-                        null);
-          } catch (Exception e2) {
-            StringBuilder buf =
-                new StringBuilder("Missing required low-level HTTP transport package.\n");
-            if (isAppEngineSdkOnClasspath) {
-              buf.append("For Google App Engine, the required package is "
-                  + "\"com.google.api.client.appengine\".\n");
-            }
-            if (isApacheHttpClientOnClasspath) {
-              boolean isAndroidOnClasspath = false;
-              try {
-                Class.forName("android.util.Log");
-                isAndroidOnClasspath = true;
-              } catch (Exception e3) {
-              }
-              if (isAndroidOnClasspath) {
-                buf.append("For Android, the preferred package is "
-                    + "\"com.google.api.client.apache\".\n");
-              } else {
-                buf.append("For Apache HTTP Client, the preferred package is "
-                    + "\"com.google.api.client.apache\".\n");
-              }
-            }
-            if (isAppEngineSdkOnClasspath || isApacheHttpClientOnClasspath) {
-              buf.append("Alternatively, use");
-            } else {
-              buf.append("Use");
-            }
-            buf.append(" package \"com.google.api.client.javanet\".");
-            throw new IllegalStateException(buf.toString());
-          }
-        }
-      }
-      if (LOGGER.isLoggable(Level.CONFIG)) {
-        LOGGER.config("Using low-level HTTP transport: "
-            + lowLevelHttpTransportInterface.getClass().getName());
-      }
-    }
-    return lowLevelHttpTransportInterface;
-  }
 
   /**
    * Default HTTP headers. These transport default headers are put into a request's headers when its
@@ -159,7 +101,7 @@ public final class HttpTransport {
    * If there is already a previous parser defined for this new parser (as defined by
    * {@link #getParser(String)} then the previous parser will be removed.
    */
-  public void addParser(HttpParser parser) {
+  public final void addParser(HttpParser parser) {
     String contentType = getNormalizedContentType(parser.getContentType());
     contentTypeToParserMap.put(contentType, parser);
   }
@@ -170,7 +112,7 @@ public final class HttpTransport {
    *
    * @param contentType content type or {@code null} for {@code null} result
    */
-  public HttpParser getParser(String contentType) {
+  public final HttpParser getParser(String contentType) {
     if (contentType == null) {
       return null;
     }
@@ -183,42 +125,38 @@ public final class HttpTransport {
     return semicolon == -1 ? contentType : contentType.substring(0, semicolon);
   }
 
-  public HttpTransport() {
-    useLowLevelHttpTransport();
-  }
-
   /** Builds a request without specifying the HTTP method. */
-  public HttpRequest buildRequest() {
+  public final HttpRequest buildRequest() {
     return new HttpRequest(this, null);
   }
 
   /** Builds a {@code DELETE} request. */
-  public HttpRequest buildDeleteRequest() {
+  public final HttpRequest buildDeleteRequest() {
     return new HttpRequest(this, HttpMethod.DELETE);
   }
 
   /** Builds a {@code GET} request. */
-  public HttpRequest buildGetRequest() {
+  public final HttpRequest buildGetRequest() {
     return new HttpRequest(this, HttpMethod.GET);
   }
 
   /** Builds a {@code POST} request. */
-  public HttpRequest buildPostRequest() {
+  public final HttpRequest buildPostRequest() {
     return new HttpRequest(this, HttpMethod.POST);
   }
 
   /** Builds a {@code PUT} request. */
-  public HttpRequest buildPutRequest() {
+  public final HttpRequest buildPutRequest() {
     return new HttpRequest(this, HttpMethod.PUT);
   }
 
   /** Builds a {@code PATCH} request. */
-  public HttpRequest buildPatchRequest() {
+  public final HttpRequest buildPatchRequest() {
     return new HttpRequest(this, HttpMethod.PATCH);
   }
 
   /** Builds a {@code HEAD} request. */
-  public HttpRequest buildHeadRequest() {
+  public final HttpRequest buildHeadRequest() {
     return new HttpRequest(this, HttpMethod.HEAD);
   }
 
@@ -227,7 +165,7 @@ public final class HttpTransport {
    *
    * @param intercepterClass intercepter class
    */
-  public void removeIntercepters(Class<?> intercepterClass) {
+  public final void removeIntercepters(Class<?> intercepterClass) {
     Iterator<HttpExecuteIntercepter> iterable = intercepters.iterator();
     while (iterable.hasNext()) {
       HttpExecuteIntercepter intercepter = iterable.next();
@@ -236,4 +174,92 @@ public final class HttpTransport {
       }
     }
   }
+
+  /**
+   * Returns whether this HTTP transport implementation supports the {@code HEAD} request method.
+   * <p>
+   * Default implementation returns {@code false}.
+   * </p>
+   *
+   * @since 1.3
+   */
+  public boolean supportsHead() {
+    return false;
+  }
+
+  /**
+   * Returns whether this HTTP transport implementation supports the {@code PATCH} request method.
+   * <p>
+   * Default implementation returns {@code false}.
+   * </p>
+   *
+   * @since 1.3
+   */
+  public boolean supportsPatch() {
+    return false;
+  }
+
+  /**
+   * Builds a {@code DELETE} request.
+   *
+   * @param url URL
+   * @throws IOException I/O exception
+   * @since 1.3
+   */
+  protected abstract LowLevelHttpRequest buildDeleteRequest(String url) throws IOException;
+
+  /**
+   * Builds a {@code GET} request.
+   *
+   * @param url URL
+   * @throws IOException I/O exception
+   * @since 1.3
+   */
+  protected abstract LowLevelHttpRequest buildGetRequest(String url) throws IOException;
+
+  /**
+   * Builds a {@code HEAD} request. Won't be called if {@link #supportsHead()} returns {@code false}
+   * .
+   * <p>
+   * Default implementation throws an {@link UnsupportedOperationException}.
+   *
+   * @param url URL
+   * @throws IOException I/O exception
+   * @since 1.3
+   */
+  protected LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * Builds a {@code PATCH} request. Won't be called if {@link #supportsPatch()} returns {@code
+   * false}.
+   * <p>
+   * Default implementation throws an {@link UnsupportedOperationException}.
+   *
+   * @param url URL
+   * @throws IOException I/O exception
+   * @since 1.3
+   */
+  protected LowLevelHttpRequest buildPatchRequest(String url) throws IOException {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * Builds a {@code POST} request.
+   *
+   * @param url URL
+   * @throws IOException I/O exception
+   * @since 1.3
+   */
+  protected abstract LowLevelHttpRequest buildPostRequest(String url) throws IOException;
+
+  /**
+   * Builds a {@code PUT} request.
+   *
+   * @param url URL
+   * @throws IOException I/O exception
+   * @since 1.3
+   */
+  protected abstract LowLevelHttpRequest buildPutRequest(String url) throws IOException;
 }

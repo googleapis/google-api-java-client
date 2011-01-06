@@ -25,11 +25,11 @@ import com.google.api.client.xml.XmlHttpParser;
  *
  * <pre>
  * <code>
- * static void setParser(HttpTransport transport) {
- *   AtomParser parser = new AtomParser();
- *   parser.namespaceDictionary = NAMESPACE_DICTIONARY;
- *   transport.addParser(parser);
- * }
+  static void setParser(HttpTransport transport) {
+    AtomParser parser = new AtomParser();
+    parser.namespaceDictionary = NAMESPACE_DICTIONARY;
+    transport.addParser(parser);
+  }
  * </code>
  * </pre>
  *

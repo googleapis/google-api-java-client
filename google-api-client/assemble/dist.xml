@@ -95,11 +95,23 @@
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
+      <source>modules/google-api-client-http-json/target/google-api-client-http-json-1.3.0-alpha.jar</source>
+      <outputDirectory>packages</outputDirectory>
+    </file>
+    <file>
       <source>modules/google-api-client-javanet/target/google-api-client-javanet-1.3.0-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>
       <source>modules/google-api-client-json/target/google-api-client-json-1.3.0-alpha.jar</source>
+      <outputDirectory>packages</outputDirectory>
+    </file>
+    <file>
+      <source>modules/google-api-client-json-gson/target/google-api-client-json-gson-1.3.0-alpha.jar</source>
+      <outputDirectory>packages</outputDirectory>
+    </file>
+    <file>
+      <source>modules/google-api-client-json-jackson/target/google-api-client-json-jackson-1.3.0-alpha.jar</source>
       <outputDirectory>packages</outputDirectory>
     </file>
     <file>

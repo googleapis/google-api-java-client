@@ -12,20 +12,25 @@
  * the License.
  */
 
-package com.google.api.client.http;
+package com.google.api.client.testing.http;
+
+import com.google.api.client.http.HttpMethod;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.LowLevelHttpRequest;
 
 import java.io.IOException;
 import java.util.EnumSet;
 
 
 /**
- * Mock for {@link LowLevelHttpTransport}.
+ * Mock for {@link HttpTransport}.
  *
  * @author Yaniv Inbar
  */
-public class MockLowLevelHttpTransport extends LowLevelHttpTransport {
+public class MockHttpTransport extends HttpTransport {
 
-  public EnumSet<HttpMethod> supportedOptionalMethods = EnumSet.noneOf(HttpMethod.class);
+  public EnumSet<HttpMethod> supportedOptionalMethods =
+      EnumSet.of(HttpMethod.HEAD, HttpMethod.PATCH);
 
   @Override
   public LowLevelHttpRequest buildDeleteRequest(String url) {

@@ -14,14 +14,14 @@
 
 package com.google.api.client.appengine;
 
-import com.google.api.client.http.LowLevelHttpTransport;
+import com.google.api.client.http.HttpTransport;
 import com.google.appengine.api.urlfetch.FetchOptions;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
 /**
- * HTTP low-level transport for Google App Engine based on <a
+ * HTTP transport for Google App Engine based on <a
  * href="http://code.google.com/appengine/docs/java/urlfetch/">URL Fetch</a>.
  * <p>
  * URL Fetch is only available on Google App Engine (not on any other Java environment), and is the
@@ -32,14 +32,20 @@ import java.net.HttpURLConnection;
  * currently a serious bug in how HTTP headers are processed in the App Engine implementation of
  * {@link HttpURLConnection}, which we are able to avoid using this implementation. Therefore, this
  * is the recommended transport to use on App Engine.
+ * </p>
  *
  * @since 1.2
  * @author Yaniv Inbar
  */
-public final class UrlFetchTransport extends LowLevelHttpTransport {
+public final class UrlFetchTransport extends HttpTransport {
 
-  /** Singleton instance of this transport. */
-  public static final UrlFetchTransport INSTANCE = new UrlFetchTransport();
+  /**
+   * Singleton instance of this transport.
+   *
+   * @deprecated (scheduled to be removed in 1.4) Use {@link #UrlFetchTransport()}
+   */
+  @Deprecated
+  public static volatile UrlFetchTransport INSTANCE = new UrlFetchTransport();
 
   /**
    * Sets the deadline in seconds or {@code null} for no deadline using

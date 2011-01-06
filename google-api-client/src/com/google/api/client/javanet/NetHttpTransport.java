@@ -14,7 +14,7 @@
 
 package com.google.api.client.javanet;
 
-import com.google.api.client.http.LowLevelHttpTransport;
+import com.google.api.client.http.HttpTransport;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -25,9 +25,14 @@ import java.net.HttpURLConnection;
  * @since 1.0
  * @author Yaniv Inbar
  */
-public final class NetHttpTransport extends LowLevelHttpTransport {
+public final class NetHttpTransport extends HttpTransport {
 
-  /** Singleton instance of this transport. */
+  /**
+   * Singleton instance of this transport.
+   *
+   * @deprecated (scheduled to be removed in 1.4) Use {@link #NetHttpTransport()}
+   */
+  @Deprecated
   public static final NetHttpTransport INSTANCE = new NetHttpTransport();
 
   /**

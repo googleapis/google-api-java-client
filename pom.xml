@@ -72,7 +72,11 @@
         <groupId>org.codehaus.jackson</groupId>
         <artifactId>jackson-core-asl</artifactId>
         <version>1.5.7</version>
-        <type>jar</type>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>1.6</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>

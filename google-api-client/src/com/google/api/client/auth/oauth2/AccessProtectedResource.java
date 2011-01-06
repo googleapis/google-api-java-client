@@ -14,9 +14,6 @@
 
 package com.google.api.client.auth.oauth2;
 
-import com.google.api.client.auth.oauth2.AccessProtectedResource.UsingAuthorizationHeader;
-import com.google.api.client.auth.oauth2.AccessProtectedResource.UsingFormEncodedBody;
-import com.google.api.client.auth.oauth2.AccessProtectedResource.UsingQueryParameter;
 import com.google.api.client.http.HttpExecuteIntercepter;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
@@ -24,7 +21,6 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.util.GenericData;
 
-import java.util.Arrays;
 import java.util.EnumSet;
 
 /**

@@ -35,12 +35,12 @@ import java.io.OutputStream;
  *
  * <pre>
  * <code>
- * private static void setRequestJpegContent(HttpRequest request, URL jpegUrl) {
- *   InputStreamContent content = new InputStreamContent();
- *   content.inputStream = jpegUrl.openStream();
- *   content.type = "image/jpeg";
- *   request.content = content;
- * }
+  private static void setRequestJpegContent(HttpRequest request, URL jpegUrl) throws IOException {
+    InputStreamContent content = new InputStreamContent();
+    content.inputStream = jpegUrl.openStream();
+    content.type = "image/jpeg";
+    request.content = content;
+  }
  * </code>
  * </pre>
  *
@@ -73,12 +73,13 @@ public final class InputStreamContent implements HttpContent {
    *
    * <pre>
    * <code>
-   * private static void setRequestJpegContent(HttpRequest request, File jpegFile) {
-   *   InputStreamContent content = new InputStreamContent();
-   *   content.setFileInput(jpegFile);
-   *   content.type = "image/jpeg";
-   *   request.content = content;
-   * }
+  private static void setRequestJpegContent(HttpRequest request, File jpegFile)
+      throws FileNotFoundException {
+    InputStreamContent content = new InputStreamContent();
+    content.setFileInput(jpegFile);
+    content.type = "image/jpeg";
+    request.content = content;
+  }
    * </code>
    * </pre>
    */
@@ -96,12 +97,12 @@ public final class InputStreamContent implements HttpContent {
    *
    * <pre>
    * <code>
-   * private static void setRequestJsonContent(HttpRequest request, String json) {
-   *   InputStreamContent content = new InputStreamContent();
-   *   content.setByteArrayInput(json.getBytes());
-   *   content.type = "application/json";
-   *   request.content = content;
-   * }
+  static void setRequestJsonContent(HttpRequest request, String json) {
+    InputStreamContent content = new InputStreamContent();
+    content.setByteArrayInput(Strings.toBytesUtf8(json));
+    content.type = "application/json";
+    request.content = content;
+  }
    * </code>
    * </pre>
    */

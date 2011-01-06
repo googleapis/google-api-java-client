@@ -15,11 +15,11 @@
 package com.google.api.client.googleapis.json;
 
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.Json;
-import com.google.api.client.json.JsonHttpParser;
-
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonToken;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonParser;
+import com.google.api.client.json.JsonToken;
 
 import java.io.IOException;
 
@@ -31,9 +31,9 @@ import java.io.IOException;
  *
  * <pre>
  * <code>
- * static void setParser(GoogleTransport transport) {
- *   transport.addParser(new JsonCParser());
- * }
+  static void setParser(HttpTransport transport) {
+    transport.addParser(new JsonCParser());
+  }
  * </code>
  * </pre>
  *
@@ -44,7 +44,7 @@ public final class JsonCParser extends JsonHttpParser {
 
   @Override
   public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
-    return Json.parseAndClose(parserForResponse(response), dataClass, null);
+    return parserForResponse(jsonFactory, response).parseAndClose(dataClass, null);
   }
 
   /**
@@ -53,14 +53,20 @@ public final class JsonCParser extends JsonHttpParser {
    * <p>
    * The parser will be closed if any throwable is thrown. The current token will be the value of
    * the {@code "data"} key.
+   * </p>
+   * <p>
+   * Upgrade warning: prior to version 1.3, there was no {@code jsonFactory} parameter, but now it
+   * is required.
+   * </p>
    *
    * @param response HTTP response
    * @return JSON parser
    * @throws IllegalArgumentException if content type is not {@link Json#CONTENT_TYPE} or if {@code
    *         "data"} key is not found
    * @throws IOException I/O exception
+   * @since 1.3
    */
-  public static org.codehaus.jackson.JsonParser parserForResponse(HttpResponse response)
+  public static JsonParser parserForResponse(JsonFactory jsonFactory, HttpResponse response)
       throws IOException {
     // check for JSON content type
     String contentType = response.contentType;
@@ -70,9 +76,9 @@ public final class JsonCParser extends JsonHttpParser {
     }
     // parse
     boolean failed = true;
-    JsonParser parser = JsonHttpParser.parserForResponse(response);
+    JsonParser parser = JsonHttpParser.parserForResponse(jsonFactory, response);
     try {
-      Json.skipToKey(parser, response.isSuccessStatusCode ? "data" : "error");
+      parser.skipToKey(response.isSuccessStatusCode ? "data" : "error");
       if (parser.getCurrentToken() == JsonToken.END_OBJECT) {
         throw new IllegalArgumentException("data key not found");
       }

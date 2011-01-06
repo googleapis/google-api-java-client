@@ -83,7 +83,9 @@ public final class GoogleStorageAuthentication {
       HttpContent content = request.content;
       if (content != null) {
         String contentType = content.getType();
-        messageBuf.append(contentType);
+        if (contentType != null) {
+          messageBuf.append(contentType);
+        }
       }
       messageBuf.append('\n');
       // date

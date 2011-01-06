@@ -26,19 +26,21 @@ import java.lang.annotation.Target;
  * If the data key name is not specifies, the default data key name is the field's name. For
  * example:
  *
- * <pre><code>public class A {
- * 
- *   // uses data key name of "dataKeyNameMatchesFieldName" 
- *   &#64;Key
- *   public String dataKeyNameMatchesFieldName;
- *   
- *   // uses data key name of "some_other_name"
- *   &#64;Key("some_other_name") 
- *   private String dataKeyNameIsOverriden;
- *   
- *   // not a data key
- *   private String notADataKey; 
- * }</code></pre>
+ * <pre><code>
+  public class A {
+
+    // uses data key name of "dataKeyNameMatchesFieldName"
+    &#64;Key
+    public String dataKeyNameMatchesFieldName;
+
+    // uses data key name of "some_other_name"
+    &#64;Key("some_other_name")
+    private String dataKeyNameIsOverriden;
+
+    // not a data key
+    private String notADataKey;
+  }
+ * </code></pre>
  *
  * @since 1.0
  * @author Yaniv Inbar

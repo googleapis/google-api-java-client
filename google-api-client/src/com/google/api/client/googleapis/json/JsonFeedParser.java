@@ -15,9 +15,8 @@
 package com.google.api.client.googleapis.json;
 
 import com.google.api.client.http.HttpResponse;
-import com.google.api.client.json.Json;
-
-import org.codehaus.jackson.JsonParser;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonParser;
 
 import java.io.IOException;
 
@@ -44,12 +43,21 @@ public final class JsonFeedParser<T, I> extends AbstractJsonFeedParser<T> {
 
   @Override
   Object parseItemInternal() throws IOException {
-    return Json.parse(parser, itemClass, null);
+    return parser.parse(itemClass, null);
   }
 
+  /**
+   * <p>
+   * Upgrade warning: prior to version 1.3, there was no {@code jsonFactory} parameter, but now it
+   * is required.
+   * </p>
+   *
+   * @since 1.3
+   */
   public static <T, I> JsonFeedParser<T, I> use(
-      HttpResponse response, Class<T> feedClass, Class<I> itemClass) throws IOException {
-    JsonParser parser = JsonCParser.parserForResponse(response);
+      JsonFactory jsonFactory, HttpResponse response, Class<T> feedClass, Class<I> itemClass)
+      throws IOException {
+    JsonParser parser = JsonCParser.parserForResponse(jsonFactory, response);
     return new JsonFeedParser<T, I>(parser, feedClass, itemClass);
   }
 }

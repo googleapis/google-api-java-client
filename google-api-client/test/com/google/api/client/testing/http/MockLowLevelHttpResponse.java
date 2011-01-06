@@ -12,8 +12,9 @@
  * the License.
  */
 
-package com.google.api.client.http;
+package com.google.api.client.testing.http;
 
+import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.Strings;
 
 import java.io.ByteArrayInputStream;

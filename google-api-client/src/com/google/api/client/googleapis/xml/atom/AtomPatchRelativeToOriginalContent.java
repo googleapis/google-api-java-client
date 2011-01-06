@@ -30,16 +30,14 @@ import java.io.IOException;
  *
  * <pre>
  * <code>
- * static void setContent(HttpRequest request,
- *     XmlNamespaceDictionary namespaceDictionary, Object originalEntry,
- *     Object patchedEntry) {
- *   AtomPatchRelativeToOriginalContent content =
- *       new AtomPatchRelativeToOriginalContent();
- *   content.namespaceDictionary = namespaceDictionary;
- *   content.originalEntry = originalEntry;
- *   content.patchedEntry = patchedEntry;
- *   request.content = content;
- * }
+  static void setContent(HttpRequest request, XmlNamespaceDictionary namespaceDictionary,
+      Object originalEntry, Object patchedEntry) {
+    AtomPatchRelativeToOriginalContent content = new AtomPatchRelativeToOriginalContent();
+    content.namespaceDictionary = namespaceDictionary;
+    content.originalEntry = originalEntry;
+    content.patchedEntry = patchedEntry;
+    request.content = content;
+  }
  * </code>
  * </pre>
  *

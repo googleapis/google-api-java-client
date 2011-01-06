@@ -12,44 +12,48 @@
  * the License.
  */
 
-package com.google.api.client.json.rpc2;
+package com.google.api.client.googleapis.json;
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.json.JsonHttpContent;
+import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.CustomizeJsonParser;
-import com.google.api.client.json.Json;
-import com.google.api.client.json.JsonHttpContent;
-import com.google.api.client.json.JsonHttpParser;
-import com.google.api.client.util.Base64;
-import com.google.api.client.util.Strings;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonParser;
+import com.google.api.client.json.rpc2.JsonRpcRequest;
 
-import org.codehaus.jackson.JsonEncoding;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonParser;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
 /**
- * JSON-RPC 2.0 HTTP transport for RPC requests, including both singleton and batched requests.
+ * JSON-RPC 2.0 HTTP transport for RPC requests for Google API's, including both singleton and
+ * batched requests.
  *
- * @since 1.0
+ * <p>
+ * Warning: this is based on an undocumented experimental Google functionality that may stop working
+ * or change in behavior at any time. Beware of this risk if running this in production code.
+ * </p>
+ * <p>
+ * Warning: in prior version 1.2 of this library this was called {@code
+ * com.google.api.client.json.rpc2.GoogleJsonRpcHttpTransport}.
+ * </p>
+ *
+ * @since 1.3
  * @author Yaniv Inbar
  */
-public final class JsonRpcHttpTransport {
+public final class GoogleJsonRpcHttpTransport {
 
   /** RPC server URL. */
   public GenericUrl rpcServerUrl;
 
-  /**
-   * HTTP transport to use for executing HTTP requests. By default this is an unmodified new
-   * instance of {@link HttpTransport}.
-   */
-  public HttpTransport transport = new HttpTransport();
+  /** (REQUIRED) HTTP transport required for building requests. */
+  public HttpTransport transport;
+
+  /** (REQUIRED) JSON factory to use for building requests. */
+  public JsonFactory jsonFactory;
 
   /**
    * Content type header to use for requests. By default this is {@code "application/json-rpc"}.
@@ -65,10 +69,11 @@ public final class JsonRpcHttpTransport {
    * Builds a POST HTTP request for the JSON-RPC requests objects specified in the given JSON-RPC
    * request object.
    * <p>
-   * You may use {@link JsonHttpParser#parserForResponse(HttpResponse)
+   * You may use
+   * {@link JsonHttpParser#parserForResponse(com.google.api.client.json.JsonFactory, HttpResponse)
    * JsonHttpParser.parserForResponse}({@link #buildPostRequest(JsonRpcRequest) execute} (request))
-   * to get the {@link JsonParser}, and
-   * {@link Json#parseAndClose(JsonParser, Class, CustomizeJsonParser)} .
+   * to get the {@link JsonParser}, and {@link JsonParser#parseAndClose(Class, CustomizeJsonParser)}
+   * .
    * </p>
    *
    * @param request JSON-RPC request object
@@ -83,10 +88,11 @@ public final class JsonRpcHttpTransport {
    * request objects.
    * <p>
    * Note that the request will always use batching -- i.e. JSON array of requests -- even if there
-   * is only one request. You may use {@link JsonHttpParser#parserForResponse(HttpResponse)
+   * is only one request. You may use
+   * {@link JsonHttpParser#parserForResponse(com.google.api.client.json.JsonFactory, HttpResponse)
    * JsonHttpParser.parserForResponse}({@link #buildPostRequest(List) execute} (requests)) to get
    * the {@link JsonParser}, and
-   * {@link Json#parseArrayAndClose(JsonParser, Collection, Class, CustomizeJsonParser)} .
+   * {@link JsonParser#parseArrayAndClose(Collection, Class, CustomizeJsonParser)} .
    * </p>
    *
    * @param requests JSON-RPC request objects
@@ -96,43 +102,11 @@ public final class JsonRpcHttpTransport {
     return internalExecute(requests);
   }
 
-  /**
-   * Builds a GET HTTP request for the JSON-RPC requests objects specified in the given JSON-RPC
-   * request object.
-   * <p>
-   * You may use {@link JsonHttpParser#parserForResponse(HttpResponse)
-   * JsonHttpParser.parserForResponse}( {@link #buildGetRequest(JsonRpcRequest) executeUsingGet}
-   * (request)) to get the {@link JsonParser}, and
-   * {@link Json#parseAndClose(JsonParser, Class, CustomizeJsonParser)} .
-   * </p>
-   *
-   * @param request JSON-RPC request object
-   * @return HTTP response
-   * @throws IOException I/O exception
-   */
-  public HttpRequest buildGetRequest(JsonRpcRequest request) throws IOException {
-    HttpTransport transport = this.transport;
-    HttpRequest httpRequest = transport.buildGetRequest();
-    GenericUrl url = httpRequest.url = rpcServerUrl.clone();
-    url.set("method", request.method);
-    url.set("id", request.id);
-    // base64 encode the params
-    ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-    JsonGenerator generator = Json.JSON_FACTORY.createJsonGenerator(byteStream, JsonEncoding.UTF8);
-    try {
-      Json.serialize(generator, request.params);
-    } finally {
-      generator.close();
-    }
-    url.set("params", Strings.fromBytesUtf8(Base64.encode(byteStream.toByteArray())));
-    return httpRequest;
-  }
-
   private HttpRequest internalExecute(Object data) {
-    HttpTransport transport = this.transport;
     HttpRequest httpRequest = transport.buildPostRequest();
     httpRequest.url = rpcServerUrl;
     JsonHttpContent content = new JsonHttpContent();
+    content.jsonFactory = jsonFactory;
     content.contentType = contentType;
     httpRequest.headers.accept = accept;
     content.data = data;
