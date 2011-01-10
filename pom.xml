@@ -61,18 +61,6 @@
     This is the parent, so only specify dependencyManagement, not direct
     dependencies.
   -->
-  <repositories>
-    <repository>
-      <id>gson</id>
-      <url>http://google-gson.googlecode.com/svn/mavenrepo</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-  </repositories>
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -89,7 +77,6 @@
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
         <version>1.6</version>
-        <scope>compile</scope>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
