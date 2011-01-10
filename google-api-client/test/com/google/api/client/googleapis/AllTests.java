@@ -25,6 +25,7 @@ public class AllTests extends TestSuite {
 
   public static TestSuite suite() {
     TestSuite result = new TestSuite(AllTests.class.getPackage().getName());
+    result.addTestSuite(GoogleUrlTest.class);
     result.addTestSuite(GoogleUtilsTest.class);
     return result;
   }
