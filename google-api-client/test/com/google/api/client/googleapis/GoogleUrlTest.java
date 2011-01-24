@@ -40,7 +40,7 @@ public class GoogleUrlTest extends TestCase {
 
   public void testConstructorBasic() {
     final String PATH = "/a/b";
-    GoogleUrl url = new GoogleUrl(SERVER, PATH, new Object());
+    GoogleUrl url = GoogleUrl.newGoogleUrl(SERVER, PATH, new Object());
     assertEquals(SERVER + PATH, url.toString());
   }
 
@@ -56,7 +56,7 @@ public class GoogleUrlTest extends TestCase {
     Parameters p = new Parameters();
     p.a = 123;
     p.b = "456";
-    GoogleUrl url = new GoogleUrl(SERVER, PATH, p);
+    GoogleUrl url = GoogleUrl.newGoogleUrl(SERVER, PATH, p);
     assertEquals(SERVER + "/123/456/c", url.toString());
   }
 
@@ -65,12 +65,11 @@ public class GoogleUrlTest extends TestCase {
     Parameters p = new Parameters();
     p.a = 123;
     p.b = "456";
-    GoogleUrl url = new GoogleUrl(SERVER, PATH, p);
+    GoogleUrl url = GoogleUrl.newGoogleUrl(SERVER, PATH, p);
     url.prettyprint = true;
     url.alt = "json";
     url.fields = "x,y,z";
-    assertEquals(SERVER + "/123/456/c?alt=json&fields=x,y,z&prettyprint=true",
-                 url.toString());
+    assertEquals(SERVER + "/123/456/c?alt=json&fields=x,y,z&prettyprint=true", url.toString());
   }
 
   public void testExpandTemplates_basic() {
@@ -79,8 +78,7 @@ public class GoogleUrlTest extends TestCase {
     requestMap.put("def", "123");
     requestMap.put("unused", "not going to be expanded");
     assertEquals("foo/xyz/bar/123",
-                 GoogleUrl.expandUriTemplates("foo/{abc}/bar/{def}",
-                                               requestMap));
+                 GoogleUrl.expandUriTemplates("foo/{abc}/bar/{def}", requestMap));
     // "abc" and "def" should be removed from the map
     assertEquals(1, requestMap.size());
 
@@ -89,15 +87,23 @@ public class GoogleUrlTest extends TestCase {
     assertTrue(requestMap.containsKey("unused"));
   }
 
+  public void testExpandTemplates_noParameters() {
+    assertEquals("foo/xyz/bar/123", GoogleUrl.expandUriTemplates("foo/xyz/bar/123", null));
+    try {
+      assertEquals("* unchecked *", GoogleUrl.expandUriTemplates("foo/{abc}/bar/{def}", null));
+    } catch (IllegalArgumentException expectedException) {
+      return;
+    }
+    fail();
+  }
+
   public void testExpandTemplates_missingParameter() {
     HashMap<String, String> requestMap = new HashMap<String, String>();
     requestMap.put("abc", "xyz");
     try {
-      String junk = GoogleUrl.expandUriTemplates("foo/{abc}/bar/{def}",
-                                                  requestMap);
+      GoogleUrl.expandUriTemplates("foo/{abc}/bar/{def}", requestMap);
     } catch (IllegalArgumentException expectedException) {
-      assertEquals("missing required path parameter: def",
-                   expectedException.getMessage());
+      assertEquals("missing required path parameter: def", expectedException.getMessage());
       return;
     }
     fail();

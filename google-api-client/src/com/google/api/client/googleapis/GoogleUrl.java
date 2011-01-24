@@ -60,6 +60,8 @@ public class GoogleUrl extends GenericUrl {
   }
 
   /**
+   * Construct a GoogleUrl from a server, template and a parameter block.
+   *
    * @param encodedServerUrl encoded URL of the server
    * @param pathTemplate path template
    * @param parameters an object with parameters designated by Key annotations
@@ -68,9 +70,10 @@ public class GoogleUrl extends GenericUrl {
    *
    * @since 1.3
    */
-  public GoogleUrl(String encodedUrl, String pathTemplate, Object parameters)
+  public static GoogleUrl newGoogleUrl(String encodedServerUrl, String pathTemplate,
+                                       Object parameters)
       throws IllegalArgumentException {
-    super(encodedUrl);
+    GoogleUrl url = new GoogleUrl(encodedServerUrl);
 
     HashMap<String, String> requestMap = new HashMap<String, String>();
     for (Map.Entry<String, Object> entry : DataUtil.mapOf(parameters).entrySet()) {
@@ -79,25 +82,25 @@ public class GoogleUrl extends GenericUrl {
         requestMap.put(entry.getKey(), value.toString());
       }
     }
-    appendRawPath(expandUriTemplates(pathTemplate, requestMap));
+    url.appendRawPath(expandUriTemplates(pathTemplate, requestMap));
     // all other parameters are assumed to be query parameters
-    putAll(requestMap);
+    url.putAll(requestMap);
+    return url;
   }
 
   /**
    * Expands templates in a URI.
    *
-   * @param pathUri Uri component.  It may contain one or more sequences of the form "{name}",
-   *   where "name" must be a key in variableMap
+   * @param pathUri Uri component.  It may contain one or more sequences of the form "{name}", where
+   *        "name" must be a key in variableMap
    * @param variableMap map of request variable names to values.  Any names which are found in
-   *   pathUri are removed from the map during processing
+   *        pathUri are removed from the map during processing
    * @return The expanded template
    * @throws IllegalArgumentException if a requested element in the pathUri is not in the
-   *   variableMap
+   *         variableMap
    * @since 1.3
    */
-  protected static String expandUriTemplates(
-      String pathUri, HashMap<String, String> variableMap)
+  protected static String expandUriTemplates(String pathUri, HashMap<String, String> variableMap)
       throws IllegalArgumentException {
     StringBuilder pathBuf = new StringBuilder();
     int cur = 0;
@@ -112,10 +115,11 @@ public class GoogleUrl extends GenericUrl {
       int close = pathUri.indexOf('}', next + 2);
       String varName = pathUri.substring(next + 1, close);
       cur = close + 1;
-      String value = variableMap.remove(varName);
-      Preconditions.checkArgument(value != null,
-                                  "missing required path parameter: %s",
+      Preconditions.checkArgument(variableMap != null,
+                                  "no variable map supplied for parameterize path: %s",
                                   varName);
+      String value = variableMap.remove(varName);
+      Preconditions.checkArgument(value != null, "missing required path parameter: %s", varName);
       pathBuf.append(CharEscapers.escapeUriPath(value));
     }
     return pathBuf.toString();
