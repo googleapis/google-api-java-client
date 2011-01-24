@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -24,7 +22,7 @@ import java.util.HashMap;
 
 /**
  * Tests {@link GoogleUrl}.
- * 
+ *
  * @author Tony Aiuto
  */
 public class GoogleUrlTest extends TestCase {
@@ -77,8 +75,8 @@ public class GoogleUrlTest extends TestCase {
     requestMap.put("abc", "xyz");
     requestMap.put("def", "123");
     requestMap.put("unused", "not going to be expanded");
-    assertEquals("foo/xyz/bar/123",
-                 GoogleUrl.expandUriTemplates("foo/{abc}/bar/{def}", requestMap));
+    assertEquals(
+        "foo/xyz/bar/123", GoogleUrl.expandUriTemplates("foo/{abc}/bar/{def}", requestMap));
     // "abc" and "def" should be removed from the map
     assertEquals(1, requestMap.size());
 

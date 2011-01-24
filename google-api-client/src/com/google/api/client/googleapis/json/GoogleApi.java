@@ -48,7 +48,9 @@ public final class GoogleApi {
    */
   public String version;
 
-  /** HTTP transport required for building requests in {@link #buildRequest(String, Object)}. */
+  /**
+   * HTTP transport required for building requests in {@link #buildRequest(String, Object)}.
+   */
   public HttpTransport transport;
 
   /**
@@ -131,9 +133,7 @@ public final class GoogleApi {
     // Create request for specified method
     HttpRequest request = transport.buildRequest();
     request.method = HttpMethod.valueOf(method.httpMethod);
-    request.url = new GoogleUrl(serviceDefinition.baseUrl,
-                                method.pathUrl,
-                                parameters);
+    request.url = new GoogleUrl(serviceDefinition.baseUrl, method.pathUrl, parameters);
     return request;
   }
 }
