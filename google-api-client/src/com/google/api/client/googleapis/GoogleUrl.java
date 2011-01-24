@@ -65,13 +65,13 @@ public class GoogleUrl extends GenericUrl {
    * @param encodedServerUrl encoded URL of the server
    * @param pathTemplate path template
    * @param parameters an object with parameters designated by Key annotations
-   * @throws IllegalArgumentException if a requested element in the pathTemplate is not
-   *   in the parameters
+   * @throws IllegalArgumentException if a requested element in the pathTemplate is not in the
+   *         parameters
    *
    * @since 1.3
    */
-  public static GoogleUrl newGoogleUrl(String encodedServerUrl, String pathTemplate,
-                                       Object parameters)
+  public static GoogleUrl newGoogleUrl(
+      String encodedServerUrl, String pathTemplate, Object parameters)
       throws IllegalArgumentException {
     GoogleUrl url = new GoogleUrl(encodedServerUrl);
 
@@ -91,9 +91,9 @@ public class GoogleUrl extends GenericUrl {
   /**
    * Expands templates in a URI.
    *
-   * @param pathUri Uri component.  It may contain one or more sequences of the form "{name}", where
+   * @param pathUri Uri component. It may contain one or more sequences of the form "{name}", where
    *        "name" must be a key in variableMap
-   * @param variableMap map of request variable names to values.  Any names which are found in
+   * @param variableMap map of request variable names to values. Any names which are found in
    *        pathUri are removed from the map during processing
    * @return The expanded template
    * @throws IllegalArgumentException if a requested element in the pathUri is not in the
@@ -115,9 +115,8 @@ public class GoogleUrl extends GenericUrl {
       int close = pathUri.indexOf('}', next + 2);
       String varName = pathUri.substring(next + 1, close);
       cur = close + 1;
-      Preconditions.checkArgument(variableMap != null,
-                                  "no variable map supplied for parameterize path: %s",
-                                  varName);
+      Preconditions.checkArgument(
+          variableMap != null, "no variable map supplied for parameterize path: %s", varName);
       String value = variableMap.remove(varName);
       Preconditions.checkArgument(value != null, "missing required path parameter: %s", varName);
       pathBuf.append(CharEscapers.escapeUriPath(value));
