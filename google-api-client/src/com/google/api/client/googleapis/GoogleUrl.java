@@ -19,6 +19,7 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.api.client.util.DataUtil;
 import com.google.api.client.util.Key;
+import com.google.common.annotations.VisibleForTesting;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,14 +65,14 @@ public class GoogleUrl extends GenericUrl {
    *
    * @param encodedServerUrl encoded URL of the server
    * @param pathTemplate path template
-   * @param parameters an object with parameters designated by Key annotations
+   * @param parameters an object with parameters designated by Key annotations.  If the template has
+   *        no variable references, parameters may be {@code null}.
    * @throws IllegalArgumentException if a requested element in the pathTemplate is not in the
    *         parameters
    *
    * @since 1.3
    */
-  public static GoogleUrl newGoogleUrl(
-      String encodedServerUrl, String pathTemplate, Object parameters)
+  public static GoogleUrl create(String encodedServerUrl, String pathTemplate, Object parameters)
       throws IllegalArgumentException {
     GoogleUrl url = new GoogleUrl(encodedServerUrl);
 
@@ -100,7 +101,8 @@ public class GoogleUrl extends GenericUrl {
    *         variableMap
    * @since 1.3
    */
-  protected static String expandUriTemplates(String pathUri, HashMap<String, String> variableMap)
+  @VisibleForTesting
+  static String expandUriTemplates(String pathUri, HashMap<String, String> variableMap)
       throws IllegalArgumentException {
     StringBuilder pathBuf = new StringBuilder();
     int cur = 0;

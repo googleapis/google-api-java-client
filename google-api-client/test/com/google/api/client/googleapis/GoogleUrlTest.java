@@ -38,7 +38,7 @@ public class GoogleUrlTest extends TestCase {
 
   public void testConstructorBasic() {
     final String PATH = "/a/b";
-    GoogleUrl url = GoogleUrl.newGoogleUrl(SERVER, PATH, new Object());
+    GoogleUrl url = GoogleUrl.create(SERVER, PATH, new Object());
     assertEquals(SERVER + PATH, url.toString());
   }
 
@@ -54,7 +54,7 @@ public class GoogleUrlTest extends TestCase {
     Parameters p = new Parameters();
     p.a = 123;
     p.b = "456";
-    GoogleUrl url = GoogleUrl.newGoogleUrl(SERVER, PATH, p);
+    GoogleUrl url = GoogleUrl.create(SERVER, PATH, p);
     assertEquals(SERVER + "/123/456/c", url.toString());
   }
 
@@ -63,7 +63,7 @@ public class GoogleUrlTest extends TestCase {
     Parameters p = new Parameters();
     p.a = 123;
     p.b = "456";
-    GoogleUrl url = GoogleUrl.newGoogleUrl(SERVER, PATH, p);
+    GoogleUrl url = GoogleUrl.create(SERVER, PATH, p);
     url.prettyprint = true;
     url.alt = "json";
     url.fields = "x,y,z";
@@ -86,9 +86,11 @@ public class GoogleUrlTest extends TestCase {
   }
 
   public void testExpandTemplates_noParameters() {
-    assertEquals("foo/xyz/bar/123", GoogleUrl.expandUriTemplates("foo/xyz/bar/123", null));
+    // Should not raise an exception.
+    GoogleUrl url = GoogleUrl.create("http://host/",  "abc/def", null);
+    assertEquals("http://host/abc/def", url.toString());
     try {
-      assertEquals("* unchecked *", GoogleUrl.expandUriTemplates("foo/{abc}/bar/{def}", null));
+      GoogleUrl.create("http://host/",  "abc/{def}/", null);
     } catch (IllegalArgumentException expectedException) {
       return;
     }

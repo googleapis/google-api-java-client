@@ -133,7 +133,7 @@ public final class GoogleApi {
     // Create request for specified method
     HttpRequest request = transport.buildRequest();
     request.method = HttpMethod.valueOf(method.httpMethod);
-    request.url = new GoogleUrl(serviceDefinition.baseUrl, method.pathUrl, parameters);
+    request.url = GoogleUrl.create(serviceDefinition.baseUrl, method.pathUrl, parameters);
     return request;
   }
 }
