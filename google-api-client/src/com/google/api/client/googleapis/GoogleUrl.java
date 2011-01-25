@@ -101,7 +101,7 @@ public class GoogleUrl extends GenericUrl {
    *         variableMap
    * @since 1.3
    */
-  @VisibleForTesting
+  // TODO(yanivi) Uncomment when Guava is added @VisibleForTesting
   static String expandUriTemplates(String pathUri, HashMap<String, String> variableMap)
       throws IllegalArgumentException {
     StringBuilder pathBuf = new StringBuilder();
