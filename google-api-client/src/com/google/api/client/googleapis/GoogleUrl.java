@@ -19,7 +19,6 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.api.client.util.DataUtil;
 import com.google.api.client.util.Key;
-import com.google.common.annotations.VisibleForTesting;
 
 import java.util.HashMap;
 import java.util.Map;
