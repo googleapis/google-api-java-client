@@ -16,9 +16,10 @@ package com.google.api.client.googleapis;
 
 import com.google.api.client.escape.CharEscapers;
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.api.client.util.DataUtil;
 import com.google.api.client.util.Key;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,7 +65,7 @@ public class GoogleUrl extends GenericUrl {
    *
    * @param encodedServerUrl encoded URL of the server
    * @param pathTemplate path template
-   * @param parameters an object with parameters designated by Key annotations.  If the template has
+   * @param parameters an object with parameters designated by Key annotations. If the template has
    *        no variable references, parameters may be {@code null}.
    * @throws IllegalArgumentException if a requested element in the pathTemplate is not in the
    *         parameters
@@ -100,7 +101,7 @@ public class GoogleUrl extends GenericUrl {
    *         variableMap
    * @since 1.3
    */
-  // TODO(yanivi) Uncomment when Guava is added @VisibleForTesting
+  @VisibleForTesting
   static String expandUriTemplates(String pathUri, HashMap<String, String> variableMap)
       throws IllegalArgumentException {
     StringBuilder pathBuf = new StringBuilder();

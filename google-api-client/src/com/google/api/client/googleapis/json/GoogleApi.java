@@ -18,14 +18,12 @@ import com.google.api.client.googleapis.GoogleUrl;
 import com.google.api.client.googleapis.json.DiscoveryDocument.APIDefinition;
 import com.google.api.client.googleapis.json.DiscoveryDocument.ServiceDefinition;
 import com.google.api.client.googleapis.json.DiscoveryDocument.ServiceMethod;
-import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
-import com.google.api.client.repackaged.com.google.common.base.Preconditions;
-import com.google.api.client.util.DataUtil;
+import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 
