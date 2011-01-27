@@ -19,8 +19,17 @@
 your <code>JAVA_HOME</code>.</p>
 
 <pre><code>hg clone https://google-api-java-client.googlecode.com/hg/ google-api-java-client
-cd google-api-java-client
-mvn compile test install</code></pre>
+cd google-api-java-client/google-api-client-parent
+mvn install</code></pre>
+
+There are two named branches:
+<ul>
+  <li>The "default" branch has the stable 1.2 library. This is the default
+  branch that is checked out with the instructions above.</li>
+  <li>The "1.3" branch has the development 1.3 library. To switch to this
+  branch, run: <pre><code>hg update 1.3
+mvn clean install</code></pre></li>
+</ul>
 
 <h3>Setup Project in Eclipse 3.5</h3>
 
@@ -48,24 +57,14 @@ plugin</a>.</p>
     </li>
   </ul>
   </li>
-  <li>Import <code>google-api-java-client</code> project
+  <li>Import projects
   <ul>
     <li>File &gt; Import...</li>
     <li>Select "General &gt; Existing Project into Workspace" and click
     "Next"</li>
     <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client</code>
-    and click "Next"</li>
-    <li>Click "Finish"</li>
-  </ul>
-  </li>
-  <li>Import <code>google-api-client</code> project
-  <ul>
-    <li>File &gt; Import...</li>
-    <li>Select "General &gt; Existing Project into Workspace" and click
-    "Next"</li>
-    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client/google-api-client</code>
-    and click "Next"</li>
-    <li>Click "Finish"</li>
+    and click OK</li>
+    <li>Click "Next" and "Finish"</li>
   </ul>
   </li>
 </ul>

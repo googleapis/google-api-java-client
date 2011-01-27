@@ -14,10 +14,10 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.repackaged.com.google.common.base.Objects;
 import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
+import com.google.common.base.Objects;
 
 import junit.framework.TestCase;
 
