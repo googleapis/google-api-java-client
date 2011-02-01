@@ -16,19 +16,11 @@
  * JSON HTTP library based on the pluggable HTTP library.
  *
  * <p>
- * This package depends on theses packages:
- * </p>
- * <ul>
- * <li>{@link com.google.api.client.http}</li>
- * <li>{@link com.google.api.client.json}</li>
- * </ul>
- *
- * <p>
  * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
  * possibly entirely removed in a future version of the library</b>
  * </p>
  *
- * @since 1.3
+ * @since 1.0
  * @author Yaniv Inbar
  */
 

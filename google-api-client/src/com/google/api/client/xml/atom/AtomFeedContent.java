@@ -14,7 +14,7 @@
 
 package com.google.api.client.xml.atom;
 
-import com.google.api.client.xml.AbstractXmlHttpContent;
+import com.google.api.client.http.xml.AbstractXmlHttpContent;
 
 import org.xmlpull.v1.XmlSerializer;
 

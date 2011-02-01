@@ -12,28 +12,20 @@
  * the License.
  */
 
-package com.google.api.client.android.xml;
+package com.google.api.client.googleapis.xml.atom;
 
-import com.google.api.client.xml.XmlParserFactory;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlSerializer;
-
-import android.util.Xml;
+import junit.framework.TestSuite;
 
 /**
- * XML parser factory for Android.
+ * All tests for {@link com.google.api.client.googleapis.xml.atom}.
  *
- * @since 1.0
  * @author Yaniv Inbar
  */
-public final class AndroidXmlParserFactory implements XmlParserFactory {
+public class AllTests extends TestSuite {
 
-  public XmlPullParser createParser() {
-    return Xml.newPullParser();
-  }
-
-  public XmlSerializer createSerializer() {
-    return Xml.newSerializer();
+  public static TestSuite suite() {
+    TestSuite result = new TestSuite(AllTests.class.getPackage().getName());
+    result.addTestSuite(GoogleAtomTest.class);
+    return result;
   }
 }

@@ -28,10 +28,28 @@ import java.util.TreeSet;
 /**
  * Utilities for working with the Atom XML of Google Data API's.
  *
+ * <p>
+ * Upgrade warning: in prior version 1.2 this class was called {@code GData}.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
-public class GData {
+public class GoogleAtom {
+
+  /**
+   * GData namespace.
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.2 this constant was declared in {@code GDataHttp}.
+   * </p>
+   *
+   * @since 1.0
+   */
+  public static final String GD_NAMESPACE = "http://schemas.google.com/g/2005";
+
+  // TODO(yanivi): require XmlNamespaceDictory and include xmlns declarations since there is no
+  // guarantee that there is a match between Google's mapping and the one used by client
 
   /**
    * Returns the fields mask to use for the given data class of key/value pairs. It cannot be a
@@ -71,17 +89,17 @@ public class GData {
         fieldsBuf.append(',');
       }
       fieldsBuf.append(name);
-      // TODO: handle Java arrays?
+      // TODO(yanivi): handle Java arrays?
       Class<?> fieldClass = fieldInfo.type;
       if (Collection.class.isAssignableFrom(fieldClass)) {
-        // TODO: handle Java collection of Java collection or Java map?
+        // TODO(yanivi): handle Java collection of Java collection or Java map?
         fieldClass = ClassInfo.getCollectionParameter(fieldInfo.field);
       }
-      // TODO: implement support for map when server implements support for *:*
+      // TODO(yanivi): implement support for map when server implements support for *:*
       if (fieldClass != null) {
         if (fieldInfo.isPrimitive) {
           if (name.charAt(0) != '@' && !name.equals("text()")) {
-            // TODO: wait for bug fix from server
+            // TODO(yanivi): wait for bug fix from server to support text() -- already fixed???
             // buf.append("/text()");
           }
         } else if (!Collection.class.isAssignableFrom(fieldClass)
@@ -89,6 +107,7 @@ public class GData {
           int[] subNumFields = new int[1];
           int openParenIndex = fieldsBuf.length();
           fieldsBuf.append('(');
+          // TODO(yanivi): abort if found cycle to avoid infinite loop
           appendFieldsFor(fieldsBuf, fieldClass, subNumFields);
           updateFieldsBasedOnNumFields(fieldsBuf, openParenIndex, subNumFields[0]);
         }
@@ -133,7 +152,7 @@ public class GData {
     return result;
   }
 
-  public static ArrayMap<String, Object> computePatchInternal(
+  private static ArrayMap<String, Object> computePatchInternal(
       FieldsMask fieldsMask, Object patchedObject, Object originalObject) {
     ArrayMap<String, Object> result = ArrayMap.create();
     Map<String, Object> patchedMap = DataUtil.mapOf(patchedObject);
@@ -153,7 +172,7 @@ public class GData {
           continue;
         }
         fieldsMask.append(name);
-        // TODO: wait for bug fix from server
+        // TODO(yanivi): wait for bug fix from server
         // if (!name.equals("text()") && name.charAt(0) != '@') {
         // fieldsMask.buf.append("/text()");
         // }
@@ -181,14 +200,14 @@ public class GData {
             }
           }
         }
-        // TODO: implement
+        // TODO(yanivi): implement
         throw new UnsupportedOperationException(
             "not yet implemented: support for patching collections");
       } else {
-        if (originalValue == null) { // TODO: test
+        if (originalValue == null) { // TODO(yanivi): test
           fieldsMask.append(name);
           result.add(name, DataUtil.mapOf(patchedValue));
-        } else if (patchedValue == null) { // TODO: test
+        } else if (patchedValue == null) { // TODO(yanivi): test
           fieldsMask.append(name);
         } else {
           FieldsMask subFieldsMask = new FieldsMask();
@@ -233,6 +252,6 @@ public class GData {
     }
   }
 
-  private GData() {
+  private GoogleAtom() {
   }
 }

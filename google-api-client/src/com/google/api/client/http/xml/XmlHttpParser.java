@@ -12,11 +12,13 @@
  * the License.
  */
 
-package com.google.api.client.xml;
+package com.google.api.client.http.xml;
 
 import com.google.api.client.http.HttpParser;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.util.ClassInfo;
+import com.google.api.client.xml.Xml;
+import com.google.api.client.xml.XmlNamespaceDictionary;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -38,6 +40,11 @@ import java.io.InputStream;
   }
  * </code>
  * </pre>
+ *
+ * <p>
+ * Upgrade warning: in prior version 1.2 this class was previously in the
+ * {@link com.google.api.client.xml} package.
+ * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar

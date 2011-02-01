@@ -30,6 +30,7 @@ public class AllTests extends TestSuite {
     result.addTest(com.google.api.client.googleapis.auth.oauth2.AllTests.suite());
     result.addTest(com.google.api.client.googleapis.auth.storage.AllTests.suite());
     result.addTest(com.google.api.client.googleapis.json.AllTests.suite());
+    result.addTest(com.google.api.client.googleapis.xml.atom.AllTests.suite());
     result.addTest(com.google.api.client.http.AllTests.suite());
     result.addTest(com.google.api.client.json.gson.AllTests.suite());
     result.addTest(com.google.api.client.json.jackson.AllTests.suite());
