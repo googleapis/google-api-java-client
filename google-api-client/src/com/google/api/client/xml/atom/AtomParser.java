@@ -14,7 +14,7 @@
 
 package com.google.api.client.xml.atom;
 
-import com.google.api.client.xml.XmlHttpParser;
+import com.google.api.client.http.xml.XmlHttpParser;
 
 /**
  * Atom XML HTTP parser into an data class of key/value pairs.

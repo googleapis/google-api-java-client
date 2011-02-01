@@ -37,11 +37,13 @@ import java.io.OutputStream;
   }
  * </code>
  * </pre>
+ *
  * <p>
- * Upgrade warning: this class was previously in the {@link com.google.api.client.json} package.
+ * Upgrade warning: in prior version 1.2 this class was previously in the
+ * {@link com.google.api.client.json} package.
  * </p>
  *
- * @since 1.3
+ * @since 1.0
  * @author Yaniv Inbar
  */
 public class JsonHttpContent implements HttpContent {

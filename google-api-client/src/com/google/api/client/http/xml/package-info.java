@@ -13,16 +13,16 @@
  */
 
 /**
- * Android XML utilities.
+ * XML HTTP library based on the pluggable HTTP library.
  *
  * <p>
  * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
  * possibly entirely removed in a future version of the library</b>
  * </p>
  *
- * @since 1.0
+ * @since 1.3
  * @author Yaniv Inbar
  */
 
-package com.google.api.client.android.xml;
+package com.google.api.client.http.xml;
 

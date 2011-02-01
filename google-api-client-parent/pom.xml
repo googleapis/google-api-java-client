@@ -52,7 +52,6 @@
 
   <modules>
     <module>../google-api-client</module>
-    <module>../google-api-client-android</module>
     <module>../google-api-client-appengine</module>
   </modules>
 

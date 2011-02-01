@@ -17,14 +17,6 @@
  * href="http://jackson.codehaus.org/">Jackson</a> JSON library.
  *
  * <p>
- * This package depends on theses packages:
- * </p>
- * <ul>
- * <li>{@link com.google.api.client.json}</li>
- * <li>{@link org.codehaus.jackson}</li>
- * </ul>
- *
- * <p>
  * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
  * possibly entirely removed in a future version of the library</b>
  * </p>

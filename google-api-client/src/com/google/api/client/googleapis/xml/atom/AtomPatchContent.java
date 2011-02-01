@@ -14,7 +14,7 @@
 
 package com.google.api.client.googleapis.xml.atom;
 
-import com.google.api.client.xml.XmlHttpParser;
+import com.google.api.client.http.xml.XmlHttpParser;
 import com.google.api.client.xml.atom.AtomContent;
 
 /**

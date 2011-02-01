@@ -1,3 +1,17 @@
+/*
+ * Copyright (c) 2010 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.google.api.client.xml;
 
 import com.google.api.client.util.ClassInfo;
@@ -5,6 +19,7 @@ import com.google.api.client.util.FieldInfo;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.IOException;
@@ -17,21 +32,28 @@ import java.util.Map;
 /**
  * XML utilities.
  *
+ * <p>
+ * Upgrade warning: in prior version 1.2, there was a global static field {@code parserFactory},
+ * which is now removed.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public class Xml {
 
-  /** XML Parser factory. */
-  public static XmlParserFactory parserFactory;
+  /** XML pull parser factory. */
+  private static XmlPullParserFactory factory;
 
-  /** Returns the parser factory. */
-  private static XmlParserFactory getParserFactory() throws XmlPullParserException {
-    XmlParserFactory parserFactory = Xml.parserFactory;
-    if (parserFactory == null) {
-      parserFactory = Xml.parserFactory = DefaultXmlParserFactory.getInstance();
+  private static synchronized XmlPullParserFactory getParserFactory()
+      throws XmlPullParserException {
+    if (factory == null) {
+      factory = XmlPullParserFactory.newInstance(
+          System.getProperty(XmlPullParserFactory.PROPERTY_NAME), null);
+      factory.setNamespaceAware(true);
     }
-    return parserFactory;
+    return factory;
+
   }
 
   /**
@@ -41,7 +63,7 @@ public class Xml {
    */
   public static XmlSerializer createSerializer() {
     try {
-      return getParserFactory().createSerializer();
+      return getParserFactory().newSerializer();
     } catch (XmlPullParserException e) {
       throw new IllegalArgumentException(e);
     }
@@ -49,12 +71,7 @@ public class Xml {
 
   /** Returns a new XML pull parser. */
   public static XmlPullParser createParser() throws XmlPullParserException {
-    XmlPullParser result = getParserFactory().createParser();
-    if (!result.getFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES)) {
-      throw new IllegalStateException("XML pull parser must have " + "namespace-aware feature");
-    }
-    // TODO: make the XML pull parser secure
-    return result;
+    return getParserFactory().newPullParser();
   }
 
   /**
@@ -123,7 +140,7 @@ public class Xml {
   }
 
   /**
-   * Parses an XML elment using the given XML pull parser into the given destination object.
+   * Parses an XML element using the given XML pull parser into the given destination object.
    * <p>
    * Requires the the current event be {@link XmlPullParser#START_TAG} (skipping any initial
    * {@link XmlPullParser#START_DOCUMENT}) of the element being parsed. At normal parsing
@@ -164,27 +181,44 @@ public class Xml {
       throw new IllegalArgumentException(
           "expected start of XML element, but got something else (event type " + eventType + ")");
     }
+    // read namespaces declared on this XML element
+    int depth = parser.getDepth();
+    int nsStart = parser.getNamespaceCount(depth - 1);
+    int nsEnd = parser.getNamespaceCount(depth);
+    for (int i = nsStart; i < nsEnd; i++) {
+      String namespace = parser.getNamespaceUri(i);
+      // if namespace isn't already in our dictionary, add it now
+      if (namespaceDictionary.getAliasForUri(namespace) == null) {
+        String prefix = parser.getNamespacePrefix(i);
+        String originalAlias = prefix == null ? "" : prefix;
+        // find an available alias
+        String alias = originalAlias;
+        int suffix = 1;
+        while (namespaceDictionary.getUriForAlias(alias) != null) {
+          suffix++;
+          alias = originalAlias + suffix;
+        }
+        namespaceDictionary.set(alias, namespace);
+      }
+    }
     // generic XML
-    String prefix = parser.getPrefix();
-    String alias = prefix == null ? "" : prefix;
-    namespaceDictionary.addNamespace(alias, parser.getNamespace());
-    // TODO: can instead just look at the xmlns attributes?
     if (genericXml != null) {
       genericXml.namespaceDictionary = namespaceDictionary;
       String name = parser.getName();
-      genericXml.name = prefix == null ? name : prefix + ":" + name;
+      String namespace = parser.getNamespace();
+      String alias = namespaceDictionary.getAliasForUri(namespace);
+      genericXml.name = alias.length() == 0 ? name : alias + ":" + name;
     }
     // attributes
     if (destination != null) {
       int attributeCount = parser.getAttributeCount();
       for (int i = 0; i < attributeCount; i++) {
         String attributeName = parser.getAttributeName(i);
-        String attributePrefix = parser.getAttributePrefix(i);
         String attributeNamespace = parser.getAttributeNamespace(i);
-        if (attributePrefix != null) {
-          namespaceDictionary.addNamespace(attributePrefix, attributeNamespace);
-        }
-        String fieldName = getFieldName(true, attributePrefix, attributeNamespace, attributeName);
+        String attributeAlias =
+            attributeNamespace.length() == 0 ? "" : namespaceDictionary.getAliasForUri(
+                attributeNamespace);
+        String fieldName = getFieldName(true, attributeAlias, attributeNamespace, attributeName);
         Field field = isMap ? null : classInfo.getField(fieldName);
         parseValue(parser.getAttributeValue(i),
             field,
@@ -238,8 +272,9 @@ public class Xml {
             continue;
           }
           // element
-          String fieldName =
-              getFieldName(false, parser.getPrefix(), parser.getNamespace(), parser.getName());
+          String namespace = parser.getNamespace();
+          String alias = namespaceDictionary.getAliasForUri(namespace);
+          String fieldName = getFieldName(false, alias, namespace, parser.getName());
           field = isMap ? null : classInfo.getField(fieldName);
           Class<?> fieldClass = field == null ? null : field.getType();
           boolean isStopped = false;
@@ -345,7 +380,9 @@ public class Xml {
 
   private static String getFieldName(
       boolean isAttribute, String alias, String namespace, String name) {
-    alias = alias == null ? "" : alias;
+    if (!isAttribute && alias.length() == 0) {
+      return name;
+    }
     StringBuilder buf = new StringBuilder(2 + alias.length() + name.length());
     if (isAttribute) {
       buf.append('@');
