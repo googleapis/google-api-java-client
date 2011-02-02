@@ -113,7 +113,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>r07</version>
+        <version>r08</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.findbugs</groupId>
