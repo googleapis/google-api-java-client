@@ -88,7 +88,7 @@ public class UrlEncodedParserTest extends TestCase {
 
   public void testParse_simple() {
     Simple actual = new Simple();
-    UrlEncodedParser.parse("q=1&a=x&b=y&c=z&q=2", actual);
+    UrlEncodedParser.parse("q=1&a=x&b=y&c=z&q=2&undeclared=0", actual);
     Simple expected = new Simple();
     expected.a = "x";
     expected.b = "y";

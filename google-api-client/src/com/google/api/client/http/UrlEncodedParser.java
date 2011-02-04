@@ -82,14 +82,21 @@ public final class UrlEncodedParser implements HttpParser {
   /**
    * Parses the given URL-encoded content into the given data object of data key name/value pairs,
    * including support for repeating data key names.
+   *
    * <p>
    * Declared fields of a "primitive" type (as defined by {@link FieldInfo#isPrimitive(Class)} are
    * parsed using {@link FieldInfo#parsePrimitiveValue(Class, String)} where the {@link Class}
    * parameter is the declared field class. Declared fields of type {@link Collection} are used to
    * support repeating data key names, so each member of the collection is an additional data key
    * value. They are parsed the same as "primitive" fields, except that the generic type parameter
-   * of the collection is used as the {@link Class} parameter. For keys not represented by a
-   * declared field, the field type is assumed to be {@link ArrayList}&lt;String&gt;.
+   * of the collection is used as the {@link Class} parameter.
+   * </p>
+   *
+   * <p>
+   * If there is no declared field for an input parameter name, it will be ignored unless the input
+   * {@code data} parameter is a {@link Map}. If it is a map, the parameter value will be stored
+   * either as a string, or as a {@link ArrayList}&lt;String&gt; in the case of repeated parameters.
+   * </p>
    *
    * @param content URL-encoded content
    * @param data data key name/value pairs
@@ -135,7 +142,7 @@ public final class UrlEncodedParser implements HttpParser {
         } else {
           fieldInfo.setValue(data, FieldInfo.parsePrimitiveValue(type, stringValue));
         }
-      } else {
+      } else if (map != null) {
         ArrayList<String> listValue = (ArrayList<String>) map.get(name);
         if (listValue == null) {
           listValue = new ArrayList<String>();
