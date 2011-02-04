@@ -21,6 +21,7 @@ import org.xmlpull.v1.XmlPullParser;
 import junit.framework.TestCase;
 
 import java.io.StringReader;
+import java.util.Collection;
 
 /**
  * Tests {@link GenericXml}.
@@ -38,10 +39,13 @@ public class GenericXmlTest extends TestCase {
 
   private static final String XML =
       "<?xml version=\"1.0\"?><feed xmlns=\"http://www.w3.org/2005/Atom\" "
-          + "xmlns:gd=\"http://schemas.google.com/g/2005\">"
-          + "<entry gd:etag=\"abc\"><title>One</title></entry>"
+          + "xmlns:gd=\"http://schemas.google.com/g/2005\"><atom:entry "
+          + "xmlns=\"http://schemas.google.com/g/2005\" "
+          + "xmlns:atom=\"http://www.w3.org/2005/Atom\" "
+          + "gd:etag=\"abc\"><atom:title>One</atom:title></atom:entry>"
           + "<entry gd:etag=\"def\"><title>Two</title></entry></feed>";
 
+  @SuppressWarnings("unchecked")
   public void testParse() throws Exception {
     GenericXml xml = new GenericXml();
     XmlPullParser parser = Xml.createParser();
@@ -50,6 +54,10 @@ public class GenericXmlTest extends TestCase {
     Xml.parseElement(parser, xml, namespaceDictionary, null);
     ArrayMap<String, String> expected =
         ArrayMap.of("gd", "http://schemas.google.com/g/2005", "", "http://www.w3.org/2005/Atom");
-    assertEquals(expected, namespaceDictionary.namespaceAliasToUriMap);
+    assertEquals(expected, namespaceDictionary.getAliasToUriMap());
+    assertEquals("feed", xml.name);
+    Collection<GenericXml> foo = (Collection<GenericXml>) xml.get("entry");
+    // TODO(yanivi): check contents of foo
+    assertEquals(2, foo.size());
   }
 }

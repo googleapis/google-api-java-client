@@ -17,6 +17,8 @@ package com.google.api.client.xml;
 import com.google.api.client.util.DataUtil;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.util.FieldInfo;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 
 import org.xmlpull.v1.XmlSerializer;
 
@@ -24,6 +26,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,22 +34,28 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * XML namespace dictionary that maps namespace aliases to URI.
+ * Thread-safe XML namespace dictionary that provides a one-to-one map of namespace alias to URI.
+ *
+ * <p>
+ * A namespace alias is uniquely mapped to a single namespace URI, and a namespace URI is uniquely
+ * mapped to a single namespace alias. In other words, it is not possible to have duplicates.
+ * </p>
+ *
  * <p>
  * Sample usage:
  *
  * <pre>{@code
-  static final XmlNamespaceDictionary NAMESPACE_DICTIONARY
-      = new XmlNamespaceDictionary();
-  static {
-    Map<String, String> map = NAMESPACE_DICTIONARY.namespaceAliasToUriMap;
-    map.put("", "http://www.w3.org/2005/Atom");
-    map.put("activity", "http://activitystrea.ms/spec/1.0/");
-    map.put("georss", "http://www.georss.org/georss");
-    map.put("media", "http://search.yahoo.com/mrss/");
-    map.put("thr", "http://purl.org/syndication/thread/1.0");
-  }
+  static final XmlNamespaceDictionary DICTIONARY = new XmlNamespaceDictionary()
+      .add("", "http://www.w3.org/2005/Atom")
+      .add("activity", "http://activitystrea.ms/spec/1.0/")
+      .add("georss", "http://www.georss.org/georss")
+      .add("media", "http://search.yahoo.com/mrss/")
+      .add("thr", "http://purl.org/syndication/thread/1.0");
  *}</pre>
+ *
+ * <p>
+ * Upgrade warning: in prior version 1.2 there was a field {@code namespaceAliasToUriMap}, which has
+ * now been made inaccessible.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -56,28 +65,107 @@ public final class XmlNamespaceDictionary {
   /**
    * Map from XML namespace alias (or {@code ""} for the default namespace) to XML namespace URI.
    */
-  public final HashMap<String, String> namespaceAliasToUriMap = new HashMap<String, String>();
+  private final HashMap<String, String> namespaceAliasToUriMap = Maps.newHashMap();
+
+  /**
+   * Map from XML namespace URI to XML namespace alias (or {@code ""} for the default namespace).
+   */
+  private final HashMap<String, String> namespaceUriToAliasMap = Maps.newHashMap();
+
+  /**
+   * Returns the namespace alias (or {@code ""} for the default namespace) for the given namespace
+   * URI.
+   *
+   * @param uri namespace URI
+   * @since 1.3
+   */
+  public synchronized String getAliasForUri(String uri) {
+    return namespaceUriToAliasMap.get(Preconditions.checkNotNull(uri));
+  }
+
+  /**
+   * Returns the namespace URI for the given namespace alias (or {@code ""} for the default
+   * namespace).
+   *
+   * @param alias namespace alias (or {@code ""} for the default namespace)
+   * @since 1.3
+   */
+  public synchronized String getUriForAlias(String alias) {
+    return namespaceAliasToUriMap.get(Preconditions.checkNotNull(alias));
+  }
+
+  /**
+   * Returns an unmodified set of map entries for the map from namespace alias (or {@code ""} for
+   * the default namespace) to namespace URI.
+   *
+   * @since 1.3
+   */
+  public synchronized Map<String, String> getAliasToUriMap() {
+    return Collections.unmodifiableMap(namespaceAliasToUriMap);
+  }
+
+  /**
+   * Returns an unmodified set of map entries for the map from namespace URI to namespace alias (or
+   * {@code ""} for the default namespace).
+   *
+   * @since 1.3
+   */
+  public synchronized Map<String, String> getUriToAliasMap() {
+    return Collections.unmodifiableMap(namespaceUriToAliasMap);
+  }
 
   /**
    * Adds a known namespace of the given alias and URI.
    *
    * @param alias alias
    * @param uri namespace URI
+   * @deprecated use {@link #set(String, String)} (scheduled to be removed in 1.4)
    */
+  @Deprecated
   public void addNamespace(String alias, String uri) {
-    if (alias == null || uri == null) {
-      throw new NullPointerException();
-    }
-    HashMap<String, String> namespaceAliasToUriMap = this.namespaceAliasToUriMap;
-    String knownUri = namespaceAliasToUriMap.get(alias);
-    if (!uri.equals(knownUri)) {
-      if (knownUri != null) {
-        throw new IllegalArgumentException(
-            "expected namespace alias <" + alias + "> to be <" + knownUri + "> but encountered <"
-                + uri + ">");
+    set(alias, uri);
+  }
+
+  /**
+   * Adds a namespace of the given alias and URI.
+   *
+   * <p>
+   * If the uri is {@code null}, the namespace alias will be removed. Similarly, if the alias is
+   * {@code null}, the namespace URI will be removed. Otherwise, if the alias is already mapped to a
+   * different URI, it will be remapped to the new URI. Similarly, if a URI is already mapped to a
+   * different alias, it will be remapped to the new alias.
+   * </p>
+   *
+   * @param alias alias or {@code null} to remove the namespace URI
+   * @param uri namespace URI or {@code null} to remove the namespace alias
+   * @return this namespace dictionary
+   * @since 1.3
+   */
+  public synchronized XmlNamespaceDictionary set(String alias, String uri) {
+    String previousUri = null;
+    String previousAlias = null;
+    if (uri == null) {
+      if (alias != null) {
+        previousUri = namespaceAliasToUriMap.remove(alias);
       }
-      namespaceAliasToUriMap.put(alias, uri);
+    } else if (alias == null) {
+      previousAlias = namespaceUriToAliasMap.remove(uri);
+    } else {
+      previousUri = namespaceAliasToUriMap.put(
+          Preconditions.checkNotNull(alias), Preconditions.checkNotNull(uri));
+      if (!uri.equals(previousUri)) {
+        previousAlias = namespaceUriToAliasMap.put(uri, alias);
+      } else {
+        previousUri = null;
+      }
     }
+    if (previousUri != null) {
+      namespaceUriToAliasMap.remove(previousUri);
+    }
+    if (previousAlias != null) {
+      namespaceAliasToUriMap.remove(previousAlias);
+    }
+    return this;
   }
 
   /**
@@ -148,17 +236,16 @@ public final class XmlNamespaceDictionary {
     serializer.startDocument(null, null);
     SortedSet<String> aliases = new TreeSet<String>();
     computeAliases(element, aliases);
-    HashMap<String, String> namespaceAliasToUriMap = this.namespaceAliasToUriMap;
     boolean foundExtra = extraNamespace == null;
     for (String alias : aliases) {
-      String uri = namespaceAliasToUriMap.get(alias);
+      String uri = getUriForAlias(alias);
       serializer.setPrefix(alias, uri);
       if (!foundExtra && uri.equals(extraNamespace)) {
         foundExtra = true;
       }
     }
     if (!foundExtra) {
-      for (Map.Entry<String, String> entry : namespaceAliasToUriMap.entrySet()) {
+      for (Map.Entry<String, String> entry : getAliasToUriMap().entrySet()) {
         if (extraNamespace.equals(entry.getValue())) {
           serializer.setPrefix(entry.getKey(), extraNamespace);
           break;
@@ -226,8 +313,8 @@ public final class XmlNamespaceDictionary {
       }
     }
 
-    String getNamespaceUriForAlias(String alias) {
-      String result = namespaceAliasToUriMap.get(alias);
+    String getNamespaceUriForAliasHandlingUnknown(String alias) {
+      String result = getUriForAlias(alias);
       if (result == null) {
         if (errorOnUnknown) {
           throw new IllegalArgumentException(
@@ -245,7 +332,7 @@ public final class XmlNamespaceDictionary {
         int colon = elementName.indexOf(':');
         elementLocalName = elementName.substring(colon + 1);
         String alias = colon == -1 ? "" : elementName.substring(0, colon);
-        elementNamespaceUri = getNamespaceUriForAlias(alias);
+        elementNamespaceUri = getNamespaceUriForAliasHandlingUnknown(alias);
         if (elementNamespaceUri == null) {
           elementNamespaceUri = "http://unknown/" + alias;
         }
@@ -271,8 +358,8 @@ public final class XmlNamespaceDictionary {
         String attributeName = attributeNames.get(i);
         int colon = attributeName.indexOf(':');
         String attributeLocalName = attributeName.substring(colon + 1);
-        String attributeNamespaceUri =
-            colon == -1 ? null : getNamespaceUriForAlias(attributeName.substring(0, colon));
+        String attributeNamespaceUri = colon == -1 ? null : getNamespaceUriForAliasHandlingUnknown(
+            attributeName.substring(0, colon));
         serializer.attribute(
             attributeNamespaceUri, attributeLocalName, toSerializedValue(attributeValues.get(i)));
       }

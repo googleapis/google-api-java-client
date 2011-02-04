@@ -63,7 +63,7 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
   @Override
   protected Object parseEntryInternal() throws IOException, XmlPullParserException {
     XmlPullParser parser = this.parser;
-    String kind = parser.getAttributeValue(GDataHttp.GD_NAMESPACE, "kind");
+    String kind = parser.getAttributeValue(GoogleAtom.GD_NAMESPACE, "kind");
     Class<?> entryClass = this.kindToEntryClassMap.get(kind);
     if (entryClass == null) {
       throw new IllegalArgumentException("unrecognized kind: " + kind);

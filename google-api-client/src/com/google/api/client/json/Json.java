@@ -18,7 +18,7 @@ package com.google.api.client.json;
  * JSON utilities.
  *
  * <p>
- * Upgrade warning: prior to version 1.3, there was a global static field {@code JSON_FACTORY} of
+ * Upgrade warning: in prior version 1.2, there was a global static field {@code JSON_FACTORY} of
  * type {@code org.codehaus.jackson.JsonFactory}. However, now that the JSON library is pluggable
  * this doesn't make sense and instead the instance of the JSON factory must be specified every time
  * it is used. For this reason much of the functionality that used be here has been moved to
