@@ -17,14 +17,6 @@
  * href="http://code.google.com/p/google-gson/">GSON</a> JSON library.
  *
  * <p>
- * This package depends on theses packages:
- * </p>
- * <ul>
- * <li>{@link com.google.api.client.json}</li>
- * <li>{@link com.google.gson}</li>
- * </ul>
- *
- * <p>
  * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
  * possibly entirely removed in a future version of the library</b>
  * </p>

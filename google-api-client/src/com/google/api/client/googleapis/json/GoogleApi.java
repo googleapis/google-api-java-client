@@ -14,23 +14,18 @@
 
 package com.google.api.client.googleapis.json;
 
-import com.google.api.client.escape.CharEscapers;
 import com.google.api.client.googleapis.GoogleUrl;
 import com.google.api.client.googleapis.json.DiscoveryDocument.APIDefinition;
 import com.google.api.client.googleapis.json.DiscoveryDocument.ServiceDefinition;
 import com.google.api.client.googleapis.json.DiscoveryDocument.ServiceMethod;
-import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
-import com.google.api.client.repackaged.com.google.common.base.Preconditions;
-import com.google.api.client.util.DataUtil;
+import com.google.common.base.Preconditions;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Manages HTTP requests for a version of a Google API service with a simple interface based on the
@@ -51,7 +46,9 @@ public final class GoogleApi {
    */
   public String version;
 
-  /** HTTP transport required for building requests in {@link #buildRequest(String, Object)}. */
+  /**
+   * HTTP transport required for building requests in {@link #buildRequest(String, Object)}.
+   */
   public HttpTransport transport;
 
   /**
@@ -134,39 +131,7 @@ public final class GoogleApi {
     // Create request for specified method
     HttpRequest request = transport.buildRequest();
     request.method = HttpMethod.valueOf(method.httpMethod);
-    HashMap<String, String> requestMap = new HashMap<String, String>();
-    for (Map.Entry<String, Object> entry : DataUtil.mapOf(parameters).entrySet()) {
-      Object value = entry.getValue();
-      if (value != null) {
-        requestMap.put(entry.getKey(), value.toString());
-      }
-    }
-    GenericUrl url = new GenericUrl(serviceDefinition.baseUrl);
-    // parse path URL
-    String pathUrl = method.pathUrl;
-    StringBuilder pathBuf = new StringBuilder();
-    int cur = 0;
-    int length = pathUrl.length();
-    while (cur < length) {
-      int next = pathUrl.indexOf('{', cur);
-      if (next == -1) {
-        pathBuf.append(pathUrl.substring(cur));
-        break;
-      }
-      pathBuf.append(pathUrl.substring(cur, next));
-      int close = pathUrl.indexOf('}', next + 2);
-      String varName = pathUrl.substring(next + 1, close);
-      cur = close + 1;
-      String value = requestMap.remove(varName);
-      if (value == null) {
-        throw new IllegalArgumentException("missing required path parameter: " + varName);
-      }
-      pathBuf.append(CharEscapers.escapeUriPath(value));
-    }
-    url.appendRawPath(pathBuf.toString());
-    // all other parameters are assumed to be query parameters
-    url.putAll(requestMap);
-    request.url = url;
+    request.url = GoogleUrl.create(serviceDefinition.baseUrl, method.pathUrl, parameters);
     return request;
   }
 }

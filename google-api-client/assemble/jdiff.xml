@@ -8,6 +8,8 @@
   <property name="PROJECT_ROOT_DIR" value="..." />
   <property name="OLD_PROJECT_ROOT_DIR" value="/tmp" />
 
+	<!-- TODO(yanivi): android and appengine extensions! -->
+
   <taskdef name="jdiff" 
            classname="jdiff.JDiffAntTask" 
            classpath="${JDIFF_HOME}/antjdiff.jar:${MAVEN_REPOSITORY_HOME}/org/codehaus/jackson/jackson-core-asl/1.5.3/jackson-core-asl-1.5.3.jar" />

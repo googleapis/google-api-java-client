@@ -14,8 +14,8 @@
 
 package com.google.api.client.googleapis.xml.atom;
 
+import com.google.api.client.http.xml.AbstractXmlHttpContent;
 import com.google.api.client.util.ArrayMap;
-import com.google.api.client.xml.AbstractXmlHttpContent;
 import com.google.api.client.xml.atom.Atom;
 
 import org.xmlpull.v1.XmlSerializer;
@@ -54,7 +54,7 @@ public final class AtomPatchRelativeToOriginalContent extends AbstractXmlHttpCon
 
   @Override
   protected void writeTo(XmlSerializer serializer) throws IOException {
-    ArrayMap<String, Object> patch = GData.computePatch(patchedEntry, originalEntry);
+    ArrayMap<String, Object> patch = GoogleAtom.computePatch(patchedEntry, originalEntry);
     namespaceDictionary.serialize(serializer, Atom.ATOM_NAMESPACE, "entry", patch);
   }
 }
