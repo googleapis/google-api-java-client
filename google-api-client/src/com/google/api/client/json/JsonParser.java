@@ -140,10 +140,8 @@ public abstract class JsonParser {
     if (currentToken == JsonToken.START_OBJECT) {
       currentToken = nextToken();
     }
-    if (currentToken == JsonToken.END_OBJECT) {
-      return;
-    }
-    Preconditions.checkArgument(getCurrentToken() == JsonToken.FIELD_NAME);
+    Preconditions.checkArgument(
+        currentToken == JsonToken.FIELD_NAME || currentToken == JsonToken.END_OBJECT, currentToken);
   }
 
   /**
@@ -334,6 +332,7 @@ public abstract class JsonParser {
   private final void parseMap(
       Map<String, Object> destinationMap, Class<?> valueClass, CustomizeJsonParser customizeParser)
       throws IOException {
+    startParsingObject();
     do {
       String key = getText();
       JsonToken curToken = nextToken();

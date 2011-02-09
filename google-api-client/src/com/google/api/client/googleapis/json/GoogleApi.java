@@ -115,13 +115,9 @@ public final class GoogleApi {
   public HttpRequest buildRequest(String fullyQualifiedMethodName, Object parameters)
       throws IOException {
     // load service method
-    String name = this.name;
-    String version = this.version;
-    HttpTransport transport = this.discoveryTransport;
-    ServiceDefinition serviceDefinition = this.serviceDefinition;
     Preconditions.checkNotNull(name);
     Preconditions.checkNotNull(version);
-    Preconditions.checkNotNull(transport);
+    Preconditions.checkNotNull(discoveryTransport);
     Preconditions.checkNotNull(fullyQualifiedMethodName);
     if (serviceDefinition == null) {
       load();
@@ -129,7 +125,7 @@ public final class GoogleApi {
     ServiceMethod method = serviceDefinition.getResourceMethod(fullyQualifiedMethodName);
     Preconditions.checkNotNull(method, "method not found: %s", fullyQualifiedMethodName);
     // Create request for specified method
-    HttpRequest request = transport.buildRequest();
+    HttpRequest request = discoveryTransport.buildRequest();
     request.method = HttpMethod.valueOf(method.httpMethod);
     request.url = GoogleUrl.create(serviceDefinition.baseUrl, method.pathUrl, parameters);
     return request;
