@@ -18,6 +18,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.Key;
+import com.google.common.collect.ImmutableMap;
 
 import junit.framework.TestCase;
 
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Abstract test case for {@link JsonParser}.
@@ -177,5 +179,19 @@ public abstract class AbstractJsonParserTest extends TestCase {
   public static class Feed {
     @Key
     public Collection<Entry> entries;
+  }
+
+  public static class A {
+    @Key
+    public Map<String, String> map;
+  }
+
+  static final String CONTAINED_MAP = "{\"map\":{\"title\":\"foo\"}}";
+
+  public void testParse() throws IOException {
+    JsonParser parser = newFactory().createJsonParser(CONTAINED_MAP);
+    parser.nextToken();
+    A a = parser.parse(A.class, null);
+    assertEquals(ImmutableMap.of("title", "foo"), a.map);
   }
 }
