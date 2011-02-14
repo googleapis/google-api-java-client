@@ -9,6 +9,8 @@ import com.google.common.base.Preconditions;
 import com.google.gson.stream.JsonReader;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,6 +76,30 @@ public class GsonParser extends JsonParser {
   public float getFloatValue() {
     checkNumber();
     return Float.valueOf(currentText);
+  }
+
+  @Override
+  public BigInteger getBigIntegerValue() {
+    checkNumber();
+    return new BigInteger(currentText);
+  }
+
+  @Override
+  public BigDecimal getDecimalValue() {
+    checkNumber();
+    return new BigDecimal(currentText);
+  }
+
+  @Override
+  public double getDoubleValue() {
+    checkNumber();
+    return Double.valueOf(currentText);
+  }
+
+  @Override
+  public long getLongValue() {
+    checkNumber();
+    return Long.valueOf(currentText);
   }
 
   private void checkNumber() {

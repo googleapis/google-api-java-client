@@ -21,6 +21,8 @@ import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Map;
 
@@ -83,6 +85,18 @@ public abstract class JsonParser {
 
   /** Returns the float value of the current token. */
   public abstract float getFloatValue() throws IOException;
+
+  /** Returns the long value of the current token. */
+  public abstract long getLongValue() throws IOException;
+
+  /** Returns the double value of the current token. */
+  public abstract double getDoubleValue() throws IOException;
+
+  /** Returns the {@link BigInteger} value of the current token. */
+  public abstract BigInteger getBigIntegerValue() throws IOException;
+
+  /** Returns the {@link BigDecimal} value of the current token. */
+  public abstract BigDecimal getDecimalValue() throws IOException;
 
   /**
    * Parse a JSON Object from the given JSON parser (which is closed after parsing completes) into
@@ -403,14 +417,24 @@ public abstract class JsonParser {
         }
         return token == JsonToken.VALUE_TRUE ? Boolean.TRUE : Boolean.FALSE;
       case VALUE_NUMBER_FLOAT:
-        if (fieldClass != null && fieldClass != Float.class && fieldClass != float.class) {
-          throw new IllegalArgumentException(
-              getCurrentName() + ": expected type Float or float but got " + fieldClass
-                  + " for field " + field);
-        }
-        return getFloatValue();
       case VALUE_NUMBER_INT:
-        if (fieldClass == null || fieldClass == Integer.class || fieldClass == int.class) {
+        Preconditions.checkArgument(field == null || field.getAnnotation(JsonString.class) == null);
+        if (fieldClass == null || fieldClass == BigDecimal.class) {
+          return getDecimalValue();
+        }
+        if (fieldClass == BigInteger.class) {
+          return getBigIntegerValue();
+        }
+        if (fieldClass == Double.class || fieldClass == double.class) {
+          return getDoubleValue();
+        }
+        if (fieldClass == Long.class || fieldClass == long.class) {
+          return getLongValue();
+        }
+        if (fieldClass == Float.class || fieldClass == float.class) {
+          return getFloatValue();
+        }
+        if (fieldClass == Integer.class || fieldClass == int.class) {
           return getIntValue();
         }
         if (fieldClass == Short.class || fieldClass == short.class) {
@@ -420,9 +444,11 @@ public abstract class JsonParser {
           return getByteValue();
         }
         throw new IllegalArgumentException(
-            getCurrentName() + ": expected type Integer/int/Short/short/Byte/byte but got "
-                + fieldClass + " for field " + field);
+            getCurrentName() + ": expected numeric type but got " + fieldClass + " for field "
+                + field);
       case VALUE_STRING:
+        Preconditions.checkArgument(field == null || !Number.class.isAssignableFrom(fieldClass)
+            || field.getAnnotation(JsonString.class) != null);
         // TODO: "special" values like Double.POSITIVE_INFINITY?
         try {
           return FieldInfo.parsePrimitiveValue(fieldClass, getText());

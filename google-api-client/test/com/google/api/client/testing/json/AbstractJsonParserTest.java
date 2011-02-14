@@ -16,6 +16,7 @@ package com.google.api.client.testing.json;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
+import com.google.api.client.json.JsonString;
 import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.Key;
 import com.google.common.collect.ImmutableMap;
@@ -23,6 +24,8 @@ import com.google.common.collect.ImmutableMap;
 import junit.framework.TestCase;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -193,5 +196,132 @@ public abstract class AbstractJsonParserTest extends TestCase {
     parser.nextToken();
     A a = parser.parse(A.class, null);
     assertEquals(ImmutableMap.of("title", "foo"), a.map);
+  }
+
+  public static class NumberTypes {
+    @Key
+    byte byteValue;
+    @Key
+    Byte byteObjValue;
+    @Key
+    short shortValue;
+    @Key
+    Short shortObjValue;
+    @Key
+    int intValue;
+    @Key
+    Integer intObjValue;
+    @Key
+    float floatValue;
+    @Key
+    Float floatObjValue;
+    @Key
+    long longValue;
+    @Key
+    Long longObjValue;
+    @Key
+    double doubleValue;
+    @Key
+    Double doubleObjValue;
+    @Key
+    BigInteger bigIntegerValue;
+    @Key
+    BigDecimal bigDecimalValue;
+    @Key("yetAnotherBigDecimalValue")
+    BigDecimal anotherBigDecimalValue;
+  }
+
+  public static class NumberTypesAsString {
+    @Key
+    @JsonString
+    byte byteValue;
+    @Key
+    @JsonString
+    Byte byteObjValue;
+    @Key
+    @JsonString
+    short shortValue;
+    @Key
+    @JsonString
+    Short shortObjValue;
+    @Key
+    @JsonString
+    int intValue;
+    @Key
+    @JsonString
+    Integer intObjValue;
+    @Key
+    @JsonString
+    float floatValue;
+    @Key
+    @JsonString
+    Float floatObjValue;
+    @Key
+    @JsonString
+    long longValue;
+    @Key
+    @JsonString
+    Long longObjValue;
+    @Key
+    @JsonString
+    double doubleValue;
+    @Key
+    @JsonString
+    Double doubleObjValue;
+    @Key
+    @JsonString
+    BigInteger bigIntegerValue;
+    @Key
+    @JsonString
+    BigDecimal bigDecimalValue;
+    @Key("yetAnotherBigDecimalValue")
+    @JsonString
+    BigDecimal anotherBigDecimalValue;
+  }
+
+  static final String NUMBER_TYPES =
+      "{\"bigDecimalValue\":1.0,\"bigIntegerValue\":1,\"byteObjValue\":1,\"byteValue\":1,"
+          + "\"doubleObjValue\":1.0,\"doubleValue\":1.0,\"floatObjValue\":1.0,\"floatValue\":1.0,"
+          + "\"intObjValue\":1,\"intValue\":1,\"longObjValue\":1,\"longValue\":1,"
+          + "\"shortObjValue\":1,\"shortValue\":1,\"yetAnotherBigDecimalValue\":1}";
+
+  static final String NUMBER_TYPES_AS_STRING =
+      "{\"bigDecimalValue\":\"1.0\",\"bigIntegerValue\":\"1\",\"byteObjValue\":\"1\","
+          + "\"byteValue\":\"1\",\"doubleObjValue\":\"1.0\",\"doubleValue\":\"1.0\","
+          + "\"floatObjValue\":\"1.0\",\"floatValue\":\"1.0\",\"intObjValue\":\"1\","
+          + "\"intValue\":\"1\",\"longObjValue\":\"1\",\"longValue\":\"1\",\"shortObjValue\":\"1\","
+          + "\"shortValue\":\"1\",\"yetAnotherBigDecimalValue\":\"1\"}";
+
+  public void testParser_numberTypes() throws IOException {
+    JsonFactory factory = newFactory();
+    JsonParser parser;
+    // number types
+    parser = factory.createJsonParser(NUMBER_TYPES);
+    parser.nextToken();
+    NumberTypes result = parser.parse(NumberTypes.class, null);
+    assertEquals(NUMBER_TYPES, factory.toString(result));
+    // number types as string
+    parser = factory.createJsonParser(NUMBER_TYPES_AS_STRING);
+    parser.nextToken();
+    NumberTypesAsString resultAsString = parser.parse(NumberTypesAsString.class, null);
+    assertEquals(NUMBER_TYPES_AS_STRING, factory.toString(resultAsString));
+    // number types with @JsonString
+    try {
+      parser = factory.createJsonParser(NUMBER_TYPES_AS_STRING);
+      parser.nextToken();
+      parser.parse(NumberTypes.class, null);
+      fail("expected IllegalArgumentException");
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+    // number types as string without @JsonString
+    try {
+      parser = factory.createJsonParser(NUMBER_TYPES);
+      parser.nextToken();
+      parser.parse(NumberTypesAsString.class, null);
+      fail("expected IllegalArgumentException");
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
   }
 }
