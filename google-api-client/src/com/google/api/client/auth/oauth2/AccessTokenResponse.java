@@ -42,8 +42,7 @@ public class AccessTokenResponse extends GenericData {
    * by the authorization server.
    */
   @Key("expires_in")
-  //TODO(yanivi): switch to Long when JSON parser supports it 
-  public Integer expiresIn;
+  public Long expiresIn;
 
   /**
    * (OPTIONAL) The refresh token used to obtain new access tokens. The authorization server SHOULD

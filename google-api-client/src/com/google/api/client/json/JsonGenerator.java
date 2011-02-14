@@ -14,10 +14,12 @@
 
 package com.google.api.client.json;
 
+import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.DataUtil;
 import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
@@ -164,17 +166,24 @@ public abstract class JsonGenerator {
     if (value == null) {
       writeNull();
     }
-    if (value instanceof String || value instanceof Long || value instanceof Double
-        || value instanceof BigInteger || value instanceof BigDecimal) {
-      // TODO: double: what about +- infinity?
-      writeString(value.toString());
-    } else if (value instanceof Boolean) {
-      writeBoolean((Boolean) value);
+    if (value instanceof String) {
+      writeString((String) value);
+    } else if (value instanceof BigDecimal) {
+      writeNumber((BigDecimal) value);
+    } else if (value instanceof BigInteger) {
+      writeNumber((BigInteger) value);
+    } else if (value instanceof Double) {
+      // TODO(yanivi): double: what about +- infinity?
+      writeNumber((Double) value);
+    } else if (value instanceof Long) {
+      writeNumber((Long) value);
+    } else if (value instanceof Float) {
+      // TODO(yanivi): what about +- infinity?
+      writeNumber((Float) value);
     } else if (value instanceof Integer || value instanceof Short || value instanceof Byte) {
       writeNumber(((Number) value).intValue());
-    } else if (value instanceof Float) {
-      // TODO: what about +- infinity?
-      writeNumber((Float) value);
+    } else if (value instanceof Boolean) {
+      writeBoolean((Boolean) value);
     } else if (value instanceof DateTime) {
       writeString(((DateTime) value).toStringRfc3339());
     } else if (value instanceof List<?>) {
@@ -188,10 +197,17 @@ public abstract class JsonGenerator {
       writeEndArray();
     } else {
       writeStartObject();
+      ClassInfo classInfo = ClassInfo.of(value.getClass());
       for (Map.Entry<String, Object> entry : DataUtil.mapOf(value).entrySet()) {
         Object fieldValue = entry.getValue();
         if (fieldValue != null) {
           String fieldName = entry.getKey();
+          if (fieldValue instanceof Number) {
+            Field field = classInfo.getField(fieldName);
+            if (field != null && field.getAnnotation(JsonString.class) != null) {
+              fieldValue = fieldValue.toString();
+            }
+          }
           writeFieldName(fieldName);
           serialize(fieldValue);
         }

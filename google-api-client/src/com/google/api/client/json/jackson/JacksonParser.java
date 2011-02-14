@@ -18,6 +18,8 @@ import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * Low-level JSON serializer implementation based on Jackson.
@@ -89,5 +91,25 @@ final class JacksonParser extends JsonParser {
   @Override
   public short getShortValue() throws IOException {
     return parser.getShortValue();
+  }
+
+  @Override
+  public BigInteger getBigIntegerValue() throws IOException {
+    return parser.getBigIntegerValue();
+  }
+
+  @Override
+  public BigDecimal getDecimalValue() throws IOException {
+    return parser.getDecimalValue();
+  }
+
+  @Override
+  public double getDoubleValue() throws IOException {
+    return parser.getDoubleValue();
+  }
+
+  @Override
+  public long getLongValue() throws IOException {
+    return parser.getLongValue();
   }
 }
