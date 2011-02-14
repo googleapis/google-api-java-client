@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.auth.clientlogin;
 
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.auth.AuthKeyValueParser;
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
@@ -41,6 +42,18 @@ public final class ClientLogin {
    * @since 1.3
    */
   public HttpTransport transport;
+
+  /**
+   * URL for the Client Login authorization server.
+   *
+   * <p>
+   * By default this is {@code "https://www.google.com"}, but it may be overridden for testing
+   * purposes.
+   * </p>
+   *
+   * @since 1.3
+   */
+  public GenericUrl serverUrl = new GenericUrl("https://www.google.com");
 
   @Key("source")
   public String applicationName;
@@ -125,7 +138,9 @@ public final class ClientLogin {
   public Response authenticate() throws HttpResponseException, IOException {
     transport.addParser(AuthKeyValueParser.INSTANCE);
     HttpRequest request = transport.buildPostRequest();
-    request.setUrl("https://www.google.com/accounts/ClientLogin");
+    GenericUrl url = serverUrl.clone();
+    url.appendRawPath("/accounts/ClientLogin");
+    request.url = url;
     UrlEncodedContent content = new UrlEncodedContent();
     content.data = this;
     request.disableContentLogging = true;

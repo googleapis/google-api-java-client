@@ -67,6 +67,7 @@ public class GenericUrl extends GenericData {
    * <p>
    * Use {@link #appendRawPath(String)} to append to the path, which ensures that no extra slash is
    * added.
+   * </p>
    */
   public List<String> pathParts;
 
@@ -130,7 +131,9 @@ public class GenericUrl extends GenericData {
   @Override
   public GenericUrl clone() {
     GenericUrl result = (GenericUrl) super.clone();
-    result.pathParts = new ArrayList<String>(pathParts);
+    if (pathParts != null) {
+      result.pathParts = new ArrayList<String>(pathParts);
+    }
     return result;
   }
 
@@ -146,7 +149,6 @@ public class GenericUrl extends GenericData {
     if (port != -1) {
       buf.append(':').append(port);
     }
-    List<String> pathParts = this.pathParts;
     if (pathParts != null) {
       appendRawPathFromParts(buf);
     }
@@ -247,7 +249,6 @@ public class GenericUrl extends GenericData {
    */
   public void appendRawPath(String encodedPath) {
     if (encodedPath != null && encodedPath.length() != 0) {
-      List<String> pathParts = this.pathParts;
       List<String> appendedPathParts = toPathParts(encodedPath);
       if (pathParts == null || pathParts.isEmpty()) {
         this.pathParts = appendedPathParts;
@@ -291,7 +292,6 @@ public class GenericUrl extends GenericData {
   }
 
   private void appendRawPathFromParts(StringBuilder buf) {
-    List<String> pathParts = this.pathParts;
     int size = pathParts.size();
     for (int i = 0; i < size; i++) {
       String pathPart = pathParts.get(i);

@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -28,7 +26,7 @@ import java.util.List;
 
 /**
  * Tests {@link GenericUrl}.
- * 
+ *
  * @author Yaniv Inbar
  */
 public class GenericUrlTest extends TestCase {
@@ -95,8 +93,7 @@ public class GenericUrlTest extends TestCase {
 
   private static String LONG_PATH = "foo://bar/path/to/resource?a=b";
 
-  private static List<String> LONG_PATH_PARTS =
-      Arrays.asList("", "path", "to", "resource");
+  private static List<String> LONG_PATH_PARTS = Arrays.asList("", "path", "to", "resource");
 
   public void testBuild_longPath() {
     GenericUrl url = new GenericUrl();
@@ -131,15 +128,11 @@ public class GenericUrlTest extends TestCase {
 
   private static String FULL =
       "https://www.google.com:223/m8/feeds/contacts/someone=%23%25&%20%3F%3Co%3E%7B%7D@gmail.com/"
-          + "full?"
-          + "foo=bar&"
-          + "alt=json&"
-          + "max-results=3&"
-          + "prettyprint=true&" + "q=Go%3D%23/%25%26%20?%3Co%3Egle";
+          + "full?" + "foo=bar&" + "alt=json&" + "max-results=3&" + "prettyprint=true&"
+          + "q=Go%3D%23/%25%26%20?%3Co%3Egle";
 
   private static List<String> FULL_PARTS =
-      Arrays.asList("", "m8", "feeds", "contacts",
-          "someone=#%& ?<o>{}@gmail.com", "full");
+      Arrays.asList("", "m8", "feeds", "contacts", "someone=#%& ?<o>{}@gmail.com", "full");
 
   public void testBuild_full() {
     TestUrl url = new TestUrl();
@@ -205,8 +198,7 @@ public class GenericUrlTest extends TestCase {
     }
   }
 
-  private static String FIELD_TYPES =
-      "foo://bar?B=true&D=-3.14&I=-3&b=true&d=-3.14&i=-3&s=a&a=b";
+  private static String FIELD_TYPES = "foo://bar?B=true&D=-3.14&I=-3&b=true&d=-3.14&i=-3&s=a&a=b";
 
   public void testBuild_fieldTypes() {
     FieldTypesUrl url = new FieldTypesUrl();
@@ -239,8 +231,7 @@ public class GenericUrlTest extends TestCase {
     assertEquals("a", url.s);
   }
 
-  private static String FRAGMENT1 =
-      "foo://bar/path/to/resource#fragme=%23/%25&%20?%3Co%3Ent";
+  private static String FRAGMENT1 = "foo://bar/path/to/resource#fragme=%23/%25&%20?%3Co%3Ent";
 
   public void testBuild_fragment1() {
     GenericUrl url = new GenericUrl();
@@ -284,8 +275,7 @@ public class GenericUrlTest extends TestCase {
       "http://www.google.com/m8/feeds/contacts/someone%2Fis%2F@gmail.com/full/";
 
   private static final List<String> PATH_WITH_SLASH_PARTS =
-      Arrays.asList("", "m8", "feeds", "contacts", "someone/is/@gmail.com",
-          "full", "");
+      Arrays.asList("", "m8", "feeds", "contacts", "someone/is/@gmail.com", "full", "");
 
   public void testBuild_pathWithSlash() {
     GenericUrl url = new GenericUrl();
@@ -312,12 +302,10 @@ public class GenericUrlTest extends TestCase {
     subtestToPathParts("path/to/resource", "path", "to", "resource");
     subtestToPathParts("/path/to/resource", "", "path", "to", "resource");
     subtestToPathParts("/path/to/resource/", "", "path", "to", "resource", "");
-    subtestToPathParts("/Go%3D%23%2F%25%26%20?%3Co%3Egle/2nd", "",
-        "Go=#/%& ?<o>gle", "2nd");
+    subtestToPathParts("/Go%3D%23%2F%25%26%20?%3Co%3Egle/2nd", "", "Go=#/%& ?<o>gle", "2nd");
   }
 
-  private void subtestToPathParts(String encodedPath,
-      String... expectedDecodedParts) {
+  private void subtestToPathParts(String encodedPath, String... expectedDecodedParts) {
     List<String> result = GenericUrl.toPathParts(encodedPath);
     if (encodedPath == null) {
       assertNull(result);
@@ -356,8 +344,7 @@ public class GenericUrlTest extends TestCase {
   private static final List<String> REPEATED_PARAM_PATH_PARTS =
       Arrays.asList("", "latitude", "v1", "location");
 
-  private static final String REPEATED_PARAM =
-      PREFIX + REPEATED_PARAM_PATH + "?q=c&q=a&q=b&s=e";
+  private static final String REPEATED_PARAM = PREFIX + REPEATED_PARAM_PATH + "?q=c&q=a&q=b&s=e";
 
   public void testRepeatedParam_build() {
     GenericUrl url = new GenericUrl();
@@ -383,8 +370,7 @@ public class GenericUrlTest extends TestCase {
     assertEquals("a", i.next());
     assertEquals("b", i.next());
     assertFalse(i.hasNext());
-    assertEquals(Arrays.asList("c", "a", "b"), new ArrayList<Object>(url
-        .getAll("q")));
+    assertEquals(Arrays.asList("c", "a", "b"), new ArrayList<Object>(url.getAll("q")));
   }
 
   public void testBuild_noValue() {
@@ -394,5 +380,11 @@ public class GenericUrlTest extends TestCase {
     url.setRawPath(REPEATED_PARAM_PATH);
     url.set("noval", "");
     assertEquals(PREFIX + REPEATED_PARAM_PATH + "?noval", url.build());
+  }
+
+  public void testClone() {
+    GenericUrl url = new GenericUrl("http://www.google.com");
+    GenericUrl clone = url.clone();
+    assertEquals("http://www.google.com", clone.build());
   }
 }
