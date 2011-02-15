@@ -25,5 +25,5 @@
  * @author Yaniv Inbar
  */
 
-package com.google.api.client.appengine;
+package com.google.api.client.extensions.appengine.http.urlfetch;
 

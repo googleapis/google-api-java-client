@@ -27,6 +27,10 @@ public class AllTests extends TestSuite {
     TestSuite result = new TestSuite(AllTests.class.getPackage().getName());
     result.addTestSuite(GoogleUrlTest.class);
     result.addTestSuite(GoogleUtilsTest.class);
+    result.addTest(com.google.api.client.googleapis.auth.oauth2.AllTests.suite());
+    result.addTest(com.google.api.client.googleapis.auth.storage.AllTests.suite());
+    result.addTest(com.google.api.client.googleapis.json.AllTests.suite());
+    result.addTest(com.google.api.client.googleapis.xml.atom.AllTests.suite());
     return result;
   }
 }

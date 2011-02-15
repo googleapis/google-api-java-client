@@ -24,13 +24,8 @@ import junit.framework.TestSuite;
 public class AllTests extends TestSuite {
 
   public static TestSuite suite() {
-    TestSuite result = new TestSuite();
+    TestSuite result = new TestSuite(AllTests.class.getPackage().getName());
     result.addTest(com.google.api.client.auth.oauth.AllTests.suite());
-    result.addTest(com.google.api.client.googleapis.AllTests.suite());
-    result.addTest(com.google.api.client.googleapis.auth.oauth2.AllTests.suite());
-    result.addTest(com.google.api.client.googleapis.auth.storage.AllTests.suite());
-    result.addTest(com.google.api.client.googleapis.json.AllTests.suite());
-    result.addTest(com.google.api.client.googleapis.xml.atom.AllTests.suite());
     result.addTest(com.google.api.client.http.AllTests.suite());
     result.addTest(com.google.api.client.json.gson.AllTests.suite());
     result.addTest(com.google.api.client.json.jackson.AllTests.suite());
