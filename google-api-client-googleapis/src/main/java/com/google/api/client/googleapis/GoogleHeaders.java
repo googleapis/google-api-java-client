@@ -14,9 +14,9 @@
 
 package com.google.api.client.googleapis;
 
-import com.google.api.client.escape.PercentEscaper;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.util.Key;
+import com.google.api.client.util.escape.PercentEscaper;
 
 /**
  * HTTP headers for Google API's.
