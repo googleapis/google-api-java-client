@@ -14,10 +14,10 @@
 
 package com.google.api.client.googleapis;
 
-import com.google.api.client.escape.CharEscapers;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.util.DataUtil;
 import com.google.api.client.util.Key;
+import com.google.api.client.util.escape.CharEscapers;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 

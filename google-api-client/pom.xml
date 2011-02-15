@@ -37,8 +37,6 @@
         </configuration>
       </plugin>
     </plugins>
-    <sourceDirectory>src</sourceDirectory>
-    <testSourceDirectory>test</testSourceDirectory>
   </build>
   <dependencies>
     <dependency>
