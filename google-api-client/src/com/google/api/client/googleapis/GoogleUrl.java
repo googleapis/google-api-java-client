@@ -45,6 +45,27 @@ public class GoogleUrl extends GenericUrl {
   @Key
   public String fields;
 
+  /**
+   * API key as described in the <a href="https://code.google.com/apis/console-help/">Google APIs
+   * Console documentation</a>.
+   *
+   * @since 1.3
+   */
+  @Key
+  public String key;
+
+  /**
+   * User IP used to enforce per-user limits for server-side applications, as described in the <a
+   * href="https://code.google.com/apis/console-help/#EnforceUserLimits">Google APIs Console
+   * documentation</a>.
+   *
+   * @since 1.3
+   */
+  @Key
+  public String userip;
+
+  // TODO(yanivi): what other common Google query parameters are also important to add here?
+
   public GoogleUrl() {
   }
 
