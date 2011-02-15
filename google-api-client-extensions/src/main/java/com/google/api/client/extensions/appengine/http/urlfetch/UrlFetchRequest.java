@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.appengine;
+package com.google.api.client.extensions.appengine.http.urlfetch;
 
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.LowLevelHttpRequest;

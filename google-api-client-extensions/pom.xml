@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.google.api.client</groupId>
+    <artifactId>google-api-client-parent</artifactId>
+    <version>1.3.0-alpha-SNAPSHOT</version>
+    <relativePath>../google-api-java-client-parent/pom.xml</relativePath>
+  </parent>
+  <groupId>com.google.api.client</groupId>
+  <artifactId>google-api-client-extensions</artifactId>
+  <name>Platform extensions to the Google API Client Library for Java.</name>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <links>
+            <link>http://download.oracle.com/docs/cd/E17476_01/javase/1.5.0/docs/api</link>
+            <link>http://code.google.com/appengine/docs/java/javadoc</link>
+          </links>
+          <doctitle>${project.name} ${project.version}</doctitle>
+          <windowtitle>${project.name} ${project.version}</windowtitle>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>com.google.api.client</groupId>
+      <artifactId>google-api-client</artifactId>
+      <version>1.3.0-alpha-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-api-1.0-sdk</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>
