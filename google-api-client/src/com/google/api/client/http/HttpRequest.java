@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 public final class HttpRequest {
 
   /** User agent suffix for all requests. */
-  private static final String USER_AGENT_SUFFIX = "Google-API-Java-Client/1.2.3-alpha";
+  private static final String USER_AGENT_SUFFIX = "Google-API-Java-Client/1.2.4-alpha";
 
   /**
    * HTTP request headers.
