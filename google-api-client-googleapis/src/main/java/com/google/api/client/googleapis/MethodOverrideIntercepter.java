@@ -68,9 +68,6 @@ public class MethodOverrideIntercepter implements HttpExecuteIntercepter {
         request.content = content;
       }
     }
-    if (!HttpTransport.useLowLevelHttpTransport().supportsHead()) {
-      overriddenMethods.add("HEAD");
-    }
   }
 
   private boolean overrideThisMethod(HttpRequest request) {
