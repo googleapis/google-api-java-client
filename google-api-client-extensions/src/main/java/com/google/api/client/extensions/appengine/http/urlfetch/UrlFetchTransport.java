@@ -15,6 +15,7 @@
 package com.google.api.client.extensions.appengine.http.urlfetch;
 
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.appengine.api.urlfetch.FetchOptions;
 
 import java.io.IOException;
@@ -59,27 +60,27 @@ public final class UrlFetchTransport extends HttpTransport {
   }
 
   @Override
-  public UrlFetchRequest buildDeleteRequest(String url) throws IOException {
+  public LowLevelHttpRequest buildDeleteRequest(String url) throws IOException {
     return new UrlFetchRequest(this, "DELETE", url);
   }
 
   @Override
-  public UrlFetchRequest buildGetRequest(String url) throws IOException {
+  public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
     return new UrlFetchRequest(this, "GET", url);
   }
 
   @Override
-  public UrlFetchRequest buildHeadRequest(String url) throws IOException {
+  public LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
     return new UrlFetchRequest(this, "HEAD", url);
   }
 
   @Override
-  public UrlFetchRequest buildPostRequest(String url) throws IOException {
+  public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
     return new UrlFetchRequest(this, "POST", url);
   }
 
   @Override
-  public UrlFetchRequest buildPutRequest(String url) throws IOException {
+  public LowLevelHttpRequest buildPutRequest(String url) throws IOException {
     return new UrlFetchRequest(this, "PUT", url);
   }
 }

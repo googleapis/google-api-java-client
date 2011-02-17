@@ -32,6 +32,7 @@ import java.io.OutputStream;
  * <code>
   static void setContent(HttpRequest request, Object data) {
     JsonHttpContent content = new JsonHttpContent();
+    content.jsonFactory = new JacksonFactory();
     content.data = data;
     request.content = content;
   }
@@ -39,8 +40,8 @@ import java.io.OutputStream;
  * </pre>
  *
  * <p>
- * Upgrade warning: in prior version 1.2 this class was previously in the
- * {@link com.google.api.client.json} package.
+ * Upgrade warning: in prior version 1.2 there was no {@link #jsonFactory} field, but now it is
+ * required.
  * </p>
  *
  * @since 1.0
@@ -56,7 +57,7 @@ public class JsonHttpContent implements HttpContent {
   public Object data;
 
   /**
-   * JSON factory to use.
+   * (Required) JSON factory to use.
    *
    * @since 1.3
    */

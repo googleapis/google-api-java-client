@@ -31,7 +31,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 
 /**
- * GData Atom feed parser when the entry class can be computed from the kind.
+ * GData Atom feed pull parser when the entry class can be computed from the kind.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -40,6 +40,7 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
 
   private final HashMap<String, Class<?>> kindToEntryClassMap = new HashMap<String, Class<?>>();
 
+  /** Sets the entry classes to use when parsing. */
   public void setEntryClasses(Class<?>... entryClasses) {
     int numEntries = entryClasses.length;
     HashMap<String, Class<?>> kindToEntryClassMap = this.kindToEntryClassMap;
@@ -73,9 +74,22 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
     return result;
   }
 
-  public static <T, I> MultiKindFeedParser<T> create(HttpResponse response,
-      XmlNamespaceDictionary namespaceDictionary, Class<T> feedClass, Class<?>... entryClasses)
-      throws XmlPullParserException, IOException {
+  /**
+   * Parses the given HTTP response using the given feed class and entry classes.
+   *
+   * @param <T> feed type
+   * @param <E> entry type
+   * @param response HTTP response
+   * @param namespaceDictionary XML namespace dictionary
+   * @param feedClass feed class
+   * @param entryClasses entry class
+   * @return Atom multi-kind feed pull parser
+   * @throws IOException I/O exception
+   * @throws XmlPullParserException XML pull parser exception
+   */
+  public static <T, E> MultiKindFeedParser<T> create(HttpResponse response,
+      XmlNamespaceDictionary namespaceDictionary, Class<T> feedClass, Class<E>... entryClasses)
+      throws IOException, XmlPullParserException {
     InputStream content = response.getContent();
     try {
       Atom.checkContentType(response.contentType);

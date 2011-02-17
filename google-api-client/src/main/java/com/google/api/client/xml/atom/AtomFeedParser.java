@@ -26,37 +26,53 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Atom feed parser when the item class is known in advance.
+ * Atom feed pull parser when the Atom entry class is known in advance.
  *
+ * @param <T> feed type
+ * @param <E> entry type
  * @since 1.0
  * @author Yaniv Inbar
  */
-public final class AtomFeedParser<T, I> extends AbstractAtomFeedParser<T> {
+public final class AtomFeedParser<T, E> extends AbstractAtomFeedParser<T> {
 
-  public Class<I> entryClass;
+  /** Atom entry class to parse. */
+  public Class<E> entryClass;
 
   @SuppressWarnings("unchecked")
   @Override
-  public I parseNextEntry() throws IOException, XmlPullParserException {
-    return (I) super.parseNextEntry();
+  public E parseNextEntry() throws IOException, XmlPullParserException {
+    return (E) super.parseNextEntry();
   }
 
   @Override
   protected Object parseEntryInternal() throws IOException, XmlPullParserException {
-    I result = ClassInfo.newInstance(this.entryClass);
+    E result = ClassInfo.newInstance(this.entryClass);
     Xml.parseElement(parser, result, namespaceDictionary, null);
     return result;
   }
 
-  public static <T, I> AtomFeedParser<T, I> create(HttpResponse response,
-      XmlNamespaceDictionary namespaceDictionary, Class<T> feedClass, Class<I> entryClass)
-      throws XmlPullParserException, IOException {
+  /**
+   * Parses the given HTTP response using the given feed class and entry class.
+   *
+   * @param <T> feed type
+   * @param <E> entry type
+   * @param response HTTP response
+   * @param namespaceDictionary XML namespace dictionary
+   * @param feedClass feed class
+   * @param entryClass entry class
+   * @return Atom feed parser
+   * @throws IOException I/O exception
+   * @throws XmlPullParserException XML pull parser exception
+   */
+  public static <T, E> AtomFeedParser<T, E> create(HttpResponse response,
+      XmlNamespaceDictionary namespaceDictionary, Class<T> feedClass, Class<E> entryClass)
+      throws IOException, XmlPullParserException {
     InputStream content = response.getContent();
     try {
       Atom.checkContentType(response.contentType);
       XmlPullParser parser = Xml.createParser();
       parser.setInput(content, null);
-      AtomFeedParser<T, I> result = new AtomFeedParser<T, I>();
+      AtomFeedParser<T, E> result = new AtomFeedParser<T, E>();
       result.parser = parser;
       result.inputStream = content;
       result.feedClass = feedClass;

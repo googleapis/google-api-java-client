@@ -34,6 +34,11 @@ public final class JsonMultiKindFeedParser<T> extends AbstractJsonFeedParser<T> 
 
   private final HashMap<String, Class<?>> kindToItemClassMap = new HashMap<String, Class<?>>();
 
+  /**
+   * @param parser JSON parser
+   * @param feedClass feed class
+   * @param itemClasses item classes
+   */
   public JsonMultiKindFeedParser(JsonParser parser, Class<T> feedClass, Class<?>... itemClasses) {
     super(parser, feedClass);
     int numItems = itemClasses.length;
@@ -72,11 +77,17 @@ public final class JsonMultiKindFeedParser<T> extends AbstractJsonFeedParser<T> 
   }
 
   /**
+   * Parses the given HTTP response using the given feed class and item classes.
+   *
    * <p>
    * Upgrade warning: prior to version 1.3, there was no {@code jsonFactory} parameter, but now it
    * is required.
    * </p>
    *
+   * @param jsonFactory JSON factory
+   * @param response HTTP response
+   * @param feedClass feed class
+   * @param itemClasses item classes
    * @since 1.3
    */
   public static <T, I> JsonMultiKindFeedParser<T> use(

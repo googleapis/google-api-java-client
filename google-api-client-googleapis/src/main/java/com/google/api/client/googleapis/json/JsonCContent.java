@@ -31,6 +31,7 @@ import java.io.OutputStream;
  * <code>
   static void setContent(HttpRequest request, Object data) {
     JsonCContent content = new JsonCContent();
+    content.jsonFactory = new JacksonFactory();
     content.data = data;
     request.content = content;
   }

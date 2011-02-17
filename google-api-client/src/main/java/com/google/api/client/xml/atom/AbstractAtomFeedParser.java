@@ -27,22 +27,32 @@ import java.io.InputStream;
 /**
  * Abstract base class for an Atom feed parser when the feed type is known in advance.
  *
+ * @param <T> feed type
  * @since 1.0
  * @author Yaniv Inbar
  */
 public abstract class AbstractAtomFeedParser<T> {
 
   private boolean feedParsed;
+
+  /** XML pull parser to use. */
   public XmlPullParser parser;
+
+  /** Input stream to read. */
   public InputStream inputStream;
+
+  /** Feed class to parse. */
   public Class<T> feedClass;
+
+  /** XML namespace dictionary. */
   public XmlNamespaceDictionary namespaceDictionary;
 
   /**
    * Parse the feed and return a new parsed instance of the feed type. This method can be skipped if
    * all you want are the items.
    *
-   * @throws XmlPullParserException
+   * @throws IOException I/O exception
+   * @throws XmlPullParserException XML pull parser exception
    */
   public T parseFeed() throws IOException, XmlPullParserException {
     boolean close = true;
@@ -61,11 +71,12 @@ public abstract class AbstractAtomFeedParser<T> {
   }
 
   /**
-   * Parse the next item in the feed and return a new parsed instanceof of the item type. If there
-   * is no item to parse, it will return {@code null} and automatically close the parser (in which
-   * case there is no need to call {@link #close()}.
+   * Parse the next item in the feed and return a new parsed instance of the item type. If there is
+   * no item to parse, it will return {@code null} and automatically close the parser (in which case
+   * there is no need to call {@link #close()}.
    *
-   * @throws XmlPullParserException
+   * @throws IOException I/O exception
+   * @throws XmlPullParserException XML pull parser exception
    */
   public Object parseNextEntry() throws IOException, XmlPullParserException {
     XmlPullParser parser = this.parser;
@@ -94,5 +105,12 @@ public abstract class AbstractAtomFeedParser<T> {
     this.inputStream.close();
   }
 
+  /**
+   * Parses a single entry.
+   *
+   * @return object representing the entry
+   * @throws IOException I/O exception
+   * @throws XmlPullParserException XML pull parser exception
+   */
   protected abstract Object parseEntryInternal() throws IOException, XmlPullParserException;
 }

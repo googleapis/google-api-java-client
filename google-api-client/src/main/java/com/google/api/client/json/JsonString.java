@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * <pre>
  * <code>
 class A {
-  @Key BigInteger value;
+  &#64;Key BigInteger value;
 }
  * </code>
  * </pre>
@@ -47,7 +47,7 @@ class A {
  * <pre>
  * <code>
 class B {
-  @Key @JsonString BigInteger value;
+  &#64;Key &#64;JsonString BigInteger value;
 }
  * </code>
  * </pre>
