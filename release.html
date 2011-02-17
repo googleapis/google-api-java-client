@@ -97,9 +97,10 @@ hg update dev
 </pre></li>
     <li>For the following files, replace <code>1.4.0-alpha</code> with <code>1.5.0-alpha</code>:
     <pre>
+pom.xml
 */pom.xml
-google-api-client-parent/jdiff.xml (also change "1.3.0" to "1.4.0")
-google-api-client-parent/release.html (also change "1.4" to "1.5", "1.3.0" to "1.4.0", and "1.3" to "1.4")
+jdiff.xml (also change "1.3.0" to "1.4.0")
+release.html (also change "1.4" to "1.5", "1.3.0" to "1.4.0", and "1.3" to "1.4")
 google-api-client/src/main/java/com/google/api/client/util/Strings.java
 </pre></li>
     <li>Commit and push: <pre>
@@ -110,6 +111,8 @@ hg update default
     <li>Merge dev branch for samples: <pre>
 cd <i>rootDir</i>/google-api-java-client-samples
 hg update default
+hg pull
+hg update
 hg merge -r dev
 hg commit -m "merge with dev branch"
 hg push
@@ -121,7 +124,7 @@ hg push
   OSS Maven Repository Usage Guide</a>):
   <ul>
     <li>Prepare:<pre>
-cd <i>rootDir</i>/google-api-java-client/google-api-client-parent
+cd <i>rootDir</i>/google-api-java-client
 mvn clean deploy
 mvn release:clean
 </pre></li>
@@ -159,7 +162,7 @@ mvn release:clean
     environment: JDIFF_HOME, MAVEN_REPOSITORY_HOME, PROJECT_ROOT_DIR,
     JAVADOC_PROJECT_ROOT_DIR</li>
     <li><pre>
-cd <i>rootDir</i>/google-api-java-client/google-api-client-parent
+cd <i>rootDir</i>/google-api-java-client
 hg update -r 1.4.0-alpha
 mvn clean javadoc:jar install site
 cp -R target/site/apidocs/ <i>rootDir</i>/javadoc/1.4-alpha
@@ -221,8 +224,8 @@ cd ../google-api-java-client
     <li><code>hg update</code></li>
     <li>For the following files, replace <code>1.3.*-alpha</code> with <code>1.4.0-alpha</code>:
     <ul>
-      <li><code>google-api-client-parent/jdiff.xml</code></li>
-      <li><code>google-api-client-parent/release.html</code>
+      <li><code>jdiff.xml</code></li>
+      <li><code>release.html</code>
       <ul>
         <li>before-hand replace 1.4.1 with next minor version, and 1.4.0
         with 1.4.1</li>
