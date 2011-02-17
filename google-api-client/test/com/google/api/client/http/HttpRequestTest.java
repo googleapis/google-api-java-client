@@ -14,9 +14,12 @@
 
 package com.google.api.client.http;
 
-import java.io.IOException;
+import com.google.api.client.testing.http.MockHttpTransport;
 
 import junit.framework.TestCase;
+
+import java.io.IOException;
+import java.util.EnumSet;
 
 /**
  * Tests {@link HttpRequest}.
@@ -25,32 +28,32 @@ import junit.framework.TestCase;
  */
 public class HttpRequestTest extends TestCase {
 
-  private static final String[] BASIC_METHODS = new String[] {"GET", "PUT", "POST", "DELETE"};
-  private static final String[] OTHER_METHODS = new String[] {"HEAD", "PATCH"};
+  private static final EnumSet<HttpMethod> BASIC_METHODS =
+      EnumSet.of(HttpMethod.GET, HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE);
+  private static final EnumSet<HttpMethod> OTHER_METHODS =
+      EnumSet.of(HttpMethod.HEAD, HttpMethod.PATCH);
 
   public HttpRequestTest(String name) {
     super(name);
   }
 
   public void testNotSupportedByDefault() throws IOException {
-    MockLowLevelHttpTransport lowLevelTransport = new MockLowLevelHttpTransport();
-    HttpTransport.setLowLevelHttpTransport(lowLevelTransport);
-    HttpTransport transport = new HttpTransport();
+    MockHttpTransport transport = new MockHttpTransport();
     HttpRequest request = transport.buildHeadRequest();
     request.setUrl("http://www.google.com");
-    for (String method : BASIC_METHODS) {
+    for (HttpMethod method : BASIC_METHODS) {
       request.method = method;
       request.execute();
     }
-    for (String method : OTHER_METHODS) {
-      lowLevelTransport.supportedOptionalMethods.remove(method);
+    for (HttpMethod method : OTHER_METHODS) {
+      transport.supportedOptionalMethods.remove(method);
       request.method = method;
       try {
         request.execute();
         fail("expected IllegalArgumentException");
       } catch (IllegalArgumentException e) {
       }
-      lowLevelTransport.supportedOptionalMethods.add(method);
+      transport.supportedOptionalMethods.add(method);
       request.execute();
     }
   }
