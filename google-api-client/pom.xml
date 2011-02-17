@@ -4,7 +4,7 @@
     <groupId>com.google.api.client</groupId>
     <artifactId>google-api-client-parent</artifactId>
     <version>1.3.1-alpha-SNAPSHOT</version>
-    <relativePath>../google-api-java-client-parent/pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-api-client</artifactId>
   <name>Google API Client Library for Java (Core)</name>
