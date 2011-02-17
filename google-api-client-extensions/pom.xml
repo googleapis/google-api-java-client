@@ -5,7 +5,7 @@
     <groupId>com.google.api.client</groupId>
     <artifactId>google-api-client-parent</artifactId>
     <version>1.4.0-alpha-SNAPSHOT</version>
-    <relativePath>../google-api-java-client-parent/pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <groupId>com.google.api.client</groupId>
   <artifactId>google-api-client-extensions</artifactId>
