@@ -47,10 +47,10 @@
   </developers>
 
   <modules>
-    <module>../google-api-client</module>
-    <module>../google-api-client-assembly</module>
-    <module>../google-api-client-extensions</module>
-    <module>../google-api-client-googleapis</module>
+    <module>google-api-client</module>
+    <module>google-api-client-assembly</module>
+    <module>google-api-client-extensions</module>
+    <module>google-api-client-googleapis</module>
   </modules>
 
   <repositories>
