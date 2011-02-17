@@ -8,7 +8,7 @@
     <relativePath>../google-api-java-client-parent/pom.xml</relativePath>
   </parent>
   <artifactId>google-api-client</artifactId>
-  <name>Google API Client Library for Java</name>
+  <name>Google API Client Library for Java (Core)</name>
   <description>
     Google API Client Library for Java. Functionality that works on all supported Java platforms,
     including Java 5 (or higher) desktop (SE) and web (EE), Android, and Google App Engine.
@@ -29,12 +29,28 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptors>
-            <descriptor>assemble/dist.xml</descriptor>
-          </descriptors>
-        </configuration>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>jar</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>source-jar</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

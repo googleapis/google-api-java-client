@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -10,11 +11,7 @@
   <artifactId>google-api-client-parent</artifactId>
   <version>1.3.0-alpha-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Google API Client - Parent</name>
-
-  <description>
-    Parent POM for the google API client packages.
-  </description>
+  <name>Google API Client Library for Java</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
 
@@ -52,6 +49,7 @@
 
   <modules>
     <module>../google-api-client</module>
+    <module>../google-api-client-assembly</module>
     <module>../google-api-client-extensions</module>
     <module>../google-api-client-googleapis</module>
   </modules>
@@ -69,10 +67,6 @@
     </repository>
   </repositories>
 
-  <!--
-    This is the parent, so only specify dependencyManagement, not direct
-    dependencies.
-  -->
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -120,6 +114,21 @@
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>jsr305</artifactId>
         <version>1.3.9</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api.client</groupId>
+        <artifactId>google-api-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api.client</groupId>
+        <artifactId>google-api-client-extensions</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api.client</groupId>
+        <artifactId>google-api-client-googleapis</artifactId>
+        <version>${project.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -217,6 +226,36 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>aggregate</id>
+            <goals>
+              <goal>aggregate</goal>
+            </goals>
+            <phase>site</phase>
+            <configuration>
+              <groups>
+                <group>
+                  <title>google-api-client</title>
+                  <packages>com.google.api.client.auth*:com.google.api.client.http*:com.google.api.client.json*:com.google.api.client.testing*:com.google.api.client.util*:com.google.api.client.xml*</packages>
+                </group>
+                <group>
+                  <title>google-api-client-googleapis</title>
+                  <packages>com.google.api.client.googleapis*</packages>
+                </group>
+                <group>
+                  <title>google-api-client-extensions</title>
+                  <packages>com.google.api.client.extensions*</packages>
+                </group>
+              </groups>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

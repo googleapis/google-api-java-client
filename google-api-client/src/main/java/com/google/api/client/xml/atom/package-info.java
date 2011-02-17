@@ -13,7 +13,7 @@
  */
 
 /**
- * Atom XML.
+ * Utilities for Atom XML.
  *
  * <p>
  * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or

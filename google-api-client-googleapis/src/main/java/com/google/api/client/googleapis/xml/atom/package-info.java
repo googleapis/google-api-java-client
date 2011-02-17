@@ -13,7 +13,7 @@
  */
 
 /**
- * Google's Atom XML implementation (see detailed package specification).
+ * Utilities for Google's Atom XML implementation (see detailed package specification).
  *
  * <h2>Package Specification</h2>
  *
@@ -185,10 +185,12 @@ public class PicasaUrl extends GoogleUrl {
  * </p>
  *
  * <pre><code>
-  private static GoogleTransport setUpGoogleTransport() throws IOException {
-    GoogleTransport transport = new GoogleTransport();
-    transport.applicationName = "google-picasaatomsample-1.0";
-    transport.setVersionHeader(PicasaWebAlbums.VERSION);
+  private static HttpTransport setUpTransport() throws IOException {
+    HttpTransport result = new NetHttpTransport();
+    GoogleUtils.useMethodOverride(result);
+    GoogleHeaders headers = new GoogleHeaders();
+    headers.setApplicationName("Google-PicasaSample/1.0");
+    headers.gdataVersion = "2";
     AtomParser parser = new AtomParser();
     parser.namespaceDictionary = PicasaWebAlbumsAtom.NAMESPACE_DICTIONARY;
     transport.addParser(parser);
@@ -203,9 +205,9 @@ public class PicasaUrl extends GoogleUrl {
  * </p>
  *
  * <pre><code>
-  public static AlbumFeed executeGet(GoogleTransport transport, PicasaUrl url)
+  public static AlbumFeed executeGet(HttpTransport transport, PicasaUrl url)
       throws IOException {
-    url.fields = GData.getFieldsFor(AlbumFeed.class);
+    url.fields = GoogleAtom.getFieldsFor(AlbumFeed.class);
     url.kinds = "photo";
     url.maxResults = 5;
     HttpRequest request = transport.buildGetRequest();
@@ -242,13 +244,13 @@ public class PicasaUrl extends GoogleUrl {
  * </p>
  *
  * <pre><code>
-  public AlbumEntry executePatchRelativeToOriginal(GoogleTransport transport,
+  public AlbumEntry executePatchRelativeToOriginal(HttpTransport transport,
       AlbumEntry original) throws IOException {
     HttpRequest request = transport.buildPatchRequest();
     request.setUrl(getEditLink());
     request.headers.ifMatch = etag;
-    PatchRelativeToOriginalContent content =
-        new PatchRelativeToOriginalContent();
+    AtomPatchRelativeToOriginalContent content =
+        new AtomPatchRelativeToOriginalContent();
     content.namespaceDictionary = PicasaWebAlbumsAtom.NAMESPACE_DICTIONARY;
     content.originalEntry = original;
     content.patchedEntry = this;
@@ -256,7 +258,7 @@ public class PicasaUrl extends GoogleUrl {
     return request.execute().parseAs(AlbumEntry.class);
   }
 
-  private static AlbumEntry updateTitle(GoogleTransport transport,
+  private static AlbumEntry updateTitle(HttpTransport transport,
       AlbumEntry album) throws IOException {
     AlbumEntry patched = album.clone();
     patched.title = "An alternate title";
@@ -269,7 +271,7 @@ public class PicasaUrl extends GoogleUrl {
  * </p>
  *
  * <pre><code>
-  public AlbumEntry insertAlbum(GoogleTransport transport, AlbumEntry entry)
+  public AlbumEntry insertAlbum(HttpTransport transport, AlbumEntry entry)
       throws IOException {
     HttpRequest request = transport.buildPostRequest();
     request.setUrl(getPostLink());
@@ -287,7 +289,7 @@ public class PicasaUrl extends GoogleUrl {
  * </p>
  *
  * <pre><code>
-  public void executeDelete(GoogleTransport transport) throws IOException {
+  public void executeDelete(HttpTransport transport) throws IOException {
     HttpRequest request = transport.buildDeleteRequest();
     request.setUrl(getEditLink());
     request.headers.ifMatch = etag;
@@ -306,7 +308,6 @@ public class PicasaUrl extends GoogleUrl {
  * that's supported as well. Just call {@link com.google.api.client.http.HttpRequest#execute()} and
  * parse the returned byte stream.
  * </p>
- *
  *
  * <p>
  * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or

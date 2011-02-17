@@ -55,15 +55,25 @@ public final class ClientLogin {
    */
   public GenericUrl serverUrl = new GenericUrl("https://www.google.com");
 
+  /**
+   * Short string identifying your application for logging purposes of the form:
+   * "companyName-applicationName-versionID".
+   */
   @Key("source")
   public String applicationName;
 
+  /**
+   * Name of the Google service you're requesting authorization for, for example {@code "cl"} for
+   * Google Calendar.
+   */
   @Key("service")
   public String authTokenType;
 
+  /** User's full email address. */
   @Key("Email")
   public String username;
 
+  /** User's password. */
   @Key("Passwd")
   public String password;
 
@@ -86,9 +96,11 @@ public final class ClientLogin {
   @Key
   public String accountType;
 
+  /** (optional) Token representing the specific CAPTCHA challenge. */
   @Key("logintoken")
   public String captchaToken;
 
+  /** (optional) String entered by the user as an answer to a CAPTCHA challenge. */
   @Key("logincaptcha")
   public String captchaAnswer;
 

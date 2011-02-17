@@ -17,7 +17,7 @@ package com.google.api.client.googleapis;
 import junit.framework.TestSuite;
 
 /**
- * All tests for {@link com.google.api.client.googleapis}.
+ * All tests for {@code google-api-client-googleapis}.
  *
  * @author Yaniv Inbar
  */

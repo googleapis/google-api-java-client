@@ -32,14 +32,16 @@ import java.io.InputStream;
  * <pre>
  * <code>
   static void setParser(HttpTransport transport) {
-    transport.addParser(new JsonHttpParser());
+    JsonHttpParser parser = new JsonHttpParser();
+    parser.jsonFactory = new JacksonFactory();
+    transport.addParser(parser);
   }
  * </code>
  * </pre>
  *
  * <p>
- * Upgrade warning: in prior version 1.2 this class was previously in the
- * {@link com.google.api.client.json} package.
+ * Upgrade warning: in prior version 1.2 there was no {@link #jsonFactory} field, but now it is
+ * required.
  * </p>
  *
  * @since 1.0
@@ -51,7 +53,7 @@ public class JsonHttpParser implements HttpParser {
   public String contentType = Json.CONTENT_TYPE;
 
   /**
-   * JSON factory to use.
+   * (Required) JSON factory to use.
    *
    * @since 1.3
    */

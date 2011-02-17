@@ -54,6 +54,8 @@ public class GoogleAtom {
   /**
    * Returns the fields mask to use for the given data class of key/value pairs. It cannot be a
    * {@link Map}, {@link GenericData} or a {@link Collection}.
+   *
+   * @param dataClass data class of key/value pairs
    */
   public static String getFieldsFor(Class<?> dataClass) {
     StringBuilder fieldsBuf = new StringBuilder();
@@ -66,6 +68,9 @@ public class GoogleAtom {
    * and for the entry class. This should only be used if the feed class does not contain the entry
    * class as a field. The data classes cannot be a {@link Map}, {@link GenericData} or a
    * {@link Collection}.
+   *
+   * @param feedClass feed data class
+   * @param entryClass entry data class
    */
   public static String getFeedFields(Class<?> feedClass, Class<?> entryClass) {
     StringBuilder fieldsBuf = new StringBuilder();
@@ -143,6 +148,14 @@ public class GoogleAtom {
     }
   }
 
+  /**
+   * Compute the patch object of key/value pairs from the given original and patched objects, adding
+   * a {@code @gd:fields} key for the fields mask.
+   *
+   * @param patched patched object
+   * @param original original object
+   * @return patch object of key/value pairs
+   */
   public static ArrayMap<String, Object> computePatch(Object patched, Object original) {
     FieldsMask fieldsMask = new FieldsMask();
     ArrayMap<String, Object> result = computePatchInternal(fieldsMask, patched, original);

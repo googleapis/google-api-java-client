@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright (c) 2011 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,18 +12,19 @@
  * the License.
  */
 
+package com.google.api.client.extensions.appengine.http.urlfetch;
+
+import junit.framework.TestCase;
+
 /**
- * Google's legacy AuthSub authorization as specified in <a
- * href="http://code.google.com/apis/accounts/docs/AuthSub.html">AuthSub for Web Applications</a>.
+ * Tests {@link UrlFetchTransport}.
  *
- * <p>
- * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
- * possibly entirely removed in a future version of the library</b>
- * </p>
- *
- * @since 1.0
- * @author Yaniv Inbar
+ * @author Tony Aiuto
  */
+public class UrlFetchTransportTest extends TestCase {
 
-package com.google.api.client.googleapis.auth.authsub;
-
+  public void testDeadline() {
+    UrlFetchTransport transport = new UrlFetchTransport();
+    assertEquals(20.0, transport.deadline);
+  }
+}

@@ -164,7 +164,7 @@ mvn release:clean</code></pre></li>
     <li><pre><code>hg update -r 1.3.0-alpha
 mvn clean install
 cd google-api-client
-mvn source:jar javadoc:jar assembly:assembly
+mvn source:jar javadoc:jar assembly:assembly site
 cp -R target/apidocs ../../javadoc/1.3.0-alpha
 cd /tmp
 rm -rf google-api-java-client

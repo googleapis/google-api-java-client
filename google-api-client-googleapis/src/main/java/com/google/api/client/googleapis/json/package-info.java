@@ -13,9 +13,7 @@
  */
 
 /**
- * Google's JSON-C as specified in <a
- * href="http://code.google.com/apis/youtube/2.0/developers_guide_jsonc.html">YouTube Developer's
- * Guide: JSON-C / JavaScript</a> (see detailed package specification).
+ * Google's JSON support (see detailed package specification).
  *
  * <h2>Package Specification</h2>
  *
@@ -31,7 +29,9 @@
  * </p>
  *
  * <p>
- * Let's take a look at a typical partial JSON-C video feed from the YouYube Data API:
+ * Let's take a look at a typical partial JSON-C video feed from the YouTube Data API (as specified
+ * in <a href="http://code.google.com/apis/youtube/2.0/developers_guide_jsonc.html">YouTube
+ * Developer's Guide: JSON-C / JavaScript</a>)
  * </p>
  *
  * <pre><code>
@@ -116,11 +116,15 @@ public class YouTubeUrl extends GoogleUrl {
  * </p>
  *
  * <pre><code>
-  private static GoogleTransport setUpGoogleTransport() throws IOException {
-    GoogleTransport transport = new GoogleTransport();
-    transport.applicationName = "google-youtubejsoncsample-1.0";
-    transport.setVersionHeader(YouTube.VERSION);
-    transport.addParser(new JsonParser());
+  private static HttpTransport setUpTransport() throws IOException {
+    HttpTransport result = new NetHttpTransport();
+    GoogleUtils.useMethodOverride(result);
+    GoogleHeaders headers = new GoogleHeaders();
+    headers.setApplicationName("Google-YouTubeSample/1.0");
+    headers.gdataVersion = "2";
+    JsonCParser parser = new JsonCParser();
+    parser.jsonFactory = new JacksonFactory();
+    transport.addParser(parser);
     // insert authentication code...
     return transport;
   }
@@ -131,7 +135,7 @@ public class YouTubeUrl extends GoogleUrl {
  * </p>
  *
  * <pre><code>
-  public static VideoFeed list(GoogleTransport transport, YouTubeUrl url)
+  public static VideoFeed list(HttpTransport transport, YouTubeUrl url)
       throws IOException {
     HttpRequest request = transport.buildGetRequest();
     request.url = url;
@@ -172,7 +176,6 @@ public class YouTubeUrl extends GoogleUrl {
  * listed for example on <a href="http://json.org">json.org</a>), that's supported as well. Just
  * call {@link com.google.api.client.http.HttpRequest#execute()} and parse the returned byte stream.
  * </p>
- *
  *
  * <p>
  * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or

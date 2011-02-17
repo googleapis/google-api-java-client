@@ -65,5 +65,10 @@ public abstract class AbstractXmlHttpContent implements HttpContent {
     writeTo(serializer);
   }
 
+  /**
+   * Writes the content to the given XML serializer.
+   *
+   * @throws IOException I/O exception
+   */
   protected abstract void writeTo(XmlSerializer serializer) throws IOException;
 }

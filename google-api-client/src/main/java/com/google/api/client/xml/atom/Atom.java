@@ -15,6 +15,7 @@
 package com.google.api.client.xml.atom;
 
 import com.google.api.client.xml.Xml;
+import com.google.common.base.Preconditions;
 
 /**
  * @since 1.0
@@ -22,7 +23,10 @@ import com.google.api.client.xml.Xml;
  */
 public final class Atom {
 
+  /** Atom namespace. */
   public static final String ATOM_NAMESPACE = "http://www.w3.org/2005/Atom";
+
+  /** Atom content type. */
   public static final String CONTENT_TYPE = "application/atom+xml";
 
   static final class StopAtAtomEntry extends Xml.CustomizeParser {
@@ -38,10 +42,13 @@ public final class Atom {
   private Atom() {
   }
 
+  /**
+   * Checks the given content type matches the Atom content type specified in {@link #CONTENT_TYPE}.
+   *
+   * @throws IllegalArgumentException if content type doesn't match
+   */
   public static void checkContentType(String contentType) {
-    if (contentType == null || !contentType.startsWith(CONTENT_TYPE)) {
-      throw new IllegalArgumentException(
-          "Wrong content type: expected <" + CONTENT_TYPE + "> but got <" + contentType + ">");
-    }
+    Preconditions.checkArgument(contentType != null && contentType.startsWith(CONTENT_TYPE),
+        "Wrong content type: expected <" + CONTENT_TYPE + "> but got <%s>", contentType);
   }
 }

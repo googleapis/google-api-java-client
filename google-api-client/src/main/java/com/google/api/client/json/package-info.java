@@ -13,9 +13,9 @@
  */
 
 /**
- * JSON as specified in <a href="http://tools.ietf.org/html/rfc4627">RFC 4627: The application/json
- * Media Type for JavaScript Object Notation (JSON)</a> and <a href="http://json.org/">Introducing
- * JSON</a>.
+ * Utilities for JSON as specified in <a href="http://tools.ietf.org/html/rfc4627">RFC 4627: The
+ * application/json Media Type for JavaScript Object Notation (JSON)</a> and <a
+ * href="http://json.org/">Introducing JSON</a>.
  *
  * <p>
  * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
