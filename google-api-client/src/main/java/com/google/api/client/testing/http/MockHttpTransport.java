@@ -38,12 +38,12 @@ public class MockHttpTransport extends HttpTransport {
       EnumSet.of(HttpMethod.HEAD, HttpMethod.PATCH);
 
   @Override
-  public LowLevelHttpRequest buildDeleteRequest(String url) {
+  public LowLevelHttpRequest buildDeleteRequest(String url) throws IOException {
     return new MockLowLevelHttpRequest();
   }
 
   @Override
-  public LowLevelHttpRequest buildGetRequest(String url) {
+  public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
     return new MockLowLevelHttpRequest();
   }
 
@@ -64,12 +64,12 @@ public class MockHttpTransport extends HttpTransport {
   }
 
   @Override
-  public LowLevelHttpRequest buildPostRequest(String url) {
+  public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
     return new MockLowLevelHttpRequest();
   }
 
   @Override
-  public LowLevelHttpRequest buildPutRequest(String url) {
+  public LowLevelHttpRequest buildPutRequest(String url) throws IOException {
     return new MockLowLevelHttpRequest();
   }
 

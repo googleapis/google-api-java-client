@@ -41,14 +41,14 @@ public abstract class LowLevelHttpRequest {
   /**
    * Sets the HTTP request content.
    *
-   * @throws IOException
+   * @throws IOException I/O exception
    */
   public abstract void setContent(HttpContent content) throws IOException;
 
   /**
    * Executes the request and returns a low-level HTTP response object.
    *
-   * @throws IOException
+   * @throws IOException I/O exception
    */
   public abstract LowLevelHttpResponse execute() throws IOException;
 }

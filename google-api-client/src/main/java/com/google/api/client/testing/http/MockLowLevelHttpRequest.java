@@ -18,6 +18,8 @@ import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 
+import java.io.IOException;
+
 /**
  * Mock for {@link LowLevelHttpRequest}.
  *
@@ -31,11 +33,11 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
   }
 
   @Override
-  public LowLevelHttpResponse execute() {
+  public LowLevelHttpResponse execute() throws IOException {
     return new MockLowLevelHttpResponse();
   }
 
   @Override
-  public void setContent(HttpContent content) {
+  public void setContent(HttpContent content) throws IOException {
   }
 }
