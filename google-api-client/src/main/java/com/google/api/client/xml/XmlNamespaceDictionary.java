@@ -18,7 +18,6 @@ import com.google.api.client.util.DataUtil;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.util.FieldInfo;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
 
 import org.xmlpull.v1.XmlSerializer;
 
@@ -65,12 +64,12 @@ public final class XmlNamespaceDictionary {
   /**
    * Map from XML namespace alias (or {@code ""} for the default namespace) to XML namespace URI.
    */
-  private final HashMap<String, String> namespaceAliasToUriMap = Maps.newHashMap();
+  private final HashMap<String, String> namespaceAliasToUriMap = new HashMap<String, String>();
 
   /**
    * Map from XML namespace URI to XML namespace alias (or {@code ""} for the default namespace).
    */
-  private final HashMap<String, String> namespaceUriToAliasMap = Maps.newHashMap();
+  private final HashMap<String, String> namespaceUriToAliasMap = new HashMap<String, String>();
 
   /**
    * Returns the namespace alias (or {@code ""} for the default namespace) for the given namespace
