@@ -28,7 +28,11 @@ import java.io.InputStream;
  */
 public abstract class LowLevelHttpResponse {
 
-  /** Returns the HTTP response content input stream or {@code null} for none. */
+  /**
+   * Returns the HTTP response content input stream or {@code null} for none.
+   *
+   * @throws IOException I/O exception
+   */
   public abstract InputStream getContent() throws IOException;
 
   /**

@@ -25,11 +25,7 @@ import java.io.OutputStream;
  */
 public interface HttpContent {
 
-  /**
-   * Returns the content length or less than zero if not known.
-   *
-   * @throws IOException
-   */
+  /** Returns the content length or less than zero if not known. */
   long getLength() throws IOException;
 
   /**
@@ -46,10 +42,6 @@ public interface HttpContent {
    */
   String getType();
 
-  /**
-   * Writes the content to the given output stream.
-   *
-   * @throws IOException
-   */
+  /** Writes the content to the given output stream. */
   void writeTo(OutputStream out) throws IOException;
 }
