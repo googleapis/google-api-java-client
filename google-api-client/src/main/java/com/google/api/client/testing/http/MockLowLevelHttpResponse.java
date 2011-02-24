@@ -19,6 +19,7 @@ import com.google.api.client.util.Strings;
 import com.google.common.collect.Lists;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -55,7 +56,7 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   }
 
   @Override
-  public InputStream getContent() {
+  public InputStream getContent() throws IOException {
     return content;
   }
 

@@ -43,7 +43,7 @@ public class MockHttpContent implements HttpContent {
     return encoding;
   }
 
-  public long getLength() {
+  public long getLength() throws IOException {
     return length;
   }
 
