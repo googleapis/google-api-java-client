@@ -237,7 +237,7 @@ public final class XmlNamespaceDictionary {
     computeAliases(element, aliases);
     boolean foundExtra = extraNamespace == null;
     for (String alias : aliases) {
-      String uri = getUriForAlias(alias);
+      String uri = getNamespaceUriForAliasHandlingUnknown(errorOnUnknown, alias);
       serializer.setPrefix(alias, uri);
       if (!foundExtra && uri.equals(extraNamespace)) {
         foundExtra = true;
@@ -280,6 +280,33 @@ public final class XmlNamespaceDictionary {
     }
   }
 
+  /**
+   * Returns the namespace URI to use for serialization for a given namespace alias, possibly using
+   * a predictable made-up namespace URI if the alias is not recognized.
+   *
+   * <p>
+   * Specifically, if the namespace alias is not recognized, the namespace URI returned will be
+   * {@code "http://unknown/"} plus the alias, unless {@code errorOnUnknown} is {@code true} in
+   * which case it will throw an {@link IllegalArgumentException}.
+   * </p>
+   *
+   * @param errorOnUnknown whether to thrown an exception if the namespace alias is not recognized
+   * @param alias namespace alias
+   * @return namespace URI, using a predictable made-up namespace URI if the namespace alias is not
+   *         recognized
+   * @throws IllegalArgumentException if the namespace alias is not recognized and {@code
+   *         errorOnUnkown} is {@code true}
+   */
+  String getNamespaceUriForAliasHandlingUnknown(boolean errorOnUnknown, String alias) {
+    String result = getUriForAlias(alias);
+    if (result == null) {
+      Preconditions.checkArgument(
+          !errorOnUnknown, "unrecognized alias: %s", alias.length() == 0 ? "(default)" : alias);
+      return "http://unknown/" + alias;
+    }
+    return result;
+  }
+
   class ElementSerializer {
     private final boolean errorOnUnknown;
     Object textValue = null;
@@ -312,18 +339,6 @@ public final class XmlNamespaceDictionary {
       }
     }
 
-    String getNamespaceUriForAliasHandlingUnknown(String alias) {
-      String result = getUriForAlias(alias);
-      if (result == null) {
-        if (errorOnUnknown) {
-          throw new IllegalArgumentException(
-              "unrecognized alias: " + (alias.length() == 0 ? "(default)" : alias));
-        }
-        return "http://unknown/" + alias;
-      }
-      return result;
-    }
-
     void serialize(XmlSerializer serializer, String elementName) throws IOException {
       String elementLocalName = null;
       String elementNamespaceUri = null;
@@ -331,10 +346,7 @@ public final class XmlNamespaceDictionary {
         int colon = elementName.indexOf(':');
         elementLocalName = elementName.substring(colon + 1);
         String alias = colon == -1 ? "" : elementName.substring(0, colon);
-        elementNamespaceUri = getNamespaceUriForAliasHandlingUnknown(alias);
-        if (elementNamespaceUri == null) {
-          elementNamespaceUri = "http://unknown/" + alias;
-        }
+        elementNamespaceUri = getNamespaceUriForAliasHandlingUnknown(errorOnUnknown, alias);
       }
       serialize(serializer, elementNamespaceUri, elementLocalName);
     }
@@ -358,7 +370,7 @@ public final class XmlNamespaceDictionary {
         int colon = attributeName.indexOf(':');
         String attributeLocalName = attributeName.substring(colon + 1);
         String attributeNamespaceUri = colon == -1 ? null : getNamespaceUriForAliasHandlingUnknown(
-            attributeName.substring(0, colon));
+            errorOnUnknown, attributeName.substring(0, colon));
         serializer.attribute(
             attributeNamespaceUri, attributeLocalName, toSerializedValue(attributeValues.get(i)));
       }
