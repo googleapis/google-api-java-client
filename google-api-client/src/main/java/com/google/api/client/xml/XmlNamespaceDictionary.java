@@ -52,10 +52,6 @@ import java.util.TreeSet;
       .add("thr", "http://purl.org/syndication/thread/1.0");
  *}</pre>
  *
- * <p>
- * Upgrade warning: in prior version 1.2 there was a field {@code namespaceAliasToUriMap}, which has
- * now been made inaccessible.
- *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -111,18 +107,6 @@ public final class XmlNamespaceDictionary {
    */
   public synchronized Map<String, String> getUriToAliasMap() {
     return Collections.unmodifiableMap(namespaceUriToAliasMap);
-  }
-
-  /**
-   * Adds a known namespace of the given alias and URI.
-   *
-   * @param alias alias
-   * @param uri namespace URI
-   * @deprecated use {@link #set(String, String)} (scheduled to be removed in 1.4)
-   */
-  @Deprecated
-  public void addNamespace(String alias, String uri) {
-    set(alias, uri);
   }
 
   /**

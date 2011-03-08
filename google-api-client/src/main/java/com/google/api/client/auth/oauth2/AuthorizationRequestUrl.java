@@ -86,10 +86,6 @@ public class AuthorizationRequestUrl extends GenericUrl {
    * <p>
    * By default, the response type is {@code "code"}, but this may be overridden.
    * </p>
-   * <p>
-   * Upgrade warning: in prior version 1.2 of the library, the default value was {@code null}. It is
-   * now {@code "code"}.
-   * </p>
    */
   @Key("response_type")
   public String responseType = "code";

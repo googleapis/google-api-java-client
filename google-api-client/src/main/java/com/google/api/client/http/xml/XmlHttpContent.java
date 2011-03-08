@@ -36,11 +36,6 @@ import java.io.IOException;
  * </code>
  * </pre>
  *
- * <p>
- * Upgrade warning: in prior version 1.2 this class was previously in the
- * {@link com.google.api.client.xml} package.
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  */

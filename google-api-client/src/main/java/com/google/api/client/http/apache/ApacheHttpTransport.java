@@ -69,19 +69,6 @@ public final class ApacheHttpTransport extends HttpTransport {
   public final HttpClient httpClient;
 
   /**
-   * Singleton instance of this transport.
-   * <p>
-   * Sample usage:
-   *
-   * <pre><code>HttpTransport.setLowLevelHttpTransport(ApacheHttpTransport.INSTANCE);</code></pre>
-   * </p>
-   *
-   * @deprecated (scheduled to be removed in 1.4) Use {@link #ApacheHttpTransport()}
-   */
-  @Deprecated
-  public static final ApacheHttpTransport INSTANCE = new ApacheHttpTransport();
-
-  /**
    * @since 1.3
    */
   public ApacheHttpTransport() {

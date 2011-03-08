@@ -54,11 +54,6 @@ public final class JsonFeedParser<T, I> extends AbstractJsonFeedParser<T> {
   /**
    * Parses the given HTTP response using the given feed class and item class.
    *
-   * <p>
-   * Upgrade warning: prior to version 1.3, there was no {@code jsonFactory} parameter, but now it
-   * is required.
-   * </p>
-   *
    * @param jsonFactory JSON factory
    * @param response HTTP response
    * @param feedClass feed class

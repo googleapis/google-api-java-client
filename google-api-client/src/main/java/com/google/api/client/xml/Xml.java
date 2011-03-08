@@ -32,11 +32,6 @@ import java.util.Map;
 /**
  * XML utilities.
  *
- * <p>
- * Upgrade warning: in prior version 1.2, there was a global static field {@code parserFactory},
- * which is now removed.
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  */
