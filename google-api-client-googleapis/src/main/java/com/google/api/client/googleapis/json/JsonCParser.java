@@ -56,10 +56,6 @@ public final class JsonCParser extends JsonHttpParser {
    * The parser will be closed if any throwable is thrown. The current token will be the value of
    * the {@code "data"} key.
    * </p>
-   * <p>
-   * Upgrade warning: prior to version 1.3, there was no {@code jsonFactory} parameter, but now it
-   * is required.
-   * </p>
    *
    * @param response HTTP response
    * @return JSON parser

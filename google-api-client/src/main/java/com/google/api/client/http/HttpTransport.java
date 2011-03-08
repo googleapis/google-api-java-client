@@ -64,14 +64,6 @@ import java.util.logging.Logger;
  * Note that this class is not thread safe. The recommended practice for multi-threaded applications
  * is to store the HTTP transport in a {@link ThreadLocal}.
  * </p>
- * <p>
- * Upgrade warning: prior to version 1.3, there were methods to set and use the low-level HTTP
- * transport, and this class was not abstract. This caused problems for users of the library that
- * use it on a package-by-package basis and got exceptions at runtime. It also meant that the
- * behavior of library could change when there is a change in the classpath, which is unintuitive.
- * Therefore, now this class is abstract, and the actual concrete implementation must be chosen
- * explicitly.
- * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar

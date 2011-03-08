@@ -28,14 +28,6 @@ import java.net.HttpURLConnection;
 public final class NetHttpTransport extends HttpTransport {
 
   /**
-   * Singleton instance of this transport.
-   *
-   * @deprecated (scheduled to be removed in 1.4) Use {@link #NetHttpTransport()}
-   */
-  @Deprecated
-  public static final NetHttpTransport INSTANCE = new NetHttpTransport();
-
-  /**
    * Sets the connection timeout to a specified timeout in milliseconds by calling
    * {@link HttpURLConnection#setConnectTimeout(int)}, or a negative value avoid calling that
    * method. By default it is 20 seconds.

@@ -30,6 +30,7 @@ public class AuthorizationResponseTest extends TestCase {
   }
 
   public void test() {
+    new AuthorizationResponse("http://example.com");
     AuthorizationResponse response =
         new AuthorizationResponse("https://client.example.com/cb?code=i1WsRn1uB1");
     assertEquals("i1WsRn1uB1", response.code);

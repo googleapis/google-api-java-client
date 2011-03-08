@@ -47,11 +47,6 @@ public final class GoogleOAuthGetAccessToken extends OAuthGetAccessToken {
   /**
    * Revokes the long-lived access token.
    *
-   * <p>
-   * Upgrade warning: prior to version 1.3, there was no {@code transport} parameter, but now it is
-   * required.
-   * </p>
-   *
    * @param parameters OAuth parameters
    * @throws IOException I/O exception
    * @since 1.3

@@ -41,14 +41,6 @@ import java.net.HttpURLConnection;
 public final class UrlFetchTransport extends HttpTransport {
 
   /**
-   * Singleton instance of this transport.
-   *
-   * @deprecated (scheduled to be removed in 1.4) Use {@link #UrlFetchTransport()}
-   */
-  @Deprecated
-  public static volatile UrlFetchTransport INSTANCE = new UrlFetchTransport();
-
-  /**
    * Sets the deadline in seconds or {@code null} for no deadline using
    * {@link FetchOptions#setDeadline(Double)}. By default it is 20 seconds.
    */

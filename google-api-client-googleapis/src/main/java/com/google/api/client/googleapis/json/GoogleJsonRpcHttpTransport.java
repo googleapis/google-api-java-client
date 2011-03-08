@@ -36,10 +36,6 @@ import java.util.List;
  * Warning: this is based on an undocumented experimental Google functionality that may stop working
  * or change in behavior at any time. Beware of this risk if running this in production code.
  * </p>
- * <p>
- * Warning: in prior version 1.2 of this library this was called {@code
- * com.google.api.client.json.rpc2.GoogleJsonRpcHttpTransport}.
- * </p>
  *
  * @since 1.3
  * @author Yaniv Inbar

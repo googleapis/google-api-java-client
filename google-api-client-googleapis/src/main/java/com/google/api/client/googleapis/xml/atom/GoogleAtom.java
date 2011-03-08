@@ -28,10 +28,6 @@ import java.util.TreeSet;
 /**
  * Utilities for working with the Atom XML of Google Data API's.
  *
- * <p>
- * Upgrade warning: in prior version 1.2 this class was called {@code GData}.
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -39,10 +35,6 @@ public class GoogleAtom {
 
   /**
    * GData namespace.
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.2 this constant was declared in {@code GDataHttp}.
-   * </p>
    *
    * @since 1.0
    */

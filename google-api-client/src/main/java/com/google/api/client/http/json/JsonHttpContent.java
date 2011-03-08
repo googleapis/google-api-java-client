@@ -39,11 +39,6 @@ import java.io.OutputStream;
  * </code>
  * </pre>
  *
- * <p>
- * Upgrade warning: in prior version 1.2 there was no {@link #jsonFactory} field, but now it is
- * required.
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  */

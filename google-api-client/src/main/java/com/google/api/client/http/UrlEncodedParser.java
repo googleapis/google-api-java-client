@@ -98,11 +98,6 @@ public final class UrlEncodedParser implements HttpParser {
    * either as a string, or as a {@link ArrayList}&lt;String&gt; in the case of repeated parameters.
    * </p>
    *
-   * <p>
-   * Upgrade warning: in prior version 1.2 of the library, if {@code content} was {@code null}, it
-   * threw a {@link NullPointerException}, but now it simply does nothing and returns normally.
-   * </p>
-   *
    * @param content URL-encoded content or {@code null} to ignore content
    * @param data data key name/value pairs
    */

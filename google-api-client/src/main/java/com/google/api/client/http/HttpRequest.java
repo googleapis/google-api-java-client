@@ -61,9 +61,6 @@ public final class HttpRequest {
 
   /**
    * HTTP request method.
-   * <p>
-   * <b>Upgrade warning:</b> prior to version 1.3 of the library, this was a string.
-   * </p>
    *
    * @since 1.3
    */

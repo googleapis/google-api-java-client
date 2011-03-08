@@ -39,11 +39,6 @@ import java.io.InputStream;
  * </code>
  * </pre>
  *
- * <p>
- * Upgrade warning: in prior version 1.2 there was no {@link #jsonFactory} field, but now it is
- * required.
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -73,10 +68,6 @@ public class JsonHttpParser implements HttpParser {
    * The response content will be closed if any throwable is thrown. On success, the current token
    * will be the first top token, which is normally {@link JsonToken#START_ARRAY} or
    * {@link JsonToken#START_OBJECT}.
-   * </p>
-   * <p>
-   * Upgrade warning: prior to version 1.3, there was no {@code jsonFactory} parameter, but now it
-   * is required.
    * </p>
    *
    * @param jsonFactory JSON factory to use
