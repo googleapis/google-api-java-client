@@ -105,4 +105,8 @@ public final class UrlEncodedContent implements HttpContent {
     }
     return first;
   }
+
+  public boolean retrySupported() {
+    return true;
+  }
 }

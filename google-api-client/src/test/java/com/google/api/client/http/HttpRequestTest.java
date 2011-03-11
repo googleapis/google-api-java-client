@@ -15,7 +15,10 @@
 package com.google.api.client.http;
 
 import com.google.api.client.testing.http.MockHttpTransport;
+import com.google.api.client.testing.http.MockLowLevelHttpRequest;
+import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import java.io.IOException;
@@ -56,5 +59,68 @@ public class HttpRequestTest extends TestCase {
       transport.supportedOptionalMethods.add(method);
       request.execute();
     }
+  }
+
+  static private class FailThenSuccessTransport extends MockHttpTransport {
+
+    public int lowLevelExecCalls = 0;
+
+    public LowLevelHttpRequest retryableGetRequest = new MockLowLevelHttpRequest() {
+
+      @Override
+      public LowLevelHttpResponse execute() {
+        lowLevelExecCalls++;
+
+        if (lowLevelExecCalls == 1) {
+          // Return failure on the first call
+          MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+          response.setContent("INVALID TOKEN");
+          response.statusCode = 401;
+          return response;
+        }
+        // Return success on the second
+        MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+        response.setContent("{\"data\":{\"foo\":{\"v1\":{}}}}");
+        response.statusCode = 200;
+        return response;
+      }
+    };
+
+    protected FailThenSuccessTransport() {
+    }
+
+    @Override
+    public LowLevelHttpRequest buildGetRequest(String url) {
+      return retryableGetRequest;
+    }
+  }
+
+  static private class TrackInvocationHandler implements HttpUnsuccessfulResponseHandler {
+    public boolean isCalled = false;
+
+    public TrackInvocationHandler() {
+    }
+
+    @SuppressWarnings("unused")
+    public boolean handleResponse(
+        HttpRequest request, HttpResponse response, boolean retrySupported) throws IOException {
+      isCalled = true;
+      return true;
+    }
+  }
+
+  public void testAbnormalResponseHandler() throws IOException {
+
+    FailThenSuccessTransport fakeTransport = new FailThenSuccessTransport();
+    TrackInvocationHandler handler = new TrackInvocationHandler();
+    fakeTransport.responseHandlers.add(handler);
+
+    HttpRequest req = fakeTransport.buildGetRequest();
+    req.url = new GenericUrl("http://not/used");
+    HttpResponse resp = req.execute();
+
+    Assert.assertEquals(200, resp.statusCode);
+    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
+    Assert.assertTrue(handler.isCalled);
   }
 }
