@@ -76,4 +76,8 @@ public class JsonHttpContent implements HttpContent {
     generator.serialize(data);
     generator.flush();
   }
+
+  public boolean retrySupported() {
+    return true;
+  }
 }
