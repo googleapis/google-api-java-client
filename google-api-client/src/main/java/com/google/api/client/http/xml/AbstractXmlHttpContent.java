@@ -59,6 +59,10 @@ public abstract class AbstractXmlHttpContent implements HttpContent {
     serializer.setOutput(out, "UTF-8");
     writeTo(serializer);
   }
+  
+  public boolean retrySupported() {
+    return true;
+  }
 
   /**
    * Writes the content to the given XML serializer.

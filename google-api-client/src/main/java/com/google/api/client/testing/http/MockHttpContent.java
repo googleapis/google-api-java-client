@@ -54,4 +54,8 @@ public class MockHttpContent implements HttpContent {
   public void writeTo(OutputStream out) throws IOException {
     out.write(content);
   }
+  
+  public boolean retrySupported() {
+    return true;
+  }
 }

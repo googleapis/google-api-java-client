@@ -54,4 +54,8 @@ final class GZipContent implements HttpContent {
   public String getType() {
     return contentType;
   }
+
+  public boolean retrySupported() {
+    return httpContent.retrySupported();
+  }
 }
