@@ -32,12 +32,11 @@ import com.google.api.client.util.Key;
  * <pre>
  * <code>
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    AuthorizationRequestUrl result = new AuthorizationRequestUrl(BASE_AUTHORIZATION_URL);
-    AuthorizationRequestUrl.ResponseType.CODE.set(result);
-    result.clientId = CLIENT_ID;
-    result.redirectUri = REDIRECT_URL;
-    result.scope = SCOPE;
-    response.sendRedirect(result.build());
+    AuthorizationRequestUrl builder =
+        new AuthorizationRequestUrl(BASE_AUTHORIZATION_URL, CLIENT_ID);
+    builder.redirectUri = REDIRECT_URL;
+    builder.scope = SCOPE;
+    response.sendRedirect(builder.build());
     return;
   }
  * </code>
@@ -125,5 +124,15 @@ public class AuthorizationRequestUrl extends GenericUrl {
    */
   public AuthorizationRequestUrl(String encodedAuthorizationServerUrl) {
     super(encodedAuthorizationServerUrl);
+  }
+
+  /**
+   * @param encodedAuthorizationServerUrl encoded authorization server URL
+   * @param clientId client identifier
+   * @since 1.4
+   */
+  public AuthorizationRequestUrl(String encodedAuthorizationServerUrl, String clientId) {
+    this(encodedAuthorizationServerUrl);
+    this.clientId = clientId;
   }
 }
