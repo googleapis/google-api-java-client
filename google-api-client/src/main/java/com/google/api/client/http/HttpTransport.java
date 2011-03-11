@@ -88,6 +88,15 @@ public abstract class HttpTransport {
   public List<HttpExecuteIntercepter> intercepters = new ArrayList<HttpExecuteIntercepter>(1);
 
   /**
+   * HTTP unsuccessful (non-2XX) response handlers. The handlers will all be run in order and if any
+   * of the interceptors requests a supported retry, the request will be retried.
+   *
+   * @since 1.4
+   */
+  public List<HttpUnsuccessfulResponseHandler> responseHandlers =
+      new ArrayList<HttpUnsuccessfulResponseHandler>(1);
+
+  /**
    * Adds an HTTP response content parser.
    * <p>
    * If there is already a previous parser defined for this new parser (as defined by
