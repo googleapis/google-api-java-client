@@ -25,7 +25,7 @@ import junit.framework.TestSuite;
 public class AllTests extends TestSuite {
 
   public static TestSuite suite() {
-    TestSuite result = new TestSuite(AllTests.class.getPackage().getName());
+    TestSuite result = new TestSuite(AllTests.class.getName());
     result.addTest(com.google.api.client.extensions.appengine.http.urlfetch.AllTests.suite());
     return result;
   }

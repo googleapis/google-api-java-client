@@ -42,10 +42,9 @@ import java.io.IOException;
  * <code>
   static void requestAccessToken() throws IOException {
     try {
-      AccessTokenRequest request = new AccessTokenRequest();
-      request.authorizationServerUrl = BASE_AUTHORIZATION_URL;
-      request.clientId = CLIENT_ID;
-      request.clientSecret = CLIENT_SECRET;
+      AccessTokenRequest request =
+          new AccessTokenRequest(new NetHttpTransport(), new JacksonFactory(),
+              "https://server.example.com/authorize", "s6BhdRkqt3", "gX1fBat3bV");
       AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
       System.out.println("Access token: " + response.accessToken);
     } catch (HttpResponseException e) {
@@ -71,14 +70,15 @@ public class AccessTokenRequest extends GenericData {
    *
    * <pre>
    * <code>
-    static void requestAccessToken(String code, String redirectUrl) throws IOException {
+    static void requestAccessToken() throws IOException {
       try {
-        AuthorizationCodeGrant request = new AuthorizationCodeGrant();
-        request.authorizationServerUrl = BASE_AUTHORIZATION_URL;
-        request.clientId = CLIENT_ID;
-        request.clientSecret = CLIENT_SECRET;
-        request.code = code;
-        request.redirectUri = redirectUrl;
+        AuthorizationCodeGrant request = new AuthorizationCodeGrant(new NetHttpTransport(),
+            new JacksonFactory(),
+            "https://server.example.com/authorize",
+            "s6BhdRkqt3",
+            "gX1fBat3bV",
+            "i1WsRn1uB1",
+            "https://client.example.com/cb");
         AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
         System.out.println("Access token: " + response.accessToken);
       } catch (HttpResponseException e) {
@@ -92,9 +92,7 @@ public class AccessTokenRequest extends GenericData {
    */
   public static class AuthorizationCodeGrant extends AccessTokenRequest {
 
-    /**
-     * (REQUIRED) The authorization code received from the authorization server.
-     */
+    /** (REQUIRED) The authorization code received from the authorization server. */
     @Key
     public String code;
 
@@ -102,8 +100,33 @@ public class AccessTokenRequest extends GenericData {
     @Key("redirect_uri")
     public String redirectUri;
 
-    public AuthorizationCodeGrant() {
+    {
       grantType = "authorization_code";
+    }
+
+    public AuthorizationCodeGrant() {
+    }
+
+    /**
+     * @param transport HTTP transport for executing request in {@link #execute()}
+     * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
+     * @param authorizationServerUrl encoded authorization server URL
+     * @param clientId client identifier
+     * @param clientSecret client secret
+     * @param code authorization code received from the authorization server
+     * @param redirectUri redirection URI used in the initial request
+     * @since 1.4
+     */
+    public AuthorizationCodeGrant(HttpTransport transport,
+        JsonFactory jsonFactory,
+        String authorizationServerUrl,
+        String clientId,
+        String clientSecret,
+        String code,
+        String redirectUri) {
+      super(transport, jsonFactory, authorizationServerUrl, clientId, clientSecret);
+      this.code = code;
+      this.redirectUri = redirectUri;
     }
   }
 
@@ -117,14 +140,16 @@ public class AccessTokenRequest extends GenericData {
    *
    * <pre>
    * <code>
-    static void requestAccessToken(String code, String redirectUrl) throws IOException {
+    static void requestAccessToken() throws IOException {
       try {
-        ResourceOwnerPasswordCredentialsGrant request = new ResourceOwnerPasswordCredentialsGrant();
-        request.authorizationServerUrl = BASE_AUTHORIZATION_URL;
-        request.clientId = CLIENT_ID;
-        request.clientSecret = CLIENT_SECRET;
-        request.username = username;
-        request.password = password;
+        ResourceOwnerPasswordCredentialsGrant request =
+            new ResourceOwnerPasswordCredentialsGrant(new NetHttpTransport(),
+                new JacksonFactory(),
+                "https://server.example.com/authorize",
+                "s6BhdRkqt3",
+                "gX1fBat3bV",
+                "johndoe",
+                "A3ddj3w");
         AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
         System.out.println("Access token: " + response.accessToken);
       } catch (HttpResponseException e) {
@@ -145,8 +170,33 @@ public class AccessTokenRequest extends GenericData {
     /** (REQUIRED) The resource owner's password. */
     public String password;
 
-    public ResourceOwnerPasswordCredentialsGrant() {
+    {
       grantType = "password";
+    }
+
+    public ResourceOwnerPasswordCredentialsGrant() {
+    }
+
+    /**
+     * @param transport HTTP transport for executing request in {@link #execute()}
+     * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
+     * @param authorizationServerUrl encoded authorization server URL
+     * @param clientId client identifier
+     * @param clientSecret client secret
+     * @param username resource owner's username
+     * @param password resource owner's password
+     * @since 1.4
+     */
+    public ResourceOwnerPasswordCredentialsGrant(HttpTransport transport,
+        JsonFactory jsonFactory,
+        String authorizationServerUrl,
+        String clientId,
+        String clientSecret,
+        String username,
+        String password) {
+      super(transport, jsonFactory, authorizationServerUrl, clientId, clientSecret);
+      this.username = username;
+      this.password = password;
     }
   }
 
@@ -158,14 +208,14 @@ public class AccessTokenRequest extends GenericData {
    *
    * <pre>
    * <code>
-    static void requestAccessToken(String assertion) throws IOException {
+    static void requestAccessToken() throws IOException {
       try {
-        AssertionGrant request = new AssertionGrant();
-        request.authorizationServerUrl = BASE_AUTHORIZATION_URL;
-        request.clientId = CLIENT_ID;
-        request.clientSecret = CLIENT_SECRET;
-        request.assertionType = ASSERTION_TYPE;
-        request.assertion = assertion;
+        AssertionGrant request = new AssertionGrant(new NetHttpTransport(),
+            new JacksonFactory(),
+            "https://server.example.com/authorize",
+            "gX1fBat3bV",
+            "urn:oasis:names:tc:SAML:2.0:",
+            "PHNhbWxwOl...[omitted for brevity]...ZT4=");
         AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
         System.out.println("Access token: " + response.accessToken);
       } catch (HttpResponseException e) {
@@ -190,8 +240,32 @@ public class AccessTokenRequest extends GenericData {
     @Key
     public String assertion;
 
-    public AssertionGrant() {
+    {
       grantType = "assertion";
+    }
+
+    public AssertionGrant() {
+    }
+
+    /**
+     * @param transport HTTP transport for executing request in {@link #execute()}
+     * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
+     * @param authorizationServerUrl encoded authorization server URL
+     * @param clientSecret client secret
+     * @param assertionType format of the assertion as defined by the authorization server. The
+     *        value MUST be an absolute URI
+     * @param assertion assertion
+     * @since 1.4
+     */
+    public AssertionGrant(HttpTransport transport,
+        JsonFactory jsonFactory,
+        String authorizationServerUrl,
+        String clientSecret,
+        String assertionType,
+        String assertion) {
+      super(transport, jsonFactory, authorizationServerUrl, clientSecret);
+      this.assertionType = assertionType;
+      this.assertion = assertion;
     }
   }
 
@@ -203,13 +277,14 @@ public class AccessTokenRequest extends GenericData {
    *
    * <pre>
    * <code>
-    static void requestAccessToken(String refreshToken) throws IOException {
+    static void requestAccessToken() throws IOException {
       try {
-        RefreshTokenGrant request = new RefreshTokenGrant();
-        request.authorizationServerUrl = BASE_AUTHORIZATION_URL;
-        request.clientId = CLIENT_ID;
-        request.clientSecret = CLIENT_SECRET;
-        request.refreshToken = refreshToken;
+        RefreshTokenGrant request = new RefreshTokenGrant(new NetHttpTransport(),
+            new JacksonFactory(),
+            "https://server.example.com/authorize",
+            "s6BhdRkqt3",
+            "gX1fBat3bV",
+            "n4E9O119d");
         AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
         System.out.println("Access token: " + response.accessToken);
       } catch (HttpResponseException e) {
@@ -229,9 +304,64 @@ public class AccessTokenRequest extends GenericData {
     @Key("refresh_token")
     public String refreshToken;
 
-    public RefreshTokenGrant() {
+    {
       grantType = "refresh_token";
     }
+
+    public RefreshTokenGrant() {
+    }
+
+    /**
+     * @param transport HTTP transport for executing request in {@link #execute()}
+     * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
+     * @param authorizationServerUrl encoded authorization server URL
+     * @param clientId client identifier
+     * @param clientSecret client secret
+     * @param refreshToken refresh token associated with the access token to be refreshed
+     * @since 1.4
+     */
+    public RefreshTokenGrant(HttpTransport transport,
+        JsonFactory jsonFactory,
+        String authorizationServerUrl,
+        String clientId,
+        String clientSecret,
+        String refreshToken) {
+      super(transport, jsonFactory, authorizationServerUrl, clientId, clientSecret);
+      this.refreshToken = refreshToken;
+    }
+  }
+
+  public AccessTokenRequest() {
+  }
+
+  /**
+   * @param transport HTTP transport for executing request in {@link #execute()}
+   * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
+   * @param authorizationServerUrl encoded authorization server URL
+   * @param clientSecret client secret
+   * @since 1.4
+   */
+  protected AccessTokenRequest(HttpTransport transport, JsonFactory jsonFactory,
+      String authorizationServerUrl, String clientSecret) {
+    this();
+    this.transport = transport;
+    this.jsonFactory = jsonFactory;
+    this.authorizationServerUrl = authorizationServerUrl;
+    this.clientSecret = clientSecret;
+  }
+
+  /**
+   * @param transport HTTP transport for executing request in {@link #execute()}
+   * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
+   * @param authorizationServerUrl encoded authorization server URL
+   * @param clientId client identifier
+   * @param clientSecret client secret
+   * @since 1.4
+   */
+  public AccessTokenRequest(HttpTransport transport, JsonFactory jsonFactory,
+      String authorizationServerUrl, String clientId, String clientSecret) {
+    this(transport, jsonFactory, authorizationServerUrl, clientSecret);
+    this.clientId = clientId;
   }
 
   /**
@@ -259,7 +389,7 @@ public class AccessTokenRequest extends GenericData {
 
   /**
    * (REQUIRED, unless the client identity can be establish via other means, for example assertion)
-   * The client identifier.
+   * The client identifier or {@code null} for none.
    */
   @Key("client_id")
   public String clientId;
@@ -270,17 +400,17 @@ public class AccessTokenRequest extends GenericData {
   public String clientSecret;
 
   /**
-   * (OPTIONAL) The scope of the access request expressed as a list of space-delimited strings. The
-   * value of the "scope" parameter is defined by the authorization server. If the value contains
-   * multiple space-delimited strings, their order does not matter, and each string adds an
-   * additional access range to the requested scope. If the access grant being used already
-   * represents an approved scope (e.g. authorization code, assertion), the requested scope MUST be
-   * equal or lesser than the scope previously granted.
+   * (OPTIONAL) The scope of the access request expressed as a list of space-delimited strings or
+   * {@code null} for none. The value of the "scope" parameter is defined by the authorization
+   * server. If the value contains multiple space-delimited strings, their order does not matter,
+   * and each string adds an additional access range to the requested scope. If the access grant
+   * being used already represents an approved scope (e.g. authorization code, assertion), the
+   * requested scope MUST be equal or lesser than the scope previously granted.
    */
   @Key
   public String scope;
 
-  /** Encoded authorization server URL. */
+  /** (REQUIRED) Encoded authorization server URL. */
   public String authorizationServerUrl;
 
   /**

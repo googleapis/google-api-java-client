@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright (c) 2011 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,20 +12,19 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.auth.storage;
-
-import junit.framework.TestSuite;
-
 /**
- * All tests for {@link com.google.api.client.http}.
+ * Google's additions to OAuth 2.0 authorization as specified in <a
+ * href="http://code.google.com/apis/accounts/docs/OAuth2.html">Using OAuth 2.0 to Access Google
+ * APIs (Experimental)</a>.
  *
+ * <p>
+ * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
+ * possibly entirely removed in a future version of the library</b>
+ * </p>
+ *
+ * @since 1.4
  * @author Yaniv Inbar
  */
-public class AllTests extends TestSuite {
 
-  public static TestSuite suite() {
-    TestSuite result = new TestSuite(AllTests.class.getName());
-    result.addTestSuite(GoogleStorageAuthenticationTest.class);
-    return result;
-  }
-}
+package com.google.api.client.googleapis.auth.oauth2;
+

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright (c) 2011 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.auth.storage;
+package com.google.api.client.auth.oauth2;
 
 import junit.framework.TestSuite;
 
@@ -25,7 +25,9 @@ public class AllTests extends TestSuite {
 
   public static TestSuite suite() {
     TestSuite result = new TestSuite(AllTests.class.getName());
-    result.addTestSuite(GoogleStorageAuthenticationTest.class);
+    result.addTestSuite(AccessTokenRequestTest.class);
+    result.addTestSuite(AuthorizationRequestUrlTest.class);
+    result.addTestSuite(AuthorizationResponseTest.class);
     return result;
   }
 }
