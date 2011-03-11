@@ -78,4 +78,8 @@ final class LogContent implements HttpContent {
     return contentType != null
         && (contentType.startsWith("text/") || contentType.startsWith("application/"));
   }
+
+  public boolean retrySupported() {
+    return httpContent.retrySupported();
+  }
 }
