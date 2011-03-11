@@ -15,6 +15,7 @@
 package com.google.api.client.googleapis;
 
 import com.google.api.client.util.Key;
+import com.google.common.collect.Maps;
 
 import junit.framework.TestCase;
 
@@ -71,7 +72,7 @@ public class GoogleUrlTest extends TestCase {
   }
 
   public void testExpandTemplates_basic() {
-    HashMap<String, String> requestMap = new HashMap<String, String>();
+    HashMap<String, Object> requestMap = new HashMap<String, Object>();
     requestMap.put("abc", "xyz");
     requestMap.put("def", "123");
     requestMap.put("unused", "not going to be expanded");
@@ -87,10 +88,10 @@ public class GoogleUrlTest extends TestCase {
 
   public void testExpandTemplates_noParameters() {
     // Should not raise an exception.
-    GoogleUrl url = GoogleUrl.create("http://host/",  "abc/def", null);
+    GoogleUrl url = GoogleUrl.create("http://host/", "abc/def", null);
     assertEquals("http://host/abc/def", url.toString());
     try {
-      GoogleUrl.create("http://host/",  "abc/{def}/", null);
+      GoogleUrl.create("http://host/", "abc/{def}/", null);
     } catch (IllegalArgumentException expectedException) {
       return;
     }
@@ -98,7 +99,7 @@ public class GoogleUrlTest extends TestCase {
   }
 
   public void testExpandTemplates_missingParameter() {
-    HashMap<String, String> requestMap = new HashMap<String, String>();
+    HashMap<String, Object> requestMap = Maps.newHashMap();
     requestMap.put("abc", "xyz");
     try {
       GoogleUrl.expandUriTemplates("foo/{abc}/bar/{def}", requestMap);
@@ -107,5 +108,18 @@ public class GoogleUrlTest extends TestCase {
       return;
     }
     fail();
+  }
+
+  public class PrettyPrintParameters {
+    @Key
+    Boolean prettyprint;
+  }
+
+  public void testCreate_prettyPrint() {
+    PrettyPrintParameters parameters = new PrettyPrintParameters();
+    assertNull(GoogleUrl.create("https://www.googleapis.com", "", parameters).prettyprint);
+    parameters.prettyprint = false;
+    assertEquals(
+        Boolean.FALSE, GoogleUrl.create("https://www.googleapis.com", "", parameters).prettyprint);
   }
 }
