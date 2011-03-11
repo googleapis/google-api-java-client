@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright (c) 2011 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,9 +12,10 @@
  * the License.
  */
 
-package com.google.api.client.xml.atom;
+package com.google.api.client.http.xml.atom;
 
 import com.google.api.client.http.xml.AbstractXmlHttpContent;
+import com.google.api.client.xml.atom.Atom;
 
 import org.xmlpull.v1.XmlSerializer;
 
@@ -39,12 +40,9 @@ import java.io.IOException;
  * </code>
  * </pre>
  *
- * @since 1.0
+ * @since 1.4
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.5) Use
- *             {@link com.google.api.client.http.xml.atom.AtomContent}
  */
-@Deprecated
 public class AtomContent extends AbstractXmlHttpContent {
 
   /** Key/value pair data for the Atom entry. */
