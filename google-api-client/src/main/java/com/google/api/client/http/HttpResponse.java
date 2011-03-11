@@ -186,7 +186,7 @@ public final class HttpResponse {
           !disableContentLogging && logger.isLoggable(Level.CONFIG) || logger.isLoggable(Level.ALL);
       if (loggable) {
         ByteArrayOutputStream debugStream = new ByteArrayOutputStream();
-        InputStreamContent.copy(content, debugStream);
+        AbstractInputStreamContent.copy(content, debugStream);
         debugContentByteArray = debugStream.toByteArray();
         content = new ByteArrayInputStream(debugContentByteArray);
         logger.config("Response size: " + debugContentByteArray.length + " bytes");
@@ -198,7 +198,7 @@ public final class HttpResponse {
         contentLength = -1;
         if (loggable) {
           ByteArrayOutputStream debugStream = new ByteArrayOutputStream();
-          InputStreamContent.copy(content, debugStream);
+          AbstractInputStreamContent.copy(content, debugStream);
           debugContentByteArray = debugStream.toByteArray();
           content = new ByteArrayInputStream(debugContentByteArray);
         }

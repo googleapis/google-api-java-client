@@ -14,11 +14,11 @@
 
 package com.google.api.client.googleapis;
 
+import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.HttpExecuteIntercepter;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.InputStreamContent;
 
 import java.util.EnumSet;
 
@@ -58,9 +58,7 @@ public class MethodOverrideIntercepter implements HttpExecuteIntercepter {
       request.headers.set("X-HTTP-Method-Override", method.name());
       // Google servers will fail to process a POST without the Content-Length header
       if (request.content == null) {
-        InputStreamContent content = new InputStreamContent();
-        content.setByteArrayInput(new byte[0]);
-        request.content = content;
+        request.content = new ByteArrayContent();
       }
     }
   }
