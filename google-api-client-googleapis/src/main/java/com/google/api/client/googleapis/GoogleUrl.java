@@ -97,11 +97,11 @@ public class GoogleUrl extends GenericUrl {
       throws IllegalArgumentException {
     GoogleUrl url = new GoogleUrl(encodedServerUrl);
 
-    HashMap<String, String> requestMap = new HashMap<String, String>();
+    HashMap<String, Object> requestMap = new HashMap<String, Object>();
     for (Map.Entry<String, Object> entry : DataUtil.mapOf(parameters).entrySet()) {
       Object value = entry.getValue();
       if (value != null) {
-        requestMap.put(entry.getKey(), value.toString());
+        requestMap.put(entry.getKey(), value);
       }
     }
     url.appendRawPath(expandUriTemplates(pathTemplate, requestMap));
@@ -123,7 +123,7 @@ public class GoogleUrl extends GenericUrl {
    * @since 1.3
    */
   @VisibleForTesting
-  static String expandUriTemplates(String pathUri, HashMap<String, String> variableMap)
+  static String expandUriTemplates(String pathUri, HashMap<String, Object> variableMap)
       throws IllegalArgumentException {
     StringBuilder pathBuf = new StringBuilder();
     int cur = 0;
@@ -140,9 +140,9 @@ public class GoogleUrl extends GenericUrl {
       cur = close + 1;
       Preconditions.checkArgument(
           variableMap != null, "no variable map supplied for parameterize path: %s", varName);
-      String value = variableMap.remove(varName);
+      Object value = variableMap.remove(varName);
       Preconditions.checkArgument(value != null, "missing required path parameter: %s", varName);
-      pathBuf.append(CharEscapers.escapeUriPath(value));
+      pathBuf.append(CharEscapers.escapeUriPath(value.toString()));
     }
     return pathBuf.toString();
   }
