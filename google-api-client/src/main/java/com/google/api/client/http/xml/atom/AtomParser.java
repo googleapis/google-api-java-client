@@ -12,9 +12,10 @@
  * the License.
  */
 
-package com.google.api.client.xml.atom;
+package com.google.api.client.http.xml.atom;
 
 import com.google.api.client.http.xml.XmlHttpParser;
+import com.google.api.client.xml.atom.Atom;
 
 /**
  * Atom XML HTTP parser into an data class of key/value pairs.
@@ -33,12 +34,9 @@ import com.google.api.client.http.xml.XmlHttpParser;
  * </code>
  * </pre>
  *
- * @since 1.0
+ * @since 1.4
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.5) Use
- *             {@link com.google.api.client.http.xml.atom.AtomParser}
  */
-@Deprecated
 public final class AtomParser extends XmlHttpParser {
 
   public AtomParser() {

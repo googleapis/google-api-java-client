@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright (c) 2011 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,16 +12,17 @@
  * the License.
  */
 
-package com.google.api.client.xml.atom;
+package com.google.api.client.http.xml.atom;
 
 import com.google.api.client.http.xml.AbstractXmlHttpContent;
+import com.google.api.client.xml.atom.Atom;
 
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.IOException;
 
 /**
- * Serializes Atom XML HTTP content based on the data key/value mapping object for an Atom entry.
+ * Serializes Atom XML HTTP content based on the data key/value mapping object for an Atom feed.
  * <p>
  * Default value for {@link #contentType} is {@link Atom#CONTENT_TYPE}.
  * <p>
@@ -30,32 +31,29 @@ import java.io.IOException;
  * <pre>
  * <code>
   static void setContent(
-      HttpRequest request, XmlNamespaceDictionary namespaceDictionary, Object entry) {
-    AtomContent content = new AtomContent();
+      HttpRequest request, XmlNamespaceDictionary namespaceDictionary, Object feed) {
+    AtomFeedContent content = new AtomFeedContent();
     content.namespaceDictionary = namespaceDictionary;
-    content.entry = entry;
+    content.feed = feed;
     request.content = content;
   }
  * </code>
  * </pre>
  *
- * @since 1.0
+ * @since 1.4
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.5) Use
- *             {@link com.google.api.client.http.xml.atom.AtomContent}
  */
-@Deprecated
-public class AtomContent extends AbstractXmlHttpContent {
+public class AtomFeedContent extends AbstractXmlHttpContent {
 
-  /** Key/value pair data for the Atom entry. */
-  public Object entry;
+  /** Key/value pair data for the Atom feed. */
+  public Object feed;
 
-  public AtomContent() {
+  public AtomFeedContent() {
     contentType = Atom.CONTENT_TYPE;
   }
 
   @Override
   public final void writeTo(XmlSerializer serializer) throws IOException {
-    namespaceDictionary.serialize(serializer, Atom.ATOM_NAMESPACE, "entry", entry);
+    namespaceDictionary.serialize(serializer, Atom.ATOM_NAMESPACE, "feed", feed);
   }
 }

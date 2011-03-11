@@ -12,12 +12,14 @@
  * the License.
  */
 
-package com.google.api.client.xml.atom;
+package com.google.api.client.http.xml.atom;
 
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.xml.Xml;
 import com.google.api.client.xml.XmlNamespaceDictionary;
+import com.google.api.client.xml.atom.AbstractAtomFeedParser;
+import com.google.api.client.xml.atom.Atom;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -30,12 +32,9 @@ import java.io.InputStream;
  *
  * @param <T> feed type
  * @param <E> entry type
- * @since 1.0
+ * @since 1.4
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.5) Use
- *             {@link com.google.api.client.http.xml.atom.AtomFeedParser}
  */
-@Deprecated
 public final class AtomFeedParser<T, E> extends AbstractAtomFeedParser<T> {
 
   /** Atom entry class to parse. */
