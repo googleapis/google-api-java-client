@@ -12,8 +12,12 @@
  * the License.
  */
 
-package com.google.api.client.json;
+package com.google.api.client.testing.json;
 
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonParser;
+import com.google.api.client.json.JsonString;
+import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.Key;
 import com.google.common.collect.ImmutableMap;
 
@@ -30,6 +34,7 @@ import java.util.Map;
 /**
  * Abstract test case for {@link JsonParser}.
  *
+ * @since 1.4
  * @author Yaniv Inbar
  */
 public abstract class AbstractJsonParserTest extends TestCase {

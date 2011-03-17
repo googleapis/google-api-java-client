@@ -12,11 +12,12 @@
  * the License.
  */
 
-package com.google.api.client.json.gson;
+package com.google.api.client.extensions.android3.json;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
-import com.google.gson.stream.JsonWriter;
+
+import android.util.JsonWriter;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -25,14 +26,14 @@ import java.math.BigInteger;
 /**
  * Low-level JSON serializer implementation based on GSON.
  *
- * @since 1.3
+ * @since 1.4
  * @author Yaniv Inbar
  */
-public class GsonGenerator extends JsonGenerator {
+public class AndroidJsonGenerator extends JsonGenerator {
   private final JsonWriter writer;
-  private final GsonFactory factory;
+  private final AndroidJsonFactory factory;
 
-  GsonGenerator(GsonFactory factory, JsonWriter writer) {
+  AndroidJsonGenerator(AndroidJsonFactory factory, JsonWriter writer) {
     this.factory = factory;
     this.writer = writer;
   }

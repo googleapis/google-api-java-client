@@ -12,8 +12,11 @@
  * the License.
  */
 
-package com.google.api.client.json;
+package com.google.api.client.testing.json;
 
+import com.google.api.client.json.JsonEncoding;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.util.Key;
 
 import junit.framework.TestCase;
@@ -25,6 +28,7 @@ import java.util.Collection;
 /**
  * Abstract test case for {@link JsonGenerator}.
  *
+ * @since 1.4
  * @author Yaniv Inbar
  */
 public abstract class AbstractJsonGeneratorTest extends TestCase {
