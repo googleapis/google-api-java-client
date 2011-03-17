@@ -418,7 +418,8 @@ public abstract class JsonParser {
         return token == JsonToken.VALUE_TRUE ? Boolean.TRUE : Boolean.FALSE;
       case VALUE_NUMBER_FLOAT:
       case VALUE_NUMBER_INT:
-        Preconditions.checkArgument(field == null || field.getAnnotation(JsonString.class) == null);
+        Preconditions.checkArgument(field == null || field.getAnnotation(JsonString.class) == null,
+            "number field formatted as a JSON number cannot use @JsonString annotation: %s", field);
         if (fieldClass == null || fieldClass == BigDecimal.class) {
           return getDecimalValue();
         }
@@ -448,7 +449,9 @@ public abstract class JsonParser {
                 + field);
       case VALUE_STRING:
         Preconditions.checkArgument(field == null || !Number.class.isAssignableFrom(fieldClass)
-            || field.getAnnotation(JsonString.class) != null);
+            || field.getAnnotation(JsonString.class) != null,
+            "number field formatted as a JSON string must use the @JsonString annotation: %s",
+            field);
         // TODO: "special" values like Double.POSITIVE_INFINITY?
         try {
           return FieldInfo.parsePrimitiveValue(fieldClass, getText());
