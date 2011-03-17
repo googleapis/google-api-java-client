@@ -12,13 +12,14 @@
  * the License.
  */
 
-package com.google.api.client.json.gson;
+package com.google.api.client.extensions.android3.json;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import com.google.common.base.Preconditions;
-import com.google.gson.stream.JsonReader;
+
+import android.util.JsonReader;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -29,18 +30,18 @@ import java.util.List;
 /**
  * Low-level JSON serializer implementation based on GSON.
  *
- * @since 1.3
+ * @since 1.4
  * @author Yaniv Inbar
  */
-public class GsonParser extends JsonParser {
+public class AndroidJsonParser extends JsonParser {
   private final JsonReader reader;
-  private final GsonFactory factory;
+  private final AndroidJsonFactory factory;
 
   private List<String> currentNameStack = new ArrayList<String>();
   private JsonToken currentToken;
   private String currentText;
 
-  GsonParser(GsonFactory factory, JsonReader reader) {
+  AndroidJsonParser(AndroidJsonFactory factory, JsonReader reader) {
     this.factory = factory;
     this.reader = reader;
   }

@@ -14,8 +14,8 @@
 
 package com.google.api.client.json.gson;
 
-import com.google.api.client.json.AbstractJsonGeneratorTest;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.testing.json.AbstractJsonGeneratorTest;
 
 /**
  * Tests {@link GsonGenerator}.

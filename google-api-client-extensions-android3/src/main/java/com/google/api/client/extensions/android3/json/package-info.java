@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright (c) 2011 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,24 +12,16 @@
  * the License.
  */
 
-package com.google.api.client.json.gson;
-
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.testing.json.AbstractJsonParserTest;
-
 /**
- * Tests {@link GsonParser}.
+ * Low-level implementation of the GSON parser library built-in to the Android 3.0 SDK.
  *
+ * <p>
+ * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
+ * possibly entirely removed in a future version of the library</b>
+ * </p>
+ *
+ * @since 1.4
  * @author Yaniv Inbar
  */
-public class GsonParserTest extends AbstractJsonParserTest {
 
-  public GsonParserTest(String name) {
-    super(name);
-  }
-
-  @Override
-  protected JsonFactory newFactory() {
-    return new GsonFactory();
-  }
-}
+package com.google.api.client.extensions.android3.json;

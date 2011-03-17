@@ -12,15 +12,16 @@
  * the License.
  */
 
-package com.google.api.client.json.gson;
+package com.google.api.client.extensions.android3.json;
 
 import com.google.api.client.json.JsonEncoding;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.util.Strings;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
+
+import android.util.JsonReader;
+import android.util.JsonWriter;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -33,11 +34,13 @@ import java.io.Writer;
 /**
  * Low-level JSON library implementation based on GSON.
  *
- * @since 1.3
+ * @since 1.4
  * @author Yaniv Inbar
  */
-public class GsonFactory extends JsonFactory {
+public class AndroidJsonFactory extends JsonFactory {
 
+  // TODO(yanivi): figure out how to run unit tests based on Android platform
+  
   @Override
   public JsonParser createJsonParser(InputStream in) {
     return createJsonParser(new InputStreamReader(in, Strings.UTF8_CHARSET));
@@ -50,7 +53,7 @@ public class GsonFactory extends JsonFactory {
 
   @Override
   public JsonParser createJsonParser(Reader reader) {
-    return new GsonParser(this, new JsonReader(reader));
+    return new AndroidJsonParser(this, new JsonReader(reader));
   }
 
   @Override
@@ -60,6 +63,6 @@ public class GsonFactory extends JsonFactory {
 
   @Override
   public JsonGenerator createJsonGenerator(Writer writer) {
-    return new GsonGenerator(this, new JsonWriter(writer));
+    return new AndroidJsonGenerator(this, new JsonWriter(writer));
   }
 }
