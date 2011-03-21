@@ -44,7 +44,8 @@ final class UrlFetchRequest extends LowLevelHttpRequest {
       throws IOException {
     this.transport = transport;
     method = HTTPMethod.valueOf(requestMethod);
-    FetchOptions options = FetchOptions.Builder.doNotFollowRedirects().disallowTruncate();
+    FetchOptions options =
+        FetchOptions.Builder.doNotFollowRedirects().disallowTruncate().validateCertificate();
     request = new HTTPRequest(new URL(url), method, options);
   }
 
