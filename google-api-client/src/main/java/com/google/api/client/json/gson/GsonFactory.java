@@ -19,6 +19,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.util.Strings;
+import com.google.common.base.Charsets;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
@@ -40,7 +41,7 @@ public class GsonFactory extends JsonFactory {
 
   @Override
   public JsonParser createJsonParser(InputStream in) {
-    return createJsonParser(new InputStreamReader(in, Strings.UTF8_CHARSET));
+    return createJsonParser(new InputStreamReader(in, Charsets.UTF_8));
   }
 
   @Override
@@ -55,7 +56,7 @@ public class GsonFactory extends JsonFactory {
 
   @Override
   public JsonGenerator createJsonGenerator(OutputStream out, JsonEncoding enc) {
-    return createJsonGenerator(new OutputStreamWriter(out, Strings.UTF8_CHARSET));
+    return createJsonGenerator(new OutputStreamWriter(out, Charsets.UTF_8));
   }
 
   @Override
