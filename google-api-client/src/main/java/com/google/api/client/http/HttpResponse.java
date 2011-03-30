@@ -55,10 +55,10 @@ public final class HttpResponse {
   /**
    * HTTP headers.
    * <p>
-   * If a header name is used for multiple headers, only the last one is retained.
+   * If a header name is used for multiple headers, only the last one is retained. The value is
+   * initialized to {@link HttpRequest#responseHeaders} before being parsed from the actual HTTP
+   * response headers.
    * <p>
-   * This field's value is instantiated using the same class as that of the
-   * {@link HttpTransport#defaultHeaders}.
    */
   public final HttpHeaders headers;
 
@@ -78,6 +78,13 @@ public final class HttpResponse {
   public final HttpTransport transport;
 
   /**
+   * HTTP request.
+   *
+   * @since 1.4
+   */
+  public final HttpRequest request;
+
+  /**
    * Whether to disable response content logging during {@link #getContent()} (unless
    * {@link Level#ALL} is loggable which forces all logging).
    * <p>
@@ -87,8 +94,10 @@ public final class HttpResponse {
   public boolean disableContentLogging;
 
   @SuppressWarnings("unchecked")
-  HttpResponse(HttpTransport transport, LowLevelHttpResponse response) {
-    this.transport = transport;
+  HttpResponse(HttpRequest request, LowLevelHttpResponse response) {
+    this.request = request;
+    this.transport = request.transport;
+    this.headers = request.headers;
     this.response = response;
     contentLength = response.getContentLength();
     contentType = response.getContentType();
@@ -117,9 +126,8 @@ public final class HttpResponse {
     }
     // headers
     int size = response.getHeaderCount();
-    Class<? extends HttpHeaders> headersClass = transport.defaultHeaders.getClass();
+    Class<? extends HttpHeaders> headersClass = headers.getClass();
     ClassInfo classInfo = ClassInfo.of(headersClass);
-    HttpHeaders headers = this.headers = ClassInfo.newInstance(headersClass);
     HashMap<String, String> fieldNameMap = HttpHeaders.getFieldNameMap(headersClass);
     for (int i = 0; i < size; i++) {
       String headerName = response.getHeaderName(i);

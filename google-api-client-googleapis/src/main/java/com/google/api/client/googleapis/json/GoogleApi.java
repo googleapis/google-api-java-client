@@ -89,8 +89,7 @@ public final class GoogleApi {
   public void load() throws IOException {
     GoogleUrl url = discoveryUrl.clone();
     url.put("api", name);
-    HttpRequest request = discoveryTransport.buildGetRequest();
-    request.url = url;
+    HttpRequest request = discoveryTransport.createRequestFactory().buildGetRequest(url);
     JsonParser parser = JsonCParser.parserForResponse(jsonFactory, request.execute());
     parser.skipToKey(name);
     DiscoveryDocument doc = new DiscoveryDocument();

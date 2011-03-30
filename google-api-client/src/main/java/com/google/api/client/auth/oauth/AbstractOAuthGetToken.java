@@ -15,6 +15,7 @@
 package com.google.api.client.auth.oauth;
 
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
@@ -65,7 +66,8 @@ public abstract class AbstractOAuthGetToken extends GenericUrl {
    */
   public final OAuthCredentialsResponse execute() throws IOException {
     createParameters().signRequestsUsingAuthorizationHeader(transport);
-    HttpRequest request = usePost ? transport.buildPostRequest() : transport.buildGetRequest();
+    HttpRequest request = transport.buildRequest();
+    request.method = usePost ? HttpMethod.POST : HttpMethod.GET;
     request.url = this;
     HttpResponse response = request.execute();
     response.disableContentLogging = true;

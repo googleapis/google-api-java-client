@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.auth.oauth;
 import com.google.api.client.auth.oauth.OAuthCredentialsResponse;
 import com.google.api.client.auth.oauth.OAuthGetAccessToken;
 import com.google.api.client.auth.oauth.OAuthParameters;
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 
@@ -54,8 +55,8 @@ public final class GoogleOAuthGetAccessToken extends OAuthGetAccessToken {
   public static void revokeAccessToken(HttpTransport transport, OAuthParameters parameters)
       throws IOException {
     parameters.signRequestsUsingAuthorizationHeader(transport);
-    HttpRequest request = transport.buildGetRequest();
-    request.setUrl("https://www.google.com/accounts/AuthSubRevokeToken");
+    HttpRequest request = transport.createRequestFactory().buildGetRequest(
+        new GenericUrl("https://www.google.com/accounts/AuthSubRevokeToken"));
     request.execute().ignore();
   }
 }
