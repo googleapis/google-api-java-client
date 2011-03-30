@@ -15,6 +15,7 @@
 package com.google.api.client.googleapis.auth.authsub;
 
 import com.google.api.client.googleapis.auth.AuthKeyValueParser;
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
@@ -141,8 +142,8 @@ public final class AuthSubHelper {
    */
   public String exchangeForSessionToken() throws IOException {
     HttpTransport authSubTransport = this.authSubTransport;
-    HttpRequest request = authSubTransport.buildGetRequest();
-    request.setUrl("https://www.google.com/accounts/AuthSubSessionToken");
+    HttpRequest request = authSubTransport.createRequestFactory().buildGetRequest(
+        new GenericUrl("https://www.google.com/accounts/AuthSubSessionToken"));
     SessionTokenResponse sessionTokenResponse =
         request.execute().parseAs(SessionTokenResponse.class);
     String sessionToken = sessionTokenResponse.sessionToken;
@@ -162,8 +163,8 @@ public final class AuthSubHelper {
    */
   public void revokeSessionToken() throws IOException {
     HttpTransport authSubTransport = this.authSubTransport;
-    HttpRequest request = authSubTransport.buildGetRequest();
-    request.setUrl("https://www.google.com/accounts/AuthSubRevokeToken");
+    HttpRequest request = authSubTransport.createRequestFactory().buildGetRequest(
+        new GenericUrl("https://www.google.com/accounts/AuthSubRevokeToken"));
     request.execute().ignore();
     setToken(null);
   }
@@ -178,8 +179,8 @@ public final class AuthSubHelper {
    */
   public TokenInfoResponse requestTokenInfo() throws IOException {
     HttpTransport authSubTransport = this.authSubTransport;
-    HttpRequest request = authSubTransport.buildGetRequest();
-    request.setUrl("https://www.google.com/accounts/AuthSubTokenInfo");
+    HttpRequest request = authSubTransport.createRequestFactory().buildGetRequest(
+        new GenericUrl("https://www.google.com/accounts/AuthSubTokenInfo"));
     HttpResponse response = request.execute();
     if (response.getParser() == null) {
       throw new IllegalStateException(response.parseAsString());
