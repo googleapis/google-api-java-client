@@ -51,7 +51,6 @@
     <module>google-api-client-assembly</module>
     <module>google-api-client-extensions</module>
     <module>google-api-client-googleapis</module>
-    <module>google-api-client-googleapis-extensions-android2</module>
   </modules>
 
   <repositories>
