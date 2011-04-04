@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright (c) 2011 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,12 +12,12 @@
  * the License.
  */
 
-package com.google.api.client.googleapis;
+package com.google.api.client.googleapis.auth.authsub;
 
 import junit.framework.TestSuite;
 
 /**
- * All tests for {@code google-api-client-googleapis} project.
+ * All tests for {@link com.google.api.client.googleapis.auth.authsub}.
  *
  * @author Yaniv Inbar
  */
@@ -25,13 +25,7 @@ public class AllTests extends TestSuite {
 
   public static TestSuite suite() {
     TestSuite result = new TestSuite(AllTests.class.getName());
-    result.addTestSuite(GoogleUrlTest.class);
-    result.addTestSuite(GoogleUtilsTest.class);
-    result.addTest(com.google.api.client.googleapis.auth.authsub.AllTests.suite());
-    result.addTest(com.google.api.client.googleapis.auth.oauth2.AllTests.suite());
-    result.addTest(com.google.api.client.googleapis.auth.storage.AllTests.suite());
-    result.addTest(com.google.api.client.googleapis.json.AllTests.suite());
-    result.addTest(com.google.api.client.googleapis.xml.atom.AllTests.suite());
+    result.addTestSuite(AuthSubHelperTest.class);
     return result;
   }
 }
