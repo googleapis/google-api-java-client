@@ -17,7 +17,6 @@ package com.google.api.client.googleapis.auth.authsub;
 import com.google.api.client.googleapis.auth.AuthKeyValueParser;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Key;
@@ -58,10 +57,6 @@ public final class AuthSubHelper {
 
   /** Token (may be single use or session). */
   private String token;
-
-  public AuthSubHelper() {
-    authSubTransport.addParser(AuthKeyValueParser.INSTANCE);
-  }
 
   /**
    * Key/value data to parse a success response for an AuthSubSessionToken request.
@@ -142,6 +137,7 @@ public final class AuthSubHelper {
    */
   public String exchangeForSessionToken() throws IOException {
     HttpTransport authSubTransport = this.authSubTransport;
+    authSubTransport.addParser(AuthKeyValueParser.INSTANCE);
     HttpRequest request = authSubTransport.createRequestFactory().buildGetRequest(
         new GenericUrl("https://www.google.com/accounts/AuthSubSessionToken"));
     SessionTokenResponse sessionTokenResponse =
@@ -179,13 +175,10 @@ public final class AuthSubHelper {
    */
   public TokenInfoResponse requestTokenInfo() throws IOException {
     HttpTransport authSubTransport = this.authSubTransport;
+    authSubTransport.addParser(AuthKeyValueParser.INSTANCE);
     HttpRequest request = authSubTransport.createRequestFactory().buildGetRequest(
         new GenericUrl("https://www.google.com/accounts/AuthSubTokenInfo"));
-    HttpResponse response = request.execute();
-    if (response.getParser() == null) {
-      throw new IllegalStateException(response.parseAsString());
-    }
-    return response.parseAs(TokenInfoResponse.class);
+    return request.execute().parseAs(TokenInfoResponse.class);
   }
 
   /** Updates the authorization headers. */
