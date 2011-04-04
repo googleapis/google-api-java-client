@@ -45,11 +45,11 @@ import java.util.TreeSet;
  *
  * <pre>{@code
   static final XmlNamespaceDictionary DICTIONARY = new XmlNamespaceDictionary()
-      .add("", "http://www.w3.org/2005/Atom")
-      .add("activity", "http://activitystrea.ms/spec/1.0/")
-      .add("georss", "http://www.georss.org/georss")
-      .add("media", "http://search.yahoo.com/mrss/")
-      .add("thr", "http://purl.org/syndication/thread/1.0");
+      .set("", "http://www.w3.org/2005/Atom")
+      .set("activity", "http://activitystrea.ms/spec/1.0/")
+      .set("georss", "http://www.georss.org/georss")
+      .set("media", "http://search.yahoo.com/mrss/")
+      .set("thr", "http://purl.org/syndication/thread/1.0");
  *}</pre>
  *
  * @since 1.0
