@@ -15,6 +15,7 @@
 package com.google.api.client.googleapis.json;
 
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
@@ -99,7 +100,8 @@ public final class GoogleJsonRpcHttpTransport {
   }
 
   private HttpRequest internalExecute(Object data) {
-    HttpRequest httpRequest = transport.buildPostRequest();
+    HttpRequest httpRequest = transport.buildRequest();
+    httpRequest.method = HttpMethod.POST;
     httpRequest.url = rpcServerUrl;
     JsonHttpContent content = new JsonHttpContent();
     content.jsonFactory = jsonFactory;
