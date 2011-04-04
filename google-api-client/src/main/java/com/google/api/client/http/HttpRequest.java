@@ -36,13 +36,58 @@ public final class HttpRequest {
   private static final String USER_AGENT_SUFFIX = "Google-API-Java-Client/" + Strings.VERSION;
 
   /**
+   * HTTP request handler to intercept the start of {@link #execute()} or {@code null} for none.
+   *
+   * <p>
+   * For example, this might be used to sign a request for authentication:
+   * </p>
+   *
+   * <pre>
+  static void prepareRequest(HttpRequest request) {
+    request.intercepter = new HttpRequestHandler() {
+      public void handle(HttpRequest request) {
+        // sign request...
+      }
+    };
+  }
+   * </pre>
+   *
+   * @since 1.4
+   */
+  public HttpRequestHandler intercepter;
+
+  /**
    * HTTP request headers.
    * <p>
-   * Its value is initialized by calling {@code clone()} on the
-   * {@link HttpTransport#defaultHeaders}. Therefore, it is initialized to be of the same Java
-   * class, i.e. of the same {@link Object#getClass()}.
+   * For backwards compatibility, its value is initialized by calling {@code clone()} on the
+   * {@link HttpTransport#defaultHeaders}, which by default is an instance of {@link HttpHeaders}.
+   * </p>
    */
   public HttpHeaders headers;
+
+  /**
+   * HTTP response headers.
+   * <p>
+   * For example, this can be used if you want to use a subclass of {@link HttpHeaders} called
+   * MyHeaders to process the response:
+   * </p>
+   *
+   * <pre>
+  static String executeAndGetValueOfSomeCustomHeader(HttpRequest request) {
+    MyHeaders responseHeaders = new MyHeaders();
+    request.responseHeaders = responseHeaders;
+    HttpResponse response = request.execute();
+    return responseHeaders.someCustomHeader;
+  }
+   * </pre>
+   * <p>
+   * For backwards compatibility, its value is initialized by calling {@code clone()} on the
+   * {@link HttpTransport#defaultHeaders}, which by default is an instance of {@link HttpHeaders}.
+   * </p>
+   *
+   * @since 1.4
+   */
+  public HttpHeaders responseHeaders;
 
   /**
    * Set the number of retries that will be allowed to execute as the result of an
@@ -84,13 +129,21 @@ public final class HttpRequest {
    * @param transport HTTP transport
    * @param method HTTP request method (may be {@code null}
    */
+  // using HttpTransport.defaultHeaders for backwards compatibility
+  @SuppressWarnings("deprecation")
   HttpRequest(HttpTransport transport, HttpMethod method) {
     this.transport = transport;
     headers = transport.defaultHeaders.clone();
+    responseHeaders = transport.defaultHeaders.clone();
     this.method = method;
   }
 
-  /** Sets the {@link #url} based on the given encoded URL string. */
+  /**
+   * Sets the {@link #url} based on the given encoded URL string.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use {@link GenericUrl#GenericUrl(String)}
+   */
+  @Deprecated
   public void setUrl(String encodedUrl) {
     url = new GenericUrl(encodedUrl);
   }
@@ -124,7 +177,10 @@ public final class HttpRequest {
       if (response != null) {
         response.ignore();
       }
-
+      // run the pre-execute handler
+      if (intercepter != null) {
+        intercepter.handle(this);
+      }
       // first run the execute intercepters
       for (HttpExecuteIntercepter intercepter : transport.intercepters) {
         intercepter.intercept(this);
@@ -230,7 +286,7 @@ public final class HttpRequest {
       }
 
       // execute
-      response = new HttpResponse(transport, lowLevelHttpRequest.execute());
+      response = new HttpResponse(this, lowLevelHttpRequest.execute());
 
       // We need to make sure our content type can support retry
       // null content is inherently able to be retried

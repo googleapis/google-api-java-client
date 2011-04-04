@@ -75,7 +75,11 @@ public abstract class HttpTransport {
   /**
    * Default HTTP headers. These transport default headers are put into a request's headers when its
    * build method is called.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use {@link HttpRequest#headers} in an
+   *             {@link HttpRequestHandler}
    */
+  @Deprecated
   public HttpHeaders defaultHeaders = new HttpHeaders();
 
   /** Map from content type to HTTP parser. */
@@ -95,6 +99,28 @@ public abstract class HttpTransport {
    */
   public List<HttpUnsuccessfulResponseHandler> responseHandlers =
       new ArrayList<HttpUnsuccessfulResponseHandler>(1);
+
+  /**
+   * Returns a new instance of an HTTP request factory based on this HTTP transport.
+   *
+   * @return new instance of an HTTP request factory
+   * @since 1.4
+   */
+  public final HttpRequestFactory createRequestFactory() {
+    return createRequestFactory(null);
+  }
+
+  /**
+   * Returns a new instance of an HTTP request factory based on this HTTP transport with the given
+   * HTTP request handler for initializing requests.
+   *
+   * @param initializer HTTP request handler for initializing requests or {@code null} for none
+   * @return new instance of an HTTP request factory
+   * @since 1.4
+   */
+  public final HttpRequestFactory createRequestFactory(HttpRequestHandler initializer) {
+    return new HttpRequestFactory(this, initializer);
+  }
 
   /**
    * Adds an HTTP response content parser.
@@ -126,37 +152,77 @@ public abstract class HttpTransport {
     return semicolon == -1 ? contentType : contentType.substring(0, semicolon);
   }
 
-  /** Builds a request without specifying the HTTP method. */
+  /**
+   * Builds a request without specifying the HTTP method.
+   *
+   * @return new HTTP request
+   */
   public final HttpRequest buildRequest() {
     return new HttpRequest(this, null);
   }
 
-  /** Builds a {@code DELETE} request. */
+  /**
+   * Builds a {@code DELETE} request.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use
+   *             {@link HttpRequestFactory#buildDeleteRequest(GenericUrl)}
+   */
+  @Deprecated
   public final HttpRequest buildDeleteRequest() {
     return new HttpRequest(this, HttpMethod.DELETE);
   }
 
-  /** Builds a {@code GET} request. */
+  /**
+   * Builds a {@code GET} request.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use
+   *             {@link HttpRequestFactory#buildGetRequest(GenericUrl)}
+   */
+  @Deprecated
   public final HttpRequest buildGetRequest() {
     return new HttpRequest(this, HttpMethod.GET);
   }
 
-  /** Builds a {@code POST} request. */
+  /**
+   * Builds a {@code POST} request.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use
+   *             {@link HttpRequestFactory#buildPostRequest(GenericUrl, HttpContent)}
+   */
+  @Deprecated
   public final HttpRequest buildPostRequest() {
     return new HttpRequest(this, HttpMethod.POST);
   }
 
-  /** Builds a {@code PUT} request. */
+  /**
+   * Builds a {@code PUT} request.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use
+   *             {@link HttpRequestFactory#buildPutRequest(GenericUrl, HttpContent)}
+   */
+  @Deprecated
   public final HttpRequest buildPutRequest() {
     return new HttpRequest(this, HttpMethod.PUT);
   }
 
-  /** Builds a {@code PATCH} request. */
+  /**
+   * Builds a {@code PATCH} request.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use
+   *             {@link HttpRequestFactory#buildPatchRequest(GenericUrl, HttpContent)}
+   */
+  @Deprecated
   public final HttpRequest buildPatchRequest() {
     return new HttpRequest(this, HttpMethod.PATCH);
   }
 
-  /** Builds a {@code HEAD} request. */
+  /**
+   * Builds a {@code HEAD} request.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use
+   *             {@link HttpRequestFactory#buildHeadRequest(GenericUrl)}
+   */
+  @Deprecated
   public final HttpRequest buildHeadRequest() {
     return new HttpRequest(this, HttpMethod.HEAD);
   }

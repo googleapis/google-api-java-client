@@ -42,8 +42,8 @@ public class HttpRequestTest extends TestCase {
 
   public void testNotSupportedByDefault() throws IOException {
     MockHttpTransport transport = new MockHttpTransport();
-    HttpRequest request = transport.buildHeadRequest();
-    request.setUrl("http://www.google.com");
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(new GenericUrl("http://www.google.com"));
     for (HttpMethod method : BASIC_METHODS) {
       request.method = method;
       request.execute();
@@ -115,8 +115,8 @@ public class HttpRequestTest extends TestCase {
     TrackInvocationHandler handler = new TrackInvocationHandler();
     fakeTransport.responseHandlers.add(handler);
 
-    HttpRequest req = fakeTransport.buildGetRequest();
-    req.url = new GenericUrl("http://not/used");
+    HttpRequest req =
+        fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
     HttpResponse resp = req.execute();
 
     Assert.assertEquals(200, resp.statusCode);

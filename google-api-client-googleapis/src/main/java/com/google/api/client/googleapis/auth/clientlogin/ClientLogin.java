@@ -107,17 +107,24 @@ public final class ClientLogin {
   /** Key/value data to parse a success response. */
   public static final class Response {
 
+    /** Authentication token. */
     @Key("Auth")
     public String auth;
 
+    /** Returns the authorization header value to use based on the authentication token. */
     public String getAuthorizationHeaderValue() {
       return GoogleHeaders.getGoogleLoginValue(auth);
     }
 
     /**
      * Sets the authorization header for the given Google transport using the authentication token.
+     *
+     * @deprecated (scheduled to be removed in 1.5) Use {@code request.headers.authorization =
+     *             response.getAuthorizationHeaderValue()}
      */
+    @Deprecated
     public void setAuthorizationHeader(HttpTransport googleTransport) {
+      // TODO(yanivi): provide a convenient way to do this in a non-deprecated way
       googleTransport.defaultHeaders.authorization = GoogleHeaders.getGoogleLoginValue(auth);
     }
   }
@@ -149,14 +156,12 @@ public final class ClientLogin {
    */
   public Response authenticate() throws HttpResponseException, IOException {
     transport.addParser(AuthKeyValueParser.INSTANCE);
-    HttpRequest request = transport.buildPostRequest();
     GenericUrl url = serverUrl.clone();
     url.appendRawPath("/accounts/ClientLogin");
-    request.url = url;
     UrlEncodedContent content = new UrlEncodedContent();
     content.data = this;
+    HttpRequest request = transport.createRequestFactory().buildPostRequest(url, content);
     request.disableContentLogging = true;
-    request.content = content;
     return request.execute().parseAs(Response.class);
   }
 }

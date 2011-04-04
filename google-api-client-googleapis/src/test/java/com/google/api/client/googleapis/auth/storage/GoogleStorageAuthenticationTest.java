@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.auth.storage;
 
 import com.google.api.client.auth.HmacSha;
 import com.google.api.client.googleapis.GoogleHeaders;
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteIntercepter;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
@@ -64,14 +65,13 @@ public class GoogleStorageAuthenticationTest extends TestCase {
     HttpTransport transport = new MockHttpTransport();
     GoogleStorageAuthentication.authorize(transport, ACCESS_KEY, SECRET);
     HttpExecuteIntercepter intercepter = transport.intercepters.get(0);
-    HttpRequest request = transport.buildPutRequest();
-    request.setUrl(url);
     GoogleHeaders headers = new GoogleHeaders();
     headers.date = "Mon, 15 Feb  2010 21:30:39 GMT";
     MockHttpContent content = new MockHttpContent();
     content.length = 4539;
     content.type = "image/jpg";
-    request.content = content;
+    HttpRequest request =
+        transport.createRequestFactory().buildPutRequest(new GenericUrl(url), content);
     headers.googAcl = "public-read";
     headers.set("x-goog-meta-reviewer", Arrays.asList("bob", "jane"));
     request.headers = headers;

@@ -15,7 +15,7 @@
 package com.google.api.client.googleapis.xml.atom;
 
 import com.google.api.client.http.xml.XmlHttpParser;
-import com.google.api.client.xml.atom.AtomContent;
+import com.google.api.client.http.xml.atom.AtomContent;
 
 /**
  * Serializes Atom XML PATCH HTTP content based on the data key/value mapping object for an Atom

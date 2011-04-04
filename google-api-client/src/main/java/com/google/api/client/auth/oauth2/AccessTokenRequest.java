@@ -14,6 +14,7 @@
 
 package com.google.api.client.auth.oauth2;
 
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
@@ -435,16 +436,15 @@ public class AccessTokenRequest extends GenericData {
     JsonHttpParser parser = new JsonHttpParser();
     parser.jsonFactory = jsonFactory;
     transport.addParser(parser);
-    HttpRequest request = transport.buildPostRequest();
+    UrlEncodedContent content = new UrlEncodedContent();
+    content.data = this;
+    HttpRequest request = transport.createRequestFactory().buildPostRequest(
+        new GenericUrl(authorizationServerUrl), content);
     if (useBasicAuthorization) {
       request.headers.setBasicAuthentication(clientId, clientSecret);
     } else {
       put("client_secret", clientSecret);
     }
-    request.setUrl(authorizationServerUrl);
-    UrlEncodedContent content = new UrlEncodedContent();
-    content.data = this;
-    request.content = content;
     return request.execute();
   }
 }
