@@ -329,4 +329,14 @@ public abstract class HttpTransport {
    * @since 1.3
    */
   protected abstract LowLevelHttpRequest buildPutRequest(String url) throws IOException;
+
+  /**
+   * Default implementation does nothing, but subclasses may override to possibly release allocated
+   * system resources or close connections.
+   *
+   * @throws IOException I/O exception
+   * @since 1.4
+   */
+  public void shutdown() throws IOException {
+  }
 }

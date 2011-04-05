@@ -36,13 +36,10 @@ import java.net.URL;
 final class UrlFetchRequest extends LowLevelHttpRequest {
 
   private HttpContent content;
-  private final UrlFetchTransport transport;
   private final HTTPMethod method;
   private final HTTPRequest request;
 
-  UrlFetchRequest(UrlFetchTransport transport, String requestMethod, String url)
-      throws IOException {
-    this.transport = transport;
+  UrlFetchRequest(String requestMethod, String url) throws IOException {
     method = HTTPMethod.valueOf(requestMethod);
     FetchOptions options =
         FetchOptions.Builder.doNotFollowRedirects().disallowTruncate().validateCertificate();
@@ -52,6 +49,13 @@ final class UrlFetchRequest extends LowLevelHttpRequest {
   @Override
   public void addHeader(String name, String value) {
     request.addHeader(new HTTPHeader(name, value));
+  }
+
+  @Override
+  public void setTimeout(int connectTimeout, int readTimeout) {
+    request.getFetchOptions().setDeadline(
+        connectTimeout == 0 || readTimeout == 0 ? Double.MAX_VALUE : (connectTimeout + readTimeout)
+            / 1000.0);
   }
 
   @Override
@@ -75,10 +79,6 @@ final class UrlFetchRequest extends LowLevelHttpRequest {
       request.setPayload(out.toByteArray());
     }
     // connect
-    double deadline = transport.deadline;
-    if (deadline >= 0) {
-      request.getFetchOptions().setDeadline(deadline);
-    }
     URLFetchService service = URLFetchServiceFactory.getURLFetchService();
     try {
       HTTPResponse response = service.fetch(request);

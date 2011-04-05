@@ -46,9 +46,23 @@ public abstract class LowLevelHttpRequest {
   public abstract void setContent(HttpContent content) throws IOException;
 
   /**
-   * Executes the request and returns a low-level HTTP response object.
+   * Sets the connection and read timeouts.
    *
-   * @throws IOException I/O exception
+   * <p>
+   * Default implementation does nothing, but subclasses should normally override.
+   * </p>
+   *
+   * @param connectTimeout timeout in milliseconds to establish a connection or {@code 0} for an
+   *        infinite timeout
+   * @param readTimeout Timeout in milliseconds to read data from an established connection or
+   *        {@code 0} for an infinite timeout
+   * @since 1.4
    */
+  @SuppressWarnings("unused")
+  public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
+
+  }
+
+  /** Executes the request and returns a low-level HTTP response object. */
   public abstract LowLevelHttpResponse execute() throws IOException;
 }

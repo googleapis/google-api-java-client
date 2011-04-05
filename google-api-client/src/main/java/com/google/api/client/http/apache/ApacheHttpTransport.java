@@ -16,6 +16,7 @@ package com.google.api.client.http.apache;
 
 import com.google.api.client.http.HttpTransport;
 
+import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -25,6 +26,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -34,9 +36,10 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
 
 /**
- * HTTP transport based on the Apache HTTP Client library.
+ * Thread-safe HTTP transport based on the Apache HTTP Client library.
  * <p>
  * Default settings:
  * </p>
@@ -76,13 +79,12 @@ public final class ApacheHttpTransport extends HttpTransport {
     // and it's not worth it to pay the penalty of checking every time.
     HttpParams params = new BasicHttpParams();
     HttpConnectionParams.setStaleCheckingEnabled(params, false);
-    // Default connection and socket timeout of 20 seconds. Tweak to taste.
-    HttpConnectionParams.setConnectionTimeout(params, 20 * 1000);
-    HttpConnectionParams.setSoTimeout(params, 20 * 1000);
     HttpConnectionParams.setSocketBufferSize(params, 8192);
-    ConnManagerParams.setTimeout(params, 20 * 1000);
+    ConnManagerParams.setMaxTotalConnections(params, 200);
+    ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(20));
     params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
-    // See http://hc.apache.org/httpcomponents-client-ga/tutorial/html/connmgmt.html#d4e596
+    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+    // See http://hc.apache.org/httpcomponents-client-ga/tutorial/html/connmgmt.html
     SchemeRegistry registry = new SchemeRegistry();
     registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
     registry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
@@ -128,5 +130,14 @@ public final class ApacheHttpTransport extends HttpTransport {
   @Override
   public ApacheHttpRequest buildPutRequest(String url) {
     return new ApacheHttpRequest(httpClient, new HttpPut(url));
+  }
+
+  /**
+   * Shuts down the connection manager and releases allocated resources. This includes closing all
+   * connections, whether they are currently used or not.
+   */
+  @Override
+  public void shutdown() {
+    httpClient.getConnectionManager().shutdown();
   }
 }

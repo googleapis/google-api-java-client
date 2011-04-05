@@ -126,6 +126,27 @@ public final class HttpRequest {
   public GenericUrl url;
 
   /**
+   * Timeout in milliseconds to establish a connection or {@code 0} for an infinite timeout.
+   * <p>
+   * By default it is 20 seconds.
+   * </p>
+   *
+   * @since 1.4
+   */
+  public int connectTimeout = 20 * 1000;
+
+  /**
+   * Timeout in milliseconds to read data from an established connection or {@code 0} for an
+   * infinite timeout.
+   * <p>
+   * By default it is 20 seconds.
+   * </p>
+   *
+   * @since 1.4
+   */
+  public int readTimeout = 20 * 1000;
+
+  /**
    * @param transport HTTP transport
    * @param method HTTP request method (may be {@code null}
    */
@@ -286,6 +307,7 @@ public final class HttpRequest {
       }
 
       // execute
+      lowLevelHttpRequest.setTimeout(connectTimeout, readTimeout);
       response = new HttpResponse(this, lowLevelHttpRequest.execute());
 
       // We need to make sure our content type can support retry

@@ -21,6 +21,9 @@ import com.google.api.client.http.LowLevelHttpResponse;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import java.io.IOException;
 
@@ -40,6 +43,14 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
   @Override
   public void addHeader(String name, String value) {
     request.addHeader(name, value);
+  }
+
+  @Override
+  public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
+    HttpParams params = request.getParams();
+    ConnManagerParams.setTimeout(params, connectTimeout);
+    HttpConnectionParams.setConnectionTimeout(params, connectTimeout);
+    HttpConnectionParams.setSoTimeout(params, readTimeout);
   }
 
   @Override
