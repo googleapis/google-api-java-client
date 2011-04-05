@@ -74,9 +74,11 @@ final class UrlFetchRequest extends LowLevelHttpRequest {
       if (contentLength >= 0) {
         addHeader("Content-Length", Long.toString(contentLength));
       }
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      content.writeTo(out);
-      request.setPayload(out.toByteArray());
+      if (contentLength != 0) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        content.writeTo(out);
+        request.setPayload(out.toByteArray());
+      }
     }
     // connect
     URLFetchService service = URLFetchServiceFactory.getURLFetchService();

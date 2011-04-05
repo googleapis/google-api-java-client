@@ -52,6 +52,8 @@ final class ContentEntity extends AbstractHttpEntity {
   }
 
   public void writeTo(OutputStream out) throws IOException {
-    content.writeTo(out);
+    if (contentLength != 0) {
+      content.writeTo(out);
+    }
   }
 }

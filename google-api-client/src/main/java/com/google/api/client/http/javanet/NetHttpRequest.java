@@ -53,9 +53,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
   public LowLevelHttpResponse execute() throws IOException {
     HttpURLConnection connection = this.connection;
     // write content
-    HttpContent content = this.content;
     if (content != null) {
-      connection.setDoOutput(true);
       String contentType = content.getType();
       if (contentType != null) {
         addHeader("Content-Type", contentType);
@@ -68,7 +66,17 @@ final class NetHttpRequest extends LowLevelHttpRequest {
       if (contentLength >= 0) {
         addHeader("Content-Length", Long.toString(contentLength));
       }
-      content.writeTo(connection.getOutputStream());
+      if (contentLength != 0) {
+        // setDoOutput(true) will change a GET method to POST, so only if contentLength != 0
+        connection.setDoOutput(true);
+        // see http://developer.android.com/reference/java/net/HttpURLConnection.html
+        if (contentLength >= 0 && contentLength <= Integer.MAX_VALUE) {
+          connection.setFixedLengthStreamingMode((int) contentLength);
+        } else {
+          connection.setChunkedStreamingMode(0);
+        }
+        content.writeTo(connection.getOutputStream());
+      }
     }
     // connect
     connection.connect();

@@ -18,17 +18,21 @@ import com.google.api.client.http.LowLevelHttpResponse;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
+import org.apache.http.client.methods.HttpRequestBase;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 final class ApacheHttpResponse extends LowLevelHttpResponse {
 
-  private final org.apache.http.HttpResponse response;
+  private final HttpRequestBase request;
+  private final HttpResponse response;
   private final Header[] allHeaders;
 
-  ApacheHttpResponse(org.apache.http.HttpResponse response) {
+  ApacheHttpResponse(HttpRequestBase request, HttpResponse response) {
+    this.request = request;
     this.response = response;
     allHeaders = response.getAllHeaders();
   }
@@ -104,5 +108,15 @@ final class ApacheHttpResponse extends LowLevelHttpResponse {
   @Override
   public String getHeaderValue(int index) {
     return allHeaders[index].getValue();
+  }
+
+  /**
+   * Aborts execution of the request.
+   *
+   * @since 1.4
+   */
+  @Override
+  public void disconnect() {
+    request.abort();
   }
 }

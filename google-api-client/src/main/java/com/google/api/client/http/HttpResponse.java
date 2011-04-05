@@ -224,16 +224,22 @@ public final class HttpResponse {
   }
 
   /**
-   * Gets the content of the HTTP response from {@link #getContent()} and ignores the content if
-   * there is any.
-   *
-   * @throws IOException I/O exception
+   * Closes the the content of the HTTP response from {@link #getContent()}, ignoring any content.
    */
   public void ignore() throws IOException {
     InputStream content = getContent();
     if (content != null) {
       content.close();
     }
+  }
+
+  /**
+   * Disconnect using {@link LowLevelHttpResponse#disconnect()}.
+   *
+   * @since 1.4
+   */
+  public void disconnect() throws IOException {
+    response.disconnect();
   }
 
   /**

@@ -55,7 +55,7 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
 
   @Override
   public LowLevelHttpResponse execute() throws IOException {
-    return new ApacheHttpResponse(httpClient.execute(request));
+    return new ApacheHttpResponse(request, httpClient.execute(request));
   }
 
   @Override
