@@ -135,6 +135,8 @@ public final class ApacheHttpTransport extends HttpTransport {
   /**
    * Shuts down the connection manager and releases allocated resources. This includes closing all
    * connections, whether they are currently used or not.
+   *
+   * @since 1.4
    */
   @Override
   public void shutdown() {
