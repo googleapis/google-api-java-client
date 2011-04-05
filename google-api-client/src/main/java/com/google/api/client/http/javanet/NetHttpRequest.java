@@ -29,10 +29,8 @@ final class NetHttpRequest extends LowLevelHttpRequest {
 
   private final HttpURLConnection connection;
   private HttpContent content;
-  private final NetHttpTransport transport;
 
-  NetHttpRequest(NetHttpTransport transport, String requestMethod, String url) throws IOException {
-    this.transport = transport;
+  NetHttpRequest(String requestMethod, String url) throws IOException {
     HttpURLConnection connection =
         this.connection = (HttpURLConnection) new URL(url).openConnection();
     connection.setRequestMethod(requestMethod);
@@ -43,6 +41,12 @@ final class NetHttpRequest extends LowLevelHttpRequest {
   @Override
   public void addHeader(String name, String value) {
     connection.addRequestProperty(name, value);
+  }
+
+  @Override
+  public void setTimeout(int connectTimeout, int readTimeout) {
+    connection.setReadTimeout(readTimeout);
+    connection.setConnectTimeout(connectTimeout);
   }
 
   @Override
@@ -67,15 +71,6 @@ final class NetHttpRequest extends LowLevelHttpRequest {
       content.writeTo(connection.getOutputStream());
     }
     // connect
-    NetHttpTransport transport = this.transport;
-    int readTimeout = transport.readTimeout;
-    if (readTimeout >= 0) {
-      connection.setReadTimeout(readTimeout);
-    }
-    int connectTimeout = transport.connectTimeout;
-    if (connectTimeout >= 0) {
-      connection.setConnectTimeout(connectTimeout);
-    }
     connection.connect();
     return new NetHttpResponse(connection);
   }

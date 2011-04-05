@@ -14,36 +14,25 @@
 
 package com.google.api.client.http.javanet;
 
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestHandler;
 import com.google.api.client.http.HttpTransport;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 
 /**
- * HTTP low-level transport based on the {@code java.net} package.
+ * Thread-safe HTTP low-level transport based on the {@code java.net} package.
+ *
+ * <p>
+ * Upgrade warning: prior version 1.3 had {@code connectTimeout} and {@code readTimeout} fields.
+ * Instead now use {@link HttpRequest#connectTimeout} and {@link HttpRequest#readTimeout} in an
+ * {@link HttpRequestHandler}.
+ * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public final class NetHttpTransport extends HttpTransport {
-
-  /**
-   * Sets the connection timeout to a specified timeout in milliseconds by calling
-   * {@link HttpURLConnection#setConnectTimeout(int)}, or a negative value avoid calling that
-   * method. By default it is 20 seconds.
-   *
-   * @since 1.1
-   */
-  public int connectTimeout = 20 * 1000;
-
-  /**
-   * Sets the read timeout to a specified timeout in milliseconds by calling
-   * {@link HttpURLConnection#setReadTimeout(int)}, or a negative value avoid calling that method.
-   * By default it is 20 seconds.
-   *
-   * @since 1.1
-   */
-  public int readTimeout = 20 * 1000;
 
   @Override
   public boolean supportsHead() {
@@ -52,26 +41,26 @@ public final class NetHttpTransport extends HttpTransport {
 
   @Override
   public NetHttpRequest buildDeleteRequest(String url) throws IOException {
-    return new NetHttpRequest(this, "DELETE", url);
+    return new NetHttpRequest("DELETE", url);
   }
 
   @Override
   public NetHttpRequest buildGetRequest(String url) throws IOException {
-    return new NetHttpRequest(this, "GET", url);
+    return new NetHttpRequest("GET", url);
   }
 
   @Override
   public NetHttpRequest buildHeadRequest(String url) throws IOException {
-    return new NetHttpRequest(this, "HEAD", url);
+    return new NetHttpRequest("HEAD", url);
   }
 
   @Override
   public NetHttpRequest buildPostRequest(String url) throws IOException {
-    return new NetHttpRequest(this, "POST", url);
+    return new NetHttpRequest("POST", url);
   }
 
   @Override
   public NetHttpRequest buildPutRequest(String url) throws IOException {
-    return new NetHttpRequest(this, "PUT", url);
+    return new NetHttpRequest("PUT", url);
   }
 }
