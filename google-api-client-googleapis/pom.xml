@@ -24,6 +24,13 @@
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+          </archive>
+        </configuration>
         <executions>
           <execution>
             <id>jar</id>
