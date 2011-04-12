@@ -275,6 +275,7 @@ public class Xml {
           field = isMap ? null : classInfo.getField(fieldName);
           Class<?> fieldClass = field == null ? null : field.getType();
           boolean isStopped = false;
+          // text content
           if (field == null && !isMap && genericXml == null || field != null
               && FieldInfo.isPrimitive(fieldClass)) {
             int level = 1;
@@ -300,12 +301,14 @@ public class Xml {
                   break;
               }
             }
-          } else if (field == null || Map.class.isAssignableFrom(fieldClass)) {
-            // TODO: handle sub-field type
+          } else if (field == null || ClassInfo.isAssignableToOrFrom(fieldClass, Map.class)) {
+            // store the element as a map
+            // TODO(yanivi): handle sub-field type
             Map<String, Object> mapValue = ClassInfo.newMapInstance(fieldClass);
             isStopped =
                 parseElementInternal(parser, mapValue, namespaceDictionary, customizeParser);
             if (isMap) {
+              // map but not GenericXml: store as ArrayList of elements
               @SuppressWarnings("unchecked")
               Collection<Object> list = (Collection<Object>) destinationMap.get(fieldName);
               if (list == null) {
@@ -314,8 +317,22 @@ public class Xml {
               }
               list.add(mapValue);
             } else if (field != null) {
-              FieldInfo.setFieldValue(field, destination, mapValue);
+              // not a map: store in field value
+              FieldInfo fieldInfo = FieldInfo.of(field);
+              if (fieldClass == Object.class) {
+                // field is an Object: store as ArrayList of element maps
+                Collection<Object> list = fieldInfo.getCollectionValue(destination);
+                if (list == null) {
+                  list = new ArrayList<Object>(1);
+                  fieldInfo.setValue(destination, list);
+                }
+                list.add(mapValue);
+              } else {
+                // field is a Map: store as a single element map
+                fieldInfo.setValue(destination, mapValue);
+              }
             } else {
+              // GenericXml: store as ArrayList of elements
               GenericXml atom = (GenericXml) destination;
               @SuppressWarnings("unchecked")
               Collection<Object> list = (Collection<Object>) atom.get(fieldName);
@@ -326,15 +343,14 @@ public class Xml {
               list.add(mapValue);
             }
           } else if (Collection.class.isAssignableFrom(fieldClass)) {
-            @SuppressWarnings("unchecked")
-            Collection<Object> collectionValue =
-                (Collection<Object>) FieldInfo.getFieldValue(field, destination);
+            FieldInfo fieldInfo = FieldInfo.of(field);
+            Collection<Object> collectionValue = fieldInfo.getCollectionValue(destination);
             if (collectionValue == null) {
               collectionValue = ClassInfo.newCollectionInstance(fieldClass);
-              FieldInfo.setFieldValue(field, destination, collectionValue);
+              fieldInfo.setValue(destination, collectionValue);
             }
             Object elementValue = null;
-            // TODO: what about Collection<Object> or Collection<?> or
+            // TODO(yanivi): what about Collection<Object> or Collection<?> or
             // Collection<? extends X>?
             Class<?> subFieldClass = ClassInfo.getCollectionParameter(field);
             if (subFieldClass == null || FieldInfo.isPrimitive(subFieldClass)) {

@@ -43,7 +43,7 @@ import java.io.OutputStream;
  * @author Yaniv Inbar
  */
 public class JsonHttpContent implements HttpContent {
-  // TODO: ability to annotate fields as only needed for POST?
+  // TODO(yanivi): ability to annotate fields as only needed for POST?
 
   /** Content type. Default value is {@link Json#CONTENT_TYPE}. */
   public String contentType = Json.CONTENT_TYPE;

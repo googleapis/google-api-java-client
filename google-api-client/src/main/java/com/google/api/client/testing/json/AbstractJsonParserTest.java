@@ -325,4 +325,33 @@ public abstract class AbstractJsonParserTest extends TestCase {
       // expected
     }
   }
+
+  public static class AnyType {
+    @Key
+    public Object arr;
+    @Key
+    public Object bool;
+    @Key
+    public Object num;
+    @Key
+    public Object obj;
+    @Key
+    public Object str;
+    @Key
+    public Object nul;
+  }
+
+  static final String ROOT_ANY_TYPE =
+      "\"arr\":[1],\"bool\":true,\"num\":5,\"obj\":{\"key\":\"value\"},\"str\":\"value\"";
+  static final String ANY_TYPE = "{" + ROOT_ANY_TYPE + ",\"nul\":null}";
+  static final String ANY_TYPE_SERIALIZED = "{" + ROOT_ANY_TYPE + "}";
+
+  public void testParser_anyType() throws IOException {
+    JsonFactory factory = newFactory();
+    JsonParser parser;
+    parser = factory.createJsonParser(ANY_TYPE);
+    parser.nextToken();
+    AnyType result = parser.parse(AnyType.class, null);
+    assertEquals(ANY_TYPE_SERIALIZED, factory.toString(result));
+  }
 }

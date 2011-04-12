@@ -23,7 +23,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
@@ -133,35 +135,60 @@ public final class ClassInfo {
       Exception e, Class<?> clazz) {
     StringBuilder buf =
         new StringBuilder("unable to create new instance of class ").append(clazz.getName());
-    if (Modifier.isAbstract(clazz.getModifiers())) {
-      buf.append(" (and) because it is abstract");
+    ArrayList<String> reasons = new ArrayList<String>();
+    if (Modifier.isInterface(clazz.getModifiers())) {
+      reasons.add("because it is an interface");
+    } else if (Modifier.isAbstract(clazz.getModifiers())) {
+      reasons.add("because it is abstract");
     }
     if (clazz.getEnclosingClass() != null && !Modifier.isStatic(clazz.getModifiers())) {
-      buf.append(" (and) because it is not static");
+      reasons.add("because it is not static");
     }
     if (!Modifier.isPublic(clazz.getModifiers())) {
-      buf.append(" (and) because it is not public");
+      reasons.add("because it is not public");
     } else {
       try {
         clazz.getConstructor();
       } catch (NoSuchMethodException e1) {
-        buf.append(" (and) because it has no public default constructor");
+        reasons.add("because it has no public default constructor");
       }
+    }
+    // append reasons
+    boolean and = false;
+    for (String reason : reasons) {
+      if (and) {
+        buf.append(" and");
+      } else {
+        and = true;
+      }
+      buf.append(" ").append(reason);
     }
     throw new IllegalArgumentException(buf.toString(), e);
   }
 
   /**
+   * Returns whether a class is either assignable to or from another class
+   *
+   * @param classToCheck class to check
+   * @param anotherClass another class
+   * @since 1.4
+   */
+  public static boolean isAssignableToOrFrom(Class<?> classToCheck, Class<?> anotherClass) {
+    return classToCheck.isAssignableFrom(anotherClass)
+        || anotherClass.isAssignableFrom(classToCheck);
+  }
+
+  /**
    * Returns a new instance of the given collection class.
    * <p>
-   * If a concrete collection class in the The class of the returned collection instance depends on
-   * the input collection class as follows (first that matches):
+   * Creates a new collection instance specified for the first input collection class that matches
+   * as follows:
    * <ul>
-   * <li>{@code null} or {@link ArrayList} is an instance of the collection class: returns an
-   * {@link ArrayList}</li>
-   * <li>Concrete subclass of {@link Collection}: returns an instance of that collection class</li>
-   * <li>{@link HashSet} is an instance of the collection class: returns a {@link HashSet}</li>
-   * <li>{@link TreeSet} is an instance of the collection class: returns a {@link TreeSet}</li>
+   * <li>{@code null} or assignable from {@link ArrayList} (like {@link List} or {@link Collection}
+   * or {@link Object}): returns an {@link ArrayList}</li>
+   * <li>assignable from {@link HashSet}: returns a {@link HashSet}</li>
+   * <li>assignable from {@link TreeSet}: returns a {@link TreeSet}</li>
+   * <li>else: calls {@link ClassInfo#newInstance(Class)}</li>
    * </ul>
    *
    * @param collectionClass collection class or {@code null} for {@link ArrayList}.
@@ -171,37 +198,41 @@ public final class ClassInfo {
     if (collectionClass == null || collectionClass.isAssignableFrom(ArrayList.class)) {
       return new ArrayList<Object>();
     }
-    if (0 == (collectionClass.getModifiers() & (Modifier.ABSTRACT | Modifier.INTERFACE))) {
-      @SuppressWarnings("unchecked")
-      Collection<Object> result = (Collection<Object>) ClassInfo.newInstance(collectionClass);
-      return result;
-    }
     if (collectionClass.isAssignableFrom(HashSet.class)) {
       return new HashSet<Object>();
     }
     if (collectionClass.isAssignableFrom(TreeSet.class)) {
       return new TreeSet<Object>();
     }
-    throw new IllegalArgumentException(
-        "no default collection class defined for class: " + collectionClass.getName());
+    @SuppressWarnings("unchecked")
+    Collection<Object> result = (Collection<Object>) ClassInfo.newInstance(collectionClass);
+    return result;
   }
 
-  /** Returns a new instance of the given map class. */
+  /**
+   * Returns a new instance of a map based on the given field class.
+   * <p>
+   * Creates a new map instance specified for the first input map class that matches as follows:
+   * </p>
+   * <ul>
+   * <li>{@code null} or assignable from {@link ArrayMap} (like {@link Map} or {@link Object}):
+   * returns an {@link ArrayMap}</li>
+   * <li>assignable from {@link TreeMap} (like {@link SortedMap}): returns a {@link TreeMap}</li>
+   * <li>else: calls {@link ClassInfo#newInstance(Class)}</li>
+   * </ul>
+   *
+   * @param mapClass field class
+   */
   public static Map<String, Object> newMapInstance(Class<?> mapClass) {
-    if (mapClass != null
-        && 0 == (mapClass.getModifiers() & (Modifier.ABSTRACT | Modifier.INTERFACE))) {
-      @SuppressWarnings("unchecked")
-      Map<String, Object> result = (Map<String, Object>) ClassInfo.newInstance(mapClass);
-      return result;
-    }
     if (mapClass == null || mapClass.isAssignableFrom(ArrayMap.class)) {
       return ArrayMap.create();
     }
     if (mapClass.isAssignableFrom(TreeMap.class)) {
       return new TreeMap<String, Object>();
     }
-    throw new IllegalArgumentException(
-        "no default map class defined for class: " + mapClass.getName());
+    @SuppressWarnings("unchecked")
+    Map<String, Object> result = (Map<String, Object>) ClassInfo.newInstance(mapClass);
+    return result;
   }
 
   /**

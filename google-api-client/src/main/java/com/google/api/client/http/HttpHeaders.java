@@ -184,5 +184,5 @@ public class HttpHeaders extends GenericData {
     return fieldNameMap;
   }
 
-  // TODO: override equals and hashCode
+  // TODO(yanivi): override equals and hashCode
 }

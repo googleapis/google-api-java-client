@@ -27,6 +27,7 @@ public class AllTests extends TestSuite {
     TestSuite result = new TestSuite(AllTests.class.getName());
     result.addTestSuite(GenericXmlTest.class);
     result.addTestSuite(XmlNamespaceDictionaryTest.class);
+    result.addTestSuite(XmlTest.class);
     return result;
   }
 }

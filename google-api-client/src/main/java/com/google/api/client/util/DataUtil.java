@@ -83,7 +83,7 @@ public class DataUtil {
   }
 
   static void cloneInternal(Object src, Object dest) {
-    // TODO: support Java arrays?
+    // TODO(yanivi): support Java arrays?
     Class<?> srcClass = src.getClass();
     if (Collection.class.isAssignableFrom(srcClass)) {
       @SuppressWarnings("unchecked")
