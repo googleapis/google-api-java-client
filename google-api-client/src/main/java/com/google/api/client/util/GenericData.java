@@ -35,14 +35,14 @@ import java.util.Set;
  */
 public class GenericData extends AbstractMap<String, Object> implements Cloneable {
 
-  // TODO: type parameter to specify value type?
+  // TODO(yanivi): type parameter to specify value type?
 
   private EntrySet entrySet;
 
   /** Map of unknown fields. */
   public ArrayMap<String, Object> unknownFields = ArrayMap.create();
 
-  // TODO: implement more methods for faster implementation
+  // TODO(yanivi): implement more methods for faster implementation
 
   final ClassInfo classInfo = ClassInfo.of(getClass());
 

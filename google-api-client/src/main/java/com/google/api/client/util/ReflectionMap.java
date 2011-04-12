@@ -44,7 +44,7 @@ public final class ReflectionMap extends AbstractMap<String, Object> {
     size = classInfo.getKeyCount();
   }
 
-  // TODO: implement more methods for faster implementation!
+  // TODO(yanivi): implement more methods for faster implementation!
 
   @Override
   public Set<Map.Entry<String, Object>> entrySet() {

@@ -72,7 +72,7 @@ public abstract class JsonParser {
    */
   public abstract String getText() throws IOException;
 
-  // TODO: Jackson provides getTextCharacters(), getTextLength(), and getTextOffset()
+  // TODO(yanivi): Jackson provides getTextCharacters(), getTextLength(), and getTextOffset()
 
   /** Returns the byte value of the current token. */
   public abstract byte getByteValue() throws IOException;
@@ -363,25 +363,24 @@ public abstract class JsonParser {
       Object destination, CustomizeJsonParser customizeParser) throws IOException {
     switch (token) {
       case START_ARRAY:
-        if (fieldClass == null || Collection.class.isAssignableFrom(fieldClass)) {
-          // TODO: handle JSON array of JSON array
-          Collection<Object> collectionValue = null;
-          if (customizeParser != null && field != null) {
-            collectionValue = customizeParser.newInstanceForArray(destination, field);
-          }
-          if (collectionValue == null) {
-            collectionValue = ClassInfo.newCollectionInstance(fieldClass);
-          }
-          Class<?> subFieldClass = ClassInfo.getCollectionParameter(field);
-          parseArray(collectionValue, subFieldClass, customizeParser);
-          return collectionValue;
+        Preconditions.checkArgument(
+            fieldClass == null || ClassInfo.isAssignableToOrFrom(fieldClass, Collection.class),
+            "%s: expected Collection field type but got %s for field %s", getCurrentName(),
+            fieldClass, field);
+        // TODO(yanivi): handle JSON array of JSON array
+        Collection<Object> collectionValue = null;
+        if (customizeParser != null && field != null) {
+          collectionValue = customizeParser.newInstanceForArray(destination, field);
         }
-        throw new IllegalArgumentException(
-            "expected field type that implements Collection but got " + fieldClass + " for field "
-                + field);
+        if (collectionValue == null) {
+          collectionValue = ClassInfo.newCollectionInstance(fieldClass);
+        }
+        Class<?> subFieldClass = ClassInfo.getCollectionParameter(field);
+        parseArray(collectionValue, subFieldClass, customizeParser);
+        return collectionValue;
       case START_OBJECT:
         Object newInstance = null;
-        boolean isMap = fieldClass == null || Map.class.isAssignableFrom(fieldClass);
+        boolean isMap = fieldClass == null || ClassInfo.isAssignableToOrFrom(fieldClass, Map.class);
         if (fieldClass != null && customizeParser != null) {
           newInstance = customizeParser.newInstanceForObject(destination, fieldClass);
         }
@@ -393,6 +392,7 @@ public abstract class JsonParser {
           }
         }
         if (isMap && fieldClass != null) {
+          // TODO(yanivi): handle map value parameter of type map or collection
           Class<?> valueClass;
           if (field != null) {
             valueClass = ClassInfo.getMapValueParameter(field);
@@ -410,17 +410,17 @@ public abstract class JsonParser {
         return newInstance;
       case VALUE_TRUE:
       case VALUE_FALSE:
-        if (fieldClass != null && fieldClass != Boolean.class && fieldClass != boolean.class) {
-          throw new IllegalArgumentException(
-              getCurrentName() + ": expected type Boolean or boolean but got " + fieldClass
-                  + " for field " + field);
-        }
+        Preconditions.checkArgument(fieldClass == null || fieldClass.isAssignableFrom(Boolean.class)
+            || fieldClass == boolean.class,
+            "%s: expected type Boolean or boolean but got %s for field %s" + field,
+            getCurrentName(), fieldClass, field);
         return token == JsonToken.VALUE_TRUE ? Boolean.TRUE : Boolean.FALSE;
       case VALUE_NUMBER_FLOAT:
       case VALUE_NUMBER_INT:
         Preconditions.checkArgument(field == null || field.getAnnotation(JsonString.class) == null,
-            "number field formatted as a JSON number cannot use @JsonString annotation: %s", field);
-        if (fieldClass == null || fieldClass == BigDecimal.class) {
+            "%s: number field formatted as a JSON number cannot use @JsonString annotation: %s",
+            getCurrentName(), field);
+        if (fieldClass == null || fieldClass.isAssignableFrom(BigDecimal.class)) {
           return getDecimalValue();
         }
         if (fieldClass == BigInteger.class) {
@@ -450,9 +450,9 @@ public abstract class JsonParser {
       case VALUE_STRING:
         Preconditions.checkArgument(field == null || !Number.class.isAssignableFrom(fieldClass)
             || field.getAnnotation(JsonString.class) != null,
-            "number field formatted as a JSON string must use the @JsonString annotation: %s",
-            field);
-        // TODO: "special" values like Double.POSITIVE_INFINITY?
+            "%s: number field formatted as a JSON string must use the @JsonString annotation: %s",
+            getCurrentName(), field);
+        // TODO(yanivi): "special" values like Double.POSITIVE_INFINITY?
         try {
           return FieldInfo.parsePrimitiveValue(fieldClass, getText());
         } catch (IllegalArgumentException e) {

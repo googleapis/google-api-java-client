@@ -18,6 +18,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.WeakHashMap;
 
 /**
@@ -100,6 +101,17 @@ public class FieldInfo {
   }
 
   /**
+   * Returns the value of the field in the given object instance using {@link #getValue(Object)} and
+   * casts it to a collection.
+   *
+   * @since 1.4
+   */
+  @SuppressWarnings("unchecked")
+  public Collection<Object> getCollectionValue(Object obj) {
+    return (Collection<Object>) getValue(obj);
+  }
+
+  /**
    * Sets to the given value of the field in the given object instance using reflection.
    * <p>
    * If the field is final, it checks that value being set is identical to the existing value.
@@ -125,7 +137,7 @@ public class FieldInfo {
         || fieldClass == DateTime.class || fieldClass == Boolean.class;
   }
 
-  // TODO: support java.net.URI as primitive type?
+  // TODO(yanivi): support java.net.URI as primitive type?
 
   /**
    * Returns whether to given value is {@code null} or its class is primitive as defined by
@@ -175,7 +187,7 @@ public class FieldInfo {
    * <p>
    * Types are parsed as follows:
    * <ul>
-   * <li>{@code null} or {@link String}: no parsing</li>
+   * <li>{@code null} or is assignable from {@link String} (like {@link Object}): no parsing</li>
    * <li>{@code char} or {@link Character}: {@link String#charAt(int) String.charAt}(0) (requires
    * length to be exactly 1)</li>
    * <li>{@code boolean} or {@link Boolean}: {@link Boolean#valueOf(String)}</li>
@@ -199,7 +211,8 @@ public class FieldInfo {
    *         {@link #isPrimitive(Class)}
    */
   public static Object parsePrimitiveValue(Class<?> primitiveClass, String stringValue) {
-    if (stringValue == null || primitiveClass == null || primitiveClass == String.class) {
+    if (stringValue == null || primitiveClass == null
+        || primitiveClass.isAssignableFrom(String.class)) {
       return stringValue;
     }
     if (primitiveClass == Character.class || primitiveClass == char.class) {

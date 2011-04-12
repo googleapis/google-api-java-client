@@ -120,7 +120,7 @@ public final class HttpRequest {
    */
   public HttpMethod method;
 
-  // TODO: support more HTTP methods?
+  // TODO(yanivi): support more HTTP methods?
 
   /** HTTP request URL. */
   public GenericUrl url;

@@ -133,9 +133,9 @@ public final class UrlEncodedParser implements HttpParser {
       FieldInfo fieldInfo = classInfo.getFieldInfo(name);
       if (fieldInfo != null) {
         Class<?> type = fieldInfo.type;
-        if (Collection.class.isAssignableFrom(type)) {
-          @SuppressWarnings("unchecked")
-          Collection<Object> collection = (Collection<Object>) fieldInfo.getValue(data);
+        if (ClassInfo.isAssignableToOrFrom(type, Collection.class)) {
+          // parser into a collection field that can handle repeating values 
+          Collection<Object> collection = fieldInfo.getCollectionValue(data);
           if (collection == null) {
             collection = ClassInfo.newCollectionInstance(type);
             fieldInfo.setValue(data, collection);
@@ -143,9 +143,11 @@ public final class UrlEncodedParser implements HttpParser {
           Class<?> subFieldClass = ClassInfo.getCollectionParameter(fieldInfo.field);
           collection.add(FieldInfo.parsePrimitiveValue(subFieldClass, stringValue));
         } else {
+          // parse into a field that assumes it is a single value
           fieldInfo.setValue(data, FieldInfo.parsePrimitiveValue(type, stringValue));
         }
       } else if (map != null) {
+        // parse into a map: store as an ArrayList of values
         @SuppressWarnings("unchecked")
         ArrayList<String> listValue = (ArrayList<String>) map.get(name);
         if (listValue == null) {

@@ -19,6 +19,8 @@ import android.accounts.AccountManager;
 import android.content.Context;
 
 /**
+ * Account manager wrapper for Google accounts.
+ *
  * @since 1.4
  * @author Yaniv Inbar
  */

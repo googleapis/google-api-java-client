@@ -93,7 +93,6 @@ public final class HttpResponse {
    */
   public boolean disableContentLogging;
 
-  @SuppressWarnings("unchecked")
   HttpResponse(HttpRequest request, LowLevelHttpResponse response) {
     this.request = request;
     this.transport = request.transport;
@@ -144,8 +143,8 @@ public final class HttpResponse {
       if (fieldInfo != null) {
         Class<?> type = fieldInfo.type;
         // collection is used for repeating headers of the same name
-        if (Collection.class.isAssignableFrom(type)) {
-          Collection<Object> collection = (Collection<Object>) fieldInfo.getValue(headers);
+        if (ClassInfo.isAssignableToOrFrom(type, Collection.class)) {
+          Collection<Object> collection = fieldInfo.getCollectionValue(headers);
           if (collection == null) {
             collection = ClassInfo.newCollectionInstance(type);
             fieldInfo.setValue(headers, collection);
@@ -159,6 +158,7 @@ public final class HttpResponse {
         }
       } else {
         // store header values in an array list
+        @SuppressWarnings("unchecked")
         ArrayList<String> listValue = (ArrayList<String>) headers.get(fieldName);
         if (listValue == null) {
           listValue = new ArrayList<String>();
