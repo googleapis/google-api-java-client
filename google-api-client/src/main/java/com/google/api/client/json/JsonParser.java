@@ -20,6 +20,7 @@ import com.google.api.client.util.GenericData;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -248,7 +249,7 @@ public abstract class JsonParser {
         Field field = fieldInfo.field;
         Object fieldValue =
             parseValue(curToken, field, fieldInfo.type, destination, customizeParser);
-        FieldInfo.setFieldValue(field, destination, fieldValue);
+        fieldInfo.setValue(destination, fieldValue);
       } else if (isGenericData) {
         // store unknown field in generic JSON
         GenericData object = (GenericData) destination;
@@ -363,8 +364,8 @@ public abstract class JsonParser {
       Object destination, CustomizeJsonParser customizeParser) throws IOException {
     switch (token) {
       case START_ARRAY:
-        Preconditions.checkArgument(
-            fieldClass == null || ClassInfo.isAssignableToOrFrom(fieldClass, Collection.class),
+        Preconditions.checkArgument(fieldClass == null || fieldClass.isArray()
+            || ClassInfo.isAssignableToOrFrom(fieldClass, Collection.class),
             "%s: expected Collection field type but got %s for field %s", getCurrentName(),
             fieldClass, field);
         // TODO(yanivi): handle JSON array of JSON array
@@ -377,6 +378,10 @@ public abstract class JsonParser {
         }
         Class<?> subFieldClass = ClassInfo.getCollectionParameter(field);
         parseArray(collectionValue, subFieldClass, customizeParser);
+        if (fieldClass != null && fieldClass.isArray()) {
+          return collectionValue.toArray(
+              (Object[]) Array.newInstance(subFieldClass, collectionValue.size()));
+        }
         return collectionValue;
       case START_OBJECT:
         Object newInstance = null;

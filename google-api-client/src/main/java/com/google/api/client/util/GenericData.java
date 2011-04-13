@@ -124,7 +124,7 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
       @SuppressWarnings("unchecked")
       GenericData result = (GenericData) super.clone();
       result.entrySet = null;
-      DataUtil.cloneInternal(this, result);
+      DataUtil.deepCopy(this, result);
       result.unknownFields = DataUtil.clone(unknownFields);
       return result;
     } catch (CloneNotSupportedException e) {

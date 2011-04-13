@@ -149,7 +149,9 @@ public class HttpHeaders extends GenericData {
    * Computes a canonical map from lower-case header name to its values.
    *
    * @return canonical map from lower-case header name to its values
+   * @deprecated (scheduled to be removed in 1.5)
    */
+  @Deprecated
   public Map<String, Collection<Object>> canonicalMap() {
     Map<String, Collection<Object>> result = new HashMap<String, Collection<Object>>();
     for (Map.Entry<String, Object> entry : entrySet()) {

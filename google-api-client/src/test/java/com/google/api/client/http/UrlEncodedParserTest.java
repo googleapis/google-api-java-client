@@ -54,13 +54,16 @@ public class UrlEncodedParserTest extends TestCase {
     List<String> q;
 
     @Key
+    String[] r;
+
+    @Key
     Object o;
 
     @Override
     public boolean equals(Object obj) {
       Simple other = (Simple) obj;
       return Objects.equal(a, other.a) && Objects.equal(b, other.b) && Objects.equal(c, other.c)
-          && Objects.equal(q, other.q) && Objects.equal(o, other.o);
+          && Objects.equal(q, other.q) && Arrays.equals(r, other.r) && Objects.equal(o, other.o);
     }
 
     public Simple() {
@@ -74,6 +77,7 @@ public class UrlEncodedParserTest extends TestCase {
           .add("b", b)
           .add("c", c)
           .add("q", q)
+          .add("r", Arrays.asList(r))
           .add("o", o)
           .toString();
     }
@@ -99,25 +103,26 @@ public class UrlEncodedParserTest extends TestCase {
 
   public void testParse_simple() {
     Simple actual = new Simple();
-    UrlEncodedParser.parse("q=1&a=x&b=y&c=z&q=2&undeclared=0&o=r", actual);
+    UrlEncodedParser.parse("q=1&a=x&b=y&c=z&q=2&undeclared=0&o=object&r=a1&r=a2", actual);
     Simple expected = new Simple();
     expected.a = "x";
     expected.b = "y";
     expected.c = "z";
     expected.q = new ArrayList<String>(Arrays.asList("1", "2"));
-    expected.o = new ArrayList<String>(Arrays.asList("r"));
+    expected.r = new String[] {"a1", "a2"};
+    expected.o = new ArrayList<String>(Arrays.asList("object"));
     assertEquals(expected, actual);
   }
 
   public void testParse_generic() {
     Generic actual = new Generic();
-    UrlEncodedParser.parse("p=4&q=1&a=x&p=3&b=y&c=z&d=v&q=2&p=5&o=r", actual);
+    UrlEncodedParser.parse("p=4&q=1&a=x&p=3&b=y&c=z&d=v&q=2&p=5&o=object", actual);
     Generic expected = new Generic();
     expected.a = "x";
     expected.b = "y";
     expected.c = "z";
     expected.q = new ArrayList<String>(Arrays.asList("1", "2"));
-    expected.o = new ArrayList<String>(Arrays.asList("r"));
+    expected.o = new ArrayList<String>(Arrays.asList("object"));
     expected.set("d", Collections.singletonList("v"));
     expected.set("p", Arrays.asList("4", "3", "5"));
     assertEquals(expected, actual);

@@ -82,6 +82,10 @@ public final class UrlEncodedContent implements HttpContent {
             for (Object repeatedValue : collectionValue) {
               first = appendParam(first, buf, name, repeatedValue);
             }
+          } else if (value.getClass().isArray()) {
+            for (Object repeatedValue : (Object[]) value) {
+              first = appendParam(first, buf, name, repeatedValue);
+            }
           } else {
             first = appendParam(first, buf, name, value);
           }

@@ -17,12 +17,16 @@ package com.google.api.client.http;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
+import com.google.api.client.util.Key;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ListMultimap;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import java.io.IOException;
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Tests {@link HttpRequest}.
@@ -122,5 +126,58 @@ public class HttpRequestTest extends TestCase {
     Assert.assertEquals(200, resp.statusCode);
     Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
     Assert.assertTrue(handler.isCalled);
+  }
+
+
+  public static class MyHeaders extends HttpHeaders {
+
+    @Key
+    public String foo;
+
+    @Key
+    Object objNum;
+
+    @Key
+    Object objList;
+
+    @Key
+    List<String> list;
+
+    @Key
+    String[] r;
+  }
+
+  public void testExecute_headerSerialization() throws IOException {
+    // custom headers
+    MyHeaders myHeaders = new MyHeaders();
+    myHeaders.foo = "bar";
+    myHeaders.objNum = 5;
+    myHeaders.list = ImmutableList.of("a", "b", "c");
+    myHeaders.objList = ImmutableList.of("a2", "b2", "c2");
+    myHeaders.r = new String[] {"a1", "a2"};
+    myHeaders.acceptEncoding = null;
+    myHeaders.userAgent = "foo";
+    myHeaders.set("a", "b");
+    // execute request
+    final MockLowLevelHttpRequest lowLevelRequest = new MockLowLevelHttpRequest();
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+        return lowLevelRequest;
+      }
+    };
+    HttpRequest request = transport.createRequestFactory().buildGetRequest(new GenericUrl());
+    request.headers = myHeaders;
+    request.execute();
+    // check headers
+    ListMultimap<String, String> headers = lowLevelRequest.headers;
+    assertEquals(ImmutableList.of("bar"), headers.get("foo"));
+    assertEquals(ImmutableList.of("a", "b", "c"), headers.get("list"));
+    assertEquals(ImmutableList.of("a2", "b2", "c2"), headers.get("objList"));
+    assertEquals(ImmutableList.of("a1", "a2"), headers.get("r"));
+    assertFalse(headers.containsKey("acceptEncoding"));
+    assertEquals(
+        ImmutableList.of("foo " + HttpRequest.USER_AGENT_SUFFIX), headers.get("User-Agent"));
+    assertEquals(ImmutableList.of("b"), headers.get("a"));
   }
 }

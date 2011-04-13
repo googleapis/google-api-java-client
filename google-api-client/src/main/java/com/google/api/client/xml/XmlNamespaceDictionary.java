@@ -255,6 +255,10 @@ public final class XmlNamespaceDictionary {
               for (Object subValue : (Collection<?>) value) {
                 computeAliases(subValue, aliases);
               }
+            } else if (value.getClass().isArray()) {
+              for (Object subValue : (Object[]) value) {
+                computeAliases(subValue, aliases);
+              }
             } else {
               computeAliases(value, aliases);
             }
@@ -372,6 +376,10 @@ public final class XmlNamespaceDictionary {
         String subElementName = subElementNames.get(i);
         if (subElementValue instanceof Collection<?>) {
           for (Object subElement : (Collection<?>) subElementValue) {
+            new ElementSerializer(subElement, errorOnUnknown).serialize(serializer, subElementName);
+          }
+        } else if (subElementValue.getClass().isArray()) {
+          for (Object subElement : (Object[]) subElementValue) {
             new ElementSerializer(subElement, errorOnUnknown).serialize(serializer, subElementName);
           }
         } else {

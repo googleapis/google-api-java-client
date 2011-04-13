@@ -49,11 +49,15 @@ public class HttpResponseTest extends TestCase {
   }
 
   public static class MyHeaders extends HttpHeaders {
+
     @Key
     public String foo;
 
     @Key
     public Object obj;
+
+    @Key
+    String[] r;
   }
 
   public void testHeaderParsing() throws IOException {
@@ -70,6 +74,8 @@ public class HttpResponseTest extends TestCase {
             result.addHeader("hoo", "dar");
             result.addHeader("hoo", "far");
             result.addHeader("obj", "o");
+            result.addHeader("r", "a1");
+            result.addHeader("r", "a2");
             return result;
           }
         };
@@ -81,6 +87,7 @@ public class HttpResponseTest extends TestCase {
     assertEquals("value", response.headers.accept);
     assertEquals("bar", ((MyHeaders) response.headers).foo);
     assertEquals(new ArrayList<String>(Arrays.asList("o")), ((MyHeaders) response.headers).obj);
+    assertEquals(Arrays.asList("a1", "a2"), Arrays.asList(((MyHeaders) response.headers).r));
     assertEquals(Arrays.asList("car"), response.headers.get("goo"));
     assertEquals(Arrays.asList("dar", "far"), response.headers.get("hoo"));
   }

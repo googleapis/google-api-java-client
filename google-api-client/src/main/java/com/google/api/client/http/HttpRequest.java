@@ -32,8 +32,12 @@ import java.util.logging.Logger;
  */
 public final class HttpRequest {
 
-  /** User agent suffix for all requests. */
-  private static final String USER_AGENT_SUFFIX = "Google-API-Java-Client/" + Strings.VERSION;
+  /**
+   * User agent suffix for all requests.
+   *
+   * @since 1.4
+   */
+  public static final String USER_AGENT_SUFFIX = "Google-API-Java-Client/" + Strings.VERSION;
 
   /**
    * HTTP request handler to intercept the start of {@link #execute()} or {@code null} for none.
@@ -260,6 +264,10 @@ public final class HttpRequest {
         if (value != null) {
           if (value instanceof Collection<?>) {
             for (Object repeatedValue : (Collection<?>) value) {
+              addHeader(logger, logbuf, lowLevelHttpRequest, name, repeatedValue);
+            }
+          } else if (value.getClass().isArray()) {
+            for (Object repeatedValue : (Object[]) value) {
               addHeader(logger, logbuf, lowLevelHttpRequest, name, repeatedValue);
             }
           } else {

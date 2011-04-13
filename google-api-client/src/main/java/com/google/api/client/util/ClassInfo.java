@@ -136,21 +136,25 @@ public final class ClassInfo {
     StringBuilder buf =
         new StringBuilder("unable to create new instance of class ").append(clazz.getName());
     ArrayList<String> reasons = new ArrayList<String>();
-    if (Modifier.isInterface(clazz.getModifiers())) {
-      reasons.add("because it is an interface");
-    } else if (Modifier.isAbstract(clazz.getModifiers())) {
-      reasons.add("because it is abstract");
-    }
-    if (clazz.getEnclosingClass() != null && !Modifier.isStatic(clazz.getModifiers())) {
-      reasons.add("because it is not static");
-    }
-    if (!Modifier.isPublic(clazz.getModifiers())) {
-      reasons.add("because it is not public");
+    if (clazz.isArray()) {
+      reasons.add("because it is an array");
     } else {
-      try {
-        clazz.getConstructor();
-      } catch (NoSuchMethodException e1) {
-        reasons.add("because it has no public default constructor");
+      if (Modifier.isInterface(clazz.getModifiers())) {
+        reasons.add("because it is an interface");
+      } else if (Modifier.isAbstract(clazz.getModifiers())) {
+        reasons.add("because it is abstract");
+      }
+      if (clazz.getEnclosingClass() != null && !Modifier.isStatic(clazz.getModifiers())) {
+        reasons.add("because it is not static");
+      }
+      if (!Modifier.isPublic(clazz.getModifiers())) {
+        reasons.add("because it is not public");
+      } else {
+        try {
+          clazz.getConstructor();
+        } catch (NoSuchMethodException e1) {
+          reasons.add("because it has no public default constructor");
+        }
       }
     }
     // append reasons
@@ -184,8 +188,8 @@ public final class ClassInfo {
    * Creates a new collection instance specified for the first input collection class that matches
    * as follows:
    * <ul>
-   * <li>{@code null} or assignable from {@link ArrayList} (like {@link List} or {@link Collection}
-   * or {@link Object}): returns an {@link ArrayList}</li>
+   * <li>{@code null} or an array or assignable from {@link ArrayList} (like {@link List} or
+   * {@link Collection} or {@link Object}): returns an {@link ArrayList}</li>
    * <li>assignable from {@link HashSet}: returns a {@link HashSet}</li>
    * <li>assignable from {@link TreeSet}: returns a {@link TreeSet}</li>
    * <li>else: calls {@link ClassInfo#newInstance(Class)}</li>
@@ -195,7 +199,8 @@ public final class ClassInfo {
    * @return new collection instance
    */
   public static Collection<Object> newCollectionInstance(Class<?> collectionClass) {
-    if (collectionClass == null || collectionClass.isAssignableFrom(ArrayList.class)) {
+    if (collectionClass == null || collectionClass.isArray()
+        || collectionClass.isAssignableFrom(ArrayList.class)) {
       return new ArrayList<Object>();
     }
     if (collectionClass.isAssignableFrom(HashSet.class)) {
@@ -236,10 +241,21 @@ public final class ClassInfo {
   }
 
   /**
-   * Returns the type parameter for the given field assuming it is of type collection.
+   * Returns the collection type parameter to use for the given field.
+   * <p>
+   * If the field has a single type parameter, it will return that type parameter. If the field is
+   * an array, it will return the component type. Otherwise, it will return {@code null}.
+   * </p>
+   *
+   * @param field field
+   * @return collection type parameter to use for the given field or {@code null} for none
    */
   public static Class<?> getCollectionParameter(Field field) {
     if (field != null) {
+      Class<?> type = field.getType();
+      if (type.isArray()) {
+        return type.getComponentType();
+      }
       Type genericType = field.getGenericType();
       if (genericType instanceof ParameterizedType) {
         Type[] typeArgs = ((ParameterizedType) genericType).getActualTypeArguments();

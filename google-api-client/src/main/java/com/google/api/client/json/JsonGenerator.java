@@ -166,6 +166,7 @@ public abstract class JsonGenerator {
     if (value == null) {
       writeNull();
     }
+    Class<?> valueClass = value.getClass();
     if (value instanceof String) {
       writeString((String) value);
     } else if (value instanceof BigDecimal) {
@@ -188,16 +189,19 @@ public abstract class JsonGenerator {
       writeString(((DateTime) value).toStringRfc3339());
     } else if (value instanceof List<?>) {
       writeStartArray();
-      @SuppressWarnings("unchecked")
-      List<Object> listValue = (List<Object>) value;
-      int size = listValue.size();
-      for (int i = 0; i < size; i++) {
-        serialize(listValue.get(i));
+      for (Object o : List.class.cast(value)) {
+        serialize(o);
+      }
+      writeEndArray();
+    } else if (valueClass.isArray()) {
+      writeStartArray();
+      for (Object o : Object[].class.cast(value)) {
+        serialize(o);
       }
       writeEndArray();
     } else {
       writeStartObject();
-      ClassInfo classInfo = ClassInfo.of(value.getClass());
+      ClassInfo classInfo = ClassInfo.of(valueClass);
       for (Map.Entry<String, Object> entry : DataUtil.mapOf(value).entrySet()) {
         Object fieldValue = entry.getValue();
         if (fieldValue != null) {
