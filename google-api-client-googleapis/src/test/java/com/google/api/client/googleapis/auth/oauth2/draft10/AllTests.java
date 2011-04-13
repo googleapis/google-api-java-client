@@ -12,12 +12,12 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.auth.oauth2;
+package com.google.api.client.googleapis.auth.oauth2.draft10;
 
 import junit.framework.TestSuite;
 
 /**
- * All tests for {@link com.google.api.client.http}.
+ * All tests for {@link com.google.api.client.googleapis.auth.oauth2.draft10}.
  *
  * @author Yaniv Inbar
  */

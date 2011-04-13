@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.auth.oauth2;
+package com.google.api.client.auth.oauth2.draft10;
 
 import com.google.api.client.http.UrlEncodedParser;
 import com.google.api.client.util.GenericData;
@@ -22,9 +22,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * OAuth 2.0 parser for the redirect URL after end user grants or denies authorization as specified
- * in <a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10#section-3.1">Authorization
- * Response</a>.
+ * OAuth 2.0 (draft 10) parser for the redirect URL after end user grants or denies authorization as
+ * specified in <a
+ * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10#section-3.1">Authorization Response</a>.
  * <p>
  * Check if {@link #error} is {@code null} to check if the end-user granted authorization.
  * </p>
@@ -63,10 +63,7 @@ import java.net.URISyntaxException;
  *
  * @since 1.2
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.5) Use
- *             {@link com.google.api.client.auth.oauth2.draft10.AuthorizationResponse}
  */
-@Deprecated
 public class AuthorizationResponse extends GenericData {
 
   /**

@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.auth.oauth2;
+package com.google.api.client.googleapis.auth.oauth2.draft10;
 
 import junit.framework.TestCase;
 

@@ -12,14 +12,14 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.auth.oauth2;
+package com.google.api.client.googleapis.auth.oauth2.draft10;
 
-import com.google.api.client.auth.oauth2.AuthorizationRequestUrl;
-import com.google.api.client.auth.oauth2.AuthorizationResponse;
+import com.google.api.client.auth.oauth2.draft10.AuthorizationRequestUrl;
+import com.google.api.client.auth.oauth2.draft10.AuthorizationResponse;
 
 /**
- * Google extension to the OAuth 2.0 URL builder for an authorization web page to allow the end user
- * to authorize the application to access their protected resources.
+ * Google extension to the OAuth 2.0 (draft 10) URL builder for an authorization web page to allow
+ * the end user to authorize the application to access their protected resources.
  * <p>
  * Use {@link AuthorizationResponse} to parse the redirect response after the end user grants/denies
  * the request.

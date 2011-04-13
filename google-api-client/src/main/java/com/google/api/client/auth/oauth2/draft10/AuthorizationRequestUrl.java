@@ -12,14 +12,14 @@
  * the License.
  */
 
-package com.google.api.client.auth.oauth2;
+package com.google.api.client.auth.oauth2.draft10;
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.util.Key;
 
 /**
- * OAuth 2.0 URL builder for an authorization web page to allow the end user to authorize the
- * application to access their protected resources as specified in <a
+ * OAuth 2.0 (draft 10) URL builder for an authorization web page to allow the end user to authorize
+ * the application to access their protected resources as specified in <a
  * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10#section-3">Obtaining End-User
  * Authorization</a>.
  * <p>
@@ -44,10 +44,7 @@ import com.google.api.client.util.Key;
  *
  * @since 1.2
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.5) Use
- *             {@link com.google.api.client.auth.oauth2.draft10.AuthorizationRequestUrl}
  */
-@Deprecated
 public class AuthorizationRequestUrl extends GenericUrl {
 
   /**

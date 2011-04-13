@@ -12,12 +12,12 @@
  * the License.
  */
 
-package com.google.api.client.auth.oauth2;
+package com.google.api.client.auth.oauth2.draft10;
 
-import com.google.api.client.auth.oauth2.AccessTokenRequest.AssertionGrant;
-import com.google.api.client.auth.oauth2.AccessTokenRequest.AuthorizationCodeGrant;
-import com.google.api.client.auth.oauth2.AccessTokenRequest.RefreshTokenGrant;
-import com.google.api.client.auth.oauth2.AccessTokenRequest.ResourceOwnerPasswordCredentialsGrant;
+import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.AssertionGrant;
+import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.AuthorizationCodeGrant;
+import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.RefreshTokenGrant;
+import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.ResourceOwnerPasswordCredentialsGrant;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson.JacksonFactory;
 

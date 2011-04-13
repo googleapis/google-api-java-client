@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.auth.oauth2;
+package com.google.api.client.auth.oauth2.draft10;
 
 import com.google.api.client.http.HttpExecuteIntercepter;
 import com.google.api.client.http.HttpMethod;
@@ -24,16 +24,13 @@ import com.google.api.client.util.GenericData;
 import java.util.EnumSet;
 
 /**
- * OAuth 2.0 methods for specifying the access token parameter as specified in <a
+ * OAuth 2.0 (draft 10) methods for specifying the access token parameter as specified in <a
  * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10#section-5">Accessing a Protected
  * Resource</a>.
  *
  * @author Yaniv Inbar
  * @since 1.2
- * @deprecated (scheduled to be removed in 1.5) Use
- *             {@link com.google.api.client.auth.oauth2.draft10.AccessProtectedResource}
  */
-@Deprecated
 public final class AccessProtectedResource {
 
   /**
