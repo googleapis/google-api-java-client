@@ -12,21 +12,18 @@
  * the License.
  */
 
-package com.google.api.client.auth.oauth2;
+package com.google.api.client.auth.oauth2.draft10;
 
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
 
 /**
- * OAuth 2.0 access token error response as specified in <a
+ * OAuth 2.0 (draft 10) access token error response as specified in <a
  * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10#section-4.3">Error Response</a>.
  *
  * @since 1.2
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.5) Use
- *             {@link com.google.api.client.auth.oauth2.draft10.AccessTokenErrorResponse}
  */
-@Deprecated
 public class AccessTokenErrorResponse extends GenericData {
 
   /**

@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.auth.oauth2;
+package com.google.api.client.auth.oauth2.draft10;
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
@@ -28,7 +28,7 @@ import com.google.api.client.util.Key;
 import java.io.IOException;
 
 /**
- * OAuth 2.0 request for an access token as specified in <a
+ * OAuth 2.0 (draft 10) request for an access token as specified in <a
  * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10#section-4">Obtaining an Access Token</a>.
  * <p>
  * This class may be used directly when no access grant is included, such as when the client is
@@ -59,10 +59,7 @@ import java.io.IOException;
  *
  * @since 1.2
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.5) Use
- *             {@link com.google.api.client.auth.oauth2.draft10.AccessTokenRequest}
  */
-@Deprecated
 public class AccessTokenRequest extends GenericData {
 
   /**
@@ -93,11 +90,7 @@ public class AccessTokenRequest extends GenericData {
    * </code>
    * </pre>
    * </p>
-   *
-   * @deprecated (scheduled to be removed in 1.5) Use {@link
-   *             com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.AuthorizationCodeGrant}
    */
-  @Deprecated
   public static class AuthorizationCodeGrant extends AccessTokenRequest {
 
     /** (REQUIRED) The authorization code received from the authorization server. */
@@ -168,11 +161,7 @@ public class AccessTokenRequest extends GenericData {
    * </code>
    * </pre>
    * </p>
-   *
-   * @deprecated (scheduled to be removed in 1.5) Use {@link
-   *             com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.ResourceOwnerPasswordCredentialsGrant}
    */
-  @Deprecated
   public static class ResourceOwnerPasswordCredentialsGrant extends AccessTokenRequest {
 
     /** (REQUIRED) The resource owner's username. */
@@ -238,11 +227,7 @@ public class AccessTokenRequest extends GenericData {
    * </code>
    * </pre>
    * </p>
-   *
-   * @deprecated (scheduled to be removed in 1.5) Use {@link
-   *             com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.AssertionGrant}
    */
-  @Deprecated
   public static class AssertionGrant extends AccessTokenRequest {
 
     /**
@@ -311,11 +296,7 @@ public class AccessTokenRequest extends GenericData {
    * </code>
    * </pre>
    * </p>
-   *
-   * @deprecated (scheduled to be removed in 1.5) Use {@link
-   *             com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.RefreshTokenGrant}
    */
-  @Deprecated
   public static class RefreshTokenGrant extends AccessTokenRequest {
 
     /**

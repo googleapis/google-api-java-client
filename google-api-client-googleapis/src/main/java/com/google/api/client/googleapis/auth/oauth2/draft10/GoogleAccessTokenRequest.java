@@ -12,15 +12,15 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.auth.oauth2;
+package com.google.api.client.googleapis.auth.oauth2.draft10;
 
-import com.google.api.client.auth.oauth2.AccessTokenRequest;
+import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Key;
 
 /**
- * Google extension to the OAuth 2.0 request for an access token.
+ * Google extension to the OAuth 2.0 (draft 10) request for an access token.
  *
  * @since 1.4
  * @author Yaniv Inbar

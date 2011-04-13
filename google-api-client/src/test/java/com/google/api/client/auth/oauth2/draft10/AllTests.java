@@ -12,19 +12,22 @@
  * the License.
  */
 
+package com.google.api.client.auth.oauth2.draft10;
+
+import junit.framework.TestSuite;
+
 /**
- * Google's additions to OAuth 2.0 authorization as specified in <a
- * href="http://code.google.com/apis/accounts/docs/OAuth2.html">Using OAuth 2.0 to Access Google
- * APIs (Experimental)</a>.
+ * All tests for {@link com.google.api.client.http}.
  *
- * <p>
- * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
- * possibly entirely removed in a future version of the library</b>
- * </p>
- *
- * @since 1.4
  * @author Yaniv Inbar
  */
+public class AllTests extends TestSuite {
 
-package com.google.api.client.googleapis.auth.oauth2;
-
+  public static TestSuite suite() {
+    TestSuite result = new TestSuite(AllTests.class.getName());
+    result.addTestSuite(AccessTokenRequestTest.class);
+    result.addTestSuite(AuthorizationRequestUrlTest.class);
+    result.addTestSuite(AuthorizationResponseTest.class);
+    return result;
+  }
+}

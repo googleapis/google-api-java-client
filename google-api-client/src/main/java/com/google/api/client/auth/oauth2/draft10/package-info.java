@@ -13,7 +13,7 @@
  */
 
 /**
- * OAuth 2.0 authorization as specified in <a
+ * OAuth 2.0 (draft 10) authorization as specified in <a
  * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10">The OAuth 2.0 Protocol
  * (draft-ietf-oauth-v2-10)</a> (see detailed package specification).
  *
@@ -26,22 +26,24 @@
  * Typical steps for the OAuth 2 authorization flow:
  * <ul>
  * <li>Redirect end user in the browser to the authorization page using
- * {@link com.google.api.client.auth.oauth2.AuthorizationRequestUrl} to grant your application
- * access to their protected data.</li>
+ * {@link com.google.api.client.auth.oauth2.draft10.AuthorizationRequestUrl} to grant your
+ * application access to their protected data.</li>
  * <li>Process the authorization response using
- * {@link com.google.api.client.auth.oauth2.AuthorizationResponse} to parse the authorization code
- * and/or access token.</li>
+ * {@link com.google.api.client.auth.oauth2.draft10.AuthorizationResponse} to parse the
+ * authorization code and/or access token.</li>
  * <li>Request an access token, depending on the access grant type:
  * <ul>
  * <li>Authorization code:
- * {@link com.google.api.client.auth.oauth2.AccessTokenRequest.AuthorizationCodeGrant}</li>
+ * {@link com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.AuthorizationCodeGrant}</li>
  * <li>Resource Owner Password Credentials: {@link
- * com.google.api.client.auth.oauth2.AccessTokenRequest.ResourceOwnerPasswordCredentialsGrant}</li>
- * <li>Assertion: {@link com.google.api.client.auth.oauth2.AccessTokenRequest.AssertionGrant}</li>
- * <li>Refresh Token: {@link com.google.api.client.auth.oauth2.AccessTokenRequest.RefreshTokenGrant}
+ * com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.ResourceOwnerPasswordCredentialsGrant}
  * </li>
+ * <li>Assertion:
+ * {@link com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.AssertionGrant}</li>
+ * <li>Refresh Token:
+ * {@link com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.RefreshTokenGrant}</li>
  * <li>None (e.g. client owns protected resource):
- * {@link com.google.api.client.auth.oauth2.AccessTokenRequest}</li>
+ * {@link com.google.api.client.auth.oauth2.draft10.AccessTokenRequest}</li>
  * </ul>
  * </li>
  * </ul>
@@ -54,8 +56,7 @@
  *
  * @since 1.2
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.5) Use
- *             {@link com.google.api.client.auth.oauth2.draft10}
  */
-package com.google.api.client.auth.oauth2;
+
+package com.google.api.client.auth.oauth2.draft10;
 
