@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Strings;
@@ -22,9 +23,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -93,6 +96,19 @@ public final class HttpResponse {
    */
   public boolean disableContentLogging;
 
+  /**
+   * Stores the array values used during
+   * {@link HttpResponse#HttpResponse(HttpRequest, LowLevelHttpResponse)}.
+   */
+  static class ArrayValue {
+
+    /** Array component type. */
+    Class<?> componentType;
+
+    /** Values to be stored in an array. */
+    ArrayList<Object> values = new ArrayList<Object>();
+  }
+
   HttpResponse(HttpRequest request, LowLevelHttpResponse response) {
     this.request = request;
     this.transport = request.transport;
@@ -128,6 +144,7 @@ public final class HttpResponse {
     Class<? extends HttpHeaders> headersClass = headers.getClass();
     ClassInfo classInfo = ClassInfo.of(headersClass);
     HashMap<String, String> fieldNameMap = HttpHeaders.getFieldNameMap(headersClass);
+    Map<FieldInfo, ArrayValue> arrayValueMap = ArrayMap.create();
     for (int i = 0; i < size; i++) {
       String headerName = response.getHeaderName(i);
       String headerValue = response.getHeaderValue(i);
@@ -152,6 +169,15 @@ public final class HttpResponse {
           // parse value based on collection type parameter
           Class<?> subFieldClass = ClassInfo.getCollectionParameter(fieldInfo.field);
           collection.add(FieldInfo.parsePrimitiveValue(subFieldClass, headerValue));
+        } else if (type.isArray()) {
+          Class<?> componentType = type.getComponentType();
+          ArrayValue arrayValue = arrayValueMap.get(fieldInfo);
+          if (arrayValue == null) {
+            arrayValue = new ArrayValue();
+            arrayValue.componentType = componentType;
+            arrayValueMap.put(fieldInfo, arrayValue);
+          }
+          arrayValue.values.add(FieldInfo.parsePrimitiveValue(componentType, headerValue));
         } else {
           // parse value based on field type
           fieldInfo.setValue(headers, FieldInfo.parsePrimitiveValue(type, headerValue));
@@ -167,6 +193,14 @@ public final class HttpResponse {
         listValue.add(headerValue);
       }
     }
+    // write the array values
+    for (Map.Entry<FieldInfo, ArrayValue> entry : arrayValueMap.entrySet()) {
+      FieldInfo fieldInfo = entry.getKey();
+      ArrayValue arrayValue = entry.getValue();
+      fieldInfo.setValue(headers, arrayValue.values.toArray(
+          (Object[]) Array.newInstance(arrayValue.componentType, arrayValue.values.size())));
+    }
+    // log from buffer
     if (loggable) {
       logger.config(logbuf.toString());
     }

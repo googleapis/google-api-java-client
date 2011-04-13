@@ -354,4 +354,20 @@ public abstract class AbstractJsonParserTest extends TestCase {
     AnyType result = parser.parse(AnyType.class, null);
     assertEquals(ANY_TYPE_SERIALIZED, factory.toString(result));
   }
+
+  public static class ArrayType {
+    @Key
+    public String[] arr;
+  }
+
+  static final String ARRAY_TYPE = "{\"arr\":[\"a\",\"b\"]}";
+
+  public void testParser_arrayType() throws IOException {
+    JsonFactory factory = newFactory();
+    JsonParser parser;
+    parser = factory.createJsonParser(ARRAY_TYPE);
+    parser.nextToken();
+    ArrayType result = parser.parse(ArrayType.class, null);
+    assertEquals(ARRAY_TYPE, factory.toString(result));
+  }
 }

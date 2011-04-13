@@ -23,6 +23,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -210,6 +211,7 @@ public class Xml {
     if (destination != null) {
       int attributeCount = parser.getAttributeCount();
       for (int i = 0; i < attributeCount; i++) {
+        // TODO(yanivi): can have repeating attribute values, e.g. "@a=value1 @a=value2"?
         String attributeName = parser.getAttributeName(i);
         String attributeNamespace = parser.getAttributeNamespace(i);
         String attributeAlias =
@@ -342,13 +344,8 @@ public class Xml {
               }
               list.add(mapValue);
             }
-          } else if (Collection.class.isAssignableFrom(fieldClass)) {
+          } else if (fieldClass.isArray() || Collection.class.isAssignableFrom(fieldClass)) {
             FieldInfo fieldInfo = FieldInfo.of(field);
-            Collection<Object> collectionValue = fieldInfo.getCollectionValue(destination);
-            if (collectionValue == null) {
-              collectionValue = ClassInfo.newCollectionInstance(fieldClass);
-              fieldInfo.setValue(destination, collectionValue);
-            }
             Object elementValue = null;
             // TODO(yanivi): what about Collection<Object> or Collection<?> or
             // Collection<? extends X>?
@@ -377,7 +374,25 @@ public class Xml {
               isStopped =
                   parseElementInternal(parser, elementValue, namespaceDictionary, customizeParser);
             }
-            collectionValue.add(elementValue);
+            if (fieldClass.isArray()) {
+              // array field: create a new array that is a copy of old array plus new element
+              Object[] array = (Object[]) fieldInfo.getValue(destination);
+              int length = array == null ? 0 : array.length;
+              Object[] newArray = (Object[]) Array.newInstance(subFieldClass, length + 1);
+              if (array != null) {
+                System.arraycopy(array, 0, newArray, 0, length);
+              }
+              newArray[length] = elementValue;
+              fieldInfo.setValue(destination, newArray);
+            } else {
+              // collection field: add new element to collection
+              Collection<Object> collectionValue = fieldInfo.getCollectionValue(destination);
+              if (collectionValue == null) {
+                collectionValue = ClassInfo.newCollectionInstance(fieldClass);
+                fieldInfo.setValue(destination, collectionValue);
+              }
+              collectionValue.add(elementValue);
+            }
           } else {
             Object value = ClassInfo.newInstance(fieldClass);
             isStopped = parseElementInternal(parser, value, namespaceDictionary, customizeParser);

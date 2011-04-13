@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
+import java.util.HashMap;
 
 /**
  * Tests {@link Xml}.
@@ -51,7 +52,7 @@ public class XmlTest extends TestCase {
       "<?xml version=\"1.0\"?><any attr=\"value\" xmlns=\"http://www.w3.org/2005/Atom\">"
           + "<elem>content</elem><rep>rep1</rep><rep>rep2</rep><value>content</value></any>";
 
-  public void testParse() throws Exception {
+  public void testParse_anyType() throws Exception {
     AnyType xml = new AnyType();
     XmlPullParser parser = Xml.createParser();
     parser.setInput(new StringReader(XML));
@@ -62,5 +63,27 @@ public class XmlTest extends TestCase {
     serializer.setOutput(out, "UTF-8");
     namespaceDictionary.serialize(serializer, "any", xml);
     assertEquals(XML, out.toString());
+  }
+
+  public static class ArrayType {
+    @Key
+    public HashMap<String, String>[] rep;
+  }
+
+  private static final String ARRAY_TYPE =
+      "<?xml version=\"1.0\"?><any xmlns=\"http://www.w3.org/2005/Atom\">"
+          + "<rep>rep1</rep><rep>rep2</rep></any>";
+
+  public void testParse_arrayType() throws Exception {
+    ArrayType xml = new ArrayType();
+    XmlPullParser parser = Xml.createParser();
+    parser.setInput(new StringReader(ARRAY_TYPE));
+    XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
+    Xml.parseElement(parser, xml, namespaceDictionary, null);
+    XmlSerializer serializer = Xml.createSerializer();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    serializer.setOutput(out, "UTF-8");
+    namespaceDictionary.serialize(serializer, "any", xml);
+    assertEquals(ARRAY_TYPE, out.toString());
   }
 }

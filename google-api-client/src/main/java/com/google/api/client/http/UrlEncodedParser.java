@@ -14,12 +14,14 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.escape.CharEscapers;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -79,6 +81,17 @@ public final class UrlEncodedParser implements HttpParser {
     return newInstance;
   }
 
+  // TODO(yanivi): avoid repeating code: this duplicates HttpResponse.ArrayValue
+  /** Stores the array values used during {@link UrlEncodedParser#parse(String, Object)}. */
+  static class ArrayValue {
+
+    /** Array component type. */
+    Class<?> componentType;
+
+    /** Values to be stored in an array. */
+    ArrayList<Object> values = new ArrayList<Object>();
+  }
+
   /**
    * Parses the given URL-encoded content into the given data object of data key name/value pairs,
    * including support for repeating data key names.
@@ -110,6 +123,7 @@ public final class UrlEncodedParser implements HttpParser {
     GenericData genericData = GenericData.class.isAssignableFrom(clazz) ? (GenericData) data : null;
     @SuppressWarnings("unchecked")
     Map<Object, Object> map = Map.class.isAssignableFrom(clazz) ? (Map<Object, Object>) data : null;
+    Map<FieldInfo, ArrayValue> arrayValueMap = ArrayMap.create();
     int cur = 0;
     int length = content.length();
     int nextEquals = content.indexOf('=');
@@ -134,7 +148,7 @@ public final class UrlEncodedParser implements HttpParser {
       if (fieldInfo != null) {
         Class<?> type = fieldInfo.type;
         if (ClassInfo.isAssignableToOrFrom(type, Collection.class)) {
-          // parser into a collection field that can handle repeating values 
+          // parser into a collection field that can handle repeating values
           Collection<Object> collection = fieldInfo.getCollectionValue(data);
           if (collection == null) {
             collection = ClassInfo.newCollectionInstance(type);
@@ -142,6 +156,15 @@ public final class UrlEncodedParser implements HttpParser {
           }
           Class<?> subFieldClass = ClassInfo.getCollectionParameter(fieldInfo.field);
           collection.add(FieldInfo.parsePrimitiveValue(subFieldClass, stringValue));
+        } else if (type.isArray()) {
+          Class<?> componentType = type.getComponentType();
+          ArrayValue arrayValue = arrayValueMap.get(fieldInfo);
+          if (arrayValue == null) {
+            arrayValue = new ArrayValue();
+            arrayValue.componentType = componentType;
+            arrayValueMap.put(fieldInfo, arrayValue);
+          }
+          arrayValue.values.add(FieldInfo.parsePrimitiveValue(componentType, stringValue));
         } else {
           // parse into a field that assumes it is a single value
           fieldInfo.setValue(data, FieldInfo.parsePrimitiveValue(type, stringValue));
@@ -161,6 +184,13 @@ public final class UrlEncodedParser implements HttpParser {
         listValue.add(stringValue);
       }
       cur = amp + 1;
+    }
+    // write the array values
+    for (Map.Entry<FieldInfo, ArrayValue> entry : arrayValueMap.entrySet()) {
+      FieldInfo fieldInfo = entry.getKey();
+      ArrayValue arrayValue = entry.getValue();
+      fieldInfo.setValue(data, arrayValue.values.toArray(
+          (Object[]) Array.newInstance(arrayValue.componentType, arrayValue.values.size())));
     }
   }
 }

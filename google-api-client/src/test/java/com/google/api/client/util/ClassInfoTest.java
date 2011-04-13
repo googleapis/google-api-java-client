@@ -56,6 +56,7 @@ public class ClassInfoTest extends TestCase {
 
   public void testNewCollectionInstance() {
     assertEquals(ArrayList.class, ClassInfo.newCollectionInstance(null).getClass());
+    assertEquals(ArrayList.class, ClassInfo.newCollectionInstance(String[].class).getClass());
     assertEquals(ArrayList.class, ClassInfo.newCollectionInstance(Object.class).getClass());
     assertEquals(ArrayList.class, ClassInfo.newCollectionInstance(List.class).getClass());
     assertEquals(ArrayList.class, ClassInfo.newCollectionInstance(AbstractList.class).getClass());
@@ -100,5 +101,19 @@ public class ClassInfoTest extends TestCase {
     } catch (ClassCastException e) {
       // expected
     }
+  }
+
+  static class CollectionParameter {
+    public String s;
+    public List<String> list;
+    public String[] array;
+  }
+
+  public void testGetCollectionParameter() throws Exception {
+    assertNull(ClassInfo.getCollectionParameter(CollectionParameter.class.getField("s")));
+    assertEquals(
+        String.class, ClassInfo.getCollectionParameter(CollectionParameter.class.getField("list")));
+    assertEquals(String.class,
+        ClassInfo.getCollectionParameter(CollectionParameter.class.getField("array")));
   }
 }
