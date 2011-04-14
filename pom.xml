@@ -129,7 +129,22 @@
       </dependency>
       <dependency>
         <groupId>com.google.api.client</groupId>
+        <artifactId>google-api-client-extensions-android2</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api.client</groupId>
+        <artifactId>google-api-client-extensions-android3</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api.client</groupId>
         <artifactId>google-api-client-googleapis</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api.client</groupId>
+        <artifactId>google-api-client-googleapis-extensions-android2</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
