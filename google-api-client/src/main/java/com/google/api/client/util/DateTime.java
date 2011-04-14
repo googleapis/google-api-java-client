@@ -14,6 +14,7 @@
 
 package com.google.api.client.util;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -26,7 +27,9 @@ import java.util.TimeZone;
  * @since 1.0
  * @author Yaniv Inbar
  */
-public class DateTime {
+public class DateTime implements Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
 
