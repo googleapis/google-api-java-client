@@ -7,7 +7,7 @@
     <version>1.4.0-alpha-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>google-api-client-extensions-android</artifactId>
+  <artifactId>google-api-client-extensions-android2</artifactId>
   <name>Android Eclair (SDK 2.1) platform extensions to the Google API Client Library for Java.</name>
 
   <build>
