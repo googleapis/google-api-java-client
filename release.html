@@ -9,7 +9,7 @@
   <li>Make sure you have permission to post to the <a
     href="http://google-api-java-client.blogspot.com/">Announcement Blog</a>.</li>
   <li>Check out the <code>google-api-java-client</code> project using <a
-    href="http://google-api-java-client.googlecode.com/hg/instructions.html?r=1.3.2-alpha">these
+    href="http://google-api-java-client.googlecode.com/hg/instructions.html?r=1.3.3-alpha">these
   instructions</a>.</li>
   <li>Check out the <code>javadoc</code> project using <a
     href="http://javadoc.google-api-java-client.googlecode.com/hg/instructions.html">these
@@ -26,12 +26,17 @@
     and then create a GPG key using <a
       href="http://www.sonatype.com/people/2010/01/how-to-generate-pgp-signatures-with-maven/">these
     instructions</a>, making sure to specify a passphrase to be used every time you
-    release.</li>
-    <li>Add these lines to your <code>~/.hgrc</code>: <pre><code>google-api-java-client.prefix = https://google-api-java-client.googlecode.com/hg/
+    release.  Make sure to run the instructions under "Distribute Your Public Key".</li>
+    <li>Add these lines to your <code>~/.hgrc</code>: <pre><code>
+[ui]
+username = Your Name <yourname@domain.com>
+
+[auth]
+google-api-java-client.prefix = https://google-api-java-client.googlecode.com/hg/
 google-api-java-client.username = <i>[username from <a
-      href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i>
+href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i>
 google-api-java-client.password = <i>[password from <a
-      href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i></code></pre></li>
+href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i></code></pre></li>
     <li>Add these lines to your <code>~/.m2/settings.xml</code> (create
     this file if it does not already exist): <pre><code>&lt;settings&gt;
   &lt;servers&gt;
@@ -69,7 +74,7 @@ google-api-java-client.password = <i>[password from <a
   </li>
 </ul>
 
-<h3>Release version 1.3.2-alpha (minor update)</h3>
+<h3>Release version 1.3.3-alpha (minor update)</h3>
 <ul>
   <li>Prepare the project
   <ul>
@@ -93,7 +98,7 @@ mvn release:clean
     <ul>
       <li>Accept default for 'What is the release version for "Google API
       Client - Parent"?'</li>
-      <li>Type <code>1.3.2-alpha</code> for 'What is SCM release tag or
+      <li>Type <code>1.3.3-alpha</code> for 'What is SCM release tag or
       label for "Google API Client - Parent"?'</li>
       <li>Accept default for 'What is the new development version for
       "Google API Client - Parent"?'</li>
@@ -104,50 +109,74 @@ mvn release:clean
     <li>Release on oss.sonatype.org
     <ul>
       <li>Log in to <a href="https://oss.sonatype.org">https://oss.sonatype.org</a></li>
-      <li>Click on "Staging Repositories"</li>
+      <li>Click on "Staging Repositories" and look for the "com.google" Repository with your username</li>
       <li>check box next to uploaded release</li>
-      <li>click Close button; type <code>1.3.2-alpha</code> and click Close</li>
+      <li>click Close button; type <code>1.3.3-alpha</code> and click Close</li>
       <li>check box next to uploaded release</li>
-      <li>click Release button; type <code>1.3.2-alpha</code> and click
+      <li>click Release button; type <code>1.3.3-alpha</code> and click
       Release</li>
     </ul>
     </li>
-    <li>Central Maven repository is synced hourly. Wait for the new version
-    at: <a
-      href="http://repo2.maven.org/maven2/com/google/api/client/google-api-client/1.3.2-alpha/">repo2.maven.org</a></li>
+    <li>Central Maven repository is synced hourly. Once uploaded onto repo2.maven.org, it will be found at: <a
+      href="http://repo2.maven.org/maven2/com/google/api/client/google-api-client/1.3.3-alpha/">repo2.maven.org</a></li>
+  </ul>
+  </li>
+  <li>Start development of next bug fix version
+  <ul>
+    <li><code>hg update</code></li>
+    <li>For the following files, replace <code>1.3.3-alpha</code> with <code>1.3.4-alpha</code>:
+    <ul>
+      <li><code>jdiff.xml</code></li>
+      <li><code>release.html</code>
+      <ul>
+        <li>before-hand replace 1.3.4 with next minor version, and 1.3.3
+        with 1.3.4</li>
+      </ul>
+      </li>
+      <li><code>google-api-client/src/main/java/com/google/api/client/util/Strings.java</code></li>
+    </ul>
+    </li>
+    <li><pre>
+hg commit -m "start 1.3.4-alpha"
+hg push
+</pre></li>
   </ul>
   </li>
   <li>Prepare the released library zip file and javadoc
   <ul>
-    <li>change these constants from assemble/jdiff.xml for your
+    <li>JDiff is a tool for showing the difference between the JavaDoc of one version of the library vs. the JavaDoc of an old version of the library.  Hence, we will check out the last minor version of the library into a temporary directory and compare against the JavaDoc of the just released version of the library, and then hg commit that diff into the javadoc Hg repository.</li>
+    <li>change these constants from jdiff.xml for your
     environment: JDIFF_HOME, MAVEN_REPOSITORY_HOME, PROJECT_ROOT_DIR,
     JAVADOC_PROJECT_ROOT_DIR</li>
     <li><pre>
-cd <i>rootDir</i>/google-api-java-client
-hg update -r 1.3.2-alpha
-mvn clean javadoc:jar install site
-cp -R target/site/apidocs/ <i>rootDir</i>/javadoc/1.3-alpha
 cd /tmp
 rm -rf google-api-java-client
-hg clone -r 1.3.2-alpha https://google-api-java-client.googlecode.com/hg/ google-api-java-client
-cd -
+mkdir google-api-java-client
+cd google-api-java-client
+hg clone -r 1.2.3-alpha https://google-api-java-client.googlecode.com/hg/ 1.2.3-alpha
+hg clone -r 1.3.3-alpha https://google-api-java-client.googlecode.com/hg/ 1.3.3-alpha
+cd 1.3.3-alpha
+mvn javadoc:jar install site
 ant -f jdiff.xml
-cd ../../javadoc
+cp -R target/site/apidocs/ <i>rootDir</i>/javadoc/1.3.3-alpha
+cd <i>rootDir</i>/javadoc
 hg add
-hg commit -m "1.3.2-alpha"
+hg commit -m "1.3.3-alpha"
 hg push
-cd ../google-api-java-client
+cd <i>rootDir</i>/google-api-java-client
 </pre></li>
   </ul>
   </li>
+  <li><b>WAIT!</b> Don't do the following instructions until after the library has been uploaded to repo2.maven.org at: <a
+      href="http://repo2.maven.org/maven2/com/google/api/client/google-api-client/1.3.3-alpha/">repo2.maven.org</a></li>
   <li>Update to new version on <a
     href="http://code.google.com/p/google-api-java-client">http://code.google.com/p/google-api-java-client</a>
   <ul>
     <li>Upload to <a
       href="http://code.google.com/p/google-api-java-client/downloads/entry">http://code.google.com/p/google-api-java-client/downloads/entry</a>
     <ul>
-      <li>Summary: Google API Client Library for Java, version 1.3.2-alpha</li>
-      <li>File: <code>google-api-java-client/target/google-api-client-1.3.2-alpha-java.zip</code></li>
+      <li>Summary: Google API Client Library for Java, version 1.3.3-alpha</li>
+      <li>File: <code>/tmp/google-api-java-client/1.3.3-alpha/google-api-client-assembly/target/google-api-client-1.3.3-alpha-java.zip</code></li>
       <li>Labels: <code>Type-Archive</code>, <code>OpSys-All</code>, and <code>Featured</code></li>
       <li>click Submit file</li>
     </ul>
@@ -156,7 +185,7 @@ cd ../google-api-java-client
     versions by removing any <code>Featured</code> label and adding the <code>Deprecated</code>
     label.</li>
     <li>Update the following pages changing any reference from the previous
-    version to the new version <code>1.3.2-alpha</code>:
+    version to the new version <code>1.3.3-alpha</code>:
     <ul>
       <li><a href="http://code.google.com/p/google-api-java-client/admin">admin</a></li>
       <li><a
@@ -173,32 +202,11 @@ cd ../google-api-java-client
   blog</a> about the new version, including links to:
   <ul>
     <li><a
-      href="http://code.google.com/p/google-api-java-client/issues/list?can=1&q=milestone=Version1.3.2%20type=Defect&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary">Bugs
+      href="http://code.google.com/p/google-api-java-client/issues/list?can=1&q=milestone=Version1.3.3%20type=Defect&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary">Bugs
     Fixed</a></li>
     <li><a
-      href="http://code.google.com/p/google-api-java-client/issues/list?can=1&q=milestone=Version1.3.2%20type=Enhancement&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary">Features
+      href="http://code.google.com/p/google-api-java-client/issues/list?can=1&q=milestone=Version1.3.3%20type=Enhancement&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary">Features
     Added</a></li>
-  </ul>
-  </li>
-  <li>Start development of next bug fix version
-  <ul>
-    <li><code>hg update</code></li>
-    <li>For the following files, replace <code>1.2.*-alpha</code> with <code>1.3.3-alpha</code>:
-    <ul>
-      <li><code>jdiff.xml</code></li>
-      <li><code>release.html</code>
-      <ul>
-        <li>before-hand replace 1.3.4 with next minor version, and 1.3.3
-        with 1.3.4</li>
-      </ul>
-      </li>
-      <li><code>google-api-client/src/main/java/com/google/api/client/util/Strings.java</code></li>
-    </ul>
-    </li>
-    <li><pre>
-hg commit -m "start 1.3.3-alpha"
-hg push
-</pre></li>
   </ul>
   </li>
 </ul>
