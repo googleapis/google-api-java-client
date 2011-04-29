@@ -20,6 +20,7 @@ import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 
+import java.io.IOException;
 import java.util.EnumSet;
 
 /**
@@ -51,14 +52,14 @@ public class MethodOverrideIntercepter implements HttpExecuteIntercepter {
 
   // TODO(yanivi): or should we be less conservative and not override PUT, PATCH, DELETE, and HEAD?
 
-  public void intercept(HttpRequest request) {
+  public void intercept(HttpRequest request) throws IOException {
     if (overrideThisMethod(request)) {
       HttpMethod method = request.method;
       request.method = HttpMethod.POST;
       request.headers.set("X-HTTP-Method-Override", method.name());
-      // Google servers will fail to process a POST without the Content-Length header
-      if (request.content == null) {
-        request.content = new ByteArrayContent();
+      // Google servers will fail to process a POST unless the Content-Length header >= 1
+      if (request.content == null || request.content.getLength() == 0) {
+        request.content = new ByteArrayContent(" ");
       }
     }
   }
