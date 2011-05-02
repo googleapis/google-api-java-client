@@ -14,21 +14,23 @@
 
 package com.google.api.client.util;
 
-import junit.framework.TestCase;
-
-import java.util.Arrays;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Tests {@link DataUtil}.
+ * Use this annotation to specify that an enum constant is the "null" data value to use for
+ * {@link Data#nullOf(Class)}.
+ * <p>
+ * See {@link Value} for an example.
+ * </p>
  *
+ * @since 1.4
  * @author Yaniv Inbar
  */
-public class DataUtilTest extends TestCase {
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface NullValue {
 
-  public void testClone_array() {
-    String[] orig = new String[] {"a", "b", "c"};
-    String[] result = DataUtil.clone(orig);
-    assertTrue(orig != result);
-    assertTrue(Arrays.equals(orig, result));
-  }
 }

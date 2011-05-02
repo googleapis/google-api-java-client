@@ -18,6 +18,7 @@ import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.Key;
+import com.google.api.client.util.Value;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
 
@@ -128,6 +129,13 @@ public class HttpRequestTest extends TestCase {
     Assert.assertTrue(handler.isCalled);
   }
 
+  public enum E {
+
+    @Value
+    VALUE,
+    @Value("other")
+    OTHER_VALUE,
+  }
 
   public static class MyHeaders extends HttpHeaders {
 
@@ -145,6 +153,12 @@ public class HttpRequestTest extends TestCase {
 
     @Key
     String[] r;
+
+    @Key
+    E value;
+
+    @Key
+    E otherValue;
   }
 
   public void testExecute_headerSerialization() throws IOException {
@@ -158,6 +172,8 @@ public class HttpRequestTest extends TestCase {
     myHeaders.acceptEncoding = null;
     myHeaders.userAgent = "foo";
     myHeaders.set("a", "b");
+    myHeaders.value = E.VALUE;
+    myHeaders.otherValue = E.OTHER_VALUE;
     // execute request
     final MockLowLevelHttpRequest lowLevelRequest = new MockLowLevelHttpRequest();
     HttpTransport transport = new MockHttpTransport() {
@@ -179,5 +195,7 @@ public class HttpRequestTest extends TestCase {
     assertEquals(
         ImmutableList.of("foo " + HttpRequest.USER_AGENT_SUFFIX), headers.get("User-Agent"));
     assertEquals(ImmutableList.of("b"), headers.get("a"));
+    assertEquals(ImmutableList.of("VALUE"), headers.get("value"));
+    assertEquals(ImmutableList.of("other"), headers.get("otherValue"));
   }
 }

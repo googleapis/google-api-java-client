@@ -28,7 +28,7 @@ import java.nio.charset.Charset;
 public class Strings {
 
   /**
-   * Version of the Google API Client Library for Java.
+   * Current version of the Google API Client Library for Java.
    *
    * @since 1.3
    */

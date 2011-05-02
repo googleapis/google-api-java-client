@@ -15,7 +15,7 @@
 package com.google.api.client.http.xml.atom;
 
 import com.google.api.client.http.HttpResponse;
-import com.google.api.client.util.ClassInfo;
+import com.google.api.client.util.Types;
 import com.google.api.client.xml.Xml;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.api.client.xml.atom.AbstractAtomFeedParser;
@@ -48,7 +48,7 @@ public final class AtomFeedParser<T, E> extends AbstractAtomFeedParser<T> {
 
   @Override
   protected Object parseEntryInternal() throws IOException, XmlPullParserException {
-    E result = ClassInfo.newInstance(this.entryClass);
+    E result = Types.newInstance(this.entryClass);
     Xml.parseElement(parser, result, namespaceDictionary, null);
     return result;
   }

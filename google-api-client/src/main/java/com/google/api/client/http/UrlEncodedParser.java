@@ -14,16 +14,20 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.ArrayMap;
+import com.google.api.client.util.ArrayValueMap;
 import com.google.api.client.util.ClassInfo;
+import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
+import com.google.api.client.util.Types;
 import com.google.api.client.util.escape.CharEscapers;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -76,20 +80,9 @@ public final class UrlEncodedParser implements HttpParser {
     if (disableContentLogging) {
       response.disableContentLogging = true;
     }
-    T newInstance = ClassInfo.newInstance(dataClass);
+    T newInstance = Types.newInstance(dataClass);
     parse(response.parseAsString(), newInstance);
     return newInstance;
-  }
-
-  // TODO(yanivi): avoid repeating code: this duplicates HttpResponse.ArrayValue
-  /** Stores the array values used during {@link UrlEncodedParser#parse(String, Object)}. */
-  static class ArrayValue {
-
-    /** Array component type. */
-    Class<?> componentType;
-
-    /** Values to be stored in an array. */
-    ArrayList<Object> values = new ArrayList<Object>();
   }
 
   /**
@@ -97,12 +90,12 @@ public final class UrlEncodedParser implements HttpParser {
    * including support for repeating data key names.
    *
    * <p>
-   * Declared fields of a "primitive" type (as defined by {@link FieldInfo#isPrimitive(Class)} are
-   * parsed using {@link FieldInfo#parsePrimitiveValue(Class, String)} where the {@link Class}
-   * parameter is the declared field class. Declared fields of type {@link Collection} are used to
-   * support repeating data key names, so each member of the collection is an additional data key
-   * value. They are parsed the same as "primitive" fields, except that the generic type parameter
-   * of the collection is used as the {@link Class} parameter.
+   * Declared fields of a "primitive" type (as defined by {@link Data#isPrimitive(Type)} are parsed
+   * using {@link Data#parsePrimitiveValue(Type, String)} where the {@link Class} parameter is the
+   * declared field class. Declared fields of type {@link Collection} are used to support repeating
+   * data key names, so each member of the collection is an additional data key value. They are
+   * parsed the same as "primitive" fields, except that the generic type parameter of the collection
+   * is used as the {@link Class} parameter.
    * </p>
    *
    * <p>
@@ -120,14 +113,16 @@ public final class UrlEncodedParser implements HttpParser {
     }
     Class<?> clazz = data.getClass();
     ClassInfo classInfo = ClassInfo.of(clazz);
+    List<Type> context = Arrays.<Type>asList(clazz);
     GenericData genericData = GenericData.class.isAssignableFrom(clazz) ? (GenericData) data : null;
     @SuppressWarnings("unchecked")
     Map<Object, Object> map = Map.class.isAssignableFrom(clazz) ? (Map<Object, Object>) data : null;
-    Map<FieldInfo, ArrayValue> arrayValueMap = ArrayMap.create();
+    ArrayValueMap arrayValueMap = new ArrayValueMap(data);
     int cur = 0;
     int length = content.length();
     int nextEquals = content.indexOf('=');
     while (cur < length) {
+      // parse next parameter
       int amp = content.indexOf('&', cur);
       if (amp == -1) {
         amp = length;
@@ -146,28 +141,28 @@ public final class UrlEncodedParser implements HttpParser {
       // get the field from the type information
       FieldInfo fieldInfo = classInfo.getFieldInfo(name);
       if (fieldInfo != null) {
-        Class<?> type = fieldInfo.type;
-        if (ClassInfo.isAssignableToOrFrom(type, Collection.class)) {
-          // parser into a collection field that can handle repeating values
-          Collection<Object> collection = fieldInfo.getCollectionValue(data);
+        Type type = Data.resolveWildcardTypeOrTypeVariable(context, fieldInfo.getGenericType());
+        // type is now class, parameterized type, or generic array type
+        if (Types.isArray(type)) {
+          // array that can handle repeating values
+          Class<?> rawArrayComponentType =
+              Types.getRawArrayComponentType(context, Types.getArrayComponentType(type));
+          arrayValueMap.put(fieldInfo.getField(), rawArrayComponentType,
+              parseValue(rawArrayComponentType, context, stringValue));
+        } else if (Types.isAssignableToOrFrom(
+            Types.getRawArrayComponentType(context, type), Iterable.class)) {
+          // iterable that can handle repeating values
+          @SuppressWarnings("unchecked")
+          Collection<Object> collection = (Collection<Object>) fieldInfo.getValue(data);
           if (collection == null) {
-            collection = ClassInfo.newCollectionInstance(type);
+            collection = Data.newCollectionInstance(type);
             fieldInfo.setValue(data, collection);
           }
-          Class<?> subFieldClass = ClassInfo.getCollectionParameter(fieldInfo.field);
-          collection.add(FieldInfo.parsePrimitiveValue(subFieldClass, stringValue));
-        } else if (type.isArray()) {
-          Class<?> componentType = type.getComponentType();
-          ArrayValue arrayValue = arrayValueMap.get(fieldInfo);
-          if (arrayValue == null) {
-            arrayValue = new ArrayValue();
-            arrayValue.componentType = componentType;
-            arrayValueMap.put(fieldInfo, arrayValue);
-          }
-          arrayValue.values.add(FieldInfo.parsePrimitiveValue(componentType, stringValue));
+          Type subFieldType = type == Object.class ? null : Types.getIterableParameter(type);
+          collection.add(parseValue(subFieldType, context, stringValue));
         } else {
           // parse into a field that assumes it is a single value
-          fieldInfo.setValue(data, FieldInfo.parsePrimitiveValue(type, stringValue));
+          fieldInfo.setValue(data, parseValue(type, context, stringValue));
         }
       } else if (map != null) {
         // parse into a map: store as an ArrayList of values
@@ -185,12 +180,11 @@ public final class UrlEncodedParser implements HttpParser {
       }
       cur = amp + 1;
     }
-    // write the array values
-    for (Map.Entry<FieldInfo, ArrayValue> entry : arrayValueMap.entrySet()) {
-      FieldInfo fieldInfo = entry.getKey();
-      ArrayValue arrayValue = entry.getValue();
-      fieldInfo.setValue(data, arrayValue.values.toArray(
-          (Object[]) Array.newInstance(arrayValue.componentType, arrayValue.values.size())));
-    }
+    arrayValueMap.setValues();
+  }
+
+  private static Object parseValue(Type valueType, List<Type> context, String value) {
+    Type resolved = Data.resolveWildcardTypeOrTypeVariable(context, valueType);
+    return Data.parsePrimitiveValue(resolved, value);
   }
 }

@@ -16,12 +16,12 @@ package com.google.api.client.googleapis.xml.atom;
 
 import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.ClassInfo;
-import com.google.api.client.util.DataUtil;
+import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
+import com.google.api.client.util.Types;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -77,9 +77,9 @@ public class GoogleAtom {
           "cannot specify field mask for a Map or Collection class: " + dataClass);
     }
     ClassInfo classInfo = ClassInfo.of(dataClass);
-    for (String name : new TreeSet<String>(classInfo.getKeyNames())) {
+    for (String name : new TreeSet<String>(classInfo.getNames())) {
       FieldInfo fieldInfo = classInfo.getFieldInfo(name);
-      if (fieldInfo.isFinal) {
+      if (fieldInfo.isFinal()) {
         continue;
       }
       if (++numFields[0] != 1) {
@@ -87,14 +87,14 @@ public class GoogleAtom {
       }
       fieldsBuf.append(name);
       // TODO(yanivi): handle Java arrays?
-      Class<?> fieldClass = fieldInfo.type;
+      Class<?> fieldClass = fieldInfo.getType();
       if (Collection.class.isAssignableFrom(fieldClass)) {
         // TODO(yanivi): handle Java collection of Java collection or Java map?
-        fieldClass = ClassInfo.getCollectionParameter(fieldInfo.field);
+        fieldClass = (Class<?>) Types.getIterableParameter(fieldInfo.getField().getGenericType());
       }
       // TODO(yanivi): implement support for map when server implements support for *:*
       if (fieldClass != null) {
-        if (fieldInfo.isPrimitive) {
+        if (fieldInfo.isPrimitive()) {
           if (name.charAt(0) != '@' && !name.equals("text()")) {
             // TODO(yanivi): wait for bug fix from server to support text() -- already fixed???
             // buf.append("/text()");
@@ -160,9 +160,9 @@ public class GoogleAtom {
   private static ArrayMap<String, Object> computePatchInternal(
       FieldsMask fieldsMask, Object patchedObject, Object originalObject) {
     ArrayMap<String, Object> result = ArrayMap.create();
-    Map<String, Object> patchedMap = DataUtil.mapOf(patchedObject);
-    Map<String, Object> originalMap = DataUtil.mapOf(originalObject);
-    HashSet<String> fieldNames = new HashSet<String>();
+    Map<String, Object> patchedMap = Data.mapOf(patchedObject);
+    Map<String, Object> originalMap = Data.mapOf(originalObject);
+    TreeSet<String> fieldNames = new TreeSet<String>();
     fieldNames.addAll(patchedMap.keySet());
     fieldNames.addAll(originalMap.keySet());
     for (String name : fieldNames) {
@@ -172,7 +172,7 @@ public class GoogleAtom {
         continue;
       }
       Class<?> type = originalValue == null ? patchedValue.getClass() : originalValue.getClass();
-      if (FieldInfo.isPrimitive(type)) {
+      if (Data.isPrimitive(type)) {
         if (originalValue != null && originalValue.equals(patchedValue)) {
           continue;
         }
@@ -211,7 +211,7 @@ public class GoogleAtom {
       } else {
         if (originalValue == null) { // TODO(yanivi): test
           fieldsMask.append(name);
-          result.add(name, DataUtil.mapOf(patchedValue));
+          result.add(name, Data.mapOf(patchedValue));
         } else if (patchedValue == null) { // TODO(yanivi): test
           fieldsMask.append(name);
         } else {

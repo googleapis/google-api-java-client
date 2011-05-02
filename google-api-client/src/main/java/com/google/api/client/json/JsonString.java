@@ -64,6 +64,8 @@ class B {
  * @since 1.3
  * @author Yaniv Inbar
  */
+// TODO(yanivi): remove JsonString and instead declare new primitives BigIntegerString and
+// BigDecimalString?
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JsonString {

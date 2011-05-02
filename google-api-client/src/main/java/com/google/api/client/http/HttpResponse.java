@@ -14,20 +14,23 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.ArrayMap;
+import com.google.api.client.util.ArrayValueMap;
 import com.google.api.client.util.ClassInfo;
+import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Strings;
+import com.google.api.client.util.Types;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -96,23 +99,10 @@ public final class HttpResponse {
    */
   public boolean disableContentLogging;
 
-  /**
-   * Stores the array values used during
-   * {@link HttpResponse#HttpResponse(HttpRequest, LowLevelHttpResponse)}.
-   */
-  static class ArrayValue {
-
-    /** Array component type. */
-    Class<?> componentType;
-
-    /** Values to be stored in an array. */
-    ArrayList<Object> values = new ArrayList<Object>();
-  }
-
   HttpResponse(HttpRequest request, LowLevelHttpResponse response) {
     this.request = request;
-    this.transport = request.transport;
-    this.headers = request.headers;
+    transport = request.transport;
+    headers = request.headers;
     this.response = response;
     contentLength = response.getContentLength();
     contentType = response.getContentType();
@@ -142,9 +132,10 @@ public final class HttpResponse {
     // headers
     int size = response.getHeaderCount();
     Class<? extends HttpHeaders> headersClass = headers.getClass();
+    List<Type> context = Arrays.<Type>asList(headersClass);
     ClassInfo classInfo = ClassInfo.of(headersClass);
     HashMap<String, String> fieldNameMap = HttpHeaders.getFieldNameMap(headersClass);
-    Map<FieldInfo, ArrayValue> arrayValueMap = ArrayMap.create();
+    ArrayValueMap arrayValueMap = new ArrayValueMap(headers);
     for (int i = 0; i < size; i++) {
       String headerName = response.getHeaderName(i);
       String headerValue = response.getHeaderValue(i);
@@ -158,29 +149,28 @@ public final class HttpResponse {
       // use field information if available
       FieldInfo fieldInfo = classInfo.getFieldInfo(fieldName);
       if (fieldInfo != null) {
-        Class<?> type = fieldInfo.type;
-        // collection is used for repeating headers of the same name
-        if (ClassInfo.isAssignableToOrFrom(type, Collection.class)) {
-          Collection<Object> collection = fieldInfo.getCollectionValue(headers);
+        Type type = Data.resolveWildcardTypeOrTypeVariable(context, fieldInfo.getGenericType());
+        // type is now class, parameterized type, or generic array type
+        if (Types.isArray(type)) {
+          // array that can handle repeating values
+          Class<?> rawArrayComponentType =
+              Types.getRawArrayComponentType(context, Types.getArrayComponentType(type));
+          arrayValueMap.put(fieldInfo.getField(), rawArrayComponentType,
+              parseValue(rawArrayComponentType, context, headerValue));
+        } else if (Types.isAssignableToOrFrom(
+            Types.getRawArrayComponentType(context, type), Iterable.class)) {
+          // iterable that can handle repeating values
+          @SuppressWarnings("unchecked")
+          Collection<Object> collection = (Collection<Object>) fieldInfo.getValue(headers);
           if (collection == null) {
-            collection = ClassInfo.newCollectionInstance(type);
+            collection = Data.newCollectionInstance(type);
             fieldInfo.setValue(headers, collection);
           }
-          // parse value based on collection type parameter
-          Class<?> subFieldClass = ClassInfo.getCollectionParameter(fieldInfo.field);
-          collection.add(FieldInfo.parsePrimitiveValue(subFieldClass, headerValue));
-        } else if (type.isArray()) {
-          Class<?> componentType = type.getComponentType();
-          ArrayValue arrayValue = arrayValueMap.get(fieldInfo);
-          if (arrayValue == null) {
-            arrayValue = new ArrayValue();
-            arrayValue.componentType = componentType;
-            arrayValueMap.put(fieldInfo, arrayValue);
-          }
-          arrayValue.values.add(FieldInfo.parsePrimitiveValue(componentType, headerValue));
+          Type subFieldType = type == Object.class ? null : Types.getIterableParameter(type);
+          collection.add(parseValue(subFieldType, context, headerValue));
         } else {
           // parse value based on field type
-          fieldInfo.setValue(headers, FieldInfo.parsePrimitiveValue(type, headerValue));
+          fieldInfo.setValue(headers, parseValue(type, context, headerValue));
         }
       } else {
         // store header values in an array list
@@ -193,17 +183,16 @@ public final class HttpResponse {
         listValue.add(headerValue);
       }
     }
-    // write the array values
-    for (Map.Entry<FieldInfo, ArrayValue> entry : arrayValueMap.entrySet()) {
-      FieldInfo fieldInfo = entry.getKey();
-      ArrayValue arrayValue = entry.getValue();
-      fieldInfo.setValue(headers, arrayValue.values.toArray(
-          (Object[]) Array.newInstance(arrayValue.componentType, arrayValue.values.size())));
-    }
+    arrayValueMap.setValues();
     // log from buffer
     if (loggable) {
       logger.config(logbuf.toString());
     }
+  }
+
+  private static Object parseValue(Type valueType, List<Type> context, String value) {
+    Type resolved = Data.resolveWildcardTypeOrTypeVariable(context, valueType);
+    return Data.parsePrimitiveValue(resolved, value);
   }
 
   /**

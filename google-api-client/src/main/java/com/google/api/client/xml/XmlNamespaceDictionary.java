@@ -14,9 +14,10 @@
 
 package com.google.api.client.xml;
 
-import com.google.api.client.util.DataUtil;
+import com.google.api.client.util.Data;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.util.FieldInfo;
+import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
 
 import org.xmlpull.v1.XmlSerializer;
@@ -24,7 +25,6 @@ import org.xmlpull.v1.XmlSerializer;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -239,24 +239,21 @@ public final class XmlNamespaceDictionary {
   }
 
   private void computeAliases(Object element, SortedSet<String> aliases) {
-    for (Map.Entry<String, Object> entry : DataUtil.mapOf(element).entrySet()) {
+    for (Map.Entry<String, Object> entry : Data.mapOf(element).entrySet()) {
       Object value = entry.getValue();
       if (value != null) {
         String name = entry.getKey();
-        if (!"text()".equals(name)) {
+        if (!Xml.TEXT_CONTENT.equals(name)) {
           int colon = name.indexOf(':');
           boolean isAttribute = name.charAt(0) == '@';
           if (colon != -1 || !isAttribute) {
             String alias = colon == -1 ? "" : name.substring(name.charAt(0) == '@' ? 1 : 0, colon);
             aliases.add(alias);
           }
-          if (!isAttribute && !FieldInfo.isPrimitive(value)) {
-            if (value instanceof Collection<?>) {
-              for (Object subValue : (Collection<?>) value) {
-                computeAliases(subValue, aliases);
-              }
-            } else if (value.getClass().isArray()) {
-              for (Object subValue : (Object[]) value) {
+          Class<?> valueClass = value.getClass();
+          if (!isAttribute && !Data.isPrimitive(valueClass)) {
+            if (value instanceof Iterable<?> || valueClass.isArray()) {
+              for (Object subValue : Types.iterableOf(value)) {
                 computeAliases(subValue, aliases);
               }
             } else {
@@ -306,14 +303,14 @@ public final class XmlNamespaceDictionary {
     ElementSerializer(Object elementValue, boolean errorOnUnknown) {
       this.errorOnUnknown = errorOnUnknown;
       Class<?> valueClass = elementValue.getClass();
-      if (FieldInfo.isPrimitive(valueClass)) {
+      if (Data.isPrimitive(valueClass) && !Data.isNull(elementValue)) {
         textValue = elementValue;
       } else {
-        for (Map.Entry<String, Object> entry : DataUtil.mapOf(elementValue).entrySet()) {
+        for (Map.Entry<String, Object> entry : Data.mapOf(elementValue).entrySet()) {
           Object fieldValue = entry.getValue();
-          if (fieldValue != null) {
+          if (fieldValue != null && !Data.isNull(fieldValue)) {
             String fieldName = entry.getKey();
-            if ("text()".equals(fieldName)) {
+            if (Xml.TEXT_CONTENT.equals(fieldName)) {
               textValue = fieldValue;
             } else if (fieldName.charAt(0) == '@') {
               attributeNames.add(fieldName.substring(1));
@@ -350,8 +347,6 @@ public final class XmlNamespaceDictionary {
       }
       serializer.startTag(elementNamespaceUri, elementLocalName);
       // attributes
-      List<String> attributeNames = this.attributeNames;
-      List<Object> attributeValues = this.attributeValues;
       int num = attributeNames.size();
       for (int i = 0; i < num; i++) {
         String attributeName = attributeNames.get(i);
@@ -363,24 +358,21 @@ public final class XmlNamespaceDictionary {
             attributeNamespaceUri, attributeLocalName, toSerializedValue(attributeValues.get(i)));
       }
       // text
-      Object textValue = this.textValue;
       if (textValue != null) {
         serializer.text(toSerializedValue(textValue));
       }
       // elements
-      List<String> subElementNames = this.subElementNames;
-      List<Object> subElementValues = this.subElementValues;
       num = subElementNames.size();
       for (int i = 0; i < num; i++) {
         Object subElementValue = subElementValues.get(i);
         String subElementName = subElementNames.get(i);
-        if (subElementValue instanceof Collection<?>) {
-          for (Object subElement : (Collection<?>) subElementValue) {
-            new ElementSerializer(subElement, errorOnUnknown).serialize(serializer, subElementName);
-          }
-        } else if (subElementValue.getClass().isArray()) {
-          for (Object subElement : (Object[]) subElementValue) {
-            new ElementSerializer(subElement, errorOnUnknown).serialize(serializer, subElementName);
+        Class<? extends Object> valueClass = subElementValue.getClass();
+        if (subElementValue instanceof Iterable<?> || valueClass.isArray()) {
+          for (Object subElement : Types.iterableOf(subElementValue)) {
+            if (subElement != null && !Data.isNull(subElement)) {
+              new ElementSerializer(subElement, errorOnUnknown).serialize(
+                  serializer, subElementName);
+            }
           }
         } else {
           new ElementSerializer(subElementValue, errorOnUnknown).serialize(
@@ -415,6 +407,9 @@ public final class XmlNamespaceDictionary {
     }
     if (value instanceof DateTime) {
       return ((DateTime) value).toStringRfc3339();
+    }
+    if (value instanceof Enum<?>) {
+      return FieldInfo.of((Enum<?>) value).getName();
     }
     throw new IllegalArgumentException("unrecognized value type: " + value.getClass());
   }

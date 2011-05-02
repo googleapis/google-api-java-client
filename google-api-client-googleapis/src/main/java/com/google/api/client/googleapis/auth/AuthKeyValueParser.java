@@ -19,6 +19,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
+import com.google.api.client.util.Types;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,7 +44,7 @@ public final class AuthKeyValueParser implements HttpParser {
   }
 
   public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
-    T newInstance = ClassInfo.newInstance(dataClass);
+    T newInstance = Types.newInstance(dataClass);
     ClassInfo classInfo = ClassInfo.of(dataClass);
     response.disableContentLogging = true;
     InputStream content = response.getContent();

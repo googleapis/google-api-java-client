@@ -14,13 +14,14 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.DataUtil;
+import com.google.api.client.util.Data;
+import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Strings;
+import com.google.api.client.util.Types;
 import com.google.api.client.util.escape.CharEscapers;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -73,17 +74,13 @@ public final class UrlEncodedContent implements HttpContent {
     if (content == null) {
       StringBuilder buf = new StringBuilder();
       boolean first = true;
-      for (Map.Entry<String, Object> nameValueEntry : DataUtil.mapOf(data).entrySet()) {
+      for (Map.Entry<String, Object> nameValueEntry : Data.mapOf(data).entrySet()) {
         Object value = nameValueEntry.getValue();
         if (value != null) {
           String name = CharEscapers.escapeUri(nameValueEntry.getKey());
-          if (value instanceof Collection<?>) {
-            Collection<?> collectionValue = (Collection<?>) value;
-            for (Object repeatedValue : collectionValue) {
-              first = appendParam(first, buf, name, repeatedValue);
-            }
-          } else if (value.getClass().isArray()) {
-            for (Object repeatedValue : (Object[]) value) {
+          Class<? extends Object> valueClass = value.getClass();
+          if (value instanceof Iterable<?> || valueClass.isArray()) {
+            for (Object repeatedValue : Types.iterableOf(value)) {
               first = appendParam(first, buf, name, repeatedValue);
             }
           } else {
@@ -97,13 +94,19 @@ public final class UrlEncodedContent implements HttpContent {
   }
 
   private static boolean appendParam(boolean first, StringBuilder buf, String name, Object value) {
+    // ignore nulls
+    if (value == null || Data.isNull(value)) {
+      return first;
+    }
+    // append value
     if (first) {
       first = false;
     } else {
       buf.append('&');
     }
     buf.append(name);
-    String stringValue = CharEscapers.escapeUri(value.toString());
+    String stringValue = CharEscapers.escapeUri(
+        value instanceof Enum<?> ? FieldInfo.of((Enum<?>) value).getName() : value.toString());
     if (stringValue.length() != 0) {
       buf.append('=').append(stringValue);
     }

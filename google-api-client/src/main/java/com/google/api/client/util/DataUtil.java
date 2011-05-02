@@ -14,9 +14,6 @@
 
 package com.google.api.client.util;
 
-import com.google.common.base.Preconditions;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,7 +24,9 @@ import java.util.Map;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use {@link Data}
  */
+@Deprecated
 public class DataUtil {
 
   /**
@@ -36,7 +35,9 @@ public class DataUtil {
    * @param data any key value data, represented by an object or a map, or {@code null}
    * @return if {@code data} is a map returns {@code data}; else if {@code data} is {@code null},
    *         returns an empty map; else returns {@link ReflectionMap} on the data object
+   * @deprecated (scheduled to be removed in 1.5) Use {@link Data#mapOf(Object)}
    */
+  @Deprecated
   public static Map<String, Object> mapOf(Object data) {
     if (data == null) {
       return Collections.emptyMap();
@@ -53,79 +54,45 @@ public class DataUtil {
    * Returns a deep clone of the given key/value data, such that the result is a completely
    * independent copy.
    * <p>
-   * This should not be used directly in the implementation of {@code Object.clone()}. Instead use
-   * {@link #deepCopy(Object, Object)} for that purpose.
-   * </p>
-   * <p>
-   * Final fields cannot be changed and therefore their value won't be copied.
-   * </p>
+   * Note that final fields cannot be changed and therefore their value won't be copied.
    *
    * @param data key/value data object or map to clone or {@code null} for a {@code null} return
    *        value
    * @return deep clone or {@code null} for {@code null} input
+   * @deprecated (scheduled to be removed in 1.5) Use {@link Data#deepCopy(Object, Object)} or
+   *             {@link Data#clone(Object)}
    */
-  @SuppressWarnings("unchecked")
+  @Deprecated
   public static <T> T clone(T data) {
     // don't need to clone primitive
     if (FieldInfo.isPrimitive(data)) {
       return data;
     }
     T copy;
-    Class<?> dataClass = data.getClass();
-    if (dataClass.isArray()) {
-      copy = (T) Array.newInstance(dataClass.getComponentType(), ((Object[]) data).length);
-    } else if (data instanceof GenericData) {
-      copy = (T) ((GenericData) data).clone();
+    if (data instanceof GenericData) {
+      // use clone method if possible
+      @SuppressWarnings("unchecked")
+      T copyTmp = (T) ((GenericData) data).clone();
+      copy = copyTmp;
     } else if (data instanceof ArrayMap<?, ?>) {
-      copy = (T) ((ArrayMap) data).clone();
+      // use ArrayMap's clone method if possible
+      @SuppressWarnings("unchecked")
+      T copyTmp = (T) ((ArrayMap<?, ?>) data).clone();
+      copy = copyTmp;
     } else {
-      copy = (T) ClassInfo.newInstance(dataClass);
+      // else new to use default constructor
+      @SuppressWarnings("unchecked")
+      T copyTmp = (T) ClassInfo.newInstance(data.getClass());
+      copy = copyTmp;
     }
-    deepCopy(data, copy);
+    cloneInternal(data, copy);
     return copy;
   }
 
-  /**
-   * Makes a deep copy of the given source object into the destination object that is assumed to be
-   * of identical type.
-   *
-   * <p>
-   * Example usage of this method in {@code Object.clone()}:
-   * </p>
-   *
-   * <pre>
-  &#64;Override
-  public MyObject clone() {
-    try {
-      &#64;SuppressWarnings("unchecked")
-      MyObject result = (MyObject) super.clone();
-      DataUtil.deepCopy(this, result);
-      return result;
-    } catch (CloneNotSupportedException e) {
-      throw new IllegalStateException(e);
-    }
-  }
-   * </pre>
-   *
-   * @param src source object (non-primitive as defined by {@link FieldInfo#isPrimitive(Object)}
-   * @param dest destination object of identical type as source object, and any contained arrays
-   *        must be the same length
-   * @since 1.4
-   */
-  public static void deepCopy(Object src, Object dest) {
+  static void cloneInternal(Object src, Object dest) {
+    // TODO: support Java arrays?
     Class<?> srcClass = src.getClass();
-    Preconditions.checkArgument(!FieldInfo.isPrimitive(srcClass));
-    Preconditions.checkArgument(srcClass == dest.getClass());
-    if (srcClass.isArray()) {
-      // clone array
-      Object[] srcArray = (Object[]) src;
-      Object[] destArray = (Object[]) dest;
-      int length = srcArray.length;
-      Preconditions.checkArgument(srcArray.length == destArray.length);
-      for (int i = 0; i < length; i++) {
-        destArray[i] = clone(srcArray[i]);
-      }
-    } else if (Collection.class.isAssignableFrom(srcClass)) {
+    if (Collection.class.isAssignableFrom(srcClass)) {
       @SuppressWarnings("unchecked")
       Collection<Object> srcCollection = (Collection<Object>) src;
       if (ArrayList.class.isAssignableFrom(srcClass)) {
@@ -145,7 +112,7 @@ public class DataUtil {
         for (String fieldName : classInfo.getKeyNames()) {
           FieldInfo fieldInfo = classInfo.getFieldInfo(fieldName);
           // skip final fields
-          if (!fieldInfo.isFinal) {
+          if (!fieldInfo.isFinal()) {
             // generic data already has primitive types copied by clone()
             if (!isGenericData || !fieldInfo.isPrimitive) {
               Object srcValue = fieldInfo.getValue(src);

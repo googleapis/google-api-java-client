@@ -14,6 +14,8 @@
 
 package com.google.api.client.util;
 
+import com.google.common.base.Objects;
+
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Iterator;
@@ -24,11 +26,12 @@ import java.util.Set;
 /**
  * Memory-efficient map of keys to values with list-style random-access semantics.
  * <p>
- * Conceptually, the keys and values are stored in a simpler array in order to minimize memory use
- * and provide for fast access to a key/value at a certain index (for example {@link #getKey(int)}).
- * However, traditional mapping operations like {@link #get(Object)} and
- * {@link #put(Object, Object)} are slower because they need to look up all key/value pairs in the
- * worst case.
+ * Supports null keys and values. Conceptually, the keys and values are stored in a simpler array in
+ * order to minimize memory use and provide for fast access to a key/value at a certain index (for
+ * example {@link #getKey(int)}). However, traditional mapping operations like {@link #get(Object)}
+ * and {@link #put(Object, Object)} are slower because they need to look up all key/value pairs in
+ * the worst case.
+ * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -36,7 +39,6 @@ import java.util.Set;
 public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
   int size;
   private Object[] data;
-  private EntrySet entrySet;
 
   /**
    * Returns a new instance of an array map with initial capacity of zero. Equivalent to calling the
@@ -319,11 +321,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
 
   @Override
   public final Set<Map.Entry<K, V>> entrySet() {
-    EntrySet entrySet = this.entrySet;
-    if (entrySet == null) {
-      entrySet = this.entrySet = new EntrySet();
-    }
-    return entrySet;
+    return new EntrySet();
   }
 
   @Override
@@ -331,7 +329,6 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
     try {
       @SuppressWarnings("unchecked")
       ArrayMap<K, V> result = (ArrayMap<K, V>) super.clone();
-      result.entrySet = null;
       Object[] data = this.data;
       if (data != null) {
         int length = data.length;
@@ -404,6 +401,23 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
 
     public V setValue(V value) {
       return ArrayMap.this.set(this.index, value);
+    }
+
+    @Override
+    public int hashCode() {
+      return getKey().hashCode() ^ getValue().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) {
+        return true;
+      }
+      if (!(obj instanceof Map.Entry<?, ?>)) {
+        return false;
+      }
+      Map.Entry<?, ?> other = (Map.Entry<?, ?>) obj;
+      return Objects.equal(getKey(), other.getKey()) && Objects.equal(getValue(), other.getValue());
     }
   }
 }

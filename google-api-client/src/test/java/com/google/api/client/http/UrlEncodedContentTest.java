@@ -37,15 +37,15 @@ public class UrlEncodedContentTest extends TestCase {
   }
 
   public void testWriteTo() throws IOException {
-    assertEquals("a=x", compute(ArrayMap.of("a", "x")));
-    assertEquals("noval", compute(ArrayMap.of("noval", "")));
+    assertEquals("a=x", toString(ArrayMap.of("a", "x")));
+    assertEquals("noval", toString(ArrayMap.of("noval", "")));
     assertEquals(
-        "multi=a&multi=b&multi=c", compute(ArrayMap.of("multi", Arrays.asList("a", "b", "c"))));
+        "multi=a&multi=b&multi=c", toString(ArrayMap.of("multi", Arrays.asList("a", "b", "c"))));
     assertEquals(
-        "multi=a&multi=b&multi=c", compute(ArrayMap.of("multi", new String[] {"a", "b", "c"})));
+        "multi=a&multi=b&multi=c", toString(ArrayMap.of("multi", new String[] {"a", "b", "c"})));
   }
 
-  static String compute(Object data) throws IOException {
+  static String toString(Object data) throws IOException {
     UrlEncodedContent content = new UrlEncodedContent();
     content.data = data;
     ByteArrayOutputStream out = new ByteArrayOutputStream();
