@@ -232,6 +232,7 @@ public abstract class AbstractJsonParserTest extends TestCase {
     assertEquals(ImmutableMap.of("title", "foo"), a.map);
   }
 
+
   public static class NumberTypes {
     @Key
     byte byteValue;
@@ -357,6 +358,12 @@ public abstract class AbstractJsonParserTest extends TestCase {
     } catch (IllegalArgumentException e) {
       // expected
     }
+  }
+
+  public void testToFromString() throws IOException {
+    JsonFactory factory = newFactory();
+    NumberTypes result = factory.fromString(NUMBER_TYPES, NumberTypes.class);
+    assertEquals(NUMBER_TYPES, factory.toString(result));
   }
 
   public static class AnyType {
