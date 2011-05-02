@@ -180,7 +180,7 @@ public class HttpHeaders extends GenericData {
    */
   static HashMap<String, String> getFieldNameMap(Class<? extends HttpHeaders> headersClass) {
     HashMap<String, String> fieldNameMap = new HashMap<String, String>();
-    for (String keyName : ClassInfo.of(headersClass).getKeyNames()) {
+    for (String keyName : ClassInfo.of(headersClass).getNames()) {
       fieldNameMap.put(keyName.toLowerCase(), keyName);
     }
     return fieldNameMap;

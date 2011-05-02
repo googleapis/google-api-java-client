@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright (c) 2011 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -20,37 +20,42 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation to specify that a field is a data key, optionally providing the data key name
- * to use.
+ * Use this annotation to specify that an enum constant is a string data value, optionally providing
+ * the string data value to use.
  * <p>
- * If the data key name is not specified, the default is the Java field's name. For example:
+ * If the string data value is not specified, the default is the Java field's name. For example:
  * </p>
  *
- * <pre><code>
-  public class A {
+ * <pre>
+  public enum A {
 
-    // uses data key name of "dataKeyNameMatchesFieldName"
-    &#64;Key
-    public String dataKeyNameMatchesFieldName;
+    // value is "USE_FIELD_NAME"
+    &#64;Value
+    USE_FIELD_NAME,
+    
+    // value is "specifiedValue"
+    &#64;Value("specifiedValue")
+    USE_SPECIFIED_VALUE, 
+    
+    // value is null
+    &#64;NullValue
+    NULL_VALUE
 
-    // uses data key name of "some_other_name"
-    &#64;Key("some_other_name")
-    private String dataKeyNameIsOverriden;
-
-    // not a data key
-    private String notADataKey;
+    // not a value
+    NOT_A_VALUE
   }
- * </code></pre>
+ * </pre>
  *
- * @since 1.0
+ * @since 1.4
  * @author Yaniv Inbar
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Key {
+public @interface Value {
 
   /**
-   * Override the data key name of the field or {@code "##default"} to use the Java field's name.
+   * Override the string data value of the field or {@code "##default"} to use the Java field's
+   * name.
    */
   String value() default "##default";
 }

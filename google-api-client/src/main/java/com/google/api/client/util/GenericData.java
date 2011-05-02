@@ -29,15 +29,12 @@ import java.util.Set;
  * <p>
  * Iteration order of the data keys is based on the sorted (ascending) key names of the declared
  * fields, followed by the iteration order of all of the unknown data key name/value pairs.
+ * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public class GenericData extends AbstractMap<String, Object> implements Cloneable {
-
-  // TODO(yanivi): type parameter to specify value type?
-
-  private EntrySet entrySet;
 
   /** Map of unknown fields. */
   public ArrayMap<String, Object> unknownFields = ArrayMap.create();
@@ -45,11 +42,6 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
   // TODO(yanivi): implement more methods for faster implementation
 
   final ClassInfo classInfo = ClassInfo.of(getClass());
-
-  @Override
-  public int size() {
-    return classInfo.getKeyCount() + unknownFields.size();
-  }
 
   @Override
   public final Object get(Object name) {
@@ -111,58 +103,78 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
 
   @Override
   public Set<Map.Entry<String, Object>> entrySet() {
-    EntrySet entrySet = this.entrySet;
-    if (entrySet == null) {
-      entrySet = this.entrySet = new EntrySet();
-    }
-    return entrySet;
+    return new EntrySet();
   }
 
+  /**
+   * Makes a "deep" clone of the generic data, in which the clone is completely independent of the
+   * original.
+   */
   @Override
   public GenericData clone() {
     try {
       @SuppressWarnings("unchecked")
       GenericData result = (GenericData) super.clone();
-      result.entrySet = null;
-      DataUtil.deepCopy(this, result);
-      result.unknownFields = DataUtil.clone(unknownFields);
+      Data.deepCopy(this, result);
+      result.unknownFields = Data.clone(unknownFields);
       return result;
     } catch (CloneNotSupportedException e) {
       throw new IllegalStateException(e);
     }
   }
 
+  /** Set of object data key/value map entries. */
   final class EntrySet extends AbstractSet<Map.Entry<String, Object>> {
+
+    private final DataMap.EntrySet dataEntrySet;
+
+    EntrySet() {
+      dataEntrySet = new DataMap(GenericData.this).entrySet();
+    }
 
     @Override
     public Iterator<Map.Entry<String, Object>> iterator() {
-      return new EntryIterator();
+      return new EntryIterator(dataEntrySet);
     }
 
     @Override
     public int size() {
-      return GenericData.this.size();
+      return unknownFields.size() + dataEntrySet.size();
+    }
+
+    @Override
+    public void clear() {
+      unknownFields.clear();
+      dataEntrySet.clear();
     }
   }
 
+  /**
+   * Iterator over the object data key/value map entries which iterates first over the fields and
+   * then over the unknown keys.
+   */
   final class EntryIterator implements Iterator<Map.Entry<String, Object>> {
 
+    /** Whether we've started iterating over the unknown keys. */
     private boolean startedUnknown;
-    private final Iterator<Map.Entry<String, Object>> unknownIterator;
-    private final ReflectionMap.EntryIterator fieldIterator;
 
-    EntryIterator() {
-      fieldIterator = new ReflectionMap.EntryIterator(classInfo, GenericData.this);
+    /** Iterator over the fields. */
+    private final Iterator<Map.Entry<String, Object>> fieldIterator;
+
+    /** Iterator over the unknown keys. */
+    private final Iterator<Map.Entry<String, Object>> unknownIterator;
+
+    EntryIterator(DataMap.EntrySet dataEntrySet) {
+      fieldIterator = dataEntrySet.iterator();
       unknownIterator = unknownFields.entrySet().iterator();
     }
 
     public boolean hasNext() {
-      return !startedUnknown && fieldIterator.hasNext() || unknownIterator.hasNext();
+      return fieldIterator.hasNext() || unknownIterator.hasNext();
     }
 
     public Map.Entry<String, Object> next() {
       if (!startedUnknown) {
-        ReflectionMap.EntryIterator fieldIterator = this.fieldIterator;
         if (fieldIterator.hasNext()) {
           return fieldIterator.next();
         }
@@ -175,7 +187,7 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
       if (startedUnknown) {
         unknownIterator.remove();
       }
-      throw new UnsupportedOperationException();
+      fieldIterator.remove();
     }
   }
 }

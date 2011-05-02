@@ -14,11 +14,13 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Data;
+import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Strings;
+import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.logging.Level;
@@ -247,7 +249,6 @@ public final class HttpRequest {
         logbuf.append(method).append(' ').append(urlString).append(Strings.LINE_SEPARATOR);
       }
       // add to user agent
-      HttpHeaders headers = this.headers;
       if (headers.userAgent == null) {
         headers.userAgent = USER_AGENT_SUFFIX;
       } else {
@@ -255,19 +256,16 @@ public final class HttpRequest {
       }
       // headers
       HashSet<String> headerNames = new HashSet<String>();
-      for (Map.Entry<String, Object> headerEntry : this.headers.entrySet()) {
+      for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
         String name = headerEntry.getKey();
         String lowerCase = name.toLowerCase();
         Preconditions.checkArgument(headerNames.add(lowerCase),
             "multiple headers of the same name (headers are case insensitive): %s", lowerCase);
         Object value = headerEntry.getValue();
         if (value != null) {
-          if (value instanceof Collection<?>) {
-            for (Object repeatedValue : (Collection<?>) value) {
-              addHeader(logger, logbuf, lowLevelHttpRequest, name, repeatedValue);
-            }
-          } else if (value.getClass().isArray()) {
-            for (Object repeatedValue : (Object[]) value) {
+          Class<? extends Object> valueClass = value.getClass();
+          if (value instanceof Iterable<?> || valueClass.isArray()) {
+            for (Object repeatedValue : Types.iterableOf(value)) {
               addHeader(logger, logbuf, lowLevelHttpRequest, name, repeatedValue);
             }
           } else {
@@ -344,7 +342,14 @@ public final class HttpRequest {
 
   private static void addHeader(Logger logger, StringBuilder logbuf,
       LowLevelHttpRequest lowLevelHttpRequest, String name, Object value) {
-    String stringValue = value.toString();
+    // ignore nulls
+    if (value == null || Data.isNull(value)) {
+      return;
+    }
+    // compute value
+    String stringValue =
+        value instanceof Enum<?> ? FieldInfo.of((Enum<?>) value).getName() : value.toString();
+    // log header
     if (logbuf != null) {
       logbuf.append(name).append(": ");
       if ("Authorization".equals(name) && !logger.isLoggable(Level.ALL)) {
@@ -354,6 +359,7 @@ public final class HttpRequest {
       }
       logbuf.append(Strings.LINE_SEPARATOR);
     }
+    // add header
     lowLevelHttpRequest.addHeader(name, stringValue);
   }
 }

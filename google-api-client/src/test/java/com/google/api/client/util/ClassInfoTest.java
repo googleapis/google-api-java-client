@@ -14,6 +14,9 @@
 
 package com.google.api.client.util;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+
 import junit.framework.TestCase;
 
 import java.util.AbstractList;
@@ -21,6 +24,7 @@ import java.util.AbstractMap;
 import java.util.AbstractQueue;
 import java.util.AbstractSet;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -40,23 +44,11 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class ClassInfoTest extends TestCase {
 
-  public ClassInfoTest() {
-  }
-
-  public ClassInfoTest(String testName) {
-    super(testName);
-  }
-
-  public void testIsAssignableToOrFrom() {
-    assertTrue(ClassInfo.isAssignableToOrFrom(String.class, Object.class));
-    assertTrue(ClassInfo.isAssignableToOrFrom(String.class, String.class));
-    assertTrue(ClassInfo.isAssignableToOrFrom(Object.class, String.class));
-    assertFalse(ClassInfo.isAssignableToOrFrom(String.class, List.class));
-  }
-
+  // NOTE: deprecated tests are testing deprecated methods and the tests will be removed when those
+  // tested methods are removed
+  @Deprecated
   public void testNewCollectionInstance() {
     assertEquals(ArrayList.class, ClassInfo.newCollectionInstance(null).getClass());
-    assertEquals(ArrayList.class, ClassInfo.newCollectionInstance(String[].class).getClass());
     assertEquals(ArrayList.class, ClassInfo.newCollectionInstance(Object.class).getClass());
     assertEquals(ArrayList.class, ClassInfo.newCollectionInstance(List.class).getClass());
     assertEquals(ArrayList.class, ClassInfo.newCollectionInstance(AbstractList.class).getClass());
@@ -80,8 +72,8 @@ public class ClassInfoTest extends TestCase {
     }
   }
 
+  @Deprecated
   public void testNewMapInstance() {
-    assertEquals(ArrayMap.class, ClassInfo.newMapInstance(Object.class).getClass());
     assertEquals(ArrayMap.class, ClassInfo.newMapInstance(Map.class).getClass());
     assertEquals(ArrayMap.class, ClassInfo.newMapInstance(Cloneable.class).getClass());
     assertEquals(ArrayMap.class, ClassInfo.newMapInstance(AbstractMap.class).getClass());
@@ -103,17 +95,61 @@ public class ClassInfoTest extends TestCase {
     }
   }
 
+  @Deprecated
   static class CollectionParameter {
     public String s;
     public List<String> list;
-    public String[] array;
   }
 
+  @Deprecated
   public void testGetCollectionParameter() throws Exception {
     assertNull(ClassInfo.getCollectionParameter(CollectionParameter.class.getField("s")));
     assertEquals(
         String.class, ClassInfo.getCollectionParameter(CollectionParameter.class.getField("list")));
-    assertEquals(String.class,
-        ClassInfo.getCollectionParameter(CollectionParameter.class.getField("array")));
+  }
+
+  public enum E {
+
+    @Value
+    VALUE,
+    @Value("other")
+    OTHER_VALUE,
+    @NullValue
+    NULL, IGNORED_VALUE
+  }
+
+  public void testIsEnum() {
+    assertTrue(ClassInfo.of(E.class).isEnum());
+    assertFalse(ClassInfo.of(String.class).isEnum());
+  }
+
+  public void testGetFieldInfo_enum() throws Exception {
+    ClassInfo classInfo = ClassInfo.of(E.class);
+    assertEquals(E.class.getField("NULL"), classInfo.getFieldInfo(null).getField());
+    assertEquals(E.class.getField("OTHER_VALUE"), classInfo.getFieldInfo("other").getField());
+    assertEquals(E.class.getField("VALUE"), classInfo.getFieldInfo("VALUE").getField());
+  }
+
+  public class A {
+    @Key
+    String b;
+    @Key("oc")
+    String c;
+    String d;
+  }
+
+  public class B extends A {
+    @Key
+    String e;
+  }
+
+  public void testNames() {
+    assertEquals(ImmutableList.of("b", "oc"), ClassInfo.of(A.class).names);
+    assertEquals(ImmutableList.of("b", "e", "oc"), ClassInfo.of(B.class).names);
+  }
+
+  public void testNames_enum() {
+    ClassInfo classInfo = ClassInfo.of(E.class);
+    assertEquals(Lists.newArrayList(Arrays.asList(null, "VALUE", "other")), classInfo.names);
   }
 }

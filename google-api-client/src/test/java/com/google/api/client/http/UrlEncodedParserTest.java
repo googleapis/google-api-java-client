@@ -17,10 +17,12 @@ package com.google.api.client.http;
 import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
+import com.google.api.client.util.Value;
 import com.google.common.base.Objects;
 
 import junit.framework.TestCase;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -157,5 +159,32 @@ public class UrlEncodedParserTest extends TestCase {
     ArrayMap<String, Object> actual = new ArrayMap<String, Object>();
     UrlEncodedParser.parse(null, actual);
     assertTrue(actual.isEmpty());
+  }
+
+  public enum E {
+
+    @Value
+    VALUE,
+    @Value("other")
+    OTHER_VALUE,
+  }
+
+  public static class EnumValue extends GenericData {
+    @Key
+    public E value;
+    @Key
+    public E otherValue;
+  }
+
+  static final String ENUM_VALUE = "otherValue=other&value=VALUE";
+
+  public void testParse_enum() throws IOException {
+    EnumValue actual = new EnumValue();
+    UrlEncodedParser.parse(ENUM_VALUE, actual);
+    EnumValue expected = new EnumValue();
+    expected.value = E.VALUE;
+    expected.otherValue = E.OTHER_VALUE;
+    assertEquals(expected, actual);
+    assertEquals(ENUM_VALUE, UrlEncodedContentTest.toString(actual));
   }
 }
