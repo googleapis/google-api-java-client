@@ -217,7 +217,7 @@ public class Data {
     if (dataClass.isArray()) {
       copy = (T) Array.newInstance(dataClass.getComponentType(), Array.getLength(data));
     } else if (data instanceof ArrayMap<?, ?>) {
-      copy = (T) ArrayMap.create();
+      copy = (T) ((ArrayMap<?, ?>) data).clone();
     } else {
       copy = (T) Types.newInstance(dataClass);
     }

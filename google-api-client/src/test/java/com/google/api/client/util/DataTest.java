@@ -109,6 +109,12 @@ public class DataTest extends TestCase {
     assertTrue(Arrays.equals(orig, result));
   }
 
+  public void testClone_arrayMap() {
+    ArrayMap<String, Integer> map = ArrayMap.of();
+    map.add("a", 1);
+    assertEquals(map, Data.clone(map));
+  }
+
   public void testNewCollectionInstance() {
     assertEquals(ArrayList.class, Data.newCollectionInstance(null).getClass());
     assertEquals(ArrayList.class, Data.newCollectionInstance(String[].class).getClass());

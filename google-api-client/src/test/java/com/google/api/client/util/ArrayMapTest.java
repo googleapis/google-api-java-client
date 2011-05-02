@@ -82,4 +82,22 @@ public class ArrayMapTest extends TestCase {
     clone.add("foo", "bar");
     assertEquals("{foo=bar}", clone.toString());
   }
+
+  public void testSet() {
+    ArrayMap<String, Integer> map = ArrayMap.of();
+    map.set(0, "a", 1);
+    assertEquals(ArrayMap.of("a", 1), map);
+    map.set(0, 2);
+    assertEquals(ArrayMap.of("a", 2), map);
+    try {
+      map.set(-1, 1);
+      fail("expected ArrayIndexOutOfBoundsException");
+    } catch (IndexOutOfBoundsException e) {
+    }
+    try {
+      map.set(1, 1);
+      fail("expected ArrayIndexOutOfBoundsException");
+    } catch (IndexOutOfBoundsException e) {
+    }
+  }
 }
