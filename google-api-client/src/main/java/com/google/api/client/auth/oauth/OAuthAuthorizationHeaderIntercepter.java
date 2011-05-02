@@ -23,6 +23,7 @@ import java.security.GeneralSecurityException;
 /**
  * @author Yaniv Inbar
  */
+@Deprecated
 final class OAuthAuthorizationHeaderIntercepter implements HttpExecuteIntercepter {
 
   OAuthParameters oauthParameters;

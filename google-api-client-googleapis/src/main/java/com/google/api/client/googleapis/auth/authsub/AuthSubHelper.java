@@ -36,7 +36,9 @@ import java.security.PrivateKey;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use OAuth 1.0a or OAuth 2.0
  */
+@Deprecated
 public final class AuthSubHelper {
 
   /** Private key for secure AuthSub or {@code null} for non-secure AuthSub. */
@@ -137,9 +139,9 @@ public final class AuthSubHelper {
    */
   public String exchangeForSessionToken() throws IOException {
     HttpTransport authSubTransport = this.authSubTransport;
-    authSubTransport.addParser(AuthKeyValueParser.INSTANCE);
     HttpRequest request = authSubTransport.createRequestFactory().buildGetRequest(
         new GenericUrl("https://www.google.com/accounts/AuthSubSessionToken"));
+    request.addParser(AuthKeyValueParser.INSTANCE);
     SessionTokenResponse sessionTokenResponse =
         request.execute().parseAs(SessionTokenResponse.class);
     String sessionToken = sessionTokenResponse.sessionToken;
@@ -175,9 +177,9 @@ public final class AuthSubHelper {
    */
   public TokenInfoResponse requestTokenInfo() throws IOException {
     HttpTransport authSubTransport = this.authSubTransport;
-    authSubTransport.addParser(AuthKeyValueParser.INSTANCE);
     HttpRequest request = authSubTransport.createRequestFactory().buildGetRequest(
         new GenericUrl("https://www.google.com/accounts/AuthSubTokenInfo"));
+    request.addParser(AuthKeyValueParser.INSTANCE);
     return request.execute().parseAs(TokenInfoResponse.class);
   }
 

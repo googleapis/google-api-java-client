@@ -90,7 +90,7 @@ keytool -export -rfc -keystore ./Example.jks -storepass changeme \
  * </li>
  * <li>For 2-legged OAuth, use
  * {@link com.google.api.client.googleapis.auth.oauth.GoogleOAuthDomainWideDelegation} as a request
- * execute intercepter to set the e-mail address of the user on every HTTP request, or
+ * execute interceptor to set the e-mail address of the user on every HTTP request, or
  * {@link com.google.api.client.googleapis.auth.oauth.GoogleOAuthDomainWideDelegation.Url} as a
  * generic URL builder with the requestor ID parameter.</li>
  * <li>To revoke an access token, use

@@ -31,6 +31,7 @@ import java.util.EnumSet;
  *
  * @author Yaniv Inbar
  */
+@Deprecated
 public class MethodOverrideIntercepterTest extends TestCase {
 
   public MethodOverrideIntercepterTest(String name) {
@@ -71,7 +72,7 @@ public class MethodOverrideIntercepterTest extends TestCase {
         request.headers.get("X-HTTP-Method-Override"));
     if (shouldOverride) {
       assertNotNull(request.content);
-      assertTrue(request.content.getLength() >= 1);
+      assertTrue(request.content.getLength() >= 0);
     } else {
       assertNull(request.content);
     }

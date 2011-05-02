@@ -114,28 +114,6 @@ public class AccessTokenRequest extends GenericData {
 
     public AuthorizationCodeGrant() {
     }
-
-    /**
-     * @param transport HTTP transport for executing request in {@link #execute()}
-     * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
-     * @param authorizationServerUrl encoded authorization server URL
-     * @param clientId client identifier
-     * @param clientSecret client secret
-     * @param code authorization code received from the authorization server
-     * @param redirectUri redirection URI used in the initial request
-     * @since 1.4
-     */
-    public AuthorizationCodeGrant(HttpTransport transport,
-        JsonFactory jsonFactory,
-        String authorizationServerUrl,
-        String clientId,
-        String clientSecret,
-        String code,
-        String redirectUri) {
-      super(transport, jsonFactory, authorizationServerUrl, clientId, clientSecret);
-      this.code = code;
-      this.redirectUri = redirectUri;
-    }
   }
 
   /**
@@ -187,28 +165,6 @@ public class AccessTokenRequest extends GenericData {
     }
 
     public ResourceOwnerPasswordCredentialsGrant() {
-    }
-
-    /**
-     * @param transport HTTP transport for executing request in {@link #execute()}
-     * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
-     * @param authorizationServerUrl encoded authorization server URL
-     * @param clientId client identifier
-     * @param clientSecret client secret
-     * @param username resource owner's username
-     * @param password resource owner's password
-     * @since 1.4
-     */
-    public ResourceOwnerPasswordCredentialsGrant(HttpTransport transport,
-        JsonFactory jsonFactory,
-        String authorizationServerUrl,
-        String clientId,
-        String clientSecret,
-        String username,
-        String password) {
-      super(transport, jsonFactory, authorizationServerUrl, clientId, clientSecret);
-      this.username = username;
-      this.password = password;
     }
   }
 
@@ -262,27 +218,6 @@ public class AccessTokenRequest extends GenericData {
 
     public AssertionGrant() {
     }
-
-    /**
-     * @param transport HTTP transport for executing request in {@link #execute()}
-     * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
-     * @param authorizationServerUrl encoded authorization server URL
-     * @param clientSecret client secret
-     * @param assertionType format of the assertion as defined by the authorization server. The
-     *        value MUST be an absolute URI
-     * @param assertion assertion
-     * @since 1.4
-     */
-    public AssertionGrant(HttpTransport transport,
-        JsonFactory jsonFactory,
-        String authorizationServerUrl,
-        String clientSecret,
-        String assertionType,
-        String assertion) {
-      super(transport, jsonFactory, authorizationServerUrl, clientSecret);
-      this.assertionType = assertionType;
-      this.assertion = assertion;
-    }
   }
 
   /**
@@ -330,58 +265,9 @@ public class AccessTokenRequest extends GenericData {
 
     public RefreshTokenGrant() {
     }
-
-    /**
-     * @param transport HTTP transport for executing request in {@link #execute()}
-     * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
-     * @param authorizationServerUrl encoded authorization server URL
-     * @param clientId client identifier
-     * @param clientSecret client secret
-     * @param refreshToken refresh token associated with the access token to be refreshed
-     * @since 1.4
-     */
-    public RefreshTokenGrant(HttpTransport transport,
-        JsonFactory jsonFactory,
-        String authorizationServerUrl,
-        String clientId,
-        String clientSecret,
-        String refreshToken) {
-      super(transport, jsonFactory, authorizationServerUrl, clientId, clientSecret);
-      this.refreshToken = refreshToken;
-    }
   }
 
   public AccessTokenRequest() {
-  }
-
-  /**
-   * @param transport HTTP transport for executing request in {@link #execute()}
-   * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
-   * @param authorizationServerUrl encoded authorization server URL
-   * @param clientSecret client secret
-   * @since 1.4
-   */
-  protected AccessTokenRequest(HttpTransport transport, JsonFactory jsonFactory,
-      String authorizationServerUrl, String clientSecret) {
-    this();
-    this.transport = transport;
-    this.jsonFactory = jsonFactory;
-    this.authorizationServerUrl = authorizationServerUrl;
-    this.clientSecret = clientSecret;
-  }
-
-  /**
-   * @param transport HTTP transport for executing request in {@link #execute()}
-   * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
-   * @param authorizationServerUrl encoded authorization server URL
-   * @param clientId client identifier
-   * @param clientSecret client secret
-   * @since 1.4
-   */
-  public AccessTokenRequest(HttpTransport transport, JsonFactory jsonFactory,
-      String authorizationServerUrl, String clientId, String clientSecret) {
-    this(transport, jsonFactory, authorizationServerUrl, clientSecret);
-    this.clientId = clientId;
   }
 
   /**
@@ -397,8 +283,6 @@ public class AccessTokenRequest extends GenericData {
    * @since 1.3
    */
   public JsonFactory jsonFactory;
-
-  // TODO(yanivi): grantType should be an enum (see Issue 3)
 
   /**
    * (REQUIRED) The access grant type included in the request. Value MUST be one of
@@ -454,11 +338,11 @@ public class AccessTokenRequest extends GenericData {
   public final HttpResponse execute() throws IOException {
     JsonHttpParser parser = new JsonHttpParser();
     parser.jsonFactory = jsonFactory;
-    transport.addParser(parser);
     UrlEncodedContent content = new UrlEncodedContent();
     content.data = this;
     HttpRequest request = transport.createRequestFactory().buildPostRequest(
         new GenericUrl(authorizationServerUrl), content);
+    request.addParser(parser);
     if (useBasicAuthorization) {
       request.headers.setBasicAuthentication(clientId, clientSecret);
     } else {

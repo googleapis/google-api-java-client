@@ -270,7 +270,7 @@ public final class HttpResponse {
    * {@code null} for none.
    */
   public HttpParser getParser() {
-    return transport.getParser(contentType);
+    return request.getParser(contentType);
   }
 
   /**

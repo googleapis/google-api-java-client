@@ -48,7 +48,7 @@ public abstract class GoogleAccessTokenRequest extends AccessTokenRequest {
                 "gX1fBat3bV",
                 "i1WsRn1uB1",
                 "https://client.example.com/cb");
-        AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
+        AccessTokenResponse response = request.execute();
         System.out.println("Access token: " + response.accessToken);
       } catch (HttpResponseException e) {
         AccessTokenErrorResponse response = e.response.parseAs(AccessTokenErrorResponse.class);
@@ -98,6 +98,60 @@ public abstract class GoogleAccessTokenRequest extends AccessTokenRequest {
   }
 
   /**
+   * Google extension to the OAuth 2.0 request to refresh an access token.
+   * <p>
+   * Sample usage:
+   *
+   * <pre>
+   * <code>
+    static void requestAccessToken() throws IOException {
+      try {
+        GoogleRefreshTokenGrant request = new GoogleRefreshTokenGrant(new NetHttpTransport(),
+            new JacksonFactory(),
+            "s6BhdRkqt3",
+            "gX1fBat3bV",
+            "n4E9O119d");
+        AccessTokenResponse response = request.execute();
+        System.out.println("Access token: " + response.accessToken);
+      } catch (HttpResponseException e) {
+        AccessTokenErrorResponse response = e.response.parseAs(AccessTokenErrorResponse.class);
+        System.out.println("Error: " + response.error);
+      }
+    }
+   * </code>
+   * </pre>
+   * </p>
+   */
+  public static class GoogleRefreshTokenGrant extends GoogleAccessTokenRequest {
+
+    /**
+     * (REQUIRED) The refresh token associated with the access token to be refreshed.
+     */
+    @Key("refresh_token")
+    public String refreshToken;
+
+    {
+      grantType = "refresh_token";
+    }
+
+    public GoogleRefreshTokenGrant() {
+    }
+
+    /**
+     * @param transport HTTP transport for executing request in {@link #execute()}
+     * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
+     * @param clientId client identifier
+     * @param clientSecret client secret
+     * @param refreshToken refresh token associated with the access token to be refreshed
+     */
+    public GoogleRefreshTokenGrant(HttpTransport transport, JsonFactory jsonFactory,
+        String clientId, String clientSecret, String refreshToken) {
+      super(transport, jsonFactory, clientId, clientSecret);
+      this.refreshToken = refreshToken;
+    }
+  }
+
+  /**
    * Google extension to the OAuth 2.0 Assertion Flow: request an access token based on an
    * assertion.
    * <p>
@@ -110,7 +164,7 @@ public abstract class GoogleAccessTokenRequest extends AccessTokenRequest {
         GoogleAssertionGrant request =
             new GoogleAssertionGrant(new NetHttpTransport(), new JacksonFactory(), "gX1fBat3bV",
                 "urn:oasis:names:tc:SAML:2.0:", "PHNhbWxwOl...[omitted for brevity]...ZT4=");
-        AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
+        AccessTokenResponse response = request.execute();
         System.out.println("Access token: " + response.accessToken);
       } catch (HttpResponseException e) {
         AccessTokenErrorResponse response = e.response.parseAs(AccessTokenErrorResponse.class);

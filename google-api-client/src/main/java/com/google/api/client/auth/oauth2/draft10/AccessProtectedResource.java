@@ -14,13 +14,15 @@
 
 package com.google.api.client.auth.oauth2.draft10;
 
-import com.google.api.client.http.HttpExecuteIntercepter;
+import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.util.GenericData;
+import com.google.common.base.Preconditions;
 
+import java.io.IOException;
 import java.util.EnumSet;
 
 /**
@@ -28,114 +30,126 @@ import java.util.EnumSet;
  * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10#section-5">Accessing a Protected
  * Resource</a>.
  *
+ * <p>
+ * Sample usage, taking advantage that this class implements {@link HttpRequestInitializer}:
+ * </p>
+ *
+ * <pre>
+  public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
+    return transport.createRequestFactory(new AccessProtectedResource(...));
+  }
+ * </pre>
+ *
+ * <p>
+ * If you have a custom request initializer, take a look at the sample usage for
+ * {@link HttpExecuteInterceptor}, which this class also implements.
+ * </p>
+ *
  * @author Yaniv Inbar
- * @since 1.2
+ * @since 1.4
  */
-public final class AccessProtectedResource {
+public final class AccessProtectedResource
+    implements HttpExecuteInterceptor, HttpRequestInitializer {
 
   /**
-   * Sets the {@code "Authorization"} header using the given access token for every executed HTTP
-   * request for the given HTTP transport.
+   * Method of accessing protected resources.
    * <p>
-   * Any existing HTTP request execute intercepters for setting the OAuth 2 access token will be
-   * removed.
+   * The only method required to be implemented by the specification is
+   * {@link #AUTHORIZATION_HEADER}.
    * </p>
+   */
+  public enum Method {
+    /**
+     * Uses the "Authorization" header, as specified in <a
+     * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10#section-5.1.1">Section 5.1.1</a>.
+     */
+    AUTHORIZATION_HEADER,
+
+    /**
+     * Uses the query parameter, as specified in <a
+     * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10#section-5.1.2">Section 5.1.2</a>.
+     */
+    QUERY_PARAMETER,
+
+    /**
+     * Uses a form-encoded body parameter, as specified in <a
+     * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10#section-5.1.3">Section 5.1.3</a>.
+     */
+    FORM_ENCODED_BODY
+  }
+
+  private static final EnumSet<HttpMethod> ALLOWED_METHODS =
+      EnumSet.of(HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE);
+
+  // TODO(yanivi): use a read-write lock on the access token instead?
+
+  /** Access token. */
+  private volatile String accessToken;
+
+  /** Method of accessing protected resources. */
+  private final Method method;
+
+  /**
+   * Uses the default method {@link Method#AUTHORIZATION_HEADER}.
    *
-   * @param transport HTTP transport
    * @param accessToken access token
    */
-  public static void usingAuthorizationHeader(HttpTransport transport, String accessToken) {
-    new UsingAuthorizationHeader().authorize(transport, accessToken);
+  public AccessProtectedResource(String accessToken) {
+    this(accessToken, Method.AUTHORIZATION_HEADER);
   }
 
   /**
-   * Sets the {@code "oauth_token"} URI query parameter using the given access token for every
-   * executed HTTP request for the given HTTP transport.
-   * <p>
-   * Any existing HTTP request execute intercepters for setting the OAuth 2 access token will be
-   * removed.
-   *
-   * @param transport HTTP transport
    * @param accessToken access token
+   * @param method method of accessing protected resources
    */
-  public static void usingQueryParameter(HttpTransport transport, String accessToken) {
-    new UsingQueryParameter().authorize(transport, accessToken);
+  public AccessProtectedResource(String accessToken, Method method) {
+    setAccessToken(accessToken);
+    this.method = method;
+  }
+
+  /** Returns the access token. */
+  public String getAccessToken() {
+    return accessToken;
   }
 
   /**
-   * Sets the {@code "oauth_token"} parameter in the form-encoded HTTP body using the given access
-   * token for every executed HTTP request for the given HTTP transport.
-   * <p>
-   * Any existing HTTP request execute intercepters for setting the OAuth 2 access token will be
-   * removed. Requirements:
-   * <ul>
-   * <li>The HTTP method must be "POST", "PUT", or "DELETE".</li>
-   * <li>The HTTP content must be {@code null} or {@link UrlEncodedContent}.</li>
-   * <li>The {@link UrlEncodedContent#data} must be {@code null} or {@link GenericData}.</li>
-   * </ul>
+   * Sets the access token.
    *
-   * @param transport HTTP transport
    * @param accessToken access token
    */
-  public static void usingFormEncodedBody(HttpTransport transport, String accessToken) {
-    new UsingFormEncodedBody().authorize(transport, accessToken);
+  public void setAccessToken(String accessToken) {
+    this.accessToken = Preconditions.checkNotNull(accessToken);
   }
 
-  /**
-   * Abstract class to inject an access token parameter for every executed HTTP request .
-   */
-  static abstract class AccessTokenIntercepter implements HttpExecuteIntercepter {
+  public void initialize(HttpRequest request) throws IOException {
+    request.interceptor = this;
+  }
 
-    /** Access token to use. */
-    String accessToken;
-
-    void authorize(HttpTransport transport, String accessToken) {
-      this.accessToken = accessToken;
-      transport.removeIntercepters(AccessTokenIntercepter.class);
-      transport.intercepters.add(this);
+  public void intercept(HttpRequest request) throws IOException {
+    switch (method) {
+      case AUTHORIZATION_HEADER:
+        request.headers.authorization = "OAuth " + accessToken;
+        break;
+      case QUERY_PARAMETER:
+        request.url.set("oauth_token", accessToken);
+        break;
+      case FORM_ENCODED_BODY:
+        Preconditions.checkArgument(ALLOWED_METHODS.contains(request.method),
+            "expected one of these HTTP methods: %s", ALLOWED_METHODS);
+        // URL-encoded content (cast exception if not the right class)
+        UrlEncodedContent content = (UrlEncodedContent) request.content;
+        if (content == null) {
+          content = new UrlEncodedContent();
+          request.content = content;
+        }
+        // Generic data (cast exception if not the right class)
+        GenericData data = (GenericData) content.data;
+        if (data == null) {
+          data = new GenericData();
+          content.data = data;
+        }
+        data.put("oauth_token", accessToken);
+        break;
     }
-  }
-
-  static final class UsingAuthorizationHeader extends AccessTokenIntercepter {
-
-    public void intercept(HttpRequest request) {
-      request.headers.authorization = "OAuth " + accessToken;
-    }
-  }
-
-  static final class UsingQueryParameter extends AccessTokenIntercepter {
-
-    public void intercept(HttpRequest request) {
-      request.url.set("oauth_token", accessToken);
-    }
-  }
-
-  static final class UsingFormEncodedBody extends AccessTokenIntercepter {
-
-    private static final EnumSet<HttpMethod> ALLOWED_METHODS =
-        EnumSet.of(HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE);
-
-    public void intercept(HttpRequest request) {
-      if (!ALLOWED_METHODS.contains(request.method)) {
-        throw new IllegalArgumentException(
-            "expected one of these HTTP methods: " + ALLOWED_METHODS);
-      }
-      // URL-encoded content (cast exception if not the right class)
-      UrlEncodedContent content = (UrlEncodedContent) request.content;
-      if (content == null) {
-        content = new UrlEncodedContent();
-        request.content = content;
-      }
-      // Generic data (cast exception if not the right class)
-      GenericData data = (GenericData) content.data;
-      if (data == null) {
-        data = new GenericData();
-        content.data = data;
-      }
-      data.put("oauth_token", accessToken);
-    }
-  }
-
-  private AccessProtectedResource() {
   }
 }

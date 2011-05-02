@@ -30,6 +30,7 @@ import java.io.IOException;
  *
  * @author Yaniv Inbar
  */
+@Deprecated
 public class GoogleApiTest extends TestCase {
 
   public GoogleApiTest(String name) {

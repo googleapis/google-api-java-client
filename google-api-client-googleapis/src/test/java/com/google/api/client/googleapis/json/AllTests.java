@@ -23,6 +23,7 @@ import junit.framework.TestSuite;
  */
 public class AllTests extends TestSuite {
 
+  @SuppressWarnings("deprecation")
   public static TestSuite suite() {
     TestSuite result = new TestSuite(AllTests.class.getName());
     result.addTestSuite(GoogleApiTest.class);

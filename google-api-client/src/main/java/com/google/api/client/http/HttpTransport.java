@@ -77,28 +77,23 @@ public abstract class HttpTransport {
    * build method is called.
    *
    * @deprecated (scheduled to be removed in 1.5) Use {@link HttpRequest#headers} in an
-   *             {@link HttpRequestHandler}
+   *             {@link HttpRequestInitializer}
    */
   @Deprecated
   public HttpHeaders defaultHeaders = new HttpHeaders();
 
   /** Map from content type to HTTP parser. */
-  private final ArrayMap<String, HttpParser> contentTypeToParserMap = ArrayMap.create();
+  @Deprecated
+  final ArrayMap<String, HttpParser> contentTypeToParserMap = ArrayMap.create();
 
   /**
    * HTTP request execute intercepters. The intercepters will be invoked in the order of the
    * {@link List#iterator()}.
-   */
-  public List<HttpExecuteIntercepter> intercepters = new ArrayList<HttpExecuteIntercepter>(1);
-
-  /**
-   * HTTP unsuccessful (non-2XX) response handlers. The handlers will all be run in order and if any
-   * of the interceptors requests a supported retry, the request will be retried.
    *
-   * @since 1.4
+   * @deprecated (scheduled to be removed in 1.5) Use {@link HttpRequest#interceptor}
    */
-  public List<HttpUnsuccessfulResponseHandler> responseHandlers =
-      new ArrayList<HttpUnsuccessfulResponseHandler>(1);
+  @Deprecated
+  public List<HttpExecuteIntercepter> intercepters = new ArrayList<HttpExecuteIntercepter>(1);
 
   /**
    * Returns a new instance of an HTTP request factory based on this HTTP transport.
@@ -112,13 +107,13 @@ public abstract class HttpTransport {
 
   /**
    * Returns a new instance of an HTTP request factory based on this HTTP transport with the given
-   * HTTP request handler for initializing requests.
+   * HTTP request initializer.
    *
-   * @param initializer HTTP request handler for initializing requests or {@code null} for none
+   * @param initializer HTTP request initializer or {@code null} for none
    * @return new instance of an HTTP request factory
    * @since 1.4
    */
-  public final HttpRequestFactory createRequestFactory(HttpRequestHandler initializer) {
+  public final HttpRequestFactory createRequestFactory(HttpRequestInitializer initializer) {
     return new HttpRequestFactory(this, initializer);
   }
 
@@ -127,7 +122,11 @@ public abstract class HttpTransport {
    * <p>
    * If there is already a previous parser defined for this new parser (as defined by
    * {@link #getParser(String)} then the previous parser will be removed.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use {@link HttpRequest#addParser(HttpParser)} in
+   *             an {@link HttpRequestInitializer}
    */
+  @Deprecated
   public final void addParser(HttpParser parser) {
     String contentType = getNormalizedContentType(parser.getContentType());
     contentTypeToParserMap.put(contentType, parser);
@@ -138,7 +137,10 @@ public abstract class HttpTransport {
    * none is defined.
    *
    * @param contentType content type or {@code null} for {@code null} result
+   * @deprecated (scheduled to be removed in 1.5) Use {@link HttpRequest#getParser(String)} in an
+   *             {@link HttpRequestInitializer}
    */
+  @Deprecated
   public final HttpParser getParser(String contentType) {
     if (contentType == null) {
       return null;
@@ -147,6 +149,7 @@ public abstract class HttpTransport {
     return contentTypeToParserMap.get(contentType);
   }
 
+  @Deprecated
   private String getNormalizedContentType(String contentType) {
     int semicolon = contentType.indexOf(';');
     return semicolon == -1 ? contentType : contentType.substring(0, semicolon);
@@ -156,7 +159,10 @@ public abstract class HttpTransport {
    * Builds a request without specifying the HTTP method.
    *
    * @return new HTTP request
+   * @deprecated (scheduled to be made package private in 1.5) Use
+   *             {@link HttpRequestFactory#buildRequest(HttpMethod, GenericUrl, HttpContent)}
    */
+  @Deprecated
   public final HttpRequest buildRequest() {
     return new HttpRequest(this, null);
   }
@@ -231,7 +237,9 @@ public abstract class HttpTransport {
    * Removes HTTP request execute intercepters of the given class or subclasses.
    *
    * @param intercepterClass intercepter class
+   * @deprecated (scheduled to be removed in 1.5) Use {@link HttpRequest#interceptor}
    */
+  @Deprecated
   public final void removeIntercepters(Class<?> intercepterClass) {
     Iterator<HttpExecuteIntercepter> iterable = intercepters.iterator();
     while (iterable.hasNext()) {

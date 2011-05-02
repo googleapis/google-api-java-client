@@ -14,13 +14,12 @@
 
 package com.google.api.client.googleapis;
 
-import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.HttpExecuteIntercepter;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.InputStreamContent;
 
-import java.io.IOException;
 import java.util.EnumSet;
 
 /**
@@ -34,7 +33,9 @@ import java.util.EnumSet;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use {@link MethodOverride}
  */
+@Deprecated
 public class MethodOverrideIntercepter implements HttpExecuteIntercepter {
 
   /**
@@ -50,16 +51,16 @@ public class MethodOverrideIntercepter implements HttpExecuteIntercepter {
   public EnumSet<HttpMethod> override =
       EnumSet.of(HttpMethod.DELETE, HttpMethod.HEAD, HttpMethod.PATCH, HttpMethod.PUT);
 
-  // TODO(yanivi): or should we be less conservative and not override PUT, PATCH, DELETE, and HEAD?
-
-  public void intercept(HttpRequest request) throws IOException {
+  public void intercept(HttpRequest request) {
     if (overrideThisMethod(request)) {
       HttpMethod method = request.method;
       request.method = HttpMethod.POST;
       request.headers.set("X-HTTP-Method-Override", method.name());
-      // Google servers will fail to process a POST unless the Content-Length header >= 1
-      if (request.content == null || request.content.getLength() == 0) {
-        request.content = new ByteArrayContent(" ");
+      // Google servers will fail to process a POST without the Content-Length header
+      if (request.content == null) {
+        InputStreamContent content = new InputStreamContent();
+        content.setByteArrayInput(new byte[0]);
+        request.content = content;
       }
     }
   }

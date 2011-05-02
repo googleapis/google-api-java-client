@@ -15,7 +15,6 @@
 package com.google.api.client.googleapis.json;
 
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
@@ -26,6 +25,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.rpc2.JsonRpcRequest;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -100,15 +100,17 @@ public final class GoogleJsonRpcHttpTransport {
   }
 
   private HttpRequest internalExecute(Object data) {
-    HttpRequest httpRequest = transport.buildRequest();
-    httpRequest.method = HttpMethod.POST;
-    httpRequest.url = rpcServerUrl;
     JsonHttpContent content = new JsonHttpContent();
     content.jsonFactory = jsonFactory;
     content.contentType = contentType;
-    httpRequest.headers.accept = accept;
     content.data = data;
-    httpRequest.content = content;
-    return httpRequest;
+    HttpRequest httpRequest;
+    try {
+      httpRequest = transport.createRequestFactory().buildPostRequest(rpcServerUrl, content);
+      httpRequest.headers.accept = accept;
+      return httpRequest;
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
+    }
   }
 }

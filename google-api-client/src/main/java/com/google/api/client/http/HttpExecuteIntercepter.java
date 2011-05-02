@@ -14,6 +14,8 @@
 
 package com.google.api.client.http;
 
+import org.apache.http.HttpRequestInterceptor;
+
 import java.io.IOException;
 
 /**
@@ -25,7 +27,9 @@ import java.io.IOException;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use {@link HttpRequestInterceptor}
  */
+@Deprecated
 public interface HttpExecuteIntercepter {
 
   /**

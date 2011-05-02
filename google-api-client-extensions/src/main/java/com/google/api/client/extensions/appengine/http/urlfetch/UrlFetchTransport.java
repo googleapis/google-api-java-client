@@ -15,7 +15,7 @@
 package com.google.api.client.extensions.appengine.http.urlfetch;
 
 import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestHandler;
+import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
 
@@ -39,7 +39,7 @@ import java.net.HttpURLConnection;
  * <p>
  * Upgrade warning: prior version 1.3 had a {@code deadline} field. Instead now use
  * {@link HttpRequest#connectTimeout} and {@link HttpRequest#readTimeout} in an
- * {@link HttpRequestHandler} (which are simply added to determine the deadline).
+ * {@link HttpRequestInitializer} (which are simply added to determine the deadline).
  * </p>
  *
  * @since 1.2

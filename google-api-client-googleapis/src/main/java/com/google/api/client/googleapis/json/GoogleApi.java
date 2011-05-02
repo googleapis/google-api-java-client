@@ -33,7 +33,9 @@ import java.io.IOException;
  *
  * @since 1.1
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be replaced in 1.5 with something based on Discovery v1)
  */
+@Deprecated
 public final class GoogleApi {
 
   /**

@@ -24,6 +24,7 @@ import java.security.PrivateKey;
 /**
  * @author Yaniv Inbar
  */
+@Deprecated
 final class AuthSubIntercepter implements HttpExecuteIntercepter {
 
   private final String token;
