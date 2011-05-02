@@ -128,14 +128,4 @@ public class AuthorizationRequestUrl extends GenericUrl {
   public AuthorizationRequestUrl(String encodedAuthorizationServerUrl) {
     super(encodedAuthorizationServerUrl);
   }
-
-  /**
-   * @param encodedAuthorizationServerUrl encoded authorization server URL
-   * @param clientId client identifier
-   * @since 1.4
-   */
-  public AuthorizationRequestUrl(String encodedAuthorizationServerUrl, String clientId) {
-    this(encodedAuthorizationServerUrl);
-    this.clientId = clientId;
-  }
 }

@@ -21,6 +21,7 @@ import junit.framework.TestSuite;
  *
  * @author Yaniv Inbar
  */
+@Deprecated
 public class AllTests extends TestSuite {
 
   public static TestSuite suite() {

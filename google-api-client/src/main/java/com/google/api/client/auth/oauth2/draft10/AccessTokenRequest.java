@@ -34,7 +34,7 @@ import java.io.IOException;
  * This class may be used directly when no access grant is included, such as when the client is
  * requesting access to the protected resources under its control. Otherwise, use one of the
  * subclasses, which add custom parameters to specify the access grant. Call {@link #execute()} to
- * execute the request from which the {@link AccessTokenResponse} may be parsed. On error, use
+ * execute the request and use the {@link AccessTokenResponse}. On error, use
  * {@link AccessTokenErrorResponse} instead.
  * <p>
  * Sample usage when the client is requesting access to the protected resources under its control:
@@ -46,7 +46,7 @@ import java.io.IOException;
       AccessTokenRequest request =
           new AccessTokenRequest(new NetHttpTransport(), new JacksonFactory(),
               "https://server.example.com/authorize", "s6BhdRkqt3", "gX1fBat3bV");
-      AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
+      AccessTokenResponse response = request.execute();
       System.out.println("Access token: " + response.accessToken);
     } catch (HttpResponseException e) {
       AccessTokenErrorResponse response = e.response.parseAs(AccessTokenErrorResponse.class);
@@ -57,7 +57,7 @@ import java.io.IOException;
  * </pre>
  * </p>
  *
- * @since 1.2
+ * @since 1.4
  * @author Yaniv Inbar
  */
 public class AccessTokenRequest extends GenericData {
@@ -80,7 +80,7 @@ public class AccessTokenRequest extends GenericData {
             "gX1fBat3bV",
             "i1WsRn1uB1",
             "https://client.example.com/cb");
-        AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
+        AccessTokenResponse response = request.execute();
         System.out.println("Access token: " + response.accessToken);
       } catch (HttpResponseException e) {
         AccessTokenErrorResponse response = e.response.parseAs(AccessTokenErrorResponse.class);
@@ -116,7 +116,6 @@ public class AccessTokenRequest extends GenericData {
      * @param clientSecret client secret
      * @param code authorization code received from the authorization server
      * @param redirectUri redirection URI used in the initial request
-     * @since 1.4
      */
     public AuthorizationCodeGrant(HttpTransport transport,
         JsonFactory jsonFactory,
@@ -151,7 +150,7 @@ public class AccessTokenRequest extends GenericData {
                 "gX1fBat3bV",
                 "johndoe",
                 "A3ddj3w");
-        AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
+        AccessTokenResponse response = request.execute();
         System.out.println("Access token: " + response.accessToken);
       } catch (HttpResponseException e) {
         AccessTokenErrorResponse response = e.response.parseAs(AccessTokenErrorResponse.class);
@@ -186,7 +185,6 @@ public class AccessTokenRequest extends GenericData {
      * @param clientSecret client secret
      * @param username resource owner's username
      * @param password resource owner's password
-     * @since 1.4
      */
     public ResourceOwnerPasswordCredentialsGrant(HttpTransport transport,
         JsonFactory jsonFactory,
@@ -217,7 +215,7 @@ public class AccessTokenRequest extends GenericData {
             "gX1fBat3bV",
             "urn:oasis:names:tc:SAML:2.0:",
             "PHNhbWxwOl...[omitted for brevity]...ZT4=");
-        AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
+        AccessTokenResponse response = request.execute();
         System.out.println("Access token: " + response.accessToken);
       } catch (HttpResponseException e) {
         AccessTokenErrorResponse response = e.response.parseAs(AccessTokenErrorResponse.class);
@@ -256,7 +254,6 @@ public class AccessTokenRequest extends GenericData {
      * @param assertionType format of the assertion as defined by the authorization server. The
      *        value MUST be an absolute URI
      * @param assertion assertion
-     * @since 1.4
      */
     public AssertionGrant(HttpTransport transport,
         JsonFactory jsonFactory,
@@ -286,7 +283,7 @@ public class AccessTokenRequest extends GenericData {
             "s6BhdRkqt3",
             "gX1fBat3bV",
             "n4E9O119d");
-        AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
+        AccessTokenResponse response = request.execute();
         System.out.println("Access token: " + response.accessToken);
       } catch (HttpResponseException e) {
         AccessTokenErrorResponse response = e.response.parseAs(AccessTokenErrorResponse.class);
@@ -319,7 +316,6 @@ public class AccessTokenRequest extends GenericData {
      * @param clientId client identifier
      * @param clientSecret client secret
      * @param refreshToken refresh token associated with the access token to be refreshed
-     * @since 1.4
      */
     public RefreshTokenGrant(HttpTransport transport,
         JsonFactory jsonFactory,
@@ -340,7 +336,6 @@ public class AccessTokenRequest extends GenericData {
    * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
    * @param authorizationServerUrl encoded authorization server URL
    * @param clientSecret client secret
-   * @since 1.4
    */
   protected AccessTokenRequest(HttpTransport transport, JsonFactory jsonFactory,
       String authorizationServerUrl, String clientSecret) {
@@ -357,7 +352,6 @@ public class AccessTokenRequest extends GenericData {
    * @param authorizationServerUrl encoded authorization server URL
    * @param clientId client identifier
    * @param clientSecret client secret
-   * @since 1.4
    */
   public AccessTokenRequest(HttpTransport transport, JsonFactory jsonFactory,
       String authorizationServerUrl, String clientId, String clientSecret) {
@@ -367,15 +361,11 @@ public class AccessTokenRequest extends GenericData {
 
   /**
    * (REQUIRED) HTTP transport required for executing request in {@link #execute()}.
-   *
-   * @since 1.3
    */
   public HttpTransport transport;
 
   /**
    * (REQUIRED) JSON factory to use for parsing response in {@link #execute()}.
-   *
-   * @since 1.3
    */
   public JsonFactory jsonFactory;
 
@@ -425,26 +415,45 @@ public class AccessTokenRequest extends GenericData {
   /**
    * Executes request for an access token, and returns the HTTP response.
    *
-   * @return HTTP response, which can then be parsed using {@link HttpResponse#parseAs(Class)} with
-   *         {@link AccessTokenResponse}
+   * <p>
+   * To execute and parse the response to {@link AccessTokenResponse}, use {@link #execute()}
+   * </p>
+   *
+   * @return HTTP response, which can then be parsed directly using
+   *         {@link HttpResponse#parseAs(Class)} or some other parsing method
    * @throws HttpResponseException for an HTTP error response, which can then be parsed using
    *         {@link HttpResponse#parseAs(Class)} on {@link HttpResponseException#response} using
    *         {@link AccessTokenErrorResponse}
-   * @throws IOException I/O exception
    */
-  public final HttpResponse execute() throws IOException {
+  public final HttpResponse executeUnparsed() throws IOException {
     JsonHttpParser parser = new JsonHttpParser();
     parser.jsonFactory = jsonFactory;
-    transport.addParser(parser);
     UrlEncodedContent content = new UrlEncodedContent();
     content.data = this;
     HttpRequest request = transport.createRequestFactory().buildPostRequest(
         new GenericUrl(authorizationServerUrl), content);
+    request.addParser(parser);
     if (useBasicAuthorization) {
       request.headers.setBasicAuthentication(clientId, clientSecret);
     } else {
       put("client_secret", clientSecret);
     }
     return request.execute();
+  }
+
+  /**
+   * Executes request for an access token, and returns the parsed access token response.
+   *
+   * <p>
+   * To execute without parsing the response, use {@link #executeUnparsed()}
+   * </p>
+   *
+   * @return parsed access token response
+   * @throws HttpResponseException for an HTTP error response, which can then be parsed using
+   *         {@link HttpResponse#parseAs(Class)} on {@link HttpResponseException#response} using
+   *         {@link AccessTokenErrorResponse}
+   */
+  public final AccessTokenResponse execute() throws IOException {
+    return executeUnparsed().parseAs(AccessTokenResponse.class);
   }
 }

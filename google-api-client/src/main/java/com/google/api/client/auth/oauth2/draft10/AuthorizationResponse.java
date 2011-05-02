@@ -15,7 +15,7 @@
 package com.google.api.client.auth.oauth2.draft10;
 
 import com.google.api.client.http.UrlEncodedParser;
-import com.google.api.client.util.GenericData;
+import com.google.api.client.json.GenericJson;
 import com.google.api.client.util.Key;
 
 import java.net.URI;
@@ -61,10 +61,10 @@ import java.net.URISyntaxException;
  * </code></pre>
  * </p>
  *
- * @since 1.2
+ * @since 1.4
  * @author Yaniv Inbar
  */
-public class AuthorizationResponse extends GenericData {
+public class AuthorizationResponse extends GenericJson {
 
   /**
    * Error codes listed in <a

@@ -29,7 +29,9 @@ import java.util.Map;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be replaced in 1.5 with something based on Discovery v1)
  */
+@Deprecated
 public final class DiscoveryDocument {
 
   /**

@@ -21,7 +21,7 @@ import com.google.api.client.util.Key;
  * OAuth 2.0 (draft 10) access token error response as specified in <a
  * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10#section-4.3">Error Response</a>.
  *
- * @since 1.2
+ * @since 1.4
  * @author Yaniv Inbar
  */
 public class AccessTokenErrorResponse extends GenericData {

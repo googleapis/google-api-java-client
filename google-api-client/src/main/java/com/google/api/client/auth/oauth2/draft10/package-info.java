@@ -54,7 +54,7 @@
  * possibly entirely removed in a future version of the library</b>
  * </p>
  *
- * @since 1.2
+ * @since 1.4
  * @author Yaniv Inbar
  */
 

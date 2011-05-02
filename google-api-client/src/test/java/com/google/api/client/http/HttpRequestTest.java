@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.json.Json;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
@@ -118,10 +119,10 @@ public class HttpRequestTest extends TestCase {
 
     FailThenSuccessTransport fakeTransport = new FailThenSuccessTransport();
     TrackInvocationHandler handler = new TrackInvocationHandler();
-    fakeTransport.responseHandlers.add(handler);
 
     HttpRequest req =
         fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
+    req.unsuccessfulResponseHandler = handler;
     HttpResponse resp = req.execute();
 
     Assert.assertEquals(200, resp.statusCode);
@@ -197,5 +198,10 @@ public class HttpRequestTest extends TestCase {
     assertEquals(ImmutableList.of("b"), headers.get("a"));
     assertEquals(ImmutableList.of("VALUE"), headers.get("value"));
     assertEquals(ImmutableList.of("other"), headers.get("otherValue"));
+  }
+
+  public void testNormalizeMediaType() {
+    assertEquals(Json.CONTENT_TYPE, HttpRequest.normalizeMediaType(Json.CONTENT_TYPE));
+    assertEquals("text/html", HttpRequest.normalizeMediaType("text/html; charset=ISO-8859-4"));
   }
 }

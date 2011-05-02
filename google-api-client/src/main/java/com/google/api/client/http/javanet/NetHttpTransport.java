@@ -15,7 +15,7 @@
 package com.google.api.client.http.javanet;
 
 import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestHandler;
+import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ import java.io.IOException;
  * <p>
  * Upgrade warning: prior version 1.3 had {@code connectTimeout} and {@code readTimeout} fields.
  * Instead now use {@link HttpRequest#connectTimeout} and {@link HttpRequest#readTimeout} in an
- * {@link HttpRequestHandler}.
+ * {@link HttpRequestInitializer}.
  * </p>
  *
  * @since 1.0

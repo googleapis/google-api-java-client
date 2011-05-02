@@ -42,7 +42,7 @@ import com.google.api.client.util.Key;
  * </code>
  * </pre>
  *
- * @since 1.2
+ * @since 1.4
  * @author Yaniv Inbar
  */
 public class AuthorizationRequestUrl extends GenericUrl {
@@ -129,7 +129,6 @@ public class AuthorizationRequestUrl extends GenericUrl {
   /**
    * @param encodedAuthorizationServerUrl encoded authorization server URL
    * @param clientId client identifier
-   * @since 1.4
    */
   public AuthorizationRequestUrl(String encodedAuthorizationServerUrl, String clientId) {
     this(encodedAuthorizationServerUrl);

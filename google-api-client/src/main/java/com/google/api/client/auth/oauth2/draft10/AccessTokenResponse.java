@@ -21,13 +21,11 @@ import com.google.api.client.util.Key;
  * OAuth 2.0 (draft 10) access token success response content as specified in <a
  * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10#section-4.2">Access Token Response</a>.
  * <p>
- * Use {@link AccessProtectedResource} to authorize executed HTTP requests based on the
- * {@link #accessToken}, for example {@link AccessProtectedResource}. {@link
- * AccessProtectedResource#usingAuthorizationHeader(com.google.api.client.http.HttpTransport,
- * String) usingAuthorizationHeader}{@code (transport, response.accessToken)}.
+ * Use {@link AccessProtectedResource#AccessProtectedResource(String)} to authorize executed HTTP
+ * requests based on the {@link #accessToken}.
  * </p>
  *
- * @since 1.2
+ * @since 1.4
  * @author Yaniv Inbar
  */
 public class AccessTokenResponse extends GenericData {

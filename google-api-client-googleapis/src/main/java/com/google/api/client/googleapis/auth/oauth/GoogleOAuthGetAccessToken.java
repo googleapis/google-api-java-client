@@ -30,9 +30,8 @@ import java.io.IOException;
  * <p>
  * Use {@link #execute()} to execute the request. The long-lived access token acquired with this
  * request is found in {@link OAuthCredentialsResponse#token} . This token must be stored. It may
- * then be used to authorize HTTP requests to protected resources in Google services by setting the
- * {@link OAuthParameters#token}, and invoking
- * {@link OAuthParameters#signRequestsUsingAuthorizationHeader(HttpTransport)}.
+ * then be used to authorize HTTP requests to protected resources in Google services by using
+ * {@link OAuthParameters}.
  * <p>
  * To revoke the stored access token, use {@link #revokeAccessToken}.
  *
@@ -54,9 +53,9 @@ public final class GoogleOAuthGetAccessToken extends OAuthGetAccessToken {
    */
   public static void revokeAccessToken(HttpTransport transport, OAuthParameters parameters)
       throws IOException {
-    parameters.signRequestsUsingAuthorizationHeader(transport);
     HttpRequest request = transport.createRequestFactory().buildGetRequest(
         new GenericUrl("https://www.google.com/accounts/AuthSubRevokeToken"));
+    parameters.intercept(request);
     request.execute().ignore();
   }
 }

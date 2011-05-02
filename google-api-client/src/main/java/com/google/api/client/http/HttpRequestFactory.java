@@ -18,7 +18,7 @@ import java.io.IOException;
 
 /**
  * Thread-safe light-weight HTTP request factory layer on top of the HTTP transport that has an
- * optional {@link HttpRequestHandler HTTP request handler} for initializing requests.
+ * optional {@link HttpRequestInitializer HTTP request initializer} for initializing requests.
  *
  * <p>
  * For example, to use a particular authorization header across all requests, use:
@@ -26,7 +26,7 @@ import java.io.IOException;
  *
  * <pre>
   public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
-    return transport.createRequestFactory(new HttpRequestHandler() {
+    return transport.createRequestFactory(new HttpRequestInitializer() {
       public void handle(HttpRequest request) {
         request.headers.authorization = "...";
       }
@@ -43,16 +43,16 @@ public final class HttpRequestFactory {
   public final HttpTransport transport;
 
   /**
-   * HTTP request handler for initializing requests immediately after calling
+   * HTTP request initializer which initializes requests immediately after calling
    * {@link HttpTransport#buildRequest()} or {@code null} for none.
    */
-  public final HttpRequestHandler initializer;
+  public final HttpRequestInitializer initializer;
 
   /**
    * @param transport HTTP transport
-   * @param initializer HTTP request handler for initializing requests or {@code null} for none
+   * @param initializer HTTP request initializer or {@code null} for none
    */
-  HttpRequestFactory(HttpTransport transport, HttpRequestHandler initializer) {
+  HttpRequestFactory(HttpTransport transport, HttpRequestInitializer initializer) {
     this.transport = transport;
     this.initializer = initializer;
   }
@@ -67,9 +67,11 @@ public final class HttpRequestFactory {
    */
   public HttpRequest buildRequest(HttpMethod method, GenericUrl url, HttpContent content)
       throws IOException {
+    // TODO(yanivi): remove deprecation suppression notice for 1.5 release
+    @SuppressWarnings("deprecation")
     HttpRequest request = transport.buildRequest();
     if (initializer != null) {
-      initializer.handle(request);
+      initializer.initialize(request);
     }
     request.method = method;
     request.url = url;

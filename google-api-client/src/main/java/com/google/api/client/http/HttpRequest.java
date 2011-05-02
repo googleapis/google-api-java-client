@@ -42,25 +42,12 @@ public final class HttpRequest {
   public static final String USER_AGENT_SUFFIX = "Google-API-Java-Client/" + Strings.VERSION;
 
   /**
-   * HTTP request handler to intercept the start of {@link #execute()} or {@code null} for none.
-   *
-   * <p>
-   * For example, this might be used to sign a request for authentication:
-   * </p>
-   *
-   * <pre>
-  static void prepareRequest(HttpRequest request) {
-    request.intercepter = new HttpRequestHandler() {
-      public void handle(HttpRequest request) {
-        // sign request...
-      }
-    };
-  }
-   * </pre>
+   * HTTP request execute interceptor to intercept the start of {@link #execute()} (before executing
+   * the HTTP request) or {@code null} for none.
    *
    * @since 1.4
    */
-  public HttpRequestHandler intercepter;
+  public HttpExecuteInterceptor interceptor;
 
   /**
    * HTTP request headers.
@@ -153,6 +140,20 @@ public final class HttpRequest {
   public int readTimeout = 20 * 1000;
 
   /**
+   * HTTP unsuccessful (non-2XX) response handler.
+   *
+   * @since 1.4
+   */
+  public HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler;
+
+  /**
+   * Map from normalized content type to HTTP parser.
+   *
+   * @since 1.4
+   */
+  private final Map<String, HttpParser> contentTypeToParserMap;
+
+  /**
    * @param transport HTTP transport
    * @param method HTTP request method (may be {@code null}
    */
@@ -162,6 +163,7 @@ public final class HttpRequest {
     this.transport = transport;
     headers = transport.defaultHeaders.clone();
     responseHeaders = transport.defaultHeaders.clone();
+    contentTypeToParserMap = transport.contentTypeToParserMap.clone();
     this.method = method;
   }
 
@@ -173,6 +175,33 @@ public final class HttpRequest {
   @Deprecated
   public void setUrl(String encodedUrl) {
     url = new GenericUrl(encodedUrl);
+  }
+
+  /**
+   * Adds an HTTP response content parser.
+   * <p>
+   * If there is already a previous parser defined for this new parser (as defined by
+   * {@link #getParser(String)} then the previous parser will be removed.
+   * </p>
+   *
+   * @since 1.4
+   */
+  public void addParser(HttpParser parser) {
+    String contentType = normalizeMediaType(parser.getContentType());
+    contentTypeToParserMap.put(contentType, parser);
+  }
+
+  /**
+   * Returns the HTTP response content parser to use for the given content type or {@code null} if
+   * none is defined.
+   *
+   * @param contentType content type or {@code null} for {@code null} result
+   * @return HTTP response content parser or {@code null} for {@code null} input
+   * @since 1.4
+   */
+  public final HttpParser getParser(String contentType) {
+    contentType = normalizeMediaType(contentType);
+    return contentTypeToParserMap.get(contentType);
   }
 
   /**
@@ -189,6 +218,7 @@ public final class HttpRequest {
    * @throws HttpResponseException for an HTTP error code
    * @see HttpResponse#isSuccessStatusCode
    */
+  @SuppressWarnings("deprecation")
   public HttpResponse execute() throws IOException {
     boolean requiresRetry = false;
     boolean retrySupported = false;
@@ -204,9 +234,9 @@ public final class HttpRequest {
       if (response != null) {
         response.ignore();
       }
-      // run the pre-execute handler
-      if (intercepter != null) {
-        intercepter.handle(this);
+      // run the interceptor
+      if (interceptor != null) {
+        interceptor.intercept(this);
       }
       // first run the execute intercepters
       for (HttpExecuteIntercepter intercepter : transport.intercepters) {
@@ -322,12 +352,10 @@ public final class HttpRequest {
       requiresRetry = false;
 
       // Even if we don't have the potential to retry, we might want to run the
-      // handlers to fix conditions (like expired tokens) that might cause us
+      // handler to fix conditions (like expired tokens) that might cause us
       // trouble on our next request
-      if (!response.isSuccessStatusCode) {
-        for (HttpUnsuccessfulResponseHandler handler : transport.responseHandlers) {
-          requiresRetry |= handler.handleResponse(this, response, retrySupported);
-        }
+      if (!response.isSuccessStatusCode && unsuccessfulResponseHandler != null) {
+        requiresRetry = unsuccessfulResponseHandler.handleResponse(this, response, retrySupported);
       }
 
       // Once there are no more retries remaining, this will be -1
@@ -361,5 +389,22 @@ public final class HttpRequest {
     }
     // add header
     lowLevelHttpRequest.addHeader(name, stringValue);
+  }
+
+  /**
+   * Returns the normalized media type without parameters of the form {@code type "/" subtype"} as
+   * specified in <a href="http://tools.ietf.org/html/rfc2616#section-3.7">Media Types</a>.
+   *
+   * @param mediaType unnormalized media type with possible parameters or {@code null} for {@code
+   *        null} result
+   * @return normalized media type without parameters or {@code null} for {@code null} input
+   * @since 1.4
+   */
+  public static String normalizeMediaType(String mediaType) {
+    if (mediaType == null) {
+      return null;
+    }
+    int semicolon = mediaType.indexOf(';');
+    return semicolon == -1 ? mediaType : mediaType.substring(0, semicolon);
   }
 }

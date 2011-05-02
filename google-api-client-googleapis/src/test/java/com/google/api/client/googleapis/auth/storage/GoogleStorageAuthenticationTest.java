@@ -17,7 +17,7 @@ package com.google.api.client.googleapis.auth.storage;
 import com.google.api.client.auth.HmacSha;
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpExecuteIntercepter;
+import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.testing.http.MockHttpContent;
@@ -63,8 +63,7 @@ public class GoogleStorageAuthenticationTest extends TestCase {
 
   private void subtest(String url, String messageToSign) throws Exception {
     HttpTransport transport = new MockHttpTransport();
-    GoogleStorageAuthentication.authorize(transport, ACCESS_KEY, SECRET);
-    HttpExecuteIntercepter intercepter = transport.intercepters.get(0);
+    HttpExecuteInterceptor interceptor = new GoogleStorageAuthentication(ACCESS_KEY, SECRET);
     GoogleHeaders headers = new GoogleHeaders();
     headers.date = "Mon, 15 Feb  2010 21:30:39 GMT";
     MockHttpContent content = new MockHttpContent();
@@ -75,7 +74,7 @@ public class GoogleStorageAuthenticationTest extends TestCase {
     headers.googAcl = "public-read";
     headers.set("x-goog-meta-reviewer", Arrays.asList("bob", "jane"));
     request.headers = headers;
-    intercepter.intercept(request);
+    interceptor.intercept(request);
     assertEquals(messageToSign, "GOOG1 " + ACCESS_KEY + ":" + HmacSha.sign(SECRET, messageToSign),
         request.headers.authorization);
   }
