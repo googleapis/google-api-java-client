@@ -27,6 +27,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -203,5 +204,42 @@ public class HttpRequestTest extends TestCase {
   public void testNormalizeMediaType() {
     assertEquals(Json.CONTENT_TYPE, HttpRequest.normalizeMediaType(Json.CONTENT_TYPE));
     assertEquals("text/html", HttpRequest.normalizeMediaType("text/html; charset=ISO-8859-4"));
+  }
+
+  public void testEnabledGZipContent() throws IOException {
+    class MyTransport extends MockHttpTransport {
+
+      boolean expectGZip;
+
+      @Override
+      public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+
+          @Override
+          public void setContent(HttpContent content) throws IOException {
+            if (expectGZip) {
+              assertEquals(GZipContent.class, content.getClass());
+              assertEquals("gzip", content.getEncoding());
+            } else {
+              assertEquals(ByteArrayContent.class, content.getClass());
+              assertNull(content.getEncoding());
+            }
+            super.setContent(content);
+          }
+        };
+      }
+    }
+    MyTransport transport = new MyTransport();
+    byte[] content = new byte[300];
+    Arrays.fill(content, (byte) ' ');
+    HttpRequest request = transport.createRequestFactory().buildPostRequest(
+        new GenericUrl(), new ByteArrayContent(content));
+    assertFalse(request.enableGZipContent);
+    request.execute();
+    assertFalse(request.enableGZipContent);
+    request.execute();
+    request.enableGZipContent = true;
+    transport.expectGZip = true;
+    request.execute();
   }
 }

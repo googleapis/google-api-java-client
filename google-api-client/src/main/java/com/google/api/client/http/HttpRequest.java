@@ -154,6 +154,19 @@ public final class HttpRequest {
   private final Map<String, HttpParser> contentTypeToParserMap;
 
   /**
+   * Whether to enable gzip compression of HTTP content ({@code false} by default).
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.3, gzip compression was enabled whenever the content length
+   * was >= 256 bytes, the content type was text-based ("text/*" or "application/*"), and there was
+   * no encoding defined. With version 1.4, the decision is entirely based on this field.
+   * </p>
+   *
+   * @since 1.4
+   */
+  public boolean enableGZipContent;
+
+  /**
    * @param transport HTTP transport
    * @param method HTTP request method (may be {@code null}
    */
@@ -306,22 +319,23 @@ public final class HttpRequest {
       // content
       HttpContent content = this.content;
       if (content != null) {
-        // check if possible to log content or gzip content
+        // TODO(yanivi): instead of isTextBasedContentType, have an enableLogContent boolean?
+        // TODO(yanivi): alternatively, HttpContent.supportsLogging()?
         String contentEncoding = content.getEncoding();
         long contentLength = content.getLength();
         String contentType = content.getType();
+        // log content
         if (contentLength != 0 && contentEncoding == null
-            && LogContent.isTextBasedContentType(contentType)) {
-          // log content?
-          if (loggable && !disableContentLogging || logger.isLoggable(Level.ALL)) {
-            content = new LogContent(content, contentType, contentEncoding, contentLength);
-          }
-          // gzip?
-          if (contentLength >= 256) {
-            content = new GZipContent(content, contentType);
-            contentEncoding = content.getEncoding();
-            contentLength = content.getLength();
-          }
+            && LogContent.isTextBasedContentType(contentType)
+            && (loggable && !disableContentLogging || logger.isLoggable(Level.ALL))) {
+          content = new LogContent(content, contentType, contentEncoding, contentLength);
+        }
+        // TODO(yanivi): only gzip for small content? cost of computing getLength() for JSON or XML?
+        // gzip
+        if (enableGZipContent) {
+          content = new GZipContent(content, contentType);
+          contentEncoding = content.getEncoding();
+          contentLength = content.getLength();
         }
         // append content headers to log buffer
         if (loggable) {
