@@ -47,6 +47,11 @@
     </developer>
   </developers>
 
+  <!--
+    If you add a new module, make sure to also add it in the jdiff.xml file, and
+    in this pom.xml file below in the dependencyManagement and
+    maven-javadoc-plugin sections.
+  -->
   <modules>
     <module>google-api-client</module>
     <module>google-api-client-assembly</module>
