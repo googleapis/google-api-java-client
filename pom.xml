@@ -11,7 +11,7 @@
   <artifactId>google-api-client-parent</artifactId>
   <version>1.4.0-alpha-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Google API Client Library for Java</name>
+  <name>Google Client Libraries for Java</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
 
@@ -260,12 +260,24 @@
                   <packages>com.google.api.client.auth*:com.google.api.client.http*:com.google.api.client.json*:com.google.api.client.testing*:com.google.api.client.util*:com.google.api.client.xml*</packages>
                 </group>
                 <group>
+                  <title>google-api-client-extensions</title>
+                  <packages>com.google.api.client.extensions.appengine*</packages>
+                </group>
+                <group>
+                  <title>google-api-client-extensions-android2</title>
+                  <packages>com.google.api.client.extensions.android2*</packages>
+                </group>
+                <group>
+                  <title>google-api-client-extensions-android3</title>
+                  <packages>com.google.api.client.extensions.android3*</packages>
+                </group>
+                <group>
                   <title>google-api-client-googleapis</title>
                   <packages>com.google.api.client.googleapis*</packages>
                 </group>
                 <group>
-                  <title>google-api-client-extensions</title>
-                  <packages>com.google.api.client.extensions*</packages>
+                  <title>google-api-client-googleapis-extensions-android2</title>
+                  <packages>com.google.api.client.googleapis.extensions.android2*</packages>
                 </group>
               </groups>
             </configuration>

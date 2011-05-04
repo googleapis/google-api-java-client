@@ -31,8 +31,8 @@ import java.util.EnumSet;
  * Use this for an HTTP transport that doesn't support PATCH like {@code NetHttpTransport} or {@code
  * UrlFetchTransport}. By default, only the methods not supported by the transport will be
  * overridden. When running behind a firewall that does not support certain verbs like PATCH, use
- * the {@link MethodOverride(EnumSet<HttpMethod>)} constructor instead to specify additional methods
- * to override.
+ * the {@link MethodOverride#MethodOverride(EnumSet)} constructor instead to specify additional
+ * methods to override.
  * </p>
  * <p>
  * Sample usage, taking advantage that this class implements {@link HttpRequestInitializer}:

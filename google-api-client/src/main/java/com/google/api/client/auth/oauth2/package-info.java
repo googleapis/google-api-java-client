@@ -48,14 +48,12 @@
  * </p>
  *
  * <p>
- * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
- * possibly entirely removed in a future version of the library</b>
+ * <b>Deprecated: this package is scheduled to be removed in 1.5. Use
+ * {@link com.google.api.client.auth.oauth2.draft10}</b>
  * </p>
  *
  * @since 1.2
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.5) Use
- *             {@link com.google.api.client.auth.oauth2.draft10}
  */
 package com.google.api.client.auth.oauth2;
 
