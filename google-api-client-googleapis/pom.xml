@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.google.api.client</groupId>
   <artifactId>google-api-client-googleapis</artifactId>
-  <name>Google APIs extensions to the Google API Client Library for Java.</name>
+  <name>Google APIs Client Library for Java</name>
   <build>
     <plugins>
       <plugin>

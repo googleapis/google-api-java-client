@@ -8,8 +8,7 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-api-client-googleapis-extensions-android2</artifactId>
-  <name>Android SDK 2.1 platform extensions to the Google APIs extensions to the Google API Client
-  Library for Java.</name>
+  <name>Android SDK 2.1 platform extensions to the Google APIs Client Library for Java.</name>
 
   <build>
     <plugins>

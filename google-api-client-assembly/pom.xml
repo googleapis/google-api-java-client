@@ -10,7 +10,7 @@
   <groupId>com.google.api.client</groupId>
   <artifactId>google-api-client-assembly</artifactId>
   <packaging>pom</packaging>
-  <name>Google API Client Library for Java [assembly]</name>
+  <name>Assembly for the Google APIs Client Library for Java</name>
 
   <dependencies>
     <dependency>

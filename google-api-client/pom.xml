@@ -8,9 +8,9 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-api-client</artifactId>
-  <name>Google API Client Library for Java (Core)</name>
+  <name>Google HTTP Client Library for Java</name>
   <description>
-    Google API Client Library for Java. Functionality that works on all supported Java platforms,
+    Google HTTP Client Library for Java. Functionality that works on all supported Java platforms,
     including Java 5 (or higher) desktop (SE) and web (EE), Android, and Google App Engine.
   </description>
 
