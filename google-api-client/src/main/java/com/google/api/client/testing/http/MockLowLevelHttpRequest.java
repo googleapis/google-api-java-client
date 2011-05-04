@@ -31,11 +31,36 @@ import java.io.IOException;
 public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
 
   /**
+   * Request URL or {@code null} for none.
+   *
+   * @since 1.4
+   */
+  public String url;
+
+  /**
    * Headers added in {@link #addHeader(String, String)}.
    *
    * @since 1.4
    */
   public final ListMultimap<String, String> headers = ArrayListMultimap.create();
+
+  /**
+   * HTTP content or {@code null} for none.
+   *
+   * @since 1.4
+   */
+  public HttpContent content;
+
+  public MockLowLevelHttpRequest() {
+  }
+
+  /**
+   * @param url Request URL or {@code null} for none
+   * @since 1.4
+   */
+  public MockLowLevelHttpRequest(String url) {
+    this.url = url;
+  }
 
   @Override
   public void addHeader(String name, String value) {
@@ -49,5 +74,6 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
 
   @Override
   public void setContent(HttpContent content) throws IOException {
+    this.content = content;
   }
 }

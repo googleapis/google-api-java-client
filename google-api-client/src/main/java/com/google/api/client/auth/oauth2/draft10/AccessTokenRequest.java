@@ -24,6 +24,8 @@ import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
+import com.google.api.client.util.Value;
+import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 
@@ -31,11 +33,12 @@ import java.io.IOException;
  * OAuth 2.0 (draft 10) request for an access token as specified in <a
  * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10#section-4">Obtaining an Access Token</a>.
  * <p>
- * This class may be used directly when no access grant is included, such as when the client is
- * requesting access to the protected resources under its control. Otherwise, use one of the
- * subclasses, which add custom parameters to specify the access grant. Call {@link #execute()} to
- * execute the request and use the {@link AccessTokenResponse}. On error, use
- * {@link AccessTokenErrorResponse} instead.
+ * The {@link #AccessTokenRequest()} or
+ * {@link #AccessTokenRequest(HttpTransport, JsonFactory, String, String, String)} constructors may
+ * be used directly when no access grant is included, such as when the client is requesting access
+ * to the protected resources under its control. Otherwise, use one of the subclasses, which add
+ * custom parameters to specify the access grant. Call {@link #execute()} to execute the request and
+ * use the {@link AccessTokenResponse}. On error, use {@link AccessTokenErrorResponse} instead.
  * <p>
  * Sample usage when the client is requesting access to the protected resources under its control:
  *
@@ -102,7 +105,7 @@ public class AccessTokenRequest extends GenericData {
     public String redirectUri;
 
     {
-      grantType = "authorization_code";
+      grantType = GrantType.AUTHORIZATION_CODE;
     }
 
     public AuthorizationCodeGrant() {
@@ -125,8 +128,8 @@ public class AccessTokenRequest extends GenericData {
         String code,
         String redirectUri) {
       super(transport, jsonFactory, authorizationServerUrl, clientId, clientSecret);
-      this.code = code;
-      this.redirectUri = redirectUri;
+      this.code = Preconditions.checkNotNull(code);
+      this.redirectUri = Preconditions.checkNotNull(redirectUri);
     }
   }
 
@@ -171,7 +174,7 @@ public class AccessTokenRequest extends GenericData {
     public String password;
 
     {
-      grantType = "password";
+      grantType = GrantType.PASSWORD;
     }
 
     public ResourceOwnerPasswordCredentialsGrant() {
@@ -194,8 +197,8 @@ public class AccessTokenRequest extends GenericData {
         String username,
         String password) {
       super(transport, jsonFactory, authorizationServerUrl, clientId, clientSecret);
-      this.username = username;
-      this.password = password;
+      this.username = Preconditions.checkNotNull(username);
+      this.password = Preconditions.checkNotNull(password);
     }
   }
 
@@ -240,7 +243,7 @@ public class AccessTokenRequest extends GenericData {
     public String assertion;
 
     {
-      grantType = "assertion";
+      grantType = GrantType.ASSERTION;
     }
 
     public AssertionGrant() {
@@ -262,8 +265,8 @@ public class AccessTokenRequest extends GenericData {
         String assertionType,
         String assertion) {
       super(transport, jsonFactory, authorizationServerUrl, clientSecret);
-      this.assertionType = assertionType;
-      this.assertion = assertion;
+      this.assertionType = Preconditions.checkNotNull(assertionType);
+      this.assertion = Preconditions.checkNotNull(assertion);
     }
   }
 
@@ -303,7 +306,7 @@ public class AccessTokenRequest extends GenericData {
     public String refreshToken;
 
     {
-      grantType = "refresh_token";
+      grantType = GrantType.REFRESH_TOKEN;
     }
 
     public RefreshTokenGrant() {
@@ -324,7 +327,7 @@ public class AccessTokenRequest extends GenericData {
         String clientSecret,
         String refreshToken) {
       super(transport, jsonFactory, authorizationServerUrl, clientId, clientSecret);
-      this.refreshToken = refreshToken;
+      this.refreshToken = Preconditions.checkNotNull(refreshToken);
     }
   }
 
@@ -340,10 +343,10 @@ public class AccessTokenRequest extends GenericData {
   protected AccessTokenRequest(HttpTransport transport, JsonFactory jsonFactory,
       String authorizationServerUrl, String clientSecret) {
     this();
-    this.transport = transport;
-    this.jsonFactory = jsonFactory;
-    this.authorizationServerUrl = authorizationServerUrl;
-    this.clientSecret = clientSecret;
+    this.transport = Preconditions.checkNotNull(transport);
+    this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
+    this.authorizationServerUrl = Preconditions.checkNotNull(authorizationServerUrl);
+    this.clientSecret = Preconditions.checkNotNull(clientSecret);
   }
 
   /**
@@ -356,7 +359,7 @@ public class AccessTokenRequest extends GenericData {
   public AccessTokenRequest(HttpTransport transport, JsonFactory jsonFactory,
       String authorizationServerUrl, String clientId, String clientSecret) {
     this(transport, jsonFactory, authorizationServerUrl, clientSecret);
-    this.clientId = clientId;
+    this.clientId = Preconditions.checkNotNull(clientId);
   }
 
   /**
@@ -369,14 +372,24 @@ public class AccessTokenRequest extends GenericData {
    */
   public JsonFactory jsonFactory;
 
-  // TODO(yanivi): grantType should be an enum (see Issue 3)
+  /** Access grant type. */
+  public enum GrantType {
 
-  /**
-   * (REQUIRED) The access grant type included in the request. Value MUST be one of
-   * "authorization_code", "password", "assertion", "refresh_token", or "none".
-   */
+    @Value("authorization_code")
+    AUTHORIZATION_CODE,
+    @Value("password")
+    PASSWORD,
+    @Value("assertion")
+    ASSERTION,
+    @Value("refresh_token")
+    REFRESH_TOKEN,
+    @Value("none")
+    NONE
+  }
+
+  /** (REQUIRED) The access grant type included in the request. */
   @Key("grant_type")
-  public String grantType = "none";
+  public GrantType grantType = GrantType.NONE;
 
   /**
    * (REQUIRED, unless the client identity can be establish via other means, for example assertion)

@@ -43,8 +43,12 @@ public final class HttpRequestFactory {
   public final HttpTransport transport;
 
   /**
-   * HTTP request initializer which initializes requests immediately after calling
-   * {@link HttpTransport#buildRequest()} or {@code null} for none.
+   * HTTP request initializer or {@code null} for none.
+   *
+   * <p>
+   * This initializer is invoked before setting its {@link HttpRequest#method},
+   * {@link HttpRequest#url}, or {@link HttpRequest#content}.
+   * </p>
    */
   public final HttpRequestInitializer initializer;
 

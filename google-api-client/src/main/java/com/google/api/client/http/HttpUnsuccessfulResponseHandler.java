@@ -19,6 +19,58 @@ import java.io.IOException;
 /**
  * Interface which handles abnormal HTTP responses (in other words not 2XX).
  *
+ * <p>
+ * For example, this might be used to refresh an OAuth 2 token:
+ * </p>
+ *
+ * <pre>
+  public static class RefreshTokenHandler implements HttpUnsuccessfulResponseHandler {
+    public boolean handleResponse(
+        HttpRequest request, HttpResponse response, boolean retrySupported) throws IOException {
+      if (response.statusCode == 401) {
+        refreshToken();
+      }
+      return false;
+    }
+  }
+ * </pre>
+ *
+ * <p>
+ * Sample usage with a request factory:
+ * </p>
+ *
+ * <pre>
+  public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
+    final RefreshTokenHandler handler = new RefreshTokenHandler();
+    return transport.createRequestFactory(new HttpRequestInitializer() {
+      public void initialize(HttpRequest request) {
+        request.unsuccessfulResponseHandler = handler;
+      }
+    });
+  }
+ * </pre>
+ *
+ * <p>
+ * If you have a custom unsuccessful response handler, use this more complex example:
+ * </p>
+ *
+ * <pre>
+  public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
+    final RefreshTokenHandler handler = new RefreshTokenHandler();
+    return transport.createRequestFactory(new HttpRequestInitializer() {
+      public void initialize(HttpRequest request) {
+        request.unsuccessfulResponseHandler = new HttpUnsuccessfulResponseHandler() {
+          public boolean handleResponse(
+              HttpRequest request, HttpResponse response, boolean retrySupported)
+              throws IOException {
+            return handler.handleResponse(request, response, retrySupported);
+          }
+        };
+      }
+    });
+  }
+ * </pre>
+ *
  * @author moshenko@google.com (Jacob Moshenko)
  * @since 1.4
  */
@@ -28,7 +80,8 @@ public interface HttpUnsuccessfulResponseHandler {
    * Handler that will be invoked when an abnormal response is received. There are a few simple
    * rules that one must follow:
    * <ul>
-   * <li>If you modify the request object, you must return true to issue a retry.</li>
+   * <li>If you modify the request object or modify its execute interceptors in a way that should
+   * resolve the error, you must return true to issue a retry.</li>
    * <li>Do not read from the content stream, this will prevent the eventual end user from having
    * access to it.</li>
    * </ul>
@@ -40,8 +93,6 @@ public interface HttpUnsuccessfulResponseHandler {
    *        after they handle their event (e.g. a handler that implements exponential backoff).
    * @return Whether or not this handler has made a change that will require the request to be
    *         re-sent.
-   *
-   * @throws IOException When an error has occurred communicating with a dependency.
    */
   boolean handleResponse(HttpRequest request, HttpResponse response, boolean retrySupported)
       throws IOException;

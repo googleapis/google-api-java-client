@@ -14,8 +14,11 @@
 
 package com.google.api.client.googleapis.auth.oauth2.draft10;
 
+import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest;
+import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.GrantType;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleAssertionGrant;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleAuthorizationCodeGrant;
+import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleRefreshTokenGrant;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson.JacksonFactory;
 
@@ -35,6 +38,7 @@ public class GoogleAccessTokenRequestTest extends TestCase {
   private static final String REDIRECT_URL = "https://client.example.com/cb";
   private static final String ASSERTION_TYPE = "urn:oasis:names:tc:SAML:2.0:";
   private static final String ASSERTION = "PHNhbWxwOl...[omitted for brevity]...ZT4=";
+  private static final String REFRESH_TOKEN = "n4E9O119d";
 
   public void testGoogleAuthorizationCodeGrant() {
     check(new GoogleAuthorizationCodeGrant(), false);
@@ -48,17 +52,21 @@ public class GoogleAccessTokenRequestTest extends TestCase {
 
   public void testGoogleAssertionGrant() {
     check(new GoogleAssertionGrant(), false);
-    check(new GoogleAssertionGrant(TRANSPORT,
-        JSON_FACTORY,
-        CLIENT_ID,
-        CLIENT_SECRET,
-        ASSERTION_TYPE,
-        ASSERTION), true);
+    check(
+        new GoogleAssertionGrant(TRANSPORT, JSON_FACTORY, CLIENT_SECRET, ASSERTION_TYPE, ASSERTION),
+        true);
+  }
+
+  public void testGoogleRefreshTokenGrant() {
+    check(new GoogleRefreshTokenGrant(), false);
+    check(new GoogleRefreshTokenGrant(
+        TRANSPORT, JSON_FACTORY, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN), true);
   }
 
   private void check(GoogleAuthorizationCodeGrant request, boolean withParameters) {
-    check(request, "authorization_code", withParameters);
+    check(request, GrantType.AUTHORIZATION_CODE, withParameters);
     if (withParameters) {
+      assertEquals(CLIENT_ID, request.clientId);
       assertEquals(CODE, request.code);
       assertEquals(REDIRECT_URL, request.redirectUri);
     } else {
@@ -69,7 +77,7 @@ public class GoogleAccessTokenRequestTest extends TestCase {
   }
 
   private void check(GoogleAssertionGrant request, boolean withParameters) {
-    check(request, "assertion", withParameters);
+    check(request, GrantType.ASSERTION, withParameters);
     if (withParameters) {
       assertEquals(ASSERTION_TYPE, request.assertionType);
       assertEquals(ASSERTION, request.assertion);
@@ -79,7 +87,18 @@ public class GoogleAccessTokenRequestTest extends TestCase {
     }
   }
 
-  private void check(GoogleAccessTokenRequest request, String grantType, boolean withParameters) {
+  private void check(GoogleRefreshTokenGrant request, boolean withParameters) {
+    check(request, GrantType.REFRESH_TOKEN, withParameters);
+    if (withParameters) {
+      assertEquals(CLIENT_ID, request.clientId);
+      assertEquals(REFRESH_TOKEN, request.refreshToken);
+    } else {
+      assertNull(request.clientId);
+      assertNull(request.refreshToken);
+    }
+  }
+
+  private void check(AccessTokenRequest request, GrantType grantType, boolean withParameters) {
     assertEquals(grantType, request.grantType);
     assertEquals("https://accounts.google.com/o/oauth2/token", request.authorizationServerUrl);
     assertFalse(request.useBasicAuthorization);
@@ -87,12 +106,10 @@ public class GoogleAccessTokenRequestTest extends TestCase {
     if (withParameters) {
       assertEquals(TRANSPORT, request.transport);
       assertEquals(JSON_FACTORY, request.jsonFactory);
-      assertEquals(CLIENT_ID, request.clientId);
       assertEquals(CLIENT_SECRET, request.clientSecret);
     } else {
       assertNull(request.transport);
       assertNull(request.jsonFactory);
-      assertNull(request.clientId);
       assertNull(request.clientSecret);
     }
   }

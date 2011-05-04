@@ -25,6 +25,7 @@ public class AllTests extends TestSuite {
 
   public static TestSuite suite() {
     TestSuite result = new TestSuite(AllTests.class.getName());
+    result.addTestSuite(AccessProtectedResourceTest.class);
     result.addTestSuite(AccessTokenRequestTest.class);
     result.addTestSuite(AuthorizationRequestUrlTest.class);
     result.addTestSuite(AuthorizationResponseTest.class);

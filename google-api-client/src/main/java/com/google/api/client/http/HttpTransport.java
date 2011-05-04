@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Abstract HTTP transport.
+ * Thread-safe abstract HTTP transport.
  *
  * <p>
  * The recommended concrete implementation HTTP transport library to use depends on what environment
@@ -55,14 +55,14 @@ import java.util.logging.Logger;
  * built into the Java SDK, so it is normally the preferred choice.</li>
  * <li>{@code com.google.api.client.apache.ApacheHttpTransport} is a good choice for users of the
  * Apache HTTP Client, especially if you need some of the configuration options available in that
- * library. Note however that there is a known bug with the Apache HTTP Transport in this library
- * for some multi-threaded applications that we're still investigating.</li>
+ * library.</li>
  * </ul>
  * </li>
  * </ul>
  * <p>
- * Note that this class is not thread safe. The recommended practice for multi-threaded applications
- * is to store the HTTP transport in a {@link ThreadLocal}.
+ * Upgrade warning: users of prior version 1.3 can continue to use the deprecated fields and methods
+ * in this class. However, that invalidates the thread safety claims on this class, thus making this
+ * class potentially unsafe to share between threads.
  * </p>
  *
  * @since 1.0
