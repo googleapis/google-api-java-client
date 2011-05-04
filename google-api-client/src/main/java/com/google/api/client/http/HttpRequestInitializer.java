@@ -17,8 +17,7 @@ package com.google.api.client.http;
 import java.io.IOException;
 
 /**
- * HTTP request initializer which initializes requests immediately after calling
- * {@link HttpTransport#buildRequest()}.
+ * HTTP request initializer.
  *
  * <p>
  * For example, this might be used to disable request timeouts:

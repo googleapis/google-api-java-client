@@ -16,6 +16,7 @@ package com.google.api.client.auth.oauth2.draft10;
 
 import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.AssertionGrant;
 import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.AuthorizationCodeGrant;
+import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.GrantType;
 import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.RefreshTokenGrant;
 import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.ResourceOwnerPasswordCredentialsGrant;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -92,7 +93,7 @@ public class AccessTokenRequestTest extends TestCase {
   }
 
   private void check(AuthorizationCodeGrant request, boolean withParameters) {
-    check(request, "authorization_code", withParameters);
+    check(request, GrantType.AUTHORIZATION_CODE, withParameters);
     if (withParameters) {
       assertEquals(CLIENT_ID, request.clientId);
       assertEquals(CODE, request.code);
@@ -105,7 +106,7 @@ public class AccessTokenRequestTest extends TestCase {
   }
 
   private void check(ResourceOwnerPasswordCredentialsGrant request, boolean withParameters) {
-    check(request, "password", withParameters);
+    check(request, GrantType.PASSWORD, withParameters);
     if (withParameters) {
       assertEquals(CLIENT_ID, request.clientId);
       assertEquals(USERNAME, request.username);
@@ -118,7 +119,7 @@ public class AccessTokenRequestTest extends TestCase {
   }
 
   private void check(AssertionGrant request, boolean withParameters) {
-    check(request, "assertion", withParameters);
+    check(request, GrantType.ASSERTION, withParameters);
     assertNull(request.clientId);
     if (withParameters) {
       assertEquals(ASSERTION_TYPE, request.assertionType);
@@ -130,7 +131,7 @@ public class AccessTokenRequestTest extends TestCase {
   }
 
   private void check(RefreshTokenGrant request, boolean withParameters) {
-    check(request, "refresh_token", withParameters);
+    check(request, GrantType.REFRESH_TOKEN, withParameters);
     if (withParameters) {
       assertEquals(CLIENT_ID, request.clientId);
       assertEquals(REFRESH_TOKEN, request.refreshToken);
@@ -141,10 +142,10 @@ public class AccessTokenRequestTest extends TestCase {
   }
 
   private void check(AccessTokenRequest request, boolean withParameters) {
-    check(request, "none", withParameters);
+    check(request, GrantType.NONE, withParameters);
   }
 
-  private void check(AccessTokenRequest request, String grantType, boolean withParameters) {
+  private void check(AccessTokenRequest request, GrantType grantType, boolean withParameters) {
     assertEquals(grantType, request.grantType);
     assertTrue(request.useBasicAuthorization);
     assertNull(request.scope);

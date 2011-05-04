@@ -15,9 +15,11 @@
 package com.google.api.client.googleapis.auth.oauth2.draft10;
 
 import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest;
+import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.AssertionGrant;
+import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.AuthorizationCodeGrant;
+import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.RefreshTokenGrant;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.util.Key;
 
 /**
  * Google extension to the OAuth 2.0 (draft 10) request for an access token.
@@ -25,7 +27,7 @@ import com.google.api.client.util.Key;
  * @since 1.4
  * @author Yaniv Inbar
  */
-public abstract class GoogleAccessTokenRequest extends AccessTokenRequest {
+public class GoogleAccessTokenRequest {
 
   /** Authorization server URL for requesting tokens. */
   public static final String AUTHORIZATION_SERVER_URL =
@@ -59,22 +61,10 @@ public abstract class GoogleAccessTokenRequest extends AccessTokenRequest {
    * </pre>
    * </p>
    */
-  public static class GoogleAuthorizationCodeGrant extends GoogleAccessTokenRequest {
-
-    /** (REQUIRED) The authorization code received from the authorization server. */
-    @Key
-    public String code;
-
-    /** (REQUIRED) The redirection URI used in the initial request. */
-    @Key("redirect_uri")
-    public String redirectUri;
-
-    {
-      grantType = "authorization_code";
-    }
+  public static class GoogleAuthorizationCodeGrant extends AuthorizationCodeGrant {
 
     public GoogleAuthorizationCodeGrant() {
-      super();
+      init(this);
     }
 
     /**
@@ -91,9 +81,14 @@ public abstract class GoogleAccessTokenRequest extends AccessTokenRequest {
         String clientSecret,
         String code,
         String redirectUri) {
-      super(transport, jsonFactory, clientId, clientSecret);
-      this.code = code;
-      this.redirectUri = redirectUri;
+      super(transport,
+          jsonFactory,
+          AUTHORIZATION_SERVER_URL,
+          clientId,
+          clientSecret,
+          code,
+          redirectUri);
+      init(this);
     }
   }
 
@@ -122,19 +117,10 @@ public abstract class GoogleAccessTokenRequest extends AccessTokenRequest {
    * </pre>
    * </p>
    */
-  public static class GoogleRefreshTokenGrant extends GoogleAccessTokenRequest {
-
-    /**
-     * (REQUIRED) The refresh token associated with the access token to be refreshed.
-     */
-    @Key("refresh_token")
-    public String refreshToken;
-
-    {
-      grantType = "refresh_token";
-    }
+  public static class GoogleRefreshTokenGrant extends RefreshTokenGrant {
 
     public GoogleRefreshTokenGrant() {
+      init(this);
     }
 
     /**
@@ -146,8 +132,8 @@ public abstract class GoogleAccessTokenRequest extends AccessTokenRequest {
      */
     public GoogleRefreshTokenGrant(HttpTransport transport, JsonFactory jsonFactory,
         String clientId, String clientSecret, String refreshToken) {
-      super(transport, jsonFactory, clientId, clientSecret);
-      this.refreshToken = refreshToken;
+      super(transport, jsonFactory, AUTHORIZATION_SERVER_URL, clientId, clientSecret, refreshToken);
+      init(this);
     }
   }
 
@@ -175,65 +161,42 @@ public abstract class GoogleAccessTokenRequest extends AccessTokenRequest {
    * </pre>
    * </p>
    */
-  public static class GoogleAssertionGrant extends GoogleAccessTokenRequest {
-
-    /**
-     * (REQUIRED) The format of the assertion as defined by the authorization server. The value MUST
-     * be an absolute URI.
-     */
-    @Key("assertion_type")
-    public String assertionType;
-
-    /** (REQUIRED) The assertion. */
-    @Key
-    public String assertion;
-
-    {
-      grantType = "assertion";
-    }
+  public static class GoogleAssertionGrant extends AssertionGrant {
 
     public GoogleAssertionGrant() {
+      init(this);
     }
 
     /**
      * @param transport HTTP transport for executing request in {@link #execute()}
      * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
-     * @param clientId client identifier
      * @param clientSecret client secret
      * @param assertionType format of the assertion as defined by the authorization server. The
      *        value MUST be an absolute URI
      * @param assertion assertion
      */
-    public GoogleAssertionGrant(HttpTransport transport,
-        JsonFactory jsonFactory,
-        String clientId,
-        String clientSecret,
-        String assertionType,
-        String assertion) {
-      super(transport, jsonFactory, clientId, clientSecret);
-      this.assertionType = assertionType;
-      this.assertion = assertion;
+    public GoogleAssertionGrant(HttpTransport transport, JsonFactory jsonFactory,
+        String clientSecret, String assertionType, String assertion) {
+      super(transport,
+          jsonFactory,
+          AUTHORIZATION_SERVER_URL,
+          clientSecret,
+          assertionType,
+          assertion);
+      init(this);
     }
   }
 
-  protected GoogleAccessTokenRequest() {
-    super();
-    authorizationServerUrl = AUTHORIZATION_SERVER_URL;
-    useBasicAuthorization = false;
+  /**
+   * Initializes the access token request for the Google authorization endpoint.
+   *
+   * @param request access token request
+   */
+  static void init(AccessTokenRequest request) {
+    request.authorizationServerUrl = AUTHORIZATION_SERVER_URL;
+    request.useBasicAuthorization = false;
   }
 
-  /**
-   * @param transport HTTP transport for executing request in {@link #execute()}
-   * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
-   * @param clientId client identifier
-   * @param clientSecret client secret
-   */
-  protected GoogleAccessTokenRequest(
-      HttpTransport transport, JsonFactory jsonFactory, String clientId, String clientSecret) {
-    this();
-    this.transport = transport;
-    this.jsonFactory = jsonFactory;
-    this.clientId = clientId;
-    this.clientSecret = clientSecret;
+  private GoogleAccessTokenRequest() {
   }
 }
