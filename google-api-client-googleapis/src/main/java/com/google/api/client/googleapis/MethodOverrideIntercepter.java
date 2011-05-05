@@ -30,15 +30,12 @@ import java.util.EnumSet;
  * It is useful when a firewall only allows the GET and POST methods, or if the underlying HTTP
  * library ({@link HttpTransport}) does not support the HTTP method.
  * </p>
- * <p>
- * Upgrade warning: prior to version 1.3, there was a global static field {@code overriddenMethods}
- * that allowed the set of HTTP methods to override to be specified globally. Now, it must be
- * specified for each instance of this class via {@link #override}.
- * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use {@link MethodOverride}
  */
+@Deprecated
 public class MethodOverrideIntercepter implements HttpExecuteIntercepter {
 
   /**
@@ -53,8 +50,6 @@ public class MethodOverrideIntercepter implements HttpExecuteIntercepter {
    */
   public EnumSet<HttpMethod> override =
       EnumSet.of(HttpMethod.DELETE, HttpMethod.HEAD, HttpMethod.PATCH, HttpMethod.PUT);
-
-  // TODO(yanivi): or should we be less conservative and not override PUT, PATCH, DELETE, and HEAD?
 
   public void intercept(HttpRequest request) {
     if (overrideThisMethod(request)) {
@@ -82,17 +77,5 @@ public class MethodOverrideIntercepter implements HttpExecuteIntercepter {
         return !request.transport.supportsHead();
     }
     return false;
-  }
-
-  /**
-   * Sets this as the first HTTP request execute intercepter for the given HTTP transport.
-   *
-   * @deprecated (scheduled to be removed in 1.4) Use
-   *             {@link GoogleUtils#useMethodOverride(HttpTransport)}.
-   */
-  @Deprecated
-  public static void setAsFirstFor(HttpTransport transport) {
-    transport.removeIntercepters(MethodOverrideIntercepter.class);
-    transport.intercepters.add(0, new MethodOverrideIntercepter());
   }
 }

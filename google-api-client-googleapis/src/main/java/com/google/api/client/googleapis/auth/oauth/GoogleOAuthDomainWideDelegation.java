@@ -17,18 +17,44 @@ package com.google.api.client.googleapis.auth.oauth;
 import com.google.api.client.auth.oauth.OAuthParameters;
 import com.google.api.client.googleapis.GoogleUrl;
 import com.google.api.client.http.HttpExecuteIntercepter;
+import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Key;
+
+import java.io.IOException;
 
 /**
  * Google's OAuth domain-wide delegation requires an e-mail address of the user whose data you are
  * trying to access via {@link #requestorId} on every HTTP request.
  *
+ * <p>
+ * Sample usage, taking advantage that this class implements {@link HttpRequestInitializer}:
+ * </p>
+ *
+ * <pre>
+  public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
+    GoogleOAuthDomainWideDelegation initializer = new GoogleOAuthDomainWideDelegation();
+    initializer.requestorId = "...";
+    OAuthParameters parameters = new OAuthParameters();
+    // parameters...
+    initializer.parameters = parameters;
+    return transport.createRequestFactory(initializer);
+  }
+ * </pre>
+ *
+ * <p>
+ * If you have a custom request initializer, take a look at the sample usage for
+ * {@link HttpExecuteInterceptor}, which this class also implements.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
-public final class GoogleOAuthDomainWideDelegation implements HttpExecuteIntercepter {
+@SuppressWarnings("deprecation")
+public final class GoogleOAuthDomainWideDelegation
+    implements HttpExecuteInterceptor, HttpExecuteIntercepter, HttpRequestInitializer {
 
   /**
    * Generic URL that extends {@link GoogleUrl} and also provides the {@link #requestorId}
@@ -51,8 +77,23 @@ public final class GoogleOAuthDomainWideDelegation implements HttpExecuteInterce
   /** Email address of the user whose data you are trying to access. */
   public String requestorId;
 
-  public void intercept(HttpRequest request) {
+  /**
+   * OAuth parameters.
+   *
+   * @since 1.4
+   */
+  public OAuthParameters parameters;
+
+  public void initialize(HttpRequest request) {
+    request.interceptor = this;
+  }
+
+  @SuppressWarnings("deprecation")
+  public void intercept(HttpRequest request) throws IOException {
     request.url.set("xoauth_requestor_id", requestorId);
+    if (parameters != null) {
+      parameters.intercept(request);
+    }
   }
 
   /**
@@ -63,7 +104,10 @@ public final class GoogleOAuthDomainWideDelegation implements HttpExecuteInterce
    * @param transport HTTP transport
    * @param parameters OAuth parameters; the {@link OAuthParameters#signer} and
    *        {@link OAuthParameters#consumerKey} should be set
+   * @deprecated (scheduled to be removed in 1.5) Use {@link GoogleOAuthDomainWideDelegation}
+   *             directly
    */
+  @Deprecated
   public void signRequests(HttpTransport transport, OAuthParameters parameters) {
     transport.intercepters.add(this);
     parameters.signRequestsUsingAuthorizationHeader(transport);

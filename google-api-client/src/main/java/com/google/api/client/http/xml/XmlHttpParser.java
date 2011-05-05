@@ -16,7 +16,7 @@ package com.google.api.client.http.xml;
 
 import com.google.api.client.http.HttpParser;
 import com.google.api.client.http.HttpResponse;
-import com.google.api.client.util.ClassInfo;
+import com.google.api.client.util.Types;
 import com.google.api.client.xml.Xml;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 
@@ -40,11 +40,6 @@ import java.io.InputStream;
   }
  * </code>
  * </pre>
- *
- * <p>
- * Upgrade warning: in prior version 1.2 this class was previously in the
- * {@link com.google.api.client.xml} package.
- * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -71,7 +66,7 @@ public class XmlHttpParser implements HttpParser {
   public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
     InputStream content = response.getContent();
     try {
-      T result = ClassInfo.newInstance(dataClass);
+      T result = Types.newInstance(dataClass);
       XmlPullParser parser = Xml.createParser();
       parser.setInput(content, null);
       Xml.parseElement(parser, result, namespaceDictionary, null);

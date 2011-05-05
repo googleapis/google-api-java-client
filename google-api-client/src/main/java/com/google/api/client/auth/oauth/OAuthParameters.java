@@ -16,9 +16,13 @@ package com.google.api.client.auth.oauth;
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteIntercepter;
+import com.google.api.client.http.HttpExecuteInterceptor;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.escape.PercentEscaper;
 
+import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.util.Collection;
@@ -31,10 +35,28 @@ import java.util.TreeMap;
  * The only required non-computed fields are {@link #signer} and {@link #consumerKey}. Use
  * {@link #token} to specify token or temporary credentials.
  *
+ * <p>
+ * Sample usage, taking advantage that this class implements {@link HttpRequestInitializer}:
+ * </p>
+ *
+ * <pre>
+  public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
+    OAuthParameters parameters = new OAuthParameters();
+    // ...
+    return transport.createRequestFactory(parameters);
+  }
+ * </pre>
+ *
+ * <p>
+ * If you have a custom request initializer, take a look at the sample usage for
+ * {@link HttpExecuteInterceptor}, which this class also implements.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
-public final class OAuthParameters {
+@SuppressWarnings("deprecation")
+public final class OAuthParameters implements HttpExecuteInterceptor, HttpRequestInitializer {
 
   /** Secure random number generator to sign requests. */
   private static final SecureRandom RANDOM = new SecureRandom();
@@ -221,7 +243,10 @@ public final class OAuthParameters {
   /**
    * Performs OAuth HTTP request signing via the {@code Authorization} header as the final HTTP
    * request execute intercepter for the given HTTP transport.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use {@link OAuthParameters} directly
    */
+  @Deprecated
   public void signRequestsUsingAuthorizationHeader(HttpTransport transport) {
     for (HttpExecuteIntercepter intercepter : transport.intercepters) {
       if (intercepter.getClass() == OAuthAuthorizationHeaderIntercepter.class) {
@@ -232,5 +257,23 @@ public final class OAuthParameters {
     OAuthAuthorizationHeaderIntercepter newIntercepter = new OAuthAuthorizationHeaderIntercepter();
     newIntercepter.oauthParameters = this;
     transport.intercepters.add(newIntercepter);
+  }
+
+  public void initialize(HttpRequest request) throws IOException {
+    request.interceptor = this;
+  }
+
+  @SuppressWarnings("deprecation")
+  public void intercept(HttpRequest request) throws IOException {
+    computeNonce();
+    computeTimestamp();
+    try {
+      computeSignature(request.method.name(), request.url);
+    } catch (GeneralSecurityException e) {
+      IOException io = new IOException();
+      io.initCause(e);
+      throw io;
+    }
+    request.headers.authorization = getAuthorizationHeader();
   }
 }

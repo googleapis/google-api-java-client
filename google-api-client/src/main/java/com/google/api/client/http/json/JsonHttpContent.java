@@ -39,16 +39,11 @@ import java.io.OutputStream;
  * </code>
  * </pre>
  *
- * <p>
- * Upgrade warning: in prior version 1.2 there was no {@link #jsonFactory} field, but now it is
- * required.
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public class JsonHttpContent implements HttpContent {
-  // TODO: ability to annotate fields as only needed for POST?
+  // TODO(yanivi): ability to annotate fields as only needed for POST?
 
   /** Content type. Default value is {@link Json#CONTENT_TYPE}. */
   public String contentType = Json.CONTENT_TYPE;
@@ -80,5 +75,9 @@ public class JsonHttpContent implements HttpContent {
     JsonGenerator generator = jsonFactory.createJsonGenerator(out, JsonEncoding.UTF8);
     generator.serialize(data);
     generator.flush();
+  }
+
+  public boolean retrySupported() {
+    return true;
   }
 }

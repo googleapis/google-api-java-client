@@ -32,12 +32,11 @@ import com.google.api.client.util.Key;
  * <pre>
  * <code>
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    AuthorizationRequestUrl result = new AuthorizationRequestUrl(BASE_AUTHORIZATION_URL);
-    AuthorizationRequestUrl.ResponseType.CODE.set(result);
-    result.clientId = CLIENT_ID;
-    result.redirectUri = REDIRECT_URL;
-    result.scope = SCOPE;
-    response.sendRedirect(result.build());
+    AuthorizationRequestUrl builder =
+        new AuthorizationRequestUrl(BASE_AUTHORIZATION_URL, CLIENT_ID);
+    builder.redirectUri = REDIRECT_URL;
+    builder.scope = SCOPE;
+    response.sendRedirect(builder.build());
     return;
   }
  * </code>
@@ -45,7 +44,10 @@ import com.google.api.client.util.Key;
  *
  * @since 1.2
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use
+ *             {@link com.google.api.client.auth.oauth2.draft10.AuthorizationRequestUrl}
  */
+@Deprecated
 public class AuthorizationRequestUrl extends GenericUrl {
 
   /**
@@ -73,7 +75,7 @@ public class AuthorizationRequestUrl extends GenericUrl {
      * @param url authorization request URL
      */
     public void set(AuthorizationRequestUrl url) {
-      url.responseType = this.toString().toLowerCase();
+      url.responseType = toString().toLowerCase();
     }
   }
 
@@ -85,10 +87,6 @@ public class AuthorizationRequestUrl extends GenericUrl {
    * {@link ResponseType} to set this value.
    * <p>
    * By default, the response type is {@code "code"}, but this may be overridden.
-   * </p>
-   * <p>
-   * Upgrade warning: in prior version 1.2 of the library, the default value was {@code null}. It is
-   * now {@code "code"}.
    * </p>
    */
   @Key("response_type")

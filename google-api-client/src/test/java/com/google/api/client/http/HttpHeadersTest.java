@@ -34,7 +34,8 @@ public class HttpHeadersTest extends TestCase {
     super(name);
   }
 
-  public void testCanonicalMap() {
+  @Deprecated
+  public void testCanonicalMap_http() {
     HttpHeaders headers = new HttpHeaders();
     headers.acceptEncoding = null;
     assertTrue(headers.canonicalMap().isEmpty());

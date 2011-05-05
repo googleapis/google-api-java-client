@@ -14,7 +14,7 @@
 
 package com.google.api.client.xml.atom;
 
-import com.google.api.client.util.ClassInfo;
+import com.google.api.client.util.Types;
 import com.google.api.client.xml.Xml;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 
@@ -58,7 +58,7 @@ public abstract class AbstractAtomFeedParser<T> {
     boolean close = true;
     try {
       this.feedParsed = true;
-      T result = ClassInfo.newInstance(this.feedClass);
+      T result = Types.newInstance(this.feedClass);
       Xml.parseElement(
           this.parser, result, this.namespaceDictionary, Atom.StopAtAtomEntry.INSTANCE);
       close = false;

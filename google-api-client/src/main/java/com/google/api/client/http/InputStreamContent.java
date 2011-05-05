@@ -23,13 +23,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Serializes HTTP request content from an input stream into an output stream.
+ * Concrete implementation of {@link AbstractInputStreamContent} that simply handles the transfer of
+ * data from an input stream to an output stream. This should only be used for streams that can not
+ * be re-opened and retried. If you have a stream that it is possible to recreate please create a
+ * new subclass of {@link AbstractInputStreamContent}.
  * <p>
- * The {@link #type} and {@link #inputStream} fields are required. The input stream is guaranteed to
- * be closed at the end of {@link #writeTo(OutputStream)}.
- * <p>
- * For a file input, use {@link #setFileInput(File)}, and for a byte array or string input use
- * {@link #setByteArrayInput(byte[])}.
+ * The {@link #type} field is required. The input stream is guaranteed to be closed at the end of
+ * {@link #writeTo(OutputStream)}.
  * <p>
  * Sample use with a URL:
  *
@@ -47,23 +47,13 @@ import java.io.OutputStream;
  * @since 1.0
  * @author Yaniv Inbar
  */
-public final class InputStreamContent implements HttpContent {
-
-  private final static int BUFFER_SIZE = 2048;
-
-  /** Required content type. */
-  public String type;
+public final class InputStreamContent extends AbstractInputStreamContent {
 
   /** Content length or less than zero if not known. Defaults to {@code -1}. */
   public long length = -1;
 
   /** Required input stream to read from. */
   public InputStream inputStream;
-
-  /**
-   * Content encoding (for example {@code "gzip"}) or {@code null} for none.
-   */
-  public String encoding;
 
   /**
    * Sets the {@link #inputStream} from a file input stream based on the given file, and the
@@ -82,7 +72,10 @@ public final class InputStreamContent implements HttpContent {
   }
    * </code>
    * </pre>
+   *
+   * @deprecated Scheduled for removal in 1.5. Please use {@link FileContent} instead.
    */
+  @Deprecated
   public void setFileInput(File file) throws FileNotFoundException {
     inputStream = new FileInputStream(file);
     length = file.length();
@@ -105,46 +98,26 @@ public final class InputStreamContent implements HttpContent {
   }
    * </code>
    * </pre>
+   *
+   * @deprecated Scheduled for removal in 1.5. Please use {@link ByteArrayContent} instead.
    */
+  @Deprecated
   public void setByteArrayInput(byte[] content) {
     inputStream = new ByteArrayInputStream(content);
     length = content.length;
-  }
-
-  public void writeTo(OutputStream out) throws IOException {
-    InputStream inputStream = this.inputStream;
-    long contentLength = length;
-    if (contentLength < 0) {
-      copy(inputStream, out);
-    } else {
-      byte[] buffer = new byte[BUFFER_SIZE];
-      try {
-        // consume no more than length
-        long remaining = contentLength;
-        while (remaining > 0) {
-          int read = inputStream.read(buffer, 0, (int) Math.min(BUFFER_SIZE, remaining));
-          if (read == -1) {
-            break;
-          }
-          out.write(buffer, 0, read);
-          remaining -= read;
-        }
-      } finally {
-        inputStream.close();
-      }
-    }
-  }
-
-  public String getEncoding() {
-    return encoding;
   }
 
   public long getLength() {
     return length;
   }
 
-  public String getType() {
-    return type;
+  public boolean retrySupported() {
+    return false;
+  }
+
+  @Override
+  protected InputStream getInputStream() {
+    return inputStream;
   }
 
   /**
@@ -157,31 +130,27 @@ public final class InputStreamContent implements HttpContent {
    * Sample use:
    *
    * <pre><code>
-  static void downloadMedia(HttpResponse response, File file)
-      throws IOException {
-    FileOutputStream out = new FileOutputStream(file);
-    try {
-      InputStreamContent.copy(response.getContent(), out);
-    } finally {
-      out.close();
-    }
-  }
-   * </code></pre>
+    static void downloadMedia(HttpResponse response, File file)
+        throws IOException {
+      FileOutputStream out = new FileOutputStream(file);
+      try {
+        InputStreamContent.copy(response.getContent(), out);
+      } finally {
+        out.close();
+      }
+     }
+     * </code></pre>
    * </p>
    *
    * @param inputStream source input stream
    * @param outputStream destination output stream
    * @throws IOException I/O exception
+   *
+   * @deprecated Scheduled for removal in version 1.5. Please use
+   *             {@link AbstractInputStreamContent#copy} as an alternative.
    */
+  @Deprecated
   public static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
-    try {
-      byte[] tmp = new byte[BUFFER_SIZE];
-      int bytesRead;
-      while ((bytesRead = inputStream.read(tmp)) != -1) {
-        outputStream.write(tmp, 0, bytesRead);
-      }
-    } finally {
-      inputStream.close();
-    }
+    AbstractInputStreamContent.copy(inputStream, outputStream);
   }
 }

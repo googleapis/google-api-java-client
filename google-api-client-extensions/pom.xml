@@ -1,21 +1,22 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.google.api.client</groupId>
     <artifactId>google-api-client-parent</artifactId>
-    <version>1.3.3-alpha-SNAPSHOT</version>
+    <version>1.4.0-alpha-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <groupId>com.google.api.client</groupId>
   <artifactId>google-api-client-extensions</artifactId>
-  <name>Platform extensions to the Google API Client Library for Java.</name>
+  <name>Platform extensions to the Google HTTP Client Library for Java.</name>
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <links>
-            <link>http://download.oracle.com/docs/cd/E17476_01/javase/1.5.0/docs/api</link>
+            <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
             <link>http://code.google.com/appengine/docs/java/javadoc</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
@@ -24,6 +25,13 @@
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+          </archive>
+        </configuration>
         <executions>
           <execution>
             <id>jar</id>
@@ -46,6 +54,22 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>maven-datanucleus-plugin</artifactId>
+        <version>2.2.1</version>
+        <configuration>
+          <verbose>true</verbose>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>enhance</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
   <dependencies>
@@ -62,6 +86,14 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.jdo</groupId>
+      <artifactId>jdo2-api</artifactId>
     </dependency>
   </dependencies>
 </project>

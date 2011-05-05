@@ -26,7 +26,7 @@ import junit.framework.TestSuite;
 public class AllTests extends TestSuite {
 
   public static TestSuite suite() {
-    TestSuite result = new TestSuite(AllTests.class.getPackage().getName());
+    TestSuite result = new TestSuite(AllTests.class.getName());
     result.addTestSuite(GenericUrlTest.class);
     result.addTestSuite(HttpHeadersTest.class);
     result.addTestSuite(HttpRequestTest.class);

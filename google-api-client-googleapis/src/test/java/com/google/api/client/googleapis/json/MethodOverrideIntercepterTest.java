@@ -23,6 +23,7 @@ import com.google.api.client.testing.http.MockHttpTransport;
 
 import junit.framework.TestCase;
 
+import java.io.IOException;
 import java.util.EnumSet;
 
 /**
@@ -30,6 +31,7 @@ import java.util.EnumSet;
  *
  * @author Yaniv Inbar
  */
+@Deprecated
 public class MethodOverrideIntercepterTest extends TestCase {
 
   public MethodOverrideIntercepterTest(String name) {
@@ -43,7 +45,7 @@ public class MethodOverrideIntercepterTest extends TestCase {
         intercepter.override);
   }
 
-  public void testIntercept() {
+  public void testIntercept() throws IOException {
     MockHttpTransport transport = new MockHttpTransport();
     MethodOverrideIntercepter intercepter = GoogleUtils.useMethodOverride(transport);
     subtestIntercept(intercepter.override, transport, intercepter);
@@ -54,19 +56,25 @@ public class MethodOverrideIntercepterTest extends TestCase {
   }
 
   private void subtestIntercept(EnumSet<HttpMethod> methodsThatShouldOverride,
-      HttpTransport transport, MethodOverrideIntercepter intercepter) {
+      HttpTransport transport, MethodOverrideIntercepter intercepter) throws IOException {
     for (HttpMethod method : HttpMethod.values()) {
       subtestIntercept(methodsThatShouldOverride.contains(method), transport, intercepter, method);
     }
   }
 
   private void subtestIntercept(boolean shouldOverride, HttpTransport transport,
-      MethodOverrideIntercepter intercepter, HttpMethod method) {
+      MethodOverrideIntercepter intercepter, HttpMethod method) throws IOException {
     HttpRequest request = transport.buildRequest();
     request.method = method;
     intercepter.intercept(request);
     assertEquals(method.toString(), shouldOverride ? HttpMethod.POST : method, request.method);
     assertEquals(method.toString(), shouldOverride ? method.toString() : null,
         request.headers.get("X-HTTP-Method-Override"));
+    if (shouldOverride) {
+      assertNotNull(request.content);
+      assertTrue(request.content.getLength() >= 0);
+    } else {
+      assertNull(request.content);
+    }
   }
 }

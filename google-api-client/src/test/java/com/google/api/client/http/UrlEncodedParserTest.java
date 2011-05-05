@@ -17,10 +17,12 @@ package com.google.api.client.http;
 import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
+import com.google.api.client.util.Value;
 import com.google.common.base.Objects;
 
 import junit.framework.TestCase;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,11 +55,17 @@ public class UrlEncodedParserTest extends TestCase {
     @Key
     List<String> q;
 
+    @Key
+    String[] r;
+
+    @Key
+    Object o;
+
     @Override
     public boolean equals(Object obj) {
       Simple other = (Simple) obj;
       return Objects.equal(a, other.a) && Objects.equal(b, other.b) && Objects.equal(c, other.c)
-          && Objects.equal(q, other.q);
+          && Objects.equal(q, other.q) && Arrays.equals(r, other.r) && Objects.equal(o, other.o);
     }
 
     public Simple() {
@@ -65,7 +73,15 @@ public class UrlEncodedParserTest extends TestCase {
 
     @Override
     public String toString() {
-      return "Simple [a=" + a + ", b=" + b + ", c=" + c + ", q=" + q + "]";
+      return Objects
+          .toStringHelper(this)
+          .add("a", a)
+          .add("b", b)
+          .add("c", c)
+          .add("q", q)
+          .add("r", Arrays.asList(r))
+          .add("o", o)
+          .toString();
     }
 
   }
@@ -82,27 +98,33 @@ public class UrlEncodedParserTest extends TestCase {
 
     @Key
     List<String> q;
+
+    @Key
+    Object o;
   }
 
   public void testParse_simple() {
     Simple actual = new Simple();
-    UrlEncodedParser.parse("q=1&a=x&b=y&c=z&q=2&undeclared=0", actual);
+    UrlEncodedParser.parse("q=1&a=x&b=y&c=z&q=2&undeclared=0&o=object&r=a1&r=a2", actual);
     Simple expected = new Simple();
     expected.a = "x";
     expected.b = "y";
     expected.c = "z";
     expected.q = new ArrayList<String>(Arrays.asList("1", "2"));
+    expected.r = new String[] {"a1", "a2"};
+    expected.o = new ArrayList<String>(Arrays.asList("object"));
     assertEquals(expected, actual);
   }
 
   public void testParse_generic() {
     Generic actual = new Generic();
-    UrlEncodedParser.parse("p=4&q=1&a=x&p=3&b=y&c=z&d=v&q=2&p=5", actual);
+    UrlEncodedParser.parse("p=4&q=1&a=x&p=3&b=y&c=z&d=v&q=2&p=5&o=object", actual);
     Generic expected = new Generic();
     expected.a = "x";
     expected.b = "y";
     expected.c = "z";
     expected.q = new ArrayList<String>(Arrays.asList("1", "2"));
+    expected.o = new ArrayList<String>(Arrays.asList("object"));
     expected.set("d", Collections.singletonList("v"));
     expected.set("p", Arrays.asList("4", "3", "5"));
     assertEquals(expected, actual);
@@ -137,5 +159,32 @@ public class UrlEncodedParserTest extends TestCase {
     ArrayMap<String, Object> actual = new ArrayMap<String, Object>();
     UrlEncodedParser.parse(null, actual);
     assertTrue(actual.isEmpty());
+  }
+
+  public enum E {
+
+    @Value
+    VALUE,
+    @Value("other")
+    OTHER_VALUE,
+  }
+
+  public static class EnumValue extends GenericData {
+    @Key
+    public E value;
+    @Key
+    public E otherValue;
+  }
+
+  static final String ENUM_VALUE = "otherValue=other&value=VALUE";
+
+  public void testParse_enum() throws IOException {
+    EnumValue actual = new EnumValue();
+    UrlEncodedParser.parse(ENUM_VALUE, actual);
+    EnumValue expected = new EnumValue();
+    expected.value = E.VALUE;
+    expected.otherValue = E.OTHER_VALUE;
+    assertEquals(expected, actual);
+    assertEquals(ENUM_VALUE, UrlEncodedContentTest.toString(actual));
   }
 }

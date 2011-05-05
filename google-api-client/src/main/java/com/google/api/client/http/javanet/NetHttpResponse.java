@@ -104,4 +104,14 @@ final class NetHttpResponse extends LowLevelHttpResponse {
   public String getHeaderValue(int index) {
     return headerValues.get(index);
   }
+
+  /**
+   * Closes the connection to the HTTP server.
+   *
+   * @since 1.4
+   */
+  @Override
+  public void disconnect() {
+    connection.disconnect();
+  }
 }

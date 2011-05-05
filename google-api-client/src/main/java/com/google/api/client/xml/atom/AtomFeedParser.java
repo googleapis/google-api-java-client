@@ -32,7 +32,10 @@ import java.io.InputStream;
  * @param <E> entry type
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use
+ *             {@link com.google.api.client.http.xml.atom.AtomFeedParser}
  */
+@Deprecated
 public final class AtomFeedParser<T, E> extends AbstractAtomFeedParser<T> {
 
   /** Atom entry class to parse. */

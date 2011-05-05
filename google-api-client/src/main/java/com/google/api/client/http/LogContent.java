@@ -74,8 +74,12 @@ final class LogContent implements HttpContent {
    * @since 1.1
    */
   public static boolean isTextBasedContentType(String contentType) {
-    // TODO: refine this further
+    // TODO(yanivi): refine this further
     return contentType != null
         && (contentType.startsWith("text/") || contentType.startsWith("application/"));
+  }
+
+  public boolean retrySupported() {
+    return httpContent.retrySupported();
   }
 }

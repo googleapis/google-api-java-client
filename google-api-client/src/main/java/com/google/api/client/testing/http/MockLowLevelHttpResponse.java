@@ -46,11 +46,22 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   /** List of header values of HTTP response (empty array list by default). */
   public ArrayList<String> headerValues = Lists.newArrayList();
 
+  /**
+   * Adds a header to the response.
+   *
+   * @param name header name
+   * @param value header value
+   */
   public void addHeader(String name, String value) {
     headerNames.add(name);
     headerValues.add(value);
   }
 
+  /**
+   * Sets the response content to the given content string.
+   *
+   * @param stringContent content string
+   */
   public void setContent(String stringContent) {
     content = new ByteArrayInputStream(Strings.toBytesUtf8(stringContent));
   }

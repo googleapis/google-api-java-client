@@ -25,7 +25,9 @@ import java.io.IOException;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use {@link HttpExecuteInterceptor}
  */
+@Deprecated
 public interface HttpExecuteIntercepter {
 
   /**

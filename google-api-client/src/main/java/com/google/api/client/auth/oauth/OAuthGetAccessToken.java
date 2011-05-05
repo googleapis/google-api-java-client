@@ -14,7 +14,6 @@
 
 package com.google.api.client.auth.oauth;
 
-import com.google.api.client.http.HttpTransport;
 
 
 /**
@@ -23,9 +22,7 @@ import com.google.api.client.http.HttpTransport;
  * <p>
  * Use {@link #execute()} to execute the request. The long-lived access token acquired with this
  * request is found in {@link OAuthCredentialsResponse#token} . This token must be stored. It may
- * then be used to authorize HTTP requests to protected resources by setting the
- * {@link OAuthParameters#token}, and invoking
- * {@link OAuthParameters#signRequestsUsingAuthorizationHeader(HttpTransport)}.
+ * then be used to authorize HTTP requests to protected resources by using {@link OAuthParameters}.
  *
  * @since 1.0
  * @author Yaniv Inbar

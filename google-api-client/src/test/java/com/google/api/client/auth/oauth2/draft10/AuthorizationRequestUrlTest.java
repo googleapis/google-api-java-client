@@ -12,9 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.auth.oauth2;
-
-import com.google.api.client.auth.oauth2.AuthorizationRequestUrl;
+package com.google.api.client.auth.oauth2.draft10;
 
 import junit.framework.TestCase;
 
@@ -25,16 +23,26 @@ import junit.framework.TestCase;
  */
 public class AuthorizationRequestUrlTest extends TestCase {
 
+  private static final String EXPECTED =
+      "https://server.example.com/authorize?client_id=s6BhdRkqt3&"
+          + "redirect_uri=https://client.example.com/cb&response_type=code";
+
   public AuthorizationRequestUrlTest(String name) {
     super(name);
   }
 
-  public void test() {
+  public void testConstructor() {
     AuthorizationRequestUrl url =
         new AuthorizationRequestUrl("https://server.example.com/authorize");
     url.clientId = "s6BhdRkqt3";
     url.redirectUri = "https://client.example.com/cb";
-    assertEquals("https://server.example.com/authorize?client_id=s6BhdRkqt3&"
-        + "redirect_uri=https://client.example.com/cb&response_type=code", url.build());
+    assertEquals(EXPECTED, url.build());
+  }
+
+  public void testConstructor_withClienId() {
+    AuthorizationRequestUrl url =
+        new AuthorizationRequestUrl("https://server.example.com/authorize", "s6BhdRkqt3");
+    url.redirectUri = "https://client.example.com/cb";
+    assertEquals(EXPECTED, url.build());
   }
 }

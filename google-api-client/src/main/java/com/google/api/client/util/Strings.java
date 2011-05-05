@@ -14,6 +14,8 @@
 
 package com.google.api.client.util;
 
+import com.google.common.base.Charsets;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
@@ -26,11 +28,11 @@ import java.nio.charset.Charset;
 public class Strings {
 
   /**
-   * Version of the Google API Client Library for Java.
+   * Current version of the Google API Client Library for Java.
    *
    * @since 1.3
    */
-  public static final String VERSION = "1.3.3-alpha";
+  public static final String VERSION = "1.4.0-alpha";
 
   /**
    * Line separator to use for this OS, i.e. {@code "\n"} or {@code "\r\n"}.
@@ -41,8 +43,10 @@ public class Strings {
    * UTF-8 character set.
    *
    * @since 1.3
+   * @deprecated (scheduled to be removed in 1.5) Use {@link Charsets#UTF_8}
    */
-  public static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
+  @Deprecated
+  public static final Charset UTF8_CHARSET = Charsets.UTF_8;
 
   /**
    * Returns a new byte array that is the result of encoding the given string into a sequence of

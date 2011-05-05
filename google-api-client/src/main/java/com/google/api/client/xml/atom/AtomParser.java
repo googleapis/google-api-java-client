@@ -35,7 +35,10 @@ import com.google.api.client.http.xml.XmlHttpParser;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use
+ *             {@link com.google.api.client.http.xml.atom.AtomParser}
  */
+@Deprecated
 public final class AtomParser extends XmlHttpParser {
 
   public AtomParser() {

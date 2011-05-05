@@ -23,8 +23,8 @@ import java.lang.annotation.Target;
  * Use this annotation to specify that a field is a data key, optionally providing the data key name
  * to use.
  * <p>
- * If the data key name is not specifies, the default data key name is the field's name. For
- * example:
+ * If the data key name is not specified, the default is the Java field's name. For example:
+ * </p>
  *
  * <pre><code>
   public class A {
@@ -50,7 +50,7 @@ import java.lang.annotation.Target;
 public @interface Key {
 
   /**
-   * Override the data key name of the field or {@code "##default"} to use the field's name.
+   * Override the data key name of the field or {@code "##default"} to use the Java field's name.
    */
   String value() default "##default";
 }

@@ -15,14 +15,15 @@
 package com.google.api.client.json;
 
 import com.google.api.client.util.ClassInfo;
-import com.google.api.client.util.DataUtil;
+import com.google.api.client.util.Data;
 import com.google.api.client.util.DateTime;
+import com.google.api.client.util.FieldInfo;
+import com.google.api.client.util.Types;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -159,14 +160,16 @@ public abstract class JsonGenerator {
   /**
    * Serializes the given JSON value object.
    *
-   * @param value JSON value object
-   * @throws IOException if failed
+   * @param value JSON value object or {@code null} to ignore
    */
   public final void serialize(Object value) throws IOException {
     if (value == null) {
-      writeNull();
+      return;
     }
-    if (value instanceof String) {
+    Class<?> valueClass = value.getClass();
+    if (Data.isNull(value)) {
+      writeNull();
+    } else if (value instanceof String) {
       writeString((String) value);
     } else if (value instanceof BigDecimal) {
       writeNumber((BigDecimal) value);
@@ -186,19 +189,23 @@ public abstract class JsonGenerator {
       writeBoolean((Boolean) value);
     } else if (value instanceof DateTime) {
       writeString(((DateTime) value).toStringRfc3339());
-    } else if (value instanceof List<?>) {
+    } else if (value instanceof Iterable<?> || valueClass.isArray()) {
       writeStartArray();
-      @SuppressWarnings("unchecked")
-      List<Object> listValue = (List<Object>) value;
-      int size = listValue.size();
-      for (int i = 0; i < size; i++) {
-        serialize(listValue.get(i));
+      for (Object o : Types.iterableOf(value)) {
+        serialize(o);
       }
       writeEndArray();
+    } else if (valueClass.isEnum()) {
+      String name = FieldInfo.of((Enum<?>) value).getName();
+      if (name == null) {
+        writeNull();
+      } else {
+        writeString(name);
+      }
     } else {
       writeStartObject();
-      ClassInfo classInfo = ClassInfo.of(value.getClass());
-      for (Map.Entry<String, Object> entry : DataUtil.mapOf(value).entrySet()) {
+      ClassInfo classInfo = ClassInfo.of(valueClass);
+      for (Map.Entry<String, Object> entry : Data.mapOf(value).entrySet()) {
         Object fieldValue = entry.getValue();
         if (fieldValue != null) {
           String fieldName = entry.getKey();

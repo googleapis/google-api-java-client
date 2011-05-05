@@ -19,6 +19,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.FieldInfo;
+import com.google.api.client.util.Types;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -50,7 +51,7 @@ public final class JsonMultiKindFeedParser<T> extends AbstractJsonFeedParser<T> 
       if (field == null) {
         throw new IllegalArgumentException("missing kind field for " + itemClass.getName());
       }
-      Object item = ClassInfo.newInstance(itemClass);
+      Object item = Types.newInstance(itemClass);
       String kind = (String) FieldInfo.getFieldValue(field, item);
       if (kind == null) {
         throw new IllegalArgumentException(
@@ -78,11 +79,6 @@ public final class JsonMultiKindFeedParser<T> extends AbstractJsonFeedParser<T> 
 
   /**
    * Parses the given HTTP response using the given feed class and item classes.
-   *
-   * <p>
-   * Upgrade warning: prior to version 1.3, there was no {@code jsonFactory} parameter, but now it
-   * is required.
-   * </p>
    *
    * @param jsonFactory JSON factory
    * @param response HTTP response

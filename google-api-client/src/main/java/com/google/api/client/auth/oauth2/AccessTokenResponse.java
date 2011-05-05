@@ -22,14 +22,17 @@ import com.google.api.client.util.Key;
  * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10#section-4.2">Access Token Response</a>.
  * <p>
  * Use {@link AccessProtectedResource} to authorize executed HTTP requests based on the
- * {@link #accessToken}, for example {@link AccessProtectedResource}.{@link
+ * {@link #accessToken}, for example {@link AccessProtectedResource}. {@link
  * AccessProtectedResource#usingAuthorizationHeader(com.google.api.client.http.HttpTransport,
  * String) usingAuthorizationHeader}{@code (transport, response.accessToken)}.
  * </p>
  *
  * @since 1.2
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use
+ *             {@link com.google.api.client.auth.oauth2.draft10.AccessTokenResponse}
  */
+@Deprecated
 public class AccessTokenResponse extends GenericData {
 
   /** (REQUIRED) The access token issued by the authorization server. */

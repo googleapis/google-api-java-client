@@ -45,7 +45,12 @@ public class XmlNamespaceDictionaryTest extends TestCase {
           + "<entry gd:etag=\"abc\"><title>One</title></entry>"
           + "<entry gd:etag=\"def\"><title>Two</title></entry></feed>";
 
-  public void testAdd() {
+  private static final String EXPECTED_UNKNOWN_NS =
+      "<?xml version=\"1.0\"?>" + "<feed xmlns=\"http://unknown/\" "
+          + "xmlns:gd=\"http://unknown/gd\">" + "<entry gd:etag=\"abc\"><title>One</title></entry>"
+          + "<entry gd:etag=\"def\"><title>Two</title></entry></feed>";
+
+  public void testSet() {
     XmlNamespaceDictionary dictionary = new XmlNamespaceDictionary();
     dictionary.set("", "http://www.w3.org/2005/Atom").set("gd", "http://schemas.google.com/g/2005");
     assertEquals("http://www.w3.org/2005/Atom", dictionary.getUriForAlias(""));
@@ -109,4 +114,31 @@ public class XmlNamespaceDictionaryTest extends TestCase {
     public Collection<Entry> entries;
 
   }
+
+  public void testSerialize_errorOnUnknown() throws Exception {
+    Entry entry = new Entry("One", "abc");
+    StringWriter writer = new StringWriter();
+    XmlSerializer serializer = Xml.createSerializer();
+    serializer.setOutput(writer);
+    XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
+    try {
+      namespaceDictionary.serialize(serializer, Atom.ATOM_NAMESPACE, "entry", entry);
+      fail("expected IllegalArgumentException");
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  public void testSerialize_unknown() throws Exception {
+    Feed feed = new Feed();
+    feed.entries = new TreeSet<Entry>();
+    feed.entries.add(new Entry("One", "abc"));
+    feed.entries.add(new Entry("Two", "def"));
+    StringWriter writer = new StringWriter();
+    XmlSerializer serializer = Xml.createSerializer();
+    serializer.setOutput(writer);
+    XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
+    assertEquals(EXPECTED_UNKNOWN_NS, namespaceDictionary.toStringOf("feed", feed));
+  }
+
 }

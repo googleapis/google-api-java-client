@@ -26,14 +26,12 @@ import java.util.Map;
  * Warning: this is based on an undocumented experimental Google API that may stop working or change
  * in behavior at any time. Beware of this risk if running this in production code.
  * </p>
- * <p>
- * Warning: in prior version 1.2 there was a {@code load(String)} method. Instead, you should now
- * use {@link GoogleApi#load()}.
- * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be replaced in 1.5 with something based on Discovery v1)
  */
+@Deprecated
 public final class DiscoveryDocument {
 
   /**

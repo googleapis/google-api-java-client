@@ -1,15 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.google.api.client</groupId>
     <artifactId>google-api-client-parent</artifactId>
-    <version>1.3.3-alpha-SNAPSHOT</version>
+    <version>1.4.0-alpha-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <groupId>com.google.api.client</groupId>
   <artifactId>google-api-client-assembly</artifactId>
   <packaging>pom</packaging>
-  <name>Google API Client Library for Java [assembly]</name>
+  <name>Assembly for the Google APIs Client Library for Java</name>
 
   <dependencies>
     <dependency>
@@ -22,7 +23,23 @@
     </dependency>
     <dependency>
       <groupId>com.google.api.client</groupId>
+      <artifactId>google-api-client-extensions-android2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.api.client</groupId>
+      <artifactId>google-api-client-extensions-android3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.api.client</groupId>
       <artifactId>google-api-client-googleapis</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.api.client</groupId>
+      <artifactId>google-api-client-googleapis-extensions</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.api.client</groupId>
+      <artifactId>google-api-client-googleapis-extensions-android2</artifactId>
     </dependency>
   </dependencies>
 

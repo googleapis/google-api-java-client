@@ -106,7 +106,7 @@ public class GenericUrl extends GenericData {
 
   @Override
   public int hashCode() {
-    // TODO: optimize?
+    // TODO(yanivi): optimize?
     return build().hashCode();
   }
 
@@ -119,7 +119,7 @@ public class GenericUrl extends GenericData {
       return false;
     }
     GenericUrl other = (GenericUrl) obj;
-    // TODO: optimize?
+    // TODO(yanivi): optimize?
     return build().equals(other.toString());
   }
 

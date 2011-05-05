@@ -15,7 +15,7 @@
 package com.google.api.client.googleapis;
 
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.util.DataUtil;
+import com.google.api.client.util.Data;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.escape.CharEscapers;
 import com.google.common.annotations.VisibleForTesting;
@@ -98,7 +98,7 @@ public class GoogleUrl extends GenericUrl {
     GoogleUrl url = new GoogleUrl(encodedServerUrl);
 
     HashMap<String, Object> requestMap = new HashMap<String, Object>();
-    for (Map.Entry<String, Object> entry : DataUtil.mapOf(parameters).entrySet()) {
+    for (Map.Entry<String, Object> entry : Data.mapOf(parameters).entrySet()) {
       Object value = entry.getValue();
       if (value != null) {
         requestMap.put(entry.getKey(), value);
@@ -113,7 +113,7 @@ public class GoogleUrl extends GenericUrl {
   /**
    * Expands templates in a URI.
    *
-   * @param pathUri Uri component. It may contain one or more sequences of the form "{name}", where
+   * @param pathUri URI component. It may contain one or more sequences of the form "{name}", where
    *        "name" must be a key in variableMap
    * @param variableMap map of request variable names to values. Any names which are found in
    *        pathUri are removed from the map during processing

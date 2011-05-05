@@ -23,7 +23,7 @@
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use OAuth 1.0a or OAuth 2.0
  */
-
 package com.google.api.client.googleapis.auth.authsub;
 

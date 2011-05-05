@@ -33,7 +33,9 @@ import java.io.IOException;
  *
  * @since 1.1
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be replaced in 1.5 with something based on Discovery v1)
  */
+@Deprecated
 public final class GoogleApi {
 
   /**
@@ -89,8 +91,7 @@ public final class GoogleApi {
   public void load() throws IOException {
     GoogleUrl url = discoveryUrl.clone();
     url.put("api", name);
-    HttpRequest request = discoveryTransport.buildGetRequest();
-    request.url = url;
+    HttpRequest request = discoveryTransport.createRequestFactory().buildGetRequest(url);
     JsonParser parser = JsonCParser.parserForResponse(jsonFactory, request.execute());
     parser.skipToKey(name);
     DiscoveryDocument doc = new DiscoveryDocument();

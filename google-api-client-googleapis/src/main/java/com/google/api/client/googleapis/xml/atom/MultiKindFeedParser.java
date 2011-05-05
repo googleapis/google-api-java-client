@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.xml.atom;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.FieldInfo;
+import com.google.api.client.util.Types;
 import com.google.api.client.xml.Xml;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.api.client.xml.atom.AbstractAtomFeedParser;
@@ -51,7 +52,7 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
       if (field == null) {
         throw new IllegalArgumentException("missing @gd:kind field for " + entryClass.getName());
       }
-      Object entry = ClassInfo.newInstance(entryClass);
+      Object entry = Types.newInstance(entryClass);
       String kind = (String) FieldInfo.getFieldValue(field, entry);
       if (kind == null) {
         throw new IllegalArgumentException(
@@ -69,7 +70,7 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
     if (entryClass == null) {
       throw new IllegalArgumentException("unrecognized kind: " + kind);
     }
-    Object result = ClassInfo.newInstance(entryClass);
+    Object result = Types.newInstance(entryClass);
     Xml.parseElement(parser, result, namespaceDictionary, null);
     return result;
   }
