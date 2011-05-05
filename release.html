@@ -78,7 +78,7 @@ google-api-java-client.password = <i>[password from <a
   </li>
 </ul>
 
-<h3>Release version 1.4.1-alpha (minor update)</h3>
+<h3>Release version 1.4.1-alpha</h3>
 <ul>
   <li>Prepare the project
   <ul>
@@ -88,42 +88,6 @@ hg status
 hg out
 </pre> to make sure you have no changes that have not yet been committed or pushed to
     the Mercurial server</li>
-  </ul>
-  </li>
-  <li>For minor version update (i.e. feature release instead of just a bug
-  fix release), first merge the new minor version branch into the default
-  branch.
-  <ul>
-    <li>Merge dev branch into default branch: <pre>
-cd <i>rootDir</i>/google-api-java-client
-hg update default
-hg pull -u
-hg merge -r dev
-hg commit -m "merge with dev branch"
-hg push
-hg update dev 
-</pre></li>
-    <li>For the following files, replace <code>1.4.1-alpha</code> with <code>1.5.0-alpha</code>:
-    <pre>
-pom.xml
-*/pom.xml
-jdiff.xml (first change "1.4" to next minor version, then change "1.3" to "1.4")
-release.html (first change "1.4" to next minor version, then change "1.3" to "1.4")
-google-api-client/src/main/java/com/google/api/client/util/Strings.java
-</pre></li>
-    <li>Commit and push: <pre>
-hg commit -m "Start new minor version"
-hg push --new_branch
-hg update default
-</pre></li>
-    <li>Merge dev branch for samples: <pre>
-cd <i>rootDir</i>/google-api-java-client-samples
-hg update default
-hg pull -u
-hg merge -r dev
-hg commit -m "merge with dev branch"
-hg push
-</pre></li>
   </ul>
   </li>
   <li>Push to central Maven repository (based on instructions from <a
@@ -194,7 +158,7 @@ hg push
     version of the library, and then hg commit that diff into the javadoc Hg
     repository.</li>
     <li>change these constants from jdiff.xml for your environment:
-    JDIFF_HOME, MAVEN_REPOSITORY_HOME, PROJECT_ROOT_DIR,
+    JDIFF_HOME, MAVEN_REPOSITORY_HOME,
     JAVADOC_PROJECT_ROOT_DIR</li>
     <li><pre>
 cd /tmp
