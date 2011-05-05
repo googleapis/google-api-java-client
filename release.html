@@ -79,7 +79,7 @@ google-api-java-client.password = <i>[password from <a
   </li>
 </ul>
 
-<h3>Release version 1.5.0-alpha (minor update)</h3>
+<h3>Release version 1.5.0-alpha</h3>
 <ul>
   <li>Prepare the project
   <ul>
@@ -195,7 +195,7 @@ hg push
     version of the library, and then hg commit that diff into the javadoc Hg
     repository.</li>
     <li>change these constants from jdiff.xml for your environment:
-    JDIFF_HOME, MAVEN_REPOSITORY_HOME, PROJECT_ROOT_DIR,
+    JDIFF_HOME, MAVEN_REPOSITORY_HOME,
     JAVADOC_PROJECT_ROOT_DIR</li>
     <li><pre>
 cd /tmp
@@ -206,8 +206,8 @@ hg clone -r 1.4.2-alpha https://google-api-java-client.googlecode.com/hg/ 1.4.2-
 hg clone -r 1.5.0-alpha https://google-api-java-client.googlecode.com/hg/ 1.5.0-alpha
 cd 1.5.0-alpha
 mvn javadoc:jar install site
-ant -f jdiff.xml
 cp -R target/site/apidocs/ <i>rootDir</i>/javadoc/1.5.0-alpha
+ant -f jdiff.xml
 cd <i>rootDir</i>/javadoc
 hg add
 hg commit -m "1.5.0-alpha"
