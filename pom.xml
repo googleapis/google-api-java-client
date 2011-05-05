@@ -298,12 +298,12 @@
                   <packages>com.google.api.client.googleapis*</packages>
                 </group>
                 <group>
-                  <title>google-api-client-googleapis-extensions-android2</title>
-                  <packages>com.google.api.client.googleapis.extensions.android2*</packages>
+                  <title>google-api-client-googleapis-extensions</title>
+                  <packages>com.google.api.client.googleapis.extensions.auth*</packages>
                 </group>
                 <group>
-                  <title>google-api-client-googleapis-extensions</title>
-                  <packages>com.google.api.client.googleapis.extensions*</packages>
+                  <title>google-api-client-googleapis-extensions-android2</title>
+                  <packages>com.google.api.client.googleapis.extensions.android2*</packages>
                 </group>
               </groups>
             </configuration>
