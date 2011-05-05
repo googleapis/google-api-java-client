@@ -14,15 +14,16 @@
 
 package com.google.api.client.extensions.appengine.http.urlfetch;
 
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
-import com.google.appengine.api.urlfetch.FetchOptions;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
 /**
- * HTTP transport for Google App Engine based on <a
+ * Thread-safe HTTP transport for Google App Engine based on <a
  * href="http://code.google.com/appengine/docs/java/urlfetch/">URL Fetch</a>.
  * <p>
  * URL Fetch is only available on Google App Engine (not on any other Java environment), and is the
@@ -35,24 +36,16 @@ import java.net.HttpURLConnection;
  * is the recommended transport to use on App Engine.
  * </p>
  *
+ * <p>
+ * Upgrade warning: prior version 1.3 had a {@code deadline} field. Instead now use
+ * {@link HttpRequest#connectTimeout} and {@link HttpRequest#readTimeout} in an
+ * {@link HttpRequestInitializer} (which are simply added to determine the deadline).
+ * </p>
+ *
  * @since 1.2
  * @author Yaniv Inbar
  */
 public final class UrlFetchTransport extends HttpTransport {
-
-  /**
-   * Singleton instance of this transport.
-   *
-   * @deprecated (scheduled to be removed in 1.4) Use {@link #UrlFetchTransport()}
-   */
-  @Deprecated
-  public static volatile UrlFetchTransport INSTANCE = new UrlFetchTransport();
-
-  /**
-   * Sets the deadline in seconds or {@code null} for no deadline using
-   * {@link FetchOptions#setDeadline(Double)}. By default it is 20 seconds.
-   */
-  public Double deadline = 20.0;
 
   @Override
   public boolean supportsHead() {
@@ -61,26 +54,26 @@ public final class UrlFetchTransport extends HttpTransport {
 
   @Override
   public LowLevelHttpRequest buildDeleteRequest(String url) throws IOException {
-    return new UrlFetchRequest(this, "DELETE", url);
+    return new UrlFetchRequest("DELETE", url);
   }
 
   @Override
   public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
-    return new UrlFetchRequest(this, "GET", url);
+    return new UrlFetchRequest("GET", url);
   }
 
   @Override
   public LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
-    return new UrlFetchRequest(this, "HEAD", url);
+    return new UrlFetchRequest("HEAD", url);
   }
 
   @Override
   public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
-    return new UrlFetchRequest(this, "POST", url);
+    return new UrlFetchRequest("POST", url);
   }
 
   @Override
   public LowLevelHttpRequest buildPutRequest(String url) throws IOException {
-    return new UrlFetchRequest(this, "PUT", url);
+    return new UrlFetchRequest("PUT", url);
   }
 }

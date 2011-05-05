@@ -12,9 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.auth.oauth2;
-
-import com.google.api.client.auth.oauth2.AuthorizationResponse;
+package com.google.api.client.auth.oauth2.draft10;
 
 import junit.framework.TestCase;
 
@@ -25,11 +23,8 @@ import junit.framework.TestCase;
  */
 public class AuthorizationResponseTest extends TestCase {
 
-  public AuthorizationResponseTest(String name) {
-    super(name);
-  }
-
-  public void test() {
+  public void testConstructor() {
+    new AuthorizationResponse("http://example.com");
     AuthorizationResponse response =
         new AuthorizationResponse("https://client.example.com/cb?code=i1WsRn1uB1");
     assertEquals("i1WsRn1uB1", response.code);

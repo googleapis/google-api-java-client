@@ -17,7 +17,9 @@ package com.google.api.client.googleapis.auth.clientlogin;
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.auth.AuthKeyValueParser;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -104,21 +106,51 @@ public final class ClientLogin {
   @Key("logincaptcha")
   public String captchaAnswer;
 
-  /** Key/value data to parse a success response. */
-  public static final class Response {
+  /**
+   * Key/value data to parse a success response.
+   *
+   * <p>
+   * Sample usage, taking advantage that this class implements {@link HttpRequestInitializer}:
+   * </p>
+   *
+   * <pre>
+  public static HttpRequestFactory createRequestFactory(HttpTransport transport, Response response) {
+    return transport.createRequestFactory(response);
+  }
+ * </pre>
+   *
+   * <p>
+   * If you have a custom request initializer, take a look at the sample usage for
+   * {@link HttpExecuteInterceptor}, which this class also implements.
+   * </p>
+   */
+  public static final class Response implements HttpExecuteInterceptor, HttpRequestInitializer {
 
+    /** Authentication token. */
     @Key("Auth")
     public String auth;
 
+    /** Returns the authorization header value to use based on the authentication token. */
     public String getAuthorizationHeaderValue() {
       return GoogleHeaders.getGoogleLoginValue(auth);
     }
 
     /**
      * Sets the authorization header for the given Google transport using the authentication token.
+     *
+     * @deprecated (scheduled to be removed in 1.5) Use {link Response} directly
      */
+    @Deprecated
     public void setAuthorizationHeader(HttpTransport googleTransport) {
       googleTransport.defaultHeaders.authorization = GoogleHeaders.getGoogleLoginValue(auth);
+    }
+
+    public void initialize(HttpRequest request) {
+      request.interceptor = this;
+    }
+
+    public void intercept(HttpRequest request) {
+      request.headers.authorization = getAuthorizationHeaderValue();
     }
   }
 
@@ -148,15 +180,13 @@ public final class ClientLogin {
    * @throws IOException some other kind of I/O exception
    */
   public Response authenticate() throws HttpResponseException, IOException {
-    transport.addParser(AuthKeyValueParser.INSTANCE);
-    HttpRequest request = transport.buildPostRequest();
     GenericUrl url = serverUrl.clone();
     url.appendRawPath("/accounts/ClientLogin");
-    request.url = url;
     UrlEncodedContent content = new UrlEncodedContent();
     content.data = this;
+    HttpRequest request = transport.createRequestFactory().buildPostRequest(url, content);
+    request.addParser(AuthKeyValueParser.INSTANCE);
     request.disableContentLogging = true;
-    request.content = content;
     return request.execute().parseAs(Response.class);
   }
 }

@@ -15,14 +15,20 @@
 package com.google.api.client.json;
 
 import com.google.api.client.util.ClassInfo;
+import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
+import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
@@ -72,7 +78,7 @@ public abstract class JsonParser {
    */
   public abstract String getText() throws IOException;
 
-  // TODO: Jackson provides getTextCharacters(), getTextLength(), and getTextOffset()
+  // TODO(yanivi): Jackson provides getTextCharacters(), getTextLength(), and getTextOffset()
 
   /** Returns the byte value of the current token. */
   public abstract byte getByteValue() throws IOException;
@@ -107,11 +113,10 @@ public abstract class JsonParser {
    *        create a new instance
    * @param customizeParser optional parser customizer or {@code null} for none
    * @return new instance of the parsed destination class
-   * @throws IOException I/O exception
    */
   public final <T> T parseAndClose(Class<T> destinationClass, CustomizeJsonParser customizeParser)
       throws IOException {
-    T newInstance = ClassInfo.newInstance(destinationClass);
+    T newInstance = Types.newInstance(destinationClass);
     parseAndClose(newInstance, customizeParser);
     return newInstance;
   }
@@ -126,36 +131,36 @@ public abstract class JsonParser {
    * </p>
    *
    * @param keyToFind key to find
-   * @throws IOException I/O exception
    */
   public final void skipToKey(String keyToFind) throws IOException {
-    startParsingObject();
-    do {
+    JsonToken curToken = startParsingObject();
+    while (curToken == JsonToken.FIELD_NAME) {
       String key = getText();
       nextToken();
       if (keyToFind.equals(key)) {
         break;
       }
       skipChildren();
-    } while (nextToken() == JsonToken.FIELD_NAME);
+      curToken = nextToken();
+    }
   }
 
   /**
    * Starts parsing an object by making sure the parser points to a field name or end of object.
    * <p>
    * Before this method is called, the parser must either point to the start or end of a JSON object
-   * or to a field name.
+   * or to a field name. After the method is called, the current token must be either
+   * {@link JsonToken#FIELD_NAME} or {@link JsonToken#END_OBJECT}.
    * </p>
-   *
-   * @throws IOException I/O exception
    */
-  private void startParsingObject() throws IOException {
+  private JsonToken startParsingObject() throws IOException {
     JsonToken currentToken = getCurrentToken();
     if (currentToken == JsonToken.START_OBJECT) {
       currentToken = nextToken();
     }
     Preconditions.checkArgument(
         currentToken == JsonToken.FIELD_NAME || currentToken == JsonToken.END_OBJECT, currentToken);
+    return currentToken;
   }
 
   /**
@@ -168,7 +173,6 @@ public abstract class JsonParser {
    *
    * @param destination destination object
    * @param customizeParser optional parser customizer or {@code null} for none
-   * @throws IOException I/O exception
    */
   public final void parseAndClose(Object destination, CustomizeJsonParser customizeParser)
       throws IOException {
@@ -193,11 +197,10 @@ public abstract class JsonParser {
    *        create a new instance
    * @param customizeParser optional parser customizer or {@code null} for none
    * @return new instance of the parsed destination class
-   * @throws IOException I/O exception
    */
   public final <T> T parse(Class<T> destinationClass, CustomizeJsonParser customizeParser)
       throws IOException {
-    T newInstance = ClassInfo.newInstance(destinationClass);
+    T newInstance = Types.newInstance(destinationClass);
     parse(newInstance, customizeParser);
     return newInstance;
   }
@@ -213,27 +216,34 @@ public abstract class JsonParser {
    *
    * @param destination destination object
    * @param customizeParser optional parser customizer or {@code null} for none
-   * @throws IOException I/O exception
    */
   public final void parse(Object destination, CustomizeJsonParser customizeParser)
+      throws IOException {
+    ArrayList<Type> context = new ArrayList<Type>();
+    context.add(destination.getClass());
+    parse(context, destination, customizeParser);
+  }
+
+  private void parse(
+      ArrayList<Type> context, Object destination, CustomizeJsonParser customizeParser)
       throws IOException {
     if (destination instanceof GenericJson) {
       ((GenericJson) destination).jsonFactory = getFactory();
     }
-    startParsingObject();
+    JsonToken curToken = startParsingObject();
     Class<?> destinationClass = destination.getClass();
     ClassInfo classInfo = ClassInfo.of(destinationClass);
     boolean isGenericData = GenericData.class.isAssignableFrom(destinationClass);
     if (!isGenericData && Map.class.isAssignableFrom(destinationClass)) {
       @SuppressWarnings("unchecked")
       Map<String, Object> destinationMap = (Map<String, Object>) destination;
-      Class<?> valueClass = ClassInfo.getMapValueParameter(destinationClass.getGenericSuperclass());
-      parseMap(destinationMap, valueClass, customizeParser);
+      parseMap(
+          destinationMap, Types.getMapValueParameter(destinationClass), context, customizeParser);
       return;
     }
-    do {
+    while (curToken == JsonToken.FIELD_NAME) {
       String key = getText();
-      JsonToken curToken = nextToken();
+      curToken = nextToken();
       // stop at items for feeds
       if (customizeParser != null && customizeParser.stopAt(destination, key)) {
         return;
@@ -242,17 +252,24 @@ public abstract class JsonParser {
       FieldInfo fieldInfo = classInfo.getFieldInfo(key);
       if (fieldInfo != null) {
         // skip final fields
-        if (fieldInfo.isFinal && !fieldInfo.isPrimitive) {
+        if (fieldInfo.isFinal() && !fieldInfo.isPrimitive()) {
           throw new IllegalArgumentException("final array/object fields are not supported");
         }
-        Field field = fieldInfo.field;
-        Object fieldValue =
-            parseValue(curToken, field, fieldInfo.type, destination, customizeParser);
-        FieldInfo.setFieldValue(field, destination, fieldValue);
+        Field field = fieldInfo.getField();
+        int contextSize = context.size();
+        context.add(field.getGenericType());
+        Object fieldValue = parseValue(curToken,
+            field,
+            fieldInfo.getGenericType(),
+            context,
+            destination,
+            customizeParser);
+        context.remove(contextSize);
+        fieldInfo.setValue(destination, fieldValue);
       } else if (isGenericData) {
         // store unknown field in generic JSON
         GenericData object = (GenericData) destination;
-        object.set(key, parseValue(curToken, null, null, destination, customizeParser));
+        object.set(key, parseValue(curToken, null, null, context, destination, customizeParser));
       } else {
         // unrecognized field, skip value
         if (customizeParser != null) {
@@ -260,7 +277,8 @@ public abstract class JsonParser {
         }
         skipChildren();
       }
-    } while (nextToken() == JsonToken.FIELD_NAME);
+      curToken = nextToken();
+    }
   }
 
   /**
@@ -272,7 +290,6 @@ public abstract class JsonParser {
    * @param destinationItemClass class of destination collection item (must have a public default
    *        constructor)
    * @param customizeParser optional parser customizer or {@code null} for none
-   * @throws IOException I/O exception
    */
   public final <T> Collection<T> parseArrayAndClose(Class<?> destinationCollectionClass,
       Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws IOException {
@@ -291,7 +308,6 @@ public abstract class JsonParser {
    * @param destinationItemClass class of destination collection item (must have a public default
    *        constructor)
    * @param customizeParser optional parser customizer or {@code null} for none
-   * @throws IOException I/O exception
    */
   public final <T> void parseArrayAndClose(Collection<? super T> destinationCollection,
       Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws IOException {
@@ -311,13 +327,12 @@ public abstract class JsonParser {
    * @param destinationItemClass class of destination collection item (must have a public default
    *        constructor)
    * @param customizeParser optional parser customizer or {@code null} for none
-   * @throws IOException I/O exception
    */
   public final <T> Collection<T> parseArray(Class<?> destinationCollectionClass,
       Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws IOException {
     @SuppressWarnings("unchecked")
     Collection<T> destinationCollection =
-        (Collection<T>) ClassInfo.newCollectionInstance(destinationCollectionClass);
+        (Collection<T>) Data.newCollectionInstance(destinationCollectionClass);
     parseArray(destinationCollection, destinationItemClass, customizeParser);
     return destinationCollection;
   }
@@ -330,133 +345,202 @@ public abstract class JsonParser {
    * @param destinationItemClass class of destination collection item (must have a public default
    *        constructor)
    * @param customizeParser optional parser customizer or {@code null} for none
-   * @throws IOException I/O exception
    */
   public final <T> void parseArray(Collection<? super T> destinationCollection,
       Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws IOException {
+    parseArray(destinationCollection, destinationItemClass, new ArrayList<Type>(), customizeParser);
+  }
+
+  /**
+   * Parse a JSON Array from the given JSON parser into the given destination collection, optionally
+   * using the given parser customizer.
+   *
+   * @param destinationCollection destination collection
+   * @param destinationItemType type of destination collection item
+   * @param customizeParser optional parser customizer or {@code null} for none
+   */
+  private <T> void parseArray(Collection<T> destinationCollection, Type destinationItemType,
+      ArrayList<Type> context, CustomizeJsonParser customizeParser) throws IOException {
     JsonToken listToken;
     while ((listToken = nextToken()) != JsonToken.END_ARRAY) {
       @SuppressWarnings("unchecked")
-      T parsedValue = (T) parseValue(
-          listToken, null, destinationItemClass, destinationCollection, customizeParser);
+      T parsedValue = (T) parseValue(listToken,
+          null,
+          destinationItemType,
+          context,
+          destinationCollection,
+          customizeParser);
       destinationCollection.add(parsedValue);
     }
   }
 
-  private final void parseMap(
-      Map<String, Object> destinationMap, Class<?> valueClass, CustomizeJsonParser customizeParser)
-      throws IOException {
-    startParsingObject();
-    do {
+  private void parseMap(Map<String, Object> destinationMap, Type valueType, ArrayList<Type> context,
+      CustomizeJsonParser customizeParser) throws IOException {
+    JsonToken curToken = startParsingObject();
+    while (curToken == JsonToken.FIELD_NAME) {
       String key = getText();
-      JsonToken curToken = nextToken();
+      curToken = nextToken();
       // stop at items for feeds
       if (customizeParser != null && customizeParser.stopAt(destinationMap, key)) {
         return;
       }
-      Object value = parseValue(curToken, null, valueClass, destinationMap, customizeParser);
+      Object value =
+          parseValue(curToken, null, valueType, context, destinationMap, customizeParser);
       destinationMap.put(key, value);
-    } while (nextToken() == JsonToken.FIELD_NAME);
+      curToken = nextToken();
+    }
   }
 
-  private final Object parseValue(JsonToken token, Field field, Class<?> fieldClass,
-      Object destination, CustomizeJsonParser customizeParser) throws IOException {
+  /**
+   * Parse a value.
+   *
+   * @param token JSON token
+   * @param field field or {@code null} for none (e.g. into a map)
+   * @param valueType value type or {@code null} if not known (e.g. into a map)
+   * @param destination destination object instance
+   * @param customizeParser customize parser or {@code null} for none
+   * @return parsed value
+   */
+  private final Object parseValue(JsonToken token,
+      Field field,
+      Type valueType,
+      ArrayList<Type> context,
+      Object destination,
+      CustomizeJsonParser customizeParser) throws IOException {
+    valueType = Data.resolveWildcardTypeOrTypeVariable(context, valueType);
+    // resolve a parameterized type to a class
+    Class<?> valueClass = valueType instanceof Class<?> ? (Class<?>) valueType : null;
+    if (valueType instanceof ParameterizedType) {
+      valueClass = Types.getRawClass((ParameterizedType) valueType);
+    }
+    // value type is now null, class, parameterized type, or generic array type
     switch (token) {
       case START_ARRAY:
-        if (fieldClass == null || Collection.class.isAssignableFrom(fieldClass)) {
-          // TODO: handle JSON array of JSON array
-          Collection<Object> collectionValue = null;
-          if (customizeParser != null && field != null) {
-            collectionValue = customizeParser.newInstanceForArray(destination, field);
-          }
-          if (collectionValue == null) {
-            collectionValue = ClassInfo.newCollectionInstance(fieldClass);
-          }
-          Class<?> subFieldClass = ClassInfo.getCollectionParameter(field);
-          parseArray(collectionValue, subFieldClass, customizeParser);
-          return collectionValue;
+        boolean isArray = Types.isArray(valueType);
+        Preconditions.checkArgument(valueType == null || isArray || valueClass != null
+            && Types.isAssignableToOrFrom(valueClass, Collection.class),
+            "%s: expected collection or array type but got %s for field %s", getCurrentName(),
+            valueType, field);
+        Collection<Object> collectionValue = null;
+        if (customizeParser != null && field != null) {
+          collectionValue = customizeParser.newInstanceForArray(destination, field);
         }
-        throw new IllegalArgumentException(
-            "expected field type that implements Collection but got " + fieldClass + " for field "
-                + field);
+        if (collectionValue == null) {
+          collectionValue = Data.newCollectionInstance(valueType);
+        }
+        Type subType = null;
+        if (isArray) {
+          subType = Types.getArrayComponentType(valueType);
+        } else if (valueClass != null && Iterable.class.isAssignableFrom(valueClass)) {
+          subType = Types.getIterableParameter(valueType);
+        }
+        subType = Data.resolveWildcardTypeOrTypeVariable(context, subType);
+        parseArray(collectionValue, subType, context, customizeParser);
+        if (isArray) {
+          return Types.toArray(collectionValue, Types.getRawArrayComponentType(context, subType));
+        }
+        return collectionValue;
       case START_OBJECT:
+        Preconditions.checkArgument(!Types.isArray(valueType),
+            "%s: expected object or map type but got %s for field %s", getCurrentName(), valueType,
+            field);
         Object newInstance = null;
-        boolean isMap = fieldClass == null || Map.class.isAssignableFrom(fieldClass);
-        if (fieldClass != null && customizeParser != null) {
-          newInstance = customizeParser.newInstanceForObject(destination, fieldClass);
+        if (valueClass != null && customizeParser != null) {
+          newInstance = customizeParser.newInstanceForObject(destination, valueClass);
         }
+        boolean isMap = valueClass != null && Types.isAssignableToOrFrom(valueClass, Map.class);
         if (newInstance == null) {
-          if (isMap) {
-            newInstance = ClassInfo.newMapInstance(fieldClass);
+          // check if it is a map to avoid ClassCastException to Map
+          if (isMap || valueClass == null) {
+            newInstance = Data.newMapInstance(valueClass);
           } else {
-            newInstance = ClassInfo.newInstance(fieldClass);
+            newInstance = Types.newInstance(valueClass);
           }
         }
-        if (isMap && fieldClass != null) {
-          Class<?> valueClass;
-          if (field != null) {
-            valueClass = ClassInfo.getMapValueParameter(field);
-          } else {
-            valueClass = ClassInfo.getMapValueParameter(fieldClass.getGenericSuperclass());
-          }
-          if (valueClass != null) {
+        int contextSize = context.size();
+        if (valueType != null) {
+          context.add(valueType);
+        }
+        if (isMap && !GenericData.class.isAssignableFrom(valueClass)) {
+          Type subValueType =
+              Map.class.isAssignableFrom(valueClass) ? Types.getMapValueParameter(valueType) : null;
+          if (subValueType != null) {
             @SuppressWarnings("unchecked")
             Map<String, Object> destinationMap = (Map<String, Object>) newInstance;
-            parseMap(destinationMap, valueClass, customizeParser);
+            parseMap(destinationMap, subValueType, context, customizeParser);
             return newInstance;
           }
         }
-        parse(newInstance, customizeParser);
+        parse(context, newInstance, customizeParser);
+        if (valueType != null) {
+          context.remove(contextSize);
+        }
         return newInstance;
       case VALUE_TRUE:
       case VALUE_FALSE:
-        if (fieldClass != null && fieldClass != Boolean.class && fieldClass != boolean.class) {
-          throw new IllegalArgumentException(
-              getCurrentName() + ": expected type Boolean or boolean but got " + fieldClass
-                  + " for field " + field);
-        }
+        Preconditions.checkArgument(
+            valueType == null || valueClass == boolean.class || valueClass != null
+                && valueClass.isAssignableFrom(Boolean.class),
+            "%s: expected type Boolean or boolean but got %s for field %s" + field,
+            getCurrentName(), valueType, field);
         return token == JsonToken.VALUE_TRUE ? Boolean.TRUE : Boolean.FALSE;
       case VALUE_NUMBER_FLOAT:
       case VALUE_NUMBER_INT:
-        Preconditions.checkArgument(field == null || field.getAnnotation(JsonString.class) == null);
-        if (fieldClass == null || fieldClass == BigDecimal.class) {
+        Preconditions.checkArgument(field == null || field.getAnnotation(JsonString.class) == null,
+            "%s: number type formatted as a JSON number cannot use @JsonString annotation on "
+                + "the field %s", getCurrentName(), field);
+        if (valueClass == null || valueClass.isAssignableFrom(BigDecimal.class)) {
           return getDecimalValue();
         }
-        if (fieldClass == BigInteger.class) {
+        if (valueClass == BigInteger.class) {
           return getBigIntegerValue();
         }
-        if (fieldClass == Double.class || fieldClass == double.class) {
+        if (valueClass == Double.class || valueClass == double.class) {
           return getDoubleValue();
         }
-        if (fieldClass == Long.class || fieldClass == long.class) {
+        if (valueClass == Long.class || valueClass == long.class) {
           return getLongValue();
         }
-        if (fieldClass == Float.class || fieldClass == float.class) {
+        if (valueClass == Float.class || valueClass == float.class) {
           return getFloatValue();
         }
-        if (fieldClass == Integer.class || fieldClass == int.class) {
+        if (valueClass == Integer.class || valueClass == int.class) {
           return getIntValue();
         }
-        if (fieldClass == Short.class || fieldClass == short.class) {
+        if (valueClass == Short.class || valueClass == short.class) {
           return getShortValue();
         }
-        if (fieldClass == Byte.class || fieldClass == byte.class) {
+        if (valueClass == Byte.class || valueClass == byte.class) {
           return getByteValue();
         }
         throw new IllegalArgumentException(
-            getCurrentName() + ": expected numeric type but got " + fieldClass + " for field "
+            getCurrentName() + ": expected numeric type but got " + valueType + " for field "
                 + field);
       case VALUE_STRING:
-        Preconditions.checkArgument(field == null || !Number.class.isAssignableFrom(fieldClass)
-            || field.getAnnotation(JsonString.class) != null);
-        // TODO: "special" values like Double.POSITIVE_INFINITY?
+        Preconditions.checkArgument(
+            valueClass == null || !Number.class.isAssignableFrom(valueClass) || field != null
+                && field.getAnnotation(JsonString.class) != null,
+            "%s: number field formatted as a JSON string must use the @JsonString annotation: %s",
+            getCurrentName(), field);
+        // TODO(yanivi): "special" values like Double.POSITIVE_INFINITY?
         try {
-          return FieldInfo.parsePrimitiveValue(fieldClass, getText());
+          return Data.parsePrimitiveValue(valueType, getText());
         } catch (IllegalArgumentException e) {
           throw new IllegalArgumentException(getCurrentName() + " for field " + field, e);
         }
       case VALUE_NULL:
-        return null;
+        Preconditions.checkArgument(valueClass == null || !valueClass.isPrimitive(),
+            "%s: primitive number field but found a JSON null: %s", getCurrentName(), field);
+        if (valueClass != null
+            && 0 != (valueClass.getModifiers() & (Modifier.ABSTRACT | Modifier.INTERFACE))) {
+          if (Types.isAssignableToOrFrom(valueClass, Collection.class)) {
+            return Data.nullOf(Data.newCollectionInstance(valueType).getClass());
+          }
+          if (Types.isAssignableToOrFrom(valueClass, Map.class)) {
+            return Data.nullOf(Data.newMapInstance(valueClass).getClass());
+          }
+        }
+        return Data.nullOf(Types.getRawArrayComponentType(context, valueType));
       default:
         throw new IllegalArgumentException(
             getCurrentName() + ": unexpected JSON node type: " + token);

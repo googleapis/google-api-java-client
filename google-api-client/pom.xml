@@ -1,15 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.google.api.client</groupId>
     <artifactId>google-api-client-parent</artifactId>
-    <version>1.3.3-alpha-SNAPSHOT</version>
+    <version>1.4.0-alpha-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-api-client</artifactId>
-  <name>Google API Client Library for Java (Core)</name>
+  <name>Google HTTP Client Library for Java</name>
   <description>
-    Google API Client Library for Java. Functionality that works on all supported Java platforms,
+    Google HTTP Client Library for Java. Functionality that works on all supported Java platforms,
     including Java 5 (or higher) desktop (SE) and web (EE), Android, and Google App Engine.
   </description>
 
@@ -19,8 +20,8 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <links>
-            <link>http://download.oracle.com/docs/cd/E17476_01/javase/1.5.0/docs/api</link>
-            <link>http://jackson.codehaus.org/1.4.2/javadoc</link>
+            <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
+            <link>http://jackson.codehaus.org/1.6.5/javadoc</link>
             <link>http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
@@ -29,6 +30,13 @@
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+          </archive>
+        </configuration>
         <executions>
           <execution>
             <id>jar</id>
@@ -69,7 +77,6 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>

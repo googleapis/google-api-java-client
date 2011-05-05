@@ -23,8 +23,7 @@ import junit.framework.TestCase;
  */
 public class UrlFetchTransportTest extends TestCase {
 
-  public void testDeadline() {
-    UrlFetchTransport transport = new UrlFetchTransport();
-    assertEquals(20.0, transport.deadline);
+  public void test() {
+    new UrlFetchTransport();
   }
 }

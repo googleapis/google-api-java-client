@@ -39,12 +39,12 @@ public class MockHttpTransport extends HttpTransport {
 
   @Override
   public LowLevelHttpRequest buildDeleteRequest(String url) throws IOException {
-    return new MockLowLevelHttpRequest();
+    return new MockLowLevelHttpRequest(url);
   }
 
   @Override
   public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
-    return new MockLowLevelHttpRequest();
+    return new MockLowLevelHttpRequest(url);
   }
 
   @Override
@@ -52,7 +52,7 @@ public class MockHttpTransport extends HttpTransport {
     if (!supportsHead()) {
       return super.buildHeadRequest(url);
     }
-    return new MockLowLevelHttpRequest();
+    return new MockLowLevelHttpRequest(url);
   }
 
   @Override
@@ -60,17 +60,17 @@ public class MockHttpTransport extends HttpTransport {
     if (!supportsPatch()) {
       return super.buildPatchRequest(url);
     }
-    return new MockLowLevelHttpRequest();
+    return new MockLowLevelHttpRequest(url);
   }
 
   @Override
   public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
-    return new MockLowLevelHttpRequest();
+    return new MockLowLevelHttpRequest(url);
   }
 
   @Override
   public LowLevelHttpRequest buildPutRequest(String url) throws IOException {
-    return new MockLowLevelHttpRequest();
+    return new MockLowLevelHttpRequest(url);
   }
 
   @Override

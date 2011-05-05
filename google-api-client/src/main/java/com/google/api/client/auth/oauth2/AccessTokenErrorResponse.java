@@ -23,7 +23,10 @@ import com.google.api.client.util.Key;
  *
  * @since 1.2
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use
+ *             {@link com.google.api.client.auth.oauth2.draft10.AccessTokenErrorResponse}
  */
+@Deprecated
 public class AccessTokenErrorResponse extends GenericData {
 
   /**
@@ -52,7 +55,7 @@ public class AccessTokenErrorResponse extends GenericData {
     UNAUTHORIZED_CLIENT,
 
     /**
-     *The provided access grant is invalid, expired, or revoked (e.g. invalid assertion, expired
+     * The provided access grant is invalid, expired, or revoked (e.g. invalid assertion, expired
      * authorization token, bad end-user password credentials, or mismatching authorization code and
      * redirection URI).
      */

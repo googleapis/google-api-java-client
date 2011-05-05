@@ -25,6 +25,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.rpc2.JsonRpcRequest;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,10 +36,6 @@ import java.util.List;
  * <p>
  * Warning: this is based on an undocumented experimental Google functionality that may stop working
  * or change in behavior at any time. Beware of this risk if running this in production code.
- * </p>
- * <p>
- * Warning: in prior version 1.2 of this library this was called {@code
- * com.google.api.client.json.rpc2.GoogleJsonRpcHttpTransport}.
  * </p>
  *
  * @since 1.3
@@ -103,14 +100,17 @@ public final class GoogleJsonRpcHttpTransport {
   }
 
   private HttpRequest internalExecute(Object data) {
-    HttpRequest httpRequest = transport.buildPostRequest();
-    httpRequest.url = rpcServerUrl;
     JsonHttpContent content = new JsonHttpContent();
     content.jsonFactory = jsonFactory;
     content.contentType = contentType;
-    httpRequest.headers.accept = accept;
     content.data = data;
-    httpRequest.content = content;
-    return httpRequest;
+    HttpRequest httpRequest;
+    try {
+      httpRequest = transport.createRequestFactory().buildPostRequest(rpcServerUrl, content);
+      httpRequest.headers.accept = accept;
+      return httpRequest;
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
+    }
   }
 }

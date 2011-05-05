@@ -9,5 +9,30 @@ including JavaDoc, documentation, support, samples, and source code.</p>
 
 <p>Dependent jars are found in the <code>dependencies</code> folder.</p>
 
+<p>Version 1.4 contains some changes that are incompatible with prior
+version 1.3:</p>
+<ul>
+  <li>Removed methods/classes/fields that were deprecated in 1.3 and
+  scheduled to be removed in version 1.4. Please <a
+    href="http://javadoc.google-api-java-client.googlecode.com/hg/1.3.1-alpha/deprecated-list.html">check
+  the JavaDoc for advice</a>.</li>
+  <li>Added required methods that are scheduled for inclusion in version
+  1.4:
+  <ul>
+    <li><a
+      href=http://javadoc.google-api-java-client.googlecode.com/hg/1.4.0-alpha/com/google/api/client/http/HttpContent.html#retrySupported()">HttpContent.retrySupported</a></li>
+  </ul>
+  </li>
+  <li>App Engine SDK minimum version 1.4.2 is now required in order to
+  enable SSL certificate validation.</li>
+  <li><a
+    href=http://javadoc.google-api-java-client.googlecode.com/hg/1.4.0-alpha/com/google/api/client/http/javanet/NetHttpTransport.html">NetHttpTransport</a>
+  (check the linked JavaDoc for advice): removed fields connectTimeout and
+  readTimeout.</li>
+  <li><a
+    href=http://javadoc.google-api-java-client.googlecode.com/hg/1.4.0-alpha/com/google/api/client/extensions/appengine/http/urlfetch/UrlFetchHttpTransport.html">UrlFetchHttpTransport</a>
+  (check the linked JavaDoc for advice): removed field deadline.</li>
+</ul>
+
 </body>
 </html>

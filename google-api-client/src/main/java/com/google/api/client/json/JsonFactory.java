@@ -78,7 +78,7 @@ public abstract class JsonFactory {
 
   /**
    * Returns a serialized JSON string representation for the given item using
-   * {@link JsonGenerator#serialize(Object)} suitable for debugging in {@link Object#toString()}.
+   * {@link JsonGenerator#serialize(Object)}.
    *
    * @param item data key/value pairs
    * @return serialized JSON string representation
@@ -93,5 +93,21 @@ public abstract class JsonFactory {
       throw new RuntimeException(e);
     }
     return byteStream.toString();
+  }
+
+  /**
+   * Parses a JSON string value into a JSON object of the given destination class using
+   * {@link JsonParser#parse(Class, CustomizeJsonParser)}.
+   *
+   * @param value JSON string value
+   * @param destinationClass destination class that has an accessibleS default constructor to use to
+   *        create a new JSON object instance
+   * @return new instance of the parsed destination class
+   * @since 1.4
+   */
+  public final <T> T fromString(String value, Class<T> destinationClass) throws IOException {
+    JsonParser parser = createJsonParser(value);
+    parser.nextToken();
+    return parser.parse(destinationClass, null);
   }
 }

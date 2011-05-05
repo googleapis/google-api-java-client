@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.google</groupId>
@@ -8,9 +9,9 @@
   </parent>
   <groupId>com.google.api.client</groupId>
   <artifactId>google-api-client-parent</artifactId>
-  <version>1.3.3-alpha-SNAPSHOT</version>
+  <version>1.4.0-alpha-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Google API Client Library for Java</name>
+  <name>Google Client Libraries for Java</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
 
@@ -46,11 +47,21 @@
     </developer>
   </developers>
 
+  <!--
+    If you add a new module, make sure to also add it in the jdiff.xml file, the
+    dependencies section of google-api-client-assembly/pom.xml, and in this
+    pom.xml file below in the dependencyManagement and maven-javadoc-plugin
+    sections.
+  -->
   <modules>
     <module>google-api-client</module>
     <module>google-api-client-assembly</module>
     <module>google-api-client-extensions</module>
+    <module>google-api-client-extensions-android2</module>
+    <module>google-api-client-extensions-android3</module>
     <module>google-api-client-googleapis</module>
+    <module>google-api-client-googleapis-extensions</module>
+    <module>google-api-client-googleapis-extensions-android2</module>
   </modules>
 
   <repositories>
@@ -76,7 +87,7 @@
       <dependency>
         <groupId>org.codehaus.jackson</groupId>
         <artifactId>jackson-core-asl</artifactId>
-        <version>1.6.5</version>
+        <version>1.6.7</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.gson</groupId>
@@ -87,12 +98,11 @@
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>4.8.2</version>
-        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>com.google.appengine</groupId>
         <artifactId>appengine-api-1.0-sdk</artifactId>
-        <version>1.3.8</version>
+        <version>1.4.2</version>
       </dependency>
       <dependency>
         <groupId>xpp3</groupId>
@@ -107,12 +117,22 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>r08</version>
+        <version>r09</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>jsr305</artifactId>
         <version>1.3.9</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.jdo</groupId>
+        <artifactId>jdo2-api</artifactId>
+        <version>2.3-eb</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.5</version>
       </dependency>
       <dependency>
         <groupId>com.google.api.client</groupId>
@@ -126,7 +146,27 @@
       </dependency>
       <dependency>
         <groupId>com.google.api.client</groupId>
+        <artifactId>google-api-client-extensions-android2</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api.client</groupId>
+        <artifactId>google-api-client-extensions-android3</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api.client</groupId>
         <artifactId>google-api-client-googleapis</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api.client</groupId>
+        <artifactId>google-api-client-googleapis-extensions</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api.client</groupId>
+        <artifactId>google-api-client-googleapis-extensions-android2</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
@@ -242,12 +282,28 @@
                   <packages>com.google.api.client.auth*:com.google.api.client.http*:com.google.api.client.json*:com.google.api.client.testing*:com.google.api.client.util*:com.google.api.client.xml*</packages>
                 </group>
                 <group>
+                  <title>google-api-client-extensions</title>
+                  <packages>com.google.api.client.extensions.appengine*:com.google.api.client.extensions.auth*:com.google.api.client.extensions.servlet*</packages>
+                </group>
+                <group>
+                  <title>google-api-client-extensions-android2</title>
+                  <packages>com.google.api.client.extensions.android2*</packages>
+                </group>
+                <group>
+                  <title>google-api-client-extensions-android3</title>
+                  <packages>com.google.api.client.extensions.android3*</packages>
+                </group>
+                <group>
                   <title>google-api-client-googleapis</title>
                   <packages>com.google.api.client.googleapis*</packages>
                 </group>
                 <group>
-                  <title>google-api-client-extensions</title>
-                  <packages>com.google.api.client.extensions*</packages>
+                  <title>google-api-client-googleapis-extensions-android2</title>
+                  <packages>com.google.api.client.googleapis.extensions.android2*</packages>
+                </group>
+                <group>
+                  <title>google-api-client-googleapis-extensions</title>
+                  <packages>com.google.api.client.googleapis.extensions*</packages>
                 </group>
               </groups>
             </configuration>

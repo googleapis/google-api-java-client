@@ -68,4 +68,14 @@ public abstract class LowLevelHttpResponse {
 
   /** Returns the HTTP response header value at the given zero-based index. */
   public abstract String getHeaderValue(int index);
+
+  /**
+   * Default implementation does nothing, but subclasses may override to attempt to abort the
+   * connection or release allocated system resources for this connection.
+   *
+   * @throws IOException I/O exception
+   * @since 1.4
+   */
+  public void disconnect() throws IOException {
+  }
 }

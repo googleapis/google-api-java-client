@@ -149,7 +149,9 @@ public class HttpHeaders extends GenericData {
    * Computes a canonical map from lower-case header name to its values.
    *
    * @return canonical map from lower-case header name to its values
+   * @deprecated (scheduled to be removed in 1.5)
    */
+  @Deprecated
   public Map<String, Collection<Object>> canonicalMap() {
     Map<String, Collection<Object>> result = new HashMap<String, Collection<Object>>();
     for (Map.Entry<String, Object> entry : entrySet()) {
@@ -178,11 +180,11 @@ public class HttpHeaders extends GenericData {
    */
   static HashMap<String, String> getFieldNameMap(Class<? extends HttpHeaders> headersClass) {
     HashMap<String, String> fieldNameMap = new HashMap<String, String>();
-    for (String keyName : ClassInfo.of(headersClass).getKeyNames()) {
+    for (String keyName : ClassInfo.of(headersClass).getNames()) {
       fieldNameMap.put(keyName.toLowerCase(), keyName);
     }
     return fieldNameMap;
   }
 
-  // TODO: override equals and hashCode
+  // TODO(yanivi): override equals and hashCode
 }

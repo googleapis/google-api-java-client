@@ -99,12 +99,21 @@ public final class MultipartRelatedContent implements HttpContent {
   }
 
   public long getLength() {
-    // TODO: compute this?
+    // TODO(yanivi): compute this?
     return -1;
   }
 
   public String getType() {
     return "multipart/related; boundary=\"END_OF_PART\"";
+  }
+
+  public boolean retrySupported() {
+    for (HttpContent onePart : parts) {
+      if (!onePart.retrySupported()) {
+        return false;
+      }
+    }
+    return true;
   }
 
 }

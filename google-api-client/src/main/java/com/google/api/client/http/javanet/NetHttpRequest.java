@@ -29,10 +29,8 @@ final class NetHttpRequest extends LowLevelHttpRequest {
 
   private final HttpURLConnection connection;
   private HttpContent content;
-  private final NetHttpTransport transport;
 
-  NetHttpRequest(NetHttpTransport transport, String requestMethod, String url) throws IOException {
-    this.transport = transport;
+  NetHttpRequest(String requestMethod, String url) throws IOException {
     HttpURLConnection connection =
         this.connection = (HttpURLConnection) new URL(url).openConnection();
     connection.setRequestMethod(requestMethod);
@@ -46,12 +44,16 @@ final class NetHttpRequest extends LowLevelHttpRequest {
   }
 
   @Override
+  public void setTimeout(int connectTimeout, int readTimeout) {
+    connection.setReadTimeout(readTimeout);
+    connection.setConnectTimeout(connectTimeout);
+  }
+
+  @Override
   public LowLevelHttpResponse execute() throws IOException {
     HttpURLConnection connection = this.connection;
     // write content
-    HttpContent content = this.content;
     if (content != null) {
-      connection.setDoOutput(true);
       String contentType = content.getType();
       if (contentType != null) {
         addHeader("Content-Type", contentType);
@@ -64,18 +66,19 @@ final class NetHttpRequest extends LowLevelHttpRequest {
       if (contentLength >= 0) {
         addHeader("Content-Length", Long.toString(contentLength));
       }
-      content.writeTo(connection.getOutputStream());
+      if (contentLength != 0) {
+        // setDoOutput(true) will change a GET method to POST, so only if contentLength != 0
+        connection.setDoOutput(true);
+        // see http://developer.android.com/reference/java/net/HttpURLConnection.html
+        if (contentLength >= 0 && contentLength <= Integer.MAX_VALUE) {
+          connection.setFixedLengthStreamingMode((int) contentLength);
+        } else {
+          connection.setChunkedStreamingMode(0);
+        }
+        content.writeTo(connection.getOutputStream());
+      }
     }
     // connect
-    NetHttpTransport transport = this.transport;
-    int readTimeout = transport.readTimeout;
-    if (readTimeout >= 0) {
-      connection.setReadTimeout(readTimeout);
-    }
-    int connectTimeout = transport.connectTimeout;
-    if (connectTimeout >= 0) {
-      connection.setConnectTimeout(connectTimeout);
-    }
     connection.connect();
     return new NetHttpResponse(connection);
   }

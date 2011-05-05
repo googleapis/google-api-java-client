@@ -14,6 +14,7 @@
 
 package com.google.api.client.auth.oauth2;
 
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
@@ -42,10 +43,9 @@ import java.io.IOException;
  * <code>
   static void requestAccessToken() throws IOException {
     try {
-      AccessTokenRequest request = new AccessTokenRequest();
-      request.authorizationServerUrl = BASE_AUTHORIZATION_URL;
-      request.clientId = CLIENT_ID;
-      request.clientSecret = CLIENT_SECRET;
+      AccessTokenRequest request =
+          new AccessTokenRequest(new NetHttpTransport(), new JacksonFactory(),
+              "https://server.example.com/authorize", "s6BhdRkqt3", "gX1fBat3bV");
       AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
       System.out.println("Access token: " + response.accessToken);
     } catch (HttpResponseException e) {
@@ -59,7 +59,10 @@ import java.io.IOException;
  *
  * @since 1.2
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use
+ *             {@link com.google.api.client.auth.oauth2.draft10.AccessTokenRequest}
  */
+@Deprecated
 public class AccessTokenRequest extends GenericData {
 
   /**
@@ -71,14 +74,15 @@ public class AccessTokenRequest extends GenericData {
    *
    * <pre>
    * <code>
-    static void requestAccessToken(String code, String redirectUrl) throws IOException {
+    static void requestAccessToken() throws IOException {
       try {
-        AuthorizationCodeGrant request = new AuthorizationCodeGrant();
-        request.authorizationServerUrl = BASE_AUTHORIZATION_URL;
-        request.clientId = CLIENT_ID;
-        request.clientSecret = CLIENT_SECRET;
-        request.code = code;
-        request.redirectUri = redirectUrl;
+        AuthorizationCodeGrant request = new AuthorizationCodeGrant(new NetHttpTransport(),
+            new JacksonFactory(),
+            "https://server.example.com/authorize",
+            "s6BhdRkqt3",
+            "gX1fBat3bV",
+            "i1WsRn1uB1",
+            "https://client.example.com/cb");
         AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
         System.out.println("Access token: " + response.accessToken);
       } catch (HttpResponseException e) {
@@ -89,12 +93,14 @@ public class AccessTokenRequest extends GenericData {
    * </code>
    * </pre>
    * </p>
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use {@link
+   *             com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.AuthorizationCodeGrant}
    */
+  @Deprecated
   public static class AuthorizationCodeGrant extends AccessTokenRequest {
 
-    /**
-     * (REQUIRED) The authorization code received from the authorization server.
-     */
+    /** (REQUIRED) The authorization code received from the authorization server. */
     @Key
     public String code;
 
@@ -102,8 +108,11 @@ public class AccessTokenRequest extends GenericData {
     @Key("redirect_uri")
     public String redirectUri;
 
-    public AuthorizationCodeGrant() {
+    {
       grantType = "authorization_code";
+    }
+
+    public AuthorizationCodeGrant() {
     }
   }
 
@@ -117,14 +126,16 @@ public class AccessTokenRequest extends GenericData {
    *
    * <pre>
    * <code>
-    static void requestAccessToken(String code, String redirectUrl) throws IOException {
+    static void requestAccessToken() throws IOException {
       try {
-        ResourceOwnerPasswordCredentialsGrant request = new ResourceOwnerPasswordCredentialsGrant();
-        request.authorizationServerUrl = BASE_AUTHORIZATION_URL;
-        request.clientId = CLIENT_ID;
-        request.clientSecret = CLIENT_SECRET;
-        request.username = username;
-        request.password = password;
+        ResourceOwnerPasswordCredentialsGrant request =
+            new ResourceOwnerPasswordCredentialsGrant(new NetHttpTransport(),
+                new JacksonFactory(),
+                "https://server.example.com/authorize",
+                "s6BhdRkqt3",
+                "gX1fBat3bV",
+                "johndoe",
+                "A3ddj3w");
         AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
         System.out.println("Access token: " + response.accessToken);
       } catch (HttpResponseException e) {
@@ -135,7 +146,11 @@ public class AccessTokenRequest extends GenericData {
    * </code>
    * </pre>
    * </p>
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use {@link
+   *             com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.ResourceOwnerPasswordCredentialsGrant}
    */
+  @Deprecated
   public static class ResourceOwnerPasswordCredentialsGrant extends AccessTokenRequest {
 
     /** (REQUIRED) The resource owner's username. */
@@ -145,8 +160,11 @@ public class AccessTokenRequest extends GenericData {
     /** (REQUIRED) The resource owner's password. */
     public String password;
 
-    public ResourceOwnerPasswordCredentialsGrant() {
+    {
       grantType = "password";
+    }
+
+    public ResourceOwnerPasswordCredentialsGrant() {
     }
   }
 
@@ -158,14 +176,14 @@ public class AccessTokenRequest extends GenericData {
    *
    * <pre>
    * <code>
-    static void requestAccessToken(String assertion) throws IOException {
+    static void requestAccessToken() throws IOException {
       try {
-        AssertionGrant request = new AssertionGrant();
-        request.authorizationServerUrl = BASE_AUTHORIZATION_URL;
-        request.clientId = CLIENT_ID;
-        request.clientSecret = CLIENT_SECRET;
-        request.assertionType = ASSERTION_TYPE;
-        request.assertion = assertion;
+        AssertionGrant request = new AssertionGrant(new NetHttpTransport(),
+            new JacksonFactory(),
+            "https://server.example.com/authorize",
+            "gX1fBat3bV",
+            "urn:oasis:names:tc:SAML:2.0:",
+            "PHNhbWxwOl...[omitted for brevity]...ZT4=");
         AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
         System.out.println("Access token: " + response.accessToken);
       } catch (HttpResponseException e) {
@@ -176,7 +194,11 @@ public class AccessTokenRequest extends GenericData {
    * </code>
    * </pre>
    * </p>
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use {@link
+   *             com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.AssertionGrant}
    */
+  @Deprecated
   public static class AssertionGrant extends AccessTokenRequest {
 
     /**
@@ -190,8 +212,11 @@ public class AccessTokenRequest extends GenericData {
     @Key
     public String assertion;
 
-    public AssertionGrant() {
+    {
       grantType = "assertion";
+    }
+
+    public AssertionGrant() {
     }
   }
 
@@ -203,13 +228,14 @@ public class AccessTokenRequest extends GenericData {
    *
    * <pre>
    * <code>
-    static void requestAccessToken(String refreshToken) throws IOException {
+    static void requestAccessToken() throws IOException {
       try {
-        RefreshTokenGrant request = new RefreshTokenGrant();
-        request.authorizationServerUrl = BASE_AUTHORIZATION_URL;
-        request.clientId = CLIENT_ID;
-        request.clientSecret = CLIENT_SECRET;
-        request.refreshToken = refreshToken;
+        RefreshTokenGrant request = new RefreshTokenGrant(new NetHttpTransport(),
+            new JacksonFactory(),
+            "https://server.example.com/authorize",
+            "s6BhdRkqt3",
+            "gX1fBat3bV",
+            "n4E9O119d");
         AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
         System.out.println("Access token: " + response.accessToken);
       } catch (HttpResponseException e) {
@@ -220,7 +246,11 @@ public class AccessTokenRequest extends GenericData {
    * </code>
    * </pre>
    * </p>
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use {@link
+   *             com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.RefreshTokenGrant}
    */
+  @Deprecated
   public static class RefreshTokenGrant extends AccessTokenRequest {
 
     /**
@@ -229,9 +259,15 @@ public class AccessTokenRequest extends GenericData {
     @Key("refresh_token")
     public String refreshToken;
 
-    public RefreshTokenGrant() {
+    {
       grantType = "refresh_token";
     }
+
+    public RefreshTokenGrant() {
+    }
+  }
+
+  public AccessTokenRequest() {
   }
 
   /**
@@ -248,8 +284,6 @@ public class AccessTokenRequest extends GenericData {
    */
   public JsonFactory jsonFactory;
 
-  // TODO(yanivi): grantType should be an enum (see Issue 3)
-
   /**
    * (REQUIRED) The access grant type included in the request. Value MUST be one of
    * "authorization_code", "password", "assertion", "refresh_token", or "none".
@@ -259,7 +293,7 @@ public class AccessTokenRequest extends GenericData {
 
   /**
    * (REQUIRED, unless the client identity can be establish via other means, for example assertion)
-   * The client identifier.
+   * The client identifier or {@code null} for none.
    */
   @Key("client_id")
   public String clientId;
@@ -270,17 +304,17 @@ public class AccessTokenRequest extends GenericData {
   public String clientSecret;
 
   /**
-   * (OPTIONAL) The scope of the access request expressed as a list of space-delimited strings. The
-   * value of the "scope" parameter is defined by the authorization server. If the value contains
-   * multiple space-delimited strings, their order does not matter, and each string adds an
-   * additional access range to the requested scope. If the access grant being used already
-   * represents an approved scope (e.g. authorization code, assertion), the requested scope MUST be
-   * equal or lesser than the scope previously granted.
+   * (OPTIONAL) The scope of the access request expressed as a list of space-delimited strings or
+   * {@code null} for none. The value of the "scope" parameter is defined by the authorization
+   * server. If the value contains multiple space-delimited strings, their order does not matter,
+   * and each string adds an additional access range to the requested scope. If the access grant
+   * being used already represents an approved scope (e.g. authorization code, assertion), the
+   * requested scope MUST be equal or lesser than the scope previously granted.
    */
   @Key
   public String scope;
 
-  /** Encoded authorization server URL. */
+  /** (REQUIRED) Encoded authorization server URL. */
   public String authorizationServerUrl;
 
   /**
@@ -304,17 +338,16 @@ public class AccessTokenRequest extends GenericData {
   public final HttpResponse execute() throws IOException {
     JsonHttpParser parser = new JsonHttpParser();
     parser.jsonFactory = jsonFactory;
-    transport.addParser(parser);
-    HttpRequest request = transport.buildPostRequest();
+    UrlEncodedContent content = new UrlEncodedContent();
+    content.data = this;
+    HttpRequest request = transport.createRequestFactory().buildPostRequest(
+        new GenericUrl(authorizationServerUrl), content);
+    request.addParser(parser);
     if (useBasicAuthorization) {
       request.headers.setBasicAuthentication(clientId, clientSecret);
     } else {
       put("client_secret", clientSecret);
     }
-    request.setUrl(authorizationServerUrl);
-    UrlEncodedContent content = new UrlEncodedContent();
-    content.data = this;
-    request.content = content;
     return request.execute();
   }
 }

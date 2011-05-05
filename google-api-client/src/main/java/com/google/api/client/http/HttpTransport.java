@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Abstract HTTP transport.
+ * Thread-safe abstract HTTP transport.
  *
  * <p>
  * The recommended concrete implementation HTTP transport library to use depends on what environment
@@ -55,22 +55,14 @@ import java.util.logging.Logger;
  * built into the Java SDK, so it is normally the preferred choice.</li>
  * <li>{@code com.google.api.client.apache.ApacheHttpTransport} is a good choice for users of the
  * Apache HTTP Client, especially if you need some of the configuration options available in that
- * library. Note however that there is a known bug with the Apache HTTP Transport in this library
- * for some multi-threaded applications that we're still investigating.</li>
+ * library.</li>
  * </ul>
  * </li>
  * </ul>
  * <p>
- * Note that this class is not thread safe. The recommended practice for multi-threaded applications
- * is to store the HTTP transport in a {@link ThreadLocal}.
- * </p>
- * <p>
- * Upgrade warning: prior to version 1.3, there were methods to set and use the low-level HTTP
- * transport, and this class was not abstract. This caused problems for users of the library that
- * use it on a package-by-package basis and got exceptions at runtime. It also meant that the
- * behavior of library could change when there is a change in the classpath, which is unintuitive.
- * Therefore, now this class is abstract, and the actual concrete implementation must be chosen
- * explicitly.
+ * Upgrade warning: users of prior version 1.3 can continue to use the deprecated fields and methods
+ * in this class. However, that invalidates the thread safety claims on this class, thus making this
+ * class potentially unsafe to share between threads.
  * </p>
  *
  * @since 1.0
@@ -83,24 +75,58 @@ public abstract class HttpTransport {
   /**
    * Default HTTP headers. These transport default headers are put into a request's headers when its
    * build method is called.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use {@link HttpRequest#headers} in an
+   *             {@link HttpRequestInitializer}
    */
+  @Deprecated
   public HttpHeaders defaultHeaders = new HttpHeaders();
 
   /** Map from content type to HTTP parser. */
-  private final ArrayMap<String, HttpParser> contentTypeToParserMap = ArrayMap.create();
+  @Deprecated
+  final ArrayMap<String, HttpParser> contentTypeToParserMap = ArrayMap.create();
 
   /**
    * HTTP request execute intercepters. The intercepters will be invoked in the order of the
    * {@link List#iterator()}.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use {@link HttpRequest#interceptor}
    */
+  @Deprecated
   public List<HttpExecuteIntercepter> intercepters = new ArrayList<HttpExecuteIntercepter>(1);
+
+  /**
+   * Returns a new instance of an HTTP request factory based on this HTTP transport.
+   *
+   * @return new instance of an HTTP request factory
+   * @since 1.4
+   */
+  public final HttpRequestFactory createRequestFactory() {
+    return createRequestFactory(null);
+  }
+
+  /**
+   * Returns a new instance of an HTTP request factory based on this HTTP transport with the given
+   * HTTP request initializer.
+   *
+   * @param initializer HTTP request initializer or {@code null} for none
+   * @return new instance of an HTTP request factory
+   * @since 1.4
+   */
+  public final HttpRequestFactory createRequestFactory(HttpRequestInitializer initializer) {
+    return new HttpRequestFactory(this, initializer);
+  }
 
   /**
    * Adds an HTTP response content parser.
    * <p>
    * If there is already a previous parser defined for this new parser (as defined by
    * {@link #getParser(String)} then the previous parser will be removed.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use {@link HttpRequest#addParser(HttpParser)} in
+   *             an {@link HttpRequestInitializer}
    */
+  @Deprecated
   public final void addParser(HttpParser parser) {
     String contentType = getNormalizedContentType(parser.getContentType());
     contentTypeToParserMap.put(contentType, parser);
@@ -111,7 +137,10 @@ public abstract class HttpTransport {
    * none is defined.
    *
    * @param contentType content type or {@code null} for {@code null} result
+   * @deprecated (scheduled to be removed in 1.5) Use {@link HttpRequest#getParser(String)} in an
+   *             {@link HttpRequestInitializer}
    */
+  @Deprecated
   public final HttpParser getParser(String contentType) {
     if (contentType == null) {
       return null;
@@ -120,42 +149,86 @@ public abstract class HttpTransport {
     return contentTypeToParserMap.get(contentType);
   }
 
+  @Deprecated
   private String getNormalizedContentType(String contentType) {
     int semicolon = contentType.indexOf(';');
     return semicolon == -1 ? contentType : contentType.substring(0, semicolon);
   }
 
-  /** Builds a request without specifying the HTTP method. */
+  /**
+   * Builds a request without specifying the HTTP method.
+   *
+   * @return new HTTP request
+   * @deprecated (scheduled to be made package private in 1.5) Use
+   *             {@link HttpRequestFactory#buildRequest(HttpMethod, GenericUrl, HttpContent)}
+   */
+  @Deprecated
   public final HttpRequest buildRequest() {
     return new HttpRequest(this, null);
   }
 
-  /** Builds a {@code DELETE} request. */
+  /**
+   * Builds a {@code DELETE} request.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use
+   *             {@link HttpRequestFactory#buildDeleteRequest(GenericUrl)}
+   */
+  @Deprecated
   public final HttpRequest buildDeleteRequest() {
     return new HttpRequest(this, HttpMethod.DELETE);
   }
 
-  /** Builds a {@code GET} request. */
+  /**
+   * Builds a {@code GET} request.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use
+   *             {@link HttpRequestFactory#buildGetRequest(GenericUrl)}
+   */
+  @Deprecated
   public final HttpRequest buildGetRequest() {
     return new HttpRequest(this, HttpMethod.GET);
   }
 
-  /** Builds a {@code POST} request. */
+  /**
+   * Builds a {@code POST} request.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use
+   *             {@link HttpRequestFactory#buildPostRequest(GenericUrl, HttpContent)}
+   */
+  @Deprecated
   public final HttpRequest buildPostRequest() {
     return new HttpRequest(this, HttpMethod.POST);
   }
 
-  /** Builds a {@code PUT} request. */
+  /**
+   * Builds a {@code PUT} request.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use
+   *             {@link HttpRequestFactory#buildPutRequest(GenericUrl, HttpContent)}
+   */
+  @Deprecated
   public final HttpRequest buildPutRequest() {
     return new HttpRequest(this, HttpMethod.PUT);
   }
 
-  /** Builds a {@code PATCH} request. */
+  /**
+   * Builds a {@code PATCH} request.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use
+   *             {@link HttpRequestFactory#buildPatchRequest(GenericUrl, HttpContent)}
+   */
+  @Deprecated
   public final HttpRequest buildPatchRequest() {
     return new HttpRequest(this, HttpMethod.PATCH);
   }
 
-  /** Builds a {@code HEAD} request. */
+  /**
+   * Builds a {@code HEAD} request.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use
+   *             {@link HttpRequestFactory#buildHeadRequest(GenericUrl)}
+   */
+  @Deprecated
   public final HttpRequest buildHeadRequest() {
     return new HttpRequest(this, HttpMethod.HEAD);
   }
@@ -164,7 +237,9 @@ public abstract class HttpTransport {
    * Removes HTTP request execute intercepters of the given class or subclasses.
    *
    * @param intercepterClass intercepter class
+   * @deprecated (scheduled to be removed in 1.5) Use {@link HttpRequest#interceptor}
    */
+  @Deprecated
   public final void removeIntercepters(Class<?> intercepterClass) {
     Iterator<HttpExecuteIntercepter> iterable = intercepters.iterator();
     while (iterable.hasNext()) {
@@ -262,4 +337,14 @@ public abstract class HttpTransport {
    * @since 1.3
    */
   protected abstract LowLevelHttpRequest buildPutRequest(String url) throws IOException;
+
+  /**
+   * Default implementation does nothing, but subclasses may override to possibly release allocated
+   * system resources or close connections.
+   *
+   * @throws IOException I/O exception
+   * @since 1.4
+   */
+  public void shutdown() throws IOException {
+  }
 }

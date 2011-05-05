@@ -63,7 +63,10 @@ import java.net.URISyntaxException;
  *
  * @since 1.2
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use
+ *             {@link com.google.api.client.auth.oauth2.draft10.AuthorizationResponse}
  */
+@Deprecated
 public class AuthorizationResponse extends GenericData {
 
   /**

@@ -36,21 +36,26 @@ import java.net.URL;
 final class UrlFetchRequest extends LowLevelHttpRequest {
 
   private HttpContent content;
-  private final UrlFetchTransport transport;
   private final HTTPMethod method;
   private final HTTPRequest request;
 
-  UrlFetchRequest(UrlFetchTransport transport, String requestMethod, String url)
-      throws IOException {
-    this.transport = transport;
+  UrlFetchRequest(String requestMethod, String url) throws IOException {
     method = HTTPMethod.valueOf(requestMethod);
-    FetchOptions options = FetchOptions.Builder.doNotFollowRedirects().disallowTruncate();
+    FetchOptions options =
+        FetchOptions.Builder.doNotFollowRedirects().disallowTruncate().validateCertificate();
     request = new HTTPRequest(new URL(url), method, options);
   }
 
   @Override
   public void addHeader(String name, String value) {
     request.addHeader(new HTTPHeader(name, value));
+  }
+
+  @Override
+  public void setTimeout(int connectTimeout, int readTimeout) {
+    request.getFetchOptions().setDeadline(
+        connectTimeout == 0 || readTimeout == 0 ? Double.MAX_VALUE : (connectTimeout + readTimeout)
+            / 1000.0);
   }
 
   @Override
@@ -65,15 +70,14 @@ final class UrlFetchRequest extends LowLevelHttpRequest {
       if (contentEncoding != null) {
         addHeader("Content-Encoding", contentEncoding);
       }
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      content.writeTo(out);
-      request.setPayload(out.toByteArray());
+      long contentLength = content.getLength();
+      if (contentLength != 0) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        content.writeTo(out);
+        request.setPayload(out.toByteArray());
+      }
     }
     // connect
-    double deadline = transport.deadline;
-    if (deadline >= 0) {
-      request.getFetchOptions().setDeadline(deadline);
-    }
     URLFetchService service = URLFetchServiceFactory.getURLFetchService();
     try {
       HTTPResponse response = service.fetch(request);

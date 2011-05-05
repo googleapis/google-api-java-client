@@ -21,7 +21,9 @@ import com.google.api.client.http.HttpTransport;
  *
  * @since 1.3
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use {@link MethodOverride}
  */
+@Deprecated
 public final class GoogleUtils {
 
   /**
@@ -46,7 +48,9 @@ public final class GoogleUtils {
    * </pre>
    *
    * @return HTTP transport
+   * @deprecated (scheduled to be removed in 1.5) Use {@link MethodOverride}
    */
+  @Deprecated
   public static MethodOverrideIntercepter useMethodOverride(HttpTransport transport) {
     transport.removeIntercepters(MethodOverrideIntercepter.class);
     MethodOverrideIntercepter result = new MethodOverrideIntercepter();

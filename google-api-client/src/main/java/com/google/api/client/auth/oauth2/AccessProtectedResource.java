@@ -30,7 +30,10 @@ import java.util.EnumSet;
  *
  * @author Yaniv Inbar
  * @since 1.2
+ * @deprecated (scheduled to be removed in 1.5) Use
+ *             {@link com.google.api.client.auth.oauth2.draft10.AccessProtectedResource}
  */
+@Deprecated
 public final class AccessProtectedResource {
 
   /**

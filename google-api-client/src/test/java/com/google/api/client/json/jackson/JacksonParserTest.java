@@ -14,8 +14,8 @@
 
 package com.google.api.client.json.jackson;
 
-import com.google.api.client.json.AbstractJsonParserTest;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.testing.json.AbstractJsonParserTest;
 
 /**
  * Tests {@link JacksonParser}.

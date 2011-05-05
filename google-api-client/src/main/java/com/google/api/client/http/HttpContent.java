@@ -33,15 +33,17 @@ public interface HttpContent {
    */
   String getEncoding();
 
-  /**
-   * Returns the content type or {@code null} for none.
-   * <p>
-   * Upgrade warning: prior to version 1.3 this could never return {@code null}, but now it is a
-   * possible return value.
-   * </p>
-   */
+  /** Returns the content type or {@code null} for none. */
   String getType();
 
   /** Writes the content to the given output stream. */
   void writeTo(OutputStream out) throws IOException;
+
+  /**
+   * Returns whether or not retry is supported on this content type. This is a backward incompatible
+   * change that affects versions prior to 1.4.
+   *
+   * @since 1.4
+   */
+  boolean retrySupported();
 }

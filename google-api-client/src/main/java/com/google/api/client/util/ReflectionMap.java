@@ -28,9 +28,11 @@ import java.util.Set;
  * <p>
  * Iteration order of the keys is based on the sorted (ascending) key names.
  *
+ * @deprecated (scheduled to be removed in 1.5) Use {@link Data#mapOf(Object)}
  * @since 1.0
  * @author Yaniv Inbar
  */
+@Deprecated
 public final class ReflectionMap extends AbstractMap<String, Object> {
 
   final int size;
@@ -43,8 +45,6 @@ public final class ReflectionMap extends AbstractMap<String, Object> {
     ClassInfo classInfo = this.classInfo = ClassInfo.of(object.getClass());
     size = classInfo.getKeyCount();
   }
-
-  // TODO: implement more methods for faster implementation!
 
   @Override
   public Set<Map.Entry<String, Object>> entrySet() {

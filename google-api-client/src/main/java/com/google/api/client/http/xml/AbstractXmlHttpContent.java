@@ -26,11 +26,6 @@ import java.io.OutputStream;
 /**
  * Abstract serializer for XML HTTP content based on the data key/value mapping object for an item.
  *
- * <p>
- * Upgrade warning: in prior version 1.2 this class was previously in the
- * {@link com.google.api.client.xml} package.
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -63,6 +58,10 @@ public abstract class AbstractXmlHttpContent implements HttpContent {
     XmlSerializer serializer = Xml.createSerializer();
     serializer.setOutput(out, "UTF-8");
     writeTo(serializer);
+  }
+  
+  public boolean retrySupported() {
+    return true;
   }
 
   /**

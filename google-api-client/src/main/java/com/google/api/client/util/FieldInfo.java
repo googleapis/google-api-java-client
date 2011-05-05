@@ -14,10 +14,14 @@
 
 package com.google.api.client.util;
 
+import com.google.common.base.Preconditions;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
@@ -28,68 +32,193 @@ import java.util.WeakHashMap;
  */
 public class FieldInfo {
 
-  private static final ThreadLocal<WeakHashMap<Field, FieldInfo>> CACHE =
-      new ThreadLocal<WeakHashMap<Field, FieldInfo>>() {
-        @Override
-        protected WeakHashMap<Field, FieldInfo> initialValue() {
-          return new WeakHashMap<Field, FieldInfo>();
-        }
-      };
+  /** Cached field information. */
+  private static final Map<Field, FieldInfo> CACHE = new WeakHashMap<Field, FieldInfo>();
 
+  /**
+   * Returns the field information for the given enum value.
+   *
+   * @param enumValue enum value
+   * @return field information
+   * @throws IllegalArgumentException if the enum value has no value annotation
+   * @since 1.4
+   */
+  public static FieldInfo of(Enum<?> enumValue) {
+    try {
+      FieldInfo result = FieldInfo.of(enumValue.getClass().getField(enumValue.name()));
+      Preconditions.checkArgument(
+          result != null, "enum constant missing @Value or @NullValue annotation: %s", enumValue);
+      return result;
+    } catch (NoSuchFieldException e) {
+      // not possible
+      throw new RuntimeException(e);
+    }
+  }
 
   /**
    * Returns the field information for the given field.
    *
    * @param field field or {@code null} for {@code null} result
-   * @return field information or {@code null} if the field has no {@link Key} annotation or for
-   *         {@code null} input
+   * @return field information or {@code null} if the field has no {@link #name} or for {@code null}
+   *         input
    */
   public static FieldInfo of(Field field) {
     if (field == null) {
       return null;
     }
-    WeakHashMap<Field, FieldInfo> cache = CACHE.get();
-    FieldInfo fieldInfo = cache.get(field);
-    if (fieldInfo == null && !Modifier.isStatic(field.getModifiers())) {
-      // ignore if field it has no @Key annotation
-      Key key = field.getAnnotation(Key.class);
-      if (key == null) {
-        return null;
+    synchronized (CACHE) {
+      FieldInfo fieldInfo = CACHE.get(field);
+      boolean isEnumContant = field.isEnumConstant();
+      if (fieldInfo == null && (isEnumContant || !Modifier.isStatic(field.getModifiers()))) {
+        String fieldName;
+        if (isEnumContant) {
+          // check for @Value annotation
+          Value value = field.getAnnotation(Value.class);
+          if (value != null) {
+            fieldName = value.value();
+          } else {
+            // check for @NullValue annotation
+            NullValue nullValue = field.getAnnotation(NullValue.class);
+            if (nullValue != null) {
+              fieldName = null;
+            } else {
+              // else ignore
+              return null;
+            }
+          }
+        } else {
+          // check for @Key annotation
+          Key key = field.getAnnotation(Key.class);
+          if (key == null) {
+            // else ignore
+            return null;
+          }
+          fieldName = key.value();
+          field.setAccessible(true);
+        }
+        if ("##default".equals(fieldName)) {
+          fieldName = field.getName();
+        }
+        fieldInfo = new FieldInfo(field, fieldName);
+        CACHE.put(field, fieldInfo);
       }
-      String fieldName = key.value();
-      if ("##default".equals(fieldName)) {
-        fieldName = field.getName();
-      }
-      fieldInfo = new FieldInfo(field, fieldName);
-      cache.put(field, fieldInfo);
-      field.setAccessible(true);
+      return fieldInfo;
     }
-    return fieldInfo;
   }
 
-  /** Whether the field is final. */
+  /**
+   * Whether the field is final.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use {@link #isFinal()}
+   */
+  @Deprecated
   public final boolean isFinal;
 
   /**
-   * Whether the field class is "primitive" as defined by {@link FieldInfo#isPrimitive(Class)}.
+   * Whether the field class is "primitive" as defined by {@link Data#isPrimitive(Type)}.
+   *
+   * @deprecated (scheduled to be made private in 1.5) Use {@link #isPrimitive()}
    */
+  @Deprecated
   public final boolean isPrimitive;
 
-  /** Field class. */
+  /**
+   * Field class.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use {@link #getType()}
+   */
+  @Deprecated
   public final Class<?> type;
 
-  /** Field. */
+  /**
+   * Field.
+   *
+   * @deprecated (scheduled to be made private in 1.5) Use {@link #getField()}
+   */
+  @Deprecated
   public final Field field;
 
-  /** Data key name associated with the field. This string is interned. */
+  /**
+   * Data key name associated with the field for a non-enum-constant with a {@link Key} annotation,
+   * or data key value associated with the enum constant with a {@link Value} annotation or {@code
+   * null} for an enum constant with a {@link NullValue} annotation.
+   *
+   * <p>
+   * This string is interned.
+   * </p>
+   *
+   * @deprecated (scheduled to be made private in 1.5) Use {@link #getName()}
+   */
+  @Deprecated
   public final String name;
 
   FieldInfo(Field field, String name) {
     this.field = field;
-    this.name = name.intern();
+    this.name = name == null ? null : name.intern();
     isFinal = Modifier.isFinal(field.getModifiers());
-    Class<?> type = this.type = field.getType();
-    isPrimitive = FieldInfo.isPrimitive(type);
+    type = field.getType();
+    isPrimitive = Data.isPrimitive(getType());
+  }
+
+  /**
+   * Returns the field.
+   *
+   * @since 1.4
+   */
+  public Field getField() {
+    return field;
+  }
+
+  /**
+   * Returns the data key name associated with the field for a non-enum-constant with a {@link Key}
+   * annotation, or data key value associated with the enum constant with a {@link Value} annotation
+   * or {@code null} for an enum constant with a {@link NullValue} annotation.
+   *
+   * <p>
+   * This string is interned.
+   * </p>
+   *
+   * @since 1.4
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Returns the field's type.
+   *
+   * @since 1.4
+   */
+  public Class<?> getType() {
+    return field.getType();
+  }
+
+  /**
+   * Returns the field's generic type, which is a class, parameterized type, generic array type, or
+   * type variable, but not a wildcard type.
+   *
+   * @since 1.4
+   */
+  public Type getGenericType() {
+    return field.getGenericType();
+  }
+
+  /**
+   * Returns whether the field is final.
+   *
+   * @since 1.4
+   */
+  public boolean isFinal() {
+    return Modifier.isFinal(field.getModifiers());
+  }
+
+  /**
+   * Returns whether the field is primitive as defined by {@link Data#isPrimitive(Type)}.
+   *
+   * @since 1.4
+   */
+  public boolean isPrimitive() {
+    return isPrimitive;
   }
 
   /**
@@ -113,10 +242,18 @@ public class FieldInfo {
     return ClassInfo.of(field.getDeclaringClass());
   }
 
+  @SuppressWarnings("unchecked")
+  public <T extends Enum<T>> T enumValue() {
+    return Enum.valueOf((Class<T>) field.getDeclaringClass(), field.getName());
+  }
+
   /**
    * Returns whether the given field class is one of the supported primitive types like number and
    * date/time.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use {@link Data#isPrimitive(Type)}
    */
+  @Deprecated
   public static boolean isPrimitive(Class<?> fieldClass) {
     return fieldClass.isPrimitive() || fieldClass == Character.class || fieldClass == String.class
         || fieldClass == Integer.class || fieldClass == Long.class || fieldClass == Short.class
@@ -125,12 +262,14 @@ public class FieldInfo {
         || fieldClass == DateTime.class || fieldClass == Boolean.class;
   }
 
-  // TODO: support java.net.URI as primitive type?
-
   /**
    * Returns whether to given value is {@code null} or its class is primitive as defined by
    * {@link #isPrimitive(Class)}.
+   *
+   * @deprecated (scheduled to be removed in 1.5) Use {@link Data#isPrimitive(Type)} on the
+   *             {@link Object#getClass()}
    */
+  @Deprecated
   public static boolean isPrimitive(Object fieldValue) {
     return fieldValue == null || isPrimitive(fieldValue.getClass());
   }
@@ -197,7 +336,9 @@ public class FieldInfo {
    * @return parsed object or {@code null} for {@code null} input
    * @throws IllegalArgumentException if the given class is not a primitive class as defined by
    *         {@link #isPrimitive(Class)}
+   * @deprecated (scheduled to be removed in 1.5) Use {@link Data#parsePrimitiveValue(Type, String)}
    */
+  @Deprecated
   public static Object parsePrimitiveValue(Class<?> primitiveClass, String stringValue) {
     if (stringValue == null || primitiveClass == null || primitiveClass == String.class) {
       return stringValue;

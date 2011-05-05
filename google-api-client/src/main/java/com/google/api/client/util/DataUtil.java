@@ -24,7 +24,9 @@ import java.util.Map;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use {@link Data}
  */
+@Deprecated
 public class DataUtil {
 
   /**
@@ -33,7 +35,9 @@ public class DataUtil {
    * @param data any key value data, represented by an object or a map, or {@code null}
    * @return if {@code data} is a map returns {@code data}; else if {@code data} is {@code null},
    *         returns an empty map; else returns {@link ReflectionMap} on the data object
+   * @deprecated (scheduled to be removed in 1.5) Use {@link Data#mapOf(Object)}
    */
+  @Deprecated
   public static Map<String, Object> mapOf(Object data) {
     if (data == null) {
       return Collections.emptyMap();
@@ -55,7 +59,10 @@ public class DataUtil {
    * @param data key/value data object or map to clone or {@code null} for a {@code null} return
    *        value
    * @return deep clone or {@code null} for {@code null} input
+   * @deprecated (scheduled to be removed in 1.5) Use {@link Data#deepCopy(Object, Object)} or
+   *             {@link Data#clone(Object)}
    */
+  @Deprecated
   public static <T> T clone(T data) {
     // don't need to clone primitive
     if (FieldInfo.isPrimitive(data)) {
@@ -70,7 +77,7 @@ public class DataUtil {
     } else if (data instanceof ArrayMap<?, ?>) {
       // use ArrayMap's clone method if possible
       @SuppressWarnings("unchecked")
-      T copyTmp = (T) ((ArrayMap) data).clone();
+      T copyTmp = (T) ((ArrayMap<?, ?>) data).clone();
       copy = copyTmp;
     } else {
       // else new to use default constructor
@@ -105,7 +112,7 @@ public class DataUtil {
         for (String fieldName : classInfo.getKeyNames()) {
           FieldInfo fieldInfo = classInfo.getFieldInfo(fieldName);
           // skip final fields
-          if (!fieldInfo.isFinal) {
+          if (!fieldInfo.isFinal()) {
             // generic data already has primitive types copied by clone()
             if (!isGenericData || !fieldInfo.isPrimitive) {
               Object srcValue = fieldInfo.getValue(src);

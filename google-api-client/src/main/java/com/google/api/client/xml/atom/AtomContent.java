@@ -41,7 +41,10 @@ import java.io.IOException;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use
+ *             {@link com.google.api.client.http.xml.atom.AtomContent}
  */
+@Deprecated
 public class AtomContent extends AbstractXmlHttpContent {
 
   /** Key/value pair data for the Atom entry. */

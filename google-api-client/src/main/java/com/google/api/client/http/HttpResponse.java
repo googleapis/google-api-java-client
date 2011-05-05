@@ -14,17 +14,23 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.ArrayValueMap;
 import com.google.api.client.util.ClassInfo;
+import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Strings;
+import com.google.api.client.util.Types;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -55,10 +61,10 @@ public final class HttpResponse {
   /**
    * HTTP headers.
    * <p>
-   * If a header name is used for multiple headers, only the last one is retained.
+   * If a header name is used for multiple headers, only the last one is retained. The value is
+   * initialized to {@link HttpRequest#responseHeaders} before being parsed from the actual HTTP
+   * response headers.
    * <p>
-   * This field's value is instantiated using the same class as that of the
-   * {@link HttpTransport#defaultHeaders}.
    */
   public final HttpHeaders headers;
 
@@ -78,6 +84,13 @@ public final class HttpResponse {
   public final HttpTransport transport;
 
   /**
+   * HTTP request.
+   *
+   * @since 1.4
+   */
+  public final HttpRequest request;
+
+  /**
    * Whether to disable response content logging during {@link #getContent()} (unless
    * {@link Level#ALL} is loggable which forces all logging).
    * <p>
@@ -86,9 +99,10 @@ public final class HttpResponse {
    */
   public boolean disableContentLogging;
 
-  @SuppressWarnings("unchecked")
-  HttpResponse(HttpTransport transport, LowLevelHttpResponse response) {
-    this.transport = transport;
+  HttpResponse(HttpRequest request, LowLevelHttpResponse response) {
+    this.request = request;
+    transport = request.transport;
+    headers = request.headers;
     this.response = response;
     contentLength = response.getContentLength();
     contentType = response.getContentType();
@@ -117,10 +131,11 @@ public final class HttpResponse {
     }
     // headers
     int size = response.getHeaderCount();
-    Class<? extends HttpHeaders> headersClass = transport.defaultHeaders.getClass();
+    Class<? extends HttpHeaders> headersClass = headers.getClass();
+    List<Type> context = Arrays.<Type>asList(headersClass);
     ClassInfo classInfo = ClassInfo.of(headersClass);
-    HttpHeaders headers = this.headers = ClassInfo.newInstance(headersClass);
     HashMap<String, String> fieldNameMap = HttpHeaders.getFieldNameMap(headersClass);
+    ArrayValueMap arrayValueMap = new ArrayValueMap(headers);
     for (int i = 0; i < size; i++) {
       String headerName = response.getHeaderName(i);
       String headerValue = response.getHeaderValue(i);
@@ -134,23 +149,32 @@ public final class HttpResponse {
       // use field information if available
       FieldInfo fieldInfo = classInfo.getFieldInfo(fieldName);
       if (fieldInfo != null) {
-        Class<?> type = fieldInfo.type;
-        // collection is used for repeating headers of the same name
-        if (Collection.class.isAssignableFrom(type)) {
+        Type type = Data.resolveWildcardTypeOrTypeVariable(context, fieldInfo.getGenericType());
+        // type is now class, parameterized type, or generic array type
+        if (Types.isArray(type)) {
+          // array that can handle repeating values
+          Class<?> rawArrayComponentType =
+              Types.getRawArrayComponentType(context, Types.getArrayComponentType(type));
+          arrayValueMap.put(fieldInfo.getField(), rawArrayComponentType,
+              parseValue(rawArrayComponentType, context, headerValue));
+        } else if (Types.isAssignableToOrFrom(
+            Types.getRawArrayComponentType(context, type), Iterable.class)) {
+          // iterable that can handle repeating values
+          @SuppressWarnings("unchecked")
           Collection<Object> collection = (Collection<Object>) fieldInfo.getValue(headers);
           if (collection == null) {
-            collection = ClassInfo.newCollectionInstance(type);
+            collection = Data.newCollectionInstance(type);
             fieldInfo.setValue(headers, collection);
           }
-          // parse value based on collection type parameter
-          Class<?> subFieldClass = ClassInfo.getCollectionParameter(fieldInfo.field);
-          collection.add(FieldInfo.parsePrimitiveValue(subFieldClass, headerValue));
+          Type subFieldType = type == Object.class ? null : Types.getIterableParameter(type);
+          collection.add(parseValue(subFieldType, context, headerValue));
         } else {
           // parse value based on field type
-          fieldInfo.setValue(headers, FieldInfo.parsePrimitiveValue(type, headerValue));
+          fieldInfo.setValue(headers, parseValue(type, context, headerValue));
         }
       } else {
         // store header values in an array list
+        @SuppressWarnings("unchecked")
         ArrayList<String> listValue = (ArrayList<String>) headers.get(fieldName);
         if (listValue == null) {
           listValue = new ArrayList<String>();
@@ -159,9 +183,16 @@ public final class HttpResponse {
         listValue.add(headerValue);
       }
     }
+    arrayValueMap.setValues();
+    // log from buffer
     if (loggable) {
       logger.config(logbuf.toString());
     }
+  }
+
+  private static Object parseValue(Type valueType, List<Type> context, String value) {
+    Type resolved = Data.resolveWildcardTypeOrTypeVariable(context, valueType);
+    return Data.parsePrimitiveValue(resolved, value);
   }
 
   /**
@@ -186,7 +217,7 @@ public final class HttpResponse {
           !disableContentLogging && logger.isLoggable(Level.CONFIG) || logger.isLoggable(Level.ALL);
       if (loggable) {
         ByteArrayOutputStream debugStream = new ByteArrayOutputStream();
-        InputStreamContent.copy(content, debugStream);
+        AbstractInputStreamContent.copy(content, debugStream);
         debugContentByteArray = debugStream.toByteArray();
         content = new ByteArrayInputStream(debugContentByteArray);
         logger.config("Response size: " + debugContentByteArray.length + " bytes");
@@ -198,7 +229,7 @@ public final class HttpResponse {
         contentLength = -1;
         if (loggable) {
           ByteArrayOutputStream debugStream = new ByteArrayOutputStream();
-          InputStreamContent.copy(content, debugStream);
+          AbstractInputStreamContent.copy(content, debugStream);
           debugContentByteArray = debugStream.toByteArray();
           content = new ByteArrayInputStream(debugContentByteArray);
         }
@@ -216,10 +247,7 @@ public final class HttpResponse {
   }
 
   /**
-   * Gets the content of the HTTP response from {@link #getContent()} and ignores the content if
-   * there is any.
-   *
-   * @throws IOException I/O exception
+   * Closes the the content of the HTTP response from {@link #getContent()}, ignoring any content.
    */
   public void ignore() throws IOException {
     InputStream content = getContent();
@@ -229,11 +257,20 @@ public final class HttpResponse {
   }
 
   /**
+   * Disconnect using {@link LowLevelHttpResponse#disconnect()}.
+   *
+   * @since 1.4
+   */
+  public void disconnect() throws IOException {
+    response.disconnect();
+  }
+
+  /**
    * Returns the HTTP response content parser to use for the content type of this HTTP response or
    * {@code null} for none.
    */
   public HttpParser getParser() {
-    return transport.getParser(contentType);
+    return request.getParser(contentType);
   }
 
   /**
