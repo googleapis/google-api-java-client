@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.google.api.client</groupId>
   <artifactId>google-api-client-parent</artifactId>
-  <version>1.4.0-alpha-SNAPSHOT</version>
+  <version>1.5.0-alpha-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Google Client Libraries for Java</name>
 
