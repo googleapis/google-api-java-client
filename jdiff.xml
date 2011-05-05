@@ -31,6 +31,7 @@
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.4.0-alpha/google-api-client-extensions-android2/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.4.0-alpha/google-api-client-extensions-android3/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.4.0-alpha/google-api-client-googleapis/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.4.0-alpha/google-api-client-googleapis-extensions/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.4.0-alpha/google-api-client-googleapis-extensions-android2/src/main/java" />
       </new>
     </jdiff>
