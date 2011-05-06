@@ -194,7 +194,6 @@ public class GoogleAccessTokenRequest {
    */
   static void init(AccessTokenRequest request) {
     request.authorizationServerUrl = AUTHORIZATION_SERVER_URL;
-    request.useBasicAuthorization = false;
   }
 
   private GoogleAccessTokenRequest() {

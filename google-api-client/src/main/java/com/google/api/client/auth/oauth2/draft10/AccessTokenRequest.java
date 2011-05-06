@@ -418,12 +418,15 @@ public class AccessTokenRequest extends GenericData {
   public String authorizationServerUrl;
 
   /**
-   * Defaults to {@code true} to use Basic Authentication as recommended in <a
+   * {@code false} to specify the password in the request body using the {@code "clientSecret"}
+   * parameter in the HTTP body or {@code true} to use Basic Authentication as recommended in <a
    * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10#section-2.1">Client Password
-   * Credentials</a>, but may be set to {@code false} for for specifying the password in the request
-   * body using the {@code "clientSecret"} parameter in the HTTP body.
+   * Credentials</a>.
+   * <p>
+   * Defaults to {@code false}.
+   * </p>
    */
-  public boolean useBasicAuthorization = true;
+  public boolean useBasicAuthorization;
 
   /**
    * Executes request for an access token, and returns the HTTP response.
