@@ -239,7 +239,7 @@ public class Data {
     try {
       &#64;SuppressWarnings("unchecked")
       MyObject result = (MyObject) super.clone();
-      DataUtil.deepCopy(this, result);
+      Data.deepCopy(this, result);
       return result;
     } catch (CloneNotSupportedException e) {
       throw new IllegalStateException(e);
