@@ -102,7 +102,7 @@ public final class HttpResponse {
   HttpResponse(HttpRequest request, LowLevelHttpResponse response) {
     this.request = request;
     transport = request.transport;
-    headers = request.headers;
+    headers = request.responseHeaders;
     this.response = response;
     contentLength = response.getContentLength();
     contentType = response.getContentType();

@@ -147,7 +147,7 @@ public class AccessTokenRequestTest extends TestCase {
 
   private void check(AccessTokenRequest request, GrantType grantType, boolean withParameters) {
     assertEquals(grantType, request.grantType);
-    assertTrue(request.useBasicAuthorization);
+    assertFalse(request.useBasicAuthorization);
     assertNull(request.scope);
     if (withParameters) {
       assertEquals(TRANSPORT, request.transport);
