@@ -10,7 +10,7 @@
     <property name="MAVEN_REPOSITORY_HOME" value=".../.m2/repository" />
 
     <!-- Set to the location of your local hg clone of the "javadoc" repository. -->
-    <property name="JAVADOC_PROJECT_ROOT_DIR" value=".../javadoc" />
+    <property name="JAVADOC_PROJECT_ROOT_DIR" value="../javadoc" />
 
     <property name="TMP_PROJECT_ROOT_DIR" value="/tmp/google-api-java-client" />
 
