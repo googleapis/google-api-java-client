@@ -119,7 +119,6 @@ public class OAuth2ThreeLeggedFlow implements ThreeLeggedFlow {
         clientSecret,
         authorizationCode,
         callbackUrl);
-    request.useBasicAuthorization = false;
 
     AccessTokenResponse response = request.execute();
 
