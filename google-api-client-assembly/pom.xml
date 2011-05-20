@@ -25,22 +25,6 @@
       <groupId>com.google.api.client</groupId>
       <artifactId>google-api-client-extensions-android2</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.google.api.client</groupId>
-      <artifactId>google-api-client-extensions-android3</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.api.client</groupId>
-      <artifactId>google-api-client-googleapis</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.api.client</groupId>
-      <artifactId>google-api-client-googleapis-extensions</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.api.client</groupId>
-      <artifactId>google-api-client-googleapis-extensions-android2</artifactId>
-    </dependency>
   </dependencies>
 
   <build>
