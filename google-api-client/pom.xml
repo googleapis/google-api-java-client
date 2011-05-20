@@ -7,13 +7,9 @@
     <version>1.5.0-beta-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
+  <groupId>com.google.api.client</groupId>
   <artifactId>google-api-client</artifactId>
-  <name>Google HTTP Client Library for Java</name>
-  <description>
-    Google HTTP Client Library for Java. Functionality that works on all supported Java platforms,
-    including Java 5 (or higher) desktop (SE) and web (EE), Android, and Google App Engine.
-  </description>
-
+  <name>Google APIs Client Library for Java</name>
   <build>
     <plugins>
       <plugin>
@@ -21,8 +17,6 @@
         <configuration>
           <links>
             <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
-            <link>http://jackson.codehaus.org/1.6.6/javadoc</link>
-            <link>http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.name} ${project.version}</windowtitle>
@@ -63,32 +57,13 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>jsr305</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
+      <groupId>com.google.oauth.client</groupId>
+      <artifactId>google-oauth-client</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-core-asl</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>xpp3</groupId>
-      <artifactId>xpp3</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

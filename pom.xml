@@ -58,10 +58,6 @@
     <module>google-api-client-assembly</module>
     <module>google-api-client-extensions</module>
     <module>google-api-client-extensions-android2</module>
-    <module>google-api-client-extensions-android3</module>
-    <module>google-api-client-googleapis</module>
-    <module>google-api-client-googleapis-extensions</module>
-    <module>google-api-client-googleapis-extensions-android2</module>
   </modules>
 
   <repositories>
@@ -135,6 +131,26 @@
         <version>2.5</version>
       </dependency>
       <dependency>
+        <groupId>com.google.http.client</groupId>
+        <artifactId>google-http-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http.client</groupId>
+        <artifactId>google-http-client-extensions</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.oauth.client</groupId>
+        <artifactId>google-oauth-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.oauth.client</groupId>
+        <artifactId>google-oauth-client-extensions</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.google.api.client</groupId>
         <artifactId>google-api-client</artifactId>
         <version>${project.version}</version>
@@ -147,26 +163,6 @@
       <dependency>
         <groupId>com.google.api.client</groupId>
         <artifactId>google-api-client-extensions-android2</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.api.client</groupId>
-        <artifactId>google-api-client-extensions-android3</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.api.client</groupId>
-        <artifactId>google-api-client-googleapis</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.api.client</groupId>
-        <artifactId>google-api-client-googleapis-extensions</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.api.client</groupId>
-        <artifactId>google-api-client-googleapis-extensions-android2</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
@@ -279,30 +275,14 @@
               <groups>
                 <group>
                   <title>google-api-client</title>
-                  <packages>com.google.api.client.auth*:com.google.api.client.http*:com.google.api.client.json*:com.google.api.client.testing*:com.google.api.client.util*:com.google.api.client.xml*</packages>
-                </group>
-                <group>
-                  <title>google-api-client-extensions</title>
-                  <packages>com.google.api.client.extensions.appengine*:com.google.api.client.extensions.auth*:com.google.api.client.extensions.servlet*</packages>
-                </group>
-                <group>
-                  <title>google-api-client-extensions-android2</title>
-                  <packages>com.google.api.client.extensions.android2*</packages>
-                </group>
-                <group>
-                  <title>google-api-client-extensions-android3</title>
-                  <packages>com.google.api.client.extensions.android3*</packages>
-                </group>
-                <group>
-                  <title>google-api-client-googleapis</title>
                   <packages>com.google.api.client.googleapis*</packages>
                 </group>
                 <group>
-                  <title>google-api-client-googleapis-extensions</title>
+                  <title>google-api-client-extensions</title>
                   <packages>com.google.api.client.googleapis.extensions.auth*</packages>
                 </group>
                 <group>
-                  <title>google-api-client-googleapis-extensions-android2</title>
+                  <title>google-api-client-extensions-android2</title>
                   <packages>com.google.api.client.googleapis.extensions.android2*</packages>
                 </group>
               </groups>
