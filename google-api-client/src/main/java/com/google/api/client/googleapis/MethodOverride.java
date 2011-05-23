@@ -32,7 +32,7 @@ import java.util.EnumSet;
  * UrlFetchTransport}. By default, only the methods not supported by the transport will be
  * overridden. When running behind a firewall that does not support certain verbs like PATCH, use
  * the {@link MethodOverride#MethodOverride(EnumSet)} constructor instead to specify additional
- * methods to override.
+ * methods to override. GET and POST are never overridden.
  * </p>
  * <p>
  * Sample usage, taking advantage that this class implements {@link HttpRequestInitializer}:
@@ -54,26 +54,19 @@ import java.util.EnumSet;
  */
 public final class MethodOverride implements HttpExecuteInterceptor, HttpRequestInitializer {
 
-  /**
-   * HTTP methods supported by the HTTP transport that nevertheless need to be overridden.
-   * <p>
-   * Any HTTP method not supported by the HTTP transport is automatically overridden, so it doesn't
-   * matter if those HTTP methods are specified here. By default, the methods DELETE, HEAD, PATCH,
-   * and PUT are all overridden. GET and POST are never overridden.
-   * </p>
-   */
+  /** HTTP methods supported by the HTTP transport that nevertheless need to be overridden. */
   private final EnumSet<HttpMethod> override;
 
-  /**
-   * Assumes not override HTTP methods unless the transport doesn't support them.
-   */
+  /** Only overrides HTTP methods that the HTTP transport does not support. */
   public MethodOverride() {
     override = EnumSet.noneOf(HttpMethod.class);
   }
 
   /**
-   * @param override HTTP methods to override (in addition to the ones the transport doesn't
-   *        support).
+   * Specifies the HTTP methods to override.
+   *
+   * @param override HTTP methods supported by the HTTP transport that nevertheless need to be
+   *        overridden
    */
   public MethodOverride(EnumSet<HttpMethod> override) {
     this.override = override.clone();
