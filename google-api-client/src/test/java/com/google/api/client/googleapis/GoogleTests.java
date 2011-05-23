@@ -27,9 +27,7 @@ public class GoogleTests extends TestSuite {
   public static TestSuite suite() {
     TestSuite result = new TestSuite(GoogleTests.class.getName());
     result.addTestSuite(GoogleUrlTest.class);
-    result.addTestSuite(GoogleUtilsTest.class);
     result.addTestSuite(MethodOverrideTest.class);
-    result.addTest(com.google.api.client.googleapis.auth.authsub.AllTests.suite());
     result.addTest(com.google.api.client.googleapis.auth.oauth2.draft10.AllTests.suite());
     result.addTest(com.google.api.client.googleapis.auth.storage.AllTests.suite());
     result.addTest(com.google.api.client.googleapis.json.AllTests.suite());

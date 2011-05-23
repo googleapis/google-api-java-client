@@ -17,12 +17,10 @@ package com.google.api.client.googleapis.auth.storage;
 import com.google.api.client.auth.HmacSha;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpExecuteIntercepter;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.http.HttpTransport;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -53,8 +51,9 @@ import java.util.regex.Pattern;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.5) Use OAuth 2.0 instead
  */
-@SuppressWarnings("deprecation")
+@Deprecated
 public final class GoogleStorageAuthentication
     implements HttpExecuteInterceptor, HttpRequestInitializer {
 
@@ -76,26 +75,6 @@ public final class GoogleStorageAuthentication
     this.secret = secret;
   }
 
-  /**
-   * Sets the {@code "Authorization"} header for every executed HTTP request for the given HTTP
-   * transport.
-   * <p>
-   * Any existing HTTP request execute intercepter for Google Storage will be removed.
-   *
-   * @param transport HTTP transport
-   * @param accessKey 20 character access key that identifies the client accessing the stored data
-   * @param secret secret associated with the access key
-   * @deprecated (scheduled to be removed in 1.5) Use {@link GoogleStorageAuthentication} directly
-   */
-  @Deprecated
-  public static void authorize(HttpTransport transport, String accessKey, String secret) {
-    transport.removeIntercepters(Intercepter.class);
-    Intercepter intercepter = new Intercepter();
-    intercepter.accessKey = accessKey;
-    intercepter.secret = secret;
-    transport.intercepters.add(intercepter);
-  }
-
   private static final String HOST = "commondatastorage.googleapis.com";
 
   public void initialize(HttpRequest request) {
@@ -103,23 +82,6 @@ public final class GoogleStorageAuthentication
   }
 
   public void intercept(HttpRequest request) throws IOException {
-    interceptInternal(request, accessKey, secret);
-  }
-
-  @Deprecated
-  static class Intercepter implements HttpExecuteIntercepter {
-
-    String accessKey;
-
-    String secret;
-
-    public void intercept(HttpRequest request) throws IOException {
-      interceptInternal(request, accessKey, secret);
-    }
-  }
-
-  static void interceptInternal(HttpRequest request, String accessKey, String secret)
-      throws IOException {
     HttpHeaders headers = request.headers;
     StringBuilder messageBuf = new StringBuilder();
     // canonical headers

@@ -16,11 +16,9 @@ package com.google.api.client.googleapis.auth.oauth;
 
 import com.google.api.client.auth.oauth.OAuthParameters;
 import com.google.api.client.googleapis.GoogleUrl;
-import com.google.api.client.http.HttpExecuteIntercepter;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Key;
 
 import java.io.IOException;
@@ -52,9 +50,8 @@ import java.io.IOException;
  * @since 1.0
  * @author Yaniv Inbar
  */
-@SuppressWarnings("deprecation")
 public final class GoogleOAuthDomainWideDelegation
-    implements HttpExecuteInterceptor, HttpExecuteIntercepter, HttpRequestInitializer {
+    implements HttpExecuteInterceptor, HttpRequestInitializer {
 
   /**
    * Generic URL that extends {@link GoogleUrl} and also provides the {@link #requestorId}
@@ -88,28 +85,10 @@ public final class GoogleOAuthDomainWideDelegation
     request.interceptor = this;
   }
 
-  @SuppressWarnings("deprecation")
   public void intercept(HttpRequest request) throws IOException {
     request.url.set("xoauth_requestor_id", requestorId);
     if (parameters != null) {
       parameters.intercept(request);
     }
-  }
-
-  /**
-   * Performs OAuth HTTP request signing via query parameter for the {@code xoauth_requestor_id} and
-   * the {@code Authorization} header as the final HTTP request execute intercepter for the given
-   * HTTP request execute manager.
-   *
-   * @param transport HTTP transport
-   * @param parameters OAuth parameters; the {@link OAuthParameters#signer} and
-   *        {@link OAuthParameters#consumerKey} should be set
-   * @deprecated (scheduled to be removed in 1.5) Use {@link GoogleOAuthDomainWideDelegation}
-   *             directly
-   */
-  @Deprecated
-  public void signRequests(HttpTransport transport, OAuthParameters parameters) {
-    transport.intercepters.add(this);
-    parameters.signRequestsUsingAuthorizationHeader(transport);
   }
 }

@@ -84,10 +84,9 @@ keytool -export -rfc -keystore ./Example.jks -storepass changeme \
  * {@link com.google.api.client.googleapis.auth.oauth.GoogleOAuthGetAccessToken}. This access token
  * must be stored.</li>
  * <li>Use the stored access token to authorize HTTP requests to protected resources in Google
- * services by setting the {@link com.google.api.client.auth.oauth.OAuthParameters#token} and
- * invoking
- * {@link com.google.api.client.auth.oauth.OAuthParameters#signRequestsUsingAuthorizationHeader}.
- * </li>
+ * services by setting the {@link com.google.api.client.auth.oauth.OAuthParameters#token} and using
+ * {@link com.google.api.client.auth.oauth.OAuthParameters} as the
+ * {@link com.google.api.client.http.HttpRequestInitializer}.</li>
  * <li>For 2-legged OAuth, use
  * {@link com.google.api.client.googleapis.auth.oauth.GoogleOAuthDomainWideDelegation} as a request
  * execute interceptor to set the e-mail address of the user on every HTTP request, or
