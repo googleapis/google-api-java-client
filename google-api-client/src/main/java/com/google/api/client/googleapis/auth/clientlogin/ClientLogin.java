@@ -135,16 +135,6 @@ public final class ClientLogin {
       return GoogleHeaders.getGoogleLoginValue(auth);
     }
 
-    /**
-     * Sets the authorization header for the given Google transport using the authentication token.
-     *
-     * @deprecated (scheduled to be removed in 1.5) Use {link Response} directly
-     */
-    @Deprecated
-    public void setAuthorizationHeader(HttpTransport googleTransport) {
-      googleTransport.defaultHeaders.authorization = GoogleHeaders.getGoogleLoginValue(auth);
-    }
-
     public void initialize(HttpRequest request) {
       request.interceptor = this;
     }
