@@ -31,7 +31,7 @@ import java.util.Arrays;
  * Tests {@link GoogleStorageAuthentication}.
  *
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.5)
+ * @deprecated (scheduled to be removed in 1.6)
  */
 @Deprecated
 public class GoogleStorageAuthenticationTest extends TestCase {

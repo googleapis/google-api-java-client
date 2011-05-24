@@ -20,7 +20,7 @@ import junit.framework.TestSuite;
  * All tests for {@link com.google.api.client.http}.
  *
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.5)
+ * @deprecated (scheduled to be removed in 1.6)
  */
 @Deprecated
 public class AllTests extends TestSuite {
