@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.TreeSet;
 
 /**
- * Utilities for working with the Atom XML of Google Data API's.
+ * Utilities for working with the Atom XML of Google Data APIs.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -39,6 +39,13 @@ public class GoogleAtom {
    * @since 1.0
    */
   public static final String GD_NAMESPACE = "http://schemas.google.com/g/2005";
+
+  /**
+   * Content type used on an error formatted in XML.
+   *
+   * @since 1.5
+   */
+  public static final String ERROR_CONTENT_TYPE = "application/vnd.google.gdata.error+xml";
 
   // TODO(yanivi): require XmlNamespaceDictory and include xmlns declarations since there is no
   // guarantee that there is a match between Google's mapping and the one used by client

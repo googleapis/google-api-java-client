@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
  *
  * @since 1.0
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.5) Use OAuth 2.0 instead
+ * @deprecated (scheduled to be removed in 1.6) Use OAuth 2.0 instead
  */
 @Deprecated
 public final class GoogleStorageAuthentication
