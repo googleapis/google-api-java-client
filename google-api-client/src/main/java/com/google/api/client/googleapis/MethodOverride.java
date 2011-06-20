@@ -73,31 +73,31 @@ public final class MethodOverride implements HttpExecuteInterceptor, HttpRequest
   }
 
   public void initialize(HttpRequest request) {
-    request.interceptor = this;
+    request.setInterceptor(this);
   }
 
   public void intercept(HttpRequest request) throws IOException {
     if (overrideThisMethod(request)) {
-      HttpMethod method = request.method;
-      request.method = HttpMethod.POST;
-      request.headers.set("X-HTTP-Method-Override", method.name());
+      HttpMethod method = request.getMethod();
+      request.setMethod(HttpMethod.POST);
+      request.getHeaders().set("X-HTTP-Method-Override", method.name());
       // Google servers will fail to process a POST unless the Content-Length header >= 1
-      if (request.content == null || request.content.getLength() == 0) {
-        request.content = new ByteArrayContent(" ");
+      if (request.getContent() == null || request.getContent().getLength() == 0) {
+        request.setContent(ByteArrayContent.fromString(null, " "));
       }
     }
   }
 
   private boolean overrideThisMethod(HttpRequest request) {
-    HttpMethod method = request.method;
+    HttpMethod method = request.getMethod();
     if (method != HttpMethod.GET && method != HttpMethod.POST && override.contains(method)) {
       return true;
     }
     switch (method) {
       case PATCH:
-        return !request.transport.supportsPatch();
+        return !request.getTransport().supportsPatch();
       case HEAD:
-        return !request.transport.supportsHead();
+        return !request.getTransport().supportsHead();
     }
     return false;
   }

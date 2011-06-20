@@ -26,8 +26,16 @@ import java.io.IOException;
 /**
  * Parses HTTP JSON-C response content into an data class of key/value pairs, assuming the data is
  * wrapped in a {@code "data"} envelope.
+ *
+ * <p>
+ * Warning: this should only be used by some older Google APIs that wrapped the response in a {@code
+ * "data"} envelope. All newer Google APIs don't use this envelope, and for those APIs
+ * {@link JsonHttpParser} should be used instead.
+ * </p>
+ *
  * <p>
  * Sample usage:
+ * </p>
  *
  * <pre>
  * <code>
@@ -44,9 +52,24 @@ import java.io.IOException;
  */
 public final class JsonCParser extends JsonHttpParser {
 
+  /**
+   * @deprecated (scheduled to be removed in 1.6) Use {@link #JsonCParser(JsonFactory)}
+   */
+  @Deprecated
+  public JsonCParser() {
+  }
+
+  /**
+   * @param jsonFactory JSON factory
+   * @since 1.5
+   */
+  public JsonCParser(JsonFactory jsonFactory) {
+    super(jsonFactory);
+  }
+
   @Override
   public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
-    return parserForResponse(jsonFactory, response).parseAndClose(dataClass, null);
+    return parserForResponse(getJsonFactory(), response).parseAndClose(dataClass, null);
   }
 
   /**
@@ -67,7 +90,7 @@ public final class JsonCParser extends JsonHttpParser {
   public static JsonParser parserForResponse(JsonFactory jsonFactory, HttpResponse response)
       throws IOException {
     // check for JSON content type
-    String contentType = response.contentType;
+    String contentType = response.getContentType();
     if (contentType == null || !contentType.startsWith(Json.CONTENT_TYPE)) {
       throw new IllegalArgumentException(
           "Wrong content type: expected <" + Json.CONTENT_TYPE + "> but got <" + contentType + ">");
@@ -76,7 +99,7 @@ public final class JsonCParser extends JsonHttpParser {
     boolean failed = true;
     JsonParser parser = JsonHttpParser.parserForResponse(jsonFactory, response);
     try {
-      parser.skipToKey(response.isSuccessStatusCode ? "data" : "error");
+      parser.skipToKey(response.isSuccessStatusCode() ? "data" : "error");
       if (parser.getCurrentToken() == JsonToken.END_OBJECT) {
         throw new IllegalArgumentException("data key not found");
       }
