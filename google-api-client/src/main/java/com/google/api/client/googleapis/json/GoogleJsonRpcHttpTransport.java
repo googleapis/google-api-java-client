@@ -100,14 +100,12 @@ public final class GoogleJsonRpcHttpTransport {
   }
 
   private HttpRequest internalExecute(Object data) {
-    JsonHttpContent content = new JsonHttpContent();
-    content.jsonFactory = jsonFactory;
-    content.contentType = contentType;
-    content.data = data;
+    JsonHttpContent content = new JsonHttpContent(jsonFactory, data);
+    content.setType(contentType);
     HttpRequest httpRequest;
     try {
       httpRequest = transport.createRequestFactory().buildPostRequest(rpcServerUrl, content);
-      httpRequest.headers.accept = accept;
+      httpRequest.getHeaders().setAccept(accept);
       return httpRequest;
     } catch (IOException e) {
       throw new IllegalStateException(e);

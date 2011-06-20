@@ -126,7 +126,7 @@ public class GoogleHeaders extends HttpHeaders {
    * "[company-id]-[app-name]/[app-version]"}, for example {@code "Google-Sample/1.0"}.
    */
   public void setApplicationName(String applicationName) {
-    userAgent = applicationName;
+    setUserAgent(applicationName);
   }
 
   /** Sets the {@link #gdataKey} header using the given developer ID. */
@@ -138,7 +138,7 @@ public class GoogleHeaders extends HttpHeaders {
    * Sets the Google Login {@code "Authorization"} header for the given authentication token.
    */
   public void setGoogleLogin(String authToken) {
-    authorization = getGoogleLoginValue(authToken);
+    setAuthorization(getGoogleLoginValue(authToken));
   }
 
   /**

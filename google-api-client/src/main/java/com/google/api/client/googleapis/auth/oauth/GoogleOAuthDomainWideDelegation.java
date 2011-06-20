@@ -82,11 +82,11 @@ public final class GoogleOAuthDomainWideDelegation
   public OAuthParameters parameters;
 
   public void initialize(HttpRequest request) {
-    request.interceptor = this;
+    request.setInterceptor(this);
   }
 
   public void intercept(HttpRequest request) throws IOException {
-    request.url.set("xoauth_requestor_id", requestorId);
+    request.getUrl().set("xoauth_requestor_id", requestorId);
     if (parameters != null) {
       parameters.intercept(request);
     }
