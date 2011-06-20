@@ -22,8 +22,8 @@ import com.google.api.client.json.JsonFactory;
 import javax.jdo.annotations.PersistenceAware;
 
 /**
- * Specialization of {@link AppAssertionFlow} with the endpoint and audience filled in for accessing Google
- * APIs.
+ * Specialization of {@link AppAssertionFlow} with the endpoint and audience filled in for accessing
+ * Google APIs.
  *
  * @author moshenko@google.com (Jacob Moshenko)
  *
@@ -32,7 +32,8 @@ import javax.jdo.annotations.PersistenceAware;
 @PersistenceAware
 public class GoogleAppAssertionFlow extends AppAssertionFlow {
   /**
-   * Create an instance of {@link AppAssertionFlow} that is specialized for communicating with Google APIs.
+   * Create an instance of {@link AppAssertionFlow} that is specialized for communicating with
+   * Google APIs.
    *
    * @param robotName Identifier that will eventually become the primary key for the credential
    *        object created by this flow. This is usually the application's identifier.
