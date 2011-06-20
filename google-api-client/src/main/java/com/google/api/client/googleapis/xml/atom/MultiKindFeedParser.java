@@ -93,7 +93,7 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
       throws IOException, XmlPullParserException {
     InputStream content = response.getContent();
     try {
-      Atom.checkContentType(response.contentType);
+      Atom.checkContentType(response.getContentType());
       XmlPullParser parser = Xml.createParser();
       parser.setInput(content, null);
       MultiKindFeedParser<T> result = new MultiKindFeedParser<T>();

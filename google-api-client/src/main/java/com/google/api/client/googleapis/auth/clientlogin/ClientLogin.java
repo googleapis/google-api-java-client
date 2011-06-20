@@ -136,11 +136,11 @@ public final class ClientLogin {
     }
 
     public void initialize(HttpRequest request) {
-      request.interceptor = this;
+      request.setInterceptor(this);
     }
 
     public void intercept(HttpRequest request) {
-      request.headers.authorization = getAuthorizationHeaderValue();
+      request.getHeaders().setAuthorization(getAuthorizationHeaderValue());
     }
   }
 
@@ -172,11 +172,10 @@ public final class ClientLogin {
   public Response authenticate() throws HttpResponseException, IOException {
     GenericUrl url = serverUrl.clone();
     url.appendRawPath("/accounts/ClientLogin");
-    UrlEncodedContent content = new UrlEncodedContent();
-    content.data = this;
-    HttpRequest request = transport.createRequestFactory().buildPostRequest(url, content);
+    HttpRequest request =
+        transport.createRequestFactory().buildPostRequest(url, new UrlEncodedContent(this));
     request.addParser(AuthKeyValueParser.INSTANCE);
-    request.disableContentLogging = true;
+    request.setDisableContentLogging(true);
     return request.execute().parseAs(Response.class);
   }
 }

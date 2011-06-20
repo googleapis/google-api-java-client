@@ -18,6 +18,7 @@ import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.testing.http.MockHttpTransport;
+import com.google.common.collect.ImmutableSet;
 
 import junit.framework.TestCase;
 
@@ -43,7 +44,9 @@ public class MethodOverrideTest extends TestCase {
     subtestIntercept(
         EnumSet.of(HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.HEAD, HttpMethod.PATCH), transport,
         new MethodOverride(EnumSet.allOf(HttpMethod.class)));
-    transport.supportedOptionalMethods.clear();
+    transport = MockHttpTransport
+        .builder().setSupportedOptionalMethods(ImmutableSet.<HttpMethod>of()).build();
+    transport.getSupportedOptionalMethods().clear();
     subtestIntercept(
         EnumSet.of(HttpMethod.HEAD, HttpMethod.PATCH), transport, new MethodOverride());
   }
@@ -59,8 +62,8 @@ public class MethodOverrideTest extends TestCase {
       MethodOverride interceptor, HttpMethod method) throws IOException {
     HttpRequest request = transport.createRequestFactory().buildRequest(method, null, null);
     interceptor.intercept(request);
-    assertEquals(method.toString(), shouldOverride ? HttpMethod.POST : method, request.method);
+    assertEquals(method.toString(), shouldOverride ? HttpMethod.POST : method, request.getMethod());
     assertEquals(method.toString(), shouldOverride ? method.toString() : null,
-        request.headers.get("X-HTTP-Method-Override"));
+        request.getHeaders().get("X-HTTP-Method-Override"));
   }
 }
