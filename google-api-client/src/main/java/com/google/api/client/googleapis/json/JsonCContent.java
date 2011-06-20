@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.json;
 
 import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.JsonEncoding;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 
 import java.io.IOException;
@@ -24,8 +25,16 @@ import java.io.OutputStream;
 /**
  * Serializes JSON-C content based on the data key/value mapping object for an item, wrapped in a
  * {@code "data"} envelope.
+ *
+ * <p>
+ * Warning: this should only be used by some older Google APIs that wrapped the response in a {@code
+ * "data"} envelope. All newer Google APIs don't use this envelope, and for those APIs
+ * {@link JsonHttpContent} should be used instead.
+ * </p>
+ *
  * <p>
  * Sample usage:
+ * </p>
  *
  * <pre>
  * <code>
@@ -43,12 +52,28 @@ import java.io.OutputStream;
  */
 public final class JsonCContent extends JsonHttpContent {
 
+  /**
+   * @deprecated (scheduled to be removed in 1.6) Use {@link #JsonCContent(JsonFactory, Object)}
+   */
+  @Deprecated
+  public JsonCContent() {
+  }
+
+  /**
+   * @param jsonFactory JSON factory to use
+   * @param data JSON key name/value data
+   * @since 1.5
+   */
+  public JsonCContent(JsonFactory jsonFactory, Object data) {
+    super(jsonFactory, data);
+  }
+
   @Override
   public void writeTo(OutputStream out) throws IOException {
-    JsonGenerator generator = jsonFactory.createJsonGenerator(out, JsonEncoding.UTF8);
+    JsonGenerator generator = getJsonFactory().createJsonGenerator(out, JsonEncoding.UTF8);
     generator.writeStartObject();
     generator.writeFieldName("data");
-    generator.serialize(data);
+    generator.serialize(getData());
     generator.writeEndObject();
     generator.flush();
   }

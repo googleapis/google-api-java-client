@@ -62,8 +62,8 @@ public class GoogleJsonErrorTest extends TestCase {
           public LowLevelHttpResponse execute() {
             MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
             result.setContent(ERROR_RESPONSE);
-            result.contentType = Json.CONTENT_TYPE;
-            result.statusCode = 403;
+            result.setContentType(Json.CONTENT_TYPE);
+            result.setStatusCode(403);
             return result;
           }
         };

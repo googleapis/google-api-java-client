@@ -59,9 +59,8 @@ public class GoogleJsonError extends GenericJson {
    */
   public static GoogleJsonError parse(JsonFactory jsonFactory, HttpResponse response)
       throws IOException {
-    JsonCParser parser = new JsonCParser();
-    parser.jsonFactory = jsonFactory;
-    return parser.parse(response, GoogleJsonError.class);
+    return JsonCParser.parserForResponse(jsonFactory, response).parseAndClose(
+        GoogleJsonError.class, null);
   }
 
   /** Detailed error information. */
