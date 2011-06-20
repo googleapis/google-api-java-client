@@ -52,9 +52,7 @@ public class GoogleAccessTokenRequestTest extends TestCase {
 
   public void testGoogleAssertionGrant() {
     check(new GoogleAssertionGrant(), false);
-    check(
-        new GoogleAssertionGrant(TRANSPORT, JSON_FACTORY, CLIENT_SECRET, ASSERTION_TYPE, ASSERTION),
-        true);
+    check(new GoogleAssertionGrant(TRANSPORT, JSON_FACTORY, ASSERTION_TYPE, ASSERTION), true);
   }
 
   public void testGoogleRefreshTokenGrant() {
@@ -106,7 +104,9 @@ public class GoogleAccessTokenRequestTest extends TestCase {
     if (withParameters) {
       assertEquals(TRANSPORT, request.transport);
       assertEquals(JSON_FACTORY, request.jsonFactory);
-      assertEquals(CLIENT_SECRET, request.clientSecret);
+      if (grantType != GrantType.ASSERTION) {
+        assertEquals(CLIENT_SECRET, request.clientSecret);
+      }
     } else {
       assertNull(request.transport);
       assertNull(request.jsonFactory);
