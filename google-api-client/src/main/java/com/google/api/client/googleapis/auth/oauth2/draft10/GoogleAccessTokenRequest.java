@@ -170,19 +170,13 @@ public class GoogleAccessTokenRequest {
     /**
      * @param transport HTTP transport for executing request in {@link #execute()}
      * @param jsonFactory JSON factory to use for parsing response in {@link #execute()}
-     * @param clientSecret client secret
      * @param assertionType format of the assertion as defined by the authorization server. The
      *        value MUST be an absolute URI
      * @param assertion assertion
      */
-    public GoogleAssertionGrant(HttpTransport transport, JsonFactory jsonFactory,
-        String clientSecret, String assertionType, String assertion) {
-      super(transport,
-          jsonFactory,
-          AUTHORIZATION_SERVER_URL,
-          clientSecret,
-          assertionType,
-          assertion);
+    public GoogleAssertionGrant(
+        HttpTransport transport, JsonFactory jsonFactory, String assertionType, String assertion) {
+      super(transport, jsonFactory, AUTHORIZATION_SERVER_URL, assertionType, assertion);
       init(this);
     }
   }
