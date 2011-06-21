@@ -16,33 +16,54 @@ package com.google.api.client.googleapis.xml.atom;
 
 import com.google.api.client.http.xml.XmlHttpParser;
 import com.google.api.client.http.xml.atom.AtomContent;
+import com.google.api.client.xml.XmlNamespaceDictionary;
 
 /**
  * Serializes Atom XML PATCH HTTP content based on the data key/value mapping object for an Atom
  * entry.
+ *
  * <p>
- * Default value for {@link #contentType} is {@link XmlHttpParser#CONTENT_TYPE}.
+ * Default value for {@link #getType()} is {@link XmlHttpParser#CONTENT_TYPE}.
+ * </p>
+ *
  * <p>
  * Sample usage:
+ * </p>
  *
  * <pre>
  * <code>
   static void setContent(
-      HttpRequest request, XmlNamespaceDictionary namespaceDictionary, Object entry) {
-    AtomPatchContent content = new AtomPatchContent();
-    content.namespaceDictionary = namespaceDictionary;
-    content.entry = entry;
-    request.content = content;
+      HttpRequest request, XmlNamespaceDictionary namespaceDictionary, Object patchEntry) {
+    request.setContent(new AtomPatchContent(namespaceDictionary, patchEntry));
   }
  * </code>
  * </pre>
+ *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public final class AtomPatchContent extends AtomContent {
 
+  /**
+   * @deprecated (scheduled to be removed in 1.6) Use
+   *             {@link #AtomPatchContent(XmlNamespaceDictionary, Object)}
+   */
+  @Deprecated
   public AtomPatchContent() {
     contentType = XmlHttpParser.CONTENT_TYPE;
+  }
+
+  /**
+   * @param namespaceDictionary XML namespace dictionary
+   * @param patchEntry key/value pair data for the Atom PATCH entry
+   * @since 1.5
+   */
+  public AtomPatchContent(XmlNamespaceDictionary namespaceDictionary, Object patchEntry) {
+    super(namespaceDictionary, patchEntry, true);
+    setType(XmlHttpParser.CONTENT_TYPE);
   }
 }
