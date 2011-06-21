@@ -41,6 +41,25 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
 
   private final HashMap<String, Class<?>> kindToEntryClassMap = new HashMap<String, Class<?>>();
 
+  /**
+   * @deprecated (scheduled to be removed in 1.6) Use
+   *             {@link #create(HttpResponse, XmlNamespaceDictionary, Class, Class...)}
+   */
+  @Deprecated
+  public MultiKindFeedParser() {
+  }
+
+  /**
+   * @param namespaceDictionary XML namespace dictionary
+   * @param parser XML pull parser to use
+   * @param inputStream input stream to read
+   * @param feedClass feed class to parse
+   */
+  MultiKindFeedParser(XmlNamespaceDictionary namespaceDictionary, XmlPullParser parser,
+      InputStream inputStream, Class<T> feedClass) {
+    super(namespaceDictionary, parser, inputStream, feedClass);
+  }
+
   /** Sets the entry classes to use when parsing. */
   public void setEntryClasses(Class<?>... entryClasses) {
     int numEntries = entryClasses.length;
@@ -64,14 +83,14 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
 
   @Override
   protected Object parseEntryInternal() throws IOException, XmlPullParserException {
-    XmlPullParser parser = this.parser;
+    XmlPullParser parser = getParser();
     String kind = parser.getAttributeValue(GoogleAtom.GD_NAMESPACE, "kind");
     Class<?> entryClass = this.kindToEntryClassMap.get(kind);
     if (entryClass == null) {
       throw new IllegalArgumentException("unrecognized kind: " + kind);
     }
     Object result = Types.newInstance(entryClass);
-    Xml.parseElement(parser, result, namespaceDictionary, null);
+    Xml.parseElement(parser, result, getNamespaceDictionary(), null);
     return result;
   }
 
@@ -96,11 +115,8 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
       Atom.checkContentType(response.getContentType());
       XmlPullParser parser = Xml.createParser();
       parser.setInput(content, null);
-      MultiKindFeedParser<T> result = new MultiKindFeedParser<T>();
-      result.parser = parser;
-      result.inputStream = content;
-      result.feedClass = feedClass;
-      result.namespaceDictionary = namespaceDictionary;
+      MultiKindFeedParser<T> result =
+          new MultiKindFeedParser<T>(namespaceDictionary, parser, content, feedClass);
       result.setEntryClasses(entryClasses);
       return result;
     } finally {
