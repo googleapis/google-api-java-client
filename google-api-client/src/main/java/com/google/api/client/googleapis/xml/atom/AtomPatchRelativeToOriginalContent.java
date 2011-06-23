@@ -15,7 +15,6 @@
 package com.google.api.client.googleapis.xml.atom;
 
 import com.google.api.client.http.xml.AbstractXmlHttpContent;
-import com.google.api.client.util.ArrayMap;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.api.client.xml.atom.Atom;
 import com.google.common.base.Preconditions;
@@ -23,6 +22,7 @@ import com.google.common.base.Preconditions;
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Serializes an optimal Atom XML PATCH HTTP content based on the data key/value mapping object for
@@ -84,7 +84,7 @@ public final class AtomPatchRelativeToOriginalContent extends AbstractXmlHttpCon
 
   @Override
   protected void writeTo(XmlSerializer serializer) throws IOException {
-    ArrayMap<String, Object> patch = GoogleAtom.computePatch(patchedEntry, originalEntry);
+    Map<String, Object> patch = GoogleAtom.computePatch(patchedEntry, originalEntry);
     getNamespaceDictionary().serialize(serializer, Atom.ATOM_NAMESPACE, "entry", patch);
   }
 
