@@ -23,6 +23,9 @@ import java.io.IOException;
 /**
  * Google JSON-C feed parser when the item class is known in advance.
  *
+ * @param <T> feed type
+ * @param <I> item type
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */

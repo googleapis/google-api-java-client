@@ -299,6 +299,7 @@
         <configuration>
           <configLocation>checkstyle.xml</configLocation>
           <consoleOutput>true</consoleOutput>
+          <suppressionsLocation>${basedir}/../checkstyle-suppressions.xml</suppressionsLocation>
         </configuration>
       </plugin>
     </plugins>

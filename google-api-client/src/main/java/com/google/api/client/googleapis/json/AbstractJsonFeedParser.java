@@ -23,6 +23,8 @@ import java.io.IOException;
 /**
  * Abstract base class for a Google JSON-C feed parser when the feed class is known in advance.
  *
+ * @param <T> feed type
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */

@@ -70,16 +70,11 @@ page at http://checkstyle.sourceforge.net/config.html -->
       <property name="severity" value="error"/>
     </module>
 
-    <module name="UnusedImports">
-      <!-- Checks for unused import statements. -->
-      <property name="severity" value="error"/>
-    </module>
-
     <module name="ImportOrder">
       <!-- Checks for out of order import statements. -->
 
       <property name="severity" value="warning"/>
-      <property name="groups" value="com.google,*,java,javax"/>
+      <property name="groups" value="com.google,android,junit,net,org,java,javax"/>
       <!-- This ensures that static imports go first. -->
       <property name="option" value="top"/>
       <property name="tokens" value="STATIC_IMPORT, IMPORT"/>
@@ -96,18 +91,15 @@ page at http://checkstyle.sourceforge.net/config.html -->
     <module name="JavadocMethod">
       <property name="scope" value="protected"/>
       <property name="severity" value="warning"/>
-      <property name="allowMissingReturnTag" value="true"/>
+      <property name="allowMissingJavadoc" value="true"/>
       <property name="allowMissingParamTags" value="true"/>
+      <property name="allowMissingReturnTag" value="true"/>
       <property name="allowMissingThrowsTags" value="true"/>
+      <property name="allowThrowsTagsForSubclasses" value="true"/>
       <property name="allowUndeclaredRTE" value="true"/>
     </module>
 
     <module name="JavadocType">
-      <property name="scope" value="protected"/>
-      <property name="severity" value="error"/>
-    </module>
-
-    <module name="JavadocVariable">
       <property name="scope" value="protected"/>
       <property name="severity" value="error"/>
     </module>
