@@ -151,11 +151,16 @@ public class GoogleAtom {
    * Compute the patch object of key/value pairs from the given original and patched objects, adding
    * a {@code @gd:fields} key for the fields mask.
    *
+   * <p>
+   * Upgrade warning: in prior version 1.4 the return type was {@link ArrayMap}, but now it is
+   * {@link Map} to allow flexibility in the implementation.
+   * </p>
+   *
    * @param patched patched object
    * @param original original object
    * @return patch object of key/value pairs
    */
-  public static ArrayMap<String, Object> computePatch(Object patched, Object original) {
+  public static Map<String, Object> computePatch(Object patched, Object original) {
     FieldsMask fieldsMask = new FieldsMask();
     ArrayMap<String, Object> result = computePatchInternal(fieldsMask, patched, original);
     if (fieldsMask.numDifferences != 0) {
