@@ -28,6 +28,8 @@ import java.util.HashMap;
 /**
  * Google JSON-C feed parser when the item class can be computed from the kind.
  *
+ * @param <T> feed type
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */

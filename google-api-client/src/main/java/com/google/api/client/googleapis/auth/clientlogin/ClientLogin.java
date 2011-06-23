@@ -114,10 +114,11 @@ public final class ClientLogin {
    * </p>
    *
    * <pre>
-  public static HttpRequestFactory createRequestFactory(HttpTransport transport, Response response) {
-    return transport.createRequestFactory(response);
-  }
- * </pre>
+    public static HttpRequestFactory createRequestFactory(
+        HttpTransport transport, Response response) {
+      return transport.createRequestFactory(response);
+    }
+   * </pre>
    *
    * <p>
    * If you have a custom request initializer, take a look at the sample usage for

@@ -34,6 +34,8 @@ import java.util.HashMap;
 /**
  * GData Atom feed pull parser when the entry class can be computed from the kind.
  *
+ * @param <T> feed type
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
