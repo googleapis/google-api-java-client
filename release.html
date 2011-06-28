@@ -73,7 +73,7 @@ google-api-java-client.password = <i>[password from <a
   </li>
 </ul>
 
-<h3>Release version 1.5.0-beta</h3>
+<h3>Release version 1.6.0-beta</h3>
 <ul>
   <li>Prepare the project
   <ul>
@@ -97,16 +97,16 @@ hg commit -m "merge with dev branch"
 hg push
 hg update dev 
 </pre></li>
-    <li>For the following files, replace <code>1.5.0-beta</code> with the next minor version:
+    <li>For the following files, replace <code>1.6.0-beta</code> with the next minor version:
     <pre>
 pom.xml
 */pom.xml
-jdiff.xml (first change "1.5" to next minor version, then change "1.4" to "1.5")
-release.html (first change "1.5" to next minor version, then change "1.4" to "1.5")
+jdiff.xml (first change "1.6" to next minor version, then change "1.5" to "1.6")
+release.html (first change "1.6" to next minor version, then change "1.5" to "1.6")
 google-api-client/src/main/java/com/google/api/client/util/Strings.java
 </pre></li>
     <li>Commit and push: <pre>
-hg commit -m "Start 1.5"
+hg commit -m "Start 1.6"
 hg push
 hg update default
 </pre></li>
@@ -133,7 +133,7 @@ mvn release:clean
     <ul>
       <li>Accept default for 'What is the release version for "Google API
       Client - Parent"?'</li>
-      <li>Type <code>1.5.0-beta</code> for 'What is SCM release tag or
+      <li>Type <code>1.6.0-beta</code> for 'What is SCM release tag or
       label for "Google API Client - Parent"?'</li>
       <li>Accept default for 'What is the new development version for
       "Google API Client - Parent"?'</li>
@@ -147,21 +147,21 @@ mvn release:clean
       <li>Click on "Staging Repositories" and look for the "com.google"
       Repository with your username</li>
       <li>check box next to uploaded release</li>
-      <li>click Close button; type <code>1.5.0-beta</code> and click Close</li>
+      <li>click Close button; type <code>1.6.0-beta</code> and click Close</li>
       <li>check box next to uploaded release</li>
-      <li>click Release button; type <code>1.5.0-beta</code> and click
+      <li>click Release button; type <code>1.6.0-beta</code> and click
       Release</li>
     </ul>
     </li>
     <li>Central Maven repository is synced hourly. Once uploaded onto
     repo2.maven.org, it will be found at: <a
-      href="http://repo2.maven.org/maven2/com/google/api/client/google-api-client/1.5.0-beta/">repo2.maven.org</a></li>
+      href="http://repo2.maven.org/maven2/com/google/api/client/google-api-client/1.6.0-beta/">repo2.maven.org</a></li>
   </ul>
   </li>
   <li>Start development of next bug fix version
   <ul>
     <li><code>hg update</code></li>
-    <li>For the following files, replace <code>1.5.0-beta</code> with the next bug fix version:
+    <li>For the following files, replace <code>1.6.0-beta</code> with the next bug fix version:
     <ul>
       <li><code>jdiff.xml</code></li>
       <li><code>release.html</code></li>
@@ -188,11 +188,11 @@ rm -rf google-api-java-client
 mkdir google-api-java-client
 cd google-api-java-client
 hg clone https://javadoc.google-api-java-client.googlecode.com/hg/ javadoc
-hg clone -r 1.4.1-beta https://google-api-java-client.googlecode.com/hg/ 1.4.1-beta
-hg clone -r 1.5.0-beta https://google-api-java-client.googlecode.com/hg/ 1.5.0-beta
-cd 1.5.0-beta
+hg clone -r 1.5.1-beta https://google-api-java-client.googlecode.com/hg/ 1.5.1-beta
+hg clone -r 1.6.0-beta https://google-api-java-client.googlecode.com/hg/ 1.6.0-beta
+cd 1.6.0-beta
 mvn javadoc:jar install site
-cp -R target/site/apidocs/ ../javadoc/1.5.0-beta
+cp -R target/site/apidocs/ ../javadoc/1.6.0-beta
 </pre></li>
     <li>change these constants from jdiff.xml for your environment:
     JDIFF_HOME, MAVEN_REPOSITORY_HOME</li>
@@ -200,22 +200,22 @@ cp -R target/site/apidocs/ ../javadoc/1.5.0-beta
 ant -f jdiff.xml
 cd ../javadoc
 hg add
-hg commit -m "1.5.0-beta"
+hg commit -m "1.6.0-beta"
 hg push
 </pre></li>
   </ul>
   </li>
   <li><b>WAIT!</b> Don't do the following instructions until after the
   library has been uploaded to repo2.maven.org at: <a
-    href="http://repo2.maven.org/maven2/com/google/api/client/google-api-client/1.5.0-beta/">repo2.maven.org</a></li>
+    href="http://repo2.maven.org/maven2/com/google/api/client/google-api-client/1.6.0-beta/">repo2.maven.org</a></li>
   <li>Update to new version on <a
     href="http://code.google.com/p/google-api-java-client">http://code.google.com/p/google-api-java-client</a>
   <ul>
     <li>Upload to <a
       href="http://code.google.com/p/google-api-java-client/downloads/entry">http://code.google.com/p/google-api-java-client/downloads/entry</a>
     <ul>
-      <li>Summary: Google API Client Library for Java, version 1.5.0-beta</li>
-      <li>File: <code>/tmp/google-api-java-client/1.5.0-beta/google-api-client-assembly/target/google-api-client-1.5.0-beta-java.zip</code></li>
+      <li>Summary: Google API Client Library for Java, version 1.6.0-beta</li>
+      <li>File: <code>/tmp/google-api-java-client/1.6.0-beta/google-api-client-assembly/target/google-api-client-1.6.0-beta-java.zip</code></li>
       <li>Labels: <code>Type-Archive</code>, <code>OpSys-All</code>, and <code>Featured</code></li>
       <li>click Submit file</li>
     </ul>
@@ -224,7 +224,7 @@ hg push
     versions by removing any <code>Featured</code> label and adding the <code>Deprecated</code>
     label.</li>
     <li>Update the following pages changing any reference from the previous
-    version to the new version <code>1.5.0-beta</code>:
+    version to the new version <code>1.6.0-beta</code>:
     <ul>
       <li><a href="http://code.google.com/p/google-api-java-client/admin">admin</a></li>
       <li><a
@@ -239,7 +239,7 @@ hg push
     href="http://www.blogger.com/post-create.g?blogID=4531100327392916335">New
   Post</a> on the <a href="http://google-api-java-client.blogspot.com/">announcement
   blog</a> about the new version, including links to <a
-    href="http://code.google.com/p/google-api-java-client/issues/list?can=1&q=milestone=Version1.5.0%20status=Fixed&colspec=ID%20Type%20Priority%20Summary">new
+    href="http://code.google.com/p/google-api-java-client/issues/list?can=1&q=milestone=Version1.6.0%20status=Fixed&colspec=ID%20Type%20Priority%20Summary">new
   features and bugs fixed</a>.</li>
 </ul>
 </body>
