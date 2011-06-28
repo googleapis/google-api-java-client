@@ -1,4 +1,4 @@
-#Fri Mar 18 23:24:11 EDT 2011
+#Fri Mar 18 23:24:03 EDT 2011
 cleanup.add_default_serial_version_id=true
 cleanup.add_generated_serial_version_id=false
 cleanup.add_missing_annotations=true
@@ -58,7 +58,7 @@ formatter_settings_version=11
 org.eclipse.jdt.ui.exception.name=exception
 org.eclipse.jdt.ui.gettersetter.use.is=false
 org.eclipse.jdt.ui.ignorelowercasenames=true
-org.eclipse.jdt.ui.importorder=com;org;;java;javax;
+org.eclipse.jdt.ui.importorder=com.google;;java;javax;
 org.eclipse.jdt.ui.javadoc=true
 org.eclipse.jdt.ui.keywordthis=false
 org.eclipse.jdt.ui.ondemandthreshold=999
