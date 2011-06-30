@@ -53,13 +53,6 @@ import java.io.OutputStream;
 public final class JsonCContent extends JsonHttpContent {
 
   /**
-   * @deprecated (scheduled to be removed in 1.6) Use {@link #JsonCContent(JsonFactory, Object)}
-   */
-  @Deprecated
-  public JsonCContent() {
-  }
-
-  /**
    * @param jsonFactory JSON factory to use
    * @param data JSON key name/value data
    * @since 1.5

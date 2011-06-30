@@ -44,14 +44,6 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
   private final HashMap<String, Class<?>> kindToEntryClassMap = new HashMap<String, Class<?>>();
 
   /**
-   * @deprecated (scheduled to be removed in 1.6) Use
-   *             {@link #create(HttpResponse, XmlNamespaceDictionary, Class, Class...)}
-   */
-  @Deprecated
-  public MultiKindFeedParser() {
-  }
-
-  /**
    * @param namespaceDictionary XML namespace dictionary
    * @param parser XML pull parser to use
    * @param inputStream input stream to read
