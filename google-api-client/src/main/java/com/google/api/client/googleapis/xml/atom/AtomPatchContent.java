@@ -49,15 +49,6 @@ import com.google.api.client.xml.XmlNamespaceDictionary;
 public final class AtomPatchContent extends AtomContent {
 
   /**
-   * @deprecated (scheduled to be removed in 1.6) Use
-   *             {@link #AtomPatchContent(XmlNamespaceDictionary, Object)}
-   */
-  @Deprecated
-  public AtomPatchContent() {
-    contentType = XmlHttpParser.CONTENT_TYPE;
-  }
-
-  /**
    * @param namespaceDictionary XML namespace dictionary
    * @param patchEntry key/value pair data for the Atom PATCH entry
    * @since 1.5

@@ -53,13 +53,6 @@ import java.io.IOException;
 public final class JsonCParser extends JsonHttpParser {
 
   /**
-   * @deprecated (scheduled to be removed in 1.6) Use {@link #JsonCParser(JsonFactory)}
-   */
-  @Deprecated
-  public JsonCParser() {
-  }
-
-  /**
    * @param jsonFactory JSON factory
    * @since 1.5
    */

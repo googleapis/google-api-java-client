@@ -47,29 +47,11 @@ import java.util.Map;
  */
 public final class AtomPatchRelativeToOriginalContent extends AbstractXmlHttpContent {
 
-  /**
-   * Key/value pair data for the updated/patched Atom entry.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getPatchedEntry}
-   */
-  @Deprecated
-  public Object patchedEntry;
+  /** Key/value pair data for the updated/patched Atom entry. */
+  private final Object patchedEntry;
 
-  /**
-   * Key/value pair data for the original unmodified Atom entry.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getOriginalEntry}
-   */
-  @Deprecated
-  public Object originalEntry;
-
-  /**
-   * @deprecated (scheduled to be removed in 1.6) Use {@link
-   *             #AtomPatchRelativeToOriginalContent(XmlNamespaceDictionary, Object, Object)}
-   */
-  @Deprecated
-  public AtomPatchRelativeToOriginalContent() {
-  }
+  /** Key/value pair data for the original unmodified Atom entry. */
+  private final Object originalEntry;
 
   /**
    * @param namespaceDictionary XML namespace dictionary
