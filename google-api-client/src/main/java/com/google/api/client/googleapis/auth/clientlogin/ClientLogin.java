@@ -165,9 +165,10 @@ public final class ClientLogin {
    * Authenticates based on the provided field values.
    *
    * @throws HttpResponseException if the authentication response has an error code, such as for a
-   *         CAPTCHA challenge. Call {@link HttpResponseException#response exception.response}.
-   *         {@link HttpResponse#parseAs(Class) parseAs}({@link ClientLogin.ErrorInfo
-   *         ClientLoginAuthenticator.ErrorInfo}.class) to parse the response.
+   *         CAPTCHA challenge. Call {@link HttpResponseException#getResponse()
+   *         exception.getResponse()}. {@link HttpResponse#parseAs(Class) parseAs}(
+   *         {@link ClientLogin.ErrorInfo ClientLoginAuthenticator.ErrorInfo}.class) to parse the
+   *         response.
    * @throws IOException some other kind of I/O exception
    */
   public Response authenticate() throws HttpResponseException, IOException {
