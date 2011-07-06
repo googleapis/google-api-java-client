@@ -39,10 +39,8 @@ import java.io.IOException;
  *
  * <pre>
  * <code>
-  static void setParser(HttpTransport transport) {
-    JsonCParser parser = new JsonCParser();
-    parser.jsonFactory = new JacksonFactory();
-    transport.addParser(parser);
+  static void setParser(HttpRequest request) {
+    request.addParser(new JsonCParser(new JacksonFactory()));
   }
  * </code>
  * </pre>
