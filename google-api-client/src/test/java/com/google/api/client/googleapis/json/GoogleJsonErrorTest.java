@@ -74,7 +74,7 @@ public class GoogleJsonErrorTest extends TestCase {
       request.execute();
       fail();
     } catch (HttpResponseException e) {
-      GoogleJsonError errorResponse = GoogleJsonError.parse(FACTORY, e.response);
+      GoogleJsonError errorResponse = GoogleJsonError.parse(FACTORY, e.getResponse());
       assertEquals(ERROR, FACTORY.toString(errorResponse));
     }
   }
