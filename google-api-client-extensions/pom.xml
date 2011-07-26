@@ -2,12 +2,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.google.api.client</groupId>
+    <groupId>com.google.api-client</groupId>
     <artifactId>google-api-client-parent</artifactId>
     <version>1.6.0-beta-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <groupId>com.google.api.client</groupId>
+  <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-extensions</artifactId>
   <name>Google specific platform extensions to the Google API Client Library for Java.</name>
   <build>
@@ -79,11 +79,11 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.google.oauth.client</groupId>
+      <groupId>com.google.oauth-client</groupId>
       <artifactId>google-oauth-client-extensions</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.api.client</groupId>
+      <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
     </dependency>
     <dependency>
@@ -100,11 +100,11 @@
       <artifactId>jdo2-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.http.client</groupId>
+      <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-extensions</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.api.client</groupId>
+      <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
     </dependency>
   </dependencies>

@@ -7,7 +7,7 @@
     <artifactId>google</artifactId>
     <version>5</version>
   </parent>
-  <groupId>com.google.api.client</groupId>
+  <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-parent</artifactId>
   <version>1.6.0-beta-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -131,37 +131,37 @@
         <version>2.5</version>
       </dependency>
       <dependency>
-        <groupId>com.google.http.client</groupId>
+        <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.google.http.client</groupId>
+        <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-extensions</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.google.oauth.client</groupId>
+        <groupId>com.google.oauth-client</groupId>
         <artifactId>google-oauth-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.google.oauth.client</groupId>
+        <groupId>com.google.oauth-client</groupId>
         <artifactId>google-oauth-client-extensions</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.google.api.client</groupId>
+        <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.google.api.client</groupId>
+        <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-extensions</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.google.api.client</groupId>
+        <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-extensions-android2</artifactId>
         <version>${project.version}</version>
       </dependency>
