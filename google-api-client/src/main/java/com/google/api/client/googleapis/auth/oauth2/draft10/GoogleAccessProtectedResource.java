@@ -99,8 +99,7 @@ public class GoogleAccessProtectedResource extends AccessProtectedResource {
     if (getRefreshToken() != null) {
       GoogleRefreshTokenGrant request = new GoogleRefreshTokenGrant(
           getTransport(), getJsonFactory(), getClientId(), getClientSecret(), getRefreshToken());
-      setAccessToken(request.execute().accessToken);
-      return true;
+      return executeAccessTokenRequest(request);
     }
     return false;
   }
