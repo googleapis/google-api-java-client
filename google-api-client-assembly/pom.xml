@@ -2,27 +2,27 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.google.api.client</groupId>
+    <groupId>com.google.api-client</groupId>
     <artifactId>google-api-client-parent</artifactId>
     <version>1.5.0-beta-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <groupId>com.google.api.client</groupId>
+  <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-assembly</artifactId>
   <packaging>pom</packaging>
   <name>Assembly for the Google APIs Client Library for Java</name>
 
   <dependencies>
     <dependency>
-      <groupId>com.google.api.client</groupId>
+      <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.api.client</groupId>
+      <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client-extensions</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.api.client</groupId>
+      <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client-extensions-android2</artifactId>
     </dependency>
   </dependencies>

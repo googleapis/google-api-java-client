@@ -20,10 +20,6 @@
       stats="on" docchanges="on">
       <old name="Google API Client Library for Java 1.4.1-beta">
         <!-- This is the location of your old source files -->
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.4.1-beta/google-api-client/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.4.1-beta/google-api-client-extensions/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.4.1-beta/google-api-client-extensions-android2/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.4.1-beta/google-api-client-extensions-android3/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.4.1-beta/google-api-client-googleapis/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.4.1-beta/google-api-client-googleapis-extensions/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.4.1-beta/google-api-client-googleapis-extensions-android2/src/main/java" />
@@ -33,10 +29,6 @@
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.5.0-beta/google-api-client/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.5.0-beta/google-api-client-extensions/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.5.0-beta/google-api-client-extensions-android2/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.5.0-beta/google-api-client-extensions-android3/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.5.0-beta/google-api-client-googleapis/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.5.0-beta/google-api-client-googleapis-extensions/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.5.0-beta/google-api-client-googleapis-extensions-android2/src/main/java" />
       </new>
     </jdiff>
   </target>
