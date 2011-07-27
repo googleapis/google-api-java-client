@@ -133,22 +133,22 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-extensions</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.oauth-client</groupId>
         <artifactId>google-oauth-client</artifactId>
-        <version>${project.version}</version>
+        <version>${project.oauth.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.oauth-client</groupId>
         <artifactId>google-oauth-client-extensions</artifactId>
-        <version>${project.version}</version>
+        <version>${project.oauth.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
@@ -306,5 +306,7 @@
   </build>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.http.version>[1.5.0-beta-SNAPSHOT,1.6.0-beta-SNAPSHOT)</project.http.version>
+    <project.oauth.version>[1.5.0-beta-SNAPSHOT,1.6.0-beta-SNAPSHOT)</project.oauth.version>
   </properties>
 </project>
