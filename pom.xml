@@ -11,7 +11,7 @@
   <artifactId>google-api-client-parent</artifactId>
   <version>1.5.0-beta-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Google Client Libraries for Java</name>
+  <name>Parent for the Google API Client Library for Java</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
 
@@ -137,6 +137,12 @@
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-assembly</artifactId>
+        <version>${project.http.version}</version>
+        <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-extensions</artifactId>
         <version>${project.http.version}</version>
       </dependency>
@@ -144,6 +150,12 @@
         <groupId>com.google.oauth-client</groupId>
         <artifactId>google-oauth-client</artifactId>
         <version>${project.oauth.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.oauth-client</groupId>
+        <artifactId>google-oauth-client-assembly</artifactId>
+        <version>${project.oauth.version}</version>
+        <type>pom</type>
       </dependency>
       <dependency>
         <groupId>com.google.oauth-client</groupId>
@@ -306,7 +318,7 @@
   </build>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>[1.5.0-beta-SNAPSHOT,1.6.0-beta-SNAPSHOT)</project.http.version>
-    <project.oauth.version>[1.5.0-beta-SNAPSHOT,1.6.0-beta-SNAPSHOT)</project.oauth.version>
+    <project.http.version>1.5.0-beta</project.http.version>
+    <project.oauth.version>1.5.0-beta</project.oauth.version>
   </properties>
 </project>

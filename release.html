@@ -23,18 +23,18 @@
     Key".</li>
     <li>Add these lines to your <code>~/.hgrc</code>: <pre><code>
 [ui]
-username = Your Name <yourname @domain.com>
+username = Your Name <i>&lt;yourname@domain.com&gt;</i>
 
 [auth]
 google-api-java-client.prefix = https://google-api-java-client.googlecode.com/hg/
 google-api-java-client.username = <i>[username from <a
       href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i>
 google-api-java-client.password = <i>[password from <a
-      href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i></code></pre></li>
-    <li>Add these lines to your <code>~/.hgrc</code>: <pre><code>google-api-java-client.prefix = https://google-api-java-client.googlecode.com/hg/
-google-api-java-client.username = <i>[username from <a
       href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i>
-google-api-java-client.password = <i>[password from <a
+javadoc-google-api-java-client.prefix = https://javadoc.google-api-java-client.googlecode.com/hg/
+javadoc-google-api-java-client.username = <i>[username from <a
+      href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i>
+javadoc-google-api-java-client.password = <i>[password from <a
       href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i></code></pre></li>
     <li>Add these lines to your <code>~/.m2/settings.xml</code> (create
     this file if it does not already exist): <pre><code>&lt;settings&gt;
@@ -75,6 +75,8 @@ google-api-java-client.password = <i>[password from <a
 
 <h3>Release version 1.5.0-beta</h3>
 <ul>
+  <li>Consider changing value of $project.http.version and
+  $project.oauth.version variables in pom.xml</li>
   <li>Prepare the project
   <ul>
     <li><pre>
@@ -82,40 +84,8 @@ cd /tmp
 rm -rf google-api-java-client
 mkdir google-api-java-client
 cd google-api-java-client
-hg clone https://google-api-java-client.googlecode.com/hg/ default
-</pre></li>
-  </ul>
-  </li>
-  <li>For minor version update (i.e. feature release instead of just a bug
-  fix release), first merge the new minor version branch into the default
-  branch.
-  <ul>
-    <li>Merge dev branch into default branch: <pre>
-hg update default
-hg merge -r dev
-hg commit -m "merge with dev branch"
-hg push
-hg update dev 
-</pre></li>
-    <li>For the following files, replace <code>1.5.0-beta</code> with the next minor version:
-    <pre>
-pom.xml
-*/pom.xml
-jdiff.xml (first change "1.5" to next minor version, then change "1.4" to "1.5")
-release.html (first change "1.5" to next minor version, then change "1.4" to "1.5")
-</pre></li>
-    <li>Commit and push: <pre>
-hg commit -m "Start 1.5"
-hg push
-hg update default
-</pre></li>
-    <li>Merge dev branch for samples: <pre>
-cd /tmp
-hg clone https://samples.google-api-java-client.googlecode.com/hg/ samples
-cd samples
-hg merge -r dev
-hg commit -m "merge with dev branch"
-hg push
+hg clone -b 1.5 https://google-api-java-client.googlecode.com/hg/ 1.5
+cd 1.5
 </pre></li>
   </ul>
   </li>
@@ -124,22 +94,11 @@ hg push
   OSS Maven Repository Usage Guide</a>):
   <ul>
     <li>Prepare:<pre>
-cd /tmp/google-api-java-client/default
 mvn clean deploy
 mvn release:clean
+mvn release:prepare -DautoVersionSubmodules=true -Dtag=1.5.0-beta --batch-mode
+mvn release:perform -Darguments=-Dgpg.passphrase=<i>[YOUR GPG PASSPHRASE]</i>
 </pre></li>
-    <li><code>mvn release:prepare -DautoVersionSubmodules=true</code>
-    <ul>
-      <li>Accept default for 'What is the release version for "Google API
-      Client - Parent"?'</li>
-      <li>Type <code>1.5.0-beta</code> for 'What is SCM release tag or
-      label for "Google API Client - Parent"?'</li>
-      <li>Accept default for 'What is the new development version for
-      "Google API Client - Parent"?'</li>
-    </ul>
-    </li>
-    <li><code>mvn release:perform -Darguments=-Dgpg.passphrase=<i>[YOUR
-    GPG PASSPHRASE]</i></code></li>
     <li>Release on oss.sonatype.org
     <ul>
       <li>Log in to <a href="https://oss.sonatype.org">https://oss.sonatype.org</a></li>
@@ -159,8 +118,8 @@ mvn release:clean
   </li>
   <li>Start development of next bug fix version
   <ul>
-    <li><code>hg update</code></li>
-    <li>For the following files, replace <code>1.5.0-beta</code> with the next bug fix version:
+    <li>For the following files, replace <code>1.5.0-beta</code> with the
+    next bug fix version:
     <ul>
       <li><code>jdiff.xml</code></li>
       <li><code>release.html</code></li>
@@ -174,23 +133,20 @@ hg push
   </li>
   <li>Prepare the released library zip file and javadoc
   <ul>
-    <li>Overview: JDiff is a tool for showing the difference between the JavaDoc of
-    one version of the library vs. the JavaDoc of an old version of the library.
-    Hence, we will check out the last minor version of the library into a
-    temporary directory and compare against the JavaDoc of the just released
-    version of the library, and then hg commit that diff into the javadoc Hg
-    repository.</li>
+    <li>Overview: JDiff is a tool for showing the difference between the
+    JavaDoc of one version of the library vs. the JavaDoc of an old version of
+    the library. Hence, we will check out the last minor version of the library
+    into a temporary directory and compare against the JavaDoc of the just
+    released version of the library, and then hg commit that diff into the
+    javadoc Hg repository.</li>
     <li><pre>
-cd /tmp
-rm -rf google-api-java-client
-mkdir google-api-java-client
-cd google-api-java-client
-hg clone https://javadoc.google-api-java-client.googlecode.com/hg/ javadoc
+cd /tmp/google-api-java-client
+hg clone --insecure https://javadoc.google-api-java-client.googlecode.com/hg/ javadoc
 hg clone -r 1.4.1-beta https://google-api-java-client.googlecode.com/hg/ 1.4.1-beta
 hg clone -r 1.5.0-beta https://google-api-java-client.googlecode.com/hg/ 1.5.0-beta
 cd 1.5.0-beta
 mvn javadoc:jar install site
-cp -R target/site/apidocs/ ../javadoc/1.5.0-beta
+cp -R target/site/apidocs ../javadoc/1.5.0-beta
 </pre></li>
     <li>change these constants from jdiff.xml for your environment:
     JDIFF_HOME, MAVEN_REPOSITORY_HOME</li>
@@ -199,7 +155,7 @@ ant -f jdiff.xml
 cd ../javadoc
 hg add
 hg commit -m "1.5.0-beta"
-hg push
+hg push --insecure
 </pre></li>
   </ul>
   </li>
