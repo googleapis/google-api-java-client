@@ -26,7 +26,7 @@
     <fileSet>
       <directory>target/dependencies</directory>
       <includes>
-        <include>google-*-client-*</include>
+        <include>google-*-client-*.jar</include>
       </includes>
       <outputDirectory>/</outputDirectory>
     </fileSet>

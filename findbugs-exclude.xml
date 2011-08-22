@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FindBugsFilter>
+  <LastVersion value="-1" relOp="NEQ"/>
+  <!-- The following have not yet been investigated -->
+  <!-- TODO(yanivi): investigate them -->
+  <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
+  <And>
+    <Class name="com.google.api.client.googleapis.auth.AuthKeyValueParser"/>
+    <Bug pattern="OS_OPEN_STREAM"/>
+  </And>
+  <!-- The following are known to be bugs and should be fixed -->
+  <!-- The following are known to not be bugs and should not be fixed -->
+</FindBugsFilter>
