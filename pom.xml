@@ -10,7 +10,7 @@
   <artifactId>google-api-client-parent</artifactId>
   <version>1.5.0-beta</version>
   <packaging>pom</packaging>
-  <name>Parent for the Google API Client Library for Java</name>
+  <name>Google API Client Library for Java</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
 
@@ -287,6 +287,14 @@
             </goals>
             <phase>site</phase>
             <configuration>
+              <links>
+                <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
+                <link>http://code.google.com/appengine/docs/java/javadoc</link>
+                <link>http://javadoc.google-http-java-client.googlecode.com/hg/1.5.0-beta</link>
+                <link>http://javadoc.google-oauth-java-client.googlecode.com/hg/1.5.0-beta</link>
+              </links>
+              <doctitle>${project.name} ${project.version}</doctitle>
+              <windowtitle>${project.groupId} ${project.version}</windowtitle>
               <groups>
                 <group>
                   <title>google-api-client</title>
