@@ -14,7 +14,6 @@
 
 package com.google.api.client.googleapis.json;
 
-import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -23,6 +22,7 @@ import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
@@ -69,7 +69,8 @@ public class GoogleJsonErrorTest extends TestCase {
         };
       }
     };
-    HttpRequest request = transport.createRequestFactory().buildGetRequest(new GenericUrl());
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     try {
       request.execute();
       fail();
