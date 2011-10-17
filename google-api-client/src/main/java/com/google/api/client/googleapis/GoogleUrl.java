@@ -15,6 +15,7 @@
 package com.google.api.client.googleapis;
 
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.UriTemplate;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.escape.CharEscapers;
@@ -92,7 +93,9 @@ public class GoogleUrl extends GenericUrl {
    *         parameters
    *
    * @since 1.3
+   * @deprecated (scheduled to be removed in 1.7) Use {@link UriTemplate#expand}
    */
+  @Deprecated
   public static GoogleUrl create(String encodedServerUrl, String pathTemplate, Object parameters)
       throws IllegalArgumentException {
     GoogleUrl url = new GoogleUrl(encodedServerUrl);
@@ -120,7 +123,6 @@ public class GoogleUrl extends GenericUrl {
    * @return The expanded template
    * @throws IllegalArgumentException if a requested element in the pathUri is not in the
    *         variableMap
-   * @since 1.3
    */
   @VisibleForTesting
   static String expandUriTemplates(String pathUri, HashMap<String, Object> variableMap)

@@ -26,6 +26,7 @@ import java.util.HashMap;
  *
  * @author Tony Aiuto
  */
+@SuppressWarnings("deprecation")
 public class GoogleUrlTest extends TestCase {
 
   final String SERVER = "http://google.com";
@@ -48,6 +49,8 @@ public class GoogleUrlTest extends TestCase {
     int a;
     @Key
     String b;
+    @Key
+    String c;
   }
 
   public void testConstructorWithTemplate() {
@@ -69,6 +72,19 @@ public class GoogleUrlTest extends TestCase {
     url.alt = "json";
     url.fields = "x,y,z";
     assertEquals(SERVER + "/123/456/c?alt=json&fields=x,y,z&prettyprint=true", url.toString());
+  }
+
+  public void testExpansionOfKeys_unusedParams() {
+    final String PATH = "/{a}/{b}/c";
+    Parameters p = new Parameters();
+    p.a = 123;
+    p.b = "456";
+    p.c = "78";
+    GoogleUrl url = GoogleUrl.create(SERVER, PATH, p);
+    url.prettyprint = true;
+    url.alt = "json";
+    url.fields = "x,y,z";
+    assertEquals(SERVER + "/123/456/c?alt=json&fields=x,y,z&prettyprint=true&c=78", url.toString());
   }
 
   public void testExpandTemplates_basic() {
