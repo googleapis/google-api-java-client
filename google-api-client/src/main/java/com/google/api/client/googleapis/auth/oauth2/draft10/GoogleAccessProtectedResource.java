@@ -76,7 +76,8 @@ public class GoogleAccessProtectedResource extends AccessProtectedResource {
    * @param jsonFactory JSON factory to use for parsing response for refresh token request
    * @param clientId client identifier
    * @param clientSecret client secret
-   * @param refreshToken refresh token associated with the access token to be refreshed
+   * @param refreshToken refresh token associated with the access token to be refreshed or
+   *        {@code null} for none
    */
   public GoogleAccessProtectedResource(String accessToken,
       HttpTransport transport,
