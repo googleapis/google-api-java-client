@@ -47,7 +47,7 @@ public class GoogleClient extends JsonHttpClient {
    * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
    *        {@code null} for none
    * @param jsonFactory A factory for creating JSON parsers and serializers
-   * @param baseUrl The base URL of the service
+   * @param baseUrl The base URL of the service. Must end with a "/"
    * @param applicationName The application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
    */
@@ -66,7 +66,8 @@ public class GoogleClient extends JsonHttpClient {
    * Create an {@link HttpRequest} suitable for use against this service.
    *
    * @param method HTTP Method type
-   * @param uriTemplate URI template
+   * @param uriTemplate URI template for the path relative to the base URL. Must not start with
+   *        a "/"
    * @param remoteRequest Remote Request type
    * @return newly created {@link HttpRequest}
    */
@@ -83,7 +84,7 @@ public class GoogleClient extends JsonHttpClient {
    *
    * @param transport The transport to use for requests
    * @param jsonFactory A factory for creating JSON parsers and serializers
-   * @param baseUrl The base URL of the service
+   * @param baseUrl The base URL of the service. Must end with a "/"
    */
   public static Builder builder(
       HttpTransport transport, JsonFactory jsonFactory, GenericUrl baseUrl) {
@@ -106,7 +107,7 @@ public class GoogleClient extends JsonHttpClient {
      *
      * @param transport The transport to use for requests
      * @param jsonFactory A factory for creating JSON parsers and serializers
-     * @param baseUrl The base URL of the service
+     * @param baseUrl The base URL of the service. Must end with a "/"
      */
     protected Builder(HttpTransport transport, JsonFactory jsonFactory, GenericUrl baseUrl) {
       super(transport, jsonFactory, baseUrl);
