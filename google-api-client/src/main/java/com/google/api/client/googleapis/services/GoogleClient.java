@@ -21,8 +21,8 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.json.JsonHttpClient;
-import com.google.api.client.http.json.RemoteRequest;
-import com.google.api.client.http.json.RemoteRequestInitializer;
+import com.google.api.client.http.json.JsonHttpRequest;
+import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
 
 import java.io.IOException;
@@ -42,8 +42,8 @@ public class GoogleClient extends JsonHttpClient {
    * Construct the {@link GoogleClient}.
    *
    * @param transport The transport to use for requests
-   * @param remoteRequestInitializer The initializer to use when creating an {@link RemoteRequest}
-   *        or {@code null} for none
+   * @param jsonHttpRequestInitializer The initializer to use when creating an
+   *        {@link JsonHttpRequest} or {@code null} for none
    * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
    *        {@code null} for none
    * @param jsonFactory A factory for creating JSON parsers and serializers
@@ -53,12 +53,12 @@ public class GoogleClient extends JsonHttpClient {
    */
   protected GoogleClient(
       HttpTransport transport,
-      RemoteRequestInitializer remoteRequestInitializer,
+      JsonHttpRequestInitializer jsonHttpRequestInitializer,
       HttpRequestInitializer httpRequestInitializer,
       JsonFactory jsonFactory,
       String baseUrl,
       String applicationName) {
-    super(transport, remoteRequestInitializer, httpRequestInitializer, jsonFactory, baseUrl,
+    super(transport, jsonHttpRequestInitializer, httpRequestInitializer, jsonFactory, baseUrl,
         applicationName);
   }
 
@@ -68,13 +68,13 @@ public class GoogleClient extends JsonHttpClient {
    * @param method HTTP Method type
    * @param uriTemplate URI template for the path relative to the base URL. Must not start with
    *        a "/"
-   * @param remoteRequest Remote Request type
+   * @param jsonHttpRequest JSON HTTP Request type
    * @return newly created {@link HttpRequest}
    */
   @Override
   protected HttpRequest buildHttpRequest(
-      HttpMethod method, String uriTemplate, RemoteRequest remoteRequest) throws IOException {
-    HttpRequest httpRequest = super.buildHttpRequest(method, uriTemplate, remoteRequest);
+      HttpMethod method, String uriTemplate, JsonHttpRequest jsonHttpRequest) throws IOException {
+    HttpRequest httpRequest = super.buildHttpRequest(method, uriTemplate, jsonHttpRequest);
     methodOverride.intercept(httpRequest);
     return httpRequest;
   }
@@ -118,7 +118,7 @@ public class GoogleClient extends JsonHttpClient {
     public GoogleClient build() {
       return new GoogleClient(
           getTransport(),
-          getRemoteRequestInitializer(),
+          getJsonHttpRequestInitializer(),
           getHttpRequestInitializer(),
           getJsonFactory(),
           getBaseUrl().build(),
