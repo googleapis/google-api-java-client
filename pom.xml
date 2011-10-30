@@ -60,35 +60,12 @@
     <module>google-api-client-extensions-android2</module>
   </modules>
 
-  <repositories>
-    <repository>
-      <id>gson</id>
-      <url>http://google-gson.googlecode.com/svn/mavenrepo</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-  </repositories>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>com.google.android</groupId>
         <artifactId>android</artifactId>
         <version>1.5_r4</version>
-      </dependency>
-      <dependency>
-        <groupId>org.codehaus.jackson</groupId>
-        <artifactId>jackson-core-asl</artifactId>
-        <version>1.6.7</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.code.gson</groupId>
-        <artifactId>gson</artifactId>
-        <version>1.6</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
