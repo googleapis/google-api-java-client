@@ -25,21 +25,28 @@ public class GoogleAuthorizationRequestUrlTest extends TestCase {
   private static final String CLIENT_ID = "s6BhdRkqt3";
   private static final String REDIRECT_URL = "https://client.example.com/cb";
   private static final String SCOPE = "https://www.googleapis.com/auth/buzz";
+  private static final String ACCESS_TYPE = "online";
+  private static final String APPROVAL_PROMPT = "force";
   private static final String EXPECTED =
-      "https://accounts.google.com/o/oauth2/auth?client_id=" + CLIENT_ID + "&redirect_uri="
-          + REDIRECT_URL + "&response_type=code&" + "scope=" + SCOPE;
+      "https://accounts.google.com/o/oauth2/auth?access_type=" + ACCESS_TYPE + "&approval_prompt="
+          + APPROVAL_PROMPT + "&client_id=" + CLIENT_ID + "&redirect_uri=" + REDIRECT_URL
+          + "&response_type=code&" + "scope=" + SCOPE;
 
   public void testConstructor() {
     GoogleAuthorizationRequestUrl url = new GoogleAuthorizationRequestUrl();
     url.clientId = CLIENT_ID;
     url.redirectUri = REDIRECT_URL;
     url.scope = SCOPE;
+    url.setAccessType(ACCESS_TYPE);
+    url.setApprovalPrompt(APPROVAL_PROMPT);
     assertEquals(EXPECTED, url.build());
   }
 
   public void testConstructor_withParameters() {
     GoogleAuthorizationRequestUrl url =
         new GoogleAuthorizationRequestUrl(CLIENT_ID, REDIRECT_URL, SCOPE);
+    url.setAccessType(ACCESS_TYPE);
+    url.setApprovalPrompt(APPROVAL_PROMPT);
     assertEquals(EXPECTED, url.build());
   }
 
