@@ -14,7 +14,7 @@
 
 package com.google.api.client.googleapis.extensions.appengine.auth.helpers;
 
-import com.google.api.client.extensions.auth.helpers.appengine.AppAssertionFlow;
+import com.google.api.client.extensions.appengine.auth.helpers.AppAssertionFlow;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -24,6 +24,12 @@ import javax.jdo.annotations.PersistenceAware;
 /**
  * Specialization of {@link AppAssertionFlow} with the endpoint and audience filled in for accessing
  * Google APIs.
+ *
+ * <p>
+ * Upgrade warning: in prior version this class extended
+ * {@link com.google.api.client.extensions.appengine.auth.helpers.AppAssertionFlow} but as of
+ * version 1.6 it now extends {@link AppAssertionFlow}, which is a drop-in replacement.
+ * </p>
  *
  * @author moshenko@google.com (Jacob Moshenko)
  *

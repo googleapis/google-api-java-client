@@ -28,7 +28,10 @@ import javax.jdo.annotations.PersistenceAware;
  * @author moshenko@google.com (Jacob Moshenko)
  *
  * @since 1.5
+ * @deprecated (scheduled to be removed in 1.7) Use {@link
+ *             com.google.api.client.googleapis.extensions.appengine.auth.helpers.GoogleAppAssertionFlow}
  */
+@Deprecated
 @PersistenceAware
 public class GoogleAppAssertionFlow extends AppAssertionFlow {
   /**
