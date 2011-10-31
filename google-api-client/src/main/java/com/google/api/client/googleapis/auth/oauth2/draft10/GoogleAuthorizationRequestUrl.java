@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.auth.oauth2.draft10;
 
 import com.google.api.client.auth.oauth2.draft10.AuthorizationRequestUrl;
 import com.google.api.client.auth.oauth2.draft10.AuthorizationResponse;
+import com.google.api.client.util.Key;
 
 /**
  * Google extension to the OAuth 2.0 (draft 10) URL builder for an authorization web page to allow
@@ -46,6 +47,20 @@ public class GoogleAuthorizationRequestUrl extends AuthorizationRequestUrl {
   /** Authorization server URL for end-user authorization. */
   public static final String AUTHORIZATION_SERVER_URL = "https://accounts.google.com/o/oauth2/auth";
 
+  /**
+   * [OPTIONAL] {@code "force"} to force the approval UI to show or {@code "auto"} to request
+   * auto-approval when possible ({@code "auto"} is the default if {@code null}).
+   */
+  @Key("approval_prompt")
+  private String approvalPrompt;
+
+  /**
+   * [OPTIONAL] {@code "offline"} to request offline access from the user or {@code "online"} to
+   * request online access ({@code "online"} is the default if {@code null}).
+   */
+  @Key("access_type")
+  private String accessType;
+
   public GoogleAuthorizationRequestUrl() {
     super(AUTHORIZATION_SERVER_URL);
   }
@@ -62,5 +77,55 @@ public class GoogleAuthorizationRequestUrl extends AuthorizationRequestUrl {
     super(AUTHORIZATION_SERVER_URL, clientId);
     this.redirectUri = redirectUri;
     this.scope = scope;
+  }
+
+  /**
+   * [OPTIONAL] {@code "force"} to force the approval UI to show or {@code "auto"} to request
+   * auto-approval when possible ({@code "auto"} is the default if {@code null}).
+   *
+   * @since 1.6
+   */
+  public final String getApprovalPrompt() {
+    return approvalPrompt;
+  }
+
+  /**
+   * [OPTIONAL] {@code "force"} to force the approval UI to show or {@code "auto"} to request
+   * auto-approval when possible ({@code "auto"} is the default if {@code null}).
+   *
+   * <p>
+   * Subclasses may override the return value by calling super.
+   * </p>
+   *
+   * @since 1.6
+   */
+  public GoogleAuthorizationRequestUrl setApprovalPrompt(String approvalPrompt) {
+    this.approvalPrompt = approvalPrompt;
+    return this;
+  }
+
+  /**
+   * [OPTIONAL] {@code "offline"} to request offline access from the user or {@code "online"} to
+   * request online access ({@code "online"} is the default if {@code null}).
+   *
+   * @since 1.6
+   */
+  public final String getAccessType() {
+    return accessType;
+  }
+
+  /**
+   * [OPTIONAL] {@code "offline"} to request offline access from the user or {@code "online"} to
+   * request online access ({@code "online"} is the default if {@code null}).
+   *
+   * <p>
+   * Subclasses may override the return value by calling super.
+   * </p>
+   *
+   * @since 1.6
+   */
+  public GoogleAuthorizationRequestUrl setAccessType(String accessType) {
+    this.accessType = accessType;
+    return this;
   }
 }
