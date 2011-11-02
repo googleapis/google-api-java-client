@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.json;
 
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.json.GenericJson;
+import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Key;
 
@@ -56,6 +57,8 @@ public class GoogleJsonError extends GenericJson {
    * @param jsonFactory JSON factory
    * @param response HTTP response
    * @return new instance of the Google JSON error information
+   * @throws IllegalArgumentException if content type is not {@link Json#CONTENT_TYPE} or if
+   *         expected {@code "data"} or {@code "error"} key is not found
    */
   public static GoogleJsonError parse(JsonFactory jsonFactory, HttpResponse response)
       throws IOException {
@@ -98,5 +101,4 @@ public class GoogleJsonError extends GenericJson {
   /** Error message. */
   @Key
   public String message;
-
 }
