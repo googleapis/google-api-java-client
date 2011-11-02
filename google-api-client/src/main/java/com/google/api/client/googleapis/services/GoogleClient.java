@@ -15,10 +15,13 @@
 package com.google.api.client.googleapis.services;
 
 import com.google.api.client.googleapis.MethodOverride;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.json.JsonHttpClient;
 import com.google.api.client.http.json.JsonHttpRequest;
@@ -39,6 +42,22 @@ public class GoogleClient extends JsonHttpClient {
   private final MethodOverride methodOverride = new MethodOverride();
 
   /**
+   * Constructor with required parameters.
+   *
+   * <p>
+   * Use {@link #builder(HttpTransport, JsonFactory, GenericUrl)} if you need to specify any of the
+   * optional parameters.
+   * </p>
+   *
+   * @param transport The transport to use for requests
+   * @param jsonFactory A factory for creating JSON parsers and serializers
+   * @param baseUrl The base URL of the service. Must end with a "/"
+   */
+  public GoogleClient(HttpTransport transport, JsonFactory jsonFactory, String baseUrl) {
+    super(transport, jsonFactory, baseUrl);
+  }
+
+  /**
    * Construct the {@link GoogleClient}.
    *
    * @param transport The transport to use for requests
@@ -51,14 +70,17 @@ public class GoogleClient extends JsonHttpClient {
    * @param applicationName The application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
    */
-  protected GoogleClient(
-      HttpTransport transport,
+  protected GoogleClient(HttpTransport transport,
       JsonHttpRequestInitializer jsonHttpRequestInitializer,
       HttpRequestInitializer httpRequestInitializer,
       JsonFactory jsonFactory,
       String baseUrl,
       String applicationName) {
-    super(transport, jsonHttpRequestInitializer, httpRequestInitializer, jsonFactory, baseUrl,
+    super(transport,
+        jsonHttpRequestInitializer,
+        httpRequestInitializer,
+        jsonFactory,
+        baseUrl,
         applicationName);
   }
 
@@ -66,8 +88,8 @@ public class GoogleClient extends JsonHttpClient {
    * Create an {@link HttpRequest} suitable for use against this service.
    *
    * @param method HTTP Method type
-   * @param uriTemplate URI template for the path relative to the base URL. Must not start with
-   *        a "/"
+   * @param uriTemplate URI template for the path relative to the base URL. Must not start with a
+   *        "/"
    * @param jsonHttpRequest JSON HTTP Request type
    * @return newly created {@link HttpRequest}
    */
@@ -89,6 +111,17 @@ public class GoogleClient extends JsonHttpClient {
   public static Builder builder(
       HttpTransport transport, JsonFactory jsonFactory, GenericUrl baseUrl) {
     return new Builder(transport, jsonFactory, baseUrl);
+  }
+
+  @Override
+  protected HttpResponse execute(
+      HttpMethod method, String uriTemplate, Object body, JsonHttpRequest jsonHttpRequest)
+      throws IOException {
+    try {
+      return super.execute(method, uriTemplate, body, jsonHttpRequest);
+    } catch (HttpResponseException e) {
+      throw GoogleJsonResponseException.from(getJsonFactory(), e.getResponse());
+    }
   }
 
   /**
@@ -116,8 +149,7 @@ public class GoogleClient extends JsonHttpClient {
     /** Builds a new instance of {@link GoogleClient}. */
     @Override
     public GoogleClient build() {
-      return new GoogleClient(
-          getTransport(),
+      return new GoogleClient(getTransport(),
           getJsonHttpRequestInitializer(),
           getHttpRequestInitializer(),
           getJsonFactory(),

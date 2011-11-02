@@ -73,8 +73,8 @@ public final class JsonCParser extends JsonHttpParser {
    *
    * @param response HTTP response
    * @return JSON parser
-   * @throws IllegalArgumentException if content type is not {@link Json#CONTENT_TYPE} or if {@code
-   *         "data"} key is not found
+   * @throws IllegalArgumentException if content type is not {@link Json#CONTENT_TYPE} or if
+   *         expected {@code "data"} or {@code "error"} key is not found
    * @throws IOException I/O exception
    * @since 1.3
    */
