@@ -35,6 +35,18 @@ import javax.jdo.annotations.PersistenceCapable;
 public class GoogleOAuth2ThreeLeggedFlow extends OAuth2ThreeLeggedFlow {
 
   /**
+   * Authorization endpoint to use.
+   *
+   * <p>
+   * This forces the approval prompt to show, and requests offline access in order to guarantee a
+   * refresh token to be returned.
+   * </p>
+   */
+  private static final String AUTHORIZATION_ENDPOINT =
+      new GoogleAuthorizationRequestUrl()
+          .setAccessType("offline").setApprovalPrompt("force").build();
+
+  /**
    * Create the flow object with the information provided and generate the authorization url.
    *
    * @param userId Key that will be used to associate this flow object with an end user.
@@ -50,7 +62,7 @@ public class GoogleOAuth2ThreeLeggedFlow extends OAuth2ThreeLeggedFlow {
         clientSecret,
         scope,
         callbackUrl,
-        GoogleAuthorizationRequestUrl.AUTHORIZATION_SERVER_URL,
+        AUTHORIZATION_ENDPOINT,
         GoogleAccessTokenRequest.AUTHORIZATION_SERVER_URL);
   }
 
