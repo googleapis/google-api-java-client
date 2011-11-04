@@ -16,8 +16,11 @@ package com.google.api.client.googleapis.json;
 
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonParser;
+import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.Strings;
 import com.google.common.base.Preconditions;
 
@@ -75,6 +78,14 @@ public class GoogleJsonResponseException extends HttpResponseException {
   /**
    * Returns a new instance of {@link GoogleJsonResponseException}.
    *
+   * <p>
+   * If there is a JSON error response, it is parsed using {@link GoogleJsonError}, which can be
+   * inspected using {@link #getDetails()}. Otherwise, response content (if any) is read and
+   * ignored. Either way, any content is already parsed, and trying to parse
+   * {@link HttpResponse#getContent()} of {@link #getResponse()} will likely result in an
+   * {@link IOException}.
+   * </p>
+   *
    * @param jsonFactory JSON factory
    * @param response HTTP response
    * @return new instance of {@link GoogleJsonResponseException}
@@ -84,12 +95,38 @@ public class GoogleJsonResponseException extends HttpResponseException {
     Preconditions.checkNotNull(jsonFactory);
     GoogleJsonError details = null;
     String contentType = response.getContentType();
-    if (contentType != null && contentType.startsWith(Json.CONTENT_TYPE)) {
+    if (!response.isSuccessStatusCode() && contentType != null
+        && contentType.startsWith(Json.CONTENT_TYPE)) {
+      JsonParser parser = null;
       try {
-        details = GoogleJsonError.parse(jsonFactory, response);
+        parser = JsonHttpParser.parserForResponse(jsonFactory, response);
+        JsonToken currentToken = parser.getCurrentToken();
+        // token is null at start, so get next token
+        if (currentToken == null) {
+          currentToken = parser.nextToken();
+        }
+        // check for empty content
+        if (currentToken != null) {
+          // make sure there is an "error" key
+          parser.skipToKey("error");
+          if (parser.getCurrentToken() != JsonToken.END_OBJECT) {
+            details = parser.parseAndClose(GoogleJsonError.class, null);
+          }
+        }
       } catch (IOException exception) {
         // it would be bad to throw an exception while throwing an exception
         exception.printStackTrace();
+      } finally {
+        try {
+          if (parser == null) {
+            response.getContent().close();
+          } else if (details == null) {
+            parser.close();
+          }
+        } catch (IOException exception) {
+          // it would be bad to throw an exception while throwing an exception
+          exception.printStackTrace();
+        }
       }
     }
     // message
