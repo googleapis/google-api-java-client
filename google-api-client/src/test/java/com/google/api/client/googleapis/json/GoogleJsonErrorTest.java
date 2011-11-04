@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.json;
 
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
@@ -39,12 +40,12 @@ import java.io.IOException;
  */
 public class GoogleJsonErrorTest extends TestCase {
 
-  private static final JacksonFactory FACTORY = new JacksonFactory();
-  private static final String ERROR =
+  static final JacksonFactory FACTORY = new JacksonFactory();
+  static final String ERROR =
       "{" + "\"code\":403," + "\"errors\":[{" + "\"domain\":\"usageLimits\","
           + "\"message\":\"Access Not Configured\"," + "\"reason\":\"accessNotConfigured\"" + "}],"
           + "\"message\":\"Access Not Configured\"}";
-  private static final String ERROR_RESPONSE = "{\"error\":" + ERROR + "}";
+  static final String ERROR_RESPONSE = "{\"error\":" + ERROR + "}";
 
   public void test_json() throws IOException {
     JsonParser parser = FACTORY.createJsonParser(ERROR);
@@ -53,22 +54,40 @@ public class GoogleJsonErrorTest extends TestCase {
     assertEquals(ERROR, FACTORY.toString(e));
   }
 
-  public void testParse() throws IOException {
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildGetRequest(String url) {
-        return new MockLowLevelHttpRequest() {
-          @Override
-          public LowLevelHttpResponse execute() {
-            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
-            result.setContent(ERROR_RESPONSE);
-            result.setContentType(Json.CONTENT_TYPE);
-            result.setStatusCode(403);
-            return result;
+  static class ErrorTransport extends MockHttpTransport {
+    final String content;
+    final String contentType;
+
+    ErrorTransport() {
+      this(ERROR_RESPONSE, Json.CONTENT_TYPE);
+    }
+
+    ErrorTransport(String content, String contentType) {
+      this.content = content;
+      this.contentType = contentType;
+    }
+
+    @Override
+    public LowLevelHttpRequest buildGetRequest(String url) {
+      return new MockLowLevelHttpRequest() {
+        @Override
+        public LowLevelHttpResponse execute() {
+          MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+          if (content != null) {
+            result.setContent(content);
           }
-        };
-      }
-    };
+          if (contentType != null) {
+            result.setContentType(contentType);
+          }
+          result.setStatusCode(HttpStatusCodes.STATUS_CODE_FORBIDDEN);
+          return result;
+        }
+      };
+    }
+  }
+
+  public void testParse() throws IOException {
+    HttpTransport transport = new ErrorTransport();
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     try {
