@@ -7,7 +7,6 @@
     <version>1.7.0-beta-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-extensions</artifactId>
   <name>Google specific platform extensions to the Google API Client Library for Java.</name>
   <build>
@@ -73,6 +72,48 @@
         </executions>
       </plugin>
     </plugins>
+    <pluginManagement>
+      <plugins>
+        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <versionRange>[2.3.1,)</versionRange>
+                    <goals>
+                      <goal>jar</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.datanucleus</groupId>
+                    <artifactId>maven-datanucleus-plugin</artifactId>
+                    <versionRange>[2.2.1,)</versionRange>
+                    <goals>
+                      <goal>enhance</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
   <dependencies>
     <dependency>
@@ -104,10 +145,6 @@
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-extensions</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.api-client</groupId>
-      <artifactId>google-api-client</artifactId>
     </dependency>
   </dependencies>
 </project>
