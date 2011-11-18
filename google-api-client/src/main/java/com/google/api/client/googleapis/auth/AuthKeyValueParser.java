@@ -46,7 +46,7 @@ public final class AuthKeyValueParser implements HttpParser {
   public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
     T newInstance = Types.newInstance(dataClass);
     ClassInfo classInfo = ClassInfo.of(dataClass);
-    response.setDisableContentLogging(true);
+    response.setContentLoggingLimit(0);
     InputStream content = response.getContent();
     try {
       BufferedReader reader = new BufferedReader(new InputStreamReader(content));
