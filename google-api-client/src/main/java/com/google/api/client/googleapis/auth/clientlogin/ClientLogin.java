@@ -177,7 +177,7 @@ public final class ClientLogin {
     HttpRequest request =
         transport.createRequestFactory().buildPostRequest(url, new UrlEncodedContent(this));
     request.addParser(AuthKeyValueParser.INSTANCE);
-    request.setDisableContentLogging(true);
+    request.setContentLoggingLimit(0);
     return request.execute().parseAs(Response.class);
   }
 }

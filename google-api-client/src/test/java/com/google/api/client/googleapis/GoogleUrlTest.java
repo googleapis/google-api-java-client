@@ -26,7 +26,6 @@ import java.util.HashMap;
  *
  * @author Tony Aiuto
  */
-@SuppressWarnings("deprecation")
 public class GoogleUrlTest extends TestCase {
 
   final String SERVER = "http://google.com";
@@ -38,12 +37,6 @@ public class GoogleUrlTest extends TestCase {
     super(name);
   }
 
-  public void testConstructorBasic() {
-    final String PATH = "/a/b";
-    GoogleUrl url = GoogleUrl.create(SERVER, PATH, new Object());
-    assertEquals(SERVER + PATH, url.toString());
-  }
-
   class Parameters {
     @Key
     int a;
@@ -51,40 +44,6 @@ public class GoogleUrlTest extends TestCase {
     String b;
     @Key
     String c;
-  }
-
-  public void testConstructorWithTemplate() {
-    final String PATH = "/{a}/{b}/c";
-    Parameters p = new Parameters();
-    p.a = 123;
-    p.b = "456";
-    GoogleUrl url = GoogleUrl.create(SERVER, PATH, p);
-    assertEquals(SERVER + "/123/456/c", url.toString());
-  }
-
-  public void testExpansionOfKeys() {
-    final String PATH = "/{a}/{b}/c";
-    Parameters p = new Parameters();
-    p.a = 123;
-    p.b = "456";
-    GoogleUrl url = GoogleUrl.create(SERVER, PATH, p);
-    url.prettyprint = true;
-    url.alt = "json";
-    url.fields = "x,y,z";
-    assertEquals(SERVER + "/123/456/c?alt=json&fields=x,y,z&prettyprint=true", url.toString());
-  }
-
-  public void testExpansionOfKeys_unusedParams() {
-    final String PATH = "/{a}/{b}/c";
-    Parameters p = new Parameters();
-    p.a = 123;
-    p.b = "456";
-    p.c = "78";
-    GoogleUrl url = GoogleUrl.create(SERVER, PATH, p);
-    url.prettyprint = true;
-    url.alt = "json";
-    url.fields = "x,y,z";
-    assertEquals(SERVER + "/123/456/c?alt=json&fields=x,y,z&prettyprint=true&c=78", url.toString());
   }
 
   public void testExpandTemplates_basic() {
@@ -102,18 +61,6 @@ public class GoogleUrlTest extends TestCase {
     assertTrue(requestMap.containsKey("unused"));
   }
 
-  public void testExpandTemplates_noParameters() {
-    // Should not raise an exception.
-    GoogleUrl url = GoogleUrl.create("http://host/", "abc/def", null);
-    assertEquals("http://host/abc/def", url.toString());
-    try {
-      GoogleUrl.create("http://host/", "abc/{def}/", null);
-    } catch (IllegalArgumentException expectedException) {
-      return;
-    }
-    fail();
-  }
-
   public void testExpandTemplates_missingParameter() {
     HashMap<String, Object> requestMap = Maps.newHashMap();
     requestMap.put("abc", "xyz");
@@ -129,13 +76,5 @@ public class GoogleUrlTest extends TestCase {
   public class PrettyPrintParameters {
     @Key
     Boolean prettyprint;
-  }
-
-  public void testCreate_prettyPrint() {
-    PrettyPrintParameters parameters = new PrettyPrintParameters();
-    assertNull(GoogleUrl.create("https://www.googleapis.com", "", parameters).prettyprint);
-    parameters.prettyprint = false;
-    assertEquals(
-        Boolean.FALSE, GoogleUrl.create("https://www.googleapis.com", "", parameters).prettyprint);
   }
 }

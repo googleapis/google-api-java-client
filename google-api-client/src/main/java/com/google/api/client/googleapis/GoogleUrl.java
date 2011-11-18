@@ -15,15 +15,12 @@
 package com.google.api.client.googleapis;
 
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.UriTemplate;
-import com.google.api.client.util.Data;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.escape.CharEscapers;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Generic Google URL providing for some common query parameters used in Google API's such as the
@@ -80,37 +77,6 @@ public class GoogleUrl extends GenericUrl {
   @Override
   public GoogleUrl clone() {
     return (GoogleUrl) super.clone();
-  }
-
-  /**
-   * Construct a GoogleUrl from a server, template and a parameter block.
-   *
-   * @param encodedServerUrl encoded URL of the server
-   * @param pathTemplate path template
-   * @param parameters an object with parameters designated by Key annotations. If the template has
-   *        no variable references, parameters may be {@code null}.
-   * @throws IllegalArgumentException if a requested element in the pathTemplate is not in the
-   *         parameters
-   *
-   * @since 1.3
-   * @deprecated (scheduled to be removed in 1.7) Use {@link UriTemplate#expand}
-   */
-  @Deprecated
-  public static GoogleUrl create(String encodedServerUrl, String pathTemplate, Object parameters)
-      throws IllegalArgumentException {
-    GoogleUrl url = new GoogleUrl(encodedServerUrl);
-
-    HashMap<String, Object> requestMap = new HashMap<String, Object>();
-    for (Map.Entry<String, Object> entry : Data.mapOf(parameters).entrySet()) {
-      Object value = entry.getValue();
-      if (value != null) {
-        requestMap.put(entry.getKey(), value);
-      }
-    }
-    url.appendRawPath(expandUriTemplates(pathTemplate, requestMap));
-    // all other parameters are assumed to be query parameters
-    url.putAll(requestMap);
-    return url;
   }
 
   /**

@@ -25,18 +25,12 @@ import javax.jdo.annotations.PersistenceAware;
  * Specialization of {@link AppAssertionFlow} with the endpoint and audience filled in for accessing
  * Google APIs.
  *
- * <p>
- * Upgrade warning: in prior version this class extended
- * {@link com.google.api.client.extensions.appengine.auth.helpers.AppAssertionFlow} but as of
- * version 1.6 it now extends {@link AppAssertionFlow}, which is a drop-in replacement.
- * </p>
- *
  * @author moshenko@google.com (Jacob Moshenko)
- *
  * @since 1.5
  */
 @PersistenceAware
 public class GoogleAppAssertionFlow extends AppAssertionFlow {
+
   /**
    * Create an instance of {@link AppAssertionFlow} that is specialized for communicating with
    * Google APIs.
@@ -56,5 +50,4 @@ public class GoogleAppAssertionFlow extends AppAssertionFlow {
         transport,
         jsonFactory);
   }
-
 }
