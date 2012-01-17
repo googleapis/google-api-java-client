@@ -35,6 +35,11 @@ javadoc-google-api-java-client.prefix = https://javadoc.google-api-java-client.g
 javadoc-google-api-java-client.username = <i>[username from <a
       href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i>
 javadoc-google-api-java-client.password = <i>[password from <a
+      href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i>
+wiki-google-api-java-client.prefix = https://wiki.google-api-java-client.googlecode.com/hg/
+wiki-google-api-java-client.username = <i>[username from <a
+      href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i>
+wiki-google-api-java-client.password = <i>[password from <a
       href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i></code></pre></li>
     <li>Add these lines to your <code>~/.m2/settings.xml</code> (create
     this file if it does not already exist): <pre><code>&lt;settings&gt;
@@ -85,7 +90,7 @@ hg push
 hg update default
 </pre></li>
   <li>For the following files, replace <code>1.7.0-beta</code> with the
-  next minor version: <pre>
+  next minor version: <b>(TODO: update this section to use sed)</b><pre>
 pom.xml
 */pom.xml
 jdiff.xml (first change "1.7" to next minor version, then change "1.6" to "1.7")
@@ -103,60 +108,40 @@ the 1.7 Mercurial branch.
 <ul>
   <li>Consider changing value of $project.http.version and
   $project.oauth.version variables in pom.xml</li>
-  <li>Prepare the project
-  <ul>
-    <li><pre>
+  <li>Checkout the source and push to central Maven repository (based on
+  instructions from <a href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Sonatype OSS Maven Repository Usage Guide</a>):<pre>
 cd /tmp
 rm -rf google-api-java-client
 mkdir google-api-java-client
 cd google-api-java-client
 hg clone -b 1.7 https://google-api-java-client.googlecode.com/hg/ 1.7
 cd 1.7
-</pre></li>
-  </ul>
-  </li>
-  <li>Push to central Maven repository (based on instructions from <a
-    href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Sonatype
-  OSS Maven Repository Usage Guide</a>):
-  <ul>
-    <li>Prepare:<pre>
+
 mvn clean deploy
 mvn release:clean
 mvn release:prepare -DautoVersionSubmodules=true -Dtag=1.7.0-beta --batch-mode
 mvn release:perform -Darguments=-Dgpg.passphrase=<i>[YOUR GPG PASSPHRASE]</i>
 </pre></li>
-    <li>Release on oss.sonatype.org
-    <ul>
-      <li>Log in to <a href="https://oss.sonatype.org">https://oss.sonatype.org</a></li>
-      <li>Click on "Staging Repositories" and look for the "com.google"
-      Repository with your username</li>
-      <li>check box next to uploaded release</li>
-      <li>click Close button; type <code>1.7.0-beta</code> and click Close</li>
-      <li>check box next to uploaded release</li>
-      <li>click Release button; type <code>1.7.0-beta</code> and click
-      Release</li>
-    </ul>
-    </li>
-    <li>Central Maven repository is synced hourly. Once uploaded onto
-    repo2.maven.org, it will be found at: <a
-      href="http://repo2.maven.org/maven2/com/google/api-client/google-api-client/1.7.0-beta/">repo2.maven.org</a></li>
-  </ul>
-  </li>
-  <li>Start development of next bug fix version
+  <li>Release on oss.sonatype.org
   <ul>
-    <li>For the following files, replace <code>1.7.0-beta</code> with the
-    next bug fix version:
-    <ul>
-      <li><code>jdiff.xml</code></li>
-      <li><code>release.html</code></li>
-    </ul>
-    </li>
-    <li><pre>
-hg commit -m "start next bug fix version"
+    <li>Log in to <a href="https://oss.sonatype.org">https://oss.sonatype.org</a></li>
+    <li>Click on "Staging Repositories" and look for the "com.google"
+    Repository with your username</li>
+    <li>check box next to uploaded release; click Close; click Close</li>
+    <li>check box next to uploaded release; click Release; click Release</li>
+  </ul>
+    Central Maven repository is synced hourly. Once uploaded onto
+    repo2.maven.org, it will be found at: <a
+      href="http://repo2.maven.org/maven2/com/google/api-client/google-api-client/1.7.0-beta/">repo2.maven.org</a>
+  </li>
+  <li>Start development of next bug fix version, by replacing <code>1.7.0-beta</code> with the next bug fix version:<pre>
+NEXT_VERSION=<i>(next bug fix version 1.7.X-beta)</i>
+sed s/1.7.0-beta/$NEXT_VERSION/g &lt;jdiff.xml &gt;/tmp/jdiff.xml
+sed s/1.7.0-beta/$NEXT_VERSION/g &lt;release.html &gt;/tmp/release.html
+mv /tmp/jdiff.xml /tmp/release.html .
+hg commit -m "start $NEXT_VERSION"
 hg push
 </pre></li>
-  </ul>
-  </li>
   <li>Prepare the released library zip file and javadoc
   <ul>
     <li>Overview: JDiff is a tool for showing the difference between the
@@ -165,26 +150,35 @@ hg push
     into a temporary directory and compare against the JavaDoc of the just
     released version of the library, and then hg commit that diff into the
     javadoc Hg repository.</li>
-    <li><pre>
+    </ul><pre>
 cd /tmp/google-api-java-client
-hg clone --insecure https://javadoc.google-api-java-client.googlecode.com/hg/ javadoc
+hg clone https://code.google.com/p/google-api-java-client.javadoc/ javadoc
+hg clone https://code.google.com/p/google-api-java-client.wiki/ wiki
 hg clone -r 1.6.0-beta https://google-api-java-client.googlecode.com/hg/ 1.6.0-beta
 hg clone -r 1.7.0-beta https://google-api-java-client.googlecode.com/hg/ 1.7.0-beta
+
 cd 1.7.0-beta
 mvn javadoc:jar install site
 cp -R target/site/apidocs ../javadoc/1.7.0-beta
-</pre></li>
-    <li>change these constants from jdiff.xml for your environment:
-    JDIFF_HOME, MAVEN_REPOSITORY_HOME</li>
-    <li><pre>
+<i>change these constants from jdiff.xml for your environment: JDIFF_HOME,
+MAVEN_REPOSITORY_HOME</i>
 ant -f jdiff.xml
+
 cd ../javadoc
 hg add
+PREV_VERSION=<i>(previous bug fix version 1.6.X-beta)</i>
+sed s/$PREV_VERSION/1.7.0-beta/g <index.html >/tmp/index.html && mv /tmp/index.html index.html
 hg commit -m "1.7.0-beta"
-hg push --insecure
+hg push
+
+cd ../wiki
+for s in *; do sed s/$PREV_VERSION/1.7.0-beta/g <$s >/tmp/$s && mv /tmp/$s .;
+done
+hg revert --no-backup ReleaseNotes.wiki
+<i>edit ReleaseNotes.wiki to add release notes for 1.7.0-beta</i>
+hg commit -m "1.7.0-beta"
+hg push
 </pre></li>
-  </ul>
-  </li>
   <li><b>WAIT!</b> Don't do the following instructions until after the
   library has been uploaded to repo2.maven.org at: <a
     href="http://repo2.maven.org/maven2/com/google/api-client/google-api-client/1.7.0-beta/">repo2.maven.org</a></li>
