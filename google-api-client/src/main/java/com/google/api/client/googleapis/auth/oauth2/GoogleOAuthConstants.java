@@ -15,19 +15,26 @@
 package com.google.api.client.googleapis.auth.oauth2;
 
 /**
- * Constants for installed (or "native") applications.
- * 
+ * Constants for Google's OAuth 2.0 implementation.
+ *
  * @since 1.7
  * @author Yaniv Inbar
  */
-public class InstalledAppConstants {
+public class GoogleOAuthConstants {
+
+  /** Encoded URL of Google's end-user authorization server. */
+  public static final String AUTHORIZATION_SERVER_URL = "https://accounts.google.com/o/oauth2/auth";
+
+  /** Encoded URL of Google's token server. */
+  public static final String TOKEN_SERVER_URL = "https://accounts.google.com/o/oauth2/token";
 
   /**
-   * Redirect URI to use for "Out Of Band", meaning that the end-user is given an access code that
-   * they must then enter into the installed application.
+   * Redirect URI to use for an installed application as specified in <a
+   * href="http://code.google.com/apis/accounts/docs/OAuth2InstalledApp.html">Using OAuth 2.0 for
+   * Installed Applications</a>.
    */
   public static final String OOB_REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
 
-  private InstalledAppConstants() {
+  private GoogleOAuthConstants() {
   }
 }

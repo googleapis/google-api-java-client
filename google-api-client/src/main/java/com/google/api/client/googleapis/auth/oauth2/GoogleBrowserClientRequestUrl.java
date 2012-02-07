@@ -14,23 +14,19 @@
 
 package com.google.api.client.googleapis.auth.oauth2;
 
-import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
-import com.google.api.client.auth.oauth2.AuthorizationCodeResponseUrl;
+import com.google.api.client.auth.oauth2.BrowserClientRequestUrl;
 import com.google.api.client.util.Key;
 import com.google.common.base.Preconditions;
 
 /**
  * Google-specific implementation of the OAuth 2.0 URL builder for an authorization web page to
  * allow the end user to authorize the application to access their protected resources and that
- * returns an authorization code, as specified in <a
- * href="http://code.google.com/apis/accounts/docs/OAuth2WebServer.html">Using OAuth 2.0 for Web
- * Server Applications (Experimental)</a>.
+ * returns the access token to a browser client using a scripting language such as JavaScript, as
+ * specified in <a href="http://code.google.com/apis/accounts/docs/OAuth2UserAgent.html">Using OAuth
+ * 2.0 for Client-side Applications (Experimental)</a>.
  *
  * <p>
- * The default for {@link #getResponseTypes()} is {@code "code"}. Use
- * {@link AuthorizationCodeResponseUrl} to parse the redirect response after the end user
- * grants/denies the request. Using the authorization code in this response, use
- * {@link GoogleAuthorizationCodeTokenRequest} to request the access token.
+ * The default for {@link #getResponseTypes()} is {@code "token"}.
  * </p>
  *
  * <p>
@@ -39,11 +35,10 @@ import com.google.common.base.Preconditions;
  *
  * <pre>
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String url =
-        new GoogleAuthorizationCodeRequestUrl("812741506391.apps.googleusercontent.com",
-            "https://oauth2-login-demo.appspot.com/code", Arrays.asList(
-                "https://www.googleapis.com/auth/userinfo.email",
-                "https://www.googleapis.com/auth/userinfo.profile")).setState("/profile").build();
+    String url = new GoogleBrowserClientRequestUrl("812741506391.apps.googleusercontent.com",
+        "https://oauth2-login-demo.appspot.com/oauthcallback", Arrays.asList(
+            "https://www.googleapis.com/auth/userinfo.email",
+            "https://www.googleapis.com/auth/userinfo.profile")).setState("/profile").build();
     response.sendRedirect(url);
   }
  * </pre>
@@ -55,7 +50,7 @@ import com.google.common.base.Preconditions;
  * @since 1.7
  * @author Yaniv Inbar
  */
-public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestUrl {
+public class GoogleBrowserClientRequestUrl extends BrowserClientRequestUrl {
 
   /**
    * Prompt for consent behavior ({@code "auto"} to request auto-approval or {@code "force"} to
@@ -65,19 +60,12 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
   private String approvalPrompt;
 
   /**
-   * Access type ({@code "online"} to request online access or {@code "offline"} to request offline
-   * access) or {@code null} for the default behavior.
-   */
-  @Key("access_type")
-  private String accessType;
-
-  /**
    * @param clientId client identifier
    * @param redirectUri URI that the authorization server directs the resource owner's user-agent
    *        back to the client after a successful authorization grant
    * @param scopes scopes (see {@link #setScopes(Iterable)})
    */
-  public GoogleAuthorizationCodeRequestUrl(
+  public GoogleBrowserClientRequestUrl(
       String clientId, String redirectUri, Iterable<String> scopes) {
     super(GoogleOAuthConstants.AUTHORIZATION_SERVER_URL, clientId);
     setRedirectUri(redirectUri);
@@ -92,7 +80,7 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
    *        back to the client after a successful authorization grant
    * @param scopes scopes (see {@link #setScopes(Iterable)})
    */
-  public GoogleAuthorizationCodeRequestUrl(
+  public GoogleBrowserClientRequestUrl(
       GoogleClientSecrets clientSecrets, String redirectUri, Iterable<String> scopes) {
     this(clientSecrets.getDetails().getClientId(), redirectUri, scopes);
   }
@@ -115,68 +103,45 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
    * the return type, but nothing else.
    * </p>
    */
-  public GoogleAuthorizationCodeRequestUrl setApprovalPrompt(String approvalPrompt) {
+  public GoogleBrowserClientRequestUrl setApprovalPrompt(String approvalPrompt) {
     this.approvalPrompt = approvalPrompt;
     return this;
   }
 
-  /**
-   * Returns the access type ({@code "online"} to request online access or {@code "offline"} to
-   * request offline access) or {@code null} for the default behavior of {@code "online"}.
-   */
-  public final String getAccessType() {
-    return accessType;
-  }
-
-  /**
-   * Sets the access type ({@code "online"} to request online access or {@code "offline"} to request
-   * offline access) or {@code null} for the default behavior of {@code "online"}.
-   *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
-   */
-  public GoogleAuthorizationCodeRequestUrl setAccessType(String accessType) {
-    this.accessType = accessType;
-    return this;
+  @Override
+  public GoogleBrowserClientRequestUrl setResponseTypes(String... responseTypes) {
+    return (GoogleBrowserClientRequestUrl) super.setResponseTypes(responseTypes);
   }
 
   @Override
-  public GoogleAuthorizationCodeRequestUrl setResponseTypes(String... responseTypes) {
-    return (GoogleAuthorizationCodeRequestUrl) super.setResponseTypes(responseTypes);
+  public GoogleBrowserClientRequestUrl setResponseTypes(Iterable<String> responseTypes) {
+    return (GoogleBrowserClientRequestUrl) super.setResponseTypes(responseTypes);
   }
 
   @Override
-  public GoogleAuthorizationCodeRequestUrl setResponseTypes(Iterable<String> responseTypes) {
-    return (GoogleAuthorizationCodeRequestUrl) super.setResponseTypes(responseTypes);
+  public GoogleBrowserClientRequestUrl setRedirectUri(String redirectUri) {
+    return (GoogleBrowserClientRequestUrl) super.setRedirectUri(redirectUri);
   }
 
   @Override
-  public GoogleAuthorizationCodeRequestUrl setRedirectUri(String redirectUri) {
-    Preconditions.checkNotNull(redirectUri);
-    return (GoogleAuthorizationCodeRequestUrl) super.setRedirectUri(redirectUri);
-  }
-
-  @Override
-  public GoogleAuthorizationCodeRequestUrl setScopes(String... scopes) {
+  public GoogleBrowserClientRequestUrl setScopes(String... scopes) {
     Preconditions.checkArgument(scopes.length != 0);
-    return (GoogleAuthorizationCodeRequestUrl) super.setScopes(scopes);
+    return (GoogleBrowserClientRequestUrl) super.setScopes(scopes);
   }
 
   @Override
-  public GoogleAuthorizationCodeRequestUrl setScopes(Iterable<String> scopes) {
+  public GoogleBrowserClientRequestUrl setScopes(Iterable<String> scopes) {
     Preconditions.checkArgument(scopes.iterator().hasNext());
-    return (GoogleAuthorizationCodeRequestUrl) super.setScopes(scopes);
+    return (GoogleBrowserClientRequestUrl) super.setScopes(scopes);
   }
 
   @Override
-  public GoogleAuthorizationCodeRequestUrl setClientId(String clientId) {
-    return (GoogleAuthorizationCodeRequestUrl) super.setClientId(clientId);
+  public GoogleBrowserClientRequestUrl setClientId(String clientId) {
+    return (GoogleBrowserClientRequestUrl) super.setClientId(clientId);
   }
 
   @Override
-  public GoogleAuthorizationCodeRequestUrl setState(String state) {
-    return (GoogleAuthorizationCodeRequestUrl) super.setState(state);
+  public GoogleBrowserClientRequestUrl setState(String state) {
+    return (GoogleBrowserClientRequestUrl) super.setState(state);
   }
 }

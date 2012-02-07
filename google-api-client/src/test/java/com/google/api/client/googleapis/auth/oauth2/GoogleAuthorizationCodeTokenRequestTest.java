@@ -15,7 +15,6 @@
 package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
-import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson.JacksonFactory;
 
@@ -31,19 +30,22 @@ public class GoogleAuthorizationCodeTokenRequestTest extends TestCase {
   private static final String CLIENT_ID = "812741506391.apps.googleusercontent.com";
   private static final String CLIENT_SECRET = "{client_secret}";
   private static final String CODE = "4/P7q7W91a-oMsCeLvIaQm6bTrgtp7";
-  private static final GenericUrl REDIRECT_URL = new GenericUrl(
-      "https://oauth2-login-demo.appspot.com/code");
+  private static final String REDIRECT_URI = "https://oauth2-login-demo.appspot.com/code";
 
   public void test() {
     GoogleAuthorizationCodeTokenRequest request =
-        new GoogleAuthorizationCodeTokenRequest(new NetHttpTransport(), new JacksonFactory(),
-            CLIENT_ID, CLIENT_SECRET, CODE, REDIRECT_URL);
+        new GoogleAuthorizationCodeTokenRequest(new NetHttpTransport(),
+            new JacksonFactory(),
+            CLIENT_ID,
+            CLIENT_SECRET,
+            CODE,
+            REDIRECT_URI);
     ClientParametersAuthentication clientAuthentication =
         (ClientParametersAuthentication) request.getClientAuthentication();
     assertEquals(CLIENT_ID, clientAuthentication.getClientId());
     assertEquals(CLIENT_SECRET, clientAuthentication.getClientSecret());
     assertEquals(CODE, request.getCode());
-    assertEquals(REDIRECT_URL, request.getRedirectUrl());
+    assertEquals(REDIRECT_URI, request.getRedirectUri());
     assertEquals("authorization_code", request.getGrantType());
     assertNull(request.getScopes());
     assertNotNull(request.getTokenServerUrl());

@@ -25,6 +25,7 @@ import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.util.Key;
+import com.google.api.client.util.Strings;
 
 import java.io.IOException;
 
@@ -164,20 +165,35 @@ public final class ClientLogin {
   /**
    * Authenticates based on the provided field values.
    *
-   * @throws HttpResponseException if the authentication response has an error code, such as for a
-   *         CAPTCHA challenge. Call {@link HttpResponseException#getResponse()
-   *         exception.getResponse()}. {@link HttpResponse#parseAs(Class) parseAs}(
-   *         {@link ClientLogin.ErrorInfo ClientLoginAuthenticator.ErrorInfo}.class) to parse the
-   *         response.
+   * <p>
+   * Upgrade warning: in prior version 1.6 it threw an {@link HttpResponseException} on error, but
+   * it now throws a {@link ClientLoginResponseException}.
+   * </p>
+   *
+   * @throws ClientLoginResponseException if the authentication response has an error code, such as
+   *         for a CAPTCHA challenge.
    * @throws IOException some other kind of I/O exception
    */
-  public Response authenticate() throws HttpResponseException, IOException {
+  public Response authenticate() throws ClientLoginResponseException, IOException {
     GenericUrl url = serverUrl.clone();
     url.appendRawPath("/accounts/ClientLogin");
     HttpRequest request =
         transport.createRequestFactory().buildPostRequest(url, new UrlEncodedContent(this));
     request.addParser(AuthKeyValueParser.INSTANCE);
     request.setContentLoggingLimit(0);
-    return request.execute().parseAs(Response.class);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    // check for an HTTP success response (2xx)
+    if (response.isSuccessStatusCode()) {
+      return response.parseAs(Response.class);
+    }
+    // On error, throw a ClientLoginResponseException with the parsed error details
+    ErrorInfo details = response.parseAs(ErrorInfo.class);
+    String detailString = details.toString();
+    StringBuilder message = HttpResponseException.computeMessageBuffer(response);
+    if (!com.google.common.base.Strings.isNullOrEmpty(detailString)) {
+      message.append(Strings.LINE_SEPARATOR).append(detailString);
+    }
+    throw new ClientLoginResponseException(response, details, message.toString());
   }
 }
