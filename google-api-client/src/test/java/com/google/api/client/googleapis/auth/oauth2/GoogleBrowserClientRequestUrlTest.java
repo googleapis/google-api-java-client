@@ -19,22 +19,23 @@ import junit.framework.TestCase;
 import java.util.Arrays;
 
 /**
- * Tests {@link GoogleAuthorizationCodeRequestUrl}.
+ * Tests {@link GoogleBrowserClientRequestUrl}.
  *
  * @author Yaniv Inbar
  */
-public class GoogleAuthorizationCodeRequestUrlTest extends TestCase {
+public class GoogleBrowserClientRequestUrlTest extends TestCase {
 
   private static final String EXPECTED =
       "https://accounts.google.com/o/oauth2/auth?client_id=812741506391.apps.googleusercontent.com&"
-      + "redirect_uri=https://oauth2-login-demo.appspot.com/code&response_type=code"
+      + "redirect_uri=https://oauth2-login-demo.appspot.com/oauthcallback&response_type=token"
       + "&scope=https://www.googleapis.com/auth/userinfo.email%20"
       + "https://www.googleapis.com/auth/userinfo.profile&state=/profile";
 
   public void testBuild() {
-    assertEquals(EXPECTED, new GoogleAuthorizationCodeRequestUrl(
-        "812741506391.apps.googleusercontent.com", "https://oauth2-login-demo.appspot.com/code",
-        Arrays.asList("https://www.googleapis.com/auth/userinfo.email",
+    assertEquals(EXPECTED, new GoogleBrowserClientRequestUrl(
+        "812741506391.apps.googleusercontent.com",
+        "https://oauth2-login-demo.appspot.com/oauthcallback", Arrays.asList(
+            "https://www.googleapis.com/auth/userinfo.email",
             "https://www.googleapis.com/auth/userinfo.profile")).setState("/profile").build());
   }
 }

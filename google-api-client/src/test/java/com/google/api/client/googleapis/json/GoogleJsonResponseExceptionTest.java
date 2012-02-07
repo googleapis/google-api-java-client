@@ -35,6 +35,7 @@ import java.io.IOException;
  *
  * @author Yaniv Inbar
  */
+@SuppressWarnings("deprecation")
 public class GoogleJsonResponseExceptionTest extends TestCase {
 
   public void testFrom_noDetails() throws IOException {
@@ -43,8 +44,8 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
     HttpResponseException e = new HttpResponseException(response);
-    GoogleJsonResponseException ge =
-        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, e.getResponse());
+    GoogleJsonResponseException ge = GoogleJsonResponseException.from(
+        GoogleJsonErrorTest.FACTORY, e.getResponse());
     assertNull(ge.getDetails());
     assertEquals("200", ge.getMessage());
   }
@@ -53,16 +54,12 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     HttpTransport transport = new ErrorTransport();
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
-    try {
-      request.execute();
-      fail();
-    } catch (HttpResponseException e) {
-      GoogleJsonResponseException ge =
-          GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, e.getResponse());
-      assertEquals(
-          GoogleJsonErrorTest.ERROR, GoogleJsonErrorTest.FACTORY.toString(ge.getDetails()));
-      assertTrue(ge.getMessage(), ge.getMessage().startsWith("403" + Strings.LINE_SEPARATOR + "{"));
-    }
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException ge =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+    assertEquals(GoogleJsonErrorTest.ERROR, GoogleJsonErrorTest.FACTORY.toString(ge.getDetails()));
+    assertTrue(ge.getMessage(), ge.getMessage().startsWith("403" + Strings.LINE_SEPARATOR + "{"));
   }
 
   public void testFrom_detailsMissingContent() throws IOException {

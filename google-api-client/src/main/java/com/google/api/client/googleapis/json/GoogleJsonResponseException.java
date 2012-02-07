@@ -14,6 +14,7 @@
 
 package com.google.api.client.googleapis.json;
 
+import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.json.JsonHttpParser;
@@ -29,8 +30,8 @@ import java.io.IOException;
 /**
  * Exception thrown when an error status code is detected in an HTTP response to a Google API that
  * uses the JSON format, using the format specified in <a
- * href="http://code.google.com/apis/buzz/v1/using_rest.html#errors">Error Messages in Google
- * Buzz</a>.
+ * href="http://code.google.com/apis/urlshortener/v1/getting_started.html#errors">Error
+ * Responses</a>.
  *
  * <p>
  * To get the structured details, use {@link #getDetails()}.
@@ -41,13 +42,14 @@ import java.io.IOException;
  */
 public class GoogleJsonResponseException extends HttpResponseException {
 
-  static final long serialVersionUID = 1;
+  private static final long serialVersionUID = 409811126989994864L;
 
   /** Google JSON error details or {@code null} for none (for example if response is not JSON). */
-  private final GoogleJsonError details;
+  private final transient GoogleJsonError details;
 
   /** JSON factory. */
-  private final JsonFactory jsonFactory;
+  @Deprecated
+  private final transient JsonFactory jsonFactory;
 
   /**
    * @param jsonFactory JSON factory
@@ -70,7 +72,12 @@ public class GoogleJsonResponseException extends HttpResponseException {
     return details;
   }
 
-  /** Returns the JSON factory. */
+  /**
+   * Returns the JSON factory.
+   *
+   * @deprecated (scheduled to be removed in 1.8)
+   */
+  @Deprecated
   public final JsonFactory getJsonFactory() {
     return jsonFactory;
   }
@@ -80,10 +87,8 @@ public class GoogleJsonResponseException extends HttpResponseException {
    *
    * <p>
    * If there is a JSON error response, it is parsed using {@link GoogleJsonError}, which can be
-   * inspected using {@link #getDetails()}. Otherwise, response content (if any) is read and
-   * ignored. Either way, any content is already parsed, and trying to parse
-   * {@link HttpResponse#getContent()} of {@link #getResponse()} will likely result in an
-   * {@link IOException}.
+   * inspected using {@link #getDetails()}. Otherwise, the full response content is read and
+   * included in the exception message.
    * </p>
    *
    * @param jsonFactory JSON factory
@@ -94,47 +99,79 @@ public class GoogleJsonResponseException extends HttpResponseException {
     // details
     Preconditions.checkNotNull(jsonFactory);
     GoogleJsonError details = null;
+    String detailString = null;
     String contentType = response.getContentType();
-    if (!response.isSuccessStatusCode() && contentType != null
-        && contentType.startsWith(Json.CONTENT_TYPE)) {
-      JsonParser parser = null;
-      try {
-        parser = JsonHttpParser.parserForResponse(jsonFactory, response);
-        JsonToken currentToken = parser.getCurrentToken();
-        // token is null at start, so get next token
-        if (currentToken == null) {
-          currentToken = parser.nextToken();
-        }
-        // check for empty content
-        if (currentToken != null) {
-          // make sure there is an "error" key
-          parser.skipToKey("error");
-          if (parser.getCurrentToken() != JsonToken.END_OBJECT) {
-            details = parser.parseAndClose(GoogleJsonError.class, null);
-          }
-        }
-      } catch (IOException exception) {
-        // it would be bad to throw an exception while throwing an exception
-        exception.printStackTrace();
-      } finally {
+    try {
+      if (!response.isSuccessStatusCode() && contentType != null
+          && contentType.startsWith(Json.CONTENT_TYPE)) {
+        JsonParser parser = null;
         try {
+          parser = JsonHttpParser.parserForResponse(jsonFactory, response);
+          JsonToken currentToken = parser.getCurrentToken();
+          // token is null at start, so get next token
+          if (currentToken == null) {
+            currentToken = parser.nextToken();
+          }
+          // check for empty content
+          if (currentToken != null) {
+            // make sure there is an "error" key
+            parser.skipToKey("error");
+            if (parser.getCurrentToken() != JsonToken.END_OBJECT) {
+              details = parser.parseAndClose(GoogleJsonError.class, null);
+              detailString = details.toPrettyString();
+            }
+          }
+        } catch (IOException exception) {
+          // it would be bad to throw an exception while throwing an exception
+          exception.printStackTrace();
+        } finally {
           if (parser == null) {
             response.getContent().close();
           } else if (details == null) {
             parser.close();
           }
-        } catch (IOException exception) {
-          // it would be bad to throw an exception while throwing an exception
-          exception.printStackTrace();
         }
+      } else {
+        detailString = response.parseAsString();
       }
+    } catch (IOException exception) {
+      // it would be bad to throw an exception while throwing an exception
+      exception.printStackTrace();
     }
     // message
-    String message = computeMessage(response);
-    if (details != null) {
-      message += Strings.LINE_SEPARATOR + details.toPrettyString();
+    StringBuilder message = HttpResponseException.computeMessageBuffer(response);
+    if (!com.google.common.base.Strings.isNullOrEmpty(detailString)) {
+      message.append(Strings.LINE_SEPARATOR).append(detailString);
     }
     // result
-    return new GoogleJsonResponseException(jsonFactory, response, details, message);
+    return new GoogleJsonResponseException(jsonFactory, response, details, message.toString());
+  }
+
+  /**
+   * Executes an HTTP request using {@link HttpRequest#execute()}, but throws a
+   * {@link GoogleJsonResponseException} on error instead of {@link HttpResponseException}.
+   *
+   * @param jsonFactory JSON factory
+   * @param request HTTP request
+   * @return HTTP response for an HTTP success code (or error code if
+   *         {@link HttpRequest#getThrowExceptionOnExecuteError()})
+   * @throws GoogleJsonResponseException for an HTTP error code (only if not
+   *         {@link HttpRequest#getThrowExceptionOnExecuteError()})
+   * @throws IOException some other kind of I/O exception
+   * @since 1.7
+   */
+  public static HttpResponse execute(JsonFactory jsonFactory, HttpRequest request)
+      throws GoogleJsonResponseException, IOException {
+    Preconditions.checkNotNull(jsonFactory);
+    boolean originalThrowExceptionOnExecuteError = request.getThrowExceptionOnExecuteError();
+    if (originalThrowExceptionOnExecuteError) {
+      request.setThrowExceptionOnExecuteError(false);
+    }
+    HttpResponse response = request.execute();
+    request.setThrowExceptionOnExecuteError(originalThrowExceptionOnExecuteError);
+    if (!originalThrowExceptionOnExecuteError || response.isSuccessStatusCode()) {
+      return response;
+    }
+    throw GoogleJsonResponseException.from(jsonFactory, response);
   }
 }

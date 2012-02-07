@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2011 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -21,7 +21,6 @@ import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.json.JsonHttpClient;
 import com.google.api.client.http.json.JsonHttpRequest;
@@ -32,7 +31,7 @@ import java.io.IOException;
 
 /**
  * Google API client.
- * 
+ *
  * @since 1.6
  * @author Ravi Mistry
  */
@@ -43,12 +42,12 @@ public class GoogleClient extends JsonHttpClient {
 
   /**
    * Constructor with required parameters.
-   * 
+   *
    * <p>
    * Use {@link #builder(HttpTransport, JsonFactory, GenericUrl)} if you need to specify any of the
    * optional parameters.
    * </p>
-   * 
+   *
    * @param transport The transport to use for requests
    * @param jsonFactory A factory for creating JSON parsers and serializers
    * @param baseUrl The base URL of the service. Must end with a "/"
@@ -59,7 +58,7 @@ public class GoogleClient extends JsonHttpClient {
 
   /**
    * Construct the {@link GoogleClient}.
-   * 
+   *
    * @param transport The transport to use for requests
    * @param jsonHttpRequestInitializer The initializer to use when creating an
    *        {@link JsonHttpRequest} or {@code null} for none
@@ -80,13 +79,13 @@ public class GoogleClient extends JsonHttpClient {
 
   /**
    * Create an {@link HttpRequest} suitable for use against this service.
-   * 
+   *
    * @param method HTTP Method type
    * @param uriTemplate URI template for the path relative to the base URL. Must not start with a
    *        "/"
    * @param jsonHttpRequest JSON HTTP Request type
    * @return newly created {@link HttpRequest}
-   * 
+   *
    * @deprecated (scheduled to be removed in 1.8) Use
    *             {@link #buildHttpRequest(HttpMethod, GenericUrl, Object)}
    */
@@ -101,7 +100,7 @@ public class GoogleClient extends JsonHttpClient {
 
   /**
    * Create an {@link HttpRequest} suitable for use against this service.
-   * 
+   *
    * @param method HTTP Method type
    * @param url The complete URL of the service where requests should be sent. It includes the base
    *        path along with the URI template
@@ -121,7 +120,7 @@ public class GoogleClient extends JsonHttpClient {
 
   /**
    * Returns an instance of a new builder.
-   * 
+   *
    * @param transport The transport to use for requests
    * @param jsonFactory A factory for creating JSON parsers and serializers
    * @param baseUrl The base URL of the service. Must end with a "/"
@@ -138,37 +137,35 @@ public class GoogleClient extends JsonHttpClient {
   @Deprecated
   protected HttpResponse execute(HttpMethod method, String uriTemplate, Object body,
       JsonHttpRequest jsonHttpRequest) throws IOException {
-    try {
-      return super.execute(method, uriTemplate, body, jsonHttpRequest);
-    } catch (HttpResponseException e) {
-      throw GoogleJsonResponseException.from(getJsonFactory(), e.getResponse());
+    HttpRequest request = buildHttpRequest(method, uriTemplate, jsonHttpRequest);
+    if (body != null) {
+      request.setContent(createSerializer(body));
+      request.setEnableGZipContent(true);
     }
+    return GoogleJsonResponseException.execute(getJsonFactory(), request);
   }
 
   @Override
   protected HttpResponse executeUnparsed(HttpMethod method, GenericUrl url, Object body)
       throws IOException {
-    try {
-      return super.executeUnparsed(method, url, body);
-    } catch (HttpResponseException e) {
-      throw GoogleJsonResponseException.from(getJsonFactory(), e.getResponse());
-    }
+    HttpRequest request = buildHttpRequest(method, url, body);
+    return GoogleJsonResponseException.execute(getJsonFactory(), request);
   }
 
   /**
    * Builder for {@link GoogleClient}.
-   * 
+   *
    * <p>
    * Implementation is not thread-safe.
    * </p>
-   * 
+   *
    * @since 1.6
    */
   public static class Builder extends JsonHttpClient.Builder {
 
     /**
      * Returns an instance of a new builder.
-     * 
+     *
      * @param transport The transport to use for requests
      * @param jsonFactory A factory for creating JSON parsers and serializers
      * @param baseUrl The base URL of the service. Must end with a "/"

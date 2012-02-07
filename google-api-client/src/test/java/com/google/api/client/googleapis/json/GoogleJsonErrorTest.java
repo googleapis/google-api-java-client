@@ -15,7 +15,7 @@
 package com.google.api.client.googleapis.json;
 
 import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
@@ -41,10 +41,9 @@ import java.io.IOException;
 public class GoogleJsonErrorTest extends TestCase {
 
   static final JacksonFactory FACTORY = new JacksonFactory();
-  static final String ERROR =
-      "{" + "\"code\":403," + "\"errors\":[{" + "\"domain\":\"usageLimits\","
-          + "\"message\":\"Access Not Configured\"," + "\"reason\":\"accessNotConfigured\"" + "}],"
-          + "\"message\":\"Access Not Configured\"}";
+  static final String ERROR = "{" + "\"code\":403," + "\"errors\":[{"
+      + "\"domain\":\"usageLimits\"," + "\"message\":\"Access Not Configured\","
+      + "\"reason\":\"accessNotConfigured\"" + "}]," + "\"message\":\"Access Not Configured\"}";
   static final String ERROR_RESPONSE = "{\"error\":" + ERROR + "}";
 
   public void test_json() throws IOException {
@@ -70,7 +69,8 @@ public class GoogleJsonErrorTest extends TestCase {
     @Override
     public LowLevelHttpRequest buildGetRequest(String url) {
       return new MockLowLevelHttpRequest() {
-        @Override
+          @Override
+
         public LowLevelHttpResponse execute() {
           MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
           if (content != null) {
@@ -86,16 +86,14 @@ public class GoogleJsonErrorTest extends TestCase {
     }
   }
 
+  @SuppressWarnings("deprecation")
   public void testParse() throws IOException {
     HttpTransport transport = new ErrorTransport();
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
-    try {
-      request.execute();
-      fail();
-    } catch (HttpResponseException e) {
-      GoogleJsonError errorResponse = GoogleJsonError.parse(FACTORY, e.getResponse());
-      assertEquals(ERROR, FACTORY.toString(errorResponse));
-    }
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonError errorResponse = GoogleJsonError.parse(FACTORY, response);
+    assertEquals(ERROR, FACTORY.toString(errorResponse));
   }
 }
