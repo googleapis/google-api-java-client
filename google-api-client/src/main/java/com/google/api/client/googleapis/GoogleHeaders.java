@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2010 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -20,15 +20,15 @@ import com.google.api.client.util.escape.PercentEscaper;
 
 /**
  * HTTP headers for Google API's.
- *
+ * 
  * @since 1.0
  * @author Yaniv Inbar
  */
 public class GoogleHeaders extends HttpHeaders {
 
   /** Escaper for the {@link #slug} header. */
-  public static final PercentEscaper SLUG_ESCAPER =
-      new PercentEscaper(" !\"#$&'()*+,-./:;<=>?@[\\]^_`{|}~", false);
+  public static final PercentEscaper SLUG_ESCAPER = new PercentEscaper(
+      " !\"#$&'()*+,-./:;<=>?@[\\]^_`{|}~", false);
 
   /** {@code "GData-Version"} header. */
   @Key("GData-Version")
@@ -36,7 +36,7 @@ public class GoogleHeaders extends HttpHeaders {
 
   /**
    * Escaped {@code "Slug"} header value, which must be escaped using {@link #SLUG_ESCAPER}.
-   *
+   * 
    * @see #setSlugFromFileName(String)
    */
   @Key("Slug")
@@ -48,7 +48,7 @@ public class GoogleHeaders extends HttpHeaders {
 
   /**
    * {@code "X-GData-Key"} header, which must be of the form {@code "key=[developerId]"}.
-   *
+   * 
    * @see #setDeveloperId(String)
    */
   @Key("X-GData-Key")
@@ -113,6 +113,14 @@ public class GoogleHeaders extends HttpHeaders {
   @Key("X-HTTP-Method-Override")
   public String methodOverride;
 
+  /** {@code "X-Upload-Content-Length"} header. */
+  @Key("X-Upload-Content-Length")
+  private long uploadContentLength;
+
+  /** {@code "X-Upload-Content-Type"} header. */
+  @Key("X-Upload-Content-Type")
+  private String uploadContentType;
+
   /**
    * Sets the {@code "Slug"} header for the given file name, properly escaping the header value. See
    * <a href="http://tools.ietf.org/html/rfc5023#section-9.7">The Slug Header</a>.
@@ -122,8 +130,8 @@ public class GoogleHeaders extends HttpHeaders {
   }
 
   /**
-   * Sets the {@code "User-Agent"} header of the form {@code
-   * "[company-id]-[app-name]/[app-version]"}, for example {@code "Google-Sample/1.0"}.
+   * Sets the {@code "User-Agent"} header of the form
+   * {@code "[company-id]-[app-name]/[app-version]"}, for example {@code "Google-Sample/1.0"}.
    */
   public void setApplicationName(String applicationName) {
     setUserAgent(applicationName);
@@ -139,6 +147,42 @@ public class GoogleHeaders extends HttpHeaders {
    */
   public void setGoogleLogin(String authToken) {
     setAuthorization(getGoogleLoginValue(authToken));
+  }
+
+  /**
+   * Returns the {@code "X-Upload-Content-Length"} header or {@code null} for none.
+   * 
+   * @since 1.7
+   */
+  public final long getUploadContentLength() {
+    return uploadContentLength;
+  }
+
+  /**
+   * Sets the {@code "X-Upload-Content-Length"} header or {@code null} for none.
+   * 
+   * @since 1.7
+   */
+  public final void setUploadContentLength(long uploadContentLength) {
+    this.uploadContentLength = uploadContentLength;
+  }
+
+  /**
+   * Returns the {@code "X-Upload-Content-Type"} header or {@code null} for none.
+   * 
+   * @since 1.7
+   */
+  public final String getUploadContentType() {
+    return uploadContentType;
+  }
+
+  /**
+   * Sets the {@code "X-Upload-Content-Type"} header or {@code null} for none.
+   * 
+   * @since 1.7
+   */
+  public final void setUploadContentType(String uploadContentType) {
+    this.uploadContentType = uploadContentType;
   }
 
   /**

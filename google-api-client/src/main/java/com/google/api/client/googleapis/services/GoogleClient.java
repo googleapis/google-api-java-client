@@ -37,9 +37,6 @@ import java.io.IOException;
  */
 public class GoogleClient extends JsonHttpClient {
 
-  /** {@link MethodOverride} to ensure that methods get overridden correctly. */
-  private final MethodOverride methodOverride = new MethodOverride();
-
   /**
    * Constructor with required parameters.
    *
@@ -91,10 +88,10 @@ public class GoogleClient extends JsonHttpClient {
    */
   @Override
   @Deprecated
-  protected HttpRequest buildHttpRequest(HttpMethod method, String uriTemplate,
-      JsonHttpRequest jsonHttpRequest) throws IOException {
+  protected HttpRequest buildHttpRequest(
+      HttpMethod method, String uriTemplate, JsonHttpRequest jsonHttpRequest) throws IOException {
     HttpRequest httpRequest = super.buildHttpRequest(method, uriTemplate, jsonHttpRequest);
-    methodOverride.intercept(httpRequest);
+    new MethodOverride().intercept(httpRequest);
     return httpRequest;
   }
 
@@ -111,7 +108,7 @@ public class GoogleClient extends JsonHttpClient {
   protected HttpRequest buildHttpRequest(HttpMethod method, GenericUrl url, Object body)
       throws IOException {
     HttpRequest httpRequest = super.buildHttpRequest(method, url, body);
-    methodOverride.intercept(httpRequest);
+    new MethodOverride().intercept(httpRequest);
     if (body != null) {
       httpRequest.setEnableGZipContent(true);
     }
@@ -125,8 +122,8 @@ public class GoogleClient extends JsonHttpClient {
    * @param jsonFactory A factory for creating JSON parsers and serializers
    * @param baseUrl The base URL of the service. Must end with a "/"
    */
-  public static Builder builder(HttpTransport transport, JsonFactory jsonFactory,
-      GenericUrl baseUrl) {
+  public static Builder builder(
+      HttpTransport transport, JsonFactory jsonFactory, GenericUrl baseUrl) {
     return new Builder(transport, jsonFactory, baseUrl);
   }
 

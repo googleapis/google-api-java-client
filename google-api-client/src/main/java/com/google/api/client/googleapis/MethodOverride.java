@@ -14,13 +14,11 @@
 
 package com.google.api.client.googleapis;
 
-import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 
-import java.io.IOException;
 import java.util.EnumSet;
 
 /**
@@ -28,8 +26,8 @@ import java.util.EnumSet;
  * POST -- inside of a POST request and uses {@code "X-HTTP-Method-Override"} header to specify the
  * actual HTTP method.
  * <p>
- * Use this for an HTTP transport that doesn't support PATCH like {@code NetHttpTransport} or {@code
- * UrlFetchTransport}. By default, only the methods not supported by the transport will be
+ * Use this for an HTTP transport that doesn't support PATCH like {@code NetHttpTransport} or
+ * {@code UrlFetchTransport}. By default, only the methods not supported by the transport will be
  * overridden. When running behind a firewall that does not support certain verbs like PATCH, use
  * the {@link MethodOverride#MethodOverride(EnumSet)} constructor instead to specify additional
  * methods to override. GET and POST are never overridden.
@@ -76,15 +74,13 @@ public final class MethodOverride implements HttpExecuteInterceptor, HttpRequest
     request.setInterceptor(this);
   }
 
-  public void intercept(HttpRequest request) throws IOException {
+  public void intercept(HttpRequest request) {
     if (overrideThisMethod(request)) {
       HttpMethod method = request.getMethod();
       request.setMethod(HttpMethod.POST);
       request.getHeaders().set("X-HTTP-Method-Override", method.name());
       // Google servers will fail to process a POST unless the Content-Length header >= 1
-      if (request.getContent() == null || request.getContent().getLength() == 0) {
-        request.setContent(ByteArrayContent.fromString(null, " "));
-      }
+      request.setAllowEmptyContent(false);
     }
   }
 
