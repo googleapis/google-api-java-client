@@ -14,7 +14,6 @@
 
 package com.google.api.client.googleapis;
 
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.GenericUrl;
@@ -26,7 +25,6 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
-import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
@@ -168,6 +166,17 @@ public final class MediaHttpUploader {
    * before upload called be called again.
    * </p>
    *
+   * <p>
+   * If an error is encountered during the request execution the caller is responsible for parsing
+   * the response correctly. For example for JSON errors:
+   *
+   * <pre>
+    if (!response.isSuccessStatusCode()) {
+      throw GoogleJsonResponseException.from(jsonFactory, response);
+    }
+   * </pre>
+   * </p>
+   *
    * @param initiationRequestUrl The request URL where the initiation request will be sent
    * @return HTTP request
    */
@@ -204,7 +213,7 @@ public final class MediaHttpUploader {
       }
 
       if (response.getStatusCode() != 308) {
-        throw GoogleJsonResponseException.from(new JacksonFactory(), response);
+        return response;
       }
 
       // Check to see if the upload URL has changed on the server.
@@ -296,9 +305,6 @@ public final class MediaHttpUploader {
     request.getHeaders().setContentRange("bytes */" + getMediaContentLength());
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
-    if (response.getStatusCode() != 308) {
-      throw GoogleJsonResponseException.from(new JacksonFactory(), response);
-    }
 
     long bytesWritten = getNextByteIndex(response.getHeaders().getRange());
 
