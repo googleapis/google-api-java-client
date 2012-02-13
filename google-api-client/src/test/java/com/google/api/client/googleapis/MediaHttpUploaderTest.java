@@ -15,7 +15,7 @@
 package com.google.api.client.googleapis;
 
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
@@ -218,12 +218,9 @@ public class MediaHttpUploaderTest extends TestCase {
     mediaContent.setLength(contentLength);
     MediaHttpUploader uploader = new MediaHttpUploader(mediaContent, fakeTransport, null);
     uploader.setBackOffPolicyEnabled(false);
-    try {
-      uploader.upload(new GenericUrl(TEST_REQUEST_URL));
-      fail("Expected " + HttpResponseException.class);
-    } catch (HttpResponseException e) {
-      // Expected
-    }
+
+    HttpResponse response = uploader.upload(new GenericUrl(TEST_REQUEST_URL));
+    assertEquals(500, response.getStatusCode());
 
     // There should be 3 calls made. 1 initiation request, 1 successful upload request and 1 upload
     // request with server error.
@@ -237,12 +234,9 @@ public class MediaHttpUploaderTest extends TestCase {
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
     mediaContent.setLength(contentLength);
     MediaHttpUploader uploader = new MediaHttpUploader(mediaContent, fakeTransport, null);
-    try {
-      uploader.upload(new GenericUrl(TEST_REQUEST_URL));
-      fail("Expected " + HttpResponseException.class);
-    } catch (HttpResponseException e) {
-      // Expected
-    }
+
+    HttpResponse response = uploader.upload(new GenericUrl(TEST_REQUEST_URL));
+    assertEquals(404, response.getStatusCode());
 
     // There should be 2 calls made. 1 initiation request and 1 upload request that returned a 404.
     assertEquals(2, fakeTransport.lowLevelExecCalls);
