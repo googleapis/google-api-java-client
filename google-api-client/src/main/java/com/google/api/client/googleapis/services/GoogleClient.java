@@ -92,6 +92,8 @@ public class GoogleClient extends JsonHttpClient {
       HttpMethod method, String uriTemplate, JsonHttpRequest jsonHttpRequest) throws IOException {
     HttpRequest httpRequest = super.buildHttpRequest(method, uriTemplate, jsonHttpRequest);
     new MethodOverride().intercept(httpRequest);
+    // Google servers will fail to process a POST/PUT/PATCH unless the Content-Length header >= 1
+    httpRequest.setAllowEmptyContent(false);
     return httpRequest;
   }
 
@@ -109,6 +111,8 @@ public class GoogleClient extends JsonHttpClient {
       throws IOException {
     HttpRequest httpRequest = super.buildHttpRequest(method, url, body);
     new MethodOverride().intercept(httpRequest);
+    // Google servers will fail to process a POST/PUT/PATCH unless the Content-Length header >= 1
+    httpRequest.setAllowEmptyContent(false);
     if (body != null) {
       httpRequest.setEnableGZipContent(true);
     }
