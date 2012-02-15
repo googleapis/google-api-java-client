@@ -197,6 +197,7 @@ public final class MediaHttpUploader {
     while (true) {
       currentRequest = requestFactory.buildPutRequest(uploadUrl, null);
       new MethodOverride().intercept(currentRequest); // needed for PUT
+      currentRequest.setAllowEmptyContent(false);
       setContentAndHeadersOnCurrentRequest(bytesUploaded);
       if (backOffPolicyEnabled) {
         // Set MediaExponentialBackOffPolicy as the BackOffPolicy of the HTTP Request which will
@@ -254,6 +255,7 @@ public final class MediaHttpUploader {
     initiationHeaders.setUploadContentType(mediaContent.getType());
     initiationHeaders.setUploadContentLength(getMediaContentLength());
     request.setHeaders(initiationHeaders);
+    request.setAllowEmptyContent(false);
     HttpResponse response = request.execute();
 
     updateStateAndNotifyListener(UploadState.INITIATION_COMPLETE);
