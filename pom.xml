@@ -70,7 +70,7 @@
       <dependency>
         <groupId>com.google.appengine</groupId>
         <artifactId>appengine-api-1.0-sdk</artifactId>
-        <version>1.5.1</version>
+        <version>1.6.1</version>
       </dependency>
       <dependency>
         <groupId>xpp3</groupId>
@@ -85,7 +85,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>10.0.1</version>
+        <version>11.0.1</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.findbugs</groupId>
@@ -112,6 +112,16 @@
         <artifactId>google-http-client-assembly</artifactId>
         <version>${project.http.version}</version>
         <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-android2</artifactId>
+        <version>${project.http.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-android3</artifactId>
+        <version>${project.http.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
