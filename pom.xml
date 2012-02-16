@@ -56,8 +56,8 @@
   <modules>
     <module>google-api-client</module>
     <module>google-api-client-assembly</module>
-    <module>google-api-client-extensions</module>
-    <module>google-api-client-extensions-android2</module>
+    <module>google-api-client-appengine</module>
+    <module>google-api-client-android2</module>
   </modules>
 
   <dependencyManagement>
@@ -115,7 +115,7 @@
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-extensions</artifactId>
+        <artifactId>google-http-client-appengine</artifactId>
         <version>${project.http.version}</version>
       </dependency>
       <dependency>
@@ -131,7 +131,12 @@
       </dependency>
       <dependency>
         <groupId>com.google.oauth-client</groupId>
-        <artifactId>google-oauth-client-extensions</artifactId>
+        <artifactId>google-oauth-client-appengine</artifactId>
+        <version>${project.oauth.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.oauth-client</groupId>
+        <artifactId>google-oauth-client-servlet</artifactId>
         <version>${project.oauth.version}</version>
       </dependency>
       <dependency>
@@ -141,12 +146,12 @@
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
-        <artifactId>google-api-client-extensions</artifactId>
+        <artifactId>google-api-client-appengine</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
-        <artifactId>google-api-client-extensions-android2</artifactId>
+        <artifactId>google-api-client-android2</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
@@ -278,11 +283,11 @@
                   <packages>com.google.api.client.googleapis*</packages>
                 </group>
                 <group>
-                  <title>google-api-client-extensions</title>
+                  <title>google-api-client-appengine</title>
                   <packages>com.google.api.client.googleapis.extensions.auth*</packages>
                 </group>
                 <group>
-                  <title>google-api-client-extensions-android2</title>
+                  <title>google-api-client-android2</title>
                   <packages>com.google.api.client.googleapis.extensions.android2*</packages>
                 </group>
               </groups>

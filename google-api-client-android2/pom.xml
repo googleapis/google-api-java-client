@@ -7,7 +7,7 @@
     <version>1.7.0-beta-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>google-api-client-extensions-android2</artifactId>
+  <artifactId>google-api-client-android2</artifactId>
   <name>Android SDK 2.1 platform extensions to the Google APIs Client Library for Java.</name>
 
   <build>

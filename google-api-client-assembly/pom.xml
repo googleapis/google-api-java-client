@@ -29,11 +29,11 @@
     </dependency>
     <dependency>
       <groupId>com.google.api-client</groupId>
-      <artifactId>google-api-client-extensions</artifactId>
+      <artifactId>google-api-client-appengine</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.api-client</groupId>
-      <artifactId>google-api-client-extensions-android2</artifactId>
+      <artifactId>google-api-client-android2</artifactId>
     </dependency>
   </dependencies>
 
