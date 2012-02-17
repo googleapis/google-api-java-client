@@ -33,6 +33,10 @@
     </dependency>
     <dependency>
       <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client-servlet</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client-android2</artifactId>
     </dependency>
   </dependencies>
