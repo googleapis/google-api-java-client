@@ -7,16 +7,15 @@
     <version>1.7.0-beta-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>google-api-client-appengine</artifactId>
-  <name>Google App Engine extensions to the Google API Client Library for Java.</name>
+  <artifactId>google-api-client-servlet</artifactId>
+  <name>Servlet and JDO extensions to the Google API Client Library for Java.</name>
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <links>
-            <link>http://download.oracle.com/javase/6/docs/api/</link>
-            <link>http://code.google.com/appengine/docs/java/javadoc</link>
+            <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
             <link>http://javadoc.google-http-java-client.googlecode.com/hg/${project.http.version}</link>
             <link>http://javadoc.google-oauth-java-client.googlecode.com/hg/${project.oauth.version}</link>
           </links>
@@ -117,21 +116,25 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>com.google.appengine</groupId>
-      <artifactId>appengine-api-1.0-sdk</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>com.google.oauth-client</groupId>
-      <artifactId>google-oauth-client-appengine</artifactId>
+      <artifactId>google-oauth-client-servlet</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-appengine</artifactId>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.jdo</groupId>
+      <artifactId>jdo2-api</artifactId>
     </dependency>
   </dependencies>
 </project>
