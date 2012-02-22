@@ -25,26 +25,28 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
+
 /**
  * Google-specific implementation of the OAuth 2.0 request for an access token based on an
  * authorization code (as specified in <a
  * href="http://code.google.com/apis/accounts/docs/OAuth2WebServer.html">Using OAuth 2.0 for Web
  * Server Applications</a>).
- *
+ * 
  * <p>
- * Use {@link GoogleCredential} to access protected resources from the resource server
- * using the {@link TokenResponse} returned by {@link #execute()}. On error, it will instead throw
+ * Use {@link GoogleCredential} to access protected resources from the resource server using the
+ * {@link TokenResponse} returned by {@link #execute()}. On error, it will instead throw
  * {@link TokenResponseException}.
  * </p>
- *
+ * 
  * <p>
  * Sample usage:
  * </p>
- *
+ * 
  * <pre>
   static void requestAccessToken() throws IOException {
     try {
-      TokenResponse response =
+      GoogleTokenResponse response =
           new GoogleAuthorizationCodeTokenRequest(new NetHttpTransport(), new JacksonFactory(),
               "812741506391.apps.googleusercontent.com", "{client_secret}",
               "4/P7q7W91a-oMsCeLvIaQm6bTrgtp7", "https://oauth2-login-demo.appspot.com/code")
@@ -65,11 +67,11 @@ import com.google.common.base.Preconditions;
     }
   }
  * </pre>
- *
+ * 
  * <p>
  * Implementation is not thread-safe.
  * </p>
- *
+ * 
  * @since 1.7
  * @author Yaniv Inbar
  */
@@ -84,8 +86,12 @@ public class GoogleAuthorizationCodeTokenRequest extends AuthorizationCodeTokenR
    * @param redirectUri redirect URL parameter matching the redirect URL parameter in the
    *        authorization request (see {@link #setRedirectUri(String)}
    */
-  public GoogleAuthorizationCodeTokenRequest(HttpTransport transport, JsonFactory jsonFactory,
-      String clientId, String clientSecret, String code, String redirectUri) {
+  public GoogleAuthorizationCodeTokenRequest(HttpTransport transport,
+      JsonFactory jsonFactory,
+      String clientId,
+      String clientSecret,
+      String code,
+      String redirectUri) {
     super(transport, jsonFactory, new GenericUrl(GoogleOAuthConstants.TOKEN_SERVER_URL), code);
     setClientAuthentication(new ClientParametersAuthentication(clientId, clientSecret));
     setRedirectUri(redirectUri);
@@ -121,8 +127,8 @@ public class GoogleAuthorizationCodeTokenRequest extends AuthorizationCodeTokenR
   public GoogleAuthorizationCodeTokenRequest setClientAuthentication(
       HttpExecuteInterceptor clientAuthentication) {
     Preconditions.checkNotNull(clientAuthentication);
-    return (GoogleAuthorizationCodeTokenRequest) super
-        .setClientAuthentication(clientAuthentication);
+    return (GoogleAuthorizationCodeTokenRequest) super.setClientAuthentication(
+        clientAuthentication);
   }
 
   @Override
@@ -134,5 +140,10 @@ public class GoogleAuthorizationCodeTokenRequest extends AuthorizationCodeTokenR
   public GoogleAuthorizationCodeTokenRequest setRedirectUri(String redirectUri) {
     Preconditions.checkNotNull(redirectUri);
     return (GoogleAuthorizationCodeTokenRequest) super.setRedirectUri(redirectUri);
+  }
+
+  @Override
+  public GoogleTokenResponse execute() throws IOException {
+    return executeUnparsed().parseAs(GoogleTokenResponse.class);
   }
 }

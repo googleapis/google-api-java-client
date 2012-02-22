@@ -24,22 +24,24 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 
+import java.io.IOException;
+
 /**
  * Google-specific implementation of the OAuth 2.0 request to refresh an access token using a
  * refresh token as specified in <a
  * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-23#section-6">Refreshing an Access
  * Token</a>.
- * 
+ *
  * <p>
  * Use {@link GoogleCredential} to access protected resources from the resource server using the
  * {@link TokenResponse} returned by {@link #execute()}. On error, it will instead throw
  * {@link TokenResponseException}.
  * </p>
- * 
+ *
  * <p>
  * Sample usage:
  * </p>
- * 
+ *
  * <pre>
   static void refreshAccessToken() throws IOException {
     try {
@@ -62,11 +64,11 @@ import com.google.api.client.json.JsonFactory;
     }
   }
  * </pre>
- * 
+ *
  * <p>
  * Implementation is not thread-safe.
  * </p>
- * 
+ *
  * @since 1.7
  * @author Yaniv Inbar
  */
@@ -121,5 +123,10 @@ public class GoogleRefreshTokenRequest extends RefreshTokenRequest {
   @Override
   public GoogleRefreshTokenRequest setRefreshToken(String refreshToken) {
     return (GoogleRefreshTokenRequest) super.setRefreshToken(refreshToken);
+  }
+
+  @Override
+  public GoogleTokenResponse execute() throws IOException {
+    return executeUnparsed().parseAs(GoogleTokenResponse.class);
   }
 }
