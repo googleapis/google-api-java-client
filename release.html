@@ -108,7 +108,7 @@ the 1.7 Mercurial branch.
 <ul>
   <li>Consider changing value of $project.http.version and
   $project.oauth.version variables in pom.xml</li>
-  <li>Checkout the source and push to central Maven repository (based on
+  <li>Checkout the source, update dependencies.html, and push to central Maven repository (based on
   instructions from <a href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Sonatype OSS Maven Repository Usage Guide</a>):<pre>
 cd /tmp
 rm -rf google-api-java-client
@@ -116,6 +116,12 @@ mkdir google-api-java-client
 cd google-api-java-client
 hg clone -b 1.7 https://google-api-java-client.googlecode.com/hg/ 1.7
 cd 1.7
+
+mvn project-info-reports:dependencies
+cp google-api-client/target/site/dependencies.html google-api-client-assembly/dependencies/dependencies.html
+cp google-api-client-android2/target/site/dependencies.html google-api-client-assembly/dependencies/android2-dependencies.html
+cp google-api-client-appengine/target/site/dependencies.html google-api-client-assembly/dependencies/appengine-dependencies.html
+cp google-api-client-servlet/target/site/dependencies.html google-api-client-assembly/dependencies/servlet-dependencies.html
 
 mvn clean deploy
 mvn release:clean

@@ -17,6 +17,9 @@
   </files>
   <fileSets>
     <fileSet>
+      <directory>dependencies</directory>
+    </fileSet>
+    <fileSet>
       <directory>target/dependencies</directory>
       <excludes>
         <exclude>google-*-client-*</exclude>
