@@ -28,6 +28,17 @@ import java.util.List;
  * href="http://code.google.com/p/google-api-python-client/wiki/ClientSecrets">client_secrets.json
  * file format</a>.
  *
+ * <p>
+ * Sample usage:
+ * </p>
+ *
+ * <pre>
+  static GoogleClientSecrets loadClientSecretsResource(JsonFactory jsonFactory) throws IOException {
+    return GoogleClientSecrets.load(
+        jsonFactory, SampleClass.class.getResourceAsStream("/client_secrets.json"));
+  }
+ * </pre>
+ *
  * @since 1.7
  * @author Yaniv Inbar
  */
