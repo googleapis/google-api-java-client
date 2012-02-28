@@ -14,6 +14,9 @@
 
 package com.google.api.client.googleapis.auth.oauth2;
 
+import com.google.api.client.auth.jsontoken.JsonWebSignature;
+import com.google.api.client.auth.jsontoken.JsonWebToken;
+import com.google.api.client.auth.jsontoken.RsaSHA256Signer;
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
 import com.google.api.client.auth.oauth2.Credential;
@@ -21,6 +24,7 @@ import com.google.api.client.auth.oauth2.CredentialRefreshListener;
 import com.google.api.client.auth.oauth2.CredentialStore;
 import com.google.api.client.auth.oauth2.TokenRequest;
 import com.google.api.client.auth.oauth2.TokenResponse;
+import com.google.api.client.auth.security.PrivateKeys;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets.Details;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteInterceptor;
@@ -28,7 +32,14 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.json.JsonFactory;
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 
+import java.io.File;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.PrivateKey;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -37,15 +48,14 @@ import java.util.List;
  * expires using a refresh token.
  *
  * <p>
- * It uses {@link BearerToken#authorizationHeaderAccessMethod()} as the access method,
- * {@link GoogleOAuthConstants#TOKEN_SERVER_URL} as the token server URL, and
- * {@link ClientParametersAuthentication} with the client ID and secret as the client authentication
- * (use {@link Builder#setClientSecrets(GoogleClientSecrets)} or
- * {@link Builder#setClientSecrets(String, String)}).
+ * There are three modes supported: access token only, refresh token flow, and service account flow
+ * (with or without impersonating a user).
  * </p>
  *
  * <p>
- * Sample usage:
+ * If all you have is an access token, you simply pass the {@link TokenResponse} to the credential
+ * using {@link Builder#setFromTokenResponse(TokenResponse)}. Google credential uses
+ * {@link BearerToken#authorizationHeaderAccessMethod()} as the access method. Sample usage:
  * </p>
  *
  * <pre>
@@ -54,7 +64,19 @@ import java.util.List;
     return transport.createRequestFactory(
         new GoogleCredential().setFromTokenResponse(tokenResponse));
   }
-
+ * </pre>
+ *
+ * <p>
+ * If you have a refresh token, it is similar to the case of access token only, but you additionally
+ * need to pass the credential the client secrets using
+ * {@link Builder#setClientSecrets(GoogleClientSecrets)} or
+ * {@link Builder#setClientSecrets(String, String)}. Google credential uses
+ * {@link GoogleOAuthConstants#TOKEN_SERVER_URL} as the token server URL, and
+ * {@link ClientParametersAuthentication} with the client ID and secret as the client
+ * authentication. Sample usage:
+ * </p>
+ *
+ * <pre>
   public static HttpRequestFactory createRequestFactoryWithRefreshToken(HttpTransport transport,
       JsonFactory jsonFactory, GoogleClientSecrets clientSecrets, TokenResponse tokenResponse) {
     return transport.createRequestFactory(new GoogleCredential.Builder().setTransport(transport)
@@ -62,6 +84,54 @@ import java.util.List;
         .setClientSecrets(clientSecrets)
         .build()
         .setFromTokenResponse(tokenResponse));
+  }
+ * </pre>
+ *
+ * <p>
+ * The service account flow is used when you want to access data owned by your client application.
+ * You download the private key in a {@code key.p12} file from the Google APIs Console. Use
+ * {@link Builder#setServiceAccountId(String)},
+ * {@link Builder#setServiceAccountPrivateKeyFromP12File(File)}, and
+ * {@link Builder#setServiceAccountScopes(String...)}. Sample usage:
+ * </p>
+ *
+ * <pre>
+  public static HttpRequestFactory createRequestFactoryForServiceAccount(
+      HttpTransport transport,
+      JsonFactory jsonFactory,
+      String serviceAccountId,
+      Iterable&lt;String&gt; serviceAccountScopes,
+      File p12File) throws GeneralSecurityException, IOException {
+    return transport.createRequestFactory(new GoogleCredential.Builder().setTransport(transport)
+        .setJsonFactory(jsonFactory)
+        .setServiceAccountId(serviceAccountId)
+        .setServiceAccountScopes(serviceAccountScopes)
+        .setServiceAccountPrivateKeyFromP12File(p12File)
+        .build());
+  }
+ * </pre>
+ *
+ * <p>
+ * You can also use the service account flow to impersonate a user in a domain that you own. This is
+ * very similar to the service account flow above, but you additionally call
+ * {@link Builder#setServiceAccountUser(String)}. Sample usage:
+ * </p>
+ *
+ * <pre>
+  public static HttpRequestFactory createRequestFactoryForServiceAccountImpersonateUser(
+      HttpTransport transport,
+      JsonFactory jsonFactory,
+      String serviceAccountId,
+      Iterable&lt;String&gt; serviceAccountScopes,
+      File p12File,
+      String serviceAccountUser) throws GeneralSecurityException, IOException {
+    return transport.createRequestFactory(new GoogleCredential.Builder().setTransport(transport)
+        .setJsonFactory(jsonFactory)
+        .setServiceAccountId(serviceAccountId)
+        .setServiceAccountScopes(serviceAccountScopes)
+        .setServiceAccountPrivateKeyFromP12File(p12File)
+        .setServiceAccountUser(serviceAccountUser)
+        .build());
   }
  * </pre>
  *
@@ -80,6 +150,30 @@ import java.util.List;
  * @author Yaniv Inbar
  */
 public class GoogleCredential extends Credential {
+
+  /**
+   * Service account ID (typically an e-mail address) or {@code null} if not using the service
+   * account flow.
+   */
+  private String serviceAccountId;
+
+  /**
+   * Space-separated OAuth scopes to use with the the service account flow or {@code null} if not
+   * using the service account flow.
+   */
+  private String serviceAccountScopes;
+
+  /**
+   * Private key to use with the the service account flow or {@code null} if not using the service
+   * account flow.
+   */
+  private PrivateKey serviceAccountPrivateKey;
+
+  /**
+   * Email address of the user the application is trying to impersonate in the service account flow
+   * or {@code null} for none or if not using the service account flow.
+   */
+  private String serviceAccountUser;
 
   /**
    * Constructor with the ability to access protected resources, but not refresh tokens.
@@ -105,6 +199,15 @@ public class GoogleCredential extends Credential {
    * @param requestInitializer HTTP request initializer for refresh token requests to the token
    *        server or {@code null} for none.
    * @param refreshListeners listeners for refresh token results or {@code null} for none
+   * @param serviceAccountId service account ID (typically an e-mail address) or {@code null} if not
+   *        using the service account flow
+   * @param serviceAccountScopes space-separated OAuth scopes to use with the the service account
+   *        flow or {@code null} if not using the service account flow
+   * @param serviceAccountPrivateKey private key to use with the the service account flow or
+   *        {@code null} if not using the service account flow
+   * @param serviceAccountUser email address of the user the application is trying to impersonate in
+   *        the service account flow or {@code null} for none or if not using the service account
+   *        flow
    */
   protected GoogleCredential(AccessMethod method,
       HttpTransport transport,
@@ -112,7 +215,11 @@ public class GoogleCredential extends Credential {
       String tokenServerEncodedUrl,
       HttpExecuteInterceptor clientAuthentication,
       HttpRequestInitializer requestInitializer,
-      List<CredentialRefreshListener> refreshListeners) {
+      List<CredentialRefreshListener> refreshListeners,
+      String serviceAccountId,
+      String serviceAccountScopes,
+      PrivateKey serviceAccountPrivateKey,
+      String serviceAccountUser) {
     super(method,
         transport,
         jsonFactory,
@@ -120,6 +227,15 @@ public class GoogleCredential extends Credential {
         clientAuthentication,
         requestInitializer,
         refreshListeners);
+    if (serviceAccountPrivateKey == null) {
+      Preconditions.checkArgument(
+          serviceAccountId == null && serviceAccountScopes == null && serviceAccountUser == null);
+    } else {
+      this.serviceAccountId = Preconditions.checkNotNull(serviceAccountId);
+      this.serviceAccountScopes = Preconditions.checkNotNull(serviceAccountScopes);
+      this.serviceAccountPrivateKey = serviceAccountPrivateKey;
+      this.serviceAccountUser = serviceAccountUser;
+    }
   }
 
   @Override
@@ -147,6 +263,70 @@ public class GoogleCredential extends Credential {
     return (GoogleCredential) super.setFromTokenResponse(tokenResponse);
   }
 
+  @Override
+  protected TokenResponse executeRefreshToken() throws IOException {
+    if (serviceAccountPrivateKey == null) {
+      return super.executeRefreshToken();
+    }
+    // service accounts
+    JsonWebSignature.Header header = new JsonWebSignature.Header();
+    header.setAlgorithm("RS256");
+    header.setType("JWT");
+    JsonWebToken.Payload payload = new JsonWebToken.Payload();
+    long currentTime = System.currentTimeMillis();
+    payload.setIssuer(serviceAccountId)
+        .setAudience(GoogleOAuthConstants.TOKEN_SERVER_URL)
+        .setIssuedAtTimeSeconds(currentTime / 1000)
+        .setExpirationTimeSeconds(currentTime / 1000 + 3600)
+        .setPrincipal(serviceAccountUser);
+    payload.put("scope", serviceAccountScopes);
+    try {
+      String assertion =
+          RsaSHA256Signer.sign(serviceAccountPrivateKey, getJsonFactory(), header, payload);
+      TokenRequest request = new TokenRequest(getTransport(), getJsonFactory(), new GenericUrl(
+          GoogleOAuthConstants.TOKEN_SERVER_URL), "assertion");
+      request.put("assertion_type", "http://oauth.net/grant_type/jwt/1.0/bearer");
+      request.put("assertion", assertion);
+      return request.execute();
+    } catch (GeneralSecurityException exception) {
+      IOException e = new IOException();
+      e.initCause(exception);
+      throw e;
+    }
+  }
+
+  /**
+   * Returns the service account ID (typically an e-mail address) or {@code null} if not using the
+   * service account flow.
+   */
+  public final String getServiceAccountId() {
+    return serviceAccountId;
+  }
+
+  /**
+   * Returns the space-separated OAuth scopes to use with the the service account flow or
+   * {@code null} if not using the service account flow.
+   */
+  public final String getServiceAccountScopes() {
+    return serviceAccountScopes;
+  }
+
+  /**
+   * Returns the private key to use with the the service account flow or {@code null} if not using
+   * the service account flow.
+   */
+  public final PrivateKey getServiceAccountPrivateKey() {
+    return serviceAccountPrivateKey;
+  }
+
+  /**
+   * Returns the email address of the user the application is trying to impersonate in the service
+   * account flow or {@code null} for none or if not using the service account flow.
+   */
+  public final String getServiceAccountUser() {
+    return serviceAccountUser;
+  }
+
   /**
    * Google credential builder.
    *
@@ -155,6 +335,24 @@ public class GoogleCredential extends Credential {
    * </p>
    */
   public static class Builder extends Credential.Builder {
+
+    /** Service account ID (typically an e-mail address) or {@code null} for none. */
+    private String serviceAccountId;
+
+    /**
+     * Space-separated OAuth scopes to use with the the service account flow or {@code null} for
+     * none.
+     */
+    private String serviceAccountScopes;
+
+    /** Private key to use with the the service account flow or {@code null} for none. */
+    private PrivateKey serviceAccountPrivateKey;
+
+    /**
+     * Email address of the user the application is trying to impersonate in the service account
+     * flow or {@code null} for none.
+     */
+    private String serviceAccountUser;
 
     public Builder() {
       super(BearerToken.authorizationHeaderAccessMethod());
@@ -169,7 +367,11 @@ public class GoogleCredential extends Credential {
           getTokenServerUrl() == null ? null : getTokenServerUrl().build(),
           getClientAuthentication(),
           getRequestInitializer(),
-          getRefreshListeners());
+          getRefreshListeners(),
+          serviceAccountId,
+          serviceAccountScopes,
+          serviceAccountPrivateKey,
+          serviceAccountUser);
     }
 
     @Override
@@ -182,17 +384,152 @@ public class GoogleCredential extends Credential {
       return (Builder) super.setJsonFactory(jsonFactory);
     }
 
-    /** Sets the client identifier and secret. */
+    /**
+     * Sets the client identifier and secret.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     */
     public Builder setClientSecrets(String clientId, String clientSecret) {
       setClientAuthentication(new ClientParametersAuthentication(clientId, clientSecret));
       return this;
     }
 
-    /** Sets the client secrets. */
+    /**
+     * Sets the client secrets.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     */
     public Builder setClientSecrets(GoogleClientSecrets clientSecrets) {
       Details details = clientSecrets.getDetails();
       setClientAuthentication(
           new ClientParametersAuthentication(details.getClientId(), details.getClientSecret()));
+      return this;
+    }
+
+    /** Returns the service account ID (typically an e-mail address) or {@code null} for none. */
+    public final String getServiceAccountId() {
+      return serviceAccountId;
+    }
+
+    /**
+     * Sets the service account ID (typically an e-mail address) or {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     */
+    public Builder setServiceAccountId(String serviceAccountId) {
+      this.serviceAccountId = serviceAccountId;
+      return this;
+    }
+
+    /**
+     * Returns the space-separated OAuth scopes to use with the the service account flow or
+     * {@code null} for none.
+     */
+    public final String getServiceAccountScopes() {
+      return serviceAccountScopes;
+    }
+
+    /**
+     * Sets the space-separated OAuth scopes to use with the the service account flow or
+     * {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     *
+     * @param serviceAccountScopes list of scopes to be joined by a space separator (or a single
+     *        value containing multiple space-separated scopes)
+     */
+    public Builder setServiceAccountScopes(String... serviceAccountScopes) {
+      return setServiceAccountScopes(
+          serviceAccountScopes == null ? null : Arrays.asList(serviceAccountScopes));
+    }
+
+    /**
+     * Sets the space-separated OAuth scopes to use with the the service account flow or
+     * {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     *
+     * @param serviceAccountScopes list of scopes to be joined by a space separator (or a single
+     *        value containing multiple space-separated scopes)
+     */
+    public Builder setServiceAccountScopes(Iterable<String> serviceAccountScopes) {
+      this.serviceAccountScopes =
+          serviceAccountScopes == null ? null : Joiner.on(' ').join(serviceAccountScopes);
+      return this;
+    }
+
+    /**
+     * Returns the private key to use with the the service account flow or {@code null} for none.
+     */
+    public final PrivateKey getServiceAccountPrivateKey() {
+      return serviceAccountPrivateKey;
+    }
+
+    /**
+     * Sets the private key to use with the the service account flow or {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     */
+    public Builder setServiceAccountPrivateKey(PrivateKey serviceAccountPrivateKey) {
+      this.serviceAccountPrivateKey = serviceAccountPrivateKey;
+      return this;
+    }
+
+    /**
+     * Sets the private key to use with the the service account flow or {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     *
+     * @param p12File input stream to the p12 file (closed at the end of this method in a finally
+     *        block)
+     */
+    public Builder setServiceAccountPrivateKeyFromP12File(File p12File)
+        throws GeneralSecurityException, IOException {
+      serviceAccountPrivateKey =
+          PrivateKeys.loadFromP12File(p12File, "notasecret", "privatekey", "notasecret");
+      return this;
+    }
+
+    /**
+     * Returns the email address of the user the application is trying to impersonate in the service
+     * account flow or {@code null} for none.
+     */
+    public final String getServiceAccountUser() {
+      return serviceAccountUser;
+    }
+
+    /**
+     * Sets the email address of the user the application is trying to impersonate in the service
+     * account flow or {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     */
+    public Builder setServiceAccountUser(String serviceAccountUser) {
+      this.serviceAccountUser = serviceAccountUser;
       return this;
     }
 
