@@ -22,14 +22,14 @@
     <fileSet>
       <directory>target/dependencies</directory>
       <excludes>
-        <exclude>google-*-client-*</exclude>
+        <exclude>google-api-client-*</exclude>
       </excludes>
       <outputDirectory>dependencies</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>target/dependencies</directory>
       <includes>
-        <include>google-*-client-*.jar</include>
+        <include>google-api-client-*.jar</include>
       </includes>
       <outputDirectory>/</outputDirectory>
     </fileSet>
