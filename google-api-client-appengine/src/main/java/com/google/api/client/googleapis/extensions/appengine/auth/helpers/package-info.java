@@ -22,6 +22,8 @@
  *
  * @since 1.5
  * @author moshenko@google.com (Jacob Moshenko)
+ * @deprecated (scheduled to be removed in 1.8) Use
+ *             {@link com.google.api.client.googleapis.extensions.appengine.auth.oauth2}
  */
 
 package com.google.api.client.googleapis.extensions.appengine.auth.helpers;

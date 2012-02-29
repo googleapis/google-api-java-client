@@ -26,7 +26,10 @@ import com.google.api.client.json.JsonFactory;
  *
  * @since 1.4
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.8) Use
+ *             {@link com.google.api.client.auth.oauth2.TokenRequest}
  */
+@Deprecated
 public class GoogleAccessTokenRequest {
 
   /** Authorization server URL for requesting tokens. */
@@ -60,7 +63,10 @@ public class GoogleAccessTokenRequest {
    * </code>
    * </pre>
    * </p>
+   * @deprecated (scheduled to be removed in 1.8) Use
+   *        {@link com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest}
    */
+  @Deprecated
   public static class GoogleAuthorizationCodeGrant extends AuthorizationCodeGrant {
 
     public GoogleAuthorizationCodeGrant() {
@@ -116,7 +122,10 @@ public class GoogleAccessTokenRequest {
    * </code>
    * </pre>
    * </p>
+   * @deprecated (scheduled to be removed in 1.8) Use
+   *        {@link com.google.api.client.googleapis.auth.oauth2.GoogleRefreshTokenRequest}
    */
+  @Deprecated
   public static class GoogleRefreshTokenGrant extends RefreshTokenGrant {
 
     public GoogleRefreshTokenGrant() {
@@ -160,7 +169,10 @@ public class GoogleAccessTokenRequest {
    * </code>
    * </pre>
    * </p>
+   * @deprecated (scheduled to be removed in 1.8) Use
+   *             {@link com.google.api.client.auth.oauth2.TokenRequest}
    */
+  @Deprecated
   public static class GoogleAssertionGrant extends AssertionGrant {
 
     public GoogleAssertionGrant() {

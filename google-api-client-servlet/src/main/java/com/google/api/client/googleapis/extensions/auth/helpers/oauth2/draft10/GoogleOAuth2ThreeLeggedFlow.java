@@ -29,7 +29,10 @@ import javax.jdo.annotations.PersistenceCapable;
  *
  * @author moshenko@google.com (Jacob Moshenko)
  * @since 1.4
+ * @deprecated (scheduled to be removed in 1.8) Use
+ *             {@link com.google.api.client.auth.oauth2.AuthorizationCodeFlow}
  */
+@Deprecated
 @PersistenceCapable
 @Inheritance(customStrategy = "complete-table")
 public class GoogleOAuth2ThreeLeggedFlow extends OAuth2ThreeLeggedFlow {

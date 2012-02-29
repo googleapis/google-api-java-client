@@ -21,6 +21,7 @@ import junit.framework.TestCase;
  *
  * @author Yaniv Inbar
  */
+@Deprecated
 public class GoogleAuthorizationRequestUrlTest extends TestCase {
   private static final String CLIENT_ID = "s6BhdRkqt3";
   private static final String REDIRECT_URL = "https://client.example.com/cb";

@@ -29,6 +29,7 @@ import junit.framework.TestCase;
  *
  * @author Yaniv Inbar
  */
+@Deprecated
 public class GoogleAccessTokenRequestTest extends TestCase {
   private static final NetHttpTransport TRANSPORT = new NetHttpTransport();
   private static final JacksonFactory JSON_FACTORY = new JacksonFactory();
