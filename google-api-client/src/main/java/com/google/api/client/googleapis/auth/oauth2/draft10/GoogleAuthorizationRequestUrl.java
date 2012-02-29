@@ -41,7 +41,12 @@ import com.google.api.client.util.Key;
  *
  * @since 1.4
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.8) Use
+ *         {@link com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl} or
+ *         {@link com.google.api.client.googleapis.auth.oauth2.GoogleBrowserClientRequestUrl} or
+ *         {@link com.google.api.client.auth.oauth2.AuthorizationRequestUrl}
  */
+@Deprecated
 public class GoogleAuthorizationRequestUrl extends AuthorizationRequestUrl {
 
   /** Authorization server URL for end-user authorization. */

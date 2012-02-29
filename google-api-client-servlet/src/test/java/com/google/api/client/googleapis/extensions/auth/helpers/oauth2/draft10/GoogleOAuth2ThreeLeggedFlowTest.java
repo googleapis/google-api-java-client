@@ -21,6 +21,7 @@ import junit.framework.TestCase;
  *
  * @author Yaniv Inbar
  */
+@Deprecated
 public class GoogleOAuth2ThreeLeggedFlowTest extends TestCase {
 
   public void testConstructor() {

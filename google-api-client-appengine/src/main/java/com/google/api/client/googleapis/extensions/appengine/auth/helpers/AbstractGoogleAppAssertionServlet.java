@@ -26,7 +26,10 @@ import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
  * @author moshenko@google.com (Jake Moshenko)
  *
  * @since 1.5
+ * @deprecated (scheduled to be removed in 1.8) Use
+ *   {@link com.google.api.client.googleapis.extensions.appengine.auth.oauth2.AppIdentityCredential}
  */
+@Deprecated
 public abstract class AbstractGoogleAppAssertionServlet
     extends AbstractAppEngineTwoLeggedFlowServlet {
 
