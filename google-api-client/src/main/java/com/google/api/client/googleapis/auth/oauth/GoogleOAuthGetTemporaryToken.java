@@ -32,7 +32,10 @@ import com.google.api.client.util.Key;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.8) Use
+ *        {@link com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest}
  */
+@Deprecated
 public final class GoogleOAuthGetTemporaryToken extends OAuthGetTemporaryToken {
 
   /**
