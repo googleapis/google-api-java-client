@@ -36,7 +36,8 @@ import java.io.InputStream;
  */
 public class MediaHttpUploaderTest extends TestCase {
 
-  private static final String TEST_REQUEST_URL = "http://www.test.com/request/url";
+  private static final String TEST_REQUEST_URL =
+      "http://www.test.com/request/url?uploadType=resumable";
   private static final String TEST_UPLOAD_URL = "http://www.test.com/media/upload/location";
   private static final String TEST_CONTENT_TYPE = "image/jpeg";
 
