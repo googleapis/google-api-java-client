@@ -244,6 +244,7 @@ public final class MediaHttpUploader {
   private HttpResponse executeUploadInitiation(GenericUrl initiationRequestUrl) throws IOException {
     updateStateAndNotifyListener(UploadState.INITIATION_STARTED);
 
+    initiationRequestUrl.put("uploadType", "resumable");
     HttpRequest request =
         requestFactory.buildRequest(initiationMethod, initiationRequestUrl, metadata);
     if (initiationMethod == HttpMethod.PUT) {
