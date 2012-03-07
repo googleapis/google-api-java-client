@@ -78,7 +78,7 @@ wiki-google-api-java-client.password = <i>[password from <a
   </li>
 </ul>
 
-<h3>Fork version 1.7.0-beta</h3>
+<h3>Fork version 1.7.1-beta</h3>
 This is done in preparation for release of the 1.7 branch 1-2 weeks before the
 official launch. We create a named Mercurial branch for 1.7. Development in the
 default Mercurial branch may then progress for the next minor version.
@@ -89,7 +89,7 @@ hg commit -m "create 1.7 branch in preparation for release"
 hg push
 hg update default
 </pre></li>
-  <li>For the following files, replace <code>1.7.0-beta</code> with the
+  <li>For the following files, replace <code>1.7.1-beta</code> with the
   next minor version: <b>(TODO: update this section to use sed)</b><pre>
 pom.xml
 */pom.xml
@@ -102,7 +102,7 @@ hg push
 </pre></li>
 </ul>
 
-<h3>Release version 1.7.0-beta</h3>
+<h3>Release version 1.7.1-beta</h3>
 This process is followed for the official launch. We are releasing the code from
 the 1.7 Mercurial branch.
 <ul>
@@ -125,7 +125,7 @@ cp google-api-client-servlet/target/site/dependencies.html google-api-client-ass
 
 mvn clean deploy
 mvn release:clean
-mvn release:prepare -DautoVersionSubmodules=true -Dtag=1.7.0-beta --batch-mode
+mvn release:prepare -DautoVersionSubmodules=true -Dtag=1.7.1-beta --batch-mode
 mvn release:perform -Darguments=-Dgpg.passphrase=<i>[YOUR GPG PASSPHRASE]</i>
 </pre></li>
   <li>Release on oss.sonatype.org
@@ -138,12 +138,12 @@ mvn release:perform -Darguments=-Dgpg.passphrase=<i>[YOUR GPG PASSPHRASE]</i>
   </ul>
     Central Maven repository is synced hourly. Once uploaded onto
     repo2.maven.org, it will be found at: <a
-      href="http://repo2.maven.org/maven2/com/google/api-client/google-api-client/1.7.0-beta/">repo2.maven.org</a>
+      href="http://repo2.maven.org/maven2/com/google/api-client/google-api-client/1.7.1-beta/">repo2.maven.org</a>
   </li>
-  <li>Start development of next bug fix version, by replacing <code>1.7.0-beta</code> with the next bug fix version:<pre>
+  <li>Start development of next bug fix version, by replacing <code>1.7.1-beta</code> with the next bug fix version:<pre>
 NEXT_VERSION=<i>(next bug fix version 1.7.X-beta)</i>
-sed s/1.7.0-beta/$NEXT_VERSION/g &lt;jdiff.xml &gt;/tmp/jdiff.xml
-sed s/1.7.0-beta/$NEXT_VERSION/g &lt;release.html &gt;/tmp/release.html
+sed s/1.7.1-beta/$NEXT_VERSION/g &lt;jdiff.xml &gt;/tmp/jdiff.xml
+sed s/1.7.1-beta/$NEXT_VERSION/g &lt;release.html &gt;/tmp/release.html
 mv /tmp/jdiff.xml /tmp/release.html .
 hg commit -m "start $NEXT_VERSION"
 hg push
@@ -161,11 +161,11 @@ cd /tmp/google-api-java-client
 hg clone https://code.google.com/p/google-api-java-client.javadoc/ javadoc
 hg clone https://code.google.com/p/google-api-java-client.wiki/ wiki
 hg clone -r 1.6.0-beta https://google-api-java-client.googlecode.com/hg/ 1.6.0-beta
-hg clone -r 1.7.0-beta https://google-api-java-client.googlecode.com/hg/ 1.7.0-beta
+hg clone -r 1.7.1-beta https://google-api-java-client.googlecode.com/hg/ 1.7.1-beta
 
-cd 1.7.0-beta
+cd 1.7.1-beta
 mvn javadoc:jar install site
-cp -R target/site/apidocs ../javadoc/1.7.0-beta
+cp -R target/site/apidocs ../javadoc/1.7.1-beta
 <i>change these constants from jdiff.xml for your environment: JDIFF_HOME,
 MAVEN_REPOSITORY_HOME</i>
 ant -f jdiff.xml
@@ -173,29 +173,29 @@ ant -f jdiff.xml
 cd ../javadoc
 hg add
 PREV_VERSION=<i>(previous bug fix version 1.6.X-beta)</i>
-sed s/$PREV_VERSION/1.7.0-beta/g <index.html >/tmp/index.html && mv /tmp/index.html index.html
-hg commit -m "1.7.0-beta"
+sed s/$PREV_VERSION/1.7.1-beta/g <index.html >/tmp/index.html && mv /tmp/index.html index.html
+hg commit -m "1.7.1-beta"
 hg push
 
 cd ../wiki
-for s in *; do sed s/$PREV_VERSION/1.7.0-beta/g <$s >/tmp/$s && mv /tmp/$s .;
+for s in *; do sed s/$PREV_VERSION/1.7.1-beta/g <$s >/tmp/$s && mv /tmp/$s .;
 done
 hg revert --no-backup ReleaseNotes.wiki
-<i>edit ReleaseNotes.wiki to add release notes for 1.7.0-beta</i>
-hg commit -m "1.7.0-beta"
+<i>edit ReleaseNotes.wiki to add release notes for 1.7.1-beta</i>
+hg commit -m "1.7.1-beta"
 hg push
 </pre></li>
   <li><b>WAIT!</b> Don't do the following instructions until after the
   library has been uploaded to repo2.maven.org at: <a
-    href="http://repo2.maven.org/maven2/com/google/api-client/google-api-client/1.7.0-beta/">repo2.maven.org</a></li>
+    href="http://repo2.maven.org/maven2/com/google/api-client/google-api-client/1.7.1-beta/">repo2.maven.org</a></li>
   <li>Update to new version on <a
     href="http://code.google.com/p/google-api-java-client">http://code.google.com/p/google-api-java-client</a>
   <ul>
     <li>Upload to <a
       href="http://code.google.com/p/google-api-java-client/downloads/entry">http://code.google.com/p/google-api-java-client/downloads/entry</a>
     <ul>
-      <li>Summary: Google API Client Library for Java, version 1.7.0-beta</li>
-      <li>File: <code>/tmp/google-api-java-client/1.7.0-beta/google-api-client-assembly/target/google-api-client-1.7.0-beta-java.zip</code></li>
+      <li>Summary: Google API Client Library for Java, version 1.7.1-beta</li>
+      <li>File: <code>/tmp/google-api-java-client/1.7.1-beta/google-api-client-assembly/target/google-api-client-1.7.1-beta-java.zip</code></li>
       <li>Labels: <code>Type-Archive</code>, <code>OpSys-All</code>, and <code>Featured</code></li>
       <li>click Submit file</li>
     </ul>
@@ -204,7 +204,7 @@ hg push
     versions by removing any <code>Featured</code> label and adding the <code>Deprecated</code>
     label.</li>
     <li>Update the following pages changing any reference from the previous
-    version to the new version <code>1.7.0-beta</code>:
+    version to the new version <code>1.7.1-beta</code>:
     <ul>
       <li><a href="http://code.google.com/p/google-api-java-client/admin">admin</a></li>
       <li><a
