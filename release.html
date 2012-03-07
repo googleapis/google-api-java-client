@@ -86,7 +86,7 @@ default Mercurial branch may then progress for the next minor version.
   <li>Create the Mercurial named branch: <pre>
 hg branch 1.8
 hg commit -m "create 1.8 branch in preparation for release"
-hg push
+hg push --new-branch
 hg update default
 </pre></li>
   <li>For the following files, replace <code>1.8.0-beta</code> with the
