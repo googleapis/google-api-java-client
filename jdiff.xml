@@ -27,7 +27,7 @@
       <new name="Google API Client Library for Java 1.7.1-beta">
         <!-- This is the location of your new source files -->
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.7.1-beta/google-api-client/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.7.1-beta/google-api-client-extensions/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.7.1-beta/google-api-client-servlet/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.7.1-beta/google-api-client-appengine/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.7.1-beta/google-api-client-android2/src/main/java" />
       </new>
