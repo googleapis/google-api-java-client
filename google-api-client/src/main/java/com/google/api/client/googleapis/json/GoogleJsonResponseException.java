@@ -22,7 +22,7 @@ import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
-import com.google.api.client.util.Strings;
+import com.google.api.client.util.StringUtils;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
@@ -141,7 +141,7 @@ public class GoogleJsonResponseException extends HttpResponseException {
     // message
     StringBuilder message = HttpResponseException.computeMessageBuffer(response);
     if (!com.google.common.base.Strings.isNullOrEmpty(detailString)) {
-      message.append(Strings.LINE_SEPARATOR).append(detailString);
+      message.append(StringUtils.LINE_SEPARATOR).append(detailString);
     }
     // result
     return new GoogleJsonResponseException(jsonFactory, response, details, message.toString());

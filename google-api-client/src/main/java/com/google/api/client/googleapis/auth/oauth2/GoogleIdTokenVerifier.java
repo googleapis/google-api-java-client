@@ -22,8 +22,7 @@ import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
-
-import org.apache.commons.codec.binary.StringUtils;
+import com.google.api.client.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
