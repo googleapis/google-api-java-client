@@ -25,7 +25,7 @@ import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.util.Key;
-import com.google.api.client.util.Strings;
+import com.google.api.client.util.StringUtils;
 
 import java.io.IOException;
 
@@ -192,7 +192,7 @@ public final class ClientLogin {
     String detailString = details.toString();
     StringBuilder message = HttpResponseException.computeMessageBuffer(response);
     if (!com.google.common.base.Strings.isNullOrEmpty(detailString)) {
-      message.append(Strings.LINE_SEPARATOR).append(detailString);
+      message.append(StringUtils.LINE_SEPARATOR).append(detailString);
     }
     throw new ClientLoginResponseException(response, details, message.toString());
   }

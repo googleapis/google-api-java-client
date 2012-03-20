@@ -22,7 +22,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.Json;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
-import com.google.api.client.util.Strings;
+import com.google.api.client.util.StringUtils;
 import com.google.api.client.xml.atom.Atom;
 
 import junit.framework.TestCase;
@@ -59,7 +59,8 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertEquals(GoogleJsonErrorTest.ERROR, GoogleJsonErrorTest.FACTORY.toString(ge.getDetails()));
-    assertTrue(ge.getMessage(), ge.getMessage().startsWith("403" + Strings.LINE_SEPARATOR + "{"));
+    assertTrue(
+        ge.getMessage(), ge.getMessage().startsWith("403" + StringUtils.LINE_SEPARATOR + "{"));
   }
 
   public void testFrom_detailsMissingContent() throws IOException {
