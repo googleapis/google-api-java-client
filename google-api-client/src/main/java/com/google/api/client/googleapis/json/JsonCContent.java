@@ -27,8 +27,8 @@ import java.io.OutputStream;
  * {@code "data"} envelope.
  *
  * <p>
- * Warning: this should only be used by some older Google APIs that wrapped the response in a {@code
- * "data"} envelope. All newer Google APIs don't use this envelope, and for those APIs
+ * Warning: this should only be used by some older Google APIs that wrapped the response in a
+ * {@code "data"} envelope. All newer Google APIs don't use this envelope, and for those APIs
  * {@link JsonHttpContent} should be used instead.
  * </p>
  *
@@ -37,15 +37,15 @@ import java.io.OutputStream;
  * </p>
  *
  * <pre>
- * <code>
   static void setContent(HttpRequest request, Object data) {
-    JsonCContent content = new JsonCContent();
-    content.jsonFactory = new JacksonFactory();
-    content.data = data;
-    request.content = content;
+    JsonCContent content = new JsonCContent(new JacksonFactory(), data);
+    request.setContent(content);
   }
- * </code>
  * </pre>
+ *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar

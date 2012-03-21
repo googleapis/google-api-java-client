@@ -59,10 +59,9 @@ import java.util.List;
  * </p>
  *
  * <pre>
-  public static HttpRequestFactory createRequestFactoryWithAccessTokenOnly(
+  public static GoogleCredential createCredentialWithAccessTokenOnly(
       HttpTransport transport, JsonFactory jsonFactory, TokenResponse tokenResponse) {
-    return transport.createRequestFactory(
-        new GoogleCredential().setFromTokenResponse(tokenResponse));
+    return new GoogleCredential().setFromTokenResponse(tokenResponse);
   }
  * </pre>
  *
@@ -77,13 +76,13 @@ import java.util.List;
  * </p>
  *
  * <pre>
-  public static HttpRequestFactory createRequestFactoryWithRefreshToken(HttpTransport transport,
+  public static GoogleCredential createCredentialWithRefreshToken(HttpTransport transport,
       JsonFactory jsonFactory, GoogleClientSecrets clientSecrets, TokenResponse tokenResponse) {
-    return transport.createRequestFactory(new GoogleCredential.Builder().setTransport(transport)
+    return new GoogleCredential.Builder().setTransport(transport)
         .setJsonFactory(jsonFactory)
         .setClientSecrets(clientSecrets)
         .build()
-        .setFromTokenResponse(tokenResponse));
+        .setFromTokenResponse(tokenResponse);
   }
  * </pre>
  *
@@ -96,18 +95,18 @@ import java.util.List;
  * </p>
  *
  * <pre>
-  public static HttpRequestFactory createRequestFactoryForServiceAccount(
+  public static GoogleCredential createCredentialForServiceAccount(
       HttpTransport transport,
       JsonFactory jsonFactory,
       String serviceAccountId,
       Iterable&lt;String&gt; serviceAccountScopes,
       File p12File) throws GeneralSecurityException, IOException {
-    return transport.createRequestFactory(new GoogleCredential.Builder().setTransport(transport)
+    return new GoogleCredential.Builder().setTransport(transport)
         .setJsonFactory(jsonFactory)
         .setServiceAccountId(serviceAccountId)
         .setServiceAccountScopes(serviceAccountScopes)
         .setServiceAccountPrivateKeyFromP12File(p12File)
-        .build());
+        .build();
   }
  * </pre>
  *
@@ -118,20 +117,20 @@ import java.util.List;
  * </p>
  *
  * <pre>
-  public static HttpRequestFactory createRequestFactoryForServiceAccountImpersonateUser(
+  public static GoogleCredential createCredentialForServiceAccountImpersonateUser(
       HttpTransport transport,
       JsonFactory jsonFactory,
       String serviceAccountId,
       Iterable&lt;String&gt; serviceAccountScopes,
       File p12File,
       String serviceAccountUser) throws GeneralSecurityException, IOException {
-    return transport.createRequestFactory(new GoogleCredential.Builder().setTransport(transport)
+    return new GoogleCredential.Builder().setTransport(transport)
         .setJsonFactory(jsonFactory)
         .setServiceAccountId(serviceAccountId)
         .setServiceAccountScopes(serviceAccountScopes)
         .setServiceAccountPrivateKeyFromP12File(p12File)
         .setServiceAccountUser(serviceAccountUser)
-        .build());
+        .build();
   }
  * </pre>
  *

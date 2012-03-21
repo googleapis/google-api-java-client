@@ -25,26 +25,8 @@ import java.util.List;
 
 /**
  * Data class representing the Google JSON error response content, as documented for example in <a
- * href="http://code.google.com/apis/buzz/v1/using_rest.html#errors">Error Messages in Google
- * Buzz</a>.
- *
- * <p>
- * Parse the error response using {@link #parse(JsonFactory, HttpResponse)}. Sample usage:
- * </p>
- *
- * <pre>
-    try {
-      request.execute();
-    } catch (HttpResponseException e) {
-        GoogleJsonError errorResponse = GoogleJsonError.parse(factory, e.response);
-        System.err.println(errorResponse.code + " Error: " + errorResponse.message);
-        for (ErrorInfo error : errorResponse.errors) {
-          System.err.println(factory.toString(error));
-        }
-    } catch (IOException e) {
-...
-    }
- * </pre>
+ * href="https://code.google.com/apis/urlshortener/v1/getting_started.html#errors">Error
+ * responses</a>.
  *
  * @since 1.4
  * @author Yaniv Inbar
@@ -62,43 +44,236 @@ public class GoogleJsonError extends GenericJson {
    */
   public static GoogleJsonError parse(JsonFactory jsonFactory, HttpResponse response)
       throws IOException {
-    return JsonCParser.parserForResponse(jsonFactory, response).parseAndClose(
-        GoogleJsonError.class, null);
+    return JsonCParser.parserForResponse(jsonFactory, response)
+        .parseAndClose(GoogleJsonError.class, null);
   }
 
   /** Detailed error information. */
   public static class ErrorInfo extends GenericJson {
 
-    /** Specifies the error classification. */
+    /**
+     * Error classification or {@code null} for none.
+     *
+     * @deprecated (scheduled to be made private in 1.9) Use {@link #getDomain} or
+     *             {@link #setDomain}
+     */
+    @Deprecated
     @Key
     public String domain;
 
-    /** Specifies the error code. */
+    /**
+     * Error reason or {@code null} for none.
+     *
+     * @deprecated (scheduled to be made private in 1.9) Use {@link #getReason} or
+     *             {@link #setReason}
+     */
+    @Deprecated
     @Key
     public String reason;
 
-    /** A human readable explanation of the error. */
+    /**
+     * Human readable explanation of the error or {@code null} for none.
+     *
+     * @deprecated (scheduled to be made private in 1.9) Use {@link #getMessage} or
+     *             {@link #setMessage}
+     */
+    @Deprecated
     @Key
     public String message;
 
-    /** Specifies the location of the error or {@code null} for none. */
+    /**
+     * Location in the request that caused the error or {@code null} for none or {@code null} for
+     * none.
+     *
+     * @deprecated (scheduled to be made private in 1.9) Use {@link #getLocation} or
+     *             {@link #setLocation}
+     */
+    @Deprecated
     @Key
     public String location;
 
-    /** Specifies the type of location of the error or {@code null} for none. */
+    /**
+     * Type of location in the request that caused the error or {@code null} for none.
+     *
+     * @deprecated (scheduled to be made private in 1.9) Use {@link #getLocationType} or
+     *             {@link #setLocationType}
+     */
+    @Deprecated
     @Key
     public String locationType;
+
+    /**
+     * Returns the error classification or {@code null} for none.
+     *
+     * @since 1.8
+     */
+    public final String getDomain() {
+      return domain;
+    }
+
+    /**
+     * Sets the error classification or {@code null} for none.
+     *
+     * @since 1.8
+     */
+    public final void setDomain(String domain) {
+      this.domain = domain;
+    }
+
+    /**
+     * Returns the error reason or {@code null} for none.
+     *
+     * @since 1.8
+     */
+    public final String getReason() {
+      return reason;
+    }
+
+    /**
+     * Sets the error reason or {@code null} for none.
+     *
+     * @since 1.8
+     */
+    public final void setReason(String reason) {
+      this.reason = reason;
+    }
+
+    /**
+     * Returns the human readable explanation of the error or {@code null} for none.
+     *
+     * @since 1.8
+     */
+    public final String getMessage() {
+      return message;
+    }
+
+    /**
+     * Sets the human readable explanation of the error or {@code null} for none.
+     *
+     * @since 1.8
+     */
+    public final void setMessage(String message) {
+      this.message = message;
+    }
+
+    /**
+     * Returns the location in the request that caused the error or {@code null} for none or
+     * {@code null} for none.
+     *
+     * @since 1.8
+     */
+    public final String getLocation() {
+      return location;
+    }
+
+    /**
+     * Sets the location in the request that caused the error or {@code null} for none or
+     * {@code null} for none.
+     *
+     * @since 1.8
+     */
+    public final void setLocation(String location) {
+      this.location = location;
+    }
+
+    /**
+     * Returns the type of location in the request that caused the error or {@code null} for none.
+     *
+     * @since 1.8
+     */
+    public final String getLocationType() {
+      return locationType;
+    }
+
+    /**
+     * Sets the type of location in the request that caused the error or {@code null} for none.
+     *
+     * @since 1.8
+     */
+    public final void setLocationType(String locationType) {
+      this.locationType = locationType;
+    }
   }
 
-  /** List of detailed errors. */
+  /**
+   * List of detailed errors or {@code null} for none.
+   *
+   * @deprecated (scheduled to be made private in 1.9) Use {@link #getErrors} or {@link #setErrors}
+   */
+  @Deprecated
   @Key
   public List<ErrorInfo> errors;
 
-  /** Error code. */
+  /**
+   * HTTP status code of this response or {@code null} for none.
+   *
+   * @deprecated (scheduled to be made private in 1.9) Use {@link #getCode} or {@link #setCode}
+   */
+  @Deprecated
   @Key
   public int code;
 
-  /** Error message. */
+  /**
+   * Human-readable explanation of the error or {@code null} for none.
+   *
+   * @deprecated (scheduled to be made private in 1.9) Use {@link #getMessage} or
+   *             {@link #setMessage}
+   */
+  @Deprecated
   @Key
   public String message;
+
+  /**
+   * Returns the list of detailed errors or {@code null} for none.
+   *
+   * @since 1.8
+   */
+  public final List<ErrorInfo> getErrors() {
+    return errors;
+  }
+
+  /**
+   * Sets the list of detailed errors or {@code null} for none.
+   *
+   * @since 1.8
+   */
+  public final void setErrors(List<ErrorInfo> errors) {
+    this.errors = errors;
+  }
+
+  /**
+   * Returns the HTTP status code of this response or {@code null} for none.
+   *
+   * @since 1.8
+   */
+  public final int getCode() {
+    return code;
+  }
+
+  /**
+   * Sets the HTTP status code of this response or {@code null} for none.
+   *
+   * @since 1.8
+   */
+  public final void setCode(int code) {
+    this.code = code;
+  }
+
+  /**
+   * Returns the human-readable explanation of the error or {@code null} for none.
+   *
+   * @since 1.8
+   */
+  public final String getMessage() {
+    return message;
+  }
+
+  /**
+   * Sets the human-readable explanation of the error or {@code null} for none.
+   *
+   * @since 1.8
+   */
+  public final void setMessage(String message) {
+    this.message = message;
+  }
 }

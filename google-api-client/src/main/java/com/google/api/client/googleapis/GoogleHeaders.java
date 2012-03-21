@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -20,96 +20,147 @@ import com.google.api.client.util.escape.PercentEscaper;
 
 /**
  * HTTP headers for Google API's.
- * 
+ *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public class GoogleHeaders extends HttpHeaders {
 
   /** Escaper for the {@link #slug} header. */
-  public static final PercentEscaper SLUG_ESCAPER = new PercentEscaper(
-      " !\"#$&'()*+,-./:;<=>?@[\\]^_`{|}~", false);
+  public static final PercentEscaper SLUG_ESCAPER =
+      new PercentEscaper(" !\"#$&'()*+,-./:;<=>?@[\\]^_`{|}~", false);
 
-  /** {@code "GData-Version"} header. */
+  /**
+   * {@code "GData-Version"} header.
+   *
+   * @deprecated (scheduled to be made private in 1.9) Use {@link #getGDataVersion} or
+   *             {@link #setGDataVersion}
+   */
+  @Deprecated
   @Key("GData-Version")
   public String gdataVersion;
 
   /**
    * Escaped {@code "Slug"} header value, which must be escaped using {@link #SLUG_ESCAPER}.
-   * 
+   *
    * @see #setSlugFromFileName(String)
+   * @deprecated (scheduled to be made private in 1.9) Use {@link #getSlug} or {@link #setSlug}
    */
+  @Deprecated
   @Key("Slug")
   public String slug;
 
-  /** {@code "X-GData-Client"} header. */
+  /**
+   * {@code "X-GData-Client"} header.
+   *
+   * @deprecated (scheduled to be made private in 1.9) Use {@link #getGDataClient} or
+   *             {@link #setGDataClient}
+   */
+  @Deprecated
   @Key("X-GData-Client")
   public String gdataClient;
 
   /**
    * {@code "X-GData-Key"} header, which must be of the form {@code "key=[developerId]"}.
-   * 
+   *
    * @see #setDeveloperId(String)
+   * @deprecated (scheduled to be made private in 1.9) Use {@link #getGDataKey} or
+   *             {@link #setGDataKey}
    */
+  @Deprecated
   @Key("X-GData-Key")
   public String gdataKey;
 
   /**
    * {@code "x-goog-acl"} header that lets you apply predefined (canned) ACLs to a bucket or object
    * when you upload it or create it.
+   *
+   * @deprecated (scheduled to be removed in 1.9)
    */
+  @Deprecated
   @Key("x-goog-acl")
   public String googAcl;
 
   /**
    * {@code "x-goog-copy-source"} header that specifies the destination bucket and object for a copy
    * operation.
+   *
+   * @deprecated (scheduled to be removed in 1.9)
    */
+  @Deprecated
   @Key("x-goog-copy-source")
   public String googCopySource;
 
   /**
    * {@code "x-goog-copy-source-if-match"} header that specifies the conditions for a copy
    * operation.
+   *
+   * @deprecated (scheduled to be removed in 1.9)
    */
+  @Deprecated
   @Key("x-goog-copy-source-if-match")
   public String googCopySourceIfMatch;
 
   /**
    * {@code "x-goog-copy-source-if-none-match"} header that specifies the conditions for a copy
    * operation.
+   *
+   * @deprecated (scheduled to be removed in 1.9)
    */
+  @Deprecated
   @Key("x-goog-copy-source-if-none-match")
   public String googCopySourceIfNoneMatch;
 
   /**
    * {@code "x-goog-copy-source-if-modified-since"} header that specifies the conditions for a copy
    * operation.
+   *
+   * @deprecated (scheduled to be removed in 1.9)
    */
+  @Deprecated
   @Key("x-goog-copy-source-if-modified-since")
   public String googCopySourceIfModifiedSince;
 
   /**
    * {@code "x-goog-copy-source-if-unmodified-since"} header that specifies the conditions for a
    * copy operation.
+   *
+   * @deprecated (scheduled to be removed in 1.9)
    */
+  @Deprecated
   @Key("x-goog-copy-source-if-unmodified-since")
   public String googCopySourceIfUnmodifiedSince;
 
   /**
    * {@code "x-goog-date"} header that specifies a time stamp for authenticated requests.
+   *
+   * @deprecated (scheduled to be removed in 1.9)
    */
+  @Deprecated
   @Key("x-goog-date")
   public String googDate;
 
   /**
    * {@code "x-goog-metadata-directive"} header that specifies metadata handling during a copy
    * operation.
+   *
+   * @deprecated (scheduled to be removed in 1.9)
    */
+  @Deprecated
   @Key("x-goog-metadata-directive")
   public String googMetadataDirective;
 
-  /** {@code "X-HTTP-Method-Override"} header. */
+  /**
+   * {@code "X-HTTP-Method-Override"} header.
+   *
+   * @deprecated (scheduled to be made private in 1.9) Use {@link #getMethodOverride} or
+   *             {@link #setMethodOverride}
+   */
+  @Deprecated
   @Key("X-HTTP-Method-Override")
   public String methodOverride;
 
@@ -151,7 +202,7 @@ public class GoogleHeaders extends HttpHeaders {
 
   /**
    * Returns the {@code "X-Upload-Content-Length"} header or {@code null} for none.
-   * 
+   *
    * @since 1.7
    */
   public final long getUploadContentLength() {
@@ -160,7 +211,7 @@ public class GoogleHeaders extends HttpHeaders {
 
   /**
    * Sets the {@code "X-Upload-Content-Length"} header or {@code null} for none.
-   * 
+   *
    * @since 1.7
    */
   public final void setUploadContentLength(long uploadContentLength) {
@@ -169,7 +220,7 @@ public class GoogleHeaders extends HttpHeaders {
 
   /**
    * Returns the {@code "X-Upload-Content-Type"} header or {@code null} for none.
-   * 
+   *
    * @since 1.7
    */
   public final String getUploadContentType() {
@@ -178,7 +229,7 @@ public class GoogleHeaders extends HttpHeaders {
 
   /**
    * Sets the {@code "X-Upload-Content-Type"} header or {@code null} for none.
-   * 
+   *
    * @since 1.7
    */
   public final void setUploadContentType(String uploadContentType) {
@@ -191,5 +242,98 @@ public class GoogleHeaders extends HttpHeaders {
    */
   public static String getGoogleLoginValue(String authToken) {
     return "GoogleLogin auth=" + authToken;
+  }
+
+  /**
+   * Returns the {@code "GData-Version"} header.
+   *
+   * @since 1.8
+   */
+  public final String getGDataVersion() {
+    return gdataVersion;
+  }
+
+  /**
+   * Sets the {@code "GData-Version"} header.
+   *
+   * @since 1.8
+   */
+  public final void setGDataVersion(String gdataVersion) {
+    this.gdataVersion = gdataVersion;
+  }
+
+  /**
+   * Returns the escaped {@code "Slug"} header value, which must be escaped using
+   * {@link #SLUG_ESCAPER}.
+   *
+   * @since 1.8
+   */
+  public final String getSlug() {
+    return slug;
+  }
+
+  /**
+   * Sets the escaped {@code "Slug"} header value, which must be escaped using
+   * {@link #SLUG_ESCAPER}.
+   *
+   * @since 1.8
+   */
+  public final void setSlug(String slug) {
+    this.slug = slug;
+  }
+
+  /**
+   * Returns the {@code "X-GData-Client"} header.
+   *
+   * @since 1.8
+   */
+  public final String getGDataClient() {
+    return gdataClient;
+  }
+
+  /**
+   * Sets the {@code "X-GData-Client"} header.
+   *
+   * @since 1.8
+   */
+  public final void setGDataClient(String gdataClient) {
+    this.gdataClient = gdataClient;
+  }
+
+  /**
+   * Returns the {@code "X-GData-Key"} header, which must be of the form {@code "key=[developerId]"}
+   * .
+   *
+   * @since 1.8
+   */
+  public final String getGDataKey() {
+    return gdataKey;
+  }
+
+  /**
+   * Sets the {@code "X-GData-Key"} header, which must be of the form {@code "key=[developerId]"}.
+   *
+   * @since 1.8
+   */
+  public final void setGDataKey(String gdataKey) {
+    this.gdataKey = gdataKey;
+  }
+
+  /**
+   * Returns the {@code "X-HTTP-Method-Override"} header.
+   *
+   * @since 1.8
+   */
+  public final String getMethodOverride() {
+    return methodOverride;
+  }
+
+  /**
+   * Sets the {@code "X-HTTP-Method-Override"} header.
+   *
+   * @since 1.8
+   */
+  public final void setMethodOverride(String methodOverride) {
+    this.methodOverride = methodOverride;
   }
 }
