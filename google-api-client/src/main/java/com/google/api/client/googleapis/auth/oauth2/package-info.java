@@ -15,7 +15,7 @@
 /**
  * Google's additions to OAuth 2.0 authorization as specified in <a
  * href="http://code.google.com/apis/accounts/docs/OAuth2.html">Using OAuth 2.0 to Access Google
- * APIs (Experimental)</a>.
+ * APIs</a>.
  *
  * <p>
  * Before using this library, you must register your application at the <a
@@ -27,7 +27,7 @@
  * <p>
  * These are the typical steps of the web server flow based on an authorization code, as specified
  * in <a href="http://code.google.com/apis/accounts/docs/OAuth2WebServer.html">Using OAuth 2.0 for
- * Web Server Applications (Experimental)</a>:
+ * Web Server Applications</a>:
  * <ul>
  * <li>Redirect the end user in the browser to the authorization page using
  * {@link com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl} to grant
@@ -46,7 +46,7 @@
  * <p>
  * These are the typical steps of the the browser-based client flow specified in <a
  * href="http://code.google.com/apis/accounts/docs/OAuth2UserAgent.html">Using OAuth 2.0 for
- * Client-side Applications (Experimental)</a>:
+ * Client-side Applications</a>:
  * <ul>
  * <li>Redirect the end user in the browser to the authorization page using
  * {@link com.google.api.client.googleapis.auth.oauth2.GoogleBrowserClientRequestUrl} to grant your

@@ -16,30 +16,51 @@ package com.google.api.client.googleapis;
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.util.Key;
-import com.google.api.client.util.escape.CharEscapers;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
-
-import java.util.HashMap;
 
 /**
  * Generic Google URL providing for some common query parameters used in Google API's such as the
  * {@link #alt} and {@link #fields} parameters.
+ *
+ * <p>
+ * Upgrade warning: in prior version 1.7 the pretty-print parameter had a key of "prettyprint", and
+ * the user IP parameter had a key of "userip". In 1.8 the case has changed, so they are now
+ * "prettyPrint" and "userIp" respectively.
+ * </p>
+ *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public class GoogleUrl extends GenericUrl {
 
-  /** Whether to pretty print the output. */
-  @Key
+  /**
+   * Whether to pretty print the output.
+   *
+   * @deprecated (scheduled to be made private in 1.9) Use {@link #getPrettyPrint} or
+   *             {@link #setPrettyPrint}
+   */
+  @Deprecated
+  @Key("prettyPrint")
   public Boolean prettyprint;
 
-  /** Alternate wire format. */
+  /**
+   * Alternate wire format.
+   *
+   * @deprecated (scheduled to be made private in 1.9) Use {@link #getAlt} or {@link #setAlt}
+   */
+  @Deprecated
   @Key
   public String alt;
 
-  /** Partial fields mask. */
+  /**
+   * Partial fields mask.
+   *
+   * @deprecated (scheduled to be made private in 1.9) Use {@link #getFields} or {@link #setFields}
+   */
+  @Deprecated
   @Key
   public String fields;
 
@@ -48,7 +69,9 @@ public class GoogleUrl extends GenericUrl {
    * Console documentation</a>.
    *
    * @since 1.3
+   * @deprecated (scheduled to be made private in 1.9) Use {@link #getKey} or {@link #setKey}
    */
+  @Deprecated
   @Key
   public String key;
 
@@ -58,11 +81,12 @@ public class GoogleUrl extends GenericUrl {
    * documentation</a>.
    *
    * @since 1.3
+   *
+   * @deprecated (scheduled to be made private in 1.9) Use {@link #getUserIp} or {@link #setUserIp}
    */
-  @Key
+  @Deprecated
+  @Key("userIp")
   public String userip;
-
-  // TODO(yanivi): what other common Google query parameters are also important to add here?
 
   public GoogleUrl() {
   }
@@ -80,38 +104,98 @@ public class GoogleUrl extends GenericUrl {
   }
 
   /**
-   * Expands templates in a URI.
+   * Returns whether to pretty print the output.
    *
-   * @param pathUri URI component. It may contain one or more sequences of the form "{name}", where
-   *        "name" must be a key in variableMap
-   * @param variableMap map of request variable names to values. Any names which are found in
-   *        pathUri are removed from the map during processing
-   * @return The expanded template
-   * @throws IllegalArgumentException if a requested element in the pathUri is not in the
-   *         variableMap
+   * @since 1.8
    */
-  @VisibleForTesting
-  static String expandUriTemplates(String pathUri, HashMap<String, Object> variableMap)
-      throws IllegalArgumentException {
-    StringBuilder pathBuf = new StringBuilder();
-    int cur = 0;
-    int length = pathUri.length();
-    while (cur < length) {
-      int next = pathUri.indexOf('{', cur);
-      if (next == -1) {
-        pathBuf.append(pathUri.substring(cur));
-        break;
-      }
-      pathBuf.append(pathUri.substring(cur, next));
-      int close = pathUri.indexOf('}', next + 2);
-      String varName = pathUri.substring(next + 1, close);
-      cur = close + 1;
-      Preconditions.checkArgument(
-          variableMap != null, "no variable map supplied for parameterize path: %s", varName);
-      Object value = variableMap.remove(varName);
-      Preconditions.checkArgument(value != null, "missing required path parameter: %s", varName);
-      pathBuf.append(CharEscapers.escapeUriPath(value.toString()));
-    }
-    return pathBuf.toString();
+  public Boolean getPrettyPrint() {
+    return prettyprint;
+  }
+
+  /**
+   * Sets whether to pretty print the output.
+   *
+   * @since 1.8
+   */
+  public void setPrettyPrint(Boolean prettyPrint) {
+    this.prettyprint = prettyPrint;
+  }
+
+  /**
+   * Returns the alternate wire format.
+   *
+   * @since 1.8
+   */
+  public final String getAlt() {
+    return alt;
+  }
+
+  /**
+   * Sets the alternate wire format.
+   *
+   * @since 1.8
+   */
+  public final void setAlt(String alt) {
+    this.alt = alt;
+  }
+
+  /**
+   * Returns the partial fields mask.
+   *
+   * @since 1.8
+   */
+  public final String getFields() {
+    return fields;
+  }
+
+  /**
+   * Sets the partial fields mask.
+   *
+   * @since 1.8
+   */
+  public final void setFields(String fields) {
+    this.fields = fields;
+  }
+
+  /**
+   * Returns the API key as described in the <a
+   * href="https://code.google.com/apis/console-help/">Google APIs Console documentation</a>.
+   *
+   * @since 1.8
+   */
+  public final String getKey() {
+    return key;
+  }
+
+  /**
+   * Sets the API key as described in the <a
+   * href="https://code.google.com/apis/console-help/">Google APIs Console documentation</a>.
+   *
+   * @since 1.8
+   */
+  public final void setKey(String key) {
+    this.key = key;
+  }
+
+  /**
+   * Returns the user IP used to enforce per-user limits for server-side applications, as described
+   * in the <a href="https://code.google.com/apis/console-help/#EnforceUserLimits">Google APIs
+   * Console documentation</a>.
+   *
+   * @since 1.8
+   */
+  public final String getUserIp() {
+    return userip;
+  }
+
+  /**
+   * Sets the user IP used to enforce per-user limits for server-side applications, as described in
+   * the <a href="https://code.google.com/apis/console-help/#EnforceUserLimits">Google APIs Console
+   * documentation</a>.
+   *
+   * @since 1.8
+   */
+  public final void setUserIp(String userip) {
+    this.userip = userip;
   }
 }

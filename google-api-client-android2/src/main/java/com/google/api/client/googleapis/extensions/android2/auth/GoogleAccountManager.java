@@ -14,6 +14,8 @@
 
 package com.google.api.client.googleapis.extensions.android2.auth;
 
+import com.google.common.base.Preconditions;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
@@ -29,14 +31,19 @@ public final class GoogleAccountManager {
   /** Google account type. */
   public static final String ACCOUNT_TYPE = "com.google";
 
-  /** Account manager. */
+  /**
+   * Account manager.
+   * 
+   * @deprecated (scheduled to be made private in 1.9) Use {@link #getAccountManager()}
+   */
+  @Deprecated
   public final AccountManager manager;
 
   /**
-   * @param manager account manager
+   * @param accountManager account manager
    */
-  public GoogleAccountManager(AccountManager manager) {
-    this.manager = manager;
+  public GoogleAccountManager(AccountManager accountManager) {
+    this.manager = Preconditions.checkNotNull(accountManager);
   }
 
   /**
@@ -44,6 +51,15 @@ public final class GoogleAccountManager {
    */
   public GoogleAccountManager(Context context) {
     this(AccountManager.get(context));
+  }
+
+  /**
+   * Returns the account manager.
+   *
+   * @since 1.8
+   */
+  public AccountManager getAccountManager() {
+    return manager;
   }
 
   /**

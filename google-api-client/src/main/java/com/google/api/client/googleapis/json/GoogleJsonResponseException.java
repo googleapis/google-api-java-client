@@ -34,8 +34,20 @@ import java.io.IOException;
  * Responses</a>.
  *
  * <p>
- * To get the structured details, use {@link #getDetails()}.
+ * To execute a request, call {@link #execute(JsonFactory, HttpRequest)}. This will throw a
+ * {@link GoogleJsonResponseException} on an error response. To get the structured details, use
+ * {@link #getDetails()}.
  * </p>
+ *
+ * <pre>
+  static void executeShowingError(JsonFactory factory, HttpRequest request) throws IOException {
+    try {
+      GoogleJsonResponseException.execute(factory, request);
+    } catch (GoogleJsonResponseException e) {
+      System.err.println(e.getDetails());
+    }
+  }
+ * </pre>
  *
  * @since 1.6
  * @author Yaniv Inbar
