@@ -87,8 +87,9 @@ import java.util.List;
  * </pre>
  *
  * <p>
- * The service account flow is used when you want to access data owned by your client application.
- * You download the private key in a {@code key.p12} file from the Google APIs Console. Use
+ * The <a href="https://developers.google.com/accounts/docs/OAuth2ServiceAccount">service account
+ * flow</a> is used when you want to access data owned by your client application. You download the
+ * private key in a {@code .p12} file from the Google APIs Console. Use
  * {@link Builder#setServiceAccountId(String)},
  * {@link Builder#setServiceAccountPrivateKeyFromP12File(File)}, and
  * {@link Builder#setServiceAccountScopes(String...)}. Sample usage:
