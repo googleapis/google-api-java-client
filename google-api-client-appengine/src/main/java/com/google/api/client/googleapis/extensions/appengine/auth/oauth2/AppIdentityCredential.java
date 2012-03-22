@@ -18,7 +18,9 @@ import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
+import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
+import com.google.appengine.api.appidentity.AppIdentityServiceFailureException;
 import com.google.common.collect.Lists;
 
 import java.io.IOException;
@@ -72,10 +74,24 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
     request.setInterceptor(this);
   }
 
+  /**
+   * Intercept the request by using the access token obtained from the {@link AppIdentityService}.
+   * Any thrown {@link AppIdentityServiceFailureException} will be wrapped with an
+   * {@link IOException}.
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.7 it threw an {@link AppIdentityServiceFailureException}
+   * without wrapping it in an {@link IOException}.
+   * </p>
+   */
   @Override
   public void intercept(HttpRequest request) throws IOException {
-    String accessToken =
-        AppIdentityServiceFactory.getAppIdentityService().getAccessToken(scopes).getAccessToken();
-    BearerToken.authorizationHeaderAccessMethod().intercept(request, accessToken);
+    try {
+      String accessToken =
+          AppIdentityServiceFactory.getAppIdentityService().getAccessToken(scopes).getAccessToken();
+      BearerToken.authorizationHeaderAccessMethod().intercept(request, accessToken);
+    } catch (AppIdentityServiceFailureException e) {
+      throw new IOException(e);
+    }
   }
 }
