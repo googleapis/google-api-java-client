@@ -78,29 +78,6 @@ public class GoogleClient extends JsonHttpClient {
    * Create an {@link HttpRequest} suitable for use against this service.
    *
    * @param method HTTP Method type
-   * @param uriTemplate URI template for the path relative to the base URL. Must not start with a
-   *        "/"
-   * @param jsonHttpRequest JSON HTTP Request type
-   * @return newly created {@link HttpRequest}
-   *
-   * @deprecated (scheduled to be removed in 1.8) Use
-   *             {@link #buildHttpRequest(HttpMethod, GenericUrl, Object)}
-   */
-  @Override
-  @Deprecated
-  protected HttpRequest buildHttpRequest(
-      HttpMethod method, String uriTemplate, JsonHttpRequest jsonHttpRequest) throws IOException {
-    HttpRequest httpRequest = super.buildHttpRequest(method, uriTemplate, jsonHttpRequest);
-    new MethodOverride().intercept(httpRequest);
-    // Google servers will fail to process a POST/PUT/PATCH unless the Content-Length header >= 1
-    httpRequest.setAllowEmptyContent(false);
-    return httpRequest;
-  }
-
-  /**
-   * Create an {@link HttpRequest} suitable for use against this service.
-   *
-   * @param method HTTP Method type
    * @param url The complete URL of the service where requests should be sent. It includes the base
    *        path along with the URI template
    * @param body A POJO that can be serialized into JSON or {@code null} for none
@@ -129,21 +106,6 @@ public class GoogleClient extends JsonHttpClient {
   public static Builder builder(
       HttpTransport transport, JsonFactory jsonFactory, GenericUrl baseUrl) {
     return new Builder(transport, jsonFactory, baseUrl);
-  }
-
-  /**
-   * @deprecated (scheduled to be removed in 1.8) Use {@link #executeUnparsed}
-   */
-  @Override
-  @Deprecated
-  protected HttpResponse execute(HttpMethod method, String uriTemplate, Object body,
-      JsonHttpRequest jsonHttpRequest) throws IOException {
-    HttpRequest request = buildHttpRequest(method, uriTemplate, jsonHttpRequest);
-    if (body != null) {
-      request.setContent(createSerializer(body));
-      request.setEnableGZipContent(true);
-    }
-    return GoogleJsonResponseException.execute(getJsonFactory(), request);
   }
 
   @Override

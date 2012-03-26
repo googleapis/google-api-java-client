@@ -37,7 +37,7 @@ import java.io.IOException;
  *
  * @since 1.0
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.8) Use
+ * @deprecated (scheduled to be removed in 1.9) Use
  *        {@link com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest}
  */
 @Deprecated
