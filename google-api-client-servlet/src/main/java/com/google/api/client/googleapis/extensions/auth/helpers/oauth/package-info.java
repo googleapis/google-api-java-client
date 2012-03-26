@@ -22,9 +22,8 @@
  *
  * @since 1.5
  * @author moshenko@google.com (Jacob Moshenko)
- * @deprecated (scheduled to be removed in 1.8) Use
+ * @deprecated (scheduled to be removed in 1.9) Use
  *             {@link com.google.api.client.googleapis.auth.oauth2}
  */
 
 package com.google.api.client.googleapis.extensions.auth.helpers.oauth;
-

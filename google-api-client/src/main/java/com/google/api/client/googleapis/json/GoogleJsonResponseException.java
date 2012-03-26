@@ -87,7 +87,7 @@ public class GoogleJsonResponseException extends HttpResponseException {
   /**
    * Returns the JSON factory.
    *
-   * @deprecated (scheduled to be removed in 1.8)
+   * @deprecated (scheduled to be removed in 1.9)
    */
   @Deprecated
   public final JsonFactory getJsonFactory() {
