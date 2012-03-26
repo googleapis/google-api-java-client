@@ -23,6 +23,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.StringUtils;
+import com.google.common.base.Preconditions;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -68,6 +69,7 @@ import java.util.regex.Pattern;
     return verifier.verify(idToken);
   }
  * </pre>
+ * @since 1.7
  */
 public final class GoogleIdTokenVerifier {
 
@@ -86,7 +88,7 @@ public final class GoogleIdTokenVerifier {
    */
   private long expirationTimeMilliseconds;
 
-  /** Client ID. */
+  /** Client ID or {@code null} for none. */
   private final String clientId;
 
   /** HTTP transport. */
@@ -100,11 +102,11 @@ public final class GoogleIdTokenVerifier {
    *
    * @param transport HTTP transport
    * @param jsonFactory JSON factory
-   * @param clientId client ID
+   * @param clientId client ID or {@code null} for none
    */
   public GoogleIdTokenVerifier(HttpTransport transport, JsonFactory jsonFactory, String clientId) {
-    this.transport = transport;
-    this.jsonFactory = jsonFactory;
+    this.transport = Preconditions.checkNotNull(transport);
+    this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
     this.clientId = clientId;
   }
 
@@ -113,7 +115,7 @@ public final class GoogleIdTokenVerifier {
     return jsonFactory;
   }
 
-  /** Returns the client ID. */
+  /** Returns the client ID or {@code null} for none. */
   public String getClientId() {
     return clientId;
   }
@@ -132,22 +134,45 @@ public final class GoogleIdTokenVerifier {
   }
 
   /**
-   * Verifies that the given ID token is valid, by verifying the signature, verifying the current
-   * time against the issued at and expiration time (allowing for a 5 minute clock skew), and
-   * checking the issuer, audience, and issuee.
+   * Verifies that the given ID token is valid using {@link #verify(GoogleIdToken, String)} with the
+   * {@link #getClientId()}.
    *
-   * <p>
-   * There is only one type of signature supported by Google ID tokens: RS256. RS256 uses RSA and
-   * SHA-256 based on the public keys downloaded from the public certificate endpoint.
-   * </p>
-   *
+   * @param idToken Google ID token
    * @return {@code true} if verified successfully or {@code false} if failed
    */
   public boolean verify(GoogleIdToken idToken) throws GeneralSecurityException, IOException {
+    return verify(idToken, clientId);
+  }
+
+
+  /**
+   * Verifies that the given ID token is valid, using the given client ID.
+   *
+   * It verifies:
+   *
+   * <ul>
+   * <li>The RS256 signature, which uses RSA and SHA-256 based on the public keys downloaded from
+   * the public certificate endpoint.</li>
+   * <li>The current time against the issued at and expiration time (allowing for a 5 minute clock
+   * skew).</li>
+   * <li>The issuer is {@code "accounts.google.com"}.</li>
+   * <li>The audience and issuee match the client ID (skipped if {@code clientId} is {@code null}.
+   * </li>
+   * <li>
+   * </ul>
+   *
+   * @param idToken Google ID token
+   * @param clientId client ID or {@code null} to skip checking it
+   * @return {@code true} if verified successfully or {@code false} if failed
+   * @since 1.8
+   */
+  public boolean verify(GoogleIdToken idToken, String clientId)
+      throws GeneralSecurityException, IOException {
     // check the payload
     GoogleIdToken.Payload payload = idToken.getPayload();
     if (!payload.isValidTime(300) || !"accounts.google.com".equals(payload.getIssuer())
-        || !clientId.equals(payload.getAudience()) || !clientId.equals(payload.getIssuee())) {
+        || clientId != null
+        && (!clientId.equals(payload.getAudience()) || !clientId.equals(payload.getIssuee()))) {
       return false;
     }
     // check the signature
