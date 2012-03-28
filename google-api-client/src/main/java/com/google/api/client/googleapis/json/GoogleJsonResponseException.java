@@ -115,7 +115,7 @@ public class GoogleJsonResponseException extends HttpResponseException {
     String contentType = response.getContentType();
     try {
       if (!response.isSuccessStatusCode() && contentType != null
-          && contentType.startsWith(Json.CONTENT_TYPE)) {
+          && contentType.startsWith(Json.CONTENT_TYPE) && response.getContent() != null) {
         JsonParser parser = null;
         try {
           parser = JsonHttpParser.parserForResponse(jsonFactory, response);
@@ -138,7 +138,7 @@ public class GoogleJsonResponseException extends HttpResponseException {
           exception.printStackTrace();
         } finally {
           if (parser == null) {
-            response.getContent().close();
+            response.ignore();
           } else if (details == null) {
             parser.close();
           }
