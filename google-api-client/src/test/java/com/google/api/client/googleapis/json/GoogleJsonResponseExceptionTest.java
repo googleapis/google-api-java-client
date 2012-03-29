@@ -38,7 +38,7 @@ import java.io.IOException;
 @SuppressWarnings("deprecation")
 public class GoogleJsonResponseExceptionTest extends TestCase {
 
-  public void testFrom_noDetails() throws IOException {
+  public void testFrom_noDetailsDeprecated() throws IOException {
     HttpTransport transport = new MockHttpTransport();
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
@@ -46,6 +46,76 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     HttpResponseException e = new HttpResponseException(response);
     GoogleJsonResponseException ge = GoogleJsonResponseException.from(
         GoogleJsonErrorTest.FACTORY, e.getResponse());
+    assertNull(ge.getDetails());
+    assertEquals("200", ge.getMessage());
+  }
+
+  public void testFrom_withDetailsDeprecated() throws IOException {
+    HttpTransport transport = new ErrorTransport();
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException ge =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+    assertEquals(GoogleJsonErrorTest.ERROR, GoogleJsonErrorTest.FACTORY.toString(ge.getDetails()));
+    assertTrue(
+        ge.getMessage(), ge.getMessage().startsWith("403" + StringUtils.LINE_SEPARATOR + "{"));
+  }
+
+  public void testFrom_detailsMissingContentDeprecated() throws IOException {
+    HttpTransport transport = new ErrorTransport(null, Json.CONTENT_TYPE);
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    try {
+      request.execute();
+      fail();
+    } catch (HttpResponseException e) {
+      GoogleJsonResponseException ge =
+          GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, e.getResponse());
+      assertNull(ge.getDetails());
+      assertEquals("403", ge.getMessage());
+    }
+  }
+
+  public void testFrom_detailsArbitraryJsonContentDeprecated() throws IOException {
+    HttpTransport transport = new ErrorTransport("{\"foo\":\"bar\"}", Json.CONTENT_TYPE);
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    try {
+      request.execute();
+      fail();
+    } catch (HttpResponseException e) {
+      GoogleJsonResponseException ge =
+          GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, e.getResponse());
+      assertNull(ge.getDetails());
+      assertEquals("403", ge.getMessage());
+    }
+  }
+
+  public void testFrom_detailsArbitraryXmlContentDeprecated() throws IOException {
+    HttpTransport transport = new ErrorTransport("<foo>", Atom.CONTENT_TYPE);
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    try {
+      request.execute();
+      fail();
+    } catch (HttpResponseException e) {
+      GoogleJsonResponseException ge =
+          GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, e.getResponse());
+      assertNull(ge.getDetails());
+      assertEquals("403", ge.getMessage());
+    }
+  }
+
+  public void testFrom_noDetails() throws IOException {
+    HttpTransport transport = new MockHttpTransport();
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException ge =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
     assertEquals("200", ge.getMessage());
   }
@@ -67,44 +137,60 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     HttpTransport transport = new ErrorTransport(null, Json.CONTENT_TYPE);
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
-    try {
-      request.execute();
-      fail();
-    } catch (HttpResponseException e) {
-      GoogleJsonResponseException ge =
-          GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, e.getResponse());
-      assertNull(ge.getDetails());
-      assertEquals("403", ge.getMessage());
-    }
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException ge =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+    assertNull(ge.getDetails());
+    assertEquals("403", ge.getMessage());
   }
 
   public void testFrom_detailsArbitraryJsonContent() throws IOException {
     HttpTransport transport = new ErrorTransport("{\"foo\":\"bar\"}", Json.CONTENT_TYPE);
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
-    try {
-      request.execute();
-      fail();
-    } catch (HttpResponseException e) {
-      GoogleJsonResponseException ge =
-          GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, e.getResponse());
-      assertNull(ge.getDetails());
-      assertEquals("403", ge.getMessage());
-    }
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException ge =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+    assertNull(ge.getDetails());
+    assertEquals("403", ge.getMessage());
   }
 
   public void testFrom_detailsArbitraryXmlContent() throws IOException {
     HttpTransport transport = new ErrorTransport("<foo>", Atom.CONTENT_TYPE);
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
-    try {
-      request.execute();
-      fail();
-    } catch (HttpResponseException e) {
-      GoogleJsonResponseException ge =
-          GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, e.getResponse());
-      assertNull(ge.getDetails());
-      assertEquals("403", ge.getMessage());
-    }
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException ge =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+    assertNull(ge.getDetails());
+    assertTrue(
+        ge.getMessage(), ge.getMessage().startsWith("403" + StringUtils.LINE_SEPARATOR + "<"));
+  }
+
+  public void testFrom_errorNoContentButWithJsonContentType() throws IOException {
+    HttpTransport transport = new ErrorTransport("", Json.CONTENT_TYPE);
+      HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException ge =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+    assertNull(ge.getDetails());
+    assertEquals("403", ge.getMessage());
+  }
+
+  public void testFrom_errorEmptyContentButWithJsonContentType() throws IOException {
+    HttpTransport transport = new ErrorTransport(null, Json.CONTENT_TYPE);
+      HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException ge =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+    assertNull(ge.getDetails());
+    assertEquals("403", ge.getMessage());
   }
 }
