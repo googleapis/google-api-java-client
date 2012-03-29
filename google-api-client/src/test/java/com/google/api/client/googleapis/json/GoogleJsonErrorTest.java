@@ -19,8 +19,8 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
-import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.json.Json;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.testing.http.HttpTesting;
@@ -40,7 +40,7 @@ import java.io.IOException;
  */
 public class GoogleJsonErrorTest extends TestCase {
 
-  static final JacksonFactory FACTORY = new JacksonFactory();
+  static final JsonFactory FACTORY = new JacksonFactory();
   static final String ERROR = "{" + "\"code\":403," + "\"errors\":[{"
       + "\"domain\":\"usageLimits\"," + "\"message\":\"Access Not Configured\","
       + "\"reason\":\"accessNotConfigured\"" + "}]," + "\"message\":\"Access Not Configured\"}";
@@ -54,35 +54,20 @@ public class GoogleJsonErrorTest extends TestCase {
   }
 
   static class ErrorTransport extends MockHttpTransport {
-    final String content;
-    final String contentType;
+    final MockLowLevelHttpResponse response;
 
     ErrorTransport() {
       this(ERROR_RESPONSE, Json.CONTENT_TYPE);
     }
 
     ErrorTransport(String content, String contentType) {
-      this.content = content;
-      this.contentType = contentType;
+      response = new MockLowLevelHttpResponse().setContent(content)
+          .setContentType(contentType).setStatusCode(HttpStatusCodes.STATUS_CODE_FORBIDDEN);
     }
 
     @Override
     public LowLevelHttpRequest buildGetRequest(String url) {
-      return new MockLowLevelHttpRequest() {
-          @Override
-
-        public LowLevelHttpResponse execute() {
-          MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
-          if (content != null) {
-            result.setContent(content);
-          }
-          if (contentType != null) {
-            result.setContentType(contentType);
-          }
-          result.setStatusCode(HttpStatusCodes.STATUS_CODE_FORBIDDEN);
-          return result;
-        }
-      };
+      return new MockLowLevelHttpRequest(url).setResponse(response);
     }
   }
 
