@@ -55,7 +55,7 @@
             <configuration>
               <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
               <outputDirectory>${project.build.directory}/dependencies</outputDirectory>
-              <excludeArtifactIds>android,opengl-api,google-collections,xmlParserAPIs,servlet-api</excludeArtifactIds>
+              <excludeArtifactIds>android,opengl-api,google-collections,xmlParserAPIs,servlet-api,commons-codec</excludeArtifactIds>
             </configuration>
           </execution>
           <execution>
