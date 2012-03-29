@@ -222,6 +222,7 @@
           <version>2.3.1</version>
           <configuration>
             <archive>
+              <addMavenDescriptor>false</addMavenDescriptor>
               <manifest>
                 <addClasspath>true</addClasspath>
               </manifest>
