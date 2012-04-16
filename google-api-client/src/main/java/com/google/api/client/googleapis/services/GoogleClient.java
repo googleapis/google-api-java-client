@@ -112,6 +112,11 @@ public class GoogleClient extends JsonHttpClient {
   protected HttpResponse executeUnparsed(HttpMethod method, GenericUrl url, Object body)
       throws IOException {
     HttpRequest request = buildHttpRequest(method, url, body);
+    return executeUnparsed(request);
+  }
+
+  @Override
+  protected HttpResponse executeUnparsed(HttpRequest request) throws IOException {
     return GoogleJsonResponseException.execute(getJsonFactory(), request);
   }
 
