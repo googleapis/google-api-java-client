@@ -12,8 +12,10 @@
  * the License.
  */
 
-package com.google.api.client.googleapis;
+package com.google.api.client.googleapis.media;
 
+import com.google.api.client.googleapis.GoogleHeaders;
+import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.GenericUrl;
@@ -31,21 +33,17 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Media HTTP Uploader. Has support for resumable media uploads following the specifications listed
- * <a href='http://code.google.com/apis/gdata/docs/resumable_upload.html'>here.</a>
+ * Media HTTP Uploader. Has support for resumable media uploads. Documentation is available <a
+ * href='http://code.google.com/p/google-api-java-client/wiki/MediaUpload'>here</a>.
  *
  * <p>
  * Implementation is not thread-safe.
  * </p>
  *
- * @since 1.7
+ * @since 1.9
  *
  * @author rmistry@google.com (Ravi Mistry)
- * 
- * @deprecated (scheduled to be removed in 1.10) Use
- *             {@link com.google.api.client.googleapis.media.MediaHttpUploader}
  */
-@Deprecated
 public final class MediaHttpUploader {
 
   /**
@@ -71,7 +69,7 @@ public final class MediaHttpUploader {
   /** The current state of the uploader. */
   private UploadState uploadState = UploadState.NOT_STARTED;
 
-  private static final int MB = 0x100000;
+  static final int MB = 0x100000;
   private static final int KB = 0x400;
 
   /**
@@ -182,12 +180,10 @@ public final class MediaHttpUploader {
    * </p>
    *
    * @param initiationRequestUrl The request URL where the initiation request will be sent
-   * @return HTTP request
+   * @return HTTP response
    */
   public HttpResponse upload(GenericUrl initiationRequestUrl) throws IOException {
-
-    Preconditions.checkState(
-        currentRequest == null, "upload can not be called twice for one instance.");
+    Preconditions.checkArgument(uploadState == UploadState.NOT_STARTED);
 
     // Make initial request to get the unique upload URL.
     HttpResponse initialResponse = executeUploadInitiation(initiationRequestUrl);
@@ -206,7 +202,7 @@ public final class MediaHttpUploader {
       if (backOffPolicyEnabled) {
         // Set MediaExponentialBackOffPolicy as the BackOffPolicy of the HTTP Request which will
         // callback to this instance if there is a server error.
-        currentRequest.setBackOffPolicy(new MediaExponentialBackOffPolicy(this));
+        currentRequest.setBackOffPolicy(new MediaUploadExponentialBackOffPolicy(this));
       }
       currentRequest.setThrowExceptionOnExecuteError(false);
       response = currentRequest.execute();
@@ -289,8 +285,8 @@ public final class MediaHttpUploader {
 
   /**
    * The call back method that will be invoked by
-   * {@link MediaExponentialBackOffPolicy#getNextBackOffMillis} if it encounters a server error.
-   * This method should only be used as a call back method after {@link #upload} is invoked.
+   * {@link MediaUploadExponentialBackOffPolicy#getNextBackOffMillis} if it encounters a server
+   * error. This method should only be used as a call back method after {@link #upload} is invoked.
    *
    * <p>
    * This method will query the current status of the upload to find how many bytes were

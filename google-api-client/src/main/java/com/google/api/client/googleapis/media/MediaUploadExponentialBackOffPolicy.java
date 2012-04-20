@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.googleapis;
+package com.google.api.client.googleapis.media;
 
 import com.google.api.client.http.ExponentialBackOffPolicy;
 
@@ -21,23 +21,19 @@ import java.io.IOException;
 /**
  * Extension of {@link ExponentialBackOffPolicy} that calls the Media HTTP Uploader call back method
  * before backing off requests.
- * 
+ *
  * <p>
  * Implementation is not thread-safe.
  * </p>
- * 
- * @since 1.7
- * @author rmistry@google.com (Ravi Mistry)
  *
- * @deprecated (scheduled to be removed in 1.10)
+ * @author rmistry@google.com (Ravi Mistry)
  */
-@Deprecated
-class MediaExponentialBackOffPolicy extends ExponentialBackOffPolicy {
+class MediaUploadExponentialBackOffPolicy extends ExponentialBackOffPolicy {
 
   /** The uploader to callback on if there is a server error. */
   private final MediaHttpUploader uploader;
 
-  MediaExponentialBackOffPolicy(MediaHttpUploader uploader) {
+  MediaUploadExponentialBackOffPolicy(MediaHttpUploader uploader) {
     super();
     this.uploader = uploader;
   }
