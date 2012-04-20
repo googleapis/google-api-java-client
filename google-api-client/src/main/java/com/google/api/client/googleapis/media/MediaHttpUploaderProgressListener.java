@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.googleapis;
+package com.google.api.client.googleapis.media;
 
 import java.io.IOException;
 
@@ -24,7 +24,7 @@ import java.io.IOException;
  * </p>
  * 
  * <pre>
-  public static class MyProgressListener implements MediaHttpUploaderProgressListener {
+  public static class MyUploadProgressListener implements MediaHttpUploaderProgressListener {
 
     public void progressChanged(MediaHttpUploader uploader) throws IOException {
       switch (uploader.getUploadState()) {
@@ -46,12 +46,9 @@ import java.io.IOException;
   }
  * </pre>
  * 
+ * @since 1.9
  * @author rmistry@google.com (Ravi Mistry)
- *
- * @deprecated (scheduled to be removed in 1.10) Use
- *             {@link com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener}
  */
-@Deprecated
 public interface MediaHttpUploaderProgressListener {
 
   /**
@@ -61,6 +58,11 @@ public interface MediaHttpUploaderProgressListener {
    * This method is called once before and after the initiation request. For media uploads it is
    * called multiple times depending on how many chunks are uploaded. Once the upload completes it
    * is called one final time.
+   * </p>
+   *
+   * <p>
+   * The upload state can be queried by calling {@link MediaHttpUploader#getUploadState} and the
+   * progress by calling {@link MediaHttpUploader#getProgress}.
    * </p>
    *
    * @param uploader Media HTTP uploader

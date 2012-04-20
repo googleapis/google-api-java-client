@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.googleapis;
+package com.google.api.client.googleapis.media;
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpResponse;
