@@ -27,14 +27,15 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
+import com.google.api.client.http.MultipartRelatedContent;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Media HTTP Uploader. Has support for resumable media uploads. Documentation is available <a
- * href='http://code.google.com/p/google-api-java-client/wiki/MediaUpload'>here</a>.
+ * Media HTTP Uploader, with support for both direct and resumable media uploads. Documentation is
+ * available <a href='http://code.google.com/p/google-api-java-client/wiki/MediaUpload'>here</a>.
  *
  * <p>
  * Implementation is not thread-safe.
@@ -128,6 +129,14 @@ public final class MediaHttpUploader {
   private boolean backOffPolicyEnabled = true;
 
   /**
+   * Determines whether direct media upload is enabled or disabled. If value is set to {@code true}
+   * then a direct upload will be done where the whole media content is uploaded in a single request
+   * If value is set to {@code false} then the upload uses the resumable media upload protocol to
+   * upload in data chunks. Defaults to {@code false}.
+   */
+  private boolean directUploadEnabled;
+
+  /**
    * Progress listener to send progress notifications to or {@code null} for none.
    */
   private MediaHttpUploaderProgressListener progressListener;
@@ -160,8 +169,8 @@ public final class MediaHttpUploader {
   }
 
   /**
-   * Executes a resumable media upload conforming to the specifications listed <a
-   * href='http://code.google.com/apis/gdata/docs/resumable_upload.html'>here.</a>
+   * Executes a direct media upload or resumable media upload conforming to the specifications
+   * listed <a href='http://code.google.com/apis/gdata/docs/resumable_upload.html'>here.</a>
    *
    * <p>
    * This method is not reentrant. A new instance of {@link MediaHttpUploader} must be instantiated
@@ -185,6 +194,26 @@ public final class MediaHttpUploader {
   public HttpResponse upload(GenericUrl initiationRequestUrl) throws IOException {
     Preconditions.checkArgument(uploadState == UploadState.NOT_STARTED);
 
+    if (directUploadEnabled) {
+      updateStateAndNotifyListener(UploadState.MEDIA_IN_PROGRESS);
+
+      HttpContent content = mediaContent;
+      if (metadata != null) {
+        content = new MultipartRelatedContent(metadata, mediaContent);
+        initiationRequestUrl.put("uploadType", "multipart");
+      } else {
+        initiationRequestUrl.put("uploadType", "media");
+      }
+      HttpRequest request =
+          requestFactory.buildRequest(initiationMethod, initiationRequestUrl, content);
+      request.setEnableGZipContent(true);
+      addMethodOverride(request);
+      HttpResponse response = request.execute();
+      bytesUploaded = getMediaContentLength();
+      updateStateAndNotifyListener(UploadState.MEDIA_COMPLETE);
+      return response;
+    }
+
     // Make initial request to get the unique upload URL.
     HttpResponse initialResponse = executeUploadInitiation(initiationRequestUrl);
     GenericUrl uploadUrl = new GenericUrl(initialResponse.getHeaders().getLocation());
@@ -205,6 +234,7 @@ public final class MediaHttpUploader {
         currentRequest.setBackOffPolicy(new MediaUploadExponentialBackOffPolicy(this));
       }
       currentRequest.setThrowExceptionOnExecuteError(false);
+      currentRequest.setRetryOnExecuteIOException(true);
       response = currentRequest.execute();
       if (response.isSuccessStatusCode()) {
         bytesUploaded = mediaContentLength;
@@ -247,20 +277,28 @@ public final class MediaHttpUploader {
     initiationRequestUrl.put("uploadType", "resumable");
     HttpRequest request =
         requestFactory.buildRequest(initiationMethod, initiationRequestUrl, metadata);
-    if (initiationMethod == HttpMethod.PUT) {
-      // Wraps PUT HTTP requests inside of a POST request and uses {@code "X-HTTP-Method-Override"}
-      // header to specify the actual HTTP method. This is only done if the HTTP transport does not
-      // support PUT.
-      new MethodOverride().intercept(request);
-    }
+    addMethodOverride(request);
     initiationHeaders.setUploadContentType(mediaContent.getType());
     initiationHeaders.setUploadContentLength(getMediaContentLength());
     request.setHeaders(initiationHeaders);
     request.setAllowEmptyContent(false);
+    request.setRetryOnExecuteIOException(true);
+    request.setEnableGZipContent(true);
     HttpResponse response = request.execute();
 
     updateStateAndNotifyListener(UploadState.INITIATION_COMPLETE);
     return response;
+  }
+
+  /**
+   * Wraps PUT HTTP requests inside of a POST request and uses {@code "X-HTTP-Method-Override"}
+   * header to specify the actual HTTP method. This is done in case the HTTP transport does not
+   * support PUT.
+   *
+   * @param request HTTP request
+   */
+  private void addMethodOverride(HttpRequest request) {
+    new MethodOverride().intercept(request);
   }
 
   /**
@@ -307,6 +345,7 @@ public final class MediaHttpUploader {
 
     request.getHeaders().setContentRange("bytes */" + getMediaContentLength());
     request.setThrowExceptionOnExecuteError(false);
+    request.setRetryOnExecuteIOException(true);
     HttpResponse response = request.execute();
 
     long bytesWritten = getNextByteIndex(response.getHeaders().getRange());
@@ -382,6 +421,31 @@ public final class MediaHttpUploader {
    */
   public boolean isBackOffPolicyEnabled() {
     return backOffPolicyEnabled;
+  }
+
+  /**
+   * Sets whether direct media upload is enabled or disabled. If value is set to {@code true} then a
+   * direct upload will be done where the whole media content is uploaded in a single request. If
+   * value is set to {@code false} then the upload uses the resumable media upload protocol to
+   * upload in data chunks. Defaults to {@code false}.
+   *
+   * @since 1.9
+   */
+  public MediaHttpUploader setDirectUploadEnabled(boolean directUploadEnabled) {
+    this.directUploadEnabled = directUploadEnabled;
+    return this;
+  }
+
+  /**
+   * Returns whether direct media upload is enabled or disabled. If value is set to {@code true}
+   * then a direct upload will be done where the whole media content is uploaded in a single
+   * request. If value is set to {@code false} then the upload uses the resumable media upload
+   * protocol to upload in data chunks. Defaults to {@code false}.
+   *
+   * @since 1.9
+   */
+  public boolean isDirectUploadEnabled() {
+    return directUploadEnabled;
   }
 
   /**
