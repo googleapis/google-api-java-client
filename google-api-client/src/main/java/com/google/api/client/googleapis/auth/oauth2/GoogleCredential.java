@@ -183,7 +183,8 @@ public class GoogleCredential extends Credential {
    * </p>
    */
   public GoogleCredential() {
-    super(BearerToken.authorizationHeaderAccessMethod());
+    super(BearerToken.authorizationHeaderAccessMethod(), null, null,
+        GoogleOAuthConstants.TOKEN_SERVER_URL, null, null, null);
   }
 
   /**
@@ -245,6 +246,11 @@ public class GoogleCredential extends Credential {
 
   @Override
   public GoogleCredential setRefreshToken(String refreshToken) {
+    if (refreshToken != null) {
+      Preconditions.checkArgument(getJsonFactory() != null && getTransport() != null
+          && getClientAuthentication() != null,
+          "Please use the Builder and call setJsonFactory, setTransport and setClientSecrets");
+    }
     return (GoogleCredential) super.setRefreshToken(refreshToken);
   }
 
