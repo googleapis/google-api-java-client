@@ -31,13 +31,8 @@ public final class GoogleAccountManager {
   /** Google account type. */
   public static final String ACCOUNT_TYPE = "com.google";
 
-  /**
-   * Account manager.
-   * 
-   * @deprecated (scheduled to be made private in 1.9) Use {@link #getAccountManager()}
-   */
-  @Deprecated
-  public final AccountManager manager;
+  /** Account manager. */
+  private final AccountManager manager;
 
   /**
    * @param accountManager account manager

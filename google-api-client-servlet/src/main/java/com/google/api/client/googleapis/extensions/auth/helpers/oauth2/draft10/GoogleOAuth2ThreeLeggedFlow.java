@@ -29,7 +29,7 @@ import javax.jdo.annotations.PersistenceCapable;
  *
  * @author moshenko@google.com (Jacob Moshenko)
  * @since 1.4
- * @deprecated (scheduled to be removed in 1.9) Use
+ * @deprecated (scheduled to be removed in 1.10) Use
  *             {@link com.google.api.client.auth.oauth2.AuthorizationCodeFlow}
  */
 @Deprecated

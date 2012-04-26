@@ -37,7 +37,7 @@ public class GoogleHeaders extends HttpHeaders {
   /**
    * {@code "GData-Version"} header.
    *
-   * @deprecated (scheduled to be made private in 1.9) Use {@link #getGDataVersion} or
+   * @deprecated (scheduled to be made private in 1.10) Use {@link #getGDataVersion} or
    *             {@link #setGDataVersion}
    */
   @Deprecated
@@ -48,121 +48,25 @@ public class GoogleHeaders extends HttpHeaders {
    * Escaped {@code "Slug"} header value, which must be escaped using {@link #SLUG_ESCAPER}.
    *
    * @see #setSlugFromFileName(String)
-   * @deprecated (scheduled to be made private in 1.9) Use {@link #getSlug} or {@link #setSlug}
    */
-  @Deprecated
   @Key("Slug")
-  public String slug;
+  private String slug;
 
-  /**
-   * {@code "X-GData-Client"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.9) Use {@link #getGDataClient} or
-   *             {@link #setGDataClient}
-   */
-  @Deprecated
+  /** {@code "X-GData-Client"} header. */
   @Key("X-GData-Client")
-  public String gdataClient;
+  private String gdataClient;
 
   /**
    * {@code "X-GData-Key"} header, which must be of the form {@code "key=[developerId]"}.
    *
    * @see #setDeveloperId(String)
-   * @deprecated (scheduled to be made private in 1.9) Use {@link #getGDataKey} or
-   *             {@link #setGDataKey}
    */
-  @Deprecated
   @Key("X-GData-Key")
-  public String gdataKey;
+  private String gdataKey;
 
-  /**
-   * {@code "x-goog-acl"} header that lets you apply predefined (canned) ACLs to a bucket or object
-   * when you upload it or create it.
-   *
-   * @deprecated (scheduled to be removed in 1.9)
-   */
-  @Deprecated
-  @Key("x-goog-acl")
-  public String googAcl;
-
-  /**
-   * {@code "x-goog-copy-source"} header that specifies the destination bucket and object for a copy
-   * operation.
-   *
-   * @deprecated (scheduled to be removed in 1.9)
-   */
-  @Deprecated
-  @Key("x-goog-copy-source")
-  public String googCopySource;
-
-  /**
-   * {@code "x-goog-copy-source-if-match"} header that specifies the conditions for a copy
-   * operation.
-   *
-   * @deprecated (scheduled to be removed in 1.9)
-   */
-  @Deprecated
-  @Key("x-goog-copy-source-if-match")
-  public String googCopySourceIfMatch;
-
-  /**
-   * {@code "x-goog-copy-source-if-none-match"} header that specifies the conditions for a copy
-   * operation.
-   *
-   * @deprecated (scheduled to be removed in 1.9)
-   */
-  @Deprecated
-  @Key("x-goog-copy-source-if-none-match")
-  public String googCopySourceIfNoneMatch;
-
-  /**
-   * {@code "x-goog-copy-source-if-modified-since"} header that specifies the conditions for a copy
-   * operation.
-   *
-   * @deprecated (scheduled to be removed in 1.9)
-   */
-  @Deprecated
-  @Key("x-goog-copy-source-if-modified-since")
-  public String googCopySourceIfModifiedSince;
-
-  /**
-   * {@code "x-goog-copy-source-if-unmodified-since"} header that specifies the conditions for a
-   * copy operation.
-   *
-   * @deprecated (scheduled to be removed in 1.9)
-   */
-  @Deprecated
-  @Key("x-goog-copy-source-if-unmodified-since")
-  public String googCopySourceIfUnmodifiedSince;
-
-  /**
-   * {@code "x-goog-date"} header that specifies a time stamp for authenticated requests.
-   *
-   * @deprecated (scheduled to be removed in 1.9)
-   */
-  @Deprecated
-  @Key("x-goog-date")
-  public String googDate;
-
-  /**
-   * {@code "x-goog-metadata-directive"} header that specifies metadata handling during a copy
-   * operation.
-   *
-   * @deprecated (scheduled to be removed in 1.9)
-   */
-  @Deprecated
-  @Key("x-goog-metadata-directive")
-  public String googMetadataDirective;
-
-  /**
-   * {@code "X-HTTP-Method-Override"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.9) Use {@link #getMethodOverride} or
-   *             {@link #setMethodOverride}
-   */
-  @Deprecated
+  /** {@code "X-HTTP-Method-Override"} header. */
   @Key("X-HTTP-Method-Override")
-  public String methodOverride;
+  private String methodOverride;
 
   /** {@code "X-Upload-Content-Length"} header. */
   @Key("X-Upload-Content-Length")

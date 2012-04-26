@@ -42,7 +42,6 @@ import java.io.IOException;
  */
 public class GoogleClientTest extends TestCase {
 
-  @SuppressWarnings("deprecation")
   @Test
   public void testExecuteUnparsed_error() throws IOException {
     HttpTransport transport = new MockHttpTransport() {
@@ -71,8 +70,6 @@ public class GoogleClientTest extends TestCase {
     } catch (GoogleJsonResponseException e) {
       // expected
       GoogleJsonError details = e.getDetails();
-      assertEquals("me", details.message);
-      assertEquals("me", details.errors.get(0).message);
       assertEquals("me", details.getMessage());
       assertEquals("me", details.getErrors().get(0).getMessage());
     }
