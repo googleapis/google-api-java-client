@@ -41,7 +41,7 @@ import com.google.api.client.util.Key;
  *
  * @since 1.4
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.9) Use
+ * @deprecated (scheduled to be removed in 1.10) Use
  *         {@link com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl} or
  *         {@link com.google.api.client.googleapis.auth.oauth2.GoogleBrowserClientRequestUrl} or
  *         {@link com.google.api.client.auth.oauth2.AuthorizationRequestUrl}

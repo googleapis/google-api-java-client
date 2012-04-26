@@ -51,56 +51,28 @@ public class GoogleJsonError extends GenericJson {
   /** Detailed error information. */
   public static class ErrorInfo extends GenericJson {
 
-    /**
-     * Error classification or {@code null} for none.
-     *
-     * @deprecated (scheduled to be made private in 1.9) Use {@link #getDomain} or
-     *             {@link #setDomain}
-     */
-    @Deprecated
+    /** Error classification or {@code null} for none. */
     @Key
-    public String domain;
+    private String domain;
 
-    /**
-     * Error reason or {@code null} for none.
-     *
-     * @deprecated (scheduled to be made private in 1.9) Use {@link #getReason} or
-     *             {@link #setReason}
-     */
-    @Deprecated
+    /** Error reason or {@code null} for none. */
     @Key
-    public String reason;
+    private String reason;
 
-    /**
-     * Human readable explanation of the error or {@code null} for none.
-     *
-     * @deprecated (scheduled to be made private in 1.9) Use {@link #getMessage} or
-     *             {@link #setMessage}
-     */
-    @Deprecated
+    /** Human readable explanation of the error or {@code null} for none. */
     @Key
-    public String message;
+    private String message;
 
     /**
      * Location in the request that caused the error or {@code null} for none or {@code null} for
      * none.
-     *
-     * @deprecated (scheduled to be made private in 1.9) Use {@link #getLocation} or
-     *             {@link #setLocation}
      */
-    @Deprecated
     @Key
-    public String location;
+    private String location;
 
-    /**
-     * Type of location in the request that caused the error or {@code null} for none.
-     *
-     * @deprecated (scheduled to be made private in 1.9) Use {@link #getLocationType} or
-     *             {@link #setLocationType}
-     */
-    @Deprecated
+    /** Type of location in the request that caused the error or {@code null} for none. */
     @Key
-    public String locationType;
+    private String locationType;
 
     /**
      * Returns the error classification or {@code null} for none.
@@ -195,33 +167,17 @@ public class GoogleJsonError extends GenericJson {
     }
   }
 
-  /**
-   * List of detailed errors or {@code null} for none.
-   *
-   * @deprecated (scheduled to be made private in 1.9) Use {@link #getErrors} or {@link #setErrors}
-   */
-  @Deprecated
+  /** List of detailed errors or {@code null} for none. */
   @Key
-  public List<ErrorInfo> errors;
+  private List<ErrorInfo> errors;
 
-  /**
-   * HTTP status code of this response or {@code null} for none.
-   *
-   * @deprecated (scheduled to be made private in 1.9) Use {@link #getCode} or {@link #setCode}
-   */
-  @Deprecated
+  /** HTTP status code of this response or {@code null} for none. */
   @Key
-  public int code;
+  private int code;
 
-  /**
-   * Human-readable explanation of the error or {@code null} for none.
-   *
-   * @deprecated (scheduled to be made private in 1.9) Use {@link #getMessage} or
-   *             {@link #setMessage}
-   */
-  @Deprecated
+  /** Human-readable explanation of the error or {@code null} for none. */
   @Key
-  public String message;
+  private String message;
 
   /**
    * Returns the list of detailed errors or {@code null} for none.

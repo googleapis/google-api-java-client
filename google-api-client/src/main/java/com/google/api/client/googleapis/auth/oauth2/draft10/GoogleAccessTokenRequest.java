@@ -26,7 +26,7 @@ import com.google.api.client.json.JsonFactory;
  *
  * @since 1.4
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.9) Use
+ * @deprecated (scheduled to be removed in 1.10) Use
  *             {@link com.google.api.client.auth.oauth2.TokenRequest}
  */
 @Deprecated
@@ -63,7 +63,7 @@ public class GoogleAccessTokenRequest {
    * </code>
    * </pre>
    * </p>
-   * @deprecated (scheduled to be removed in 1.9) Use
+   * @deprecated (scheduled to be removed in 1.10) Use
    *        {@link com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest}
    */
   @Deprecated
@@ -122,7 +122,7 @@ public class GoogleAccessTokenRequest {
    * </code>
    * </pre>
    * </p>
-   * @deprecated (scheduled to be removed in 1.9) Use
+   * @deprecated (scheduled to be removed in 1.10) Use
    *        {@link com.google.api.client.googleapis.auth.oauth2.GoogleRefreshTokenRequest}
    */
   @Deprecated
@@ -169,7 +169,7 @@ public class GoogleAccessTokenRequest {
    * </code>
    * </pre>
    * </p>
-   * @deprecated (scheduled to be removed in 1.9) Use
+   * @deprecated (scheduled to be removed in 1.10) Use
    *             {@link com.google.api.client.auth.oauth2.TokenRequest}
    */
   @Deprecated

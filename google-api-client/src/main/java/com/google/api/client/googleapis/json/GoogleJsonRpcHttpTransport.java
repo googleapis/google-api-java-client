@@ -55,7 +55,7 @@ public final class GoogleJsonRpcHttpTransport {
    * RPC server URL.
    *
    * @deprecated (scheduled to be made private final in 1.10) Use
-   *             {@link Builder#setRpcServerUrl(String)}.
+   *             {@link Builder#setRpcServerUrl(GenericUrl)}.
    */
   // TODO(jasonhall): When this becomes final, make this field a String for immutability.
   @Deprecated
@@ -185,8 +185,7 @@ public final class GoogleJsonRpcHttpTransport {
   public static class Builder {
 
     /** Default RPC server URL. */
-    private static final GenericUrl DEFAULT_SERVER_URL =
-        new GenericUrl("https://www.googleapis.com");
+    static final GenericUrl DEFAULT_SERVER_URL = new GenericUrl("https://www.googleapis.com");
 
     /** HTTP transport required for building requests. */
     private final HttpTransport httpTransport;

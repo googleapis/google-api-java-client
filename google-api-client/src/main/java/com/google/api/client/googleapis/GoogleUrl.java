@@ -36,57 +36,32 @@ import com.google.api.client.util.Key;
  */
 public class GoogleUrl extends GenericUrl {
 
-  /**
-   * Whether to pretty print the output.
-   *
-   * @deprecated (scheduled to be made private in 1.9) Use {@link #getPrettyPrint} or
-   *             {@link #setPrettyPrint}
-   */
-  @Deprecated
+  /** Whether to pretty print the output. */
   @Key("prettyPrint")
-  public Boolean prettyprint;
+  private Boolean prettyprint;
 
-  /**
-   * Alternate wire format.
-   *
-   * @deprecated (scheduled to be made private in 1.9) Use {@link #getAlt} or {@link #setAlt}
-   */
-  @Deprecated
+  /** Alternate wire format. */
   @Key
-  public String alt;
+  private String alt;
 
-  /**
-   * Partial fields mask.
-   *
-   * @deprecated (scheduled to be made private in 1.9) Use {@link #getFields} or {@link #setFields}
-   */
-  @Deprecated
+  /** Partial fields mask. */
   @Key
-  public String fields;
+  private String fields;
 
   /**
    * API key as described in the <a href="https://code.google.com/apis/console-help/">Google APIs
    * Console documentation</a>.
-   *
-   * @since 1.3
-   * @deprecated (scheduled to be made private in 1.9) Use {@link #getKey} or {@link #setKey}
    */
-  @Deprecated
   @Key
-  public String key;
+  private String key;
 
   /**
    * User IP used to enforce per-user limits for server-side applications, as described in the <a
    * href="https://code.google.com/apis/console-help/#EnforceUserLimits">Google APIs Console
    * documentation</a>.
-   *
-   * @since 1.3
-   *
-   * @deprecated (scheduled to be made private in 1.9) Use {@link #getUserIp} or {@link #setUserIp}
    */
-  @Deprecated
   @Key("userIp")
-  public String userip;
+  private String userip;
 
   public GoogleUrl() {
   }
