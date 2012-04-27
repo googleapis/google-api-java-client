@@ -22,6 +22,7 @@ import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
+import com.google.api.client.util.Clock;
 import com.google.api.client.util.StringUtils;
 import com.google.common.base.Preconditions;
 
@@ -87,7 +88,7 @@ public class GoogleIdTokenVerifier {
   private List<PublicKey> publicKeys;
 
   /**
-   * Expiration time in milliseconds to be used with {@link System#currentTimeMillis()} or {@code 0}
+   * Expiration time in milliseconds to be used with {@link Clock#currentTimeMillis()} or {@code 0}
    * for none.
    */
   private long expirationTimeMilliseconds;
@@ -100,6 +101,9 @@ public class GoogleIdTokenVerifier {
 
   /** Lock on the public keys. */
   private final Lock lock = new ReentrantLock();
+
+  /** Clock to use for expiration checks. */
+  private final Clock clock;
 
   /**
    * Constructor with required parameters.
@@ -138,11 +142,26 @@ public class GoogleIdTokenVerifier {
    * @since 1.9
    */
   protected GoogleIdTokenVerifier(Set<String> clientIds, HttpTransport transport,
-      JsonFactory jsonFactory) {
+    JsonFactory jsonFactory) {
+    this(clientIds, transport, jsonFactory, Clock.SYSTEM);
+  }
+
+  /**
+   * Construct the {@link GoogleIdTokenVerifier}.
+   *
+   * @param clientIds set of client IDs or {@code null} for none
+   * @param transport HTTP transport
+   * @param jsonFactory JSON factory
+   * @param clock Clock for expiration checks
+   * @since 1.9
+   */
+  protected GoogleIdTokenVerifier(Set<String> clientIds, HttpTransport transport,
+      JsonFactory jsonFactory, Clock clock) {
     this.clientIds =
         clientIds == null ? Collections.<String>emptySet() : Collections.unmodifiableSet(clientIds);
     this.transport = Preconditions.checkNotNull(transport);
     this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
+    this.clock = Preconditions.checkNotNull(clock);
   }
 
   /** Returns the JSON factory. */
@@ -176,7 +195,7 @@ public class GoogleIdTokenVerifier {
   }
 
   /**
-   * Returns the expiration time in milliseconds to be used with {@link System#currentTimeMillis()}
+   * Returns the expiration time in milliseconds to be used with {@link Clock#currentTimeMillis()}
    * or {@code 0} for none.
    */
   public final long getExpirationTimeMilliseconds() {
@@ -274,7 +293,7 @@ public class GoogleIdTokenVerifier {
       try {
         // load public keys; expire 5 minutes (300 seconds) before actual expiration time
         if (publicKeys == null
-            || System.currentTimeMillis() + 300000 > expirationTimeMilliseconds) {
+            || clock.currentTimeMillis() + 300000 > expirationTimeMilliseconds) {
           loadPublicCerts();
         }
         Signature signer = Signature.getInstance("SHA256withRSA");
@@ -314,7 +333,7 @@ public class GoogleIdTokenVerifier {
       for (String arg : certsResponse.getHeaders().getCacheControl().split(",")) {
         Matcher m = MAX_AGE_PATTERN.matcher(arg);
         if (m.matches()) {
-          expirationTimeMilliseconds = System.currentTimeMillis() + Long.valueOf(m.group(1)) * 1000;
+          expirationTimeMilliseconds = clock.currentTimeMillis() + Long.valueOf(m.group(1)) * 1000;
           break;
         }
       }

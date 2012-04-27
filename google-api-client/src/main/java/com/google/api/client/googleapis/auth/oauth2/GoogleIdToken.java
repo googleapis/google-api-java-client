@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.auth.oauth2;
 import com.google.api.client.auth.jsontoken.JsonWebSignature;
 import com.google.api.client.auth.jsontoken.JsonWebToken;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.util.Clock;
 import com.google.api.client.util.Key;
 
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class GoogleIdToken extends JsonWebSignature {
 
   /**
    * Parses the given ID token string and returns the parsed {@link GoogleIdToken}.
-   * 
+   *
    * @param jsonFactory JSON factory
    * @param idTokenString ID token string
    * @return parsed Google ID token
@@ -82,7 +83,6 @@ public class GoogleIdToken extends JsonWebSignature {
 
   /** Google ID token payload. */
   public static class Payload extends JsonWebToken.Payload {
-
     /** Obfuscated Google user ID or {@code null} for none. */
     @Key("id")
     private String userId;
@@ -98,6 +98,22 @@ public class GoogleIdToken extends JsonWebSignature {
     /** Hosted domain name if asserted user is a domain managed user or {@code null} for none. */
     @Key("hd")
     private String hostedDomain;
+
+    /**
+     * Constructs a new Payload using default settings.
+     */
+    public Payload() {
+      this(Clock.SYSTEM);
+    }
+
+    /**
+     * Constructs a new Payload and uses the specified {@link Clock}.
+     * @param clock Clock to use for expiration checks.
+     * @since 1.9
+     */
+    public Payload(Clock clock) {
+      super(clock);
+    }
 
     /** Returns the obfuscated Google user id or {@code null} for none. */
     public String getUserId() {
