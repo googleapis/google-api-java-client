@@ -96,5 +96,11 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <scope>provided</scope>
+      <version>1.6</version>
+   </dependency>
   </dependencies>
 </project>

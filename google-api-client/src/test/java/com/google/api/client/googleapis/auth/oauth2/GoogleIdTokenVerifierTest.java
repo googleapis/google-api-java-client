@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.auth.oauth2;
 import com.google.api.client.auth.jsontoken.JsonWebSignature.Header;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.testing.http.FixedClock;
 import com.google.api.client.testing.http.MockHttpTransport;
 
 import junit.framework.TestCase;
@@ -34,12 +35,12 @@ public class GoogleIdTokenVerifierTest extends TestCase {
   private static final String CLIENT_ID = "myclientid";
 
   private static Payload newPayload(String clientId) {
-    Payload payload = new Payload();
+    Payload payload = new Payload(new FixedClock(0L));
     payload.setIssuer("accounts.google.com");
     payload.setAudience(clientId);
     payload.setIssuee(clientId);
-    payload.setExpirationTimeSeconds(100 + System.currentTimeMillis() / 1000);
-    payload.setIssuedAtTimeSeconds(System.currentTimeMillis() / 1000);
+    payload.setExpirationTimeSeconds(100L);
+    payload.setIssuedAtTimeSeconds(0L);
     return payload;
   }
 

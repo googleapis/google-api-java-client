@@ -32,6 +32,7 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.util.Clock;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
@@ -221,13 +222,56 @@ public class GoogleCredential extends Credential {
       String serviceAccountScopes,
       PrivateKey serviceAccountPrivateKey,
       String serviceAccountUser) {
+    this(method, transport, jsonFactory, tokenServerEncodedUrl, clientAuthentication,
+         requestInitializer, refreshListeners, serviceAccountId, serviceAccountScopes,
+         serviceAccountPrivateKey, serviceAccountUser, Clock.SYSTEM);
+  }
+
+  /**
+   * @param method method of presenting the access token to the resource server (for example
+   *        {@link BearerToken#authorizationHeaderAccessMethod})
+   * @param transport HTTP transport for executing refresh token request or {@code null} if not
+   *        refreshing tokens
+   * @param jsonFactory JSON factory to use for parsing response for refresh token request or
+   *        {@code null} if not refreshing tokens
+   * @param tokenServerEncodedUrl encoded token server URL or {@code null} if not refreshing tokens
+   * @param clientAuthentication client authentication or {@code null} for none (see
+   *        {@link TokenRequest#setClientAuthentication(HttpExecuteInterceptor)})
+   * @param requestInitializer HTTP request initializer for refresh token requests to the token
+   *        server or {@code null} for none.
+   * @param refreshListeners listeners for refresh token results or {@code null} for none
+   * @param serviceAccountId service account ID (typically an e-mail address) or {@code null} if not
+   *        using the service account flow
+   * @param serviceAccountScopes space-separated OAuth scopes to use with the the service account
+   *        flow or {@code null} if not using the service account flow
+   * @param serviceAccountPrivateKey private key to use with the the service account flow or
+   *        {@code null} if not using the service account flow
+   * @param serviceAccountUser email address of the user the application is trying to impersonate in
+   *        the service account flow or {@code null} for none or if not using the service account
+   *        flow
+   * @param clock The clock to use for expiration check
+   * @since 1.9
+   */
+  protected GoogleCredential(AccessMethod method,
+      HttpTransport transport,
+      JsonFactory jsonFactory,
+      String tokenServerEncodedUrl,
+      HttpExecuteInterceptor clientAuthentication,
+      HttpRequestInitializer requestInitializer,
+      List<CredentialRefreshListener> refreshListeners,
+      String serviceAccountId,
+      String serviceAccountScopes,
+      PrivateKey serviceAccountPrivateKey,
+      String serviceAccountUser,
+      Clock clock) {
     super(method,
         transport,
         jsonFactory,
         tokenServerEncodedUrl,
         clientAuthentication,
         requestInitializer,
-        refreshListeners);
+        refreshListeners,
+        clock);
     if (serviceAccountPrivateKey == null) {
       Preconditions.checkArgument(
           serviceAccountId == null && serviceAccountScopes == null && serviceAccountUser == null);
@@ -278,8 +322,8 @@ public class GoogleCredential extends Credential {
     JsonWebSignature.Header header = new JsonWebSignature.Header();
     header.setAlgorithm("RS256");
     header.setType("JWT");
-    JsonWebToken.Payload payload = new JsonWebToken.Payload();
-    long currentTime = System.currentTimeMillis();
+    JsonWebToken.Payload payload = new JsonWebToken.Payload(getClock());
+    long currentTime = getClock().currentTimeMillis();
     payload.setIssuer(serviceAccountId)
         .setAudience(GoogleOAuthConstants.TOKEN_SERVER_URL)
         .setIssuedAtTimeSeconds(currentTime / 1000)
@@ -377,7 +421,8 @@ public class GoogleCredential extends Credential {
           serviceAccountId,
           serviceAccountScopes,
           serviceAccountPrivateKey,
-          serviceAccountUser);
+          serviceAccountUser,
+          getClock());
     }
 
     @Override
@@ -388,6 +433,14 @@ public class GoogleCredential extends Credential {
     @Override
     public Builder setJsonFactory(JsonFactory jsonFactory) {
       return (Builder) super.setJsonFactory(jsonFactory);
+    }
+
+    /**
+     * @since 1.9
+     */
+    @Override
+    public Builder setClock(Clock clock) {
+      return (Builder) super.setClock(clock);
     }
 
     /**
