@@ -21,11 +21,11 @@ import java.io.IOException;
 /**
  * Extension of {@link ExponentialBackOffPolicy} that calls the Media HTTP Uploader call back method
  * before backing off requests.
- * 
+ *
  * <p>
  * Implementation is not thread-safe.
  * </p>
- * 
+ *
  * @since 1.7
  * @author rmistry@google.com (Ravi Mistry)
  *
@@ -56,10 +56,10 @@ class MediaExponentialBackOffPolicy extends ExponentialBackOffPolicy {
       // Call the Media HTTP Uploader to calculate how much data was uploaded before the error and
       // then adjust the HTTP request before the retry.
       uploader.serverErrorCallback();
+      return super.getNextBackOffMillis();
     } catch (IOException e) {
       // The call back threw an exception re-raise it.
       throw new RuntimeException(e);
     }
-    return super.getNextBackOffMillis();
   }
 }

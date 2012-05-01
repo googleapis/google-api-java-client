@@ -45,17 +45,13 @@ class MediaUploadExponentialBackOffPolicy extends ExponentialBackOffPolicy {
    *
    * @return the number of milliseconds to wait when backing off requests, or {@link #STOP} if no
    *         more retries should be made
+   * @throws IOException I/O exception
    */
   @Override
-  public long getNextBackOffMillis() {
-    try {
-      // Call the Media HTTP Uploader to calculate how much data was uploaded before the error and
-      // then adjust the HTTP request before the retry.
-      uploader.serverErrorCallback();
-    } catch (IOException e) {
-      // The call back threw an exception re-raise it.
-      throw new RuntimeException(e);
-    }
+  public long getNextBackOffMillis() throws IOException {
+    // Call the Media HTTP Uploader to calculate how much data was uploaded before the error and
+    // then adjust the HTTP request before the retry.
+    uploader.serverErrorCallback();
     return super.getNextBackOffMillis();
   }
 }

@@ -30,12 +30,19 @@ import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.http.MultipartRelatedContent;
 import com.google.common.base.Preconditions;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * Media HTTP Uploader, with support for both direct and resumable media uploads. Documentation is
  * available <a href='http://code.google.com/p/google-api-java-client/wiki/MediaUpload'>here</a>.
+ *
+ * <p>
+ * If the provided {@link InputStream} has {@link InputStream#markSupported} as {@code false} then
+ * it is wrapped in an {@link BufferedInputStream} to support the {@link InputStream#mark} and
+ * {@link InputStream#reset} methods required for handling server errors.
+ * </p>
  *
  * <p>
  * Implementation is not thread-safe.
@@ -155,7 +162,10 @@ public final class MediaHttpUploader {
    *
    * @param mediaContent The Input stream content of the media to be uploaded. The input stream
    *        received by calling {@link AbstractInputStreamContent#getInputStream} is closed when the
-   *        upload process is successfully completed
+   *        upload process is successfully completed. If the input stream has
+   *        {@link InputStream#markSupported} as {@code false} then it is wrapped in an
+   *        {@link BufferedInputStream} to support the {@link InputStream#mark} and
+   *        {@link InputStream#reset} methods required for handling server errors.
    * @param transport The transport to use for requests
    * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
    *        {@code null} for none
@@ -220,6 +230,9 @@ public final class MediaHttpUploader {
 
     // Convert media content into a byte stream to upload in chunks.
     contentInputStream = mediaContent.getInputStream();
+    if (!contentInputStream.markSupported()) {
+      contentInputStream = new BufferedInputStream(contentInputStream);
+    }
 
     HttpResponse response;
     // Upload the media content in chunks.
