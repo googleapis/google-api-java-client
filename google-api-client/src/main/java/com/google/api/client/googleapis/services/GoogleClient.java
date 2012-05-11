@@ -15,6 +15,7 @@
 package com.google.api.client.googleapis.services;
 
 import com.google.api.client.googleapis.MethodOverride;
+import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpMethod;
@@ -28,6 +29,7 @@ import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Google API client.
@@ -94,6 +96,54 @@ public class GoogleClient extends JsonHttpClient {
       httpRequest.setEnableGZipContent(true);
     }
     return httpRequest;
+  }
+
+  /**
+   * Create an {@link BatchRequest} object from this Google API client instance.
+   *
+   * <p>
+   * Sample usage:
+   * </p>
+   *
+   * <pre>
+     client.batch()
+         .queue(...)
+         .queue(...)
+         .execute();
+   * </pre>
+   *
+   * @return newly created Batch request
+   */
+  public BatchRequest batch() {
+    return batch(null);
+  }
+
+  /**
+   * Create an {@link BatchRequest} object from this Google API client instance.
+   *
+   * <p>
+   * Sample usage:
+   * </p>
+   *
+   * <pre>
+     client.batch(httpRequestInitializer)
+         .queue(...)
+         .queue(...)
+         .execute();
+   * </pre>
+   *
+   * @param httpRequestInitializer The initializer to use when creating the top-level batch HTTP
+   *        request or {@code null} for none
+   * @return newly created Batch request
+   */
+  public BatchRequest batch(HttpRequestInitializer httpRequestInitializer) {
+    BatchRequest batch =
+        new BatchRequest(getRequestFactory().getTransport(), httpRequestInitializer);
+    GenericUrl baseUrl = new GenericUrl(getBaseUrl());
+    baseUrl.setPathParts(Arrays.asList("", "batch"));
+    batch.setBatchUrl(baseUrl);
+    // TODO(rmistry): batch.setBatchUrl(new GenericUrl(getRootUrl() + "batch"));
+    return batch;
   }
 
   /**
