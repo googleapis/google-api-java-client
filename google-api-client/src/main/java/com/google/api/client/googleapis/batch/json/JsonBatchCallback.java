@@ -12,14 +12,17 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.batch;
+package com.google.api.client.googleapis.batch.json;
 
 import com.google.api.client.googleapis.GoogleHeaders;
+import com.google.api.client.googleapis.batch.BatchCallback;
+import com.google.api.client.googleapis.json.GoogleJsonError;
+import com.google.api.client.googleapis.json.GoogleJsonErrorContainer;
 
 import java.io.IOException;
 
 /**
- * Callback for an individual batch response.
+ * Callback for an individual batch JSON response.
  *
  * <p>
  * Sample use:
@@ -27,39 +30,36 @@ import java.io.IOException;
  *
  * <pre>
    batch.queue(volumesList.buildHttpRequest(), Volumes.class, GoogleJsonErrorContainer.class,
-       new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
+       new JsonBatchCallback&lt;Volumes&gt;() {
 
      public void onSuccess(Volumes volumes, GoogleHeaders responseHeaders) {
        log("Success");
        printVolumes(volumes.getItems());
      }
 
-     public void onFailure(GoogleJsonErrorContainer e, GoogleHeaders responseHeaders) {
-       log(e.getError().getMessage());
+     public void onFailure(GoogleJsonError e, GoogleHeaders responseHeaders) {
+       log(e.getMessage());
      }
    });
  * </pre>
  *
  * @param <T> Type of the data model class
- * @param <E> Type of the error data model class
  * @since 1.9
  * @author rmistry@google.com (Ravi Mistry)
  */
-public interface BatchCallback<T, E> {
+public abstract class JsonBatchCallback<T> implements BatchCallback<T, GoogleJsonErrorContainer> {
 
-  /**
-   * Called if the individual batch response is successful.
-   *
-   * @param t instance of the parsed data model class
-   * @param responseHeaders Headers of the batch response
-   */
-  void onSuccess(T t, GoogleHeaders responseHeaders);
+  public final void onFailure(GoogleJsonErrorContainer e, GoogleHeaders responseHeaders)
+      throws IOException {
+    onFailure(e.getError(), responseHeaders);
+  }
 
   /**
    * Called if the individual batch response is unsuccessful.
    *
-   * @param e instance of data class representing the error response content
+   * @param e Google JSON error response content
    * @param responseHeaders Headers of the batch response
    */
-  void onFailure(E e, GoogleHeaders responseHeaders) throws IOException;
+  public abstract void onFailure(GoogleJsonError e, GoogleHeaders responseHeaders)
+      throws IOException;
 }
