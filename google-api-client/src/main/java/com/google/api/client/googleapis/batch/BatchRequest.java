@@ -47,7 +47,7 @@ import java.util.List;
      }
 
      public void onFailure(GoogleJsonErrorContainer e, GoogleHeaders responseHeaders) {
-       log(e.message);
+       log(e.getError().getMessage());
      }
    });
    batch.queue(volumesList, Volumes.class, GoogleJsonErrorContainer.class,
@@ -59,7 +59,7 @@ import java.util.List;
      }
 
      public void onFailure(GoogleJsonErrorContainer e, GoogleHeaders responseHeaders) {
-       log(e.message);
+       log(e.getError().getMessage());
      }
    });
    batch.execute();
