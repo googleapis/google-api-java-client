@@ -22,7 +22,7 @@
 
 <h3>Dependencies and Licenses</h3>
 The license can be found <a href='LICENSE.txt'>here</a>.<br/>
-Dependent jars can be found in the <a href='dependencies'>dependencies</a> folder.<br/><br/>
+Dependent jars can be found in the <a href='libs'>libs</a> folder and the corresonding source jars can be found in the <a href='libs-sources'>libs-sources</a> folder.<br/><br/>
 The dependency structure and licenses for the different libraries can be found here:
 <ul>
   <li>google-api-client: <a href='dependencies/dependencies.html'>dependencies.html</a></li>
@@ -31,8 +31,16 @@ The dependency structure and licenses for the different libraries can be found h
   <li>google-api-client-servlet: <a href='dependencies/servlet-dependencies.html'>servlet-dependencies.html</a></li>
 </ul>
 
+<h3>Maven Usage</h3>
+For information on how to add these libraries to your Maven project please see
+<a href='http://code.google.com/p/google-api-java-client/wiki/Setup#Maven'>http://code.google.com/p/google-api-java-client/wiki/Setup#Maven</a>.
+
+<h3>Eclipse</h3>
+A .classpath file snippet that can be included in your project's .classpath has been provided <a href='.classpath'>here</a>.
+Please only use the classpathentry's you actually need (see below for details).
+
 <h3>Android Dependencies</h3>
-The following are the jars from the <a href='dependencies'>dependencies</a> folder required for android applications or a newer compatible version:
+The following are the jars from the <a href='libs'>libs</a> folder required for android applications or a newer compatible version:
 <ul>
   <li>google-api-client-${project.version}.jar</li>
   <li>google-api-client-android2-${project.version}.jar (only for SDK >= 2.1)</li>
@@ -49,7 +57,7 @@ The following are the jars from the <a href='dependencies'>dependencies</a> fold
 Please see the <a href='http://code.google.com/p/google-api-java-client/wiki/Android'>Android wiki</a> for the Android Developer's Guide.
 
 <h3>Google App Engine Dependencies</h3>
-The following are the jars from the <a href='dependencies'>dependencies</a>
+The following are the jars from the <a href='libs'>libs</a>
 folder required for Google App Engine applications or a newer compatible version:
 <ul>
   <li>google-api-client-${project.version}.jar</li>
@@ -69,9 +77,10 @@ folder required for Google App Engine applications or a newer compatible version
   <li>transaction-api-${project.transaction-api.version}.jar</li>
   <li>xpp3-${project.xpp3.version}.jar</li>
 </ul>
+Please see the <a href='http://code.google.com/p/google-api-java-client/wiki/GoogleAppEngine'>GoogleAppEngine wiki</a> for the Google App Engine Developer's Guide.
 
 <h3>Servlet Dependencies</h3>
-The following are the jars from the <a href='dependencies'>dependencies</a>
+The following are the jars from the <a href='libs'>libs</a>
 folder required for Servlet applications or a newer compatible version:
 <ul>
   <li>google-api-client-${project.version}.jar</li>
@@ -93,7 +102,7 @@ folder required for Servlet applications or a newer compatible version:
 </ul>
 
 <h3>General Purpose Java 5 Environment Dependencies</h3>
-The following are the jars from the <a href='dependencies'>dependencies</a>
+The following are the jars from the <a href='libs'>libs</a>
 folder required for general purpose Java 5 applications or a newer compatible version:
 <ul>
   <li>google-api-client-${project.version}.jar</li>
