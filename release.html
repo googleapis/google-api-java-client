@@ -122,6 +122,8 @@ cp google-api-client/target/site/dependencies.html google-api-client-assembly/de
 cp google-api-client-android2/target/site/dependencies.html google-api-client-assembly/dependencies/android2-dependencies.html
 cp google-api-client-appengine/target/site/dependencies.html google-api-client-assembly/dependencies/appengine-dependencies.html
 cp google-api-client-servlet/target/site/dependencies.html google-api-client-assembly/dependencies/servlet-dependencies.html
+hg commit -m "prepare 1.10.0-beta for release"
+hg push
 
 mvn clean deploy
 mvn release:clean
