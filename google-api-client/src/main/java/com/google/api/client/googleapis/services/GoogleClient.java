@@ -39,6 +39,18 @@ import java.util.Arrays;
  */
 public class GoogleClient extends JsonHttpClient {
 
+  /** Whether to enable GZip compression of HTTP content. */
+  private final boolean enableGZipContent;
+
+  /**
+   * Returns whether to enable GZip compression of HTTP content.
+   *
+   * @since 1.10
+   */
+  public final boolean getEnableGZipContent() {
+    return enableGZipContent;
+  }
+
   /**
    * Constructor with required parameters.
    *
@@ -47,12 +59,53 @@ public class GoogleClient extends JsonHttpClient {
    * optional parameters.
    * </p>
    *
+   * <p>
+   * This constructor sets the value of {@link #getEnableGZipContent} to {@code true}. Use
+   * {@link Builder} if you need to change it.
+   * </p>
+   *
    * @param transport The transport to use for requests
    * @param jsonFactory A factory for creating JSON parsers and serializers
    * @param baseUrl The base URL of the service. Must end with a "/"
    */
   public GoogleClient(HttpTransport transport, JsonFactory jsonFactory, String baseUrl) {
     super(transport, jsonFactory, baseUrl);
+    this.enableGZipContent = true;
+  }
+
+  /**
+   * Construct the {@link GoogleClient}.
+   *
+   * <p>
+   * This constructor sets the value of {@link #getEnableGZipContent} to {@code true}. Use
+   * {@link Builder} if you need to change it.
+   * </p>
+   *
+   * @param transport The transport to use for requests
+   * @param jsonHttpRequestInitializer The initializer to use when creating an
+   *        {@link JsonHttpRequest} or {@code null} for none
+   * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
+   *        {@code null} for none
+   * @param jsonFactory A factory for creating JSON parsers and serializers
+   * @param baseUrl The base URL of the service. Must end with a "/"
+   * @param applicationName The application name to be sent in the User-Agent header of requests or
+   *        {@code null} for none
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #GoogleClient(HttpTransport,
+   *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, String, String,
+   *             boolean)}
+   */
+  @Deprecated
+  protected GoogleClient(HttpTransport transport,
+      JsonHttpRequestInitializer jsonHttpRequestInitializer,
+      HttpRequestInitializer httpRequestInitializer, JsonFactory jsonFactory, String baseUrl,
+      String applicationName) {
+    this(transport,
+        jsonHttpRequestInitializer,
+        httpRequestInitializer,
+        jsonFactory,
+        baseUrl,
+        applicationName,
+        true);
   }
 
   /**
@@ -67,13 +120,16 @@ public class GoogleClient extends JsonHttpClient {
    * @param baseUrl The base URL of the service. Must end with a "/"
    * @param applicationName The application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
+   * @param enableGZipContent Whether to enable GZip compression of HTTP content
+   * @since 1.10
    */
   protected GoogleClient(HttpTransport transport,
       JsonHttpRequestInitializer jsonHttpRequestInitializer,
       HttpRequestInitializer httpRequestInitializer, JsonFactory jsonFactory, String baseUrl,
-      String applicationName) {
+      String applicationName, boolean enableGZipContent) {
     super(transport, jsonHttpRequestInitializer, httpRequestInitializer, jsonFactory, baseUrl,
         applicationName);
+    this.enableGZipContent = enableGZipContent;
   }
 
   /**
@@ -93,7 +149,7 @@ public class GoogleClient extends JsonHttpClient {
     // Google servers will fail to process a POST/PUT/PATCH unless the Content-Length header >= 1
     httpRequest.setAllowEmptyContent(false);
     if (body != null) {
-      httpRequest.setEnableGZipContent(true);
+      httpRequest.setEnableGZipContent(enableGZipContent);
     }
     return httpRequest;
   }
@@ -181,6 +237,9 @@ public class GoogleClient extends JsonHttpClient {
    */
   public static class Builder extends JsonHttpClient.Builder {
 
+    /** Whether to enable GZip compression of HTTP content. */
+    private boolean enableGZipContent = true;
+
     /**
      * Returns an instance of a new builder.
      *
@@ -195,9 +254,37 @@ public class GoogleClient extends JsonHttpClient {
     /** Builds a new instance of {@link GoogleClient}. */
     @Override
     public GoogleClient build() {
-      return new GoogleClient(getTransport(), getJsonHttpRequestInitializer(),
-          getHttpRequestInitializer(), getJsonFactory(), getBaseUrl().build(),
-          getApplicationName());
+      return new GoogleClient(getTransport(),
+          getJsonHttpRequestInitializer(),
+          getHttpRequestInitializer(),
+          getJsonFactory(),
+          getBaseUrl().build(),
+          getApplicationName(),
+          enableGZipContent);
+    }
+
+    /**
+     * Sets whether to enable GZip compression of HTTP content. Subclasses should override by
+     * calling super.
+     *
+     * <p>
+     * By default it is {@code true}.
+     * </p>
+     *
+     * @since 1.10
+     */
+    public Builder setEnableGZipContent(boolean enableGZipContent) {
+      this.enableGZipContent = enableGZipContent;
+      return this;
+    }
+
+    /**
+     * Returns whether to enable GZip compression of HTTP content.
+     *
+     * @since 1.10
+     */
+    public final boolean getEnableGZipContent() {
+      return enableGZipContent;
     }
   }
 }
