@@ -48,25 +48,27 @@ public class GoogleClientTest extends TestCase {
   public void testEnableGZipContent() throws IOException {
     final HttpTransport transport = new MockHttpTransport();
     final JsonFactory jsonFactory = new JacksonFactory();
-    final GenericUrl testUrl = new GenericUrl(HttpTesting.SIMPLE_URL);
+    final GenericUrl testUrl = new GenericUrl(HttpTesting.SIMPLE_URL + "test/");
     final String testContent = "test content";
 
     // Verify that enableGZipContent is true by default.
-    GoogleClient client = new GoogleClient(transport, jsonFactory, HttpTesting.SIMPLE_URL);
+    GoogleClient client = new GoogleClient(transport, jsonFactory, HttpTesting.SIMPLE_URL, "test/");
     HttpRequest request = client.buildHttpRequest(HttpMethod.GET, testUrl, testContent);
     assertTrue(client.getEnableGZipContent());
     assertTrue(request.getEnableGZipContent());
 
     // Set enableGZipContent to false and assert.
-    client =
-        GoogleClient.builder(transport, jsonFactory, testUrl).setEnableGZipContent(false).build();
+    client = GoogleClient.builder(
+        transport, jsonFactory, new GenericUrl(HttpTesting.SIMPLE_URL), "test/")
+        .setEnableGZipContent(false).build();
     request = client.buildHttpRequest(HttpMethod.GET, testUrl, testContent);
     assertFalse(client.getEnableGZipContent());
     assertFalse(request.getEnableGZipContent());
 
     // Set enableGZipContent to true and assert.
-    client =
-        GoogleClient.builder(transport, jsonFactory, testUrl).setEnableGZipContent(true).build();
+    client = GoogleClient.builder(
+        transport, jsonFactory, new GenericUrl(HttpTesting.SIMPLE_URL), "test/")
+        .setEnableGZipContent(true).build();
     request = client.buildHttpRequest(HttpMethod.GET, testUrl, testContent);
     assertTrue(client.getEnableGZipContent());
     assertTrue(request.getEnableGZipContent());
@@ -92,7 +94,7 @@ public class GoogleClientTest extends TestCase {
       }
     };
     JsonFactory jsonFactory = new JacksonFactory();
-    GoogleClient client = new GoogleClient(transport, jsonFactory, HttpTesting.SIMPLE_URL);
+    GoogleClient client = new GoogleClient(transport, jsonFactory, HttpTesting.SIMPLE_URL, "test/");
     JsonHttpRequest request = new JsonHttpRequest(client, HttpMethod.GET, "foo", null);
     try {
       request.executeUnparsed();

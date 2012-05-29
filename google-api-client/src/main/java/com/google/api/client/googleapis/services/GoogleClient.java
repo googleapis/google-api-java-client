@@ -67,9 +67,38 @@ public class GoogleClient extends JsonHttpClient {
    * @param transport The transport to use for requests
    * @param jsonFactory A factory for creating JSON parsers and serializers
    * @param baseUrl The base URL of the service. Must end with a "/"
+   * @deprecated (scheduled to be removed in 1.11) Use
+   *             {@link #GoogleClient(HttpTransport, JsonFactory, String, String)}.
    */
+  @Deprecated
   public GoogleClient(HttpTransport transport, JsonFactory jsonFactory, String baseUrl) {
     super(transport, jsonFactory, baseUrl);
+    this.enableGZipContent = true;
+  }
+
+  /**
+   * Constructor with required parameters.
+   *
+   * <p>
+   * Use {@link #builder(HttpTransport, JsonFactory, GenericUrl)} if you need to specify any of the
+   * optional parameters.
+   * </p>
+   *
+   * <p>
+   * This constructor sets the value of {@link #getEnableGZipContent} to {@code true}. Use
+   * {@link Builder} if you need to change it.
+   * </p>
+   *
+   * @param transport The transport to use for requests
+   * @param jsonFactory A factory for creating JSON parsers and serializers
+   * @param rootUrl The root URL of the service. Must end with a "/"
+   * @param servicePath The service path of the service. Must end with a "/" and not begin with a
+   *        "/". It is allowed to be an empty string {@code ""}
+   * @since 1.10
+   */
+  public GoogleClient(
+      HttpTransport transport, JsonFactory jsonFactory, String rootUrl, String servicePath) {
+    super(transport, jsonFactory, rootUrl, servicePath);
     this.enableGZipContent = true;
   }
 
@@ -122,12 +151,51 @@ public class GoogleClient extends JsonHttpClient {
    *        {@code null} for none
    * @param enableGZipContent Whether to enable GZip compression of HTTP content
    * @since 1.10
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #GoogleClient(HttpTransport,
+   *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, String, String,
+   *             String, boolean)}.
    */
+  @Deprecated
   protected GoogleClient(HttpTransport transport,
       JsonHttpRequestInitializer jsonHttpRequestInitializer,
       HttpRequestInitializer httpRequestInitializer, JsonFactory jsonFactory, String baseUrl,
       String applicationName, boolean enableGZipContent) {
     super(transport, jsonHttpRequestInitializer, httpRequestInitializer, jsonFactory, baseUrl,
+        applicationName);
+    this.enableGZipContent = enableGZipContent;
+  }
+
+  /**
+   * Construct the {@link GoogleClient}.
+   *
+   * @param transport The transport to use for requests
+   * @param jsonHttpRequestInitializer The initializer to use when creating an
+   *        {@link JsonHttpRequest} or {@code null} for none
+   * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
+   *        {@code null} for none
+   * @param jsonFactory A factory for creating JSON parsers and serializers
+   * @param rootUrl The root URL of the service. Must end with a "/"
+   * @param servicePath The service path of the service. Must end with a "/" and not begin with a
+   *        "/". It is allowed to be an empty string {@code ""}
+   * @param applicationName The application name to be sent in the User-Agent header of requests or
+   *        {@code null} for none
+   * @param enableGZipContent Whether to enable GZip compression of HTTP content
+   * @since 1.10
+   */
+  protected GoogleClient(HttpTransport transport,
+      JsonHttpRequestInitializer jsonHttpRequestInitializer,
+      HttpRequestInitializer httpRequestInitializer,
+      JsonFactory jsonFactory,
+      String rootUrl,
+      String servicePath,
+      String applicationName,
+      boolean enableGZipContent) {
+    super(transport,
+        jsonHttpRequestInitializer,
+        httpRequestInitializer,
+        jsonFactory,
+        rootUrl,
+        servicePath,
         applicationName);
     this.enableGZipContent = enableGZipContent;
   }
@@ -192,13 +260,18 @@ public class GoogleClient extends JsonHttpClient {
    *        request or {@code null} for none
    * @return newly created Batch request
    */
+  @SuppressWarnings("deprecation")
   public BatchRequest batch(HttpRequestInitializer httpRequestInitializer) {
     BatchRequest batch =
         new BatchRequest(getRequestFactory().getTransport(), httpRequestInitializer);
-    GenericUrl baseUrl = new GenericUrl(getBaseUrl());
-    baseUrl.setPathParts(Arrays.asList("", "batch"));
+    GenericUrl baseUrl;
+    if (isBaseUrlUsed()) {
+      baseUrl = new GenericUrl(getBaseUrl());
+      baseUrl.setPathParts(Arrays.asList("", "batch"));
+    } else {
+      baseUrl = new GenericUrl(getRootUrl() + "batch");
+    }
     batch.setBatchUrl(baseUrl);
-    // TODO(rmistry): batch.setBatchUrl(new GenericUrl(getRootUrl() + "batch"));
     return batch;
   }
 
@@ -208,10 +281,28 @@ public class GoogleClient extends JsonHttpClient {
    * @param transport The transport to use for requests
    * @param jsonFactory A factory for creating JSON parsers and serializers
    * @param baseUrl The base URL of the service. Must end with a "/"
+   * @deprecated (scheduled to be removed in 1.11) Use
+   *             {@link #builder(HttpTransport, JsonFactory, GenericUrl, String)} instead.
    */
+  @Deprecated
   public static Builder builder(
       HttpTransport transport, JsonFactory jsonFactory, GenericUrl baseUrl) {
     return new Builder(transport, jsonFactory, baseUrl);
+  }
+
+  /**
+   * Returns an instance of a new builder.
+   *
+   * @param transport The transport to use for requests
+   * @param jsonFactory A factory for creating JSON parsers and serializers
+   * @param rootUrl The root URL of the service. Must end with a "/"
+   * @param servicePath The service path of the service. Must end with a "/" and not begin with a
+   *        "/". It is allowed to be an empty string {@code ""}
+   * @since 1.10
+   */
+  public static Builder builder(
+      HttpTransport transport, JsonFactory jsonFactory, GenericUrl rootUrl, String servicePath) {
+    return new Builder(transport, jsonFactory, rootUrl, servicePath);
   }
 
   @Override
@@ -246,19 +337,48 @@ public class GoogleClient extends JsonHttpClient {
      * @param transport The transport to use for requests
      * @param jsonFactory A factory for creating JSON parsers and serializers
      * @param baseUrl The base URL of the service. Must end with a "/"
+     * @deprecated (scheduled to be removed in 1.11) Use
+     *             {@link #Builder(HttpTransport, JsonFactory, GenericUrl, String)} instead.
      */
+    @Deprecated
     protected Builder(HttpTransport transport, JsonFactory jsonFactory, GenericUrl baseUrl) {
       super(transport, jsonFactory, baseUrl);
     }
 
+    /**
+     * Returns an instance of a new builder.
+     *
+     * @param transport The transport to use for requests
+     * @param jsonFactory A factory for creating JSON parsers and serializers
+     * @param rootUrl The root URL of the service. Must end with a "/"
+     * @param servicePath The service path of the service. Must end with a "/" and not begin with a
+     *        "/". It is allowed to be an empty string {@code ""}
+     * @since 1.10
+     */
+    protected Builder(
+        HttpTransport transport, JsonFactory jsonFactory, GenericUrl rootUrl, String servicePath) {
+      super(transport, jsonFactory, rootUrl, servicePath);
+    }
+
     /** Builds a new instance of {@link GoogleClient}. */
+    @SuppressWarnings("deprecation")
     @Override
     public GoogleClient build() {
+      if (isBaseUrlUsed()) {
+        return new GoogleClient(getTransport(),
+            getJsonHttpRequestInitializer(),
+            getHttpRequestInitializer(),
+            getJsonFactory(),
+            getBaseUrl().build(),
+            getApplicationName(),
+            enableGZipContent);
+      }
       return new GoogleClient(getTransport(),
           getJsonHttpRequestInitializer(),
           getHttpRequestInitializer(),
           getJsonFactory(),
-          getBaseUrl().build(),
+          getRootUrl(),
+          getServicePath(),
           getApplicationName(),
           enableGZipContent);
     }

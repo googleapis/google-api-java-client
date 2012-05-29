@@ -38,7 +38,8 @@ import java.util.List;
  */
 public class BatchRequestTest extends TestCase {
 
-  private static final String BASE_URL = "http://www.test.com/";
+  private static final String ROOT_URL = "http://www.test.com/";
+  private static final String SERVICE_PATH = "test/";
   private static final String TEST_BATCH_URL = "http://www.testgoogleapis.com/batch";
   private static final String URI_TEMPLATE1 = "uri/template/1";
   private static final String URI_TEMPLATE2 = "uri/template/2";
@@ -271,7 +272,8 @@ public class BatchRequestTest extends TestCase {
       boolean testAuthenticationError, boolean returnSuccessAuthenticatedContent)
       throws IOException {
     MockTransport transport = new MockTransport(testServerError, testAuthenticationError);
-    JsonHttpClient client = new JsonHttpClient(transport, new JacksonFactory(), BASE_URL);
+    JsonHttpClient client =
+        new JsonHttpClient(transport, new JacksonFactory(), ROOT_URL, SERVICE_PATH);
     JsonHttpRequest jsonHttpRequest1 = new JsonHttpRequest(client, METHOD1, URI_TEMPLATE1, null);
     JsonHttpRequest jsonHttpRequest2 = new JsonHttpRequest(client, METHOD2, URI_TEMPLATE2, null);
 
@@ -303,8 +305,10 @@ public class BatchRequestTest extends TestCase {
     assertEquals(MockDataClass2.class, requestInfos.get(1).dataClass);
     assertEquals(callback2, requestInfos.get(1).callback);
     // Assert that the requests in the queue are as expected.
-    assertEquals(BASE_URL + URI_TEMPLATE1, requestInfos.get(0).request.getUrl().build());
-    assertEquals(BASE_URL + URI_TEMPLATE2, requestInfos.get(1).request.getUrl().build());
+    assertEquals(
+        ROOT_URL + SERVICE_PATH + URI_TEMPLATE1, requestInfos.get(0).request.getUrl().build());
+    assertEquals(
+        ROOT_URL + SERVICE_PATH + URI_TEMPLATE2, requestInfos.get(1).request.getUrl().build());
     assertEquals(METHOD1, requestInfos.get(0).request.getMethod());
     assertEquals(METHOD2, requestInfos.get(1).request.getMethod());
   }
@@ -377,7 +381,8 @@ public class BatchRequestTest extends TestCase {
 
   public void subTestExecuteWithVoidCallback(boolean testServerError) throws Exception {
     MockTransport transport = new MockTransport(testServerError, false);
-    JsonHttpClient client = new JsonHttpClient(transport, new JacksonFactory(), BASE_URL);
+    JsonHttpClient client =
+        new JsonHttpClient(transport, new JacksonFactory(), ROOT_URL, SERVICE_PATH);
     JsonHttpRequest jsonHttpRequest1 = new JsonHttpRequest(client, METHOD1, URI_TEMPLATE1, null);
     JsonHttpRequest jsonHttpRequest2 = new JsonHttpRequest(client, METHOD2, URI_TEMPLATE2, null);
     HttpParser parser = new JsonHttpParser(new JacksonFactory());
