@@ -37,8 +37,8 @@ public class GoogleKeyInitializerTest extends TestCase {
 
     public MyRequest() {
       super(new JsonHttpClient(
-          new MockHttpTransport(), new JacksonFactory(), HttpTesting.SIMPLE_URL), HttpMethod.GET,
-          "", null);
+          new MockHttpTransport(), new JacksonFactory(), HttpTesting.SIMPLE_URL, "test/"),
+          HttpMethod.GET, "", null);
     }
   }
 
