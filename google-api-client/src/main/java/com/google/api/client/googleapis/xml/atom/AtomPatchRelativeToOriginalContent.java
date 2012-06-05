@@ -14,6 +14,7 @@
 
 package com.google.api.client.googleapis.xml.atom;
 
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.xml.AbstractXmlHttpContent;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.api.client.xml.atom.Atom;
@@ -68,6 +69,12 @@ public final class AtomPatchRelativeToOriginalContent extends AbstractXmlHttpCon
   protected void writeTo(XmlSerializer serializer) throws IOException {
     Map<String, Object> patch = GoogleAtom.computePatch(patchedEntry, originalEntry);
     getNamespaceDictionary().serialize(serializer, Atom.ATOM_NAMESPACE, "entry", patch);
+  }
+
+  @Override
+  public AtomPatchRelativeToOriginalContent setMediaType(HttpMediaType mediaType) {
+    super.setMediaType(mediaType);
+    return this;
   }
 
   /**

@@ -14,10 +14,10 @@
 
 package com.google.api.client.googleapis.json;
 
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
@@ -112,13 +112,13 @@ public class GoogleJsonResponseException extends HttpResponseException {
     Preconditions.checkNotNull(jsonFactory);
     GoogleJsonError details = null;
     String detailString = null;
-    String contentType = response.getContentType();
     try {
-      if (!response.isSuccessStatusCode() && contentType != null
-          && contentType.startsWith(Json.CONTENT_TYPE) && response.getContent() != null) {
+      if (!response.isSuccessStatusCode()
+          && HttpMediaType.equalsIgnoreParameters(Json.MEDIA_TYPE, response.getContentType())
+          && response.getContent() != null) {
         JsonParser parser = null;
         try {
-          parser = JsonHttpParser.parserForResponse(jsonFactory, response);
+          parser = jsonFactory.createJsonParser(response.getContent());
           JsonToken currentToken = parser.getCurrentToken();
           // token is null at start, so get next token
           if (currentToken == null) {

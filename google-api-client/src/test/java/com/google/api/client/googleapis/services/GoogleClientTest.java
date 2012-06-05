@@ -84,7 +84,7 @@ public class GoogleClientTest extends TestCase {
           public LowLevelHttpResponse execute() {
             MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
             result.setStatusCode(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED);
-            result.setContentType(Json.CONTENT_TYPE);
+            result.setContentType(Json.MEDIA_TYPE);
             result.setContent("{\"error\":{\"code\":401,\"errors\":[{\"domain\":\"global\","
                 + "\"location\":\"Authorization\",\"locationType\":\"header\","
                 + "\"message\":\"me\",\"reason\":\"authError\"}],\"message\":\"me\"}}");

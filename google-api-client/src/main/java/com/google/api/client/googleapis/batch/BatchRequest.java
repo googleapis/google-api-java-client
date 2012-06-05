@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.batch;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpExecuteInterceptor;
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -186,15 +187,10 @@ public final class BatchRequest {
     HttpResponse response = executeUnparsed();
 
     // Find the boundary from the Content-Type header.
-    String contentType = response.getHeaders().getContentType();
-    String[] parts = contentType.split(";");
-    String boundary = null;
-    for (String part : parts) {
-      if (part.contains("boundary=")) {
-        int boundaryStartIndex = part.indexOf("boundary=");
-        boundary = "--" + part.substring(boundaryStartIndex + "boundary=".length());
-        break;
-      }
+    HttpMediaType mediaType = response.getMediaType();
+    String boundary = mediaType == null ? null : mediaType.getParameter("boundary");
+    if (boundary != null) {
+      boundary = "--" + boundary;
     }
 
     // Parse the content stream.

@@ -28,7 +28,9 @@ import java.io.IOException;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.11)
  */
+@Deprecated
 public final class JsonFeedParser<T, I> extends AbstractJsonFeedParser<T> {
 
   private final Class<I> itemClass;

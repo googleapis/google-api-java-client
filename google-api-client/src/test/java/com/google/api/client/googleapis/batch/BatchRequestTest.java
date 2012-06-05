@@ -10,21 +10,21 @@ import com.google.api.client.googleapis.json.GoogleJsonErrorContainer;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpMethod;
-import com.google.api.client.http.HttpParser;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.http.json.JsonHttpClient;
-import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.http.json.JsonHttpRequest;
 import com.google.api.client.json.GenericJson;
+import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.Key;
+import com.google.api.client.util.ObjectParser;
 
 import junit.framework.TestCase;
 
@@ -277,13 +277,13 @@ public class BatchRequestTest extends TestCase {
     JsonHttpRequest jsonHttpRequest1 = new JsonHttpRequest(client, METHOD1, URI_TEMPLATE1, null);
     JsonHttpRequest jsonHttpRequest2 = new JsonHttpRequest(client, METHOD2, URI_TEMPLATE2, null);
 
-    HttpParser parser = new JsonHttpParser(new JacksonFactory());
+    ObjectParser parser = new JsonObjectParser(new JacksonFactory());
     BatchRequest batchRequest = new BatchRequest(transport, null).setBatchUrl(
         new GenericUrl(TEST_BATCH_URL));
     HttpRequest request1 = jsonHttpRequest1.buildHttpRequest();
-    request1.addParser(parser);
+    request1.setParser(parser);
     HttpRequest request2 = jsonHttpRequest2.buildHttpRequest();
-    request2.addParser(parser);
+    request2.setParser(parser);
     if (testAuthenticationError) {
       request2.setUnsuccessfulResponseHandler(
           new MockUnsuccessfulResponseHandler(transport, returnSuccessAuthenticatedContent));
@@ -385,13 +385,13 @@ public class BatchRequestTest extends TestCase {
         new JsonHttpClient(transport, new JacksonFactory(), ROOT_URL, SERVICE_PATH);
     JsonHttpRequest jsonHttpRequest1 = new JsonHttpRequest(client, METHOD1, URI_TEMPLATE1, null);
     JsonHttpRequest jsonHttpRequest2 = new JsonHttpRequest(client, METHOD2, URI_TEMPLATE2, null);
-    HttpParser parser = new JsonHttpParser(new JacksonFactory());
+    ObjectParser parser = new JsonObjectParser(new JacksonFactory());
     BatchRequest batchRequest = new BatchRequest(transport, null).setBatchUrl(
         new GenericUrl(TEST_BATCH_URL));
     HttpRequest request1 = jsonHttpRequest1.buildHttpRequest();
-    request1.addParser(parser);
+    request1.setParser(parser);
     HttpRequest request2 = jsonHttpRequest2.buildHttpRequest();
-    request2.addParser(parser);
+    request2.setParser(parser);
     batchRequest.queue(request1, MockDataClass1.class, GoogleJsonErrorContainer.class, callback1);
     batchRequest.queue(request2, Void.class, Void.class, callback3);
     batchRequest.execute();

@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.batch;
 import com.google.api.client.http.AbstractHttpContent;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.HttpRequest;
 import com.google.common.base.Preconditions;
 
@@ -51,9 +52,6 @@ class MultipartMixedContent extends AbstractHttpContent {
   /** List of request infos. */
   private List<BatchRequest.RequestInfo<?, ?>> requestInfos;
 
-  /** Boundary string to use. */
-  private String boundary;
-
   /**
    * Construct an instance of {@link MultipartMixedContent}.
    *
@@ -61,19 +59,21 @@ class MultipartMixedContent extends AbstractHttpContent {
    * @param boundary Boundary string to use for separating each HTTP request
    */
   MultipartMixedContent(List<BatchRequest.RequestInfo<?, ?>> requestInfos, String boundary) {
+    super(new HttpMediaType("multipart/mixed").setParameter(
+        "boundary", Preconditions.checkNotNull(boundary)));
     Preconditions.checkNotNull(requestInfos);
     Preconditions.checkArgument(!requestInfos.isEmpty());
     this.requestInfos = Collections.unmodifiableList(requestInfos);
-    this.boundary = Preconditions.checkNotNull(boundary);
   }
 
-  public String getType() {
-    return "multipart/mixed; boundary=" + boundary;
+  private String getBoundary() {
+    return getMediaType().getParameter("boundary");
   }
 
   public void writeTo(OutputStream out) throws IOException {
     int contentId = 1;
     Writer writer = new OutputStreamWriter(out);
+    String boundary = getBoundary();
 
     for (BatchRequest.RequestInfo<?, ?> requestInfo : requestInfos) {
       HttpRequest request = requestInfo.request;
@@ -129,5 +129,11 @@ class MultipartMixedContent extends AbstractHttpContent {
     writer.write(": ");
     writer.write(value);
     writer.write(CR_LF);
+  }
+
+  @Override
+  public MultipartMixedContent setMediaType(HttpMediaType mediaType) {
+    super.setMediaType(mediaType);
+    return this;
   }
 }

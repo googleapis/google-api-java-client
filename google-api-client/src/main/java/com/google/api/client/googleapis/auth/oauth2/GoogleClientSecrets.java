@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.auth.oauth2;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Key;
+import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
@@ -163,6 +164,7 @@ public final class GoogleClientSecrets extends GenericJson {
   /** Loads the {@code client_secrets.json} file from the given input stream. */
   public static GoogleClientSecrets load(JsonFactory jsonFactory, InputStream inputStream)
       throws IOException {
-    return jsonFactory.fromInputStream(inputStream, GoogleClientSecrets.class);
+    // TODO(mlinder): Change this method to take a charset
+    return jsonFactory.fromInputStream(inputStream, Charsets.UTF_8, GoogleClientSecrets.class);
   }
 }

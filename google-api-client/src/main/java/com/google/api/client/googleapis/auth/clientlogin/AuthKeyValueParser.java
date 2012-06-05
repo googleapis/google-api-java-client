@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.auth;
+package com.google.api.client.googleapis.auth.clientlogin;
 
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.util.ClassInfo;
@@ -34,15 +34,11 @@ import java.util.Map;
 /**
  * HTTP parser for Google response to an Authorization request.
  *
- * @since 1.0
+ * @since 1.10
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.11)
  */
-@Deprecated
-public final class AuthKeyValueParser
-    implements
-      com.google.api.client.http.HttpParser,
-      ObjectParser {
+@SuppressWarnings("deprecation")
+final class AuthKeyValueParser implements com.google.api.client.http.HttpParser, ObjectParser {
 
   /** Singleton instance. */
   public static final AuthKeyValueParser INSTANCE = new AuthKeyValueParser();

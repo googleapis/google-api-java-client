@@ -18,7 +18,6 @@ import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.batch.BatchRequest.RequestInfo;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpParser;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpStatusCodes;
@@ -26,6 +25,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
+import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.StringUtils;
 import com.google.common.base.Preconditions;
 
@@ -130,8 +130,10 @@ final class BatchUnparsedResponse {
   }
 
   /**
-   * Parse an object into a new instance of the data class using {@link HttpParser#parse}.
+   * Parse an object into a new instance of the data class using
+   * {@link HttpResponse#parseAs(java.lang.reflect.Type)}.
    */
+  @SuppressWarnings("deprecation")
   private <T, E> void parseAndCallback(
       RequestInfo<T, E> requestInfo, int statusCode, int contentID, HttpResponse response)
       throws IOException {
@@ -140,27 +142,41 @@ final class BatchUnparsedResponse {
       // No point in parsing if there is no callback.
       return;
     }
+
     GoogleHeaders responseHeaders = new GoogleHeaders();
     responseHeaders.putAll(response.getHeaders());
-    HttpParser parser = requestInfo.request.getParser(responseHeaders.getContentType());
     HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler =
         requestInfo.request.getUnsuccessfulResponseHandler();
+
+    // TODO(mlinder): Remove the HttpResponse reference and directly parse the InputStream
+    com.google.api.client.http.HttpParser oldParser = requestInfo.request.getParser(
+        responseHeaders.getContentType());
+    ObjectParser parser = requestInfo.request.getParser();
+
     if (HttpStatusCodes.isSuccess(statusCode)) {
-      T parsed = requestInfo.dataClass == Void.class ? null : parser.parse(
-          response, requestInfo.dataClass);
+      T parsed = null;
+      if (requestInfo.dataClass != Void.class) {
+        parsed = parser != null ? parser.parseAndClose(
+            response.getContent(), response.getContentCharset(), requestInfo.dataClass)
+            : oldParser.parse(response, requestInfo.dataClass);
+      }
       callback.onSuccess(parsed, responseHeaders);
     } else if (unsuccessfulResponseHandler != null
-        && unsuccessfulResponseHandler.handleResponse(
-            requestInfo.request, response, true)) {
+        && unsuccessfulResponseHandler.handleResponse(requestInfo.request, response, true)) {
       unsuccessfulRequestInfos.add(requestInfo);
     } else {
-      E parsed = requestInfo.errorClass == Void.class ? null : parser.parse(
-          response, requestInfo.errorClass);
+      E parsed = null;
+      if (requestInfo.dataClass != Void.class) {
+        parsed = parser != null ? parser.parseAndClose(
+            response.getContent(), response.getContentCharset(), requestInfo.errorClass)
+            : oldParser.parse(response, requestInfo.errorClass);
+      }
       callback.onFailure(parsed, responseHeaders);
     }
   }
 
   /** Create a fake HTTP response object populated with the partContent and the statusCode. */
+  @Deprecated
   private HttpResponse getFakeResponse(final int statusCode, final String partContent,
       List<String> headerNames, List<String> headerValues)
       throws IOException {
@@ -183,6 +199,7 @@ final class BatchUnparsedResponse {
     }
   }
 
+  @Deprecated
   private static class FakeResponseHttpTransport extends HttpTransport {
 
     private int statusCode;
@@ -220,6 +237,7 @@ final class BatchUnparsedResponse {
     }
   }
 
+  @Deprecated
   private static class FakeLowLevelHttpRequest extends LowLevelHttpRequest {
 
     // TODO(rmistry): Read in partContent as bytes instead of String for efficiency.
@@ -252,6 +270,7 @@ final class BatchUnparsedResponse {
     }
   }
 
+  @Deprecated
   private static class FakeLowLevelHttpResponse extends LowLevelHttpResponse {
 
     private InputStream partContent;
