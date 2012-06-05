@@ -15,7 +15,6 @@
 package com.google.api.client.googleapis.auth.clientlogin;
 
 import com.google.api.client.googleapis.GoogleHeaders;
-import com.google.api.client.googleapis.auth.AuthKeyValueParser;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
@@ -179,7 +178,7 @@ public final class ClientLogin {
     url.appendRawPath("/accounts/ClientLogin");
     HttpRequest request =
         transport.createRequestFactory().buildPostRequest(url, new UrlEncodedContent(this));
-    request.addParser(AuthKeyValueParser.INSTANCE);
+    request.setParser(AuthKeyValueParser.INSTANCE);
     request.setContentLoggingLimit(0);
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();

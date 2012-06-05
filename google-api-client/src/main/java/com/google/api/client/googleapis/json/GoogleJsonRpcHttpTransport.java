@@ -15,11 +15,10 @@
 package com.google.api.client.googleapis.json;
 
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.json.JsonHttpContent;
-import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.CustomizeJsonParser;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
@@ -84,7 +83,7 @@ public final class GoogleJsonRpcHttpTransport {
    *             {@link Builder#setContentType(String)}.
    */
   @Deprecated
-  public String contentType = JSON_RPC_CONTENT_TYPE;
+  public String contentType = JSON_RPC_CONTENT_TYPE; // TODO(mlinder): Rename this to mediaType
 
   /**
    * Accept header to use for requests. By default this is {@code "application/json-rpc"}.
@@ -105,7 +104,7 @@ public final class GoogleJsonRpcHttpTransport {
    */
   public GoogleJsonRpcHttpTransport(HttpTransport httpTransport, JsonFactory jsonFactory) {
     this(Preconditions.checkNotNull(httpTransport), Preconditions.checkNotNull(jsonFactory),
-         Builder.DEFAULT_SERVER_URL.build(), JSON_RPC_CONTENT_TYPE, JSON_RPC_CONTENT_TYPE);
+        Builder.DEFAULT_SERVER_URL.build(), JSON_RPC_CONTENT_TYPE, JSON_RPC_CONTENT_TYPE);
   }
 
   /**
@@ -114,17 +113,17 @@ public final class GoogleJsonRpcHttpTransport {
    * @param httpTransport HTTP transport required for building requests.
    * @param jsonFactory JSON factory to use for building requests.
    * @param rpcServerUrl RPC server URL.
-   * @param contentType Content type header to use for requests.
+   * @param mimeType Content type header to use for requests.
    * @param accept Accept header to use for requests.
    *
    * @since 1.9
    */
   protected GoogleJsonRpcHttpTransport(HttpTransport httpTransport, JsonFactory jsonFactory,
-      String rpcServerUrl, String contentType, String accept) {
+      String rpcServerUrl, String mimeType, String accept) {
     this.transport = httpTransport;
     this.jsonFactory = jsonFactory;
     this.rpcServerUrl = new GenericUrl(rpcServerUrl);
-    this.contentType = contentType;
+    this.contentType = mimeType;
     this.accept = accept;
   }
 
@@ -159,8 +158,19 @@ public final class GoogleJsonRpcHttpTransport {
    * Returns the Content type header used for requests.
    *
    * @since 1.9
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #getMimeType()} instead.
    */
+  @Deprecated
   public final String getContentType() {
+    return contentType;
+  }
+
+  /**
+   * Returns the MIME type header used for requests.
+   *
+   * @since 1.10
+   */
+  public final String getMimeType() {
     return contentType;
   }
 
@@ -196,11 +206,11 @@ public final class GoogleJsonRpcHttpTransport {
     /** RPC server URL. */
     private GenericUrl rpcServerUrl = DEFAULT_SERVER_URL;
 
-    /** Content type header to use for requests. */
-    private String contentType = JSON_RPC_CONTENT_TYPE;
+    /** MIME type to use for the Content type header for requests. */
+    private String mimeType = JSON_RPC_CONTENT_TYPE;
 
     /** Accept header to use for requests. */
-    private String accept = contentType;
+    private String accept = mimeType;
 
     /**
      * @param httpTransport HTTP transport required for building requests.
@@ -236,9 +246,28 @@ public final class GoogleJsonRpcHttpTransport {
      * </p>
      *
      * @param contentType Content type header to use for requests.
+     * @deprecated (scheduled to be removed in 1.11) Renamed to {@link #setMimeType(String)}.
      */
+    @Deprecated
     protected Builder setContentType(String contentType) {
-      this.contentType = Preconditions.checkNotNull(contentType);
+      this.mimeType = Preconditions.checkNotNull(contentType);
+      return this;
+    }
+
+    /**
+     * Sets the MIME type of the Content type header to use for requests. By default this is
+     * {@code "application/json-rpc"}.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     *
+     * @param mimeType MIME type to use for requests.
+     * @since 1.10
+     */
+    protected Builder setMimeType(String mimeType) {
+      this.mimeType = Preconditions.checkNotNull(mimeType);
       return this;
     }
 
@@ -268,7 +297,7 @@ public final class GoogleJsonRpcHttpTransport {
      */
     protected GoogleJsonRpcHttpTransport build() {
       return new GoogleJsonRpcHttpTransport(
-          httpTransport, jsonFactory, rpcServerUrl.build(), contentType, accept);
+          httpTransport, jsonFactory, rpcServerUrl.build(), mimeType, accept);
     }
 
     /**
@@ -294,9 +323,21 @@ public final class GoogleJsonRpcHttpTransport {
 
     /**
      * Returns the Content type header used for requests.
+     *
+     * @deprecated (scheduled to be removed in 1.11) Renamed to {@link #getMimeType()}
      */
+    @Deprecated
     public final String getContentType() {
-      return contentType;
+      return mimeType;
+    }
+
+    /**
+     * Returns the MIME type used for requests.
+     *
+     * @since 1.10
+     */
+    public final String getMimeType() {
+      return mimeType;
     }
 
     /**
@@ -311,10 +352,8 @@ public final class GoogleJsonRpcHttpTransport {
    * Builds a POST HTTP request for the JSON-RPC requests objects specified in the given JSON-RPC
    * request object.
    * <p>
-   * You may use {@link JsonHttpParser#parserForResponse(JsonFactory, HttpResponse)
-   * JsonHttpParser.parserForResponse}({@link #buildPostRequest(JsonRpcRequest) execute} (request))
-   * to get the {@link JsonParser}, and {@link JsonParser#parseAndClose(Class, CustomizeJsonParser)}
-   * .
+   * You may use {@link JsonFactory#createJsonParser(java.io.InputStream)} to get the
+   * {@link JsonParser}, and {@link JsonParser#parseAndClose(Class, CustomizeJsonParser)}.
    * </p>
    *
    * @param request JSON-RPC request object
@@ -329,10 +368,8 @@ public final class GoogleJsonRpcHttpTransport {
    * request objects.
    * <p>
    * Note that the request will always use batching -- i.e. JSON array of requests -- even if there
-   * is only one request. You may use
-   * {@link JsonHttpParser#parserForResponse(JsonFactory, HttpResponse)
-   * JsonHttpParser.parserForResponse}({@link #buildPostRequest(List) execute} (requests)) to get
-   * the {@link JsonParser}, and
+   * is only one request. You may use {@link JsonFactory#createJsonParser(java.io.InputStream)} to
+   * get the {@link JsonParser}, and
    * {@link JsonParser#parseArrayAndClose(Collection, Class, CustomizeJsonParser)} .
    * </p>
    *
@@ -345,7 +382,7 @@ public final class GoogleJsonRpcHttpTransport {
 
   private HttpRequest internalExecute(Object data) {
     JsonHttpContent content = new JsonHttpContent(jsonFactory, data);
-    content.setType(contentType);
+    content.setMediaType(new HttpMediaType(contentType));
     HttpRequest httpRequest;
     try {
       httpRequest = transport.createRequestFactory().buildPostRequest(rpcServerUrl, content);

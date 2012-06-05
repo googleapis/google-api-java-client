@@ -50,10 +50,7 @@ public class MediaHttpUploaderTest extends TestCase {
   private static class MockHttpContent extends AbstractHttpContent {
 
     public MockHttpContent() {
-    }
-
-    public String getType() {
-      return "mock-type";
+      super("mock/type");
     }
 
     public void writeTo(OutputStream out) {

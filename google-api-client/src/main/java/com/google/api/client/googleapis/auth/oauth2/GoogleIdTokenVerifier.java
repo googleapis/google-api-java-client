@@ -18,7 +18,6 @@ import com.google.api.client.auth.jsontoken.JsonWebSignature;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
@@ -338,7 +337,7 @@ public class GoogleIdTokenVerifier {
         }
       }
       // parse each public key in the JSON response
-      JsonParser parser = JsonHttpParser.parserForResponse(jsonFactory, certsResponse);
+      JsonParser parser = jsonFactory.createJsonParser(certsResponse.getContent());
       try {
         while (parser.nextToken() != JsonToken.END_OBJECT) {
           parser.nextToken();

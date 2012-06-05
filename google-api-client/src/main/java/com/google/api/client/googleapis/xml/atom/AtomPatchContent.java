@@ -14,8 +14,9 @@
 
 package com.google.api.client.googleapis.xml.atom;
 
-import com.google.api.client.http.xml.XmlHttpParser;
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.xml.atom.AtomContent;
+import com.google.api.client.xml.Xml;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 
 /**
@@ -23,7 +24,7 @@ import com.google.api.client.xml.XmlNamespaceDictionary;
  * entry.
  *
  * <p>
- * Default value for {@link #getType()} is {@link XmlHttpParser#CONTENT_TYPE}.
+ * Default value for {@link #getType()} is {@link Xml#MEDIA_TYPE}.
  * </p>
  *
  * <p>
@@ -31,7 +32,7 @@ import com.google.api.client.xml.XmlNamespaceDictionary;
  * </p>
  *
  * <pre>
- * <code>
+ *<code>
   static void setContent(
       HttpRequest request, XmlNamespaceDictionary namespaceDictionary, Object patchEntry) {
     request.setContent(new AtomPatchContent(namespaceDictionary, patchEntry));
@@ -55,6 +56,12 @@ public final class AtomPatchContent extends AtomContent {
    */
   public AtomPatchContent(XmlNamespaceDictionary namespaceDictionary, Object patchEntry) {
     super(namespaceDictionary, patchEntry, true);
-    setType(XmlHttpParser.CONTENT_TYPE);
+    setMediaType(new HttpMediaType(Xml.MEDIA_TYPE));
+  }
+
+  @Override
+  public AtomPatchContent setMediaType(HttpMediaType mediaType) {
+    super.setMediaType(mediaType);
+    return this;
   }
 }

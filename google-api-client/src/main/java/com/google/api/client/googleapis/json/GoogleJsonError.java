@@ -39,13 +39,13 @@ public class GoogleJsonError extends GenericJson {
    * @param jsonFactory JSON factory
    * @param response HTTP response
    * @return new instance of the Google JSON error information
-   * @throws IllegalArgumentException if content type is not {@link Json#CONTENT_TYPE} or if
+   * @throws IllegalArgumentException if content type is not {@link Json#MEDIA_TYPE} or if
    *         expected {@code "data"} or {@code "error"} key is not found
    */
   public static GoogleJsonError parse(JsonFactory jsonFactory, HttpResponse response)
       throws IOException {
-    return JsonCParser.parserForResponse(jsonFactory, response)
-        .parseAndClose(GoogleJsonError.class, null);
+    return new JsonCParser(jsonFactory).parseAndClose(
+        response.getContent(), response.getContentCharset(), GoogleJsonError.class);
   }
 
   /** Detailed error information. */

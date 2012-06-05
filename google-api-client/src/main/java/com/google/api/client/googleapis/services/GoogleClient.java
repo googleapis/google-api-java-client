@@ -27,6 +27,7 @@ import com.google.api.client.http.json.JsonHttpClient;
 import com.google.api.client.http.json.JsonHttpRequest;
 import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonObjectParser;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -120,18 +121,21 @@ public class GoogleClient extends JsonHttpClient {
    * @param applicationName The application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
    * @deprecated (scheduled to be removed in 1.11) Use {@link #GoogleClient(HttpTransport,
-   *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, String, String,
-   *             boolean)}
+   *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, JsonObjectParser,
+   *             String, String, boolean)}
    */
   @Deprecated
   protected GoogleClient(HttpTransport transport,
       JsonHttpRequestInitializer jsonHttpRequestInitializer,
-      HttpRequestInitializer httpRequestInitializer, JsonFactory jsonFactory, String baseUrl,
+      HttpRequestInitializer httpRequestInitializer,
+      JsonFactory jsonFactory,
+      String baseUrl,
       String applicationName) {
     this(transport,
         jsonHttpRequestInitializer,
         httpRequestInitializer,
         jsonFactory,
+        null,
         baseUrl,
         applicationName,
         true);
@@ -146,21 +150,31 @@ public class GoogleClient extends JsonHttpClient {
    * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
    *        {@code null} for none
    * @param jsonFactory A factory for creating JSON parsers and serializers
+   * @param jsonObjectParser JSON parser to use or {@code null} if unused
    * @param baseUrl The base URL of the service. Must end with a "/"
    * @param applicationName The application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
    * @param enableGZipContent Whether to enable GZip compression of HTTP content
    * @since 1.10
    * @deprecated (scheduled to be removed in 1.11) Use {@link #GoogleClient(HttpTransport,
-   *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, String, String,
-   *             String, boolean)}.
+   *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, JsonObjectParser,
+   *             String, String, String, boolean)}.
    */
   @Deprecated
   protected GoogleClient(HttpTransport transport,
       JsonHttpRequestInitializer jsonHttpRequestInitializer,
-      HttpRequestInitializer httpRequestInitializer, JsonFactory jsonFactory, String baseUrl,
-      String applicationName, boolean enableGZipContent) {
-    super(transport, jsonHttpRequestInitializer, httpRequestInitializer, jsonFactory, baseUrl,
+      HttpRequestInitializer httpRequestInitializer,
+      JsonFactory jsonFactory,
+      JsonObjectParser jsonObjectParser,
+      String baseUrl,
+      String applicationName,
+      boolean enableGZipContent) {
+    super(transport,
+        jsonHttpRequestInitializer,
+        httpRequestInitializer,
+        jsonFactory,
+        jsonObjectParser,
+        baseUrl,
         applicationName);
     this.enableGZipContent = enableGZipContent;
   }
@@ -174,6 +188,7 @@ public class GoogleClient extends JsonHttpClient {
    * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
    *        {@code null} for none
    * @param jsonFactory A factory for creating JSON parsers and serializers
+   * @param jsonObjectParser JSON parser to use or {@code null} if unused
    * @param rootUrl The root URL of the service. Must end with a "/"
    * @param servicePath The service path of the service. Must end with a "/" and not begin with a
    *        "/". It is allowed to be an empty string {@code ""}
@@ -186,6 +201,7 @@ public class GoogleClient extends JsonHttpClient {
       JsonHttpRequestInitializer jsonHttpRequestInitializer,
       HttpRequestInitializer httpRequestInitializer,
       JsonFactory jsonFactory,
+      JsonObjectParser jsonObjectParser,
       String rootUrl,
       String servicePath,
       String applicationName,
@@ -194,6 +210,7 @@ public class GoogleClient extends JsonHttpClient {
         jsonHttpRequestInitializer,
         httpRequestInitializer,
         jsonFactory,
+        jsonObjectParser,
         rootUrl,
         servicePath,
         applicationName);
@@ -369,6 +386,7 @@ public class GoogleClient extends JsonHttpClient {
             getJsonHttpRequestInitializer(),
             getHttpRequestInitializer(),
             getJsonFactory(),
+            getObjectParser(),
             getBaseUrl().build(),
             getApplicationName(),
             enableGZipContent);
@@ -377,6 +395,7 @@ public class GoogleClient extends JsonHttpClient {
           getJsonHttpRequestInitializer(),
           getHttpRequestInitializer(),
           getJsonFactory(),
+          getObjectParser(),
           getRootUrl(),
           getServicePath(),
           getApplicationName(),

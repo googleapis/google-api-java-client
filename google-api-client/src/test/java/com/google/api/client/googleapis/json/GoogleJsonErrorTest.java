@@ -57,7 +57,7 @@ public class GoogleJsonErrorTest extends TestCase {
     final MockLowLevelHttpResponse response;
 
     ErrorTransport() {
-      this(ERROR_RESPONSE, Json.CONTENT_TYPE);
+      this(ERROR_RESPONSE, Json.MEDIA_TYPE);
     }
 
     ErrorTransport(String content, String contentType) {

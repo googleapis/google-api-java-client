@@ -25,6 +25,6 @@
  * @since 1.0
  * @author Yaniv Inbar
  */
-
+@Deprecated
 package com.google.api.client.googleapis.auth;
 

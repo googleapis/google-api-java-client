@@ -14,8 +14,8 @@
 
 package com.google.api.client.googleapis.json;
 
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.json.JsonHttpContent;
-import com.google.api.client.json.JsonEncoding;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 
@@ -63,11 +63,17 @@ public final class JsonCContent extends JsonHttpContent {
 
   @Override
   public void writeTo(OutputStream out) throws IOException {
-    JsonGenerator generator = getJsonFactory().createJsonGenerator(out, JsonEncoding.UTF8);
+    JsonGenerator generator = getJsonFactory().createJsonGenerator(out, getCharset());
     generator.writeStartObject();
     generator.writeFieldName("data");
     generator.serialize(getData());
     generator.writeEndObject();
     generator.flush();
+  }
+
+  @Override
+  public JsonCContent setMediaType(HttpMediaType mediaType) {
+    super.setMediaType(mediaType);
+    return this;
   }
 }

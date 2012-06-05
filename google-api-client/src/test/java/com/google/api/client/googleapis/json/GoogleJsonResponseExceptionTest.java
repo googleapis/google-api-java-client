@@ -62,7 +62,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
   }
 
   public void testFrom_detailsMissingContent() throws IOException {
-    HttpTransport transport = new ErrorTransport(null, Json.CONTENT_TYPE);
+    HttpTransport transport = new ErrorTransport(null, Json.MEDIA_TYPE);
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);
@@ -74,7 +74,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
   }
 
   public void testFrom_detailsArbitraryJsonContent() throws IOException {
-    HttpTransport transport = new ErrorTransport("{\"foo\":\"bar\"}", Json.CONTENT_TYPE);
+    HttpTransport transport = new ErrorTransport("{\"foo\":\"bar\"}", Json.MEDIA_TYPE);
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);
@@ -86,7 +86,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
   }
 
   public void testFrom_detailsArbitraryXmlContent() throws IOException {
-    HttpTransport transport = new ErrorTransport("<foo>", Atom.CONTENT_TYPE);
+    HttpTransport transport = new ErrorTransport("<foo>", Atom.MEDIA_TYPE);
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);
@@ -99,7 +99,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
   }
 
   public void testFrom_errorNoContentButWithJsonContentType() throws IOException {
-    HttpTransport transport = new ErrorTransport("", Json.CONTENT_TYPE);
+    HttpTransport transport = new ErrorTransport("", Json.MEDIA_TYPE);
       HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);
@@ -111,7 +111,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
   }
 
   public void testFrom_errorEmptyContentButWithJsonContentType() throws IOException {
-    HttpTransport transport = new ErrorTransport(null, Json.CONTENT_TYPE);
+    HttpTransport transport = new ErrorTransport(null, Json.MEDIA_TYPE);
       HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);

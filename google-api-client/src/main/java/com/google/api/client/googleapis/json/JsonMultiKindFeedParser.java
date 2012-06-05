@@ -32,7 +32,9 @@ import java.util.HashMap;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.11)
  */
+@Deprecated
 public final class JsonMultiKindFeedParser<T> extends AbstractJsonFeedParser<T> {
 
   private final HashMap<String, Class<?>> kindToItemClassMap = new HashMap<String, Class<?>>();

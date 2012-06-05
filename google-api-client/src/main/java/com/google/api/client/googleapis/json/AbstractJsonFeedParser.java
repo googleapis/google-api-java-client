@@ -27,7 +27,9 @@ import java.io.IOException;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.11)
  */
+@Deprecated
 public abstract class AbstractJsonFeedParser<T> {
 
   private boolean feedParsed;
