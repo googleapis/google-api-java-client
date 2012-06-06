@@ -147,7 +147,7 @@ public final class MediaHttpDownloader {
       HttpResponse response = request.execute();
 
       // All required bytes have been downloaded from the server.
-      mediaContentLength = Long.parseLong(response.getHeaders().getContentLength());
+      mediaContentLength = response.getHeaders().getContentLength();
       bytesDownloaded = mediaContentLength;
       updateStateAndNotifyListener(DownloadState.MEDIA_COMPLETE);
       AbstractInputStreamContent.copy(response.getContent(), outputStream);
