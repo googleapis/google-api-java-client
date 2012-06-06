@@ -163,6 +163,22 @@ public class GoogleJsonResponseException extends HttpResponseException {
    * Executes an HTTP request using {@link HttpRequest#execute()}, but throws a
    * {@link GoogleJsonResponseException} on error instead of {@link HttpResponseException}.
    *
+   * <p>
+   * Callers should call {@link HttpResponse#disconnect} when the returned HTTP response object is
+   * no longer needed. However, {@link HttpResponse#disconnect} does not have to be called if the
+   * response stream is properly closed. Example usage:
+   * </p>
+   *
+   * <pre>
+     HttpResponse response = GoogleJsonResponseException.execute(jsonFactory, request);
+     try {
+       // process the HTTP response object
+     } finally {
+       response.disconnect();
+     }
+   * </pre>
+   *
+   *
    * @param jsonFactory JSON factory
    * @param request HTTP request
    * @return HTTP response for an HTTP success code (or error code if

@@ -146,11 +146,15 @@ public final class MediaHttpDownloader {
       HttpRequest request = requestFactory.buildGetRequest(requestUrl);
       HttpResponse response = request.execute();
 
-      // All required bytes have been downloaded from the server.
-      mediaContentLength = response.getHeaders().getContentLength();
-      bytesDownloaded = mediaContentLength;
-      updateStateAndNotifyListener(DownloadState.MEDIA_COMPLETE);
-      AbstractInputStreamContent.copy(response.getContent(), outputStream);
+      try {
+        // All required bytes have been downloaded from the server.
+        mediaContentLength = response.getHeaders().getContentLength();
+        bytesDownloaded = mediaContentLength;
+        updateStateAndNotifyListener(DownloadState.MEDIA_COMPLETE);
+        AbstractInputStreamContent.copy(response.getContent(), outputStream);
+      } finally {
+        response.disconnect();
+      }
       return;
     }
 

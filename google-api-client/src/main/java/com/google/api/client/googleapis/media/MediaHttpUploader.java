@@ -198,6 +198,21 @@ public final class MediaHttpUploader {
    * </pre>
    * </p>
    *
+   * <p>
+   * Callers should call {@link HttpResponse#disconnect} when the returned HTTP response object is
+   * no longer needed. However, {@link HttpResponse#disconnect} does not have to be called if the
+   * response stream is properly closed. Example usage:
+   * </p>
+   *
+   * <pre>
+     HttpResponse response = batch.upload(initiationRequestUrl);
+     try {
+       // process the HTTP response object
+     } finally {
+       response.disconnect();
+     }
+   * </pre>
+   *
    * @param initiationRequestUrl The request URL where the initiation request will be sent
    * @return HTTP response
    */
@@ -219,14 +234,27 @@ public final class MediaHttpUploader {
       request.setEnableGZipContent(true);
       addMethodOverride(request);
       HttpResponse response = request.execute();
-      bytesUploaded = getMediaContentLength();
-      updateStateAndNotifyListener(UploadState.MEDIA_COMPLETE);
+      boolean responseProcessed = false;
+      try {
+        bytesUploaded = getMediaContentLength();
+        updateStateAndNotifyListener(UploadState.MEDIA_COMPLETE);
+        responseProcessed = true;
+      } finally {
+        if (!responseProcessed) {
+          response.disconnect();
+        }
+      }
       return response;
     }
 
     // Make initial request to get the unique upload URL.
     HttpResponse initialResponse = executeUploadInitiation(initiationRequestUrl);
-    GenericUrl uploadUrl = new GenericUrl(initialResponse.getHeaders().getLocation());
+    GenericUrl uploadUrl;
+    try {
+      uploadUrl = new GenericUrl(initialResponse.getHeaders().getLocation());
+    } finally {
+      initialResponse.disconnect();
+    }
 
     // Convert media content into a byte stream to upload in chunks.
     contentInputStream = mediaContent.getInputStream();
@@ -249,24 +277,33 @@ public final class MediaHttpUploader {
       currentRequest.setThrowExceptionOnExecuteError(false);
       currentRequest.setRetryOnExecuteIOException(true);
       response = currentRequest.execute();
-      if (response.isSuccessStatusCode()) {
-        bytesUploaded = mediaContentLength;
-        contentInputStream.close();
-        updateStateAndNotifyListener(UploadState.MEDIA_COMPLETE);
-        return response;
-      }
+      boolean returningResponse = false;
+      try {
+        if (response.isSuccessStatusCode()) {
+          bytesUploaded = mediaContentLength;
+          contentInputStream.close();
+          updateStateAndNotifyListener(UploadState.MEDIA_COMPLETE);
+          returningResponse = true;
+          return response;
+        }
 
-      if (response.getStatusCode() != 308) {
-        return response;
-      }
+        if (response.getStatusCode() != 308) {
+          returningResponse = true;
+          return response;
+        }
 
-      // Check to see if the upload URL has changed on the server.
-      String updatedUploadUrl = response.getHeaders().getLocation();
-      if (updatedUploadUrl != null) {
-        uploadUrl = new GenericUrl(updatedUploadUrl);
+        // Check to see if the upload URL has changed on the server.
+        String updatedUploadUrl = response.getHeaders().getLocation();
+        if (updatedUploadUrl != null) {
+          uploadUrl = new GenericUrl(updatedUploadUrl);
+        }
+        bytesUploaded = getNextByteIndex(response.getHeaders().getRange());
+        updateStateAndNotifyListener(UploadState.MEDIA_IN_PROGRESS);
+      } finally {
+        if (!returningResponse) {
+          response.disconnect();
+        }
       }
-      bytesUploaded = getNextByteIndex(response.getHeaders().getRange());
-      updateStateAndNotifyListener(UploadState.MEDIA_IN_PROGRESS);
     }
   }
 
@@ -298,8 +335,16 @@ public final class MediaHttpUploader {
     request.setRetryOnExecuteIOException(true);
     request.setEnableGZipContent(true);
     HttpResponse response = request.execute();
+    boolean notificationCompleted = false;
 
-    updateStateAndNotifyListener(UploadState.INITIATION_COMPLETE);
+    try {
+      updateStateAndNotifyListener(UploadState.INITIATION_COMPLETE);
+      notificationCompleted = true;
+    } finally {
+      if (!notificationCompleted) {
+        response.disconnect();
+      }
+    }
     return response;
   }
 
@@ -361,24 +406,28 @@ public final class MediaHttpUploader {
     request.setRetryOnExecuteIOException(true);
     HttpResponse response = request.execute();
 
-    long bytesWritten = getNextByteIndex(response.getHeaders().getRange());
+    try {
+      long bytesWritten = getNextByteIndex(response.getHeaders().getRange());
 
-    // Check to see if the upload URL has changed on the server.
-    String updatedUploadUrl = response.getHeaders().getLocation();
-    if (updatedUploadUrl != null) {
-      currentRequest.setUrl(new GenericUrl(updatedUploadUrl));
+      // Check to see if the upload URL has changed on the server.
+      String updatedUploadUrl = response.getHeaders().getLocation();
+      if (updatedUploadUrl != null) {
+        currentRequest.setUrl(new GenericUrl(updatedUploadUrl));
+      }
+
+      // The current position of the input stream is likely incorrect because the upload was
+      // interrupted. Reset the position and skip ahead to the correct spot.
+      contentInputStream.reset();
+      long skipValue = bytesUploaded - bytesWritten;
+      long actualSkipValue = contentInputStream.skip(skipValue);
+      Preconditions.checkState(skipValue == actualSkipValue);
+
+      // Adjust the HTTP request that encountered the server error with the correct range header
+      // and media content chunk.
+      setContentAndHeadersOnCurrentRequest(bytesWritten);
+    } finally {
+      response.disconnect();
     }
-
-    // The current position of the input stream is likely incorrect because the upload was
-    // interrupted. Reset the position and skip ahead to the correct spot.
-    contentInputStream.reset();
-    long skipValue = bytesUploaded - bytesWritten;
-    long actualSkipValue = contentInputStream.skip(skipValue);
-    Preconditions.checkState(skipValue == actualSkipValue);
-
-    // Adjust the HTTP request that encountered the server error with the correct range header
-    // and media content chunk.
-    setContentAndHeadersOnCurrentRequest(bytesWritten);
   }
 
   /**

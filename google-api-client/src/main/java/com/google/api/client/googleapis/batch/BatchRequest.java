@@ -185,21 +185,25 @@ public final class BatchRequest {
 
   private void execute(boolean retryUnsuccessfulRequests) throws IOException {
     HttpResponse response = executeUnparsed();
+    BatchUnparsedResponse batchResponse;
 
-    // Find the boundary from the Content-Type header.
-    HttpMediaType mediaType = response.getMediaType();
-    String boundary = mediaType == null ? null : mediaType.getParameter("boundary");
-    if (boundary != null) {
-      boundary = "--" + boundary;
-    }
+    try {
+      // Find the boundary from the Content-Type header.
+      HttpMediaType mediaType = response.getMediaType();
+      String boundary = mediaType == null ? null : mediaType.getParameter("boundary");
+      if (boundary != null) {
+        boundary = "--" + boundary;
+      }
 
-    // Parse the content stream.
-    InputStream contentStream = response.getContent();
-    BatchUnparsedResponse batchResponse =
-        new BatchUnparsedResponse(contentStream, boundary, requestInfos);
+      // Parse the content stream.
+      InputStream contentStream = response.getContent();
+      batchResponse = new BatchUnparsedResponse(contentStream, boundary, requestInfos);
 
-    while (batchResponse.hasNext) {
-      batchResponse.parseNextResponse();
+      while (batchResponse.hasNext) {
+        batchResponse.parseNextResponse();
+      }
+    } finally {
+      response.disconnect();
     }
 
     List<RequestInfo<?, ?>> unsuccessfulRequestInfos = batchResponse.unsuccessfulRequestInfos;
