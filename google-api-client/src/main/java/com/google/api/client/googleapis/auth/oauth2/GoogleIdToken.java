@@ -99,6 +99,14 @@ public class GoogleIdToken extends JsonWebSignature {
     @Key("hd")
     private String hostedDomain;
 
+    /** E-mail of the user or {@code null} if not requested. */
+    @Key("email")
+    private String email;
+
+    /** {@code true} if the email is verified. */
+    @Key("verified_email")
+    private boolean emailVerified;
+
     /**
      * Constructs a new Payload using default settings.
      */
@@ -162,6 +170,60 @@ public class GoogleIdToken extends JsonWebSignature {
      */
     public Payload setHostedDomain(String hostedDomain) {
       this.hostedDomain = hostedDomain;
+      return this;
+    }
+
+    /**
+     * Returns the e-mail address of the user or {@code null} if it was not requested.
+     *
+     * <p>
+     * Requires the {@code "https://www.googleapis.com/auth/userinfo.email"} scope.
+     * </p>
+     *
+     * @since 1.10
+     */
+    public String getEmail() {
+      return email;
+    }
+
+    /**
+     * Sets the e-mail address of the user or {@code null} if it was not requested.
+     *
+     * <p>
+     * Used in conjunction with the {@code "https://www.googleapis.com/auth/userinfo.email"} scope.
+     * </p>
+     *
+     * @since 1.10
+     */
+    public Payload setEmail(String email) {
+      this.email = email;
+      return this;
+    }
+
+    /**
+     * Returns {@code true} if the users e-mail address has been verified by Google.
+     *
+     * <p>
+     * Requires the {@code "https://www.googleapis.com/auth/userinfo.email"} scope.
+     * </p>
+     *
+     * @since 1.10
+     */
+    public boolean getEmailVerified() {
+      return emailVerified;
+    }
+
+    /**
+     * Sets whether the users e-mail address has been verified by Google or not.
+     *
+     * <p>
+     * Used in conjunction with the {@code "https://www.googleapis.com/auth/userinfo.email"} scope.
+     * </p>
+     *
+     * @since 1.10
+     */
+    public Payload setEmailVerified(boolean emailVerified) {
+      this.emailVerified = emailVerified;
       return this;
     }
   }
