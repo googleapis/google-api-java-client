@@ -79,7 +79,7 @@ wiki-google-api-java-client.password = <i>[password from <a
 </ul>
 
 <h3>Fork version 1.10.0-beta</h3>
-This is done in preparation for release of the 1.10 branch 1-2 weeks before the
+This is done in preparation for release of the 1.10 branch a week before the
 official launch. We create a named Mercurial branch for 1.10. Development in the
 default Mercurial branch may then progress for the next minor version.
 <ul>
@@ -89,12 +89,17 @@ hg commit -m "create 1.10 branch in preparation for release"
 hg push --new-branch
 hg update default
 </pre></li>
-  <li>For the following files, replace <code>1.10.0-beta</code> with the
-  next minor version: <b>(TODO: update this section to use sed)</b><pre>
-pom.xml
-*/pom.xml
-jdiff.xml (first change "1.10" to next minor version, then change "1.9" to "1.10")
-release.html (first change "1.10" to next minor version, then change "1.9" to "1.10")
+  <li>Update existing files by replacing <code>1.10.0-beta</code> with the
+  next minor version. This can be done by running this set of sed commands:
+<pre>
+VER_NEXT=1.11; VER_CUR=1.10; VER_PREV=1.9; VER_SUFFIX='\.0-beta'
+function esc() { echo $@ | sed "s/\./\\\./g"; }
+ESC_VER_NEXT=`esc ${VER_NEXT}`; ESC_VER_CUR=`esc ${VER_CUR}`; ESC_VER_PREV=`esc ${VER_PREV}`
+sed -i "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g" pom.xml
+sed -i "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g" */pom.xml
+sed -i -e "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g" -e "s@${ESC_VER_PREV}${VER_SUFFIX}@${ESC_VER_CUR}${VER_SUFFIX}@g" jdiff.xml
+sed -i -e "s@${ESC_VER_CUR}@${ESC_VER_NEXT}@g" -e "s@${ESC_VER_PREV}@${ESC_VER_CUR}@g" release.html
+echo -n && read -e -p "Version which comes after ${VER_NEXT}: " NV && sed -i -e "s@VER_NEXT=${ESC_VER_NEXT}@VER_NEXT=${NV}@g" release.html
 </pre></li>
   <li>Commit and push: <pre>
 hg commit -m "Start next minor version"
