@@ -16,9 +16,7 @@ package com.google.api.client.googleapis.services;
 
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpMethod;
-import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
@@ -45,36 +43,6 @@ import java.io.IOException;
 public class GoogleClientTest extends TestCase {
 
   @Test
-  public void testEnableGZipContent() throws IOException {
-    final HttpTransport transport = new MockHttpTransport();
-    final JsonFactory jsonFactory = new JacksonFactory();
-    final GenericUrl testUrl = new GenericUrl(HttpTesting.SIMPLE_URL + "test/");
-    final String testContent = "test content";
-
-    // Verify that enableGZipContent is true by default.
-    GoogleClient client = new GoogleClient(transport, jsonFactory, HttpTesting.SIMPLE_URL, "test/");
-    HttpRequest request = client.buildHttpRequest(HttpMethod.GET, testUrl, testContent);
-    assertTrue(client.getEnableGZipContent());
-    assertTrue(request.getEnableGZipContent());
-
-    // Set enableGZipContent to false and assert.
-    client = GoogleClient.builder(
-        transport, jsonFactory, new GenericUrl(HttpTesting.SIMPLE_URL), "test/")
-        .setEnableGZipContent(false).build();
-    request = client.buildHttpRequest(HttpMethod.GET, testUrl, testContent);
-    assertFalse(client.getEnableGZipContent());
-    assertFalse(request.getEnableGZipContent());
-
-    // Set enableGZipContent to true and assert.
-    client = GoogleClient.builder(
-        transport, jsonFactory, new GenericUrl(HttpTesting.SIMPLE_URL), "test/")
-        .setEnableGZipContent(true).build();
-    request = client.buildHttpRequest(HttpMethod.GET, testUrl, testContent);
-    assertTrue(client.getEnableGZipContent());
-    assertTrue(request.getEnableGZipContent());
-  }
-
-  @Test
   public void testExecuteUnparsed_error() throws IOException {
     HttpTransport transport = new MockHttpTransport() {
       @Override
@@ -94,7 +62,8 @@ public class GoogleClientTest extends TestCase {
       }
     };
     JsonFactory jsonFactory = new JacksonFactory();
-    GoogleClient client = new GoogleClient(transport, jsonFactory, HttpTesting.SIMPLE_URL, "test/");
+    GoogleClient client =
+        new GoogleClient(transport, jsonFactory, HttpTesting.SIMPLE_URL, "test/", null);
     JsonHttpRequest request = new JsonHttpRequest(client, HttpMethod.GET, "foo", null);
     try {
       request.executeUnparsed();

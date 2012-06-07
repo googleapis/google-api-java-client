@@ -273,7 +273,7 @@ public class BatchRequestTest extends TestCase {
       throws IOException {
     MockTransport transport = new MockTransport(testServerError, testAuthenticationError);
     JsonHttpClient client =
-        new JsonHttpClient(transport, new JacksonFactory(), ROOT_URL, SERVICE_PATH);
+        new JsonHttpClient(transport, new JacksonFactory(), ROOT_URL, SERVICE_PATH, null);
     JsonHttpRequest jsonHttpRequest1 = new JsonHttpRequest(client, METHOD1, URI_TEMPLATE1, null);
     JsonHttpRequest jsonHttpRequest2 = new JsonHttpRequest(client, METHOD2, URI_TEMPLATE2, null);
 
@@ -382,7 +382,7 @@ public class BatchRequestTest extends TestCase {
   public void subTestExecuteWithVoidCallback(boolean testServerError) throws Exception {
     MockTransport transport = new MockTransport(testServerError, false);
     JsonHttpClient client =
-        new JsonHttpClient(transport, new JacksonFactory(), ROOT_URL, SERVICE_PATH);
+        new JsonHttpClient(transport, new JacksonFactory(), ROOT_URL, SERVICE_PATH, null);
     JsonHttpRequest jsonHttpRequest1 = new JsonHttpRequest(client, METHOD1, URI_TEMPLATE1, null);
     JsonHttpRequest jsonHttpRequest2 = new JsonHttpRequest(client, METHOD2, URI_TEMPLATE2, null);
     ObjectParser parser = new JsonObjectParser(new JacksonFactory());
