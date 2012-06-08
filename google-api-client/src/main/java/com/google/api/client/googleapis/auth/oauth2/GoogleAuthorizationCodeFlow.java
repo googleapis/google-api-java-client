@@ -163,13 +163,13 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
      * Prompt for consent behavior ({@code "auto"} to request auto-approval or {@code "force"} to
      * force the approval UI to show) or {@code null} for the default behavior.
      */
-    private String approvalPrompt = "force";
+    private String approvalPrompt;
 
     /**
      * Access type ({@code "online"} to request online access or {@code "offline"} to request
      * offline access) or {@code null} for the default behavior.
      */
-    private String accessType = "offline";
+    private String accessType;
 
     /**
      * @param transport HTTP transport
@@ -252,7 +252,7 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
      * to force the approval UI to show) or {@code null} for the default behavior of {@code "auto"}.
      *
      * <p>
-     * By default this has the value {@code "force"}.
+     * By default this has the value {@code null}.
      * </p>
      *
      * <p>
@@ -279,7 +279,7 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
      * request offline access) or {@code null} for the default behavior of {@code "online"}.
      *
      * <p>
-     * By default this has the value {@code "offline"}.
+     * By default this has the value {@code null}.
      * </p>
      *
      * <p>
