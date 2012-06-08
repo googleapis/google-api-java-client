@@ -41,8 +41,8 @@ import java.io.InputStream;
  * @since 1.7
  *
  * @author rmistry@google.com (Ravi Mistry)
- * 
- * @deprecated (scheduled to be removed in 1.10) Use
+ *
+ * @deprecated (scheduled to be removed in 1.11) Use
  *             {@link com.google.api.client.googleapis.media.MediaHttpUploader}
  */
 @Deprecated

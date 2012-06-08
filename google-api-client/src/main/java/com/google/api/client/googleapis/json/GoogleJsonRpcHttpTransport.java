@@ -53,7 +53,7 @@ public final class GoogleJsonRpcHttpTransport {
   /**
    * RPC server URL.
    *
-   * @deprecated (scheduled to be made private final in 1.10) Use
+   * @deprecated (scheduled to be made private final in 1.11) Use
    *             {@link Builder#setRpcServerUrl(GenericUrl)}.
    */
   // TODO(jasonhall): When this becomes final, make this field a String for immutability.
@@ -63,7 +63,7 @@ public final class GoogleJsonRpcHttpTransport {
   /**
    * (REQUIRED) HTTP transport required for building requests.
    *
-   * @deprecated (scheduled to be made private final in 1.10) Use {@link Builder}.
+   * @deprecated (scheduled to be made private final in 1.11) Use {@link Builder}.
    */
   @Deprecated
   public HttpTransport transport;
@@ -71,7 +71,7 @@ public final class GoogleJsonRpcHttpTransport {
   /**
    * (REQUIRED) JSON factory to use for building requests.
    *
-   * @deprecated (scheduled to be made private final in 1.10) Use {@link Builder}.
+   * @deprecated (scheduled to be made private final in 1.11) Use {@link Builder}.
    */
   @Deprecated
   public JsonFactory jsonFactory;
@@ -79,7 +79,7 @@ public final class GoogleJsonRpcHttpTransport {
   /**
    * Content type header to use for requests. By default this is {@code "application/json-rpc"}.
    *
-   * @deprecated (scheduled to be made private final in 1.10) Use
+   * @deprecated (scheduled to be made private final in 1.11) Use
    *             {@link Builder#setContentType(String)}.
    */
   @Deprecated
@@ -88,7 +88,7 @@ public final class GoogleJsonRpcHttpTransport {
   /**
    * Accept header to use for requests. By default this is {@code "application/json-rpc"}.
    *
-   * @deprecated (scheduled to be made private final in 1.10) Use {@link Builder#setAccept(String)}.
+   * @deprecated (scheduled to be made private final in 1.11) Use {@link Builder#setAccept(String)}.
    */
   @Deprecated
   public String accept = contentType;

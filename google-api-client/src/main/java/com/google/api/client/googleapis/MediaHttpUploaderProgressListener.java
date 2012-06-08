@@ -18,11 +18,11 @@ import java.io.IOException;
 
 /**
  * An interface for receiving progress notifications for uploads.
- * 
+ *
  * <p>
  * Sample usage:
  * </p>
- * 
+ *
  * <pre>
   public static class MyProgressListener implements MediaHttpUploaderProgressListener {
 
@@ -45,10 +45,10 @@ import java.io.IOException;
     }
   }
  * </pre>
- * 
+ *
  * @author rmistry@google.com (Ravi Mistry)
  *
- * @deprecated (scheduled to be removed in 1.10) Use
+ * @deprecated (scheduled to be removed in 1.11) Use
  *             {@link com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener}
  */
 @Deprecated
