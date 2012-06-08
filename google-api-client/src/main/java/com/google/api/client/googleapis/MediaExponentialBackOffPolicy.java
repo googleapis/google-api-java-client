@@ -29,7 +29,7 @@ import java.io.IOException;
  * @since 1.7
  * @author rmistry@google.com (Ravi Mistry)
  *
- * @deprecated (scheduled to be removed in 1.10)
+ * @deprecated (scheduled to be removed in 1.11)
  */
 @Deprecated
 class MediaExponentialBackOffPolicy extends ExponentialBackOffPolicy {

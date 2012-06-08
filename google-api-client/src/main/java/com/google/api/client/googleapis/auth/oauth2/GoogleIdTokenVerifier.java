@@ -111,7 +111,7 @@ public class GoogleIdTokenVerifier {
    * @param jsonFactory JSON factory
    * @param clientId client ID or {@code null} for none
    *
-   * @deprecated (scheduled to be removed in 1.10) Use the {@link #GoogleIdTokenVerifier.Builder} to
+   * @deprecated (scheduled to be removed in 1.11) Use the {@link #GoogleIdTokenVerifier.Builder} to
    *             specify client IDs or use {@link
    *             #GoogleIdTokenVerifier(HttpTransport, JsonFactory)} if no client IDs are required.
    */
@@ -172,7 +172,7 @@ public class GoogleIdTokenVerifier {
    * Returns the client ID or {@code null} for none that was specified in
    * {@link #GoogleIdTokenVerifier(HttpTransport, JsonFactory, String)}.
    *
-   * @deprecated (scheduled to be removed in 1.10) Use {@link #getClientIds}
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #getClientIds}
    */
   @Deprecated
   public final String getClientId() {
