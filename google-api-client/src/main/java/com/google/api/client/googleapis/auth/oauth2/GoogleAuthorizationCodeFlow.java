@@ -50,6 +50,17 @@ import java.util.Collections;
  * accessing protected resources.
  * </p>
  *
+ * <p>
+ * Upgrade warning: prior to version 1.10 the default for the {@code approval_prompt} parameter was
+ * {@code "force"}, and the default for the {@code access_type} parameter was {@code "offline"}.
+ * However, starting with version 1.10 the default for the {@code approval_prompt} and
+ * {@code access_type} parameters and is {@code null}, which means
+ * {@code "approval_prompt=auto&access_type=online"} for web applications. To keep the prior
+ * behavior, you need to explicitly call {@code setApprovalPrompt("force").setAccesstype("offline")}
+ * . See {@link Builder#setApprovalPrompt(String)} and {@link Builder#setAccessType(String)} for
+ * more details.
+ * </p>
+ *
  * @since 1.7
  * @author Yaniv Inbar
  */
@@ -259,6 +270,12 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
      * Overriding is only supported for the purpose of calling the super implementation and changing
      * the return type, but nothing else.
      * </p>
+     *
+     * <p>
+     * Upgrade warning: prior to version 1.10 the default was {@code "force"}. However, starting
+     * with version 1.10 it is {@code null}, which means {@code "auto"} for web applications. To
+     * keep the prior behavior, you need to explicitly call {@code setApprovalPrompt("force")}.
+     * </p>
      */
     public Builder setApprovalPrompt(String approvalPrompt) {
       this.approvalPrompt = approvalPrompt;
@@ -285,6 +302,12 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
      * <p>
      * Overriding is only supported for the purpose of calling the super implementation and changing
      * the return type, but nothing else.
+     * </p>
+     *
+     * <p>
+     * Upgrade warning: prior to version 1.10 the default was {@code "offline"}. However, starting
+     * with version 1.10 it is {@code null}, which means {@code "online"} for web applications. To
+     * keep the prior behavior, you need to explicitly call {@code setAccessType("offline")}.
      * </p>
      */
     public Builder setAccessType(String accessType) {
