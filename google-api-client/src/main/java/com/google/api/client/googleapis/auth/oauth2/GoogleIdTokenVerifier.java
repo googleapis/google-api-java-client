@@ -338,6 +338,12 @@ public class GoogleIdTokenVerifier {
       }
       // parse each public key in the JSON response
       JsonParser parser = jsonFactory.createJsonParser(certsResponse.getContent());
+      JsonToken currentToken = parser.getCurrentToken();
+      // token is null at start, so get next token
+      if (currentToken == null) {
+        currentToken = parser.nextToken();
+      }
+      Preconditions.checkArgument(currentToken == JsonToken.START_OBJECT);
       try {
         while (parser.nextToken() != JsonToken.END_OBJECT) {
           parser.nextToken();
