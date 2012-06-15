@@ -14,8 +14,8 @@
 
 package com.google.api.client.googleapis.batch;
 
+import com.google.api.client.http.BackOffPolicy;
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
@@ -68,6 +68,10 @@ import java.util.List;
  * <p>
  * The content of each individual response is stored in memory. There is thus a potential of
  * encountering an {@link OutOfMemoryError} for very large responses.
+ * </p>
+ *
+ * <p>
+ * Redirects are currently not followed in {@link BatchRequest}.
  * </p>
  *
  * <p>
@@ -179,60 +183,77 @@ public final class BatchRequest {
    * </p>
    */
   public void execute() throws IOException {
-    execute(true);
-  }
+    boolean retryAllowed;
+    Preconditions.checkState(!requestInfos.isEmpty());
+    HttpRequest batchRequest = requestFactory.buildPostRequest(this.batchUrl, null);
+    batchRequest.setInterceptor(new BatchInterceptor());
+    int retriesRemaining = batchRequest.getNumberOfRetries();
+    BackOffPolicy backOffPolicy = batchRequest.getBackOffPolicy();
 
-  private void execute(boolean retryUnsuccessfulRequests) throws IOException {
-    HttpResponse response = executeUnparsed();
-    BatchUnparsedResponse batchResponse;
+    if (backOffPolicy != null) {
+      // Reset the BackOffPolicy at the start of each execute.
+      backOffPolicy.reset();
+    }
 
-    try {
-      // Find the boundary from the Content-Type header.
-      String contentType = response.getHeaders().getContentType();
-      String[] parts = contentType.split(";");
-      String boundary = null;
-      for (String part : parts) {
-        if (part.contains("boundary=")) {
-          int boundaryStartIndex = part.indexOf("boundary=");
-          boundary = "--" + part.substring(boundaryStartIndex + "boundary=".length());
-          break;
+    do {
+      retryAllowed = retriesRemaining > 0;
+      batchRequest.setContent(new MultipartMixedContent(requestInfos, "__END_OF_PART__"));
+      HttpResponse response = batchRequest.execute();
+      BatchUnparsedResponse batchResponse;
+      try {
+        // Find the boundary from the Content-Type header.
+        String contentType = response.getHeaders().getContentType();
+        String[] parts = contentType.split(";");
+        String boundary = null;
+        for (String part : parts) {
+          if (part.contains("boundary=")) {
+            int boundaryStartIndex = part.indexOf("boundary=");
+            boundary = "--" + part.substring(boundaryStartIndex + "boundary=".length());
+            break;
+          }
         }
+
+        // Parse the content stream.
+        InputStream contentStream = response.getContent();
+        batchResponse =
+            new BatchUnparsedResponse(contentStream, boundary, requestInfos, retryAllowed);
+
+        while (batchResponse.hasNext) {
+          batchResponse.parseNextResponse();
+        }
+      } finally {
+        response.disconnect();
       }
 
-      // Parse the content stream.
-      InputStream contentStream = response.getContent();
-      batchResponse = new BatchUnparsedResponse(contentStream, boundary, requestInfos);
-
-      while (batchResponse.hasNext) {
-        batchResponse.parseNextResponse();
+      List<RequestInfo<?, ?>> unsuccessfulRequestInfos = batchResponse.unsuccessfulRequestInfos;
+      if (!unsuccessfulRequestInfos.isEmpty()) {
+        requestInfos = unsuccessfulRequestInfos;
+        // backOff if required.
+        if (batchResponse.backOffRequired && backOffPolicy != null) {
+          long backOffTime = backOffPolicy.getNextBackOffMillis();
+          if (backOffTime != BackOffPolicy.STOP) {
+            sleep(backOffTime);
+          }
+        }
+      } else {
+        break;
       }
-    } finally {
-      response.disconnect();
-    }
-
-    List<RequestInfo<?, ?>> unsuccessfulRequestInfos = batchResponse.unsuccessfulRequestInfos;
-    if (retryUnsuccessfulRequests && !unsuccessfulRequestInfos.isEmpty()) {
-      requestInfos = unsuccessfulRequestInfos;
-      execute(false);
-    }
-
+      retriesRemaining--;
+    } while (retryAllowed);
     requestInfos.clear();
   }
 
-  /** Executes all queued requests in a single call without parsing individual responses. */
-  HttpResponse executeUnparsed() throws IOException {
-    // TODO(rmistry): Handle unsuccessful batch responses and add retries.
-    HttpRequest batchRequest = buildHttpRequest();
-    return batchRequest.execute();
-  }
-
-  /** Builds a HTTP multipart Request. */
-  HttpRequest buildHttpRequest() throws IOException {
-    Preconditions.checkState(!requestInfos.isEmpty());
-    HttpContent content = new MultipartMixedContent(requestInfos, "__END_OF_PART__");
-    HttpRequest request = requestFactory.buildPostRequest(this.batchUrl, content);
-    request.setInterceptor(new BatchInterceptor());
-    return request;
+  /**
+   * An exception safe sleep where if the sleeping is interrupted the exception is ignored.
+   *
+   * @param millis to sleep
+   */
+  private void sleep(long millis) {
+    try {
+      Thread.sleep(millis);
+    } catch (InterruptedException e) {
+      // Ignore.
+    }
   }
 
   /**
