@@ -78,7 +78,7 @@ wiki-google-api-java-client.password = <i>[password from <a
   </li>
 </ul>
 
-<h3>Fork version 1.10.2-beta</h3>
+<h3>Fork version 1.10.3-beta</h3>
 This is done in preparation for release of the 1.10 branch a week before the
 official launch. We create a named Mercurial branch for 1.10. Development in the
 default Mercurial branch may then progress for the next minor version.
@@ -89,7 +89,7 @@ hg commit -m "create 1.10 branch in preparation for release"
 hg push --new-branch
 hg update default
 </pre></li>
-  <li>Update existing files by replacing <code>1.10.2-beta</code> with the
+  <li>Update existing files by replacing <code>1.10.3-beta</code> with the
   next minor version. This can be done by running this set of sed commands:
 <pre>
 VER_NEXT=1.11; VER_CUR=1.10; VER_PREV=1.9; VER_SUFFIX='\.0-beta'
@@ -107,7 +107,7 @@ hg push
 </pre></li>
 </ul>
 
-<h3>Release version 1.10.2-beta</h3>
+<h3>Release version 1.10.3-beta</h3>
 This process is followed for the official launch. We are releasing the code from
 the 1.10 Mercurial branch.
 <ul>
@@ -127,12 +127,12 @@ cp google-api-client/target/site/dependencies.html google-api-client-assembly/de
 cp google-api-client-android2/target/site/dependencies.html google-api-client-assembly/dependencies/android2-dependencies.html
 cp google-api-client-appengine/target/site/dependencies.html google-api-client-assembly/dependencies/appengine-dependencies.html
 cp google-api-client-servlet/target/site/dependencies.html google-api-client-assembly/dependencies/servlet-dependencies.html
-hg commit -m "prepare 1.10.2-beta for release"
+hg commit -m "prepare 1.10.3-beta for release"
 hg push
 
 mvn clean deploy
 mvn release:clean
-mvn release:prepare -DautoVersionSubmodules=true -Dtag=1.10.2-beta --batch-mode
+mvn release:prepare -DautoVersionSubmodules=true -Dtag=1.10.3-beta --batch-mode
 mvn release:perform -Darguments=-Dgpg.passphrase=<i>[YOUR GPG PASSPHRASE]</i>
 </pre></li>
   <li>Release on oss.sonatype.org
@@ -145,12 +145,12 @@ mvn release:perform -Darguments=-Dgpg.passphrase=<i>[YOUR GPG PASSPHRASE]</i>
   </ul>
     Central Maven repository is synced hourly. Once uploaded onto
     repo2.maven.org, it will be found at: <a
-      href="http://repo2.maven.org/maven2/com/google/api-client/google-api-client/1.10.2-beta/">repo2.maven.org</a>
+      href="http://repo2.maven.org/maven2/com/google/api-client/google-api-client/1.10.3-beta/">repo2.maven.org</a>
   </li>
-  <li>Start development of next bug fix version, by replacing <code>1.10.2-beta</code> with the next bug fix version:<pre>
+  <li>Start development of next bug fix version, by replacing <code>1.10.3-beta</code> with the next bug fix version:<pre>
 NEXT_VERSION=<i>(next bug fix version 1.10.X-beta)</i>
-sed s/1.10.2-beta/$NEXT_VERSION/g &lt;jdiff.xml &gt;/tmp/jdiff.xml
-sed s/1.10.2-beta/$NEXT_VERSION/g &lt;release.html &gt;/tmp/release.html
+sed s/1.10.3-beta/$NEXT_VERSION/g &lt;jdiff.xml &gt;/tmp/jdiff.xml
+sed s/1.10.3-beta/$NEXT_VERSION/g &lt;release.html &gt;/tmp/release.html
 mv /tmp/jdiff.xml /tmp/release.html .
 hg commit -m "start $NEXT_VERSION"
 hg push
@@ -168,11 +168,11 @@ cd /tmp/google-api-java-client
 hg clone https://code.google.com/p/google-api-java-client.javadoc/ javadoc
 hg clone https://code.google.com/p/google-api-java-client.wiki/ wiki
 hg clone -r 1.9.0-beta https://google-api-java-client.googlecode.com/hg/ 1.9.0-beta
-hg clone -r 1.10.2-beta https://google-api-java-client.googlecode.com/hg/ 1.10.2-beta
+hg clone -r 1.10.3-beta https://google-api-java-client.googlecode.com/hg/ 1.10.3-beta
 
-cd 1.10.2-beta
+cd 1.10.3-beta
 mvn javadoc:jar install site
-cp -R target/site/apidocs ../javadoc/1.10.2-beta
+cp -R target/site/apidocs ../javadoc/1.10.3-beta
 <i>change these constants from jdiff.xml for your environment: JDIFF_HOME,
 MAVEN_REPOSITORY_HOME</i>
 ant -f jdiff.xml
@@ -180,30 +180,30 @@ ant -f jdiff.xml
 cd ../javadoc
 hg add
 PREV_VERSION=<i>(previous bug fix version 1.9.X-beta)</i>
-sed s/$PREV_VERSION/1.10.2-beta/g <index.html >/tmp/index.html && mv /tmp/index.html index.html
-hg commit -m "1.10.2-beta"
+sed s/$PREV_VERSION/1.10.3-beta/g <index.html >/tmp/index.html && mv /tmp/index.html index.html
+hg commit -m "1.10.3-beta"
 hg push
 
 cd ../wiki
-for s in *; do sed s/$PREV_VERSION/1.10.2-beta/g <$s >/tmp/$s && mv /tmp/$s .;
+for s in *; do sed s/$PREV_VERSION/1.10.3-beta/g <$s >/tmp/$s && mv /tmp/$s .;
 done
 hg revert --no-backup ReleaseNotes.wiki
-<i>edit ReleaseNotes.wiki to add release notes for 1.10.2-beta</i>
-hg commit -m "1.10.2-beta"
+<i>edit ReleaseNotes.wiki to add release notes for 1.10.3-beta</i>
+hg commit -m "1.10.3-beta"
 hg push
 </pre></li>
   <li><b>WAIT!</b> Don't do the following instructions until after the
   library has been uploaded to repo2.maven.org at: <a
-    href="http://repo2.maven.org/maven2/com/google/api-client/google-api-client/1.10.2-beta/">repo2.maven.org</a></li>
+    href="http://repo2.maven.org/maven2/com/google/api-client/google-api-client/1.10.3-beta/">repo2.maven.org</a></li>
   <li>Update to new version on <a
     href="http://code.google.com/p/google-api-java-client">http://code.google.com/p/google-api-java-client</a>
   <ul>
     <li>Upload to <a
       href="http://code.google.com/p/google-api-java-client/downloads/entry">http://code.google.com/p/google-api-java-client/downloads/entry</a>
     <ul>
-      <li>Summary: Google API Client Library for Java, version 1.10.2-beta</li>
+      <li>Summary: Google API Client Library for Java, version 1.10.3-beta</li>
       <li>File:
-      <code>/tmp/google-api-java-client/1.10.2-beta/google-api-client-assembly/target/google-api-client-1.10.2-beta-java.zip</code></li>
+      <code>/tmp/google-api-java-client/1.10.3-beta/google-api-client-assembly/target/google-api-client-1.10.3-beta-java.zip</code></li>
       <li>Labels: <code>Type-Archive</code>, <code>OpSys-All</code>, and <code>Featured</code></li>
       <li>click Submit file</li>
     </ul>
@@ -212,7 +212,7 @@ hg push
     versions by removing any <code>Featured</code> label and adding the <code>Deprecated</code>
     label.</li>
     <li>Update the following pages changing any reference from the previous
-    version to the new version <code>1.10.2-beta</code>:
+    version to the new version <code>1.10.3-beta</code>:
     <ul>
       <li><a href="http://code.google.com/p/google-api-java-client/admin">admin</a></li>
       <li><a
