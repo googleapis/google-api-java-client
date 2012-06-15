@@ -26,6 +26,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
 import com.google.common.base.Preconditions;
+import com.google.common.io.LimitInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -276,7 +277,8 @@ public final class MediaHttpUploader {
   private void setContentAndHeadersOnCurrentRequest(long bytesWritten) throws IOException {
     int blockSize = (int) Math.min(chunkSize, getMediaContentLength() - bytesWritten);
     InputStreamContent contentChunk =
-        new InputStreamContent(mediaContent.getType(), contentInputStream);
+        new InputStreamContent(mediaContent.getType(),
+          new LimitInputStream(contentInputStream, blockSize));
     contentChunk.setCloseInputStream(false);
     contentChunk.setRetrySupported(true);
     contentChunk.setLength(blockSize);
