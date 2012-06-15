@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.batch;
 
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.batch.BatchRequest.RequestInfo;
+import com.google.api.client.http.BackOffPolicy;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
@@ -60,8 +61,14 @@ final class BatchUnparsedResponse {
   /** List of unsuccessful HTTP requests that can be retried. */
   List<RequestInfo<?, ?>> unsuccessfulRequestInfos = new ArrayList<RequestInfo<?, ?>>();
 
+  /** Indicates if back off is required before the next retry. */
+  boolean backOffRequired;
+
   /** The content Id the response is currently at. */
   private int contentId = 0;
+
+  /** Whether unsuccessful HTTP requests can be retried. */
+  private final boolean retryAllowed;
 
   /**
    * Construct the {@link BatchUnparsedResponse}.
@@ -69,12 +76,14 @@ final class BatchUnparsedResponse {
    * @param inputStream Input stream that contains the batch response
    * @param boundary The boundary of the batch response
    * @param requestInfos List of request infos
+   * @param retryAllowed Whether unsuccessful HTTP requests can be retried
    */
-  BatchUnparsedResponse(
-      InputStream inputStream, String boundary, List<RequestInfo<?, ?>> requestInfos)
+  BatchUnparsedResponse(InputStream inputStream, String boundary,
+      List<RequestInfo<?, ?>> requestInfos, boolean retryAllowed)
       throws IOException {
     this.boundary = boundary;
     this.requestInfos = requestInfos;
+    this.retryAllowed = retryAllowed;
     this.bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
     // First line in the stream will be the boundary.
     checkForFinalBoundary(bufferedReader.readLine());
@@ -133,46 +142,68 @@ final class BatchUnparsedResponse {
    * Parse an object into a new instance of the data class using
    * {@link HttpResponse#parseAs(java.lang.reflect.Type)}.
    */
-  @SuppressWarnings("deprecation")
   private <T, E> void parseAndCallback(
       RequestInfo<T, E> requestInfo, int statusCode, int contentID, HttpResponse response)
       throws IOException {
     BatchCallback<T, E> callback = requestInfo.callback;
-    if (callback == null) {
-      // No point in parsing if there is no callback.
-      return;
-    }
 
     GoogleHeaders responseHeaders = new GoogleHeaders();
     responseHeaders.putAll(response.getHeaders());
     HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler =
         requestInfo.request.getUnsuccessfulResponseHandler();
+    BackOffPolicy backOffPolicy = requestInfo.request.getBackOffPolicy();
 
-    // TODO(mlinder): Remove the HttpResponse reference and directly parse the InputStream
-    com.google.api.client.http.HttpParser oldParser = requestInfo.request.getParser(
-        responseHeaders.getContentType());
-    ObjectParser parser = requestInfo.request.getParser();
+    // Reset backOff flag.
+    backOffRequired = false;
 
     if (HttpStatusCodes.isSuccess(statusCode)) {
-      T parsed = null;
-      if (requestInfo.dataClass != Void.class) {
-        parsed = parser != null ? parser.parseAndClose(
-            response.getContent(), response.getContentCharset(), requestInfo.dataClass)
-            : oldParser.parse(response, requestInfo.dataClass);
+      if (callback == null) {
+        // No point in parsing if there is no callback.
+        return;
       }
+      T parsed = getParsedDataClass(
+          requestInfo.dataClass, response, requestInfo, responseHeaders.getContentType());
       callback.onSuccess(parsed, responseHeaders);
-    } else if (unsuccessfulResponseHandler != null
-        && unsuccessfulResponseHandler.handleResponse(requestInfo.request, response, true)) {
-      unsuccessfulRequestInfos.add(requestInfo);
     } else {
-      E parsed = null;
-      if (requestInfo.dataClass != Void.class) {
-        parsed = parser != null ? parser.parseAndClose(
-            response.getContent(), response.getContentCharset(), requestInfo.errorClass)
-            : oldParser.parse(response, requestInfo.errorClass);
+      HttpContent content = requestInfo.request.getContent();
+      boolean retrySupported = retryAllowed && (content == null || content.retrySupported());
+      boolean errorHandled = false;
+      if (unsuccessfulResponseHandler != null) {
+        errorHandled = unsuccessfulResponseHandler.handleResponse(
+            requestInfo.request, response, retrySupported);
       }
-      callback.onFailure(parsed, responseHeaders);
+      if (!errorHandled && retrySupported && backOffPolicy != null
+          && backOffPolicy.isBackOffRequired(response.getStatusCode())) {
+        backOffRequired = true;
+      }
+      if (retrySupported && (errorHandled || backOffRequired)) {
+        unsuccessfulRequestInfos.add(requestInfo);
+      } else {
+        if (callback == null) {
+          // No point in parsing if there is no callback.
+          return;
+        }
+        E parsed = getParsedDataClass(
+            requestInfo.errorClass, response, requestInfo, responseHeaders.getContentType());
+        callback.onFailure(parsed, responseHeaders);
+      }
     }
+  }
+
+  @SuppressWarnings("deprecation")
+  private <A, T, E> A getParsedDataClass(
+      Class<A> dataClass, HttpResponse response, RequestInfo<T, E> requestInfo, String contentType)
+      throws IOException {
+    // TODO(mlinder): Remove the HttpResponse reference and directly parse the InputStream
+    com.google.api.client.http.HttpParser oldParser = requestInfo.request.getParser(contentType);
+    ObjectParser parser = requestInfo.request.getParser();
+    A parsed = null;
+    if (dataClass != Void.class) {
+      parsed = parser != null ? parser.parseAndClose(
+          response.getContent(), response.getContentCharset(), dataClass) : oldParser.parse(
+          response, dataClass);
+    }
+    return parsed;
   }
 
   /** Create a fake HTTP response object populated with the partContent and the statusCode. */
