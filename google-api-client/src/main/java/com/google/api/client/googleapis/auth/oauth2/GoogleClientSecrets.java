@@ -17,7 +17,6 @@ package com.google.api.client.googleapis.auth.oauth2;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Key;
-import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
@@ -161,10 +160,18 @@ public final class GoogleClientSecrets extends GenericJson {
     }
   }
 
-  /** Loads the {@code client_secrets.json} file from the given input stream. */
+  /**
+   * Loads the {@code client_secrets.json} file from the given input stream.
+   *
+   * <p>
+   * <b>Upgrade Warning:</b> Prior to version 1.11 this method would assume that the input stream
+   * was encoded in UTF-8. Since 1.11 the underlying JSON-library tries to determine the charset
+   * automatically.
+   * </p>
+   */
   public static GoogleClientSecrets load(JsonFactory jsonFactory, InputStream inputStream)
       throws IOException {
     // TODO(mlinder): Change this method to take a charset
-    return jsonFactory.fromInputStream(inputStream, Charsets.UTF_8, GoogleClientSecrets.class);
+    return jsonFactory.fromInputStream(inputStream, null, GoogleClientSecrets.class);
   }
 }

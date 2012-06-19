@@ -147,8 +147,7 @@ final class BatchUnparsedResponse {
       throws IOException {
     BatchCallback<T, E> callback = requestInfo.callback;
 
-    GoogleHeaders responseHeaders = new GoogleHeaders();
-    responseHeaders.putAll(response.getHeaders());
+    GoogleHeaders responseHeaders = new GoogleHeaders(response.getHeaders());
     HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler =
         requestInfo.request.getUnsuccessfulResponseHandler();
     BackOffPolicy backOffPolicy = requestInfo.request.getBackOffPolicy();

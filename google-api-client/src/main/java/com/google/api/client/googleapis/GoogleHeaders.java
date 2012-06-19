@@ -77,6 +77,21 @@ public class GoogleHeaders extends HttpHeaders {
   private String uploadContentType;
 
   /**
+   * Creates an empty GoogleHeaders object.
+   */
+  public GoogleHeaders() {}
+
+  /**
+   * Creates a GoogleHeaders object using the headers present in the specified {@link HttpHeaders}.
+   *
+   * @param headers HTTP headers object including set headers
+   * @since 1.11
+   */
+  public GoogleHeaders(HttpHeaders headers) {
+    this.fromHttpHeaders(headers);
+  }
+
+  /**
    * Sets the {@code "Slug"} header for the given file name, properly escaping the header value. See
    * <a href="http://tools.ietf.org/html/rfc5023#section-9.7">The Slug Header</a>.
    */
