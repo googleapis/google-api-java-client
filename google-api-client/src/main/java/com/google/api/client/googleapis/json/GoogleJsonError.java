@@ -18,6 +18,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.util.Data;
 import com.google.api.client.util.Key;
 
 import java.io.IOException;
@@ -46,6 +47,12 @@ public class GoogleJsonError extends GenericJson {
       throws IOException {
     return new JsonCParser(jsonFactory).parseAndClose(
         response.getContent(), response.getContentCharset(), GoogleJsonError.class);
+  }
+
+  static {
+    // hack to force ProGuard to consider ErrorInfo used, since otherwise it would be stripped out
+    // see http://code.google.com/p/google-api-java-client/issues/detail?id=527
+    Data.nullOf(ErrorInfo.class);
   }
 
   /** Detailed error information. */
