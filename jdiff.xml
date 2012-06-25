@@ -16,7 +16,7 @@
 
     <taskdef name="jdiff" classname="jdiff.JDiffAntTask"
       classpath="${JDIFF_HOME}/antjdiff.jar:${MAVEN_REPOSITORY_HOME}/xpp3/xpp3/1.1.4c/xpp3-1.1.4c.jar" />
-    <jdiff destdir="${JAVADOC_PROJECT_ROOT_DIR}/1.10.3-beta/jdiff" verbose="on"
+    <jdiff destdir="${JAVADOC_PROJECT_ROOT_DIR}/1.10.4-beta/jdiff" verbose="on"
       stats="on" docchanges="on">
       <old name="Google API Client Library for Java 1.9.0-beta">
         <!-- This is the location of your old source files -->
@@ -25,12 +25,12 @@
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.9.0-beta/google-api-client-appengine/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.9.0-beta/google-api-client-android2/src/main/java" />
       </old>
-      <new name="Google API Client Library for Java 1.10.3-beta">
+      <new name="Google API Client Library for Java 1.10.4-beta">
         <!-- This is the location of your new source files -->
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.10.3-beta/google-api-client/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.10.3-beta/google-api-client-servlet/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.10.3-beta/google-api-client-appengine/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.10.3-beta/google-api-client-android2/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.10.4-beta/google-api-client/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.10.4-beta/google-api-client-servlet/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.10.4-beta/google-api-client-appengine/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.10.4-beta/google-api-client-android2/src/main/java" />
       </new>
     </jdiff>
   </target>
