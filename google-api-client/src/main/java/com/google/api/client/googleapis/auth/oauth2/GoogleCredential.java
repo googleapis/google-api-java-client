@@ -325,7 +325,7 @@ public class GoogleCredential extends Credential {
     JsonWebToken.Payload payload = new JsonWebToken.Payload(getClock());
     long currentTime = getClock().currentTimeMillis();
     payload.setIssuer(serviceAccountId)
-        .setAudience(GoogleOAuthConstants.TOKEN_SERVER_URL)
+        .setAudience(getTokenServerEncodedUrl())
         .setIssuedAtTimeSeconds(currentTime / 1000)
         .setExpirationTimeSeconds(currentTime / 1000 + 3600)
         .setPrincipal(serviceAccountUser);
@@ -334,7 +334,7 @@ public class GoogleCredential extends Credential {
       String assertion =
           RsaSHA256Signer.sign(serviceAccountPrivateKey, getJsonFactory(), header, payload);
       TokenRequest request = new TokenRequest(getTransport(), getJsonFactory(), new GenericUrl(
-          GoogleOAuthConstants.TOKEN_SERVER_URL), "assertion");
+          getTokenServerEncodedUrl()), "assertion");
       request.put("assertion_type", "http://oauth.net/grant_type/jwt/1.0/bearer");
       request.put("assertion", assertion);
       return request.execute();
