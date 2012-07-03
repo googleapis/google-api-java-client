@@ -172,6 +172,6 @@ public final class GoogleClientSecrets extends GenericJson {
   public static GoogleClientSecrets load(JsonFactory jsonFactory, InputStream inputStream)
       throws IOException {
     // TODO(mlinder): Change this method to take a charset
-    return jsonFactory.fromInputStream(inputStream, null, GoogleClientSecrets.class);
+    return jsonFactory.fromInputStream(inputStream, GoogleClientSecrets.class);
   }
 }
