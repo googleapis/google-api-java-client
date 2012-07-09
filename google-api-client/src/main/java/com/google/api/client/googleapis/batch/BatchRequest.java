@@ -202,16 +202,7 @@ public final class BatchRequest {
       BatchUnparsedResponse batchResponse;
       try {
         // Find the boundary from the Content-Type header.
-        String contentType = response.getHeaders().getContentType();
-        String[] parts = contentType.split(";");
-        String boundary = null;
-        for (String part : parts) {
-          if (part.contains("boundary=")) {
-            int boundaryStartIndex = part.indexOf("boundary=");
-            boundary = "--" + part.substring(boundaryStartIndex + "boundary=".length());
-            break;
-          }
-        }
+        String boundary = "--" + response.getMediaType().getParameter("boundary");
 
         // Parse the content stream.
         InputStream contentStream = response.getContent();

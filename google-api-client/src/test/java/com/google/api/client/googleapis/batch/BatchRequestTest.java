@@ -49,7 +49,7 @@ public class BatchRequestTest extends TestCase {
   private static final String ERROR_REASON = "notFound";
   private static final int ERROR_CODE = 503;
   private static final String ERROR_DOMAIN = "global";
-  private static final String RESPONSE_BOUNDARY = "ABCDEF";
+  private static final String RESPONSE_BOUNDARY = "ABC=DE=F";
   private static final String TEST_ID = "Humpty Dumpty";
   private static final String TEST_KIND = "Big Egg";
   private static final String TEST_NAME = "James Bond";
