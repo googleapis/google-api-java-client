@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.services;
 import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.googleapis.subscriptions.SubscriptionManager;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
@@ -45,6 +46,9 @@ import java.util.Arrays;
  * @author Ravi Mistry
  */
 public class GoogleClient extends JsonHttpClient {
+
+  /** The {@link SubscriptionManager} which is used to make all subscription requests. */
+  private SubscriptionManager subscriptionManager;
 
   /**
    * Constructor with required parameters.
@@ -134,7 +138,11 @@ public class GoogleClient extends JsonHttpClient {
    * @param applicationName The application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
    * @since 1.10
+   * @deprecated (scheduled to be removed in 1.12) Use {@link #GoogleClient(HttpTransport,
+   *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, JsonObjectParser,
+   *             SubscriptionManager, String, String, String)} instead.
    */
+  @Deprecated
   protected GoogleClient(HttpTransport transport,
       JsonHttpRequestInitializer jsonHttpRequestInitializer,
       HttpRequestInitializer httpRequestInitializer,
@@ -152,6 +160,46 @@ public class GoogleClient extends JsonHttpClient {
         servicePath,
         applicationName);
   }
+
+  /**
+   * Construct the {@link GoogleClient}.
+   *
+   * @param transport The transport to use for requests
+   * @param jsonHttpRequestInitializer The initializer to use when creating an
+   *        {@link JsonHttpRequest} or {@code null} for none
+   * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
+   *        {@code null} for none
+   * @param jsonFactory A factory for creating JSON parsers and serializers
+   * @param jsonObjectParser JSON parser to use or {@code null} if unused
+   * @param subscriptionManager The subscription manager to use for subscription requests or
+   *        {@code null} for none
+   * @param rootUrl The root URL of the service. Must end with a "/"
+   * @param servicePath The service path of the service. Must end with a "/" and not begin with a
+   *        "/". It is allowed to be an empty string {@code ""}
+   * @param applicationName The application name to be sent in the User-Agent header of requests or
+   *        {@code null} for none
+   * @since 1.11
+   */
+  protected GoogleClient(HttpTransport transport,
+      JsonHttpRequestInitializer jsonHttpRequestInitializer,
+      HttpRequestInitializer httpRequestInitializer,
+      JsonFactory jsonFactory,
+      JsonObjectParser jsonObjectParser,
+      SubscriptionManager subscriptionManager,
+      String rootUrl,
+      String servicePath,
+      String applicationName) {
+    super(transport,
+        jsonHttpRequestInitializer,
+        httpRequestInitializer,
+        jsonFactory,
+        jsonObjectParser,
+        rootUrl,
+        servicePath,
+        applicationName);
+    this.subscriptionManager = subscriptionManager;
+  }
+
 
   /**
    * Create an {@link HttpRequest} suitable for use against this service.
@@ -238,6 +286,15 @@ public class GoogleClient extends JsonHttpClient {
   }
 
   /**
+   * Returns the {@link SubscriptionManager} used by this service, or {@code null} for none.
+   *
+   * @since 1.11
+   */
+  public SubscriptionManager getSubscriptionManager() {
+    return subscriptionManager;
+  }
+
+  /**
    * Builder for {@link GoogleClient}.
    *
    * <p>
@@ -247,6 +304,30 @@ public class GoogleClient extends JsonHttpClient {
    * @since 1.6
    */
   public static class Builder extends JsonHttpClient.Builder {
+
+    /** Subscription manager used to create subscriptions. */
+    private SubscriptionManager subscriptionManager;
+
+    /**
+     * Returns the {@link SubscriptionManager} used to make subscription requests, or {@code null}
+     * for none.
+     *
+     * @since 1.11
+     */
+    public final SubscriptionManager getSubscriptionManager() {
+      return subscriptionManager;
+    }
+
+    /**
+     * Sets the {@link SubscriptionManager} used to make subscription requests, or {@code null} for
+     * none.
+     *
+     * @since 1.11
+     */
+    public Builder setSubscriptionManager(SubscriptionManager subscriptionManager) {
+      this.subscriptionManager = subscriptionManager;
+      return this;
+    }
 
     /**
      * Returns an instance of a new builder.
@@ -296,6 +377,7 @@ public class GoogleClient extends JsonHttpClient {
           getHttpRequestInitializer(),
           getJsonFactory(),
           getObjectParser(),
+          getSubscriptionManager(),
           getRootUrl(),
           getServicePath(),
           getApplicationName());
