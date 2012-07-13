@@ -98,6 +98,17 @@ public abstract class AbstractWebHookServlet extends HttpServlet {
     return subscriptionManager;
   }
 
+  /**
+   * Responds to a notification with a 200 OK response with the X-Unsubscribe header which causes
+   * the subscription to be removed.
+   */
+  protected void sendUnsubscribeResponse(
+      HttpServletResponse resp, UnparsedNotification notification) {
+    // Subscriptions can be removed by sending an 200 OK with the X-Unsubscribe header.
+    resp.setStatus(HttpServletResponse.SC_OK);
+    resp.setHeader(SubscriptionHeaders.UNSUBSCRIBE, notification.getSubscriptionID());
+  }
+
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
@@ -134,7 +145,7 @@ public abstract class AbstractWebHookServlet extends HttpServlet {
           contentStream);
 
       if (!getSubscriptionManager().deliverNotification(notification)) {
-        resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Notification could not be delivered.");
+        sendUnsubscribeResponse(resp, notification);
       }
     } catch (Exception ex) {
       throw new IOException(ex);
