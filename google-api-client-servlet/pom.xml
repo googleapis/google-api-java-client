@@ -8,7 +8,7 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-api-client-servlet</artifactId>
-  <name>[Deprecated] Servlet and JDO extensions to the Google API Client Library for Java.</name>
+  <name>Servlet and JDO extensions to the Google API Client Library for Java.</name>
   <build>
     <plugins>
       <plugin>
