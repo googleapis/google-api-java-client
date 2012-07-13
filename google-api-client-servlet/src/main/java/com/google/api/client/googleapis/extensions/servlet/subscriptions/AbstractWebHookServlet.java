@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
  * </p>
  *
  * <b>Example usage:</b>
+ *
  * <pre>
     public class NotificationServlet extends AbstractWebHookServlet {
 
@@ -52,7 +53,9 @@ import javax.servlet.http.HttpServletResponse;
       }
     }
  * </pre>
+ *
  * <b>web.xml setup:</b>
+ *
  * <pre>
       &lt;servlet&gt;
           &lt;servlet-name&gt;NotificationServlet&lt;/servlet-name&gt;
