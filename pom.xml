@@ -71,7 +71,22 @@
       <dependency>
         <groupId>com.google.appengine</groupId>
         <artifactId>appengine-api-1.0-sdk</artifactId>
-        <version>1.6.1</version>
+        <version>${project.appengine.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-testing</artifactId>
+        <version>${project.appengine.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-api-labs</artifactId>
+        <version>${project.appengine.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-api-stubs</artifactId>
+        <version>${project.appengine.version}</version>
       </dependency>
       <dependency>
         <groupId>xpp3</groupId>
@@ -395,6 +410,7 @@
     <project.jackson-core-asl.version>1.9.4</project.jackson-core-asl.version>
     <project.protobuf-java.version>2.2.0</project.protobuf-java.version>
     <project.guava.version>11.0.1</project.guava.version>
+    <project.appengine.version>1.6.6</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.commons-logging.version>1.1.1</project.commons-logging.version>
     <project.httpclient.version>4.0.3</project.httpclient.version>
