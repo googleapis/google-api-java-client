@@ -25,7 +25,6 @@ import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.rpc2.JsonRpcRequest;
 import com.google.common.base.Preconditions;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -388,7 +387,7 @@ public final class GoogleJsonRpcHttpTransport {
       httpRequest = transport.createRequestFactory().buildPostRequest(rpcServerUrl, content);
       httpRequest.getHeaders().setAccept(accept);
       return httpRequest;
-    } catch (IOException e) {
+    } catch (Exception e) {
       throw new IllegalStateException(e);
     }
   }

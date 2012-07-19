@@ -16,8 +16,6 @@ package com.google.api.client.googleapis.batch;
 
 import com.google.api.client.googleapis.GoogleHeaders;
 
-import java.io.IOException;
-
 /**
  * Callback for an individual batch response.
  *
@@ -58,8 +56,13 @@ public interface BatchCallback<T, E> {
   /**
    * Called if the individual batch response is unsuccessful.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.10 it threw
+   * an {@link java.io.IOException}.
+   * </p>
+   *
    * @param e instance of data class representing the error response content
    * @param responseHeaders Headers of the batch response
    */
-  void onFailure(E e, GoogleHeaders responseHeaders) throws IOException;
+  void onFailure(E e, GoogleHeaders responseHeaders) throws Exception;
 }

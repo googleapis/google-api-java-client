@@ -21,8 +21,6 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 
-import java.io.IOException;
-
 /**
  * Generic Google OAuth 1.0a URL to request to exchange the temporary credentials token (or "request
  * token") for a long-lived credentials token (or "access token") from the Google Authorization
@@ -51,11 +49,10 @@ public final class GoogleOAuthGetAccessToken extends OAuthGetAccessToken {
    * Revokes the long-lived access token.
    *
    * @param parameters OAuth parameters
-   * @throws IOException I/O exception
    * @since 1.3
    */
   public static void revokeAccessToken(HttpTransport transport, OAuthParameters parameters)
-      throws IOException {
+      throws Exception {
     HttpRequest request = transport.createRequestFactory().buildGetRequest(
         new GenericUrl("https://www.google.com/accounts/AuthSubRevokeToken"));
     parameters.intercept(request);

@@ -22,8 +22,6 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.json.JsonFactory;
 
-import java.io.IOException;
-
 /**
  * Thread-safe Google extension to the OAuth 2.0 (draft 10) method for specifying and refreshing the
  * access token parameter as a request parameter.
@@ -99,7 +97,7 @@ public class GoogleAccessProtectedResource extends AccessProtectedResource {
   }
 
   @Override
-  protected boolean executeRefreshToken() throws IOException {
+  protected boolean executeRefreshToken() throws Exception {
     if (getRefreshToken() != null) {
       GoogleRefreshTokenGrant request = new GoogleRefreshTokenGrant(
           getTransport(), getJsonFactory(), getClientId(), getClientSecret(), getRefreshToken());

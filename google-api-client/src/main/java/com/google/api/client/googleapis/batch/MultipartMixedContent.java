@@ -70,7 +70,7 @@ class MultipartMixedContent extends AbstractHttpContent {
     return getMediaType().getParameter("boundary");
   }
 
-  public void writeTo(OutputStream out) throws IOException {
+  public void writeTo(OutputStream out) throws Exception {
     int contentId = 1;
     Writer writer = new OutputStreamWriter(out);
     String boundary = getBoundary();
