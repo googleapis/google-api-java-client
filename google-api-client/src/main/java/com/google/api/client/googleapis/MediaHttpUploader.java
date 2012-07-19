@@ -185,7 +185,7 @@ public final class MediaHttpUploader {
    * @param initiationRequestUrl The request URL where the initiation request will be sent
    * @return HTTP request
    */
-  public HttpResponse upload(GenericUrl initiationRequestUrl) throws IOException {
+  public HttpResponse upload(GenericUrl initiationRequestUrl) throws Exception {
 
     Preconditions.checkState(
         currentRequest == null, "upload can not be called twice for one instance.");
@@ -233,7 +233,7 @@ public final class MediaHttpUploader {
   }
 
   /** Uses lazy initialization to compute the media content length. */
-  private long getMediaContentLength() throws IOException {
+  private long getMediaContentLength() throws Exception {
     if (mediaContentLength == 0) {
       mediaContentLength = mediaContent.getLength();
       Preconditions.checkArgument(mediaContentLength != -1);
@@ -246,7 +246,7 @@ public final class MediaHttpUploader {
    *
    * @param initiationRequestUrl The request URL where the initiation request will be sent
    */
-  private HttpResponse executeUploadInitiation(GenericUrl initiationRequestUrl) throws IOException {
+  private HttpResponse executeUploadInitiation(GenericUrl initiationRequestUrl) throws Exception {
     updateStateAndNotifyListener(UploadState.INITIATION_STARTED);
 
     initiationRequestUrl.put("uploadType", "resumable");
@@ -274,7 +274,7 @@ public final class MediaHttpUploader {
    *
    * @param bytesWritten The number of bytes that have been successfully uploaded on the server
    */
-  private void setContentAndHeadersOnCurrentRequest(long bytesWritten) throws IOException {
+  private void setContentAndHeadersOnCurrentRequest(long bytesWritten) throws Exception {
     int blockSize = (int) Math.min(chunkSize, getMediaContentLength() - bytesWritten);
     InputStreamContent contentChunk =
         new InputStreamContent(mediaContent.getType(),
@@ -300,7 +300,7 @@ public final class MediaHttpUploader {
    * object used by the BackOffPolicy to contain the correct range header and media content chunk.
    * </p>
    */
-  public void serverErrorCallback() throws IOException {
+  public void serverErrorCallback() throws Exception {
     Preconditions.checkNotNull(currentRequest, "The current request should not be null");
 
     // TODO(rmistry): Handle timeouts here similar to how server errors are handled.
@@ -494,7 +494,7 @@ public final class MediaHttpUploader {
    *
    * @return the upload progress
    */
-  public double getProgress() throws IOException {
+  public double getProgress() throws Exception {
     return (double) bytesUploaded / getMediaContentLength();
   }
 }

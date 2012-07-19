@@ -17,7 +17,6 @@ package com.google.api.client.googleapis.auth.oauth2;
 import com.google.api.client.auth.openidconnect.IdTokenResponse;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 
 /**
  * Google OAuth 2.0 JSON model for a successful access token response as specified in <a
@@ -81,10 +80,14 @@ public class GoogleTokenResponse extends IdTokenResponse {
    * Verifies the ID token as specified in {@link GoogleIdTokenVerifier#verify} by passing it
    * {@link #parseIdToken}.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.10 it threw
+   * an {@link IOException}.
+   * </p>
+   *
    * @param verifier Google ID token verifier
    */
-  public boolean verifyIdToken(GoogleIdTokenVerifier verifier)
-      throws GeneralSecurityException, IOException {
+  public boolean verifyIdToken(GoogleIdTokenVerifier verifier) throws Exception {
     return verifier.verify(parseIdToken());
   }
 }

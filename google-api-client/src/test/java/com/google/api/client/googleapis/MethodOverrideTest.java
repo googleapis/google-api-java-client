@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableSet;
 
 import junit.framework.TestCase;
 
-import java.io.IOException;
 import java.util.EnumSet;
 
 /**
@@ -36,7 +35,7 @@ public class MethodOverrideTest extends TestCase {
     super(name);
   }
 
-  public void testIntercept() throws IOException {
+  public void testIntercept() throws Exception {
     MockHttpTransport transport = new MockHttpTransport();
     subtestIntercept(EnumSet.noneOf(HttpMethod.class), transport, new MethodOverride());
     subtestIntercept(EnumSet.noneOf(HttpMethod.class), transport,
@@ -52,14 +51,14 @@ public class MethodOverrideTest extends TestCase {
   }
 
   private void subtestIntercept(EnumSet<HttpMethod> methodsThatShouldOverride,
-      HttpTransport transport, MethodOverride interceptor) throws IOException {
+      HttpTransport transport, MethodOverride interceptor) throws Exception {
     for (HttpMethod method : HttpMethod.values()) {
       subtestIntercept(methodsThatShouldOverride.contains(method), transport, interceptor, method);
     }
   }
 
   private void subtestIntercept(boolean shouldOverride, HttpTransport transport,
-      MethodOverride interceptor, HttpMethod method) throws IOException {
+      MethodOverride interceptor, HttpMethod method) throws Exception {
     HttpRequest request = transport.createRequestFactory().buildRequest(method, null, null);
     interceptor.intercept(request);
     assertEquals(method.toString(), shouldOverride ? HttpMethod.POST : method, request.getMethod());
