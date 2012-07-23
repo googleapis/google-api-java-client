@@ -40,7 +40,7 @@ import java.io.IOException;
  * </p>
  *
  * <pre>
-  static void executeShowingError(JsonFactory factory, HttpRequest request) throws Exception {
+  static void executeShowingError(JsonFactory factory, HttpRequest request) throws IOException {
     try {
       GoogleJsonResponseException.execute(factory, request);
     } catch (GoogleJsonResponseException e) {
@@ -178,10 +178,6 @@ public class GoogleJsonResponseException extends HttpResponseException {
      }
    * </pre>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
    *
    * @param jsonFactory JSON factory
    * @param request HTTP request
@@ -189,11 +185,11 @@ public class GoogleJsonResponseException extends HttpResponseException {
    *         {@link HttpRequest#getThrowExceptionOnExecuteError()})
    * @throws GoogleJsonResponseException for an HTTP error code (only if not
    *         {@link HttpRequest#getThrowExceptionOnExecuteError()})
-   * @throws Exception some other kind of exception
+   * @throws IOException some other kind of I/O exception
    * @since 1.7
    */
   public static HttpResponse execute(JsonFactory jsonFactory, HttpRequest request)
-      throws GoogleJsonResponseException, Exception {
+      throws GoogleJsonResponseException, IOException {
     Preconditions.checkNotNull(jsonFactory);
     boolean originalThrowExceptionOnExecuteError = request.getThrowExceptionOnExecuteError();
     if (originalThrowExceptionOnExecuteError) {

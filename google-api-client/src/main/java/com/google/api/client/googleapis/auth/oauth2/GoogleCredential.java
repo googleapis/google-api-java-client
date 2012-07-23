@@ -314,7 +314,7 @@ public class GoogleCredential extends Credential {
   }
 
   @Override
-  protected TokenResponse executeRefreshToken() throws Exception {
+  protected TokenResponse executeRefreshToken() throws IOException {
     if (serviceAccountPrivateKey == null) {
       return super.executeRefreshToken();
     }
@@ -330,14 +330,19 @@ public class GoogleCredential extends Credential {
         .setExpirationTimeSeconds(currentTime / 1000 + 3600)
         .setPrincipal(serviceAccountUser);
     payload.put("scope", serviceAccountScopes);
-
-    String assertion =
-        RsaSHA256Signer.sign(serviceAccountPrivateKey, getJsonFactory(), header, payload);
-    TokenRequest request = new TokenRequest(getTransport(), getJsonFactory(), new GenericUrl(
-        getTokenServerEncodedUrl()), "assertion");
-    request.put("assertion_type", "http://oauth.net/grant_type/jwt/1.0/bearer");
-    request.put("assertion", assertion);
-    return request.execute();
+    try {
+      String assertion =
+          RsaSHA256Signer.sign(serviceAccountPrivateKey, getJsonFactory(), header, payload);
+      TokenRequest request = new TokenRequest(getTransport(), getJsonFactory(), new GenericUrl(
+          getTokenServerEncodedUrl()), "assertion");
+      request.put("assertion_type", "http://oauth.net/grant_type/jwt/1.0/bearer");
+      request.put("assertion", assertion);
+      return request.execute();
+    } catch (GeneralSecurityException exception) {
+      IOException e = new IOException();
+      e.initCause(exception);
+      throw e;
+    }
   }
 
   /**

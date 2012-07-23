@@ -33,6 +33,8 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import junit.framework.TestCase;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
  * Tests {@link GoogleJsonError}.
  *
@@ -41,7 +43,7 @@ import org.junit.Test;
 public class GoogleClientTest extends TestCase {
 
   @Test
-  public void testExecuteUnparsed_error() throws Exception {
+  public void testExecuteUnparsed_error() throws IOException {
     HttpTransport transport = new MockHttpTransport() {
       @Override
       public LowLevelHttpRequest buildGetRequest(String url) {

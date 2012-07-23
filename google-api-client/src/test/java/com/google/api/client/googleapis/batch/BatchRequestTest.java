@@ -28,6 +28,7 @@ import com.google.api.client.util.ObjectParser;
 
 import junit.framework.TestCase;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -304,7 +305,7 @@ public class BatchRequestTest extends TestCase {
 
   private BatchRequest getBatchPopulatedWithRequests(boolean testServerError,
       boolean testAuthenticationError, boolean returnSuccessAuthenticatedContent,
-      boolean testExponentialBackOff) throws Exception {
+      boolean testExponentialBackOff) throws IOException {
     transport =
         new MockTransport(testServerError, testAuthenticationError, testExponentialBackOff);
     JsonHttpClient client =

@@ -25,24 +25,26 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
+
 /**
  * Google-specific implementation of the OAuth 2.0 request for an access token based on an
  * authorization code (as specified in <a
  * href="http://code.google.com/apis/accounts/docs/OAuth2WebServer.html">Using OAuth 2.0 for Web
  * Server Applications</a>).
- *
+ * 
  * <p>
  * Use {@link GoogleCredential} to access protected resources from the resource server using the
  * {@link TokenResponse} returned by {@link #execute()}. On error, it will instead throw
  * {@link TokenResponseException}.
  * </p>
- *
+ * 
  * <p>
  * Sample usage:
  * </p>
- *
+ * 
  * <pre>
-  static void requestAccessToken() throws Exception {
+  static void requestAccessToken() throws IOException {
     try {
       GoogleTokenResponse response =
           new GoogleAuthorizationCodeTokenRequest(new NetHttpTransport(), new JacksonFactory(),
@@ -65,11 +67,11 @@ import com.google.common.base.Preconditions;
     }
   }
  * </pre>
- *
+ * 
  * <p>
  * Implementation is not thread-safe.
  * </p>
- *
+ * 
  * @since 1.7
  * @author Yaniv Inbar
  */
@@ -141,7 +143,7 @@ public class GoogleAuthorizationCodeTokenRequest extends AuthorizationCodeTokenR
   }
 
   @Override
-  public GoogleTokenResponse execute() throws Exception {
+  public GoogleTokenResponse execute() throws IOException {
     return executeUnparsed().parseAs(GoogleTokenResponse.class);
   }
 }

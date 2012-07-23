@@ -19,6 +19,8 @@ import com.google.api.client.googleapis.batch.BatchCallback;
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonErrorContainer;
 
+import java.io.IOException;
+
 /**
  * Callback for an individual batch JSON response.
  *
@@ -48,20 +50,16 @@ import com.google.api.client.googleapis.json.GoogleJsonErrorContainer;
 public abstract class JsonBatchCallback<T> implements BatchCallback<T, GoogleJsonErrorContainer> {
 
   public final void onFailure(GoogleJsonErrorContainer e, GoogleHeaders responseHeaders)
-      throws Exception {
+      throws IOException {
     onFailure(e.getError(), responseHeaders);
   }
 
   /**
    * Called if the individual batch response is unsuccessful.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @param e Google JSON error response content
    * @param responseHeaders Headers of the batch response
    */
-  public abstract void onFailure(GoogleJsonError e, GoogleHeaders responseHeaders) throws Exception;
+  public abstract void onFailure(GoogleJsonError e, GoogleHeaders responseHeaders)
+      throws IOException;
 }

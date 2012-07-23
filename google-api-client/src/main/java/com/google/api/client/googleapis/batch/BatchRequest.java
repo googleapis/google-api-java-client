@@ -24,6 +24,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -140,11 +141,6 @@ public final class BatchRequest {
    * Queues the specified {@link HttpRequest} for batched execution. Batched requests are executed
    * when {@link #execute()} is called.
    *
-   * <p>
-   * Upgrade warning: this method now does not throw any exception. In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @param <T> destination class type
    * @param <E> error class type
    * @param httpRequest HTTP Request
@@ -154,11 +150,12 @@ public final class BatchRequest {
    *        {@code Void.class} to ignore the content
    * @param callback Batch Callback
    * @return this Batch request
+   * @throws IOException If building the HTTP Request fails
    */
   public <T, E> BatchRequest queue(HttpRequest httpRequest,
       Class<T> dataClass,
       Class<E> errorClass,
-      BatchCallback<T, E> callback) {
+      BatchCallback<T, E> callback) throws IOException {
     Preconditions.checkNotNull(httpRequest);
     // TODO(rmistry): Add BatchUnparsedCallback with onResponse(InputStream content, GoogleHeaders).
     Preconditions.checkNotNull(callback);
@@ -184,13 +181,8 @@ public final class BatchRequest {
    * {@link BatchRequest} object can be reused to {@link #queue} and {@link #execute()} requests
    * again.
    * </p>
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
    */
-  public void execute() throws Exception {
+  public void execute() throws IOException {
     boolean retryAllowed;
     Preconditions.checkState(!requestInfos.isEmpty());
     HttpRequest batchRequest = requestFactory.buildPostRequest(this.batchUrl, null);
@@ -261,7 +253,7 @@ public final class BatchRequest {
    */
   class BatchInterceptor implements HttpExecuteInterceptor {
 
-    public void intercept(HttpRequest batchRequest) throws Exception {
+    public void intercept(HttpRequest batchRequest) throws IOException {
       for (RequestInfo<?, ?> requestInfo : requestInfos) {
         HttpExecuteInterceptor interceptor = requestInfo.request.getInterceptor();
         if (interceptor != null) {
