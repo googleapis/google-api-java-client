@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -126,7 +127,7 @@ public class MediaHttpDownloaderTest extends TestCase {
     }
   }
 
-  public void testDownloadOneCallHalfChunkSize() throws Exception {
+  public void testDownloadOneCallHalfChunkSize() throws IOException {
     int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE / 2;
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     MediaTransport fakeTransport = new MediaTransport(contentLength);
@@ -138,7 +139,7 @@ public class MediaHttpDownloaderTest extends TestCase {
     assertEquals(1, fakeTransport.lowLevelExecCalls);
   }
 
-  public void testDownloadOneCallMaxChunkSize() throws Exception {
+  public void testDownloadOneCallMaxChunkSize() throws IOException {
     int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE;
     MediaTransport fakeTransport = new MediaTransport(contentLength);
     MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
@@ -155,7 +156,7 @@ public class MediaHttpDownloaderTest extends TestCase {
     assertEquals(1, fakeTransport.lowLevelExecCalls);
   }
 
-  public void testSetBytesDownloaded() throws Exception {
+  public void testSetBytesDownloaded() throws IOException {
     int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE;
     MediaTransport fakeTransport = new MediaTransport(contentLength);
     fakeTransport.bytesDownloaded = contentLength - 10000;
@@ -169,7 +170,7 @@ public class MediaHttpDownloaderTest extends TestCase {
     assertEquals(1, fakeTransport.lowLevelExecCalls);
   }
 
-  public void testDownloadMultipleCallsMaxChunkSize() throws Exception {
+  public void testDownloadMultipleCallsMaxChunkSize() throws IOException {
     int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE * 3;
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     MediaTransport fakeTransport = new MediaTransport(contentLength);
@@ -181,7 +182,7 @@ public class MediaHttpDownloaderTest extends TestCase {
     assertEquals(3, fakeTransport.lowLevelExecCalls);
   }
 
-  public void testDownloadProgressListener() throws Exception {
+  public void testDownloadProgressListener() throws IOException {
     int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE * 2;
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     MediaTransport fakeTransport = new MediaTransport(contentLength);
@@ -190,7 +191,7 @@ public class MediaHttpDownloaderTest extends TestCase {
     downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
   }
 
-  public void testDownloadServerErrorWithBackOffEnabled() throws Exception {
+  public void testDownloadServerErrorWithBackOffEnabled() throws IOException {
     int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE * 2;
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     MediaTransport fakeTransport = new MediaTransport(contentLength);
@@ -203,7 +204,7 @@ public class MediaHttpDownloaderTest extends TestCase {
     assertEquals(3, fakeTransport.lowLevelExecCalls);
   }
 
-  public void testDownloadServerErrorWithBackOffDisabled() throws Exception {
+  public void testDownloadServerErrorWithBackOffDisabled() throws IOException {
     int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE * 2;
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     MediaTransport fakeTransport = new MediaTransport(contentLength);
@@ -222,7 +223,7 @@ public class MediaHttpDownloaderTest extends TestCase {
     assertEquals(2, fakeTransport.lowLevelExecCalls);
   }
 
-  public void testDownloadClientError() throws Exception {
+  public void testDownloadClientError() throws IOException {
     int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE * 2;
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     MediaTransport fakeTransport = new MediaTransport(contentLength);
@@ -240,7 +241,7 @@ public class MediaHttpDownloaderTest extends TestCase {
     assertEquals(1, fakeTransport.lowLevelExecCalls);
   }
 
-  public void testDirectMediaDownload() throws Exception {
+  public void testDirectMediaDownload() throws IOException {
     int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE;
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     MediaTransport fakeTransport = new MediaTransport(contentLength);

@@ -80,12 +80,12 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
    * {@link IOException}.
    *
    * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
+   * Upgrade warning: in prior version 1.7 it threw an {@link AppIdentityServiceFailureException}
+   * without wrapping it in an {@link IOException}.
    * </p>
    */
   @Override
-  public void intercept(HttpRequest request) throws Exception {
+  public void intercept(HttpRequest request) throws IOException {
     try {
       String accessToken =
           AppIdentityServiceFactory.getAppIdentityService().getAccessToken(scopes).getAccessToken();

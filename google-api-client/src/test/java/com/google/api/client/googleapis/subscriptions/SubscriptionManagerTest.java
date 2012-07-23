@@ -27,6 +27,7 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import junit.framework.TestCase;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -150,7 +151,7 @@ public class SubscriptionManagerTest extends TestCase {
 
     /** Returns a HttpRequest using the specified FakeHttpRequestExecutor. */
     public static HttpRequest buildHttpRequest(FakeHttpRequestExecutor executor)
-        throws Exception {
+        throws IOException {
       GenericUrl url = new GenericUrl("http://example.com");
       return new FakeHttpTransport(executor).createRequestFactory().buildGetRequest(url);
     }

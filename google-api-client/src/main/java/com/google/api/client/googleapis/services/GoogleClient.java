@@ -30,6 +30,7 @@ import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -211,7 +212,7 @@ public class GoogleClient extends JsonHttpClient {
    */
   @Override
   protected HttpRequest buildHttpRequest(HttpMethod method, GenericUrl url, Object body)
-      throws Exception {
+      throws IOException {
     HttpRequest httpRequest = super.buildHttpRequest(method, url, body);
     new MethodOverride().intercept(httpRequest);
     // Google servers will fail to process a POST/PUT/PATCH unless the Content-Length header >= 1
@@ -274,13 +275,13 @@ public class GoogleClient extends JsonHttpClient {
 
   @Override
   protected HttpResponse executeUnparsed(HttpMethod method, GenericUrl url, Object body)
-      throws Exception {
+      throws IOException {
     HttpRequest request = buildHttpRequest(method, url, body);
     return executeUnparsed(request);
   }
 
   @Override
-  protected HttpResponse executeUnparsed(HttpRequest request) throws Exception {
+  protected HttpResponse executeUnparsed(HttpRequest request) throws IOException {
     return GoogleJsonResponseException.execute(getJsonFactory(), request);
   }
 

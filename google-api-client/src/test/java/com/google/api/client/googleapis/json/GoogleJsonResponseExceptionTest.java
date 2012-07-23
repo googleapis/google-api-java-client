@@ -26,6 +26,8 @@ import com.google.api.client.xml.atom.Atom;
 
 import junit.framework.TestCase;
 
+import java.io.IOException;
+
 
 /**
  * Tests {@link GoogleJsonResponseException}.
@@ -34,7 +36,7 @@ import junit.framework.TestCase;
  */
 public class GoogleJsonResponseExceptionTest extends TestCase {
 
-  public void testFrom_noDetails() throws Exception {
+  public void testFrom_noDetails() throws IOException {
     HttpTransport transport = new MockHttpTransport();
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
@@ -46,7 +48,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     assertEquals("200", ge.getMessage());
   }
 
-  public void testFrom_withDetails() throws Exception {
+  public void testFrom_withDetails() throws IOException {
     HttpTransport transport = new ErrorTransport();
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
@@ -59,7 +61,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
         ge.getMessage(), ge.getMessage().startsWith("403" + StringUtils.LINE_SEPARATOR + "{"));
   }
 
-  public void testFrom_detailsMissingContent() throws Exception {
+  public void testFrom_detailsMissingContent() throws IOException {
     HttpTransport transport = new ErrorTransport(null, Json.MEDIA_TYPE);
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
@@ -71,7 +73,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     assertEquals("403", ge.getMessage());
   }
 
-  public void testFrom_detailsArbitraryJsonContent() throws Exception {
+  public void testFrom_detailsArbitraryJsonContent() throws IOException {
     HttpTransport transport = new ErrorTransport("{\"foo\":\"bar\"}", Json.MEDIA_TYPE);
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
@@ -83,7 +85,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     assertEquals("403", ge.getMessage());
   }
 
-  public void testFrom_detailsArbitraryXmlContent() throws Exception {
+  public void testFrom_detailsArbitraryXmlContent() throws IOException {
     HttpTransport transport = new ErrorTransport("<foo>", Atom.MEDIA_TYPE);
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
@@ -96,7 +98,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
         ge.getMessage(), ge.getMessage().startsWith("403" + StringUtils.LINE_SEPARATOR + "<"));
   }
 
-  public void testFrom_errorNoContentButWithJsonContentType() throws Exception {
+  public void testFrom_errorNoContentButWithJsonContentType() throws IOException {
     HttpTransport transport = new ErrorTransport("", Json.MEDIA_TYPE);
       HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
@@ -108,7 +110,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     assertEquals("403", ge.getMessage());
   }
 
-  public void testFrom_errorEmptyContentButWithJsonContentType() throws Exception {
+  public void testFrom_errorEmptyContentButWithJsonContentType() throws IOException {
     HttpTransport transport = new ErrorTransport(null, Json.MEDIA_TYPE);
       HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);

@@ -27,6 +27,7 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import junit.framework.TestCase;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -163,7 +164,7 @@ public class MediaHttpUploaderTest extends TestCase {
     public ResumableProgressListenerWithTwoUploadCalls() {
     }
 
-    public void progressChanged(MediaHttpUploader uploader) throws Exception {
+    public void progressChanged(MediaHttpUploader uploader) throws IOException {
       progressListenerCalls++;
 
       switch (uploader.getUploadState()) {
@@ -196,7 +197,7 @@ public class MediaHttpUploaderTest extends TestCase {
     public DirectProgressListener() {
     }
 
-    public void progressChanged(MediaHttpUploader uploader) throws Exception {
+    public void progressChanged(MediaHttpUploader uploader) throws IOException {
       progressListenerCalls++;
 
       switch (uploader.getUploadState()) {
@@ -214,7 +215,7 @@ public class MediaHttpUploaderTest extends TestCase {
     }
   }
 
-  public void testUploadOneCall() throws Exception {
+  public void testUploadOneCall() throws IOException {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE;
     MediaTransport fakeTransport = new MediaTransport(contentLength, false, false, false);
     InputStream is = new ByteArrayInputStream(new byte[contentLength]);
@@ -227,7 +228,7 @@ public class MediaHttpUploaderTest extends TestCase {
     assertEquals(2, fakeTransport.lowLevelExecCalls);
   }
 
-  public void testUploadMultipleCalls() throws Exception {
+  public void testUploadMultipleCalls() throws IOException {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 5;
     MediaTransport fakeTransport = new MediaTransport(contentLength, false, false, false);
     InputStream is = new ByteArrayInputStream(new byte[contentLength]);
@@ -240,7 +241,7 @@ public class MediaHttpUploaderTest extends TestCase {
     assertEquals(6, fakeTransport.lowLevelExecCalls);
   }
 
-  public void testUploadProgressListener() throws Exception {
+  public void testUploadProgressListener() throws IOException {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2;
     MediaTransport fakeTransport = new MediaTransport(contentLength, false, false, false);
     InputStream is = new ByteArrayInputStream(new byte[contentLength]);
@@ -251,7 +252,7 @@ public class MediaHttpUploaderTest extends TestCase {
     uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
   }
 
-  public void testUploadServerErrorWithBackOffEnabled() throws Exception {
+  public void testUploadServerErrorWithBackOffEnabled() throws IOException {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2;
     MediaTransport fakeTransport = new MediaTransport(contentLength, true, false, false);
     InputStream is = new ByteArrayInputStream(new byte[contentLength]);
@@ -265,7 +266,7 @@ public class MediaHttpUploaderTest extends TestCase {
     assertEquals(5, fakeTransport.lowLevelExecCalls);
   }
 
-  public void testUploadServerErrorWithBackOffDisabled() throws Exception {
+  public void testUploadServerErrorWithBackOffDisabled() throws IOException {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2;
     MediaTransport fakeTransport = new MediaTransport(contentLength, true, false, false);
     InputStream is = new ByteArrayInputStream(new byte[contentLength]);
@@ -282,7 +283,7 @@ public class MediaHttpUploaderTest extends TestCase {
     assertEquals(3, fakeTransport.lowLevelExecCalls);
   }
 
-  public void testUploadClientError() throws Exception {
+  public void testUploadClientError() throws IOException {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2;
     MediaTransport fakeTransport = new MediaTransport(contentLength, false, true, false);
     InputStream is = new ByteArrayInputStream(new byte[contentLength]);
@@ -297,7 +298,7 @@ public class MediaHttpUploaderTest extends TestCase {
     assertEquals(2, fakeTransport.lowLevelExecCalls);
   }
 
-  public void testDirectMediaUpload() throws Exception {
+  public void testDirectMediaUpload() throws IOException {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2;
     MediaTransport fakeTransport = new MediaTransport(contentLength, false, false, true);
     InputStream is = new ByteArrayInputStream(new byte[contentLength]);
@@ -315,7 +316,7 @@ public class MediaHttpUploaderTest extends TestCase {
     assertEquals(1, fakeTransport.lowLevelExecCalls);
   }
 
-  public void testDirectMediaUploadWithMetadata() throws Exception {
+  public void testDirectMediaUploadWithMetadata() throws IOException {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2;
     MediaTransport fakeTransport = new MediaTransport(contentLength, false, false, true);
     fakeTransport.directUploadWithMetadata = true;

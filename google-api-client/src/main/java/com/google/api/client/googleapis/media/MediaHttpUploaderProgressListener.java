@@ -14,18 +14,19 @@
 
 package com.google.api.client.googleapis.media;
 
+import java.io.IOException;
 
 /**
  * An interface for receiving progress notifications for uploads.
- *
+ * 
  * <p>
  * Sample usage:
  * </p>
- *
+ * 
  * <pre>
   public static class MyUploadProgressListener implements MediaHttpUploaderProgressListener {
 
-    public void progressChanged(MediaHttpUploader uploader) throws Exception {
+    public void progressChanged(MediaHttpUploader uploader) throws IOException {
       switch (uploader.getUploadState()) {
         case INITIATION_STARTED:
           System.out.println("Initiation Started");
@@ -44,7 +45,7 @@ package com.google.api.client.googleapis.media;
     }
   }
  * </pre>
- *
+ * 
  * @since 1.9
  * @author rmistry@google.com (Ravi Mistry)
  */
@@ -64,12 +65,7 @@ public interface MediaHttpUploaderProgressListener {
    * progress by calling {@link MediaHttpUploader#getProgress}.
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @param uploader Media HTTP uploader
    */
-  public void progressChanged(MediaHttpUploader uploader) throws Exception;
+  public void progressChanged(MediaHttpUploader uploader) throws IOException;
 }

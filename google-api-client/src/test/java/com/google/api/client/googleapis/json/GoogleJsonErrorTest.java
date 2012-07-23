@@ -72,7 +72,7 @@ public class GoogleJsonErrorTest extends TestCase {
   }
 
   @SuppressWarnings("deprecation")
-  public void testParse() throws Exception {
+  public void testParse() throws IOException {
     HttpTransport transport = new ErrorTransport();
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);

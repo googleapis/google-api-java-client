@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.subscriptions;
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.util.ObjectParser;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
@@ -105,7 +106,7 @@ public abstract class TypedNotificationCallback<T> implements NotificationCallba
 
   /** Parses the specified content and closes the InputStream of the notification. */
   private Object parseContent(ObjectParser parser, UnparsedNotification notification)
-      throws Exception {
+      throws IOException {
     // Return null if no content is expected
     if (dataClass == null || notification.getContentType() == null
         || Void.class.equals(dataClass)) {
