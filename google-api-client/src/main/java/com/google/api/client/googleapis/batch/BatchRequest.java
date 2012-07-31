@@ -186,7 +186,8 @@ public final class BatchRequest {
     boolean retryAllowed;
     Preconditions.checkState(!requestInfos.isEmpty());
     HttpRequest batchRequest = requestFactory.buildPostRequest(this.batchUrl, null);
-    batchRequest.setInterceptor(new BatchInterceptor());
+    HttpExecuteInterceptor originalInterceptor = batchRequest.getInterceptor();
+    batchRequest.setInterceptor(new BatchInterceptor(originalInterceptor));
     int retriesRemaining = batchRequest.getNumberOfRetries();
     BackOffPolicy backOffPolicy = batchRequest.getBackOffPolicy();
 
@@ -253,7 +254,16 @@ public final class BatchRequest {
    */
   class BatchInterceptor implements HttpExecuteInterceptor {
 
+    private HttpExecuteInterceptor originalInterceptor;
+
+    BatchInterceptor(HttpExecuteInterceptor originalInterceptor) {
+      this.originalInterceptor = originalInterceptor;
+    }
+
     public void intercept(HttpRequest batchRequest) throws IOException {
+      if (originalInterceptor != null) {
+        originalInterceptor.intercept(batchRequest);
+      }
       for (RequestInfo<?, ?> requestInfo : requestInfos) {
         HttpExecuteInterceptor interceptor = requestInfo.request.getInterceptor();
         if (interceptor != null) {

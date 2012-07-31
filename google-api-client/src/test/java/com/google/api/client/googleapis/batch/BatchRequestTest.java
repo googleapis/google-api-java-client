@@ -9,8 +9,10 @@ import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
 import com.google.api.client.googleapis.json.GoogleJsonErrorContainer;
 import com.google.api.client.http.ExponentialBackOffPolicy;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.http.LowLevelHttpRequest;
@@ -60,6 +62,8 @@ public class BatchRequestTest extends TestCase {
   private TestCallback3 callback3;
 
   private MockTransport transport;
+
+  private MockCredential credential;
 
   @Override
   protected void setUp() {
@@ -303,6 +307,28 @@ public class BatchRequestTest extends TestCase {
     }
   }
 
+  private static class MockCredential
+      implements
+        HttpRequestInitializer,
+        HttpExecuteInterceptor {
+
+    boolean initializerCalled = false;
+    boolean interceptorCalled = false;
+
+    MockCredential() {
+    }
+
+    public void initialize(HttpRequest request) {
+      request.setInterceptor(this);
+      initializerCalled = true;
+    }
+
+    public void intercept(HttpRequest request) {
+      interceptorCalled = true;
+    }
+
+  }
+
   private BatchRequest getBatchPopulatedWithRequests(boolean testServerError,
       boolean testAuthenticationError, boolean returnSuccessAuthenticatedContent,
       boolean testExponentialBackOff) throws IOException {
@@ -312,9 +338,10 @@ public class BatchRequestTest extends TestCase {
         new JsonHttpClient(transport, new JacksonFactory(), ROOT_URL, SERVICE_PATH, null);
     JsonHttpRequest jsonHttpRequest1 = new JsonHttpRequest(client, METHOD1, URI_TEMPLATE1, null);
     JsonHttpRequest jsonHttpRequest2 = new JsonHttpRequest(client, METHOD2, URI_TEMPLATE2, null);
+    credential = new MockCredential();
 
     ObjectParser parser = new JsonObjectParser(new JacksonFactory());
-    BatchRequest batchRequest = new BatchRequest(transport, null).setBatchUrl(
+    BatchRequest batchRequest = new BatchRequest(transport, credential).setBatchUrl(
         new GenericUrl(TEST_BATCH_URL));
     HttpRequest request1 = jsonHttpRequest1.buildHttpRequest();
     request1.setParser(parser);
@@ -463,5 +490,13 @@ public class BatchRequestTest extends TestCase {
     assertEquals(11, transport.actualCalls);
     // Assert requestInfos is empty after execute.
     assertTrue(batchRequest.requestInfos.isEmpty());
+  }
+
+  public void testInterceptor() throws Exception {
+    BatchRequest batchRequest = getBatchPopulatedWithRequests(true, false, false, true);
+    batchRequest.execute();
+    // Assert the top-level request initializer is called.
+    assertTrue(credential.initializerCalled);
+    assertTrue(credential.interceptorCalled);
   }
 }
