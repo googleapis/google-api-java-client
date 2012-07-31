@@ -17,7 +17,7 @@ package com.google.api.client.googleapis.subscriptions;
 import java.io.Serializable;
 
 /**
- * Callback which is used to receive @{link UnparsedNotification}s after subscribing to a topic.
+ * Callback which is used to receive {@link UnparsedNotification}s after subscribing to a topic.
  *
  * <p>
  * Must not be implemented in form of an anonymous class as this will break serialization.

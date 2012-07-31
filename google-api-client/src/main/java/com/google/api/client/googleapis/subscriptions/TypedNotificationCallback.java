@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
- * Callback which is used to receive typed @{link Notification}s after subscribing to a topic.
+ * Callback which is used to receive typed {@link Notification}s after subscribing to a topic.
  *
  * <p>
  * Must not be implemented in form of an anonymous class as this will break serialization.
