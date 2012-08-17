@@ -148,7 +148,9 @@ public abstract class AbstractWebHookServlet extends HttpServlet {
         sendUnsubscribeResponse(resp, notification);
       }
     } catch (Exception ex) {
-      throw new IOException(ex);
+      IOException io = new IOException();
+      io.initCause(ex);
+      throw io;
     } finally {
       contentStream.close();
     }
