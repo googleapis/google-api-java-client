@@ -54,10 +54,10 @@ public final class Subscription implements Serializable {
    * Creates a new subscription.
    *
    * @param id ID of the subscription
-   * @param handler The handler to call once a notification for this subscription has been
-   *                received. Should be thread-safe.
+   * @param handler The handler to call once a notification for this subscription has been received.
+   *        Should be thread-safe.
    * @param clientToken The token used to verify the authority of the notifications' origin, or
-   *                    {@code null} if unused
+   *        {@code null} if unused
    */
   public <T> Subscription(String id, NotificationCallback handler, String clientToken) {
     this.subscriptionID = Preconditions.checkNotNull(id);
@@ -91,5 +91,11 @@ public final class Subscription implements Serializable {
    */
   public final String getClientToken() {
     return clientToken;
+  }
+
+  @Override
+  public String toString() {
+    return "Subscription{id=" + subscriptionID + ", clientToken=" + clientToken
+        + ", notificationCallback=" + subscriptionHandler + "}";
   }
 }
