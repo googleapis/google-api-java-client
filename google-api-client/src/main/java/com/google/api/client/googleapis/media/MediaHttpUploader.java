@@ -17,7 +17,7 @@ package com.google.api.client.googleapis.media;
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.http.AbstractInputStreamContent;
-import com.google.api.client.http.ByteArrayContent;
+import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpMethod;
@@ -268,7 +268,6 @@ public final class MediaHttpUploader {
     while (true) {
       currentRequest = requestFactory.buildPutRequest(uploadUrl, null);
       new MethodOverride().intercept(currentRequest); // needed for PUT
-      currentRequest.setAllowEmptyContent(false);
       setContentAndHeadersOnCurrentRequest(bytesUploaded);
       if (backOffPolicyEnabled) {
         // Set MediaExponentialBackOffPolicy as the BackOffPolicy of the HTTP Request which will
@@ -326,13 +325,13 @@ public final class MediaHttpUploader {
     updateStateAndNotifyListener(UploadState.INITIATION_STARTED);
 
     initiationRequestUrl.put("uploadType", "resumable");
+    HttpContent content = metadata == null ? new EmptyContent() : metadata;
     HttpRequest request =
-        requestFactory.buildRequest(initiationMethod, initiationRequestUrl, metadata);
+        requestFactory.buildRequest(initiationMethod, initiationRequestUrl, content);
     addMethodOverride(request);
     initiationHeaders.setUploadContentType(mediaContent.getType());
     initiationHeaders.setUploadContentLength(getMediaContentLength());
     request.setHeaders(initiationHeaders);
-    request.setAllowEmptyContent(false);
     request.setRetryOnExecuteIOException(true);
     request.setEnableGZipContent(true);
     HttpResponse response = request.execute();
@@ -400,9 +399,6 @@ public final class MediaHttpUploader {
     // Query the current status of the upload by issuing an empty POST request on the upload URI.
     HttpRequest request = requestFactory.buildPutRequest(currentRequest.getUrl(), null);
     new MethodOverride().intercept(request); // needed for PUT
-    // The resumable media upload protocol requires Content-Length to be 0.
-    request.setAllowEmptyContent(true);
-    request.setContent(new ByteArrayContent(null, new byte[0]));
 
     request.getHeaders().setContentRange("bytes */" + getMediaContentLength());
     request.setThrowExceptionOnExecuteError(false);

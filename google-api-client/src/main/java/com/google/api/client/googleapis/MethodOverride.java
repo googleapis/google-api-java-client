@@ -14,6 +14,7 @@
 
 package com.google.api.client.googleapis;
 
+import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
@@ -79,8 +80,10 @@ public final class MethodOverride implements HttpExecuteInterceptor, HttpRequest
       HttpMethod method = request.getMethod();
       request.setMethod(HttpMethod.POST);
       request.getHeaders().set("X-HTTP-Method-Override", method.name());
-      // Google servers will fail to process a POST unless the Content-Length header >= 1
-      request.setAllowEmptyContent(false);
+      // Google servers will fail to process a POST unless the Content-Length header is specified
+      if (request.getContent() == null) {
+        request.setContent(new EmptyContent());
+      }
     }
   }
 
