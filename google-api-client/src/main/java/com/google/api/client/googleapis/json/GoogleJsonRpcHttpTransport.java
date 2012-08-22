@@ -34,8 +34,7 @@ import java.util.List;
  * batched requests.
  *
  * <p>
- * This implementation is thread-safe, as long as you don't change the values of the public fields
- * after construction. These fields are deprecated for this reason.
+ * This implementation is thread-safe.
  * </p>
  *
  * <p>
@@ -50,48 +49,20 @@ public final class GoogleJsonRpcHttpTransport {
 
   private static final String JSON_RPC_CONTENT_TYPE = "application/json-rpc";
 
-  /**
-   * RPC server URL.
-   *
-   * @deprecated (scheduled to be made private final in 1.11) Use
-   *             {@link Builder#setRpcServerUrl(GenericUrl)}.
-   */
-  // TODO(jasonhall): When this becomes final, make this field a String for immutability.
-  @Deprecated
-  public GenericUrl rpcServerUrl;
+  /** Encoded RPC server URL. */
+  private final String rpcServerUrl;
 
-  /**
-   * (REQUIRED) HTTP transport required for building requests.
-   *
-   * @deprecated (scheduled to be made private final in 1.11) Use {@link Builder}.
-   */
-  @Deprecated
-  public HttpTransport transport;
+  /** (REQUIRED) HTTP transport required for building requests. */
+  private final HttpTransport transport;
 
-  /**
-   * (REQUIRED) JSON factory to use for building requests.
-   *
-   * @deprecated (scheduled to be made private final in 1.11) Use {@link Builder}.
-   */
-  @Deprecated
-  public JsonFactory jsonFactory;
+  /** (REQUIRED) JSON factory to use for building requests. */
+  private final JsonFactory jsonFactory;
 
-  /**
-   * Content type header to use for requests. By default this is {@code "application/json-rpc"}.
-   *
-   * @deprecated (scheduled to be made private final in 1.11) Use
-   *             {@link Builder#setContentType(String)}.
-   */
-  @Deprecated
-  public String contentType = JSON_RPC_CONTENT_TYPE; // TODO(mlinder): Rename this to mediaType
+  /** Content type header to use for requests. By default this is {@code "application/json-rpc"}. */
+  private final String mimeType;
 
-  /**
-   * Accept header to use for requests. By default this is {@code "application/json-rpc"}.
-   *
-   * @deprecated (scheduled to be made private final in 1.11) Use {@link Builder#setAccept(String)}.
-   */
-  @Deprecated
-  public String accept = contentType;
+  /** Accept header to use for requests. By default this is {@code "application/json-rpc"}. */
+  private final String accept;
 
   /**
    * Creates a new {@link GoogleJsonRpcHttpTransport} with default values for RPC server, and
@@ -122,8 +93,8 @@ public final class GoogleJsonRpcHttpTransport {
       String rpcServerUrl, String mimeType, String accept) {
     this.transport = httpTransport;
     this.jsonFactory = jsonFactory;
-    this.rpcServerUrl = new GenericUrl(rpcServerUrl);
-    this.contentType = mimeType;
+    this.rpcServerUrl = rpcServerUrl;
+    this.mimeType = mimeType;
     this.accept = accept;
   }
 
@@ -151,18 +122,7 @@ public final class GoogleJsonRpcHttpTransport {
    * @since 1.9
    */
   public final String getRpcServerUrl() {
-    return rpcServerUrl.build();
-  }
-
-  /**
-   * Returns the Content type header used for requests.
-   *
-   * @since 1.9
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #getMimeType()} instead.
-   */
-  @Deprecated
-  public final String getContentType() {
-    return contentType;
+    return rpcServerUrl;
   }
 
   /**
@@ -171,7 +131,7 @@ public final class GoogleJsonRpcHttpTransport {
    * @since 1.10
    */
   public final String getMimeType() {
-    return contentType;
+    return mimeType;
   }
 
   /**
@@ -233,24 +193,6 @@ public final class GoogleJsonRpcHttpTransport {
      */
     protected Builder setRpcServerUrl(GenericUrl rpcServerUrl) {
       this.rpcServerUrl = Preconditions.checkNotNull(rpcServerUrl);
-      return this;
-    }
-
-    /**
-     * Sets the Content type header to use for requests. By default this is
-     * {@code "application/json-rpc"}.
-     *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
-     *
-     * @param contentType Content type header to use for requests.
-     * @deprecated (scheduled to be removed in 1.11) Renamed to {@link #setMimeType(String)}.
-     */
-    @Deprecated
-    protected Builder setContentType(String contentType) {
-      this.mimeType = Preconditions.checkNotNull(contentType);
       return this;
     }
 
@@ -322,16 +264,6 @@ public final class GoogleJsonRpcHttpTransport {
     }
 
     /**
-     * Returns the Content type header used for requests.
-     *
-     * @deprecated (scheduled to be removed in 1.11) Renamed to {@link #getMimeType()}
-     */
-    @Deprecated
-    public final String getContentType() {
-      return mimeType;
-    }
-
-    /**
      * Returns the MIME type used for requests.
      *
      * @since 1.10
@@ -382,10 +314,11 @@ public final class GoogleJsonRpcHttpTransport {
 
   private HttpRequest internalExecute(Object data) {
     JsonHttpContent content = new JsonHttpContent(jsonFactory, data);
-    content.setMediaType(new HttpMediaType(contentType));
+    content.setMediaType(new HttpMediaType(mimeType));
     HttpRequest httpRequest;
     try {
-      httpRequest = transport.createRequestFactory().buildPostRequest(rpcServerUrl, content);
+      httpRequest =
+          transport.createRequestFactory().buildPostRequest(new GenericUrl(rpcServerUrl), content);
       httpRequest.getHeaders().setAccept(accept);
       return httpRequest;
     } catch (IOException e) {
