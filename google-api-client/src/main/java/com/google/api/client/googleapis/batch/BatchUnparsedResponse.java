@@ -167,15 +167,20 @@ final class BatchUnparsedResponse {
       HttpContent content = requestInfo.request.getContent();
       boolean retrySupported = retryAllowed && (content == null || content.retrySupported());
       boolean errorHandled = false;
+      boolean redirectRequest = false;
       if (unsuccessfulResponseHandler != null) {
         errorHandled = unsuccessfulResponseHandler.handleResponse(
             requestInfo.request, response, retrySupported);
       }
-      if (!errorHandled && retrySupported && backOffPolicy != null
-          && backOffPolicy.isBackOffRequired(response.getStatusCode())) {
-        backOffRequired = true;
+      if (!errorHandled) {
+        if (requestInfo.request.handleRedirect(response.getStatusCode(), response.getHeaders())) {
+          redirectRequest = true;
+        } else if (retrySupported && backOffPolicy != null
+            && backOffPolicy.isBackOffRequired(response.getStatusCode())) {
+          backOffRequired = true;
+        }
       }
-      if (retrySupported && (errorHandled || backOffRequired)) {
+      if (retrySupported && (errorHandled || backOffRequired || redirectRequest)) {
         unsuccessfulRequestInfos.add(requestInfo);
       } else {
         if (callback == null) {
