@@ -16,7 +16,7 @@ package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets.Details;
 import com.google.api.client.json.gson.GsonFactory;
-import com.google.common.base.Charsets;
+import com.google.api.client.util.StringUtils;
 
 import junit.framework.TestCase;
 
@@ -39,7 +39,7 @@ public class GoogleClientSecretsTest extends TestCase {
 
   public void testLoad() throws IOException {
     GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
-        new GsonFactory(), new ByteArrayInputStream(CLIENT_SECRETS.getBytes(Charsets.UTF_8)));
+        new GsonFactory(), new ByteArrayInputStream(StringUtils.getBytesUtf8(CLIENT_SECRETS)));
     Details installed = clientSecrets.getInstalled();
     assertNotNull(installed);
     assertEquals(CLIENT_ID, installed.getClientId());
