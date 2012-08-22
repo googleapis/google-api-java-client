@@ -16,8 +16,10 @@ package com.google.api.client.googleapis.subscriptions;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * {@link SubscriptionStore} which stores all subscription information in memory.
@@ -37,23 +39,46 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MemorySubscriptionStore implements SubscriptionStore {
 
+  /** Lock on the token response information. */
+  private final Lock lock = new ReentrantLock();
+
   /** Map of all stored subscriptions. */
-  private final Map<String, Subscription> storedSubscriptions =
-      new ConcurrentHashMap<String, Subscription>();
+  private final SortedMap<String, Subscription> storedSubscriptions =
+      new TreeMap<String, Subscription>();
 
   public void storeSubscription(Subscription subscription) {
-    storedSubscriptions.put(subscription.getSubscriptionID(), subscription);
+    lock.lock();
+    try {
+      storedSubscriptions.put(subscription.getSubscriptionID(), subscription);
+    } finally {
+      lock.unlock();
+    }
   }
 
   public void removeSubscription(Subscription subscription) {
-    storedSubscriptions.remove(subscription.getSubscriptionID());
+    lock.lock();
+    try {
+      storedSubscriptions.remove(subscription.getSubscriptionID());
+    } finally {
+      lock.unlock();
+    }
   }
 
   public Collection<Subscription> listSubscriptions() {
-    return Collections.unmodifiableCollection(storedSubscriptions.values());
+    lock.lock();
+    try {
+      return Collections.unmodifiableCollection(storedSubscriptions.values());
+    } finally {
+      lock.unlock();
+    }
   }
 
   public Subscription getSubscription(String subscriptionID) {
-    return storedSubscriptions.get(subscriptionID);
+    lock.lock();
+    try {
+      return storedSubscriptions.get(subscriptionID);
+    } finally {
+      lock.unlock();
+    }
   }
 }
