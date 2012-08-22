@@ -18,6 +18,7 @@ import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.subscriptions.SubscriptionManager;
+import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
@@ -215,8 +216,10 @@ public class GoogleClient extends JsonHttpClient {
       throws IOException {
     HttpRequest httpRequest = super.buildHttpRequest(method, url, body);
     new MethodOverride().intercept(httpRequest);
-    // Google servers will fail to process a POST/PUT/PATCH unless the Content-Length header >= 1
-    httpRequest.setAllowEmptyContent(false);
+    // custom methods may use POST with no content but require a Content-Length header
+    if (body == null && method.equals(HttpMethod.POST)) {
+      httpRequest.setContent(new EmptyContent());
+    }
     return httpRequest;
   }
 
