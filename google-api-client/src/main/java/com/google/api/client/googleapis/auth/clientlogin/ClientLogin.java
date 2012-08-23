@@ -164,11 +164,6 @@ public final class ClientLogin {
   /**
    * Authenticates based on the provided field values.
    *
-   * <p>
-   * Upgrade warning: in prior version 1.6 it threw an {@link HttpResponseException} on error, but
-   * it now throws a {@link ClientLoginResponseException}.
-   * </p>
-   *
    * @throws ClientLoginResponseException if the authentication response has an error code, such as
    *         for a CAPTCHA challenge.
    * @throws IOException some other kind of I/O exception

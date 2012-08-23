@@ -22,12 +22,6 @@ import com.google.api.client.util.Key;
  * {@link #alt} and {@link #fields} parameters.
  *
  * <p>
- * Upgrade warning: in prior version 1.7 the pretty-print parameter had a key of "prettyprint", and
- * the user IP parameter had a key of "userip". In 1.8 the case has changed, so they are now
- * "prettyPrint" and "userIp" respectively.
- * </p>
- *
- * <p>
  * Implementation is not thread-safe.
  * </p>
  *

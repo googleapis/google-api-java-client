@@ -37,12 +37,6 @@ import java.util.Arrays;
 /**
  * Google API client.
  *
- * <p>
- * Upgrade warning: prior to version 1.10 there was a {@code builder} method in
- * {@link GoogleClient}, this has been removed in version 1.10. The Builder can now be instantiated
- * with {@link Builder#Builder(HttpTransport, JsonFactory, String, String, HttpRequestInitializer)}.
- * </p>
- *
  * @since 1.6
  * @author Ravi Mistry
  */
@@ -61,7 +55,7 @@ public class GoogleClient extends JsonHttpClient {
    * @param transport The transport to use for requests
    * @param jsonFactory A factory for creating JSON parsers and serializers
    * @param baseUrl The base URL of the service. Must end with a "/"
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #GoogleClient(HttpTransport,
+   * @deprecated (scheduled to be removed in 1.12) Use {@link #GoogleClient(HttpTransport,
    *             JsonFactory, String, String, HttpRequestInitializer)}.
    */
   @Deprecated
@@ -102,7 +96,7 @@ public class GoogleClient extends JsonHttpClient {
    * @param baseUrl The base URL of the service. Must end with a "/"
    * @param applicationName The application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #GoogleClient(HttpTransport,
+   * @deprecated (scheduled to be removed in 1.12) Use {@link #GoogleClient(HttpTransport,
    *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, JsonObjectParser,
    *             String, String, String)}
    */
@@ -338,7 +332,7 @@ public class GoogleClient extends JsonHttpClient {
      * @param transport The transport to use for requests
      * @param jsonFactory A factory for creating JSON parsers and serializers
      * @param baseUrl The base URL of the service. Must end with a "/"
-     * @deprecated (scheduled to be removed in 1.11) Use {@link #Builder(HttpTransport, JsonFactory,
+     * @deprecated (scheduled to be removed in 1.12) Use {@link #Builder(HttpTransport, JsonFactory,
      *             String, String, HttpRequestInitializer)} instead.
      */
     @Deprecated
