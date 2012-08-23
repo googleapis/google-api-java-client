@@ -15,6 +15,9 @@
       <filtered>true</filtered>
     </file>
     <file>
+      <source>proguard-google-api-client.txt</source>
+    </file>
+    <file>
       <source>readme.html</source>
       <filtered>true</filtered>
     </file>
