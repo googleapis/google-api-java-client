@@ -26,6 +26,7 @@ import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.util.Clock;
 import com.google.common.base.Preconditions;
 
 import java.util.Collections;
@@ -140,8 +141,9 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
   @Override
   public GoogleAuthorizationCodeRequestUrl newAuthorizationUrl() {
     // don't want to specify redirectUri to give control of it to user of this class
-    return new GoogleAuthorizationCodeRequestUrl(getClientId(), "", Collections.singleton(
-        getScopes())).setAccessType(accessType).setApprovalPrompt(approvalPrompt);
+    return new GoogleAuthorizationCodeRequestUrl(
+        getClientId(), "", Collections.singleton(getScopes())).setAccessType(accessType)
+        .setApprovalPrompt(approvalPrompt);
   }
 
   /**
@@ -256,6 +258,70 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
     @Override
     public Builder setScopes(String... scopes) {
       return (Builder) super.setScopes(scopes);
+    }
+
+    /**
+     * @since 1.11
+     */
+    @Override
+    public Builder setMethod(AccessMethod method) {
+      return (Builder) super.setMethod(method);
+    }
+
+    /**
+     * @since 1.11
+     */
+    @Override
+    public Builder setTransport(HttpTransport transport) {
+      return (Builder) super.setTransport(transport);
+    }
+
+    /**
+     * @since 1.11
+     */
+    @Override
+    public Builder setJsonFactory(JsonFactory jsonFactory) {
+      return (Builder) super.setJsonFactory(jsonFactory);
+    }
+
+    /**
+     * @since 1.11
+     */
+    @Override
+    public Builder setTokenServerUrl(GenericUrl tokenServerUrl) {
+      return (Builder) super.setTokenServerUrl(tokenServerUrl);
+    }
+
+    /**
+     * @since 1.11
+     */
+    @Override
+    public Builder setClientAuthentication(HttpExecuteInterceptor clientAuthentication) {
+      return (Builder) super.setClientAuthentication(clientAuthentication);
+    }
+
+    /**
+     * @since 1.11
+     */
+    @Override
+    public Builder setClientId(String clientId) {
+      return (Builder) super.setClientId(clientId);
+    }
+
+    /**
+     * @since 1.11
+     */
+    @Override
+    public Builder setAuthorizationServerEncodedUrl(String authorizationServerEncodedUrl) {
+      return (Builder) super.setAuthorizationServerEncodedUrl(authorizationServerEncodedUrl);
+    }
+
+    /**
+     * @since 1.11
+     */
+    @Override
+    public Builder setClock(Clock clock) {
+      return (Builder) super.setClock(clock);
     }
 
     /**
