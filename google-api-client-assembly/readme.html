@@ -15,7 +15,8 @@
 <h3>Library Details</h3>
 <ul>
   <li>google-api-client can be used for all platforms.</li>
-  <li>google-api-client-android2 is for Android SDK 2.0 & higher.</li>
+  <li>google-api-client-android is for Android SDK 2.1 (Eclair) & higher.</li>
+  <li>[deprecated] google-api-client-android2 is for Android SDK 2.1 (Eclair) & higher.</li>
   <li>google-api-client-appengine is for Google App Engine.</li>
   <li>google-api-client-servlet is for the HTTP Servlet environment.</li>
 </ul>
@@ -26,7 +27,8 @@ Dependent jars can be found in the <a href='libs'>libs</a> folder and the corres
 The dependency structure and licenses for the different libraries can be found here:
 <ul>
   <li>google-api-client: <a href='dependencies/dependencies.html'>dependencies.html</a></li>
-  <li>google-api-client-android2: <a href='dependencies/android2-dependencies.html'>android2-dependencies.html</a></li>
+  <li>google-api-client-android: <a href='dependencies/android-dependencies.html'>android-dependencies.html</a></li>
+  <li>[deprecated] google-api-client-android2: <a href='dependencies/android2-dependencies.html'>android2-dependencies.html</a></li>
   <li>google-api-client-appengine: <a href='dependencies/appengine-dependencies.html'>appengine-dependencies.html</a></li>
   <li>google-api-client-servlet: <a href='dependencies/servlet-dependencies.html'>servlet-dependencies.html</a></li>
 </ul>
@@ -39,15 +41,35 @@ For information on how to add these libraries to your Maven project please see
 A .classpath file snippet that can be included in your project's .classpath has been provided <a href='.classpath'>here</a>.
 Please only use the classpathentry's you actually need (see below for details).
 
+  <h3>ProGuard</h3>
+  <p>
+    A ProGuard configuration file <a href="proguard-google-api-client.txt">proguard-google-api-client.txt</a>
+    is included for common settings for using the library. On Android projects,
+    you may want to add a reference to
+    <code>proguard-google-api-client.txt</code>
+    in the
+    <code>project.properties</code>
+    file under the
+    <code>proguard.config</code>
+    property.
+  </p>
+  <p>
+    Please read <a
+      href="http://code.google.com/p/google-http-java-client/wiki/Setup#ProGuard">Setup
+      ProGuard</a> for more details.
+  </p>
+
 <h3>Android Dependencies</h3>
-The following are the jars from the <a href='libs'>libs</a> folder required for android applications or a newer compatible version:
+The following are the jars from the <a href='libs'>libs</a> folder required for Android applications or a newer compatible version:
 <ul>
   <li>google-api-client-${project.version}.jar</li>
-  <li>google-api-client-android2-${project.version}.jar (only for SDK >= 2.1)</li>
+  <li>google-api-client-android-${project.version}.jar (only for SDK >= 2.1)</li>
+  <li>[deprecated] google-api-client-android2-${project.version}.jar (only for SDK >= 2.1)</li>
   <li>google-oauth-client-${project.oauth.version}.jar</li>
   <li>google-http-client-${project.http.version}.jar</li>
-  <li>google-http-client-android2-${project.http.version}.jar (only for SDK >= 2.1)</li>
-  <li>google-http-client-android3-${project.http.version}.jar (only for SDK >= 3.0)</li>
+  <li>google-http-client-android-${project.http.version}.jar (only for SDK >= 2.1)</li>
+  <li>[deprecated] google-http-client-android2-${project.http.version}.jar (only for SDK >= 2.1)</li>
+  <li>[deprecated] google-http-client-android3-${project.http.version}.jar (only for SDK >= 3.0)</li>
   <li>gson-${project.gson.version}.jar</li>
   <li>guava-${project.guava.version}.jar</li>
   <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>

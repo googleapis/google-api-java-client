@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Google Inc.
+ * Copyright (c) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -20,12 +20,9 @@
  * possibly entirely removed in a future version of the library</b>
  * </p>
  *
- * @since 1.4
+ * @since 1.11
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.12) Use
- *             {@code com.google.api.client.googleapis.extensions.android.accounts} package from the
- *             {@code google-api-client-android} library.
  */
 
-package com.google.api.client.googleapis.extensions.android2.auth;
+package com.google.api.client.googleapis.extensions.android.accounts;
 

@@ -1,4 +1,5 @@
 	<classpathentry kind="lib" path="libs/google-api-client-${project.version}.jar" sourcepath="libs-sources/google-api-client-${project.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-api-client-android-${project.version}.jar" sourcepath="libs-sources/google-api-client-android-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-api-client-android2-${project.version}.jar" sourcepath="libs-sources/google-api-client-android2-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-api-client-appengine-${project.version}.jar" sourcepath="libs-sources/google-api-client-appengine-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-api-client-servlet-${project.version}.jar" sourcepath="libs-sources/google-api-client-servlet-${project.version}-sources.jar"/>
@@ -6,6 +7,7 @@
 	<classpathentry kind="lib" path="libs/google-oauth-client-appengine-${project.oauth.version}.jar" sourcepath="libs-sources/google-oauth-client-appengine-${project.oauth.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-oauth-client-servlet-${project.oauth.version}.jar" sourcepath="libs-sources/google-oauth-client-servlet-${project.oauth.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-http-client-${project.http.version}.jar" sourcepath="libs-sources/google-http-client-${project.http.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-http-client-android-${project.http.version}.jar" sourcepath="libs-sources/google-http-client-android-${project.http.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-http-client-android2-${project.http.version}.jar" sourcepath="libs-sources/google-http-client-android2-${project.http.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-http-client-android3-${project.http.version}.jar" sourcepath="libs-sources/google-http-client-android3-${project.http.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-http-client-appengine-${project.http.version}.jar" sourcepath="libs-sources/google-http-client-appengine-${project.http.version}-sources.jar"/>
