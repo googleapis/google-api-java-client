@@ -78,11 +78,6 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
    * Intercept the request by using the access token obtained from the {@link AppIdentityService}.
    * Any thrown {@link AppIdentityServiceFailureException} will be wrapped with an
    * {@link IOException}.
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.7 it threw an {@link AppIdentityServiceFailureException}
-   * without wrapping it in an {@link IOException}.
-   * </p>
    */
   @Override
   public void intercept(HttpRequest request) throws IOException {

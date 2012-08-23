@@ -105,23 +105,6 @@ public class GoogleIdTokenVerifier {
   private final Clock clock;
 
   /**
-   * Constructor with required parameters.
-   *
-   * @param transport HTTP transport
-   * @param jsonFactory JSON factory
-   * @param clientId client ID or {@code null} for none
-   *
-   * @deprecated (scheduled to be removed in 1.11) Use the {@link #GoogleIdTokenVerifier.Builder} to
-   *             specify client IDs or use {@link
-   *             #GoogleIdTokenVerifier(HttpTransport, JsonFactory)} if no client IDs are required.
-   */
-  @Deprecated
-  public GoogleIdTokenVerifier(HttpTransport transport, JsonFactory jsonFactory, String clientId) {
-    this(clientId == null ? Collections.<String>emptySet() : Collections.singleton(clientId),
-        transport, jsonFactory);
-  }
-
-  /**
    * Constructor with required parameters. Use the {@link #GoogleIdTokenVerifier.Builder} to specify
    * client IDs.
    *
@@ -166,17 +149,6 @@ public class GoogleIdTokenVerifier {
   /** Returns the JSON factory. */
   public final JsonFactory getJsonFactory() {
     return jsonFactory;
-  }
-
-  /**
-   * Returns the client ID or {@code null} for none that was specified in
-   * {@link #GoogleIdTokenVerifier(HttpTransport, JsonFactory, String)}.
-   *
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #getClientIds}
-   */
-  @Deprecated
-  public final String getClientId() {
-    return clientIds.iterator().next();
   }
 
   /**

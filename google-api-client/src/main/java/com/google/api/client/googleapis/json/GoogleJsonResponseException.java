@@ -59,20 +59,14 @@ public class GoogleJsonResponseException extends HttpResponseException {
   /** Google JSON error details or {@code null} for none (for example if response is not JSON). */
   private final transient GoogleJsonError details;
 
-  /** JSON factory. */
-  @Deprecated
-  private final transient JsonFactory jsonFactory;
-
   /**
-   * @param jsonFactory JSON factory
    * @param response HTTP response
    * @param details Google JSON error details
    * @param message message details
    */
   private GoogleJsonResponseException(
-      JsonFactory jsonFactory, HttpResponse response, GoogleJsonError details, String message) {
+      HttpResponse response, GoogleJsonError details, String message) {
     super(response, message);
-    this.jsonFactory = jsonFactory;
     this.details = details;
   }
 
@@ -82,16 +76,6 @@ public class GoogleJsonResponseException extends HttpResponseException {
    */
   public final GoogleJsonError getDetails() {
     return details;
-  }
-
-  /**
-   * Returns the JSON factory.
-   *
-   * @deprecated (scheduled to be removed in 1.9)
-   */
-  @Deprecated
-  public final JsonFactory getJsonFactory() {
-    return jsonFactory;
   }
 
   /**
@@ -156,7 +140,7 @@ public class GoogleJsonResponseException extends HttpResponseException {
       message.append(StringUtils.LINE_SEPARATOR).append(detailString);
     }
     // result
-    return new GoogleJsonResponseException(jsonFactory, response, details, message.toString());
+    return new GoogleJsonResponseException(response, details, message.toString());
   }
 
   /**

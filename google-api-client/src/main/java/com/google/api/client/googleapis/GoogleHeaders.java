@@ -37,7 +37,7 @@ public class GoogleHeaders extends HttpHeaders {
   /**
    * {@code "GData-Version"} header.
    *
-   * @deprecated (scheduled to be made private in 1.11) Use {@link #getGDataVersion} or
+   * @deprecated (scheduled to be made private in 1.12) Use {@link #getGDataVersion} or
    *             {@link #setGDataVersion}
    */
   @Deprecated

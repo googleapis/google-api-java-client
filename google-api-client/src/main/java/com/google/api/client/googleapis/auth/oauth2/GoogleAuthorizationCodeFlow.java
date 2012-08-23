@@ -52,14 +52,11 @@ import java.util.Collections;
  * </p>
  *
  * <p>
- * Upgrade warning: prior to version 1.10 the default for the {@code approval_prompt} parameter was
- * {@code "force"}, and the default for the {@code access_type} parameter was {@code "offline"}.
- * However, starting with version 1.10 the default for the {@code approval_prompt} and
- * {@code access_type} parameters and is {@code null}, which means
- * {@code "approval_prompt=auto&access_type=online"} for web applications. To keep the prior
- * behavior, you need to explicitly call {@code setApprovalPrompt("force").setAccesstype("offline")}
- * . See {@link Builder#setApprovalPrompt(String)} and {@link Builder#setAccessType(String)} for
- * more details.
+ * The default for the {@code approval_prompt} and {@code access_type} parameters is {@code null}.
+ * For web applications that means {@code "approval_prompt=auto&access_type=online"} and for
+ * installed applications that means {@code "approval_prompt=force&access_type=offline"}. To
+ * override the default, you need to explicitly call {@link Builder#setApprovalPrompt(String)} and
+ * {@link Builder#setAccessType(String)}.
  * </p>
  *
  * @since 1.7
@@ -326,7 +323,8 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
 
     /**
      * Sets the approval prompt behavior ({@code "auto"} to request auto-approval or {@code "force"}
-     * to force the approval UI to show) or {@code null} for the default behavior of {@code "auto"}.
+     * to force the approval UI to show) or {@code null} for the default behavior ({@code "auto"}
+     * for web applications and {@code "force"} for installed applications).
      *
      * <p>
      * By default this has the value {@code null}.
@@ -335,12 +333,6 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
      * <p>
      * Overriding is only supported for the purpose of calling the super implementation and changing
      * the return type, but nothing else.
-     * </p>
-     *
-     * <p>
-     * Upgrade warning: prior to version 1.10 the default was {@code "force"}. However, starting
-     * with version 1.10 it is {@code null}, which means {@code "auto"} for web applications. To
-     * keep the prior behavior, you need to explicitly call {@code setApprovalPrompt("force")}.
      * </p>
      */
     public Builder setApprovalPrompt(String approvalPrompt) {
@@ -359,7 +351,8 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
 
     /**
      * Sets the access type ({@code "online"} to request online access or {@code "offline"} to
-     * request offline access) or {@code null} for the default behavior of {@code "online"}.
+     * request offline access) or {@code null} for the default behavior ({@code "online"} for web
+     * applications and {@code "offline"} for installed applications).
      *
      * <p>
      * By default this has the value {@code null}.
@@ -368,12 +361,6 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
      * <p>
      * Overriding is only supported for the purpose of calling the super implementation and changing
      * the return type, but nothing else.
-     * </p>
-     *
-     * <p>
-     * Upgrade warning: prior to version 1.10 the default was {@code "offline"}. However, starting
-     * with version 1.10 it is {@code null}, which means {@code "online"} for web applications. To
-     * keep the prior behavior, you need to explicitly call {@code setAccessType("offline")}.
      * </p>
      */
     public Builder setAccessType(String accessType) {

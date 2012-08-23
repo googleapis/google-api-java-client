@@ -102,7 +102,7 @@ public final class JsonCParser extends JsonHttpParser implements ObjectParser {
    *         expected {@code "data"} or {@code "error"} key is not found
    * @throws IOException I/O exception
    * @since 1.3
-   * @deprecated (scheduled to be removed in 1.11) Use {@link JsonFactory#createJsonParser(
+   * @deprecated (scheduled to be removed in 1.12) Use {@link JsonFactory#createJsonParser(
    *             java.io.InputStream, java.nio.charset.Charset)} and {@link
    *             JsonCParser#initializeParser(JsonParser)} instead.
    */
