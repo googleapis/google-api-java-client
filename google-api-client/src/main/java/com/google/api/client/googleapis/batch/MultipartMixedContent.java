@@ -105,8 +105,14 @@ class MultipartMixedContent extends AbstractHttpContent {
       // Write the data to the body.
       HttpContent data = request.getContent();
       if (data != null) {
-        writeHeader(writer, "Content-Type", data.getType());
-        writeHeader(writer, "Content-Length", String.valueOf(data.getLength()));
+        String type = data.getType();
+        if (type != null) {
+          writeHeader(writer, "Content-Type", type);
+        }
+        long length = data.getLength();
+        if (length != -1) {
+          writeHeader(writer, "Content-Length", length);
+        }
         writer.write(CR_LF);
         writer.flush();
         data.writeTo(out);
@@ -124,10 +130,10 @@ class MultipartMixedContent extends AbstractHttpContent {
   }
 
   /** Writes a header to the Writer. */
-  private void writeHeader(Writer writer, String name, String value) throws IOException {
+  private void writeHeader(Writer writer, String name, Object value) throws IOException {
     writer.write(name);
     writer.write(": ");
-    writer.write(value);
+    writer.write(value.toString());
     writer.write(CR_LF);
   }
 

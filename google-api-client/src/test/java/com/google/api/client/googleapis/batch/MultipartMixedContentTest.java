@@ -20,12 +20,14 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 
 import junit.framework.TestCase;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,12 +66,11 @@ public class MultipartMixedContentTest extends TestCase {
     expectedOutput.append("--END_OF_PART--\r\n");
 
     MockHttpTransport transport = new MockHttpTransport();
-    HttpRequest request1 =
-        transport.createRequestFactory().buildRequest(request1Method, new GenericUrl(request1Url),
-            new ByteArrayContent(request1ContentType, request1Content.getBytes()));
-    HttpRequest request2 =
-        transport.createRequestFactory().buildRequest(request2Method, new GenericUrl(request2Url),
-            null);
+    HttpRequest request1 = transport.createRequestFactory().buildRequest(
+        request1Method, new GenericUrl(request1Url),
+        new ByteArrayContent(request1ContentType, request1Content.getBytes()));
+    HttpRequest request2 = transport.createRequestFactory()
+        .buildRequest(request2Method, new GenericUrl(request2Url), null);
     List<RequestInfo<?, ?>> requestInfos = new ArrayList<RequestInfo<?, ?>>();
     RequestInfo<?, ?> requestInfo1 = new RequestInfo<Object, Object>(null, null, null, request1);
     RequestInfo<?, ?> requestInfo2 = new RequestInfo<Object, Object>(null, null, null, request2);
@@ -81,5 +82,48 @@ public class MultipartMixedContentTest extends TestCase {
     content.writeTo(outputStream);
 
     assertEquals(expectedOutput.toString(), outputStream.toString());
+  }
+
+  public void testWriteTo_nullHeaders() throws IOException {
+    MockHttpTransport transport = new MockHttpTransport();
+    HttpRequest request1 = transport.createRequestFactory()
+        .buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL, new HttpContent() {
+
+          public long getLength() {
+            return -1;
+          }
+
+          public String getEncoding() {
+            return null;
+          }
+
+          public String getType() {
+            return null;
+          }
+
+          public void writeTo(OutputStream out) {
+          }
+
+          public boolean retrySupported() {
+            return true;
+          }
+        });
+    List<RequestInfo<?, ?>> requestInfos = new ArrayList<RequestInfo<?, ?>>();
+    RequestInfo<?, ?> requestInfo1 = new RequestInfo<Object, Object>(null, null, null, request1);
+    requestInfos.add(requestInfo1);
+    HttpContent content = new MultipartMixedContent(requestInfos, "END_OF_PART");
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    content.writeTo(outputStream);
+    assertEquals(new StringBuilder().append("--END_OF_PART\r\n")
+        .append("Content-Type: application/http\r\n")
+        .append("Content-Transfer-Encoding: binary\r\n")
+        .append("Content-ID: 1\r\n")
+        .append("\r\n")
+        .append("POST http://google.com/\r\n")
+        .append("Accept-Encoding: gzip\r\n")
+        .append("\r\n")
+        .append("\r\n")
+        .append("--END_OF_PART--\r\n")
+        .toString(), outputStream.toString());
   }
 }
