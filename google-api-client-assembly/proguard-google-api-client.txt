@@ -2,7 +2,7 @@
 #
 # See http://proguard.sourceforge.net/index.html#manual/usage.html
 
-# Needed by google-http-client to keep generic types and @Key annotations accessed via reflection
+# Needed to keep generic types and @Key annotations accessed via reflection
 
 -keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault
 
