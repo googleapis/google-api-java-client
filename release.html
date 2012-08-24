@@ -97,6 +97,7 @@ function esc() { echo $@ | sed "s/\./\\\./g"; }
 ESC_VER_NEXT=`esc ${VER_NEXT}`; ESC_VER_CUR=`esc ${VER_CUR}`; ESC_VER_PREV=`esc ${VER_PREV}`
 sed -i "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g" pom.xml
 sed -i "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g" */pom.xml
+for filename in google-api-client-assembly/android-properties/*.properties; do newname=`echo $filename | sed -e "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g"`; mv $filename google-api-client-assembly/android-properties/$newname; done
 sed -i -e "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g" -e "s@${ESC_VER_PREV}${VER_SUFFIX}@${ESC_VER_CUR}${VER_SUFFIX}@g" jdiff.xml
 sed -i -e "s@${ESC_VER_CUR}@${ESC_VER_NEXT}@g" -e "s@${ESC_VER_PREV}@${ESC_VER_CUR}@g" release.html
 echo -n && read -e -p "Version which comes after ${VER_NEXT}: " NV && sed -i -e "s@VER_NEXT=${ESC_VER_NEXT}@VER_NEXT=${NV}@g" release.html
@@ -113,7 +114,7 @@ the 1.11 Mercurial branch.
 <ul>
   <li>Consider changing value of $project.http.version and
   $project.oauth.version variables in pom.xml</li>
-  <li>Checkout the source, update dependencies.html, and push to central Maven repository (based on
+  <li>Checkout the source, update dependencies.html, update android-properties, and push to central Maven repository (based on
   instructions from <a href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Sonatype OSS Maven Repository Usage Guide</a>):<pre>
 cd /tmp
 rm -rf google-api-java-client
@@ -128,6 +129,9 @@ cp google-api-client-android/target/site/dependencies.html google-api-client-ass
 cp google-api-client-android2/target/site/dependencies.html google-api-client-assembly/dependencies/android2-dependencies.html
 cp google-api-client-appengine/target/site/dependencies.html google-api-client-assembly/dependencies/appengine-dependencies.html
 cp google-api-client-servlet/target/site/dependencies.html google-api-client-assembly/dependencies/servlet-dependencies.html
+
+for filename in google-api-client-assembly/android-properties/*.properties; do newname=`echo $filename | sed -e 's/-SNAPSHOT//g'`; mv $filename google-api-client-assembly/android-properties/$newname; done
+
 hg commit -m "prepare 1.11.0-beta for release"
 hg push
 
@@ -150,6 +154,8 @@ mvn release:perform -Darguments=-Dgpg.passphrase=<i>[YOUR GPG PASSPHRASE]</i>
   </li>
   <li>Start development of next bug fix version, by replacing <code>1.11.0-beta</code> with the next bug fix version:<pre>
 NEXT_VERSION=<i>(next bug fix version 1.11.X-beta)</i>
+sed -i 's/1.11.0-beta/$NEXT_VERSION/g' google-api-client-assembly/android-properties/*.properties
+for filename in google-api-client-assembly/android-properties/*.properties; do newname=`echo $filename | sed -e 's/1.11.0-beta/$NEXT_VERSION/g'`; mv $filename google-api-client-assembly/android-properties/$newname; done
 sed s/1.11.0-beta/$NEXT_VERSION/g &lt;jdiff.xml &gt;/tmp/jdiff.xml
 sed s/1.11.0-beta/$NEXT_VERSION/g &lt;release.html &gt;/tmp/release.html
 mv /tmp/jdiff.xml /tmp/release.html .
