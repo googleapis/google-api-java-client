@@ -17,7 +17,6 @@ package com.google.api.client.googleapis.services;
 import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.googleapis.subscriptions.SubscriptionManager;
 import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpMethod;
@@ -41,9 +40,6 @@ import java.util.Arrays;
  * @author Ravi Mistry
  */
 public class GoogleClient extends JsonHttpClient {
-
-  /** The {@link SubscriptionManager} which is used to make all subscription requests. */
-  private SubscriptionManager subscriptionManager;
 
   /** Whether discovery pattern checks should be suppressed on required parameters. */
   private boolean suppressPatternChecks;
@@ -138,7 +134,7 @@ public class GoogleClient extends JsonHttpClient {
    * @since 1.10
    * @deprecated (scheduled to be removed in 1.12) Use {@link #GoogleClient(HttpTransport,
    *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, JsonObjectParser,
-   *             SubscriptionManager, String, String, String, boolean)} instead.
+   *             String, String, String, boolean)} instead.
    */
   @Deprecated
   protected GoogleClient(HttpTransport transport,
@@ -169,8 +165,6 @@ public class GoogleClient extends JsonHttpClient {
    *        {@code null} for none
    * @param jsonFactory A factory for creating JSON parsers and serializers
    * @param jsonObjectParser JSON parser to use or {@code null} if unused
-   * @param subscriptionManager The subscription manager to use for subscription requests or
-   *        {@code null} for none
    * @param rootUrl The root URL of the service. Must end with a "/"
    * @param servicePath The service path of the service. Must end with a "/" and not begin with a
    *        "/". It is allowed to be an empty string {@code ""}
@@ -183,7 +177,6 @@ public class GoogleClient extends JsonHttpClient {
       HttpRequestInitializer httpRequestInitializer,
       JsonFactory jsonFactory,
       JsonObjectParser jsonObjectParser,
-      SubscriptionManager subscriptionManager,
       String rootUrl,
       String servicePath,
       String applicationName,
@@ -196,7 +189,6 @@ public class GoogleClient extends JsonHttpClient {
         rootUrl,
         servicePath,
         applicationName);
-    this.subscriptionManager = subscriptionManager;
     this.suppressPatternChecks = suppressPatternChecks;
   }
 
@@ -288,15 +280,6 @@ public class GoogleClient extends JsonHttpClient {
   }
 
   /**
-   * Returns the {@link SubscriptionManager} used by this service, or {@code null} for none.
-   *
-   * @since 1.11
-   */
-  public SubscriptionManager getSubscriptionManager() {
-    return subscriptionManager;
-  }
-
-  /**
    * Returns whether discovery pattern checks should be suppressed on required parameters.
    *
    * @since 1.11
@@ -316,32 +299,8 @@ public class GoogleClient extends JsonHttpClient {
    */
   public static class Builder extends JsonHttpClient.Builder {
 
-    /** Subscription manager used to create subscriptions. */
-    private SubscriptionManager subscriptionManager;
-
     /** Whether discovery pattern checks should be suppressed on required parameters. */
     private boolean suppressPatternChecks;
-
-    /**
-     * Returns the {@link SubscriptionManager} used to make subscription requests, or {@code null}
-     * for none.
-     *
-     * @since 1.11
-     */
-    public final SubscriptionManager getSubscriptionManager() {
-      return subscriptionManager;
-    }
-
-    /**
-     * Sets the {@link SubscriptionManager} used to make subscription requests, or {@code null} for
-     * none.
-     *
-     * @since 1.11
-     */
-    public Builder setSubscriptionManager(SubscriptionManager subscriptionManager) {
-      this.subscriptionManager = subscriptionManager;
-      return this;
-    }
 
     /**
      * Returns whether discovery pattern checks should be suppressed on required parameters.
@@ -414,7 +373,6 @@ public class GoogleClient extends JsonHttpClient {
           getHttpRequestInitializer(),
           getJsonFactory(),
           getObjectParser(),
-          getSubscriptionManager(),
           getRootUrl(),
           getServicePath(),
           getApplicationName(),

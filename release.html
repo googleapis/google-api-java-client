@@ -129,7 +129,6 @@ cp google-api-client-android/target/site/dependencies.html google-api-client-ass
 cp google-api-client-android2/target/site/dependencies.html google-api-client-assembly/dependencies/android2-dependencies.html
 cp google-api-client-appengine/target/site/dependencies.html google-api-client-assembly/dependencies/appengine-dependencies.html
 cp google-api-client-java6/target/site/dependencies.html google-api-client-assembly/dependencies/java6-dependencies.html
-cp google-api-client-servlet/target/site/dependencies.html google-api-client-assembly/dependencies/servlet-dependencies.html
 
 for filename in google-api-client-assembly/android-properties/*.properties; do newname=`echo $filename | sed -e 's/-SNAPSHOT//g'`; mv $filename google-api-client-assembly/android-properties/$newname; done
 
