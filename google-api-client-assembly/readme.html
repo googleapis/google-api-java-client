@@ -19,6 +19,7 @@
   <li>[deprecated] google-api-client-android2 is for Android SDK 2.1 (Eclair) & higher.</li>
   <li>google-api-client-appengine is for Google App Engine.</li>
   <li>google-api-client-servlet is for the HTTP Servlet environment.</li>
+  <li>google-api-client-java6 is for Java 6 & Higher.</li>
 </ul>
 
 <h3>Dependencies and Licenses</h3>
@@ -31,6 +32,7 @@ The dependency structure and licenses for the different libraries can be found h
   <li>[deprecated] google-api-client-android2: <a href='dependencies/android2-dependencies.html'>android2-dependencies.html</a></li>
   <li>google-api-client-appengine: <a href='dependencies/appengine-dependencies.html'>appengine-dependencies.html</a></li>
   <li>google-api-client-servlet: <a href='dependencies/servlet-dependencies.html'>servlet-dependencies.html</a></li>
+  <li>google-api-client-java6: <a href='dependencies/java6-dependencies.html'>java6-dependencies.html</a></li>
 </ul>
 
 <h3>Maven Usage</h3>
@@ -129,6 +131,17 @@ The following are the jars from the <a href='libs'>libs</a>
 folder required for general purpose Java 5 applications or a newer compatible version:
 <ul>
   <li>google-api-client-${project.version}.jar</li>
+  <li>google-api-client-java6-${project.version}.jar
+    <ul>
+      <li>google-oauth-client-java6-${project.oauth.version}.jar (only for JDK >= 6)</li>
+    </ul>
+  </li>
+  <li>google-oauth-client-jetty-${project.oauth.version}.jar
+    <ul>
+      <li>jetty-${project.jetty.version}.jar</li>
+      <li>jetty-util-${project.jetty.version}.jar</li>
+    </ul>
+  </li>
   <li>google-oauth-client-${project.oauth.version}.jar</li>
   <li>google-http-client-${project.http.version}.jar</li>
   <li>commons-logging-${project.commons-logging.version}.jar</li>

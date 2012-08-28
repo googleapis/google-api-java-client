@@ -55,7 +55,7 @@
     * google-api-client-assembly/.classpath
     * google-api-client-assembly/dependencies/<name>-dependencies.html
         (use mvn project-info-reports:dependencies and copy from
-        google-oauth-client-<name>/target/site/dependencies.html)
+        google-api-client-<name>/target/site/dependencies.html)
     * jdiff.xml
     * google-api-client-assembly/android-properties/*.properties
     * This pom.xml file below in the dependencyManagement and maven-javadoc-plugin sections
@@ -67,6 +67,7 @@
     <module>google-api-client-servlet</module>
     <module>google-api-client-android</module>
     <module>google-api-client-android2</module>
+    <module>google-api-client-java6</module>
   </modules>
 
   <dependencyManagement>
@@ -194,6 +195,11 @@
       </dependency>
       <dependency>
         <groupId>com.google.oauth-client</groupId>
+        <artifactId>google-oauth-client-java6</artifactId>
+        <version>${project.oauth.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.oauth-client</groupId>
         <artifactId>google-oauth-client-servlet</artifactId>
         <version>${project.oauth.version}</version>
       </dependency>
@@ -220,6 +226,11 @@
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-android2</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api-client</groupId>
+        <artifactId>google-api-client-java6</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
@@ -404,6 +415,10 @@
                 <group>
                   <title>google-api-client-android2</title>
                   <packages>com.google.api.client.googleapis.extensions.android2*</packages>
+                </group>
+                <group>
+                  <title>google-api-client-java6</title>
+                  <packages>com.google.api.client.googleapis.extensions.java6.*</packages>
                 </group>
               </groups>
               <windowtitle>google-api-java-client ${project.version}</windowtitle>

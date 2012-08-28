@@ -32,6 +32,7 @@
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.11.0-beta/google-api-client-appengine/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.11.0-beta/google-api-client-android/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.11.0-beta/google-api-client-android2/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.11.0-beta/google-api-client-java6/src/main/java" />
       </new>
     </jdiff>
   </target>
