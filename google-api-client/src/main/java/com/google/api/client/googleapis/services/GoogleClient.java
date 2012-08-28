@@ -45,6 +45,9 @@ public class GoogleClient extends JsonHttpClient {
   /** The {@link SubscriptionManager} which is used to make all subscription requests. */
   private SubscriptionManager subscriptionManager;
 
+  /** Whether discovery pattern checks should be suppressed on required parameters. */
+  private boolean suppressPatternChecks;
+
   /**
    * Constructor with required parameters.
    *
@@ -135,7 +138,7 @@ public class GoogleClient extends JsonHttpClient {
    * @since 1.10
    * @deprecated (scheduled to be removed in 1.12) Use {@link #GoogleClient(HttpTransport,
    *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, JsonObjectParser,
-   *             SubscriptionManager, String, String, String)} instead.
+   *             SubscriptionManager, String, String, String, boolean)} instead.
    */
   @Deprecated
   protected GoogleClient(HttpTransport transport,
@@ -183,7 +186,8 @@ public class GoogleClient extends JsonHttpClient {
       SubscriptionManager subscriptionManager,
       String rootUrl,
       String servicePath,
-      String applicationName) {
+      String applicationName,
+      boolean suppressPatternChecks) {
     super(transport,
         jsonHttpRequestInitializer,
         httpRequestInitializer,
@@ -193,6 +197,7 @@ public class GoogleClient extends JsonHttpClient {
         servicePath,
         applicationName);
     this.subscriptionManager = subscriptionManager;
+    this.suppressPatternChecks = suppressPatternChecks;
   }
 
 
@@ -292,6 +297,15 @@ public class GoogleClient extends JsonHttpClient {
   }
 
   /**
+   * Returns whether discovery pattern checks should be suppressed on required parameters.
+   *
+   * @since 1.11
+   */
+  public final boolean getSuppressPatternChecks() {
+    return suppressPatternChecks;
+  }
+
+  /**
    * Builder for {@link GoogleClient}.
    *
    * <p>
@@ -304,6 +318,9 @@ public class GoogleClient extends JsonHttpClient {
 
     /** Subscription manager used to create subscriptions. */
     private SubscriptionManager subscriptionManager;
+
+    /** Whether discovery pattern checks should be suppressed on required parameters. */
+    private boolean suppressPatternChecks;
 
     /**
      * Returns the {@link SubscriptionManager} used to make subscription requests, or {@code null}
@@ -323,6 +340,29 @@ public class GoogleClient extends JsonHttpClient {
      */
     public Builder setSubscriptionManager(SubscriptionManager subscriptionManager) {
       this.subscriptionManager = subscriptionManager;
+      return this;
+    }
+
+    /**
+     * Returns whether discovery pattern checks should be suppressed on required parameters.
+     *
+     * @since 1.11
+     */
+    public final boolean getSuppressPatternChecks() {
+      return suppressPatternChecks;
+    }
+
+    /**
+     * Sets whether discovery pattern checks should be suppressed on required parameters.
+     *
+     * <p>
+     * Default value is {@code false}.
+     * </p>
+     *
+     * @since 1.11
+     */
+    public Builder setSuppressPatternChecks(boolean suppressPatternChecks) {
+      this.suppressPatternChecks = suppressPatternChecks;
       return this;
     }
 
@@ -377,7 +417,8 @@ public class GoogleClient extends JsonHttpClient {
           getSubscriptionManager(),
           getRootUrl(),
           getServicePath(),
-          getApplicationName());
+          getApplicationName(),
+          getSuppressPatternChecks());
     }
   }
 }
