@@ -64,7 +64,6 @@
     <module>google-api-client</module>
     <module>google-api-client-assembly</module>
     <module>google-api-client-appengine</module>
-    <module>google-api-client-servlet</module>
     <module>google-api-client-android</module>
     <module>google-api-client-android2</module>
     <module>google-api-client-java6</module>
@@ -211,11 +210,6 @@
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-appengine</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.api-client</groupId>
-        <artifactId>google-api-client-servlet</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -403,10 +397,6 @@
                 <group>
                   <title>google-api-client-appengine</title>
                   <packages>com.google.api.client.googleapis.extensions.appengine*</packages>
-                </group>
-                <group>
-                  <title>google-api-client-servlet</title>
-                  <packages>com.google.api.client.googleapis.extensions.auth*</packages>
                 </group>
                 <group>
                   <title>google-api-client-android</title>
