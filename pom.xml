@@ -49,6 +49,8 @@
 
   <!--
     If you add a new module, make sure to also add it in the following places:
+    * below in the dependencyManagement and maven-javadoc-plugin sections
+    * jdiff.xml
     * release.html
     * google-api-client-assembly/pom.xml
     * google-api-client-assembly/readme.html
@@ -56,9 +58,7 @@
     * google-api-client-assembly/dependencies/<name>-dependencies.html
         (use mvn project-info-reports:dependencies and copy from
         google-api-client-<name>/target/site/dependencies.html)
-    * jdiff.xml
     * google-api-client-assembly/android-properties/*.properties
-    * This pom.xml file below in the dependencyManagement and maven-javadoc-plugin sections
   -->
   <modules>
     <module>google-api-client</module>
@@ -66,21 +66,11 @@
     <module>google-api-client-appengine</module>
     <module>google-api-client-servlet</module>
     <module>google-api-client-android</module>
-    <module>google-api-client-android2</module>
     <module>google-api-client-java6</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>android</groupId>
-        <artifactId>android</artifactId>
-        <!-- use https://github.com/mosabua/maven-android-sdk-deployer and run:
-        mvn install -P 4.1
-        TODO(yanivi): switch to central maven repo when either annotations.jar or 4.1 is available
-         -->
-        <version>4.1_r1</version>
-      </dependency>
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
@@ -154,16 +144,6 @@
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-android2</artifactId>
-        <version>${project.http.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-android3</artifactId>
-        <version>${project.http.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-appengine</artifactId>
         <version>${project.http.version}</version>
       </dependency>
@@ -221,11 +201,6 @@
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-android</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.api-client</groupId>
-        <artifactId>google-api-client-android2</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -411,10 +386,6 @@
                 <group>
                   <title>google-api-client-android</title>
                   <packages>com.google.api.client.googleapis.extensions.android.*</packages>
-                </group>
-                <group>
-                  <title>google-api-client-android2</title>
-                  <packages>com.google.api.client.googleapis.extensions.android2*</packages>
                 </group>
                 <group>
                   <title>google-api-client-java6</title>
