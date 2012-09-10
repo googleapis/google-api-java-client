@@ -37,7 +37,7 @@ import com.google.common.base.Preconditions;
  * </pre>
  *
  * @author Matthias Linder (mlinder)
- * @since 1.11
+ * @since 1.12
  */
 public class WebHookDeliveryMethod {
 
@@ -60,9 +60,9 @@ public class WebHookDeliveryMethod {
     url.set("url", callbackURL);
     this.url = url;
   }
-  
-  /** 
-   * Returns the URL this builder is currently building. 
+
+  /**
+   * Returns the URL this builder is currently building.
    */
   public final GenericUrl getUrl() {
     return url;

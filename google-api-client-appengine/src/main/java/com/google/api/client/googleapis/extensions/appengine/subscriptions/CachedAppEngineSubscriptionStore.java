@@ -40,7 +40,7 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory;
  * </pre>
  *
  * @author Matthias Linder (mlinder)
- * @since 1.11
+ * @since 1.12
  */
 public final class CachedAppEngineSubscriptionStore extends AppEngineSubscriptionStore {
 

@@ -76,42 +76,40 @@ public class MediaHttpUploaderTest extends TestCase {
     }
 
     @Override
-    public LowLevelHttpRequest buildPostRequest(String url) {
-      if (directUploadEnabled) {
-        if (directUploadWithMetadata) {
-          assertEquals(TEST_MULTIPART_REQUEST_URL, url);
-        } else {
-          assertEquals(TEST_DIRECT_REQUEST_URL, url);
-        }
-      } else {
-        assertEquals(TEST_RESUMABLE_REQUEST_URL, url);
-      }
-
-      return new MockLowLevelHttpRequest() {
-        @Override
-        public LowLevelHttpResponse execute() {
-          lowLevelExecCalls++;
-          if (!directUploadEnabled) {
-            // Assert that the required headers are set.
-            assertEquals(Integer.toString(contentLength),
-                getHeaders().get("X-Upload-Content-Length").get(0));
-            assertEquals(TEST_CONTENT_TYPE, getHeaders().get("X-Upload-Content-Type").get(0));
+    public LowLevelHttpRequest buildRequest(String name, String url) {
+      if (name.equals("POST")) {
+        if (directUploadEnabled) {
+          if (directUploadWithMetadata) {
+            assertEquals(TEST_MULTIPART_REQUEST_URL, url);
+          } else {
+            assertEquals(TEST_DIRECT_REQUEST_URL, url);
           }
-          // This is the initiation call. Return 200 with the upload URI.
-          MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
-          response.setStatusCode(200);
-          response.addHeader("Location", TEST_UPLOAD_URL);
-          return response;
+        } else {
+          assertEquals(TEST_RESUMABLE_REQUEST_URL, url);
         }
-      };
-    }
 
-    @Override
-    public LowLevelHttpRequest buildPutRequest(String url) {
+        return new MockLowLevelHttpRequest() {
+            @Override
+          public LowLevelHttpResponse execute() {
+            lowLevelExecCalls++;
+            if (!directUploadEnabled) {
+              // Assert that the required headers are set.
+              assertEquals(Integer.toString(contentLength),
+                  getHeaders().get("X-Upload-Content-Length").get(0));
+              assertEquals(TEST_CONTENT_TYPE, getHeaders().get("X-Upload-Content-Type").get(0));
+            }
+            // This is the initiation call. Return 200 with the upload URI.
+            MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+            response.setStatusCode(200);
+            response.addHeader("Location", TEST_UPLOAD_URL);
+            return response;
+          }
+        };
+      }
       assertEquals(TEST_UPLOAD_URL, url);
 
       return new MockLowLevelHttpRequest() {
-        @Override
+          @Override
         public LowLevelHttpResponse execute() {
           lowLevelExecCalls++;
           MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();

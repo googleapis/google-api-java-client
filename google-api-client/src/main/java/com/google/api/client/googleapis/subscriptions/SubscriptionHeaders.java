@@ -33,7 +33,7 @@ import com.google.api.client.util.Key;
  * </pre>
  *
  * @author Matthias Linder (mlinder)
- * @since 1.11
+ * @since 1.12
  */
 public final class SubscriptionHeaders extends GoogleHeaders {
 

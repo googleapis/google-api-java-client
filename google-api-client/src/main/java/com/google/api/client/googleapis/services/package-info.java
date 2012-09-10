@@ -20,9 +20,12 @@
  * possibly entirely removed in a future version of the library</b>
  * </p>
  *
- *
  * @since 1.6
  * @author Ravi Mistry
+ * @deprecated (scheduled to be removed in 1.13) Use
+ *             {@link com.google.api.client.googleapis.AbstractGoogleClient} or
+ *             {@link com.google.api.client.googleapis.GoogleKeyInitializer}
  */
 
 package com.google.api.client.googleapis.services;
+

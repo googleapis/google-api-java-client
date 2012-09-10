@@ -1,6 +1,4 @@
 /*
- * Copyright (c) 2011 Google Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
  *
@@ -12,16 +10,14 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.services;
+package com.google.api.client.googleapis.json;
 
-import com.google.api.client.googleapis.json.GoogleJsonError;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.HttpMethod;
+import com.google.api.client.googleapis.testing.json.MockGoogleJsonClient;
+import com.google.api.client.googleapis.testing.json.MockGoogleJsonClientRequest;
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
-import com.google.api.client.http.json.JsonHttpRequest;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
@@ -33,23 +29,20 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-import java.io.IOException;
-
 /**
- * Tests {@link GoogleJsonError}.
+ * Tests {@link AbstractGoogleJsonClient}.
  *
  * @author Yaniv Inbar
  */
-@Deprecated
-public class GoogleClientTest extends TestCase {
+public class AbstractGoogleJsonClientTest extends TestCase {
 
   @Test
-  public void testExecuteUnparsed_error() throws IOException {
+  public void testExecuteUnparsed_error() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildGetRequest(String url) {
+        @Override
+      public LowLevelHttpRequest buildRequest(String name, String url) {
         return new MockLowLevelHttpRequest() {
-          @Override
+            @Override
           public LowLevelHttpResponse execute() {
             MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
             result.setStatusCode(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED);
@@ -63,9 +56,10 @@ public class GoogleClientTest extends TestCase {
       }
     };
     JsonFactory jsonFactory = new JacksonFactory();
-    GoogleClient client =
-        new GoogleClient(transport, jsonFactory, HttpTesting.SIMPLE_URL, "test/", null);
-    JsonHttpRequest request = new JsonHttpRequest(client, HttpMethod.GET, "foo", null);
+    MockGoogleJsonClient client =
+        new MockGoogleJsonClient(transport, jsonFactory, HttpTesting.SIMPLE_URL, "", null);
+    MockGoogleJsonClientRequest<String> request =
+        new MockGoogleJsonClientRequest<String>(client, "GET", "foo", null, String.class);
     try {
       request.executeUnparsed();
       fail("expected " + GoogleJsonResponseException.class);

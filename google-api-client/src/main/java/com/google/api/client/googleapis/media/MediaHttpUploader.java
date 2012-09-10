@@ -21,6 +21,7 @@ import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpMethod;
+import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -53,6 +54,7 @@ import java.io.InputStream;
  *
  * @author rmistry@google.com (Ravi Mistry)
  */
+@SuppressWarnings("deprecation")
 public final class MediaHttpUploader {
 
   /**
@@ -115,7 +117,18 @@ public final class MediaHttpUploader {
    * upload) or {@link HttpMethod#PUT} (for media update). The default value is
    * {@link HttpMethod#POST}.
    */
+  @Deprecated
   private HttpMethod initiationMethod = HttpMethod.POST;
+
+  /**
+   * The HTTP method used for the initiation request.
+   *
+   * <p>
+   * Can only be {@link HttpMethods#POST} (for media upload) or {@link HttpMethods#PUT} (for media
+   * update). The default value is {@link HttpMethods#POST}.
+   * </p>
+   */
+  private String initiationRequestMethod = HttpMethods.POST;
 
   /** The HTTP headers used in the initiation request. */
   private GoogleHeaders initiationHeaders = new GoogleHeaders();
@@ -327,7 +340,7 @@ public final class MediaHttpUploader {
     initiationRequestUrl.put("uploadType", "resumable");
     HttpContent content = metadata == null ? new EmptyContent() : metadata;
     HttpRequest request =
-        requestFactory.buildRequest(initiationMethod, initiationRequestUrl, content);
+        requestFactory.buildRequest(initiationRequestMethod, initiationRequestUrl, content);
     addMethodOverride(request);
     initiationHeaders.setUploadContentType(mediaContent.getType());
     initiationHeaders.setUploadContentLength(getMediaContentLength());
@@ -368,9 +381,8 @@ public final class MediaHttpUploader {
   private void setContentAndHeadersOnCurrentRequest(long bytesWritten) throws IOException {
     int blockSize = (int) Math.min(chunkSize, getMediaContentLength() - bytesWritten);
     // TODO(rmistry): Add tests for LimitInputStream.
-    InputStreamContent contentChunk =
-        new InputStreamContent(mediaContent.getType(),
-          new LimitInputStream(contentInputStream, blockSize));
+    InputStreamContent contentChunk = new InputStreamContent(
+        mediaContent.getType(), new LimitInputStream(contentInputStream, blockSize));
     contentChunk.setCloseInputStream(false);
     contentChunk.setRetrySupported(true);
     contentChunk.setLength(blockSize);
@@ -550,20 +562,54 @@ public final class MediaHttpUploader {
    * Sets the HTTP method used for the initiation request. Can only be {@link HttpMethod#POST} (for
    * media upload) or {@link HttpMethod#PUT} (for media update). The default value is
    * {@link HttpMethod#POST}.
+   * @deprecated (scheduled to be removed in 1.13) Use {@link #setInitiationRequestMethod} instead
    */
+  @Deprecated
   public MediaHttpUploader setInitiationMethod(HttpMethod initiationMethod) {
-    Preconditions.checkArgument(
-        initiationMethod == HttpMethod.POST || initiationMethod == HttpMethod.PUT);
-    this.initiationMethod = initiationMethod;
-    return this;
+    return setInitiationRequestMethod(initiationMethod.toString());
   }
 
   /**
    * Returns the HTTP method used for the initiation request. The default value is
    * {@link HttpMethod#POST}.
+   * @deprecated (scheduled to be removed in 1.13) Use {@link #getInitiationRequestMethod} instead
    */
+  @Deprecated
   public HttpMethod getInitiationMethod() {
     return initiationMethod;
+  }
+
+  /**
+   * Returns the HTTP method used for the initiation request.
+   *
+   * <p>
+   * The default value is {@link HttpMethods#POST}.
+   * </p>
+   *
+   * @since 1.12
+   */
+  public String getInitiationRequestMethod() {
+    return initiationRequestMethod;
+  }
+
+  /**
+   * Sets the HTTP method used for the initiation request.
+   *
+   * <p>
+   * Can only be {@link HttpMethods#POST} (for media upload) or {@link HttpMethods#PUT} (for media
+   * update). The default value is {@link HttpMethods#POST}.
+   * </p>
+   *
+   * @since 1.12
+   */
+  @SuppressWarnings("deprecation")
+  public MediaHttpUploader setInitiationRequestMethod(String initiationRequestMethod) {
+    Preconditions.checkArgument(initiationRequestMethod.equals(HttpMethods.POST)
+        || initiationRequestMethod.equals(HttpMethods.PUT));
+    this.initiationRequestMethod = initiationRequestMethod;
+    this.initiationMethod =
+        initiationRequestMethod.equals(HttpMethods.POST) ? HttpMethod.POST : HttpMethod.PUT;
+    return this;
   }
 
   /** Sets the HTTP headers used for the initiation request. */

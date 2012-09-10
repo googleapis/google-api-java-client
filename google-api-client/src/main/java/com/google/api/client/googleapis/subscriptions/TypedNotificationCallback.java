@@ -58,7 +58,7 @@ import java.nio.charset.Charset;
  *
  * @param <T> Type of the data contained within a notification
  * @author Matthias Linder (mlinder)
- * @since 1.11
+ * @since 1.12
  */
 @SuppressWarnings("serial")
 public abstract class TypedNotificationCallback<T> implements NotificationCallback {

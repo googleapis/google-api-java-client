@@ -18,7 +18,7 @@ import com.google.api.client.googleapis.batch.BatchRequest.RequestInfo;
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpMethod;
+import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
@@ -39,12 +39,12 @@ import java.util.List;
 public class MultipartMixedContentTest extends TestCase {
 
   public void testMultipartMixedContent() throws IOException {
-    HttpMethod request1Method = HttpMethod.POST;
+    String request1Method = HttpMethods.POST;
     String request1Url = "http://test/dummy/url1";
     String request1ContentType = "application/json";
     String request1Content = "{\"data\":{\"foo\":{\"v1\":{}}}}";
 
-    HttpMethod request2Method = HttpMethod.GET;
+    String request2Method = HttpMethods.GET;
     String request2Url = "http://test/dummy/url2";
 
     StringBuilder expectedOutput = new StringBuilder();

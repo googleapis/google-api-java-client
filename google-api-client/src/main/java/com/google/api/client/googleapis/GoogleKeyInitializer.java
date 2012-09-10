@@ -1,6 +1,4 @@
 /*
- * Copyright (c) 2012 Google Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
  *
@@ -12,13 +10,10 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.services;
-
-import com.google.api.client.http.json.JsonHttpRequest;
-import com.google.api.client.http.json.JsonHttpRequestInitializer;
+package com.google.api.client.googleapis;
 
 /**
- * JSON HTTP request initializer that specifies a Google API key for all requests.
+ * Google client request initializer that specifies a Google API key for all requests.
  *
  * <p>
  * This is needed when doing unauthenticated access to Google APIs. Otherwise, you will only be able
@@ -29,18 +24,16 @@ import com.google.api.client.http.json.JsonHttpRequestInitializer;
  * </p>
  *
  * <p>
- * Note that this is not needed when doing authenticated access with OAuth 2.0, because the OAuth
- * 2.0 client ID is already associated with the same project as the API key.
+ * Note that this is not needed when doing authenticated access with an OAuth 2.0 access token,
+ * because the OAuth 2.0 client ID is already associated with the same project as the API key.
  * </p>
  *
- * @since 1.8
+ * @since 1.12
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.13) Use
- *             {@link com.google.api.client.googleapis.GoogleKeyInitializer} instead.
  */
-@Deprecated
-public class GoogleKeyInitializer implements JsonHttpRequestInitializer {
+public class GoogleKeyInitializer implements GoogleClientRequestInitializer {
 
+  /** API key. */
   private final String key;
 
   /**
@@ -50,7 +43,7 @@ public class GoogleKeyInitializer implements JsonHttpRequestInitializer {
     this.key = key;
   }
 
-  public void initialize(JsonHttpRequest request) {
+  public void initialize(AbstractGoogleClientRequest<?> request) {
     request.put("key", key);
   }
 }

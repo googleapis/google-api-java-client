@@ -60,7 +60,7 @@ public class MediaHttpDownloaderTest extends TestCase {
     }
 
     @Override
-    public LowLevelHttpRequest buildGetRequest(String url) {
+    public LowLevelHttpRequest buildRequest(String name, String url) {
       assertEquals(TEST_REQUEST_URL, url);
 
       return new MockLowLevelHttpRequest() {

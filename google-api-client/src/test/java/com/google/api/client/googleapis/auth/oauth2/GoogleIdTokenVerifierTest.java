@@ -91,7 +91,7 @@ public class GoogleIdTokenVerifierTest extends TestCase {
   public void testLoadCerts() throws Exception {
     GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new MockHttpTransport() {
       @Override
-      public LowLevelHttpRequest buildGetRequest(String url) {
+      public LowLevelHttpRequest buildRequest(String name, String url) {
         return new MockLowLevelHttpRequest() {
           @Override
           public LowLevelHttpResponse execute() {
