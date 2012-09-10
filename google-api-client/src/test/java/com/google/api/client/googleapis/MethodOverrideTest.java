@@ -14,56 +14,66 @@
 
 package com.google.api.client.googleapis;
 
-import com.google.api.client.http.HttpMethod;
+import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.testing.http.MockHttpTransport;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 import junit.framework.TestCase;
 
 import java.io.IOException;
-import java.util.EnumSet;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Tests {@link MethodOverride}.
  *
  * @author Yaniv Inbar
  */
+@SuppressWarnings("deprecation")
 public class MethodOverrideTest extends TestCase {
+
+  private static final List<String> OVERRIDDEN_METHODS = ImmutableList.of("FOO",
+      HttpMethods.DELETE,
+      HttpMethods.HEAD,
+      HttpMethods.OPTIONS,
+      "PATCH",
+      HttpMethods.PUT,
+      HttpMethods.TRACE);
+
+  private static final List<String> SUPPORTED_METHODS = ImmutableList.<String>builder()
+      .addAll(OVERRIDDEN_METHODS).add(HttpMethods.GET, HttpMethods.POST).build();
 
   public MethodOverrideTest(String name) {
     super(name);
   }
 
   public void testIntercept() throws IOException {
-    MockHttpTransport transport = new MockHttpTransport();
-    subtestIntercept(EnumSet.noneOf(HttpMethod.class), transport, new MethodOverride());
-    subtestIntercept(EnumSet.noneOf(HttpMethod.class), transport,
-        new MethodOverride(EnumSet.noneOf(HttpMethod.class)));
-    subtestIntercept(
-        EnumSet.of(HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.HEAD, HttpMethod.PATCH), transport,
-        new MethodOverride(EnumSet.allOf(HttpMethod.class)));
-    transport = MockHttpTransport
-        .builder().setSupportedOptionalMethods(ImmutableSet.<HttpMethod>of()).build();
-    transport.getSupportedOptionalMethods().clear();
-    subtestIntercept(
-        EnumSet.of(HttpMethod.HEAD, HttpMethod.PATCH), transport, new MethodOverride());
+    subtestIntercept(ImmutableSet.<String>of(), new MockHttpTransport(), new MethodOverride());
+    subtestIntercept(OVERRIDDEN_METHODS, new MockHttpTransport(),
+        new MethodOverride.Builder().setOverrideAllMethods(true).build());
+    subtestIntercept(OVERRIDDEN_METHODS, MockHttpTransport.builder()
+        .setSupportedMethods(ImmutableSet.<String>of(HttpMethods.GET, HttpMethods.POST)).build(),
+        new MethodOverride());
   }
 
-  private void subtestIntercept(EnumSet<HttpMethod> methodsThatShouldOverride,
+  private void subtestIntercept(Collection<String> methodsThatShouldOverride,
       HttpTransport transport, MethodOverride interceptor) throws IOException {
-    for (HttpMethod method : HttpMethod.values()) {
-      subtestIntercept(methodsThatShouldOverride.contains(method), transport, interceptor, method);
+    for (String requestMethod : SUPPORTED_METHODS) {
+      subtestIntercept(
+          methodsThatShouldOverride.contains(requestMethod), transport, interceptor, requestMethod);
     }
   }
 
   private void subtestIntercept(boolean shouldOverride, HttpTransport transport,
-      MethodOverride interceptor, HttpMethod method) throws IOException {
-    HttpRequest request = transport.createRequestFactory().buildRequest(method, null, null);
+      MethodOverride interceptor, String requestMethod) throws IOException {
+    HttpRequest request = transport.createRequestFactory().buildRequest(requestMethod, null, null);
     interceptor.intercept(request);
-    assertEquals(method.toString(), shouldOverride ? HttpMethod.POST : method, request.getMethod());
-    assertEquals(method.toString(), shouldOverride ? method.toString() : null,
+    assertEquals(requestMethod, shouldOverride ? HttpMethods.POST : requestMethod,
+        request.getRequestMethod());
+    assertEquals(requestMethod, shouldOverride ? requestMethod : null,
         request.getHeaders().get("X-HTTP-Method-Override"));
   }
 }

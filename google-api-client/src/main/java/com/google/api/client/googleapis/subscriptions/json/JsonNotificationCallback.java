@@ -58,7 +58,7 @@ import com.google.api.client.util.ObjectParser;
  *
  * @param <T> Type of the data contained within a notification
  * @author Matthias Linder (mlinder)
- * @since 1.11
+ * @since 1.12
  */
 @SuppressWarnings("serial")
 public abstract class JsonNotificationCallback<T> extends TypedNotificationCallback<T> {

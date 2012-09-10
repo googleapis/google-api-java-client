@@ -35,7 +35,7 @@ import com.google.common.base.Strings;
  * </pre>
  *
  * @author Matthias Linder (mlinder)
- * @since 1.11
+ * @since 1.12
  */
 public final class SubscriptionManager {
 

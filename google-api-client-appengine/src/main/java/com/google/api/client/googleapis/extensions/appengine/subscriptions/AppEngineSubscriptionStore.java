@@ -48,7 +48,7 @@ import java.util.List;
  * </pre>
  *
  * @author Matthias Linder (mlinder)
- * @since 1.11
+ * @since 1.12
  */
 public class AppEngineSubscriptionStore implements SubscriptionStore {
 

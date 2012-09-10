@@ -144,7 +144,7 @@ public class SubscriptionManagerTest extends TestCase {
       }
 
       @Override
-      public LowLevelHttpRequest buildGetRequest(String url) {
+      public LowLevelHttpRequest buildRequest(String name, String url) {
         return new FakeLowLevelHttpRequest(executor);
       }
     }

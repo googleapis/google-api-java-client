@@ -33,7 +33,7 @@ import com.google.common.base.Preconditions;
  * </p>
  *
  * @author Matthias Linder (mlinder)
- * @since 1.11
+ * @since 1.12
  */
 public abstract class Notification {
 

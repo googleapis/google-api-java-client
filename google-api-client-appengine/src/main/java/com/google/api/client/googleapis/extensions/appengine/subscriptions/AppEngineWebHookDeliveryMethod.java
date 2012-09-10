@@ -38,7 +38,7 @@ import com.google.api.client.googleapis.extensions.servlet.subscriptions.WebHook
  * </pre>
  *
  * @author Matthias Linder (mlinder)
- * @since 1.11
+ * @since 1.12
  */
 public class AppEngineWebHookDeliveryMethod extends WebHookDeliveryMethod {
 

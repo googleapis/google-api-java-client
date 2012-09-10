@@ -94,7 +94,7 @@ class MultipartMixedContent extends AbstractHttpContent {
       writer.write(CR_LF);
 
       // Write the batch method and path.
-      writer.write(request.getMethod().toString());
+      writer.write(request.getRequestMethod());
       writer.write(" ");
       writer.write(request.getUrl().build());
       writer.write(CR_LF);

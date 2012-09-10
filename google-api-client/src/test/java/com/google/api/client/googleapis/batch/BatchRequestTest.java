@@ -7,18 +7,18 @@ import com.google.api.client.googleapis.batch.BatchRequest.RequestInfo;
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
 import com.google.api.client.googleapis.json.GoogleJsonErrorContainer;
+import com.google.api.client.googleapis.testing.MockGoogleClient;
+import com.google.api.client.googleapis.testing.MockGoogleClientRequest;
 import com.google.api.client.http.ExponentialBackOffPolicy;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteInterceptor;
-import com.google.api.client.http.HttpMethod;
+import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
-import com.google.api.client.http.json.JsonHttpClient;
-import com.google.api.client.http.json.JsonHttpRequest;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson.JacksonFactory;
@@ -30,7 +30,6 @@ import com.google.api.client.util.ObjectParser;
 
 import junit.framework.TestCase;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -45,8 +44,8 @@ public class BatchRequestTest extends TestCase {
   private static final String TEST_BATCH_URL = "http://www.testgoogleapis.com/batch";
   private static final String URI_TEMPLATE1 = "uri/template/1";
   private static final String URI_TEMPLATE2 = "uri/template/2";
-  private static final HttpMethod METHOD1 = HttpMethod.GET;
-  private static final HttpMethod METHOD2 = HttpMethod.POST;
+  private static final String METHOD1 = HttpMethods.GET;
+  private static final String METHOD2 = HttpMethods.POST;
   private static final String ERROR_MSG = "Error message";
   private static final String ERROR_REASON = "notFound";
   private static final int ERROR_CODE = 503;
@@ -212,7 +211,7 @@ public class BatchRequestTest extends TestCase {
     }
 
     @Override
-    public LowLevelHttpRequest buildPostRequest(String url) {
+    public LowLevelHttpRequest buildRequest(String name, String url) {
       actualCalls++;
       return new MockLowLevelHttpRequest() {
           @Override
@@ -227,15 +226,15 @@ public class BatchRequestTest extends TestCase {
           if (returnSuccessAuthenticatedContent || (testExponentialBackOff && actualCalls > 1)
               || (testRedirect && actualCalls > 1)) {
             if (returnSuccessAuthenticatedContent || actualCalls == callsBeforeSuccess) {
-            responseContent.append("--" + RESPONSE_BOUNDARY + "\n")
-                    .append("Content-Type: application/http\n")
-                    .append("Content-Transfer-Encoding: binary\n")
-                    .append("Content-ID: response-1\n\n")
-                    .append("HTTP/1.1 200 OK\n")
-                    .append("Content-Type: application/json; charset=UTF-8\n")
-                    .append("Content-Length: " + content2.length() + "\n\n")
-                    .append(content2 + "\n\n")
-                    .append("--" + RESPONSE_BOUNDARY + "--\n\n");
+              responseContent.append("--" + RESPONSE_BOUNDARY + "\n")
+                  .append("Content-Type: application/http\n")
+                  .append("Content-Transfer-Encoding: binary\n")
+                  .append("Content-ID: response-1\n\n")
+                  .append("HTTP/1.1 200 OK\n")
+                  .append("Content-Type: application/json; charset=UTF-8\n")
+                  .append("Content-Length: " + content2.length() + "\n\n")
+                  .append(content2 + "\n\n")
+                  .append("--" + RESPONSE_BOUNDARY + "--\n\n");
             } else {
               String errorContent = new StringBuilder().append(
                   "{\"error\": { \"errors\": [{\"domain\": \"" + ERROR_DOMAIN + "\",").append(
@@ -253,8 +252,7 @@ public class BatchRequestTest extends TestCase {
                   .append("--" + RESPONSE_BOUNDARY + "--\n\n");
             }
           } else if (returnErrorAuthenticatedContent) {
-            responseContent.append(
-                "Content-Type: application/http\n")
+            responseContent.append("Content-Type: application/http\n")
                 .append("Content-Transfer-Encoding: binary\n").append("Content-ID: response-1\n\n");
             String errorContent = new StringBuilder().append(
                 "{\"error\": { \"errors\": [{\"domain\": \"" + ERROR_DOMAIN + "\",").append(
@@ -315,10 +313,7 @@ public class BatchRequestTest extends TestCase {
     }
   }
 
-  private static class MockCredential
-      implements
-        HttpRequestInitializer,
-        HttpExecuteInterceptor {
+  private static class MockCredential implements HttpRequestInitializer, HttpExecuteInterceptor {
 
     boolean initializerCalled = false;
     boolean interceptorCalled = false;
@@ -339,18 +334,19 @@ public class BatchRequestTest extends TestCase {
 
   private BatchRequest getBatchPopulatedWithRequests(boolean testServerError,
       boolean testAuthenticationError, boolean returnSuccessAuthenticatedContent,
-      boolean testExponentialBackOff, boolean testRedirect) throws IOException {
+      boolean testExponentialBackOff, boolean testRedirect) throws Exception {
     transport = new MockTransport(
         testServerError, testAuthenticationError, testExponentialBackOff, testRedirect);
-    JsonHttpClient client =
-        new JsonHttpClient(transport, new JacksonFactory(), ROOT_URL, SERVICE_PATH, null);
-    JsonHttpRequest jsonHttpRequest1 = new JsonHttpRequest(client, METHOD1, URI_TEMPLATE1, null);
-    JsonHttpRequest jsonHttpRequest2 = new JsonHttpRequest(client, METHOD2, URI_TEMPLATE2, null);
+    MockGoogleClient client = new MockGoogleClient(transport, null, ROOT_URL, SERVICE_PATH, null);
+    MockGoogleClientRequest<String> jsonHttpRequest1 =
+        new MockGoogleClientRequest<String>(client, METHOD1, URI_TEMPLATE1, null, String.class);
+    MockGoogleClientRequest<String> jsonHttpRequest2 =
+        new MockGoogleClientRequest<String>(client, METHOD2, URI_TEMPLATE2, null, String.class);
     credential = new MockCredential();
 
     ObjectParser parser = new JsonObjectParser(new JacksonFactory());
-    BatchRequest batchRequest = new BatchRequest(transport, credential).setBatchUrl(
-        new GenericUrl(TEST_BATCH_URL));
+    BatchRequest batchRequest =
+        new BatchRequest(transport, credential).setBatchUrl(new GenericUrl(TEST_BATCH_URL));
     HttpRequest request1 = jsonHttpRequest1.buildHttpRequest();
     request1.setParser(parser);
     HttpRequest request2 = jsonHttpRequest2.buildHttpRequest();
@@ -383,8 +379,8 @@ public class BatchRequestTest extends TestCase {
         ROOT_URL + SERVICE_PATH + URI_TEMPLATE1, requestInfos.get(0).request.getUrl().build());
     assertEquals(
         ROOT_URL + SERVICE_PATH + URI_TEMPLATE2, requestInfos.get(1).request.getUrl().build());
-    assertEquals(METHOD1, requestInfos.get(0).request.getMethod());
-    assertEquals(METHOD2, requestInfos.get(1).request.getMethod());
+    assertEquals(METHOD1, requestInfos.get(0).request.getRequestMethod());
+    assertEquals(METHOD2, requestInfos.get(1).request.getRequestMethod());
   }
 
   public void testExecute() throws Exception {
@@ -429,13 +425,14 @@ public class BatchRequestTest extends TestCase {
 
   public void subTestExecuteWithVoidCallback(boolean testServerError) throws Exception {
     MockTransport transport = new MockTransport(testServerError, false, false, false);
-    JsonHttpClient client =
-        new JsonHttpClient(transport, new JacksonFactory(), ROOT_URL, SERVICE_PATH, null);
-    JsonHttpRequest jsonHttpRequest1 = new JsonHttpRequest(client, METHOD1, URI_TEMPLATE1, null);
-    JsonHttpRequest jsonHttpRequest2 = new JsonHttpRequest(client, METHOD2, URI_TEMPLATE2, null);
+    MockGoogleClient client = new MockGoogleClient(transport, null, ROOT_URL, SERVICE_PATH, null);
+    MockGoogleClientRequest<String> jsonHttpRequest1 =
+        new MockGoogleClientRequest<String>(client, METHOD1, URI_TEMPLATE1, null, String.class);
+    MockGoogleClientRequest<String> jsonHttpRequest2 =
+        new MockGoogleClientRequest<String>(client, METHOD2, URI_TEMPLATE2, null, String.class);
     ObjectParser parser = new JsonObjectParser(new JacksonFactory());
-    BatchRequest batchRequest = new BatchRequest(transport, null).setBatchUrl(
-        new GenericUrl(TEST_BATCH_URL));
+    BatchRequest batchRequest =
+        new BatchRequest(transport, null).setBatchUrl(new GenericUrl(TEST_BATCH_URL));
     HttpRequest request1 = jsonHttpRequest1.buildHttpRequest();
     request1.setParser(parser);
     HttpRequest request2 = jsonHttpRequest2.buildHttpRequest();

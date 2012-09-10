@@ -1,6 +1,4 @@
 /*
- * Copyright (c) 2012 Google Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
  *
@@ -13,7 +11,7 @@
  */
 
 /**
- * Test utilities for the Subscriptions extension package.
+ * Test utilities for the {@code com.google.api.client.googleapis} package.
  *
  * <p>
  * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
@@ -21,8 +19,8 @@
  * </p>
  *
  * @since 1.12
- * @author Matthias Linder (mlinder)
+ * @author Yaniv Inbar
  */
 
-package com.google.api.client.googleapis.testing.subscriptions;
+package com.google.api.client.googleapis.testing;
 
