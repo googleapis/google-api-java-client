@@ -17,6 +17,7 @@ import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.batch.json.JsonBatchCallback;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.UriTemplate;
 import com.google.api.client.http.json.JsonHttpContent;
 
@@ -36,11 +37,12 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
   /**
    * @param client Google client
    * @param method HTTP Method
-   * @param uriTemplate URI template for the path relative to the root URL specified in the Google
-   *        client. If it starts with a "/" the base path from the base URL will be stripped out.
-   *        The URI template can also be a full URL. URI template expansion is done using
+   * @param uriTemplate URI template for the path relative to the base URL. If it starts with a "/"
+   *        the base path from the base URL will be stripped out. The URI template can also be a
+   *        full URL. URI template expansion is done using
    *        {@link UriTemplate#expand(String, String, Object, boolean)}
    * @param content A POJO that can be serialized into JSON or {@code null} for none
+   * @param responseClass response class to parse into
    */
   protected AbstractGoogleJsonClientRequest(AbstractGoogleJsonClient client, String method,
       String uriTemplate, Object content, Class<T> responseClass) {
@@ -51,9 +53,9 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
   /**
    * @param client Google client
    * @param method HTTP Method
-   * @param uriTemplate URI template for the path relative to the root URL specified in the Google
-   *        client. If it starts with a "/" the base path from the base URL will be stripped out.
-   *        The URI template can also be a full URL. URI template expansion is done using
+   * @param uriTemplate URI template for the path relative to the base URL. If it starts with a "/"
+   *        the base path from the base URL will be stripped out. The URI template can also be a
+   *        full URL. URI template expansion is done using
    *        {@link UriTemplate#expand(String, String, Object, boolean)}
    * @param content HTTP content or {@code null} for none
    */
@@ -107,5 +109,14 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
   public final void queue(BatchRequest batchRequest, JsonBatchCallback<T> callback)
       throws Exception {
     super.queue(batchRequest, GoogleJsonErrorContainer.class, callback);
+  }
+
+  @Override
+  public HttpResponse executeUnparsed() throws Exception {
+    HttpResponse response = super.executeUnparsed();
+    if (getMediaHttpUploader() != null && !response.isSuccessStatusCode()) {
+      throw GoogleJsonResponseException.from(getClient().getJsonFactory(), response);
+    }
+    return response;
   }
 }

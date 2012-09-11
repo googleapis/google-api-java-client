@@ -89,14 +89,7 @@ public abstract class AbstractGoogleClient {
   protected AbstractGoogleClient(HttpTransport transport,
       HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
       ObjectParser objectParser) {
-    this(transport,
-        httpRequestInitializer,
-        rootUrl,
-        servicePath,
-        objectParser,
-        null,
-        null,
-        null,
+    this(transport, httpRequestInitializer, rootUrl, servicePath, objectParser, null, null, null,
         false);
   }
 
@@ -114,13 +107,9 @@ public abstract class AbstractGoogleClient {
    *        parameters
    */
   protected AbstractGoogleClient(HttpTransport transport,
-      HttpRequestInitializer httpRequestInitializer,
-      String rootUrl,
-      String servicePath,
-      ObjectParser objectParser,
-      GoogleClientRequestInitializer googleClientRequestInitializer,
-      String applicationName,
-      SubscriptionManager subscriptionManager,
+      HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
+      ObjectParser objectParser, GoogleClientRequestInitializer googleClientRequestInitializer,
+      String applicationName, SubscriptionManager subscriptionManager,
       boolean suppressPatternChecks) {
     this.googleClientRequestInitializer = googleClientRequestInitializer;
     this.rootUrl = normalizeRootUrl(rootUrl);
@@ -162,7 +151,7 @@ public abstract class AbstractGoogleClient {
    * {@code "https://www.googleapis.com/tasks/v1/"}.
    *
    * <p>
-   * Must end with a "/".
+   * Must end with a "/". It is guaranteed to be equal to {@code getRootUrl() + getServicePath()}.
    * </p>
    */
   public final String getBaseUrl() {
