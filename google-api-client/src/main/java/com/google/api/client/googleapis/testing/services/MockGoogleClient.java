@@ -10,34 +10,33 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.testing.json;
+package com.google.api.client.googleapis.testing.services;
 
-import com.google.api.client.googleapis.GoogleClientRequestInitializer;
-import com.google.api.client.googleapis.json.AbstractGoogleJsonClient;
+import com.google.api.client.googleapis.services.AbstractGoogleClient;
+import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.google.api.client.googleapis.subscriptions.SubscriptionManager;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.JsonObjectParser;
+import com.google.api.client.util.ObjectParser;
 
 /**
- * Thread-safe mock Google JSON client.
+ * Thread-safe mock Google client.
  *
  * @since 1.12
  * @author Yaniv Inbar
  */
-public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
+public class MockGoogleClient extends AbstractGoogleClient {
 
   /**
    * @param transport HTTP transport
-   * @param jsonFactory JSON factory
+   * @param httpRequestInitializer HTTP request initializer or {@code null} for none
    * @param rootUrl root URL of the service
    * @param servicePath service path
-   * @param httpRequestInitializer HTTP request initializer or {@code null} for none
+   * @param objectParser object parser
    */
-  public MockGoogleJsonClient(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
-      String servicePath, HttpRequestInitializer httpRequestInitializer) {
-    super(transport, jsonFactory, rootUrl, servicePath, httpRequestInitializer);
+  public MockGoogleClient(HttpTransport transport, HttpRequestInitializer httpRequestInitializer,
+      String rootUrl, String servicePath, ObjectParser objectParser) {
+    super(transport, httpRequestInitializer, rootUrl, servicePath, objectParser);
   }
 
   /**
@@ -45,7 +44,7 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
    * @param httpRequestInitializer HTTP request initializer or {@code null} for none
    * @param rootUrl root URL of the service
    * @param servicePath service path
-   * @param jsonObjectParser JSON object parser
+   * @param objectParser object parser or {@code null} for none
    * @param googleClientRequestInitializer Google request initializer or {@code null} for none
    * @param applicationName application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
@@ -53,11 +52,11 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
    */
-  public MockGoogleJsonClient(HttpTransport transport,
+  public MockGoogleClient(HttpTransport transport,
       HttpRequestInitializer httpRequestInitializer,
       String rootUrl,
       String servicePath,
-      JsonObjectParser jsonObjectParser,
+      ObjectParser objectParser,
       GoogleClientRequestInitializer googleClientRequestInitializer,
       String applicationName,
       SubscriptionManager subscriptionManager,
@@ -66,7 +65,7 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
         httpRequestInitializer,
         rootUrl,
         servicePath,
-        jsonObjectParser,
+        objectParser,
         googleClientRequestInitializer,
         applicationName,
         subscriptionManager,
@@ -74,29 +73,28 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
   }
 
   /**
-   * Builder for {@link MockGoogleJsonClient}.
+   * Builder for {@link MockGoogleClient}.
    *
    * <p>
    * Implementation is not thread-safe.
    * </p>
    */
-  public static class Builder extends AbstractGoogleJsonClient.Builder {
+  public static class Builder extends AbstractGoogleClient.Builder {
 
     /**
-     * @param transport HTTP transport
-     * @param jsonFactory JSON factory
-     * @param rootUrl root URL of the service
+     * @param transport The transport to use for requests
+     * @param rootUrl root URL of the service. Must end with a "/"
      * @param servicePath service path
      * @param httpRequestInitializer HTTP request initializer or {@code null} for none
      */
-    protected Builder(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
-        String servicePath, HttpRequestInitializer httpRequestInitializer) {
-      super(transport, jsonFactory, rootUrl, servicePath, httpRequestInitializer);
+    public Builder(HttpTransport transport, String rootUrl, String servicePath,
+        ObjectParser objectParser, HttpRequestInitializer httpRequestInitializer) {
+      super(transport, rootUrl, servicePath, objectParser, httpRequestInitializer);
     }
 
     @Override
-    public MockGoogleJsonClient build() {
-      return new MockGoogleJsonClient(getTransport(),
+    public MockGoogleClient build() {
+      return new MockGoogleClient(getTransport(),
           getHttpRequestInitializer(),
           getRootUrl(),
           getServicePath(),

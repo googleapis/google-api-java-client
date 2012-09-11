@@ -16,8 +16,8 @@ package com.google.api.client.googleapis.services;
 
 import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.googleapis.batch.BatchRequest;
-import com.google.api.client.googleapis.json.AbstractGoogleJsonClient;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.googleapis.services.json.AbstractGoogleJsonClient;
 import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpMethod;
@@ -292,7 +292,8 @@ public class GoogleClient extends JsonHttpClient {
    *
    * @since 1.6
    * @deprecated (scheduled to be removed in 1.13) Use
-   *             {@link com.google.api.client.googleapis.AbstractGoogleClient.Builder} instead.
+   *             {@link com.google.api.client.googleapis.services.AbstractGoogleClient.Builder}
+   *             instead.
    */
   @Deprecated
   public static class Builder extends JsonHttpClient.Builder {

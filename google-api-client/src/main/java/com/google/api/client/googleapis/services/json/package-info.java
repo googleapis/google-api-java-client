@@ -10,33 +10,16 @@
  * the License.
  */
 
-package com.google.api.client.googleapis;
-
-
 /**
- * Google client request initializer.
+ * Contains the basis for the generated service-specific libraries based on the JSON format.
  *
  * <p>
- * For example, this might be used to set a key URL query parameter on all requests:
- * </p>
- *
- * <pre>
-  public class KeyRequestInitializer implements GoogleClientRequestInitializer {
-    public void initialize(GoogleClientRequest<?> request) {
-      request.put("key", KEY);
-    }
-  }
- * </pre>
- *
- * <p>
- * Implementations should normally be thread-safe.
+ * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
+ * possibly entirely removed in a future version of the library</b>
  * </p>
  *
  * @since 1.12
  * @author Yaniv Inbar
  */
-public interface GoogleClientRequestInitializer {
 
-  /** Initializes a Google client request. */
-  void initialize(AbstractGoogleClientRequest<?> request) throws Exception;
-}
+package com.google.api.client.googleapis.services.json;

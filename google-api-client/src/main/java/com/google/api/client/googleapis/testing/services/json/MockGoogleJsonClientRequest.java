@@ -10,23 +10,21 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.testing;
+package com.google.api.client.googleapis.testing.services.json;
 
-import com.google.api.client.googleapis.AbstractGoogleClient;
-import com.google.api.client.googleapis.AbstractGoogleClientRequest;
-import com.google.api.client.googleapis.testing.json.MockGoogleJsonClientRequest;
-import com.google.api.client.http.HttpContent;
+import com.google.api.client.googleapis.services.json.AbstractGoogleJsonClient;
+import com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.UriTemplate;
 
 /**
- * Thread-safe mock Google request.
+ * Thread-safe mock Google JSON request.
  *
  * @param <T> type of the response
  * @since 1.12
  * @author Yaniv Inbar
  */
-public class MockGoogleClientRequest<T> extends AbstractGoogleClientRequest<T> {
+public class MockGoogleJsonClientRequest<T> extends AbstractGoogleJsonClientRequest<T> {
 
   /**
    * @param client Google client
@@ -35,11 +33,10 @@ public class MockGoogleClientRequest<T> extends AbstractGoogleClientRequest<T> {
    *        the base path from the base URL will be stripped out. The URI template can also be a
    *        full URL. URI template expansion is done using
    *        {@link UriTemplate#expand(String, String, Object, boolean)}
-   * @param content HTTP content or {@code null} for none
-   * @param responseClass response class to parse into
+   * @param content A POJO that can be serialized into JSON or {@code null} for none
    */
-  public MockGoogleClientRequest(AbstractGoogleClient client, String method, String uriTemplate,
-      HttpContent content, Class<T> responseClass) {
+  public MockGoogleJsonClientRequest(AbstractGoogleJsonClient client, String method,
+      String uriTemplate, Object content, Class<T> responseClass) {
     super(client, method, uriTemplate, content, responseClass);
   }
 

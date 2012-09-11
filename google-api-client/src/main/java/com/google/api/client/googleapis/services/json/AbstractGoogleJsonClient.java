@@ -10,10 +10,11 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.json;
+package com.google.api.client.googleapis.services.json;
 
-import com.google.api.client.googleapis.AbstractGoogleClient;
-import com.google.api.client.googleapis.GoogleClientRequestInitializer;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.googleapis.services.AbstractGoogleClient;
+import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.google.api.client.googleapis.subscriptions.SubscriptionManager;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;

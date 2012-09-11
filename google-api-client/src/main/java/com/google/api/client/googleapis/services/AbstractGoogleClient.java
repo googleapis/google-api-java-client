@@ -10,8 +10,9 @@
  * the License.
  */
 
-package com.google.api.client.googleapis;
+package com.google.api.client.googleapis.services;
 
+import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.subscriptions.SubscriptionManager;
 import com.google.api.client.http.EmptyContent;
