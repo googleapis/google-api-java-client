@@ -29,9 +29,9 @@ public class MockGoogleJsonClientRequest<T> extends AbstractGoogleJsonClientRequ
   /**
    * @param client Google client
    * @param method HTTP Method
-   * @param uriTemplate URI template for the path relative to the root URL specified in the Google
-   *        client. If it starts with a "/" the base path from the base URL will be stripped out.
-   *        The URI template can also be a full URL. URI template expansion is done using
+   * @param uriTemplate URI template for the path relative to the base URL. If it starts with a "/"
+   *        the base path from the base URL will be stripped out. The URI template can also be a
+   *        full URL. URI template expansion is done using
    *        {@link UriTemplate#expand(String, String, Object, boolean)}
    * @param content A POJO that can be serialized into JSON or {@code null} for none
    */
