@@ -10,8 +10,11 @@
  * the License.
  */
 
-package com.google.api.client.googleapis;
+package com.google.api.client.googleapis.services;
 
+import com.google.api.client.googleapis.services.AbstractGoogleClient;
+import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
+import com.google.api.client.googleapis.services.KeyInitializer;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.testing.http.HttpTesting;
@@ -21,11 +24,11 @@ import com.google.api.client.util.Key;
 import junit.framework.TestCase;
 
 /**
- * Tests {@link GoogleKeyInitializer}.
+ * Tests {@link KeyInitializer}.
  *
  * @author Yaniv Inbar
  */
-public class GoogleKeyInitializerTest extends TestCase {
+public class KeyInitializerTest extends TestCase {
 
   public static class MyClient extends AbstractGoogleClient {
 
@@ -45,7 +48,7 @@ public class GoogleKeyInitializerTest extends TestCase {
   }
 
   public void testInitialize() {
-    GoogleKeyInitializer key = new GoogleKeyInitializer("foo");
+    KeyInitializer key = new KeyInitializer("foo");
     MyClient client = new MyClient(new MockHttpTransport());
     MyRequest request = new MyRequest(client, "GET", "", null, String.class);
     assertNull(request.key);

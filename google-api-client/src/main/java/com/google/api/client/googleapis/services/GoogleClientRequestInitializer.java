@@ -10,22 +10,19 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.json;
+package com.google.api.client.googleapis.services;
 
-import com.google.api.client.googleapis.AbstractGoogleClientRequest;
-import com.google.api.client.googleapis.GoogleClientRequestInitializer;
 
 /**
- * Google JSON client request initializer.
+ * Google client request initializer.
  *
  * <p>
  * For example, this might be used to set a key URL query parameter on all requests:
  * </p>
  *
  * <pre>
-  public class KeyRequestInitializer extends GoogleJsonClientRequestInitializer {
-    &#64;Override
-    protected void initialize(GoogleJsonClientRequest request) throws IOException {
+  public class KeyRequestInitializer implements GoogleClientRequestInitializer {
+    public void initialize(GoogleClientRequest<?> request) {
       request.put("key", KEY);
     }
   }
@@ -38,12 +35,8 @@ import com.google.api.client.googleapis.GoogleClientRequestInitializer;
  * @since 1.12
  * @author Yaniv Inbar
  */
-public abstract class GoogleJsonClientRequestInitializer implements GoogleClientRequestInitializer {
+public interface GoogleClientRequestInitializer {
 
-  public final void initialize(AbstractGoogleClientRequest<?> request) throws Exception {
-    initialize((AbstractGoogleJsonClientRequest<?>) request);
-  }
-
-  /** Initializes a Google JSON client request. */
-  protected abstract void initialize(AbstractGoogleJsonClientRequest<?> request) throws Exception;
+  /** Initializes a Google client request. */
+  void initialize(AbstractGoogleClientRequest<?> request) throws Exception;
 }

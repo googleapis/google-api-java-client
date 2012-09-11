@@ -10,7 +10,7 @@
  * the License.
  */
 
-package com.google.api.client.googleapis;
+package com.google.api.client.googleapis.services;
 
 /**
  * Google client request initializer that specifies a Google API key for all requests.
@@ -31,7 +31,7 @@ package com.google.api.client.googleapis;
  * @since 1.12
  * @author Yaniv Inbar
  */
-public class GoogleKeyInitializer implements GoogleClientRequestInitializer {
+public class KeyInitializer implements GoogleClientRequestInitializer {
 
   /** API key. */
   private final String key;
@@ -39,7 +39,7 @@ public class GoogleKeyInitializer implements GoogleClientRequestInitializer {
   /**
    * @param key API key
    */
-  public GoogleKeyInitializer(String key) {
+  public KeyInitializer(String key) {
     this.key = key;
   }
 

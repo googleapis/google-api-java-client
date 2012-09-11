@@ -11,7 +11,7 @@
  */
 
 /**
- * Test utilities for the {@code com.google.api.client.googleapis} package.
+ * Test utilities for the {@code com.google.api.client.googleapis.json} package.
  *
  * <p>
  * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
@@ -22,5 +22,5 @@
  * @author Yaniv Inbar
  */
 
-package com.google.api.client.googleapis.testing;
+package com.google.api.client.googleapis.testing.services.json;
 

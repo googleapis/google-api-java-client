@@ -10,10 +10,13 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.json;
+package com.google.api.client.googleapis.services.json;
 
-import com.google.api.client.googleapis.testing.json.MockGoogleJsonClient;
-import com.google.api.client.googleapis.testing.json.MockGoogleJsonClientRequest;
+import com.google.api.client.googleapis.json.GoogleJsonError;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.googleapis.services.json.AbstractGoogleJsonClient;
+import com.google.api.client.googleapis.testing.services.json.MockGoogleJsonClient;
+import com.google.api.client.googleapis.testing.services.json.MockGoogleJsonClientRequest;
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;

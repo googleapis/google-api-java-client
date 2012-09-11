@@ -14,7 +14,7 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
-import com.google.api.client.googleapis.testing.subscriptions.MockNotificationCallback;
+import com.google.api.client.googleapis.testing.services.subscriptions.MockNotificationCallback;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
