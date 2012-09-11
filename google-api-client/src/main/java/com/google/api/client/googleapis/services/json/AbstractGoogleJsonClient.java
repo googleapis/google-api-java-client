@@ -100,8 +100,20 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
      */
     protected Builder(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
         String servicePath, HttpRequestInitializer httpRequestInitializer) {
-      super(transport, rootUrl, servicePath, new JsonObjectParser(jsonFactory),
+      this(transport, new JsonObjectParser(jsonFactory), rootUrl, servicePath,
           httpRequestInitializer);
+    }
+
+    /**
+     * @param transport HTTP transport
+     * @param jsonObjectParser JSON object parser
+     * @param rootUrl root URL of the service
+     * @param servicePath service path
+     * @param httpRequestInitializer HTTP request initializer or {@code null} for none
+     */
+    protected Builder(HttpTransport transport, JsonObjectParser jsonObjectParser, String rootUrl,
+        String servicePath, HttpRequestInitializer httpRequestInitializer) {
+      super(transport, rootUrl, servicePath, jsonObjectParser, httpRequestInitializer);
     }
 
     @Override

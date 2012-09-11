@@ -14,14 +14,11 @@
 
 package com.google.api.client.googleapis.json;
 
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
-import com.google.api.client.util.ObjectParser;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
@@ -57,11 +54,16 @@ import java.nio.charset.Charset;
  * Implementation is thread-safe.
  * </p>
  *
+ * <p>
+ * Upgrade warning: this class now extends {@link JsonObjectParser}, whereas in prior
+ * version 1.11 it extended {@link com.google.api.client.http.json.JsonHttpParser}.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
-@SuppressWarnings("deprecation")
-public final class JsonCParser extends JsonHttpParser implements ObjectParser {
+@SuppressWarnings("javadoc")
+public final class JsonCParser extends JsonObjectParser {
   private final JsonFactory jsonFactory;
 
   /**
@@ -80,56 +82,6 @@ public final class JsonCParser extends JsonHttpParser implements ObjectParser {
   public JsonCParser(JsonFactory jsonFactory) {
     super(jsonFactory);
     this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
-  }
-
-  @Deprecated
-  @Override
-  public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
-    return parserForResponse(getJsonFactory(), response).parseAndClose(dataClass, null);
-  }
-
-  /**
-   * Returns a JSON parser to use for parsing the given HTTP response, skipped over the
-   * {@code "data"} envelope.
-   * <p>
-   * The parser will be closed if any throwable is thrown. The current token will be the value of
-   * the {@code "data"} key.
-   * </p>
-   *
-   * @param response HTTP response
-   * @return JSON parser
-   * @throws IllegalArgumentException if content type is not {@link Json#CONTENT_TYPE} or if
-   *         expected {@code "data"} or {@code "error"} key is not found
-   * @throws IOException I/O exception
-   * @since 1.3
-   * @deprecated (scheduled to be removed in 1.12) Use {@link JsonFactory#createJsonParser(
-   *             java.io.InputStream, java.nio.charset.Charset)} and {@link
-   *             JsonCParser#initializeParser(JsonParser)} instead.
-   */
-  @Deprecated
-  public static JsonParser parserForResponse(JsonFactory jsonFactory, HttpResponse response)
-      throws IOException {
-    // check for JSON content type
-    String contentType = response.getContentType();
-    if (contentType == null || !contentType.startsWith(Json.CONTENT_TYPE)) {
-      throw new IllegalArgumentException(
-          "Wrong content type: expected <" + Json.CONTENT_TYPE + "> but got <" + contentType + ">");
-    }
-    // parse
-    boolean failed = true;
-    JsonParser parser = JsonHttpParser.parserForResponse(jsonFactory, response);
-    try {
-      parser.skipToKey(response.isSuccessStatusCode() ? "data" : "error");
-      if (parser.getCurrentToken() == JsonToken.END_OBJECT) {
-        throw new IllegalArgumentException("data key not found");
-      }
-      failed = false;
-      return parser;
-    } finally {
-      if (failed) {
-        parser.close();
-      }
-    }
   }
 
   /**
@@ -165,21 +117,12 @@ public final class JsonCParser extends JsonHttpParser implements ObjectParser {
     return parser;
   }
 
-  @SuppressWarnings("unchecked")
-  public <T> T parseAndClose(InputStream in, Charset charset, Class<T> dataClass)
-      throws IOException {
-    return (T) parseAndClose(in, charset, (Type) dataClass);
-  }
-
+  @Override
   public Object parseAndClose(InputStream in, Charset charset, Type dataType) throws IOException {
     return initializeParser(jsonFactory.createJsonParser(in, charset)).parse(dataType, true, null);
   }
 
-  @SuppressWarnings("unchecked")
-  public <T> T parseAndClose(Reader reader, Class<T> dataClass) throws IOException {
-    return (T) parseAndClose(reader, (Type) dataClass);
-  }
-
+  @Override
   public Object parseAndClose(Reader reader, Type dataType) throws IOException {
     return initializeParser(jsonFactory.createJsonParser(reader)).parse(dataType, true, null);
   }

@@ -17,7 +17,6 @@ package com.google.api.client.googleapis.services;
 import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.googleapis.services.json.AbstractGoogleJsonClient;
 import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpMethod;
@@ -38,7 +37,8 @@ import java.util.Arrays;
  *
  * @since 1.6
  * @author Ravi Mistry
- * @deprecated (scheduled to be removed in 1.13) Use {@link AbstractGoogleJsonClient} instead.
+ * @deprecated (scheduled to be removed in 1.13) Use {@code
+ *             com.google.api.client.googleapis.services.json.AbstractGoogleJsonClient} instead.
  */
 @Deprecated
 public class GoogleClient extends JsonHttpClient {
@@ -97,18 +97,10 @@ public class GoogleClient extends JsonHttpClient {
    */
   protected GoogleClient(HttpTransport transport,
       JsonHttpRequestInitializer jsonHttpRequestInitializer,
-      HttpRequestInitializer httpRequestInitializer,
-      JsonFactory jsonFactory,
-      JsonObjectParser jsonObjectParser,
-      String baseUrl,
-      String applicationName) {
-    super(transport,
-        jsonHttpRequestInitializer,
-        httpRequestInitializer,
-        jsonFactory,
-        jsonObjectParser,
-        baseUrl,
-        applicationName);
+      HttpRequestInitializer httpRequestInitializer, JsonFactory jsonFactory,
+      JsonObjectParser jsonObjectParser, String baseUrl, String applicationName) {
+    super(transport, jsonHttpRequestInitializer, httpRequestInitializer, jsonFactory,
+        jsonObjectParser, baseUrl, applicationName);
   }
 
   /**
@@ -130,20 +122,11 @@ public class GoogleClient extends JsonHttpClient {
    */
   protected GoogleClient(HttpTransport transport,
       JsonHttpRequestInitializer jsonHttpRequestInitializer,
-      HttpRequestInitializer httpRequestInitializer,
-      JsonFactory jsonFactory,
-      JsonObjectParser jsonObjectParser,
-      String rootUrl,
-      String servicePath,
+      HttpRequestInitializer httpRequestInitializer, JsonFactory jsonFactory,
+      JsonObjectParser jsonObjectParser, String rootUrl, String servicePath,
       String applicationName) {
-    super(transport,
-        jsonHttpRequestInitializer,
-        httpRequestInitializer,
-        jsonFactory,
-        jsonObjectParser,
-        rootUrl,
-        servicePath,
-        applicationName);
+    super(transport, jsonHttpRequestInitializer, httpRequestInitializer, jsonFactory,
+        jsonObjectParser, rootUrl, servicePath, applicationName);
   }
 
   /**
@@ -165,21 +148,11 @@ public class GoogleClient extends JsonHttpClient {
    */
   protected GoogleClient(HttpTransport transport,
       JsonHttpRequestInitializer jsonHttpRequestInitializer,
-      HttpRequestInitializer httpRequestInitializer,
-      JsonFactory jsonFactory,
-      JsonObjectParser jsonObjectParser,
-      String rootUrl,
-      String servicePath,
-      String applicationName,
+      HttpRequestInitializer httpRequestInitializer, JsonFactory jsonFactory,
+      JsonObjectParser jsonObjectParser, String rootUrl, String servicePath, String applicationName,
       boolean suppressPatternChecks) {
-    super(transport,
-        jsonHttpRequestInitializer,
-        httpRequestInitializer,
-        jsonFactory,
-        jsonObjectParser,
-        rootUrl,
-        servicePath,
-        applicationName);
+    super(transport, jsonHttpRequestInitializer, httpRequestInitializer, jsonFactory,
+        jsonObjectParser, rootUrl, servicePath, applicationName);
     this.suppressPatternChecks = suppressPatternChecks;
   }
 
@@ -355,23 +328,13 @@ public class GoogleClient extends JsonHttpClient {
     @Override
     public GoogleClient build() {
       if (isBaseUrlUsed()) {
-        return new GoogleClient(getTransport(),
-            getJsonHttpRequestInitializer(),
-            getHttpRequestInitializer(),
-            getJsonFactory(),
-            getObjectParser(),
-            getBaseUrl().build(),
+        return new GoogleClient(getTransport(), getJsonHttpRequestInitializer(),
+            getHttpRequestInitializer(), getJsonFactory(), getObjectParser(), getBaseUrl().build(),
             getApplicationName());
       }
-      return new GoogleClient(getTransport(),
-          getJsonHttpRequestInitializer(),
-          getHttpRequestInitializer(),
-          getJsonFactory(),
-          getObjectParser(),
-          getRootUrl(),
-          getServicePath(),
-          getApplicationName(),
-          getSuppressPatternChecks());
+      return new GoogleClient(getTransport(), getJsonHttpRequestInitializer(),
+          getHttpRequestInitializer(), getJsonFactory(), getObjectParser(), getRootUrl(),
+          getServicePath(), getApplicationName(), getSuppressPatternChecks());
     }
   }
 }
