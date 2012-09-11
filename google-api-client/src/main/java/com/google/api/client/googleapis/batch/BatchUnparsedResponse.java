@@ -95,8 +95,13 @@ final class BatchUnparsedResponse {
    * <p>
    * This method closes the input stream if there are no more individual responses left.
    * </p>
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
    */
-  void parseNextResponse() throws IOException {
+  void parseNextResponse() throws Exception {
     contentId++;
 
     // Extract the outer headers.
@@ -144,7 +149,7 @@ final class BatchUnparsedResponse {
    */
   private <T, E> void parseAndCallback(
       RequestInfo<T, E> requestInfo, int statusCode, int contentID, HttpResponse response)
-      throws IOException {
+      throws Exception {
     BatchCallback<T, E> callback = requestInfo.callback;
 
     GoogleHeaders responseHeaders = new GoogleHeaders(response.getHeaders());
@@ -197,7 +202,7 @@ final class BatchUnparsedResponse {
   @SuppressWarnings("deprecation")
   private <A, T, E> A getParsedDataClass(
       Class<A> dataClass, HttpResponse response, RequestInfo<T, E> requestInfo, String contentType)
-      throws IOException {
+      throws Exception {
     // TODO(mlinder): Remove the HttpResponse reference and directly parse the InputStream
     com.google.api.client.http.HttpParser oldParser = requestInfo.request.getParser(contentType);
     ObjectParser parser = requestInfo.request.getParser();
@@ -214,7 +219,7 @@ final class BatchUnparsedResponse {
   @Deprecated
   private HttpResponse getFakeResponse(final int statusCode, final String partContent,
       List<String> headerNames, List<String> headerValues)
-      throws IOException {
+      throws Exception {
     HttpRequest request = new FakeResponseHttpTransport(
         statusCode, partContent, headerNames, headerValues).createRequestFactory()
         .buildPostRequest(new GenericUrl("http://google.com/"), null);

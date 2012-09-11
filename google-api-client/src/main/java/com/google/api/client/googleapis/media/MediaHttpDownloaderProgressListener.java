@@ -14,7 +14,6 @@
 
 package com.google.api.client.googleapis.media;
 
-import java.io.IOException;
 
 /**
  * An interface for receiving progress notifications for downloads.
@@ -26,7 +25,7 @@ import java.io.IOException;
  * <pre>
   public static class MyDownloadProgressListener implements MediaHttpDownloaderProgressListener {
 
-    public void progressChanged(MediaHttpDownloader downloader) throws IOException {
+    public void progressChanged(MediaHttpDownloader downloader) throws Exception {
       switch (downloader.getDownloadState()) {
         case MEDIA_IN_PROGRESS:
           System.out.println("Download in progress");
@@ -47,18 +46,23 @@ public interface MediaHttpDownloaderProgressListener {
 
   /**
    * Called to notify that progress has been changed.
-   * 
+   *
    * <p>
    * This method is called multiple times depending on how many chunks are downloaded. Once the
    * download completes it is called one final time.
    * </p>
-   * 
+   *
    * <p>
    * The download state can be queried by calling {@link MediaHttpDownloader#getDownloadState} and
    * the progress by calling {@link MediaHttpDownloader#getProgress}.
    * </p>
-   * 
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param downloader Media HTTP downloader
    */
-  public void progressChanged(MediaHttpDownloader downloader) throws IOException;
+  public void progressChanged(MediaHttpDownloader downloader) throws Exception;
 }

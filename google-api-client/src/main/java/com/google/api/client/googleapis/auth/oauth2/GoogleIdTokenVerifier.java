@@ -26,8 +26,6 @@ import com.google.api.client.util.StringUtils;
 import com.google.common.base.Preconditions;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.cert.CertificateFactory;
@@ -105,8 +103,11 @@ public class GoogleIdTokenVerifier {
   private final Clock clock;
 
   /**
-   * Constructor with required parameters. Use the {@link #GoogleIdTokenVerifier.Builder} to specify
-   * client IDs.
+   * Constructor with required parameters.
+   *
+   * <p>
+   * Use {@link #GoogleIdTokenVerifier.Builder} to specify client IDs.
+   * </p>
    *
    * @param transport HTTP transport
    * @param jsonFactory JSON factory
@@ -123,8 +124,8 @@ public class GoogleIdTokenVerifier {
    * @param jsonFactory JSON factory
    * @since 1.9
    */
-  protected GoogleIdTokenVerifier(Set<String> clientIds, HttpTransport transport,
-    JsonFactory jsonFactory) {
+  protected GoogleIdTokenVerifier(
+      Set<String> clientIds, HttpTransport transport, JsonFactory jsonFactory) {
     this(clientIds, transport, jsonFactory, Clock.SYSTEM);
   }
 
@@ -137,8 +138,8 @@ public class GoogleIdTokenVerifier {
    * @param clock Clock for expiration checks
    * @since 1.9
    */
-  protected GoogleIdTokenVerifier(Set<String> clientIds, HttpTransport transport,
-      JsonFactory jsonFactory, Clock clock) {
+  protected GoogleIdTokenVerifier(
+      Set<String> clientIds, HttpTransport transport, JsonFactory jsonFactory, Clock clock) {
     this.clientIds =
         clientIds == null ? Collections.<String>emptySet() : Collections.unmodifiableSet(clientIds);
     this.transport = Preconditions.checkNotNull(transport);
@@ -177,10 +178,15 @@ public class GoogleIdTokenVerifier {
    * Verifies that the given ID token is valid using {@link #verify(GoogleIdToken, String)} with the
    * {@link #getClientIds()}.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param idToken Google ID token
    * @return {@code true} if verified successfully or {@code false} if failed
    */
-  public boolean verify(GoogleIdToken idToken) throws GeneralSecurityException, IOException {
+  public boolean verify(GoogleIdToken idToken) throws Exception {
     return verify(clientIds, idToken);
   }
 
@@ -188,11 +194,16 @@ public class GoogleIdTokenVerifier {
    * Returns a Google ID token if the given ID token string is valid using
    * {@link #verify(GoogleIdToken, String)} with the {@link #getClientIds()}.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param idTokenString Google ID token string
    * @return Google ID token if verified successfully or {@code null} if failed
    * @since 1.9
    */
-  public GoogleIdToken verify(String idTokenString) throws GeneralSecurityException, IOException {
+  public GoogleIdToken verify(String idTokenString) throws Exception {
     GoogleIdToken idToken = GoogleIdToken.parse(jsonFactory, idTokenString);
     return verify(idToken) ? idToken : null;
   }
@@ -213,13 +224,17 @@ public class GoogleIdTokenVerifier {
    * <li>
    * </ul>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param idToken Google ID token
    * @param clientId client ID or {@code null} to skip checking it
    * @return {@code true} if verified successfully or {@code false} if failed
    * @since 1.8
    */
-  public boolean verify(GoogleIdToken idToken, String clientId)
-      throws GeneralSecurityException, IOException {
+  public boolean verify(GoogleIdToken idToken, String clientId) throws Exception {
     return verify(
         clientId == null ? Collections.<String>emptySet() : Collections.singleton(clientId),
         idToken);
@@ -241,18 +256,21 @@ public class GoogleIdTokenVerifier {
    * <li>
    * </ul>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param idToken Google ID token
    * @param clientIds set of client IDs
    * @return {@code true} if verified successfully or {@code false} if failed
    * @since 1.9
    */
-  public boolean verify(Set<String> clientIds, GoogleIdToken idToken)
-      throws GeneralSecurityException, IOException {
+  public boolean verify(Set<String> clientIds, GoogleIdToken idToken) throws Exception {
     // check the payload
     GoogleIdToken.Payload payload = idToken.getPayload();
     if (!payload.isValidTime(300) || !"accounts.google.com".equals(payload.getIssuer())
-        || !clientIds.isEmpty() && (
-            !clientIds.contains(payload.getAudience())
+        || !clientIds.isEmpty() && (!clientIds.contains(payload.getAudience())
             || !clientIds.contains(payload.getIssuee()))) {
       return false;
     }
@@ -263,8 +281,7 @@ public class GoogleIdTokenVerifier {
       lock.lock();
       try {
         // load public keys; expire 5 minutes (300 seconds) before actual expiration time
-        if (publicKeys == null
-            || clock.currentTimeMillis() + 300000 > expirationTimeMilliseconds) {
+        if (publicKeys == null || clock.currentTimeMillis() + 300000 > expirationTimeMilliseconds) {
           loadPublicCerts();
         }
         Signature signer = Signature.getInstance("SHA256withRSA");
@@ -291,15 +308,20 @@ public class GoogleIdTokenVerifier {
    * expiration time is very close, so normally this doesn't need to be called. Only call this
    * method explicitly to force the public keys to be updated.
    * </p>
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
    */
-  public GoogleIdTokenVerifier loadPublicCerts() throws GeneralSecurityException, IOException {
+  public GoogleIdTokenVerifier loadPublicCerts() throws Exception {
     lock.lock();
     try {
       publicKeys = new ArrayList<PublicKey>();
       // HTTP request to public endpoint
       CertificateFactory factory = CertificateFactory.getInstance("X509");
-      HttpResponse certsResponse = transport.createRequestFactory().buildGetRequest(
-        new GenericUrl("https://www.googleapis.com/oauth2/v1/certs")).execute();
+      HttpResponse certsResponse = transport.createRequestFactory()
+          .buildGetRequest(new GenericUrl("https://www.googleapis.com/oauth2/v1/certs")).execute();
       // parse Cache-Control max-age parameter
       for (String arg : certsResponse.getHeaders().getCacheControl().split(",")) {
         Matcher m = MAX_AGE_PATTERN.matcher(arg);
@@ -321,7 +343,7 @@ public class GoogleIdTokenVerifier {
           parser.nextToken();
           String certValue = parser.getText();
           X509Certificate x509Cert = (X509Certificate) factory.generateCertificate(
-            new ByteArrayInputStream(StringUtils.getBytesUtf8(certValue)));
+              new ByteArrayInputStream(StringUtils.getBytesUtf8(certValue)));
           publicKeys.add(x509Cert.getPublicKey());
         }
         publicKeys = Collections.unmodifiableList(publicKeys);

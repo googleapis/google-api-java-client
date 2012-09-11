@@ -20,7 +20,6 @@ import junit.framework.TestCase;
  * Tests for the {@link AppEngineWebHookDeliveryMethod} class.
  *
  * @author Matthias Linder (mlinder)
- * @since 1.11
  */
 public class AppEngineWebHookDeliveryMethodTest extends TestCase {
 

@@ -26,7 +26,6 @@ import com.google.api.client.testing.http.MockHttpTransport;
 import junit.framework.TestCase;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ import java.util.List;
  */
 public class MultipartMixedContentTest extends TestCase {
 
-  public void testMultipartMixedContent() throws IOException {
+  public void testMultipartMixedContent() throws Exception {
     String request1Method = HttpMethods.POST;
     String request1Url = "http://test/dummy/url1";
     String request1ContentType = "application/json";
@@ -84,7 +83,7 @@ public class MultipartMixedContentTest extends TestCase {
     assertEquals(expectedOutput.toString(), outputStream.toString());
   }
 
-  public void testWriteTo_nullHeaders() throws IOException {
+  public void testWriteTo_nullHeaders() throws Exception {
     MockHttpTransport transport = new MockHttpTransport();
     HttpRequest request1 = transport.createRequestFactory()
         .buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL, new HttpContent() {

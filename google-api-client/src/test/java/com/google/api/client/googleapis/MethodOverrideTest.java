@@ -23,7 +23,6 @@ import com.google.common.collect.ImmutableSet;
 
 import junit.framework.TestCase;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,12 +34,8 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public class MethodOverrideTest extends TestCase {
 
-  private static final List<String> OVERRIDDEN_METHODS = ImmutableList.of("FOO",
-      HttpMethods.DELETE,
-      HttpMethods.HEAD,
-      HttpMethods.OPTIONS,
-      "PATCH",
-      HttpMethods.PUT,
+  private static final List<String> OVERRIDDEN_METHODS = ImmutableList.of(
+      "FOO", HttpMethods.DELETE, HttpMethods.HEAD, HttpMethods.OPTIONS, "PATCH", HttpMethods.PUT,
       HttpMethods.TRACE);
 
   private static final List<String> SUPPORTED_METHODS = ImmutableList.<String>builder()
@@ -50,7 +45,7 @@ public class MethodOverrideTest extends TestCase {
     super(name);
   }
 
-  public void testIntercept() throws IOException {
+  public void testIntercept() throws Exception {
     subtestIntercept(ImmutableSet.<String>of(), new MockHttpTransport(), new MethodOverride());
     subtestIntercept(OVERRIDDEN_METHODS, new MockHttpTransport(),
         new MethodOverride.Builder().setOverrideAllMethods(true).build());
@@ -60,7 +55,7 @@ public class MethodOverrideTest extends TestCase {
   }
 
   private void subtestIntercept(Collection<String> methodsThatShouldOverride,
-      HttpTransport transport, MethodOverride interceptor) throws IOException {
+      HttpTransport transport, MethodOverride interceptor) throws Exception {
     for (String requestMethod : SUPPORTED_METHODS) {
       subtestIntercept(
           methodsThatShouldOverride.contains(requestMethod), transport, interceptor, requestMethod);
@@ -68,7 +63,7 @@ public class MethodOverrideTest extends TestCase {
   }
 
   private void subtestIntercept(boolean shouldOverride, HttpTransport transport,
-      MethodOverride interceptor, String requestMethod) throws IOException {
+      MethodOverride interceptor, String requestMethod) throws Exception {
     HttpRequest request = transport.createRequestFactory().buildRequest(requestMethod, null, null);
     interceptor.intercept(request);
     assertEquals(requestMethod, shouldOverride ? HttpMethods.POST : requestMethod,

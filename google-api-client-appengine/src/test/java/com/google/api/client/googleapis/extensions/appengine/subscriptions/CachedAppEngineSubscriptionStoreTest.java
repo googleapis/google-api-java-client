@@ -31,7 +31,6 @@ import org.junit.Test;
  * Tests for the {@link CachedAppEngineSubscriptionStore} class.
  *
  * @author Matthias Linder
- * @since 1.11
  */
 public class CachedAppEngineSubscriptionStoreTest extends TestCase {
 

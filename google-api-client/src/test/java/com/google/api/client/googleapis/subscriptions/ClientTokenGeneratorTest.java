@@ -14,15 +14,12 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
-import com.google.api.client.googleapis.subscriptions.ClientTokenGenerator;
-
 import junit.framework.TestCase;
 
 /**
  * Tests for the {@link ClientTokenGenerator} class.
  *
  * @author Matthias Linder
- * @since 1.11
  */
 public class ClientTokenGeneratorTest extends TestCase {
 
