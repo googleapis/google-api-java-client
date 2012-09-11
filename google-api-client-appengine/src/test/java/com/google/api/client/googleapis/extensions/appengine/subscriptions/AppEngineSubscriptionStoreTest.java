@@ -29,7 +29,6 @@ import org.junit.Test;
  * Tests for the {@link AppEngineSubscriptionStore} class.
  *
  * @author Matthias Linder (mlinder)
- * @since 1.11
  */
 public class AppEngineSubscriptionStoreTest extends TestCase {
 

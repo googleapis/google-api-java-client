@@ -17,7 +17,6 @@ package com.google.api.client.googleapis.subscriptions;
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.util.ObjectParser;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
@@ -37,6 +36,7 @@ import java.nio.charset.Charset;
  * </p>
  *
  * <b>Example usage:</b>
+ *
  * <pre>
     class MyTypedNotificationCallback extends TypedNotificationCallback&lt;ItemList&gt; {
       void handleNotification(
@@ -101,12 +101,11 @@ public abstract class TypedNotificationCallback<T> implements NotificationCallba
    *
    * @param notification Notification which should be parsable by the returned parser
    */
-  protected abstract ObjectParser getParser(UnparsedNotification notification)
-      throws Exception;
+  protected abstract ObjectParser getParser(UnparsedNotification notification) throws Exception;
 
   /** Parses the specified content and closes the InputStream of the notification. */
   private Object parseContent(ObjectParser parser, UnparsedNotification notification)
-      throws IOException {
+      throws Exception {
     // Return null if no content is expected
     if (dataClass == null || notification.getContentType() == null
         || Void.class.equals(dataClass)) {
@@ -119,8 +118,8 @@ public abstract class TypedNotificationCallback<T> implements NotificationCallba
     return parser.parseAndClose(notification.getContent(), charset, dataClass);
   }
 
-  public void handleNotification(
-      Subscription subscription, UnparsedNotification notification) throws Exception {
+  public void handleNotification(Subscription subscription, UnparsedNotification notification)
+      throws Exception {
     ObjectParser parser = getParser(notification);
     @SuppressWarnings("unchecked")
     T content = (T) parseContent(parser, notification);

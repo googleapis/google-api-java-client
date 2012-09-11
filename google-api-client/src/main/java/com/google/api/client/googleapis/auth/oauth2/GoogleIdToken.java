@@ -21,7 +21,6 @@ import com.google.api.client.util.Clock;
 import com.google.api.client.util.Key;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 
 /**
  * Google ID tokens.
@@ -70,9 +69,13 @@ public class GoogleIdToken extends JsonWebSignature {
 
   /**
    * Verifies that this ID token is valid using {@link GoogleIdTokenVerifier#verify(GoogleIdToken)}.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
    */
-  public boolean verify(GoogleIdTokenVerifier verifier)
-      throws GeneralSecurityException, IOException {
+  public boolean verify(GoogleIdTokenVerifier verifier) throws Exception {
     return verifier.verify(this);
   }
 

@@ -33,7 +33,6 @@ import java.io.ObjectOutputStream;
  * Tests for the {@link JsonNotificationCallback} class.
  *
  * @author Matthias Linder (mlinder)
- * @since 1.11
  */
 public class JsonNotificationCallbackTest extends TestCase {
 

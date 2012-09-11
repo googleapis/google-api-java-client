@@ -211,20 +211,14 @@ public class GoogleCredential extends Credential {
    *        the service account flow or {@code null} for none or if not using the service account
    *        flow
    */
-  protected GoogleCredential(AccessMethod method,
-      HttpTransport transport,
-      JsonFactory jsonFactory,
-      String tokenServerEncodedUrl,
-      HttpExecuteInterceptor clientAuthentication,
-      HttpRequestInitializer requestInitializer,
-      List<CredentialRefreshListener> refreshListeners,
-      String serviceAccountId,
-      String serviceAccountScopes,
-      PrivateKey serviceAccountPrivateKey,
+  protected GoogleCredential(AccessMethod method, HttpTransport transport, JsonFactory jsonFactory,
+      String tokenServerEncodedUrl, HttpExecuteInterceptor clientAuthentication,
+      HttpRequestInitializer requestInitializer, List<CredentialRefreshListener> refreshListeners,
+      String serviceAccountId, String serviceAccountScopes, PrivateKey serviceAccountPrivateKey,
       String serviceAccountUser) {
     this(method, transport, jsonFactory, tokenServerEncodedUrl, clientAuthentication,
-         requestInitializer, refreshListeners, serviceAccountId, serviceAccountScopes,
-         serviceAccountPrivateKey, serviceAccountUser, Clock.SYSTEM);
+        requestInitializer, refreshListeners, serviceAccountId, serviceAccountScopes,
+        serviceAccountPrivateKey, serviceAccountUser, Clock.SYSTEM);
   }
 
   /**
@@ -252,26 +246,13 @@ public class GoogleCredential extends Credential {
    * @param clock The clock to use for expiration check
    * @since 1.9
    */
-  protected GoogleCredential(AccessMethod method,
-      HttpTransport transport,
-      JsonFactory jsonFactory,
-      String tokenServerEncodedUrl,
-      HttpExecuteInterceptor clientAuthentication,
-      HttpRequestInitializer requestInitializer,
-      List<CredentialRefreshListener> refreshListeners,
-      String serviceAccountId,
-      String serviceAccountScopes,
-      PrivateKey serviceAccountPrivateKey,
-      String serviceAccountUser,
-      Clock clock) {
-    super(method,
-        transport,
-        jsonFactory,
-        tokenServerEncodedUrl,
-        clientAuthentication,
-        requestInitializer,
-        refreshListeners,
-        clock);
+  protected GoogleCredential(AccessMethod method, HttpTransport transport, JsonFactory jsonFactory,
+      String tokenServerEncodedUrl, HttpExecuteInterceptor clientAuthentication,
+      HttpRequestInitializer requestInitializer, List<CredentialRefreshListener> refreshListeners,
+      String serviceAccountId, String serviceAccountScopes, PrivateKey serviceAccountPrivateKey,
+      String serviceAccountUser, Clock clock) {
+    super(method, transport, jsonFactory, tokenServerEncodedUrl, clientAuthentication,
+        requestInitializer, refreshListeners, clock);
     if (serviceAccountPrivateKey == null) {
       Preconditions.checkArgument(
           serviceAccountId == null && serviceAccountScopes == null && serviceAccountUser == null);
@@ -291,8 +272,8 @@ public class GoogleCredential extends Credential {
   @Override
   public GoogleCredential setRefreshToken(String refreshToken) {
     if (refreshToken != null) {
-      Preconditions.checkArgument(getJsonFactory() != null && getTransport() != null
-          && getClientAuthentication() != null,
+      Preconditions.checkArgument(
+          getJsonFactory() != null && getTransport() != null && getClientAuthentication() != null,
           "Please use the Builder and call setJsonFactory, setTransport and setClientSecrets");
     }
     return (GoogleCredential) super.setRefreshToken(refreshToken);
@@ -314,7 +295,7 @@ public class GoogleCredential extends Credential {
   }
 
   @Override
-  protected TokenResponse executeRefreshToken() throws IOException {
+  protected TokenResponse executeRefreshToken() throws Exception {
     if (serviceAccountPrivateKey == null) {
       return super.executeRefreshToken();
     }
@@ -324,25 +305,17 @@ public class GoogleCredential extends Credential {
     header.setType("JWT");
     JsonWebToken.Payload payload = new JsonWebToken.Payload(getClock());
     long currentTime = getClock().currentTimeMillis();
-    payload.setIssuer(serviceAccountId)
-        .setAudience(getTokenServerEncodedUrl())
+    payload.setIssuer(serviceAccountId).setAudience(getTokenServerEncodedUrl())
         .setIssuedAtTimeSeconds(currentTime / 1000)
-        .setExpirationTimeSeconds(currentTime / 1000 + 3600)
-        .setPrincipal(serviceAccountUser);
+        .setExpirationTimeSeconds(currentTime / 1000 + 3600).setPrincipal(serviceAccountUser);
     payload.put("scope", serviceAccountScopes);
-    try {
-      String assertion =
-          RsaSHA256Signer.sign(serviceAccountPrivateKey, getJsonFactory(), header, payload);
-      TokenRequest request = new TokenRequest(getTransport(), getJsonFactory(), new GenericUrl(
-          getTokenServerEncodedUrl()), "assertion");
-      request.put("assertion_type", "http://oauth.net/grant_type/jwt/1.0/bearer");
-      request.put("assertion", assertion);
-      return request.execute();
-    } catch (GeneralSecurityException exception) {
-      IOException e = new IOException();
-      e.initCause(exception);
-      throw e;
-    }
+    String assertion =
+        RsaSHA256Signer.sign(serviceAccountPrivateKey, getJsonFactory(), header, payload);
+    TokenRequest request = new TokenRequest(
+        getTransport(), getJsonFactory(), new GenericUrl(getTokenServerEncodedUrl()), "assertion");
+    request.put("assertion_type", "http://oauth.net/grant_type/jwt/1.0/bearer");
+    request.put("assertion", assertion);
+    return request.execute();
   }
 
   /**
@@ -411,17 +384,10 @@ public class GoogleCredential extends Credential {
 
     @Override
     public GoogleCredential build() {
-      return new GoogleCredential(getMethod(),
-          getTransport(),
-          getJsonFactory(),
+      return new GoogleCredential(getMethod(), getTransport(), getJsonFactory(),
           getTokenServerUrl() == null ? null : getTokenServerUrl().build(),
-          getClientAuthentication(),
-          getRequestInitializer(),
-          getRefreshListeners(),
-          serviceAccountId,
-          serviceAccountScopes,
-          serviceAccountPrivateKey,
-          serviceAccountUser,
+          getClientAuthentication(), getRequestInitializer(), getRefreshListeners(),
+          serviceAccountId, serviceAccountScopes, serviceAccountPrivateKey, serviceAccountUser,
           getClock());
     }
 

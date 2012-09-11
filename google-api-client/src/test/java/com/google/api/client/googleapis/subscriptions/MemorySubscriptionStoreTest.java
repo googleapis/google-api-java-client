@@ -23,7 +23,6 @@ import junit.framework.TestCase;
  * Tests for the {@link MemorySubscriptionStore} class.
  *
  * @author Matthias Linder (mlinder)
- * @since 1.11
  */
 public class MemorySubscriptionStoreTest extends TestCase {
 

@@ -162,6 +162,10 @@ public class GoogleJsonResponseException extends HttpResponseException {
      }
    * </pre>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
    *
    * @param jsonFactory JSON factory
    * @param request HTTP request
@@ -169,11 +173,10 @@ public class GoogleJsonResponseException extends HttpResponseException {
    *         {@link HttpRequest#getThrowExceptionOnExecuteError()})
    * @throws GoogleJsonResponseException for an HTTP error code (only if not
    *         {@link HttpRequest#getThrowExceptionOnExecuteError()})
-   * @throws IOException some other kind of I/O exception
    * @since 1.7
    */
   public static HttpResponse execute(JsonFactory jsonFactory, HttpRequest request)
-      throws GoogleJsonResponseException, IOException {
+      throws Exception {
     Preconditions.checkNotNull(jsonFactory);
     boolean originalThrowExceptionOnExecuteError = request.getThrowExceptionOnExecuteError();
     if (originalThrowExceptionOnExecuteError) {

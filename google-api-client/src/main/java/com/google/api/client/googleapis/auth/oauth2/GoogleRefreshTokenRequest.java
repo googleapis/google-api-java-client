@@ -24,8 +24,6 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 
-import java.io.IOException;
-
 /**
  * Google-specific implementation of the OAuth 2.0 request to refresh an access token using a
  * refresh token as specified in <a
@@ -43,7 +41,7 @@ import java.io.IOException;
  * </p>
  *
  * <pre>
-  static void refreshAccessToken() throws IOException {
+  static void refreshAccessToken() throws Exception {
     try {
       TokenResponse response =
           new GoogleRefreshTokenRequest(new NetHttpTransport(), new JacksonFactory(),
@@ -89,8 +87,8 @@ public class GoogleRefreshTokenRequest extends RefreshTokenRequest {
   }
 
   @Override
-  public GoogleRefreshTokenRequest setRequestInitializer(HttpRequestInitializer requestInitializer)
-  {
+  public GoogleRefreshTokenRequest setRequestInitializer(
+      HttpRequestInitializer requestInitializer) {
     return (GoogleRefreshTokenRequest) super.setRequestInitializer(requestInitializer);
   }
 
@@ -126,7 +124,7 @@ public class GoogleRefreshTokenRequest extends RefreshTokenRequest {
   }
 
   @Override
-  public GoogleTokenResponse execute() throws IOException {
+  public GoogleTokenResponse execute() throws Exception {
     return executeUnparsed().parseAs(GoogleTokenResponse.class);
   }
 }

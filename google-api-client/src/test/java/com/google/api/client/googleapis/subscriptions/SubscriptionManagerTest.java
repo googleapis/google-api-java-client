@@ -27,14 +27,12 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import junit.framework.TestCase;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * Tests for the {@link SubscriptionManager} class.
  *
  * @author Matthias Linder (mlinder)
- * @since 1.11
  */
 public class SubscriptionManagerTest extends TestCase {
 
@@ -48,13 +46,8 @@ public class SubscriptionManagerTest extends TestCase {
 
     // Send a notification
     InputStream contentStream = new ByteArrayInputStream(new byte[] {1, 2, 3});
-    UnparsedNotification notification = new UnparsedNotification("id",
-        "topicID",
-        "topicURI",
-        "clientToken",
-        "eventType",
-        "foo/bar",
-        contentStream);
+    UnparsedNotification notification = new UnparsedNotification(
+        "id", "topicID", "topicURI", "clientToken", "eventType", "foo/bar", contentStream);
     assertTrue(pm.deliverNotification(notification));
     assertEquals(true, handler.wasCalled());
   }
@@ -69,21 +62,15 @@ public class SubscriptionManagerTest extends TestCase {
 
     // Send a notification
     InputStream contentStream = new ByteArrayInputStream(new byte[] {1, 2, 3});
-    UnparsedNotification notification = new UnparsedNotification("id",
-        "topicID",
-        "topicURI",
-        "clientToken",
-        "eventType",
-        "foo/bar",
-        contentStream);
+    UnparsedNotification notification = new UnparsedNotification(
+        "id", "topicID", "topicURI", "clientToken", "eventType", "foo/bar", contentStream);
 
     assertFalse(pm.deliverNotification(notification));
     assertEquals(false, handler.wasCalled());
   }
 
   /** Test for .deliverPushNotification() with an invalid client token. */
-  public void testDeliverPushNotification_invalidToken()
-      throws Exception {
+  public void testDeliverPushNotification_invalidToken() throws Exception {
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     MockNotificationCallback handler = new MockNotificationCallback();
     SubscriptionManager pm = new SubscriptionManager(store);
@@ -93,18 +80,14 @@ public class SubscriptionManagerTest extends TestCase {
 
     // Send a notification
     InputStream contentStream = new ByteArrayInputStream(new byte[] {1, 2, 3});
-    UnparsedNotification notification = new UnparsedNotification("id",
-        "topicID",
-        "topicURI",
-        "differentClientToken",
-        "eventType",
-        "foo/bar",
-        contentStream);
+    UnparsedNotification notification = new UnparsedNotification(
+        "id", "topicID", "topicURI", "differentClientToken", "eventType", "foo/bar", contentStream);
 
     try {
       pm.deliverNotification(notification);
       fail("Expected IllegalArgumentException but code passed");
-    } catch (IllegalArgumentException expected) {}
+    } catch (IllegalArgumentException expected) {
+    }
 
     assertEquals(false, handler.wasCalled());
   }
@@ -150,8 +133,7 @@ public class SubscriptionManagerTest extends TestCase {
     }
 
     /** Returns a HttpRequest using the specified FakeHttpRequestExecutor. */
-    public static HttpRequest buildHttpRequest(FakeHttpRequestExecutor executor)
-        throws IOException {
+    public static HttpRequest buildHttpRequest(FakeHttpRequestExecutor executor) throws Exception {
       GenericUrl url = new GenericUrl("http://example.com");
       return new FakeHttpTransport(executor).createRequestFactory().buildGetRequest(url);
     }

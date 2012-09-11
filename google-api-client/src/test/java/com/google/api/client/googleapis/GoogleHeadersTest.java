@@ -26,7 +26,6 @@ import java.io.InputStream;
  * Tests for the {@link GoogleHeaders} class.
  *
  * @author Matthias Linder (mlinder)
- * @since 1.11
  */
 public class GoogleHeadersTest extends TestCase {
   private static class MockLowLevelHttpResponse extends LowLevelHttpResponse {

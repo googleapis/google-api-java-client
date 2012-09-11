@@ -14,15 +14,12 @@
 
 package com.google.api.client.googleapis.extensions.servlet.subscriptions;
 
-import com.google.api.client.googleapis.extensions.servlet.subscriptions.WebHookDeliveryMethod;
-
 import junit.framework.TestCase;
 
 /**
  * Tests for the {@link WebHookDeliveryMethod} class.
  *
  * @author Matthias Linder (mlinder)
- * @since 1.11
  */
 public class WebHookDeliveryMethodTest extends TestCase {
 

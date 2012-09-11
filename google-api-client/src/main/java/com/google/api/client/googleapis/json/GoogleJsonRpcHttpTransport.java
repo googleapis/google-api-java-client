@@ -25,7 +25,6 @@ import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.rpc2.JsonRpcRequest;
 import com.google.common.base.Preconditions;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -288,10 +287,15 @@ public final class GoogleJsonRpcHttpTransport {
    * {@link JsonParser}, and {@link JsonParser#parseAndClose(Class, CustomizeJsonParser)}.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
+   * throw an exception.
+   * </p>
+   *
    * @param request JSON-RPC request object
    * @return HTTP request
    */
-  public HttpRequest buildPostRequest(JsonRpcRequest request) {
+  public HttpRequest buildPostRequest(JsonRpcRequest request) throws Exception {
     return internalExecute(request);
   }
 
@@ -305,24 +309,25 @@ public final class GoogleJsonRpcHttpTransport {
    * {@link JsonParser#parseArrayAndClose(Collection, Class, CustomizeJsonParser)} .
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
+   * throw an exception.
+   * </p>
+   *
    * @param requests JSON-RPC request objects
    * @return HTTP request
    */
-  public HttpRequest buildPostRequest(List<JsonRpcRequest> requests) {
+  public HttpRequest buildPostRequest(List<JsonRpcRequest> requests) throws Exception {
     return internalExecute(requests);
   }
 
-  private HttpRequest internalExecute(Object data) {
+  private HttpRequest internalExecute(Object data) throws Exception {
     JsonHttpContent content = new JsonHttpContent(jsonFactory, data);
     content.setMediaType(new HttpMediaType(mimeType));
     HttpRequest httpRequest;
-    try {
-      httpRequest =
-          transport.createRequestFactory().buildPostRequest(new GenericUrl(rpcServerUrl), content);
-      httpRequest.getHeaders().setAccept(accept);
-      return httpRequest;
-    } catch (IOException e) {
-      throw new IllegalStateException(e);
-    }
+    httpRequest =
+        transport.createRequestFactory().buildPostRequest(new GenericUrl(rpcServerUrl), content);
+    httpRequest.getHeaders().setAccept(accept);
+    return httpRequest;
   }
 }
