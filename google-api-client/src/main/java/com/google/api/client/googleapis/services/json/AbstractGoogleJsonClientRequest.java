@@ -37,8 +37,8 @@ import com.google.api.client.http.json.JsonHttpContent;
 public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleClientRequest<T> {
 
   /**
-   * @param client Google client
-   * @param method HTTP Method
+   * @param abstractGoogleJsonClient Google JSON client
+   * @param requestMethod HTTP Method
    * @param uriTemplate URI template for the path relative to the base URL. If it starts with a "/"
    *        the base path from the base URL will be stripped out. The URI template can also be a
    *        full URL. URI template expansion is done using
@@ -46,29 +46,30 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
    * @param content A POJO that can be serialized into JSON or {@code null} for none
    * @param responseClass response class to parse into
    */
-  protected AbstractGoogleJsonClientRequest(AbstractGoogleJsonClient client, String method,
-      String uriTemplate, Object content, Class<T> responseClass) {
-    this(client, method, uriTemplate, content == null ? null : new JsonHttpContent(
-        client.getJsonFactory(), content), responseClass);
+  protected AbstractGoogleJsonClientRequest(AbstractGoogleJsonClient abstractGoogleJsonClient,
+      String requestMethod, String uriTemplate, Object content, Class<T> responseClass) {
+    this(abstractGoogleJsonClient, requestMethod, uriTemplate, content == null
+        ? null : new JsonHttpContent(abstractGoogleJsonClient.getJsonFactory(), content),
+        responseClass);
   }
 
   /**
-   * @param client Google client
-   * @param method HTTP Method
+   * @param abstractGoogleJsonClient Google JSON client
+   * @param requestMethod HTTP Method
    * @param uriTemplate URI template for the path relative to the base URL. If it starts with a "/"
    *        the base path from the base URL will be stripped out. The URI template can also be a
    *        full URL. URI template expansion is done using
    *        {@link UriTemplate#expand(String, String, Object, boolean)}
-   * @param content HTTP content or {@code null} for none
+   * @param httpContent HTTP content or {@code null} for none
    */
-  protected AbstractGoogleJsonClientRequest(AbstractGoogleJsonClient client, String method,
-      String uriTemplate, HttpContent content, Class<T> responseClass) {
-    super(client, method, uriTemplate, content, responseClass);
+  protected AbstractGoogleJsonClientRequest(AbstractGoogleJsonClient abstractGoogleJsonClient,
+      String requestMethod, String uriTemplate, HttpContent httpContent, Class<T> responseClass) {
+    super(abstractGoogleJsonClient, requestMethod, uriTemplate, httpContent, responseClass);
   }
 
   @Override
-  public AbstractGoogleJsonClient getClient() {
-    return (AbstractGoogleJsonClient) super.getClient();
+  public AbstractGoogleJsonClient getAbstractGoogleClient() {
+    return (AbstractGoogleJsonClient) super.getAbstractGoogleClient();
   }
 
   @Override
@@ -117,7 +118,7 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
   public HttpResponse executeUnparsed() throws Exception {
     HttpResponse response = super.executeUnparsed();
     if (getMediaHttpUploader() != null && !response.isSuccessStatusCode()) {
-      throw GoogleJsonResponseException.from(getClient().getJsonFactory(), response);
+      throw GoogleJsonResponseException.from(getAbstractGoogleClient().getJsonFactory(), response);
     }
     return response;
   }

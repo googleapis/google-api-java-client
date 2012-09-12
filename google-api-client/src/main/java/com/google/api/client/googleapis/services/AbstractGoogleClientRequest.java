@@ -49,16 +49,16 @@ import java.io.OutputStream;
 public abstract class AbstractGoogleClientRequest<T> extends GenericData {
 
   /** Google client. */
-  private final AbstractGoogleClient client;
+  private final AbstractGoogleClient abstractGoogleClient;
 
   /** HTTP method. */
-  private final String method;
+  private final String requestMethod;
 
   /** URI template for the path relative to the base URL. */
   private final String uriTemplate;
 
   /** HTTP content or {@code null} for none. */
-  private final HttpContent content;
+  private final HttpContent httpContent;
 
   /** HTTP headers used for the Google client request. */
   private HttpHeaders requestHeaders = new HttpHeaders();
@@ -88,22 +88,22 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   private MediaHttpDownloader downloader;
 
   /**
-   * @param client Google client
-   * @param method HTTP Method
+   * @param abstractGoogleClient Google client
+   * @param requestMethod HTTP Method
    * @param uriTemplate URI template for the path relative to the base URL. If it starts with a "/"
    *        the base path from the base URL will be stripped out. The URI template can also be a
    *        full URL. URI template expansion is done using
    *        {@link UriTemplate#expand(String, String, Object, boolean)}
-   * @param content HTTP content or {@code null} for none
+   * @param httpContent HTTP content or {@code null} for none
    * @param responseClass response class to parse into
    */
-  protected AbstractGoogleClientRequest(AbstractGoogleClient client, String method,
-      String uriTemplate, HttpContent content, Class<T> responseClass) {
+  protected AbstractGoogleClientRequest(AbstractGoogleClient abstractGoogleClient,
+      String requestMethod, String uriTemplate, HttpContent httpContent, Class<T> responseClass) {
     this.responseClass = Preconditions.checkNotNull(responseClass);
-    this.client = Preconditions.checkNotNull(client);
-    this.method = Preconditions.checkNotNull(method);
+    this.abstractGoogleClient = Preconditions.checkNotNull(abstractGoogleClient);
+    this.requestMethod = Preconditions.checkNotNull(requestMethod);
     this.uriTemplate = Preconditions.checkNotNull(uriTemplate);
-    this.content = content;
+    this.httpContent = httpContent;
   }
 
   /** Returns whether to disable GZip compression of HTTP content. */
@@ -129,8 +129,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   }
 
   /** Returns the HTTP method. */
-  public final String getMethod() {
-    return method;
+  public final String getRequestMethod() {
+    return requestMethod;
   }
 
   /** Returns the URI template for the path relative to the base URL. */
@@ -139,8 +139,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   }
 
   /** Returns the HTTP content or {@code null} for none. */
-  public final HttpContent getContent() {
-    return content;
+  public final HttpContent getHttpContent() {
+    return httpContent;
   }
 
   /**
@@ -151,8 +151,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * the return type, but nothing else.
    * </p>
    */
-  public AbstractGoogleClient getClient() {
-    return client;
+  public AbstractGoogleClient getAbstractGoogleClient() {
+    return abstractGoogleClient;
   }
 
   /** Returns the HTTP headers used for the Google client request. */
@@ -278,12 +278,12 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * @param mediaContent media content
    */
   protected final void initializeMediaUpload(AbstractInputStreamContent mediaContent) {
-    HttpRequestFactory requestFactory = getClient().getRequestFactory();
+    HttpRequestFactory requestFactory = abstractGoogleClient.getRequestFactory();
     this.uploader = new MediaHttpUploader(
         mediaContent, requestFactory.getTransport(), requestFactory.getInitializer());
-    this.uploader.setInitiationRequestMethod(method);
-    if (content != null) {
-      this.uploader.setMetadata(content);
+    this.uploader.setInitiationRequestMethod(requestMethod);
+    if (httpContent != null) {
+      this.uploader.setMetadata(httpContent);
     }
   }
 
@@ -294,7 +294,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
 
   /** Initializes the media HTTP downloader. */
   protected final void initializeMediaDownload() {
-    HttpRequestFactory requestFactory = getClient().getRequestFactory();
+    HttpRequestFactory requestFactory = abstractGoogleClient.getRequestFactory();
     this.downloader =
         new MediaHttpDownloader(requestFactory.getTransport(), requestFactory.getInitializer());
   }
@@ -305,17 +305,19 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * @return newly created {@link GenericUrl}
    */
   public final GenericUrl buildHttpRequestUrl() {
-    return new GenericUrl(UriTemplate.expand(getClient().getBaseUrl(), uriTemplate, this, true));
+    return new GenericUrl(
+        UriTemplate.expand(abstractGoogleClient.getBaseUrl(), uriTemplate, this, true));
   }
 
   /** Create an {@link HttpRequest} suitable for use against this service. */
   public final HttpRequest buildHttpRequest() throws Exception {
     Preconditions.checkArgument(uploader == null);
-    HttpRequest request = client.buildHttpRequest(method, buildHttpRequestUrl(), content);
+    HttpRequest request =
+        abstractGoogleClient.buildHttpRequest(requestMethod, buildHttpRequestUrl(), httpContent);
     // Add specified headers (if any) to the headers in the request.
     request.getHeaders().putAll(getRequestHeaders());
     if (isSubscribing) {
-      client.getSubscriptionManager().addSubscriptionRequestHeaders(request);
+      abstractGoogleClient.getSubscriptionManager().addSubscriptionRequestHeaders(request);
     }
     return request;
   }
@@ -348,10 +350,10 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     if (uploader == null) {
       HttpRequest request = buildHttpRequest();
       request.setEnableGZipContent(!disableGZipContent);
-      HttpResponse response = client.executeUnparsed(request);
+      HttpResponse response = abstractGoogleClient.executeUnparsed(request);
       lastResponseHeaders = response.getHeaders();
       if (notificationCallback != null) {
-        lastSubscription = client.getSubscriptionManager()
+        lastSubscription = abstractGoogleClient.getSubscriptionManager()
             .processSubscribeResponse(lastResponseHeaders, notificationCallback);
       }
       return response;

@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.testing.services.subscriptions;
+package com.google.api.client.googleapis.testing.subscriptions;
 
 import com.google.api.client.googleapis.subscriptions.NotificationCallback;
 import com.google.api.client.googleapis.subscriptions.Subscription;

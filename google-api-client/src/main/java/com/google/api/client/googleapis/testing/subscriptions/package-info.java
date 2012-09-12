@@ -24,5 +24,5 @@
  * @author Matthias Linder (mlinder)
  */
 
-package com.google.api.client.googleapis.testing.services.subscriptions;
+package com.google.api.client.googleapis.testing.subscriptions;
 
