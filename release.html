@@ -97,7 +97,7 @@ function esc() { echo $@ | sed "s/\./\\\./g"; }
 ESC_VER_NEXT=`esc ${VER_NEXT}`; ESC_VER_CUR=`esc ${VER_CUR}`; ESC_VER_PREV=`esc ${VER_PREV}`
 sed -i "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g" pom.xml
 sed -i "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g" */pom.xml
-for filename in google-api-client-assembly/android-properties/*.properties; do newname=`echo $filename | sed -e "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g"`; mv $filename $newname; done
+for filename in google-api-client-assembly/android-properties/*.properties; do newname=`echo $filename | sed -e "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g"`; hg mv $filename $newname; done
 sed -i -e "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g" -e "s@${ESC_VER_PREV}${VER_SUFFIX}@${ESC_VER_CUR}${VER_SUFFIX}@g" jdiff.xml
 sed -i -e "s@${ESC_VER_CUR}@${ESC_VER_NEXT}@g" -e "s@${ESC_VER_PREV}@${ESC_VER_CUR}@g" release.html
 echo -n && read -e -p "Version which comes after ${VER_NEXT}: " NV && sed -i -e "s@VER_NEXT=${ESC_VER_NEXT}@VER_NEXT=${NV}@g" release.html
