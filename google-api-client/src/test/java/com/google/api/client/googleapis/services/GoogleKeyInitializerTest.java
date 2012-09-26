@@ -14,7 +14,9 @@
 
 package com.google.api.client.googleapis.services;
 
+import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpMethod;
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.json.JsonHttpClient;
 import com.google.api.client.http.json.JsonHttpRequest;
 import com.google.api.client.json.jackson.JacksonFactory;
@@ -29,23 +31,51 @@ import junit.framework.TestCase;
  *
  * @author Yaniv Inbar
  */
-@Deprecated
+@SuppressWarnings("deprecation")
 public class GoogleKeyInitializerTest extends TestCase {
 
-  public static class MyRequest extends JsonHttpRequest {
+  @Deprecated
+  public static class MyRequestOld extends JsonHttpRequest {
     @Key
     String key;
 
-    public MyRequest() {
+    public MyRequestOld() {
       super(new JsonHttpClient(
           new MockHttpTransport(), new JacksonFactory(), HttpTesting.SIMPLE_URL, "test/", null),
           HttpMethod.GET, "", null);
     }
   }
 
-  public void testInitialize() {
+  @Deprecated
+  public void testInitializeOld() {
     GoogleKeyInitializer key = new GoogleKeyInitializer("foo");
-    MyRequest request = new MyRequest();
+    MyRequestOld request = new MyRequestOld();
+    assertNull(request.key);
+    key.initialize(request);
+    assertEquals("foo", request.key);
+  }
+
+  public static class MyClient extends AbstractGoogleClient {
+
+    public MyClient(HttpTransport transport) {
+      super(transport, null, HttpTesting.SIMPLE_URL, "test/", null);
+    }
+  }
+
+  public static class MyRequest extends AbstractGoogleClientRequest<String> {
+    @Key
+    String key;
+
+    protected MyRequest(MyClient client, String method, String uriTemplate,
+        HttpContent content, Class<String> responseClass) {
+      super(client, method, uriTemplate, content, responseClass);
+    }
+  }
+
+  public void testInitialize2() {
+    GoogleKeyInitializer key = new GoogleKeyInitializer("foo");
+    MyClient client = new MyClient(new MockHttpTransport());
+    MyRequest request = new MyRequest(client, "GET", "", null, String.class);
     assertNull(request.key);
     key.initialize(request);
     assertEquals("foo", request.key);
