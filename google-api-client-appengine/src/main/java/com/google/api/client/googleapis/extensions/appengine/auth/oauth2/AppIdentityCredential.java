@@ -21,7 +21,8 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
 import com.google.appengine.api.appidentity.AppIdentityServiceFailureException;
-import com.google.common.collect.Lists;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 
 import java.io.IOException;
 import java.util.List;
@@ -52,21 +53,35 @@ import java.util.List;
  */
 public class AppIdentityCredential implements HttpRequestInitializer, HttpExecuteInterceptor {
 
+  /** App Identity Service that provides the access token. */
+  private final AppIdentityService appIdentityService;
+
   /** OAuth scopes. */
-  private final List<String> scopes;
+  private final ImmutableList<String> scopes;
 
   /**
    * @param scopes OAuth scopes
    */
   public AppIdentityCredential(Iterable<String> scopes) {
-    this.scopes = Lists.newArrayList(scopes.iterator());
+    this(AppIdentityServiceFactory.getAppIdentityService(), ImmutableList.copyOf(scopes));
   }
 
   /**
    * @param scopes OAuth scopes
    */
   public AppIdentityCredential(String... scopes) {
-    this.scopes = Lists.newArrayList(scopes);
+    this(AppIdentityServiceFactory.getAppIdentityService(), ImmutableList.copyOf(scopes));
+  }
+
+  /**
+   * @param appIdentityService App Identity Service that provides the access token
+   * @param scopes OAuth scopes
+   *
+   * @since 1.12
+   */
+  protected AppIdentityCredential(AppIdentityService appIdentityService, List<String> scopes) {
+    this.appIdentityService = Preconditions.checkNotNull(appIdentityService);
+    this.scopes = ImmutableList.copyOf(scopes);
   }
 
   @Override
@@ -87,11 +102,94 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
   @Override
   public void intercept(HttpRequest request) throws Exception {
     try {
-      String accessToken =
-          AppIdentityServiceFactory.getAppIdentityService().getAccessToken(scopes).getAccessToken();
+      String accessToken = appIdentityService.getAccessToken(scopes).getAccessToken();
       BearerToken.authorizationHeaderAccessMethod().intercept(request, accessToken);
     } catch (AppIdentityServiceFailureException e) {
       throw new Exception(e);
+    }
+  }
+
+  /**
+   * Gets the App Identity Service that provides the access token.
+   *
+   * @since 1.12
+   */
+  public final AppIdentityService getAppIdentityService() {
+    return appIdentityService;
+  }
+
+  /**
+   * Gets the OAuth scopes.
+   *
+   * @since 1.12
+   */
+  public final List<String> getScopes() {
+    return scopes;
+  }
+
+  /**
+   * Builder for {@link AppIdentityCredential}.
+   *
+   * <p>
+   * Implementation is not thread-safe.
+   * </p>
+   *
+   * @since 1.12
+   */
+  public static class Builder {
+
+    /** App Identity Service that provides the access token. */
+    private AppIdentityService appIdentityService;
+
+    /** OAuth scopes. */
+    private final ImmutableList<String> scopes;
+
+    /**
+     * Returns an instance of a new builder.
+     *
+     * @param scopes OAuth scopes
+     */
+    public Builder(Iterable<String> scopes) {
+      this.scopes = ImmutableList.copyOf(scopes);
+    }
+
+    /**
+     * Returns an instance of a new builder.
+     *
+     * @param scopes OAuth scopes
+     */
+    public Builder(String... scopes) {
+      this.scopes = ImmutableList.copyOf(scopes);
+    }
+
+    /**
+     * Sets the App Identity Service that provides the access token.
+     * <p>
+     * If not explicitly set, the {@link AppIdentityServiceFactory#getAppIdentityService()} method
+     * will be used to provide the App Identity Service.
+     * </p>
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     */
+    public Builder setAppIdentityService(AppIdentityService appIdentityService) {
+      this.appIdentityService = Preconditions.checkNotNull(appIdentityService);
+      return this;
+    }
+
+    /**
+     * Returns a new {@link AppIdentityCredential}.
+     */
+    public AppIdentityCredential build() {
+      AppIdentityService appIdentityService = this.appIdentityService;
+      if (appIdentityService == null) {
+        // Lazily retrieved rather than setting as the default value in order to not add runtime
+        // dependencies on AppIdentityServiceFactory unless it is actually being used.
+        appIdentityService = AppIdentityServiceFactory.getAppIdentityService();
+      }
+      return new AppIdentityCredential(appIdentityService, scopes);
     }
   }
 }
