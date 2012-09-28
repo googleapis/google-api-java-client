@@ -364,9 +364,13 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /**
    * Sends the request to the server and returns the parsed response.
    *
+   * <p>
+   * Subclasses may override by calling the super implementation.
+   * </p>
+   *
    * @return parsed HTTP response
    */
-  public final T execute() throws Exception {
+  public T execute() throws Exception {
     HttpResponse response = executeUnparsed();
     // TODO(yanivi): remove workaround when feature is implemented
     // workaround for http://code.google.com/p/google-http-java-client/issues/detail?id=110
