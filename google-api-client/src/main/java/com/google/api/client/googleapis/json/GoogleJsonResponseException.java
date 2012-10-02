@@ -25,8 +25,6 @@ import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.StringUtils;
 import com.google.common.base.Preconditions;
 
-import java.io.IOException;
-
 /**
  * Exception thrown when an error status code is detected in an HTTP response to a Google API that
  * uses the JSON format, using the format specified in <a
@@ -117,7 +115,7 @@ public class GoogleJsonResponseException extends HttpResponseException {
               detailString = details.toPrettyString();
             }
           }
-        } catch (IOException exception) {
+        } catch (Exception exception) {
           // it would be bad to throw an exception while throwing an exception
           exception.printStackTrace();
         } finally {
@@ -130,7 +128,7 @@ public class GoogleJsonResponseException extends HttpResponseException {
       } else {
         detailString = response.parseAsString();
       }
-    } catch (IOException exception) {
+    } catch (Exception exception) {
       // it would be bad to throw an exception while throwing an exception
       exception.printStackTrace();
     }

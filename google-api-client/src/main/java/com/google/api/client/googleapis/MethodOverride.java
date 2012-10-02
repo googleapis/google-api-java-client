@@ -97,7 +97,7 @@ public final class MethodOverride implements HttpExecuteInterceptor, HttpRequest
     request.setInterceptor(this);
   }
 
-  public void intercept(HttpRequest request) {
+  public void intercept(HttpRequest request) throws Exception {
     if (overrideThisMethod(request)) {
       String requestMethod = request.getRequestMethod();
       request.setRequestMethod(HttpMethods.POST);
@@ -109,7 +109,7 @@ public final class MethodOverride implements HttpExecuteInterceptor, HttpRequest
     }
   }
 
-  private boolean overrideThisMethod(HttpRequest request) {
+  private boolean overrideThisMethod(HttpRequest request) throws Exception {
     String requestMethod = request.getRequestMethod();
     boolean supportsMethod = request.getTransport().supportsMethod(requestMethod);
     if (requestMethod.equals(HttpMethods.GET) || requestMethod.equals(HttpMethods.POST)) {

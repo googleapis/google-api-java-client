@@ -12,22 +12,15 @@
 
 package com.google.api.client.googleapis.services;
 
-import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.googleapis.batch.BatchRequest;
-import com.google.api.client.googleapis.subscriptions.SubscriptionManager;
-import com.google.api.client.http.EmptyContent;
+import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpMethods;
-import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.ObjectParser;
 import com.google.common.base.Preconditions;
 
-import java.io.InputStream;
 import java.util.logging.Logger;
 
 /**
@@ -68,8 +61,8 @@ public abstract class AbstractGoogleClient {
   /** Object parser or {@code null} for none. */
   private final ObjectParser objectParser;
 
-  /** Subscription manager. */
-  private SubscriptionManager subscriptionManager;
+  /** Subscription store or {@code null} for none. */
+  private SubscriptionStore subscriptionStore;
 
   /** Whether discovery pattern checks should be suppressed on required parameters. */
   private boolean suppressPatternChecks;
@@ -103,15 +96,14 @@ public abstract class AbstractGoogleClient {
    * @param googleClientRequestInitializer Google request initializer or {@code null} for none
    * @param applicationName application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
-   * @param subscriptionManager subscription manager
+   * @param subscriptionStore subscription store or {@code null} for none
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
    */
   protected AbstractGoogleClient(HttpTransport transport,
       HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
       ObjectParser objectParser, GoogleClientRequestInitializer googleClientRequestInitializer,
-      String applicationName, SubscriptionManager subscriptionManager,
-      boolean suppressPatternChecks) {
+      String applicationName, SubscriptionStore subscriptionStore, boolean suppressPatternChecks) {
     this.googleClientRequestInitializer = googleClientRequestInitializer;
     this.rootUrl = normalizeRootUrl(rootUrl);
     this.servicePath = normalizeServicePath(servicePath);
@@ -119,7 +111,7 @@ public abstract class AbstractGoogleClient {
     this.requestFactory = httpRequestInitializer == null
         ? transport.createRequestFactory() : transport.createRequestFactory(httpRequestInitializer);
     this.objectParser = objectParser;
-    this.subscriptionManager = subscriptionManager;
+    this.subscriptionStore = subscriptionStore;
     this.suppressPatternChecks = suppressPatternChecks;
   }
 
@@ -223,123 +215,6 @@ public abstract class AbstractGoogleClient {
   }
 
   /**
-   * Create an {@link HttpRequest} suitable for use against this service.
-   *
-   * <p>
-   * Subclasses may override if specific behavior is required, for example if a sequence of requests
-   * need to be built instead of a single request then subclasses should throw an
-   * {@link UnsupportedOperationException}. Subclasses which override this method can make use of
-   * {@link HttpRequest#addParser}, {@link HttpRequest#setContent} and
-   * {@link HttpRequest#setEnableGZipContent}.
-   * </p>
-   *
-   * @param requestMethod HTTP request method
-   * @param url The complete URL of the service where requests should be sent
-   * @param content HTTP content or {@code null} for none
-   * @return newly created {@link HttpRequest}
-   */
-  protected final HttpRequest buildHttpRequest(
-      String requestMethod, GenericUrl url, HttpContent content) throws Exception {
-    HttpRequest httpRequest = requestFactory.buildRequest(requestMethod, url, content);
-    new MethodOverride().intercept(httpRequest);
-    httpRequest.setParser(getObjectParser());
-    if (getApplicationName() != null) {
-      httpRequest.getHeaders().setUserAgent(getApplicationName());
-    }
-    // custom methods may use POST with no content but require a Content-Length header
-    if (content == null && requestMethod.equals(HttpMethods.POST)) {
-      httpRequest.setContent(new EmptyContent());
-    }
-    return httpRequest;
-  }
-
-  /**
-   * Builds and executes a {@link HttpRequest}. Subclasses may override if specific behavior is
-   * required, for example if a sequence of requests need to be built instead of a single request.
-   *
-   * <p>
-   * Callers are responsible for disconnecting the HTTP response by calling
-   * {@link HttpResponse#disconnect}. Example usage:
-   * </p>
-   *
-   * <pre>
-     HttpResponse response = client.executeUnparsed(method, url, body);
-     try {
-       // process response..
-     } finally {
-       response.disconnect();
-     }
-   * </pre>
-   *
-   * @param method HTTP Method type
-   * @param url The complete URL of the service where requests should be sent
-   * @param content HTTP content or {@code null} for none
-   * @return HTTP response
-   */
-  protected final HttpResponse executeUnparsed(String method, GenericUrl url, HttpContent content)
-      throws Exception {
-    HttpRequest request = buildHttpRequest(method, url, content);
-    return executeUnparsed(request);
-  }
-
-  /**
-   * Executes the specified {@link HttpRequest}. Subclasses may override if specific behavior is
-   * required, for example if a custom error is required to be thrown.
-   *
-   * <p>
-   * Callers are responsible for disconnecting the HTTP response by calling
-   * {@link HttpResponse#disconnect}. Example usage:
-   * </p>
-   *
-   * <pre>
-     HttpResponse response = client.executeUnparsed(request);
-     try {
-       // process response..
-     } finally {
-       response.disconnect();
-     }
-   * </pre>
-   *
-   * <p>
-   * Override by calling the super implementation.
-   * </p>
-   *
-   * @param request HTTP Request
-   * @return HTTP response
-   */
-  protected HttpResponse executeUnparsed(HttpRequest request) throws Exception {
-    return request.execute();
-  }
-
-  /**
-   * Builds and executes an {@link HttpRequest} and then returns the content input stream of
-   * {@link HttpResponse}. Subclasses may override if specific behavior is required.
-   *
-   * <p>
-   * Callers are responsible for closing the input stream after it is processed. Example usage:
-   * </p>
-   *
-   * <pre>
-     InputStream is = client.executeAsInputStream();
-     try {
-       // Process input stream..
-     } finally {
-       is.close();
-     }
-   * </pre>
-   *
-   * @param method HTTP Method type
-   * @param url The complete URL of the service where requests should be sent
-   * @param content HTTP content or {@code null} for none
-   * @return input stream of the response content
-   */
-  protected final InputStream executeAsInputStream(
-      String method, GenericUrl url, HttpContent content) throws Exception {
-    HttpResponse response = executeUnparsed(method, url, content);
-    return response.getContent();
-  }
-
-  /**
    * Create an {@link BatchRequest} object from this Google API client instance.
    *
    * <p>
@@ -384,9 +259,9 @@ public abstract class AbstractGoogleClient {
     return batch;
   }
 
-  /** Returns the subscription manager or {@code null} for none. */
-  public final SubscriptionManager getSubscriptionManager() {
-    return subscriptionManager;
+  /** Returns the subscription store or {@code null} for none. */
+  public final SubscriptionStore getSubscriptionStore() {
+    return subscriptionStore;
   }
 
   /** Returns whether discovery pattern checks should be suppressed on required parameters. */
@@ -460,8 +335,8 @@ public abstract class AbstractGoogleClient {
      */
     private String applicationName;
 
-    /** Subscription manager used to create subscriptions. */
-    private SubscriptionManager subscriptionManager;
+    /** Subscription store or {@code null} for none. */
+    private SubscriptionStore subscriptionStore;
 
     /** Whether discovery pattern checks should be suppressed on required parameters. */
     private boolean suppressPatternChecks;
@@ -628,19 +503,19 @@ public abstract class AbstractGoogleClient {
     }
 
     /**
-     * Returns the {@link SubscriptionManager} used to make subscription requests, or {@code null}
-     * for none.
+     * Returns the {@link SubscriptionStore} used to make subscription requests, or {@code null} for
+     * none.
      */
-    public final SubscriptionManager getSubscriptionManager() {
-      return subscriptionManager;
+    public final SubscriptionStore getSubscriptionStore() {
+      return subscriptionStore;
     }
 
     /**
-     * Sets the {@link SubscriptionManager} used to make subscription requests, or {@code null} for
+     * Sets the {@link SubscriptionStore} used to make subscription requests, or {@code null} for
      * none.
      */
-    public Builder setSubscriptionManager(SubscriptionManager subscriptionManager) {
-      this.subscriptionManager = subscriptionManager;
+    public Builder setSubscriptionStore(SubscriptionStore subscriptionStore) {
+      this.subscriptionStore = subscriptionStore;
       return this;
     }
 

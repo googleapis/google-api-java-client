@@ -248,7 +248,8 @@ public final class MediaHttpUploader {
         initiationRequestUrl.put("uploadType", "media");
       }
       HttpRequest request =
-          requestFactory.buildRequest(initiationMethod, initiationRequestUrl, content);
+          requestFactory.buildRequest(initiationRequestMethod, initiationRequestUrl, content);
+      request.setThrowExceptionOnExecuteError(false);
       request.setEnableGZipContent(true);
       addMethodOverride(request);
       HttpResponse response = request.execute();
@@ -352,8 +353,9 @@ public final class MediaHttpUploader {
         requestFactory.buildRequest(initiationRequestMethod, initiationRequestUrl, content);
     addMethodOverride(request);
     initiationHeaders.setUploadContentType(mediaContent.getType());
-    initiationHeaders.setUploadContentLength(getMediaContentLength());
-    request.setHeaders(initiationHeaders);
+    initiationHeaders.setUploadContentLength(Long.valueOf(getMediaContentLength()));
+    request.getHeaders().putAll(initiationHeaders);
+    request.setThrowExceptionOnExecuteError(false);
     request.setRetryOnExecuteIOException(true);
     request.setEnableGZipContent(true);
     HttpResponse response = request.execute();
@@ -377,7 +379,7 @@ public final class MediaHttpUploader {
    *
    * @param request HTTP request
    */
-  private void addMethodOverride(HttpRequest request) {
+  private void addMethodOverride(HttpRequest request) throws Exception {
     new MethodOverride().intercept(request);
   }
 

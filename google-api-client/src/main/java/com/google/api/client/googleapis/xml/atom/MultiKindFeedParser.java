@@ -91,6 +91,11 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
   /**
    * Parses the given HTTP response using the given feed class and entry classes.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link IOException} and {@link XmlPullParserException}.
+   * </p>
+   *
    * @param <T> feed type
    * @param <E> entry type
    * @param response HTTP response
@@ -103,7 +108,7 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
    */
   public static <T, E> MultiKindFeedParser<T> create(HttpResponse response,
       XmlNamespaceDictionary namespaceDictionary, Class<T> feedClass, Class<E>... entryClasses)
-      throws IOException, XmlPullParserException {
+      throws Exception {
     InputStream content = response.getContent();
     try {
       Atom.checkContentType(response.getContentType());

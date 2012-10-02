@@ -20,8 +20,6 @@ import com.google.api.client.json.jackson.JacksonFactory;
 
 import junit.framework.TestCase;
 
-import java.io.IOException;
-
 /**
  * Tests {@link GoogleJsonErrorContainer}.
  *
@@ -34,7 +32,7 @@ public class GoogleJsonErrorContainerTest extends TestCase {
       + "\"domain\":\"usageLimits\"," + "\"message\":\"Access Not Configured\","
       + "\"reason\":\"accessNotConfigured\"" + "}]," + "\"message\":\"Access Not Configured\"}}";
 
-  public void test_json() throws IOException {
+  public void test_json() throws Exception {
     JsonParser parser = FACTORY.createJsonParser(ERROR);
     GoogleJsonErrorContainer e = parser.parse(GoogleJsonErrorContainer.class, null);
     assertEquals(ERROR, FACTORY.toString(e));

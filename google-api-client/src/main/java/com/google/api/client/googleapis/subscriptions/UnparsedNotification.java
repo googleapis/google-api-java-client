@@ -15,6 +15,7 @@
 package com.google.api.client.googleapis.subscriptions;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 
 import java.io.InputStream;
 
@@ -82,5 +83,34 @@ public final class UnparsedNotification extends Notification {
    */
   public final InputStream getContent() {
     return content;
+  }
+
+  /**
+   * Handles a newly received notification, and delegates it to the registered handler.
+   *
+   * @param subscriptionStore subscription store
+   * @returns {@code true} if the notification was delivered successfully, or {@code false} if this
+   *          notification could not be delivered and the subscription should be cancelled.
+   * @throws IllegalArgumentException if there is a client-token mismatch
+   */
+  public boolean deliverNotification(SubscriptionStore subscriptionStore) throws Exception {
+    // Find out the handler to whom this notification should go.
+    Subscription subscription =
+        subscriptionStore.getSubscription(Preconditions.checkNotNull(getSubscriptionID()));
+    if (subscription == null) {
+      return false;
+    }
+
+    // Validate the notification.
+    String expectedToken = subscription.getClientToken();
+    Preconditions.checkArgument(
+        Strings.isNullOrEmpty(expectedToken) || expectedToken.equals(getClientToken()),
+        "Token mismatch for subscription with id=%s -- got=%s expected=%s", getSubscriptionID(),
+        getClientToken(), expectedToken);
+
+    // Invoke the handler associated with this subscription.
+    NotificationCallback h = subscription.getNotificationCallback();
+    h.handleNotification(subscription, this);
+    return true;
   }
 }

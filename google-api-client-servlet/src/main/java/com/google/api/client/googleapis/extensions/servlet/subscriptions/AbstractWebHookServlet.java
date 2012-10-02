@@ -15,9 +15,9 @@
 package com.google.api.client.googleapis.extensions.servlet.subscriptions;
 
 import com.google.api.client.googleapis.subscriptions.SubscriptionHeaders;
-import com.google.api.client.googleapis.subscriptions.SubscriptionManager;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.googleapis.subscriptions.UnparsedNotification;
+import com.google.common.base.Throwables;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,8 +48,8 @@ import javax.servlet.http.HttpServletResponse;
       private static final long serialVersionUID = 1L;
 
       @Override
-      protected SubscriptionManager createSubscriptionManager() {
-        return new SubscriptionManager(new CachedAppEngineSubscriptionStore());
+      protected SubscriptionStore createSubscriptionStore() {
+        return new CachedAppEngineSubscriptionStore();
       }
     }
  * </pre>
@@ -80,22 +80,22 @@ import javax.servlet.http.HttpServletResponse;
 @SuppressWarnings("serial")
 public abstract class AbstractWebHookServlet extends HttpServlet {
 
-  /** Globally shared/cached {@link SubscriptionManager}. */
-  private static SubscriptionManager subscriptionManager;
+  /** Globally shared/cached {@link SubscriptionStore}. */
+  private static SubscriptionStore subscriptionStore;
 
   /**
    * Used to get access to the {@link SubscriptionStore} in order to handle incoming notifications.
    */
-  protected abstract SubscriptionManager createSubscriptionManager();
+  protected abstract SubscriptionStore createSubscriptionStore();
 
   /**
-   * Returns the (cached) {@link SubscriptionManager} used by this servlet.
+   * Returns the (cached) {@link SubscriptionStore} used by this servlet.
    */
-  public final SubscriptionManager getSubscriptionManager() {
-    if (subscriptionManager == null) {
-      subscriptionManager = createSubscriptionManager();
+  public final SubscriptionStore getSubscriptionStore() {
+    if (subscriptionStore == null) {
+      subscriptionStore = createSubscriptionStore();
     }
-    return subscriptionManager;
+    return subscriptionStore;
   }
 
   /**
@@ -144,13 +144,12 @@ public abstract class AbstractWebHookServlet extends HttpServlet {
           req.getContentType(),
           contentStream);
 
-      if (!getSubscriptionManager().deliverNotification(notification)) {
+      if (!notification.deliverNotification(getSubscriptionStore())) {
         sendUnsubscribeResponse(resp, notification);
       }
-    } catch (Exception ex) {
-      IOException io = new IOException();
-      io.initCause(ex);
-      throw io;
+    } catch (Exception e) {
+      Throwables.propagateIfPossible(e, IOException.class, ServletException.class);
+      throw new ServletException(e);
     } finally {
       contentStream.close();
     }

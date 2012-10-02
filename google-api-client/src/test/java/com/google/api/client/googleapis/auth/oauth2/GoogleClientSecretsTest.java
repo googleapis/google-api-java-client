@@ -21,7 +21,6 @@ import com.google.api.client.util.StringUtils;
 import junit.framework.TestCase;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 /**
  * Tests {@link GoogleClientSecrets}.
@@ -37,7 +36,7 @@ public class GoogleClientSecretsTest extends TestCase {
   private final static String CLIENT_SECRETS = "{\"installed\": {\"client_id\": \"" + CLIENT_ID
       + "\",\"client_secret\": \"" + CLIENT_SECRET + "\"}}";
 
-  public void testLoad() throws IOException {
+  public void testLoad() throws Exception {
     GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
         new GsonFactory(), new ByteArrayInputStream(StringUtils.getBytesUtf8(CLIENT_SECRETS)));
     Details installed = clientSecrets.getInstalled();

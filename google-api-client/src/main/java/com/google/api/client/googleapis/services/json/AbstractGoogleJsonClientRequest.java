@@ -16,8 +16,11 @@ import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.batch.json.JsonBatchCallback;
 import com.google.api.client.googleapis.json.GoogleJsonErrorContainer;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.googleapis.json.JsonCContent;
+import com.google.api.client.googleapis.json.JsonCParser;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
-import com.google.api.client.http.HttpContent;
+import com.google.api.client.googleapis.subscriptions.SubscriptionUtils;
+import com.google.api.client.googleapis.subscriptions.json.JsonNotificationCallback;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.UriTemplate;
@@ -36,22 +39,8 @@ import com.google.api.client.http.json.JsonHttpContent;
  */
 public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleClientRequest<T> {
 
-  /**
-   * @param abstractGoogleJsonClient Google JSON client
-   * @param requestMethod HTTP Method
-   * @param uriTemplate URI template for the path relative to the base URL. If it starts with a "/"
-   *        the base path from the base URL will be stripped out. The URI template can also be a
-   *        full URL. URI template expansion is done using
-   *        {@link UriTemplate#expand(String, String, Object, boolean)}
-   * @param content A POJO that can be serialized into JSON or {@code null} for none
-   * @param responseClass response class to parse into
-   */
-  protected AbstractGoogleJsonClientRequest(AbstractGoogleJsonClient abstractGoogleJsonClient,
-      String requestMethod, String uriTemplate, Object content, Class<T> responseClass) {
-    this(abstractGoogleJsonClient, requestMethod, uriTemplate, content == null
-        ? null : new JsonHttpContent(abstractGoogleJsonClient.getJsonFactory(), content),
-        responseClass);
-  }
+  /** POJO that can be serialized into JSON content or {@code null} for none. */
+  private final Object jsonContent;
 
   /**
    * @param abstractGoogleJsonClient Google JSON client
@@ -60,11 +49,17 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
    *        the base path from the base URL will be stripped out. The URI template can also be a
    *        full URL. URI template expansion is done using
    *        {@link UriTemplate#expand(String, String, Object, boolean)}
-   * @param httpContent HTTP content or {@code null} for none
+   * @param jsonContent POJO that can be serialized into JSON content or {@code null} for none
+   * @param responseClass response class to parse into
    */
   protected AbstractGoogleJsonClientRequest(AbstractGoogleJsonClient abstractGoogleJsonClient,
-      String requestMethod, String uriTemplate, HttpContent httpContent, Class<T> responseClass) {
-    super(abstractGoogleJsonClient, requestMethod, uriTemplate, httpContent, responseClass);
+      String requestMethod, String uriTemplate, Object jsonContent, Class<T> responseClass) {
+    super(abstractGoogleJsonClient, requestMethod, uriTemplate, jsonContent == null
+        ? null : (abstractGoogleJsonClient.getObjectParser() instanceof JsonCParser)
+            ? new JsonCContent(abstractGoogleJsonClient.getJsonFactory(), jsonContent)
+            : new JsonHttpContent(abstractGoogleJsonClient.getJsonFactory(), jsonContent),
+        responseClass);
+    this.jsonContent = jsonContent;
   }
 
   @Override
@@ -80,6 +75,13 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
   @Override
   public AbstractGoogleJsonClientRequest<T> setRequestHeaders(HttpHeaders headers) {
     return (AbstractGoogleJsonClientRequest<T>) super.setRequestHeaders(headers);
+  }
+
+  @Override
+  public AbstractGoogleJsonClientRequest<T> setNotificationClientToken(
+      String notificationClientToken) {
+    return (AbstractGoogleJsonClientRequest<T>) super.setNotificationClientToken(
+        notificationClientToken);
   }
 
   /**
@@ -115,11 +117,35 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
   }
 
   @Override
-  public HttpResponse executeUnparsed() throws Exception {
-    HttpResponse response = super.executeUnparsed();
-    if (getMediaHttpUploader() != null && !response.isSuccessStatusCode()) {
-      throw GoogleJsonResponseException.from(getAbstractGoogleClient().getJsonFactory(), response);
-    }
-    return response;
+  protected Exception newExceptionOnError(HttpResponse response) {
+    return GoogleJsonResponseException.from(getAbstractGoogleClient().getJsonFactory(), response);
+  }
+
+  /**
+   * Subscribes to parsed JSON notifications.
+   *
+   * <p>
+   * A notification client token is randomly generated using
+   * {@link SubscriptionUtils#generateRandomClientToken()}. You may override using
+   * {@link #setNotificationClientToken(String)}.
+   * </p>
+   *
+   * <p>
+   * Overriding is only supported for the purpose of changing visibility to public, but nothing
+   * else.
+   * </p>
+   *
+   * @param notificationDeliveryMethod notification delivery method
+   * @param notificationCallback JSON notification callback or {@code null} for none
+   */
+  protected AbstractGoogleJsonClientRequest<T> subscribe(
+      String notificationDeliveryMethod, JsonNotificationCallback<T> notificationCallback) {
+    return (AbstractGoogleJsonClientRequest<T>) super.subscribe(
+        notificationDeliveryMethod, notificationCallback);
+  }
+
+  /** Returns POJO that can be serialized into JSON content or {@code null} for none. */
+  public Object getJsonContent() {
+    return jsonContent;
   }
 }

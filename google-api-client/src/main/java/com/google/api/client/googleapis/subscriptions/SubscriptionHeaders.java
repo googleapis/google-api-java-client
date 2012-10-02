@@ -72,6 +72,12 @@ public final class SubscriptionHeaders extends GoogleHeaders {
    */
   public static final String UNSUBSCRIBE = "X-Unsubscribe";
 
+  /**
+   * Header sent that provides an HTTP Date indicating the time at which the subscription will
+   * expire. If not provided the subscription is assumed to have an infinite TTL.
+   */
+  public static final String SUBSCRIPTION_EXPIRES = "X-Subscription-Expires";
+
   /** {@code "X-Subscribe"} header. */
   @Key(SubscriptionHeaders.SUBSCRIBE)
   private String subscribe;
@@ -99,6 +105,13 @@ public final class SubscriptionHeaders extends GoogleHeaders {
   /** {@code "X-Unsubscribe"} header. */
   @Key(SubscriptionHeaders.UNSUBSCRIBE)
   private String unsubscribe;
+
+  /**
+   * HTTP Date indicating the time at which the subscription will expire or {@code null} for an
+   * infinite TTL.
+   */
+  @Key(SubscriptionHeaders.SUBSCRIPTION_EXPIRES)
+  private String subscriptionExpires;
 
   /**
    * Creates a PushHeaders object using the headers present in the specified {@link HttpHeaders}.
@@ -205,5 +218,21 @@ public final class SubscriptionHeaders extends GoogleHeaders {
    */
   public void setUnsubscribe(String unsubscribe) {
     this.unsubscribe = unsubscribe;
+  }
+
+  /**
+   * Returns the HTTP Date indicating the time at which the subscription will expire or {@code null}
+   * for an infinite TTL.
+   */
+  public String getSubscriptionExpires() {
+    return subscriptionExpires;
+  }
+
+  /**
+   * Sets the HTTP Date indicating the time at which the subscription will expire or {@code null}
+   * for an infinite TTL.
+   */
+  public void setSubscriptionExpires(String subscriptionExpires) {
+    this.subscriptionExpires = subscriptionExpires;
   }
 }

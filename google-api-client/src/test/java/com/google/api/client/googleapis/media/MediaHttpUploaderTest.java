@@ -94,8 +94,8 @@ public class MediaHttpUploaderTest extends TestCase {
             if (!directUploadEnabled) {
               // Assert that the required headers are set.
               assertEquals(Integer.toString(contentLength),
-                  getHeaders().get("X-Upload-Content-Length").get(0));
-              assertEquals(TEST_CONTENT_TYPE, getHeaders().get("X-Upload-Content-Type").get(0));
+                  getHeaders().get("x-upload-content-length").get(0));
+              assertEquals(TEST_CONTENT_TYPE, getHeaders().get("x-upload-content-type").get(0));
             }
             // This is the initiation call. Return 200 with the upload URI.
             MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();

@@ -19,7 +19,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Key;
 import com.google.common.base.Preconditions;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -168,9 +167,14 @@ public final class GoogleClientSecrets extends GenericJson {
    * was encoded in UTF-8. Since 1.11 the underlying JSON-library tries to determine the charset
    * automatically.
    * </p>
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
    */
   public static GoogleClientSecrets load(JsonFactory jsonFactory, InputStream inputStream)
-      throws IOException {
+      throws Exception {
     // TODO(mlinder): Change this method to take a charset
     return jsonFactory.fromInputStream(inputStream, GoogleClientSecrets.class);
   }

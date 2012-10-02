@@ -70,7 +70,7 @@ public class GoogleHeaders extends HttpHeaders {
 
   /** {@code "X-Upload-Content-Length"} header. */
   @Key("X-Upload-Content-Length")
-  private long uploadContentLength;
+  private Long uploadContentLength;
 
   /** {@code "X-Upload-Content-Type"} header. */
   @Key("X-Upload-Content-Type")
@@ -122,17 +122,33 @@ public class GoogleHeaders extends HttpHeaders {
   /**
    * Returns the {@code "X-Upload-Content-Length"} header or {@code null} for none.
    *
+   * <p>
+   * Upgrade warning: this method now returns a {@link Long}. In prior version 1.11 it returned a
+   * {@code long}.
+   * </p>
+   *
    * @since 1.7
    */
-  public final long getUploadContentLength() {
+  public final Long getUploadContentLength() {
     return uploadContentLength;
   }
 
   /**
    * Sets the {@code "X-Upload-Content-Length"} header or {@code null} for none.
    *
-   * @since 1.7
+   * @since 1.12
    */
+  public final void setUploadContentLength(Long uploadContentLength) {
+    this.uploadContentLength = uploadContentLength;
+  }
+
+  /**
+   * Sets the {@code "X-Upload-Content-Length"} header.
+   *
+   * @since 1.7
+   * @deprecated (scheduled to be removed in 1.13) Use {@link #setUploadContentLength(Long)} instead
+   */
+  @Deprecated
   public final void setUploadContentLength(long uploadContentLength) {
     this.uploadContentLength = uploadContentLength;
   }

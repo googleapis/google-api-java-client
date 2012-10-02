@@ -14,7 +14,7 @@ package com.google.api.client.googleapis.testing.services;
 
 import com.google.api.client.googleapis.services.AbstractGoogleClient;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
-import com.google.api.client.googleapis.subscriptions.SubscriptionManager;
+import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.ObjectParser;
@@ -48,7 +48,7 @@ public class MockGoogleClient extends AbstractGoogleClient {
    * @param googleClientRequestInitializer Google request initializer or {@code null} for none
    * @param applicationName application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
-   * @param subscriptionManager subscription manager
+   * @param subscriptionStore subscription store
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
    */
@@ -59,7 +59,7 @@ public class MockGoogleClient extends AbstractGoogleClient {
       ObjectParser objectParser,
       GoogleClientRequestInitializer googleClientRequestInitializer,
       String applicationName,
-      SubscriptionManager subscriptionManager,
+      SubscriptionStore subscriptionStore,
       boolean suppressPatternChecks) {
     super(transport,
         httpRequestInitializer,
@@ -68,7 +68,7 @@ public class MockGoogleClient extends AbstractGoogleClient {
         objectParser,
         googleClientRequestInitializer,
         applicationName,
-        subscriptionManager,
+        subscriptionStore,
         suppressPatternChecks);
   }
 
@@ -101,7 +101,7 @@ public class MockGoogleClient extends AbstractGoogleClient {
           getObjectParser(),
           getGoogleClientRequestInitializer(),
           getApplicationName(),
-          getSubscriptionManager(),
+          getSubscriptionStore(),
           getSuppressPatternChecks());
     }
 
@@ -132,8 +132,8 @@ public class MockGoogleClient extends AbstractGoogleClient {
     }
 
     @Override
-    public Builder setSubscriptionManager(SubscriptionManager subscriptionManager) {
-      return (Builder) super.setSubscriptionManager(subscriptionManager);
+    public Builder setSubscriptionStore(SubscriptionStore subscriptionStore) {
+      return (Builder) super.setSubscriptionStore(subscriptionStore);
     }
 
     @Override

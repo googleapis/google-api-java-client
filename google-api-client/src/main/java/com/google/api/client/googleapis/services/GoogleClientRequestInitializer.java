@@ -29,7 +29,7 @@ package com.google.api.client.googleapis.services;
  * </pre>
  *
  * <p>
- * Implementations should normally be thread-safe.
+ * Implementations should be thread-safe.
  * </p>
  *
  * @since 1.12

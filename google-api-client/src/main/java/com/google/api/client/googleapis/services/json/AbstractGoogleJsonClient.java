@@ -12,13 +12,11 @@
 
 package com.google.api.client.googleapis.services.json;
 
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.googleapis.json.JsonCParser;
 import com.google.api.client.googleapis.services.AbstractGoogleClient;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
-import com.google.api.client.googleapis.subscriptions.SubscriptionManager;
-import com.google.api.client.http.HttpRequest;
+import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
@@ -53,7 +51,7 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
    * @param googleClientRequestInitializer Google request initializer or {@code null} for none
    * @param applicationName application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
-   * @param subscriptionManager subscription manager
+   * @param subscriptionStore subscription store
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
    */
@@ -61,20 +59,14 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
       HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
       JsonObjectParser jsonObjectParser,
       GoogleClientRequestInitializer googleClientRequestInitializer, String applicationName,
-      SubscriptionManager subscriptionManager, boolean suppressPatternChecks) {
+      SubscriptionStore subscriptionStore, boolean suppressPatternChecks) {
     super(transport, httpRequestInitializer, rootUrl, servicePath, jsonObjectParser,
-        googleClientRequestInitializer, applicationName, subscriptionManager,
-        suppressPatternChecks);
+        googleClientRequestInitializer, applicationName, subscriptionStore, suppressPatternChecks);
   }
 
   @Override
   public JsonObjectParser getObjectParser() {
     return (JsonObjectParser) super.getObjectParser();
-  }
-
-  @Override
-  protected HttpResponse executeUnparsed(HttpRequest request) throws Exception {
-    return GoogleJsonResponseException.execute(getJsonFactory(), request);
   }
 
   /** Returns the JSON Factory. */
@@ -97,23 +89,14 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
      * @param rootUrl root URL of the service
      * @param servicePath service path
      * @param httpRequestInitializer HTTP request initializer or {@code null} for none
+     * @param legacyDataWrapper whether using the legacy data wrapper in responses
      */
     protected Builder(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
-        String servicePath, HttpRequestInitializer httpRequestInitializer) {
-      this(transport, new JsonObjectParser(jsonFactory), rootUrl, servicePath,
+        String servicePath, HttpRequestInitializer httpRequestInitializer,
+        boolean legacyDataWrapper) {
+      super(transport, rootUrl, servicePath, legacyDataWrapper
+          ? new JsonCParser(jsonFactory) : new JsonObjectParser(jsonFactory),
           httpRequestInitializer);
-    }
-
-    /**
-     * @param transport HTTP transport
-     * @param jsonObjectParser JSON object parser
-     * @param rootUrl root URL of the service
-     * @param servicePath service path
-     * @param httpRequestInitializer HTTP request initializer or {@code null} for none
-     */
-    protected Builder(HttpTransport transport, JsonObjectParser jsonObjectParser, String rootUrl,
-        String servicePath, HttpRequestInitializer httpRequestInitializer) {
-      super(transport, rootUrl, servicePath, jsonObjectParser, httpRequestInitializer);
     }
 
     @Override
@@ -156,8 +139,8 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
     }
 
     @Override
-    public Builder setSubscriptionManager(SubscriptionManager subscriptionManager) {
-      return (Builder) super.setSubscriptionManager(subscriptionManager);
+    public Builder setSubscriptionStore(SubscriptionStore subscriptionStore) {
+      return (Builder) super.setSubscriptionStore(subscriptionStore);
     }
 
     @Override
