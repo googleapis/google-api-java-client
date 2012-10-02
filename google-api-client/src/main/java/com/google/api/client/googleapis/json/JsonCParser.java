@@ -22,7 +22,6 @@ import com.google.api.client.json.JsonToken;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Type;
@@ -33,8 +32,8 @@ import java.nio.charset.Charset;
  * wrapped in a {@code "data"} envelope.
  *
  * <p>
- * Warning: this should only be used by some older Google APIs that wrapped the response in a {@code
- * "data"} envelope. All newer Google APIs don't use this envelope, and for those APIs
+ * Warning: this should only be used by some older Google APIs that wrapped the response in a
+ * {@code "data"} envelope. All newer Google APIs don't use this envelope, and for those APIs
  * {@link JsonObjectParser} should be used instead.
  * </p>
  *
@@ -55,8 +54,8 @@ import java.nio.charset.Charset;
  * </p>
  *
  * <p>
- * Upgrade warning: this class now extends {@link JsonObjectParser}, whereas in prior
- * version 1.11 it extended {@link com.google.api.client.http.json.JsonHttpParser}.
+ * Upgrade warning: this class now extends {@link JsonObjectParser}, whereas in prior version 1.11
+ * it extended {@link com.google.api.client.http.json.JsonHttpParser}.
  * </p>
  *
  * @since 1.0
@@ -85,22 +84,26 @@ public final class JsonCParser extends JsonObjectParser {
   }
 
   /**
-   * Initializes a JSON parser to use for parsing by skipping over the {@code
-   * "data"} or {@code "error"} envelope.
+   * Initializes a JSON parser to use for parsing by skipping over the {@code "data"} or
+   * {@code "error"} envelope.
    *
    * <p>
    * The parser will be closed if any throwable is thrown. The current token will be the value of
    * the {@code "data"} or {@code "error} key.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param parser the parser which should be initialized for normal parsing
-   * @throws IllegalArgumentException if content type is not {@link Json#MEDIA_TYPE} or if
-   *         expected {@code "data"} or {@code "error"} key is not found
+   * @throws IllegalArgumentException if content type is not {@link Json#MEDIA_TYPE} or if expected
+   *         {@code "data"} or {@code "error"} key is not found
    * @returns the parser which was passed as a parameter
    * @since 1.10
    */
-  public static JsonParser initializeParser(JsonParser parser)
-      throws IOException {
+  public static JsonParser initializeParser(JsonParser parser) throws Exception {
     // parse
     boolean failed = true;
     try {
@@ -118,12 +121,12 @@ public final class JsonCParser extends JsonObjectParser {
   }
 
   @Override
-  public Object parseAndClose(InputStream in, Charset charset, Type dataType) throws IOException {
+  public Object parseAndClose(InputStream in, Charset charset, Type dataType) throws Exception {
     return initializeParser(jsonFactory.createJsonParser(in, charset)).parse(dataType, true, null);
   }
 
   @Override
-  public Object parseAndClose(Reader reader, Type dataType) throws IOException {
+  public Object parseAndClose(Reader reader, Type dataType) throws Exception {
     return initializeParser(jsonFactory.createJsonParser(reader)).parse(dataType, true, null);
   }
 }

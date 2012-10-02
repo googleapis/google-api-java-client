@@ -12,21 +12,28 @@
 
 package com.google.api.client.googleapis.services;
 
+import com.google.api.client.googleapis.GoogleHeaders;
+import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.googleapis.batch.BatchCallback;
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.media.MediaHttpDownloader;
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.googleapis.subscriptions.NotificationCallback;
 import com.google.api.client.googleapis.subscriptions.Subscription;
+import com.google.api.client.googleapis.subscriptions.SubscriptionHeaders;
+import com.google.api.client.googleapis.subscriptions.SubscriptionUtils;
 import com.google.api.client.googleapis.subscriptions.TypedNotificationCallback;
 import com.google.api.client.http.AbstractInputStreamContent;
+import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.UriTemplate;
 import com.google.api.client.util.GenericData;
 import com.google.common.base.Preconditions;
@@ -63,8 +70,14 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /** HTTP headers used for the Google client request. */
   private HttpHeaders requestHeaders = new HttpHeaders();
 
-  /** HTTP headers of the last response or {@code null} for none. */
+  /** HTTP headers of the last response or {@code null} before request has been executed. */
   private HttpHeaders lastResponseHeaders;
+
+  /** Status code of the last response or {@code -1} before request has been executed. */
+  private int lastStatusCode = -1;
+
+  /** Status message of the last response or {@code null} before request has been executed. */
+  private String lastStatusMessage;
 
   /** Whether to disable GZip compression of HTTP content. */
   private boolean disableGZipContent;
@@ -77,6 +90,9 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
 
   /** Callback for processing subscription notifications or {@code null} for none. */
   private NotificationCallback notificationCallback;
+
+  /** Subscription headers from the last response or {@code null} for none. */
+  private SubscriptionHeaders lastSubscriptionHeaders;
 
   /** Subscription details of the last response or {@code null} for none. */
   private Subscription lastSubscription;
@@ -104,6 +120,11 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     this.requestMethod = Preconditions.checkNotNull(requestMethod);
     this.uriTemplate = Preconditions.checkNotNull(uriTemplate);
     this.httpContent = httpContent;
+    // application name
+    String applicationName = abstractGoogleClient.getApplicationName();
+    if (applicationName != null) {
+      requestHeaders.setUserAgent(applicationName);
+    }
   }
 
   /** Returns whether to disable GZip compression of HTTP content. */
@@ -178,9 +199,26 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     return this;
   }
 
-  /** Gets the HTTP headers of the last response or {@code null} for none. */
+  /**
+   * Returns the HTTP headers of the last response or {@code null} before request has been executed.
+   */
   public final HttpHeaders getLastResponseHeaders() {
     return lastResponseHeaders;
+  }
+
+  /**
+   * Returns the status code of the last response or {@code -1} before request has been executed.
+   */
+  public final int getLastStatusCode() {
+    return lastStatusCode;
+  }
+
+  /**
+   * Returns the status message of the last response or {@code null} before request has been
+   * executed.
+   */
+  public final String getLastStatusMessage() {
+    return lastStatusMessage;
   }
 
   /** Returns the response class to parse into. */
@@ -188,70 +226,100 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     return responseClass;
   }
 
-  /**
-   * Returns whether to subscribe to notifications.
-   *
-   * <p>
-   * Overriding is only supported for the purpose of changing visibility to public, but nothing
-   * else.
-   * </p>
-   */
-  protected boolean isSubscribing() {
+  /** Returns whether to subscribe to notifications. */
+  public final boolean isSubscribing() {
     return isSubscribing;
   }
 
-  /**
-   * Returns the callback for processing subscription notifications or {@code null} for none.
-   *
-   * <p>
-   * Overriding is only supported for the purpose of changing visibility to public, but nothing
-   * else.
-   * </p>
-   */
-  protected NotificationCallback getNotificationCallback() {
+  /** Returns the callback for processing subscription notifications or {@code null} for none. */
+  public final NotificationCallback getNotificationCallback() {
     return notificationCallback;
   }
 
+  /** Returns the notification delivery method or {@code null} for none. */
+  public final String getNotificationDeliveryMethod() {
+    return (String) requestHeaders.get(SubscriptionHeaders.SUBSCRIBE);
+  }
+
+  /** Returns the notification client token or {@code null} for none. */
+  public final String getNotificationClientToken() {
+    return (String) requestHeaders.get(SubscriptionHeaders.CLIENT_TOKEN);
+  }
+
   /**
-   * Subscribes to notifications without specifying a notification callback.
+   * Sets the notification client token or {@code null} for none.
    *
    * <p>
    * Overriding is only supported for the purpose of changing visibility to public, but nothing
    * else.
    * </p>
    */
-  protected AbstractGoogleClientRequest<T> subscribe() {
+  public AbstractGoogleClientRequest<T> setNotificationClientToken(String notificationClientToken) {
+    requestHeaders.set(SubscriptionHeaders.CLIENT_TOKEN, notificationClientToken);
+    return this;
+  }
+
+  /**
+   * Subscribes to unparsed notifications.
+   *
+   * <p>
+   * A notification client token is randomly generated using
+   * {@link SubscriptionUtils#generateRandomClientToken()}. You may override using
+   * {@link #setNotificationClientToken(String)}.
+   * </p>
+   *
+   * <p>
+   * Overriding is only supported for the purpose of changing visibility to public, but nothing
+   * else.
+   * </p>
+   *
+   * @param notificationDeliveryMethod notification delivery method
+   * @param notificationCallback notification callback or {@code null} for none
+   */
+  @SuppressWarnings("unchecked")
+  protected AbstractGoogleClientRequest<T> subscribeUnparsed(
+      String notificationDeliveryMethod, NotificationCallback notificationCallback) {
+    this.notificationCallback = notificationCallback;
+    requestHeaders.set(
+        SubscriptionHeaders.SUBSCRIBE, Preconditions.checkNotNull(notificationDeliveryMethod));
+    setNotificationClientToken(SubscriptionUtils.generateRandomClientToken());
+    if (notificationCallback instanceof TypedNotificationCallback<?>) {
+      ((TypedNotificationCallback<T>) notificationCallback).setDataType(responseClass);
+    }
     isSubscribing = true;
     return this;
   }
 
   /**
-   * Subscribes to notifications to be sent to the given notification callback.
+   * Subscribes to parsed notifications.
+   *
+   * <p>
+   * A notification client token is randomly generated using
+   * {@link SubscriptionUtils#generateRandomClientToken()}. You may override using
+   * {@link #setNotificationClientToken(String)}.
+   * </p>
    *
    * <p>
    * Overriding is only supported for the purpose of changing visibility to public, but nothing
    * else.
    * </p>
+   *
+   * @param notificationDeliveryMethod notification delivery method
+   * @param typedNotificationCallback typed notification callback or {@code null} for none
    */
-  @SuppressWarnings("unchecked")
-  protected AbstractGoogleClientRequest<T> subscribe(NotificationCallback notificationCallback) {
-    this.notificationCallback = Preconditions.checkNotNull(notificationCallback);
-    if (notificationCallback instanceof TypedNotificationCallback<?>) {
-      ((TypedNotificationCallback<T>) notificationCallback).setDataType(responseClass);
-    }
-    return subscribe();
+  protected AbstractGoogleClientRequest<T> subscribe(
+      String notificationDeliveryMethod, TypedNotificationCallback<T> typedNotificationCallback) {
+    return subscribeUnparsed(notificationDeliveryMethod, typedNotificationCallback);
   }
 
-  /**
-   * Returns the subscription details of the last response or {@code null} for none.
-   *
-   * <p>
-   * Overriding is only supported for the purpose of changing visibility to public, but nothing
-   * else.
-   * </p>
-   */
-  protected Subscription getLastSubscription() {
+  /** Returns the subscription details of the last response or {@code null} for none. */
+  public final Subscription getLastSubscription() {
     return lastSubscription;
+  }
+
+  /** Returns the subscription headers from the last response or {@code null} for none. */
+  public final SubscriptionHeaders getLastSubscriptionHeaders() {
+    return lastSubscriptionHeaders;
   }
 
   /**
@@ -302,29 +370,40 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /**
    * Creates a new instance of {@link GenericUrl} suitable for use against this service.
    *
+   * <p>
+   * Subclasses may override by calling the super implementation.
+   * </p>
+   *
    * @return newly created {@link GenericUrl}
    */
-  public final GenericUrl buildHttpRequestUrl() {
+  public GenericUrl buildHttpRequestUrl() {
     return new GenericUrl(
         UriTemplate.expand(abstractGoogleClient.getBaseUrl(), uriTemplate, this, true));
   }
 
-  /** Create an {@link HttpRequest} suitable for use against this service. */
-  public final HttpRequest buildHttpRequest() throws Exception {
+  /**
+   * Create an {@link HttpRequest} suitable for use against this service.
+   *
+   * <p>
+   * Subclasses may override by calling the super implementation.
+   * </p>
+   */
+  public HttpRequest buildHttpRequest() throws Exception {
     Preconditions.checkArgument(uploader == null);
-    HttpRequest request =
-        abstractGoogleClient.buildHttpRequest(requestMethod, buildHttpRequestUrl(), httpContent);
-    // Add specified headers (if any) to the headers in the request.
-    request.getHeaders().putAll(getRequestHeaders());
-    if (isSubscribing) {
-      abstractGoogleClient.getSubscriptionManager().addSubscriptionRequestHeaders(request);
+    HttpRequest httpRequest = getAbstractGoogleClient()
+        .getRequestFactory().buildRequest(requestMethod, buildHttpRequestUrl(), httpContent);
+    new MethodOverride().intercept(httpRequest);
+    httpRequest.setParser(getAbstractGoogleClient().getObjectParser());
+    // custom methods may use POST with no content but require a Content-Length header
+    if (httpContent == null && requestMethod.equals(HttpMethods.POST)) {
+      httpRequest.setContent(new EmptyContent());
     }
-    return request;
+    httpRequest.getHeaders().putAll(requestHeaders);
+    return httpRequest;
   }
 
   /**
-   * Sends the request to the server and returns the raw {@link HttpResponse}. Subclasses may
-   * override if specific behavior is required.
+   * Sends the request to the server and returns the raw {@link HttpResponse}.
    *
    * <p>
    * Callers are responsible for disconnecting the HTTP response by calling
@@ -347,18 +426,61 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * @return the {@link HttpResponse}
    */
   public HttpResponse executeUnparsed() throws Exception {
+    boolean throwExceptionOnExecuteError;
+    HttpResponse response;
     if (uploader == null) {
+      // normal request (not upload)
       HttpRequest request = buildHttpRequest();
       request.setEnableGZipContent(!disableGZipContent);
-      HttpResponse response = abstractGoogleClient.executeUnparsed(request);
-      lastResponseHeaders = response.getHeaders();
-      if (notificationCallback != null) {
-        lastSubscription = abstractGoogleClient.getSubscriptionManager()
-            .processSubscribeResponse(lastResponseHeaders, notificationCallback);
-      }
-      return response;
+      throwExceptionOnExecuteError = request.getThrowExceptionOnExecuteError();
+      request.setThrowExceptionOnExecuteError(false);
+      response = request.execute();
+    } else {
+      // upload request
+      GenericUrl httpRequestUrl = buildHttpRequestUrl();
+      HttpRequest httpRequest = getAbstractGoogleClient()
+          .getRequestFactory().buildRequest(requestMethod, httpRequestUrl, httpContent);
+      throwExceptionOnExecuteError = httpRequest.getThrowExceptionOnExecuteError();
+      uploader.setInitiationHeaders(new GoogleHeaders(requestHeaders));
+      response = uploader.upload(httpRequestUrl);
+      response.getRequest().setParser(getAbstractGoogleClient().getObjectParser());
     }
-    return uploader.upload(buildHttpRequestUrl());
+    // process response
+    lastResponseHeaders = response.getHeaders();
+    lastStatusCode = response.getStatusCode();
+    lastStatusMessage = response.getStatusMessage();
+    // process subscriptions
+    if (isSubscribing) {
+      lastSubscriptionHeaders = new SubscriptionHeaders(lastResponseHeaders);
+      if (notificationCallback != null) {
+        lastSubscription = new Subscription(
+            lastSubscriptionHeaders.getSubscriptionID(), notificationCallback,
+            lastSubscriptionHeaders.getClientToken());
+        getAbstractGoogleClient().getSubscriptionStore().storeSubscription(lastSubscription);
+      }
+    }
+    // process any error
+    if (throwExceptionOnExecuteError && !response.isSuccessStatusCode()) {
+      throw newExceptionOnError(response);
+    }
+    return response;
+  }
+
+  /**
+   * Returns the exception to throw on an HTTP error response as defined by
+   * {@link HttpResponse#isSuccessStatusCode()}.
+   *
+   * <p>
+   * It is guaranteed that {@link HttpResponse#isSuccessStatusCode()} is {@code false}. Default
+   * implementation is to call {@link HttpResponseException#HttpResponseException(HttpResponse)},
+   * but subclasses may override.
+   * </p>
+   *
+   * @param response HTTP response
+   * @return exception to throw
+   */
+  protected Exception newExceptionOnError(HttpResponse response) {
+    return new HttpResponseException(response);
   }
 
   /**
@@ -383,7 +505,6 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
 
   /**
    * Sends the request to the server and returns the content input stream of {@link HttpResponse}.
-   * Subclasses may override if specific behavior is required.
    *
    * <p>
    * Callers are responsible for closing the input stream after it is processed. Example sample:
@@ -398,9 +519,13 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
      }
    * </pre>
    *
+   * <p>
+   * Subclasses may override by calling the super implementation.
+   * </p>
+   *
    * @return input stream of the response content
    */
-  public final InputStream executeAsInputStream() throws Exception {
+  public InputStream executeAsInputStream() throws Exception {
     HttpResponse response = executeUnparsed();
     return response.getContent();
   }
@@ -420,7 +545,9 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       HttpResponse response = executeUnparsed();
       response.download(outputStream);
     } else {
-      downloader.download(buildHttpRequestUrl(), outputStream);
+      Preconditions.checkArgument(notificationCallback == null,
+          "subscribing with a notification callback during media download is not yet implemented");
+      downloader.download(buildHttpRequestUrl(), requestHeaders, outputStream);
     }
   }
 
@@ -439,6 +566,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   public final <E> void queue(
       BatchRequest batchRequest, Class<E> errorClass, BatchCallback<T, E> callback)
       throws Exception {
+    Preconditions.checkArgument(notificationCallback == null,
+        "subscribing with a notification callback during batch is not yet implemented");
     batchRequest.queue(buildHttpRequest(), getResponseClass(), errorClass, callback);
   }
 }

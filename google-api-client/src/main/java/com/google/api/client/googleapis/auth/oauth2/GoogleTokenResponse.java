@@ -16,8 +16,6 @@ package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.auth.openidconnect.IdTokenResponse;
 
-import java.io.IOException;
-
 /**
  * Google OAuth 2.0 JSON model for a successful access token response as specified in <a
  * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-23#section-5.1">Successful Response</a>,
@@ -72,7 +70,7 @@ public class GoogleTokenResponse extends IdTokenResponse {
   }
 
   @Override
-  public GoogleIdToken parseIdToken() throws IOException {
+  public GoogleIdToken parseIdToken() throws Exception {
     return GoogleIdToken.parse(getFactory(), getIdToken());
   }
 

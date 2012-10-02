@@ -30,8 +30,6 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 
 import junit.framework.TestCase;
 
-import java.io.IOException;
-
 
 /**
  * Tests {@link GoogleJsonError}.
@@ -46,7 +44,7 @@ public class GoogleJsonErrorTest extends TestCase {
       + "\"reason\":\"accessNotConfigured\"" + "}]," + "\"message\":\"Access Not Configured\"}";
   static final String ERROR_RESPONSE = "{\"error\":" + ERROR + "}";
 
-  public void test_json() throws IOException {
+  public void test_json() throws Exception {
     JsonParser parser = FACTORY.createJsonParser(ERROR);
     parser.nextToken();
     GoogleJsonError e = parser.parse(GoogleJsonError.class, null);

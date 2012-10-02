@@ -17,17 +17,15 @@ package com.google.api.client.googleapis.subscriptions;
 import junit.framework.TestCase;
 
 /**
- * Tests for the {@link ClientTokenGenerator} class.
+ * Tests for the {@link SubscriptionUtils} class.
  *
  * @author Matthias Linder
  */
-public class ClientTokenGeneratorTest extends TestCase {
+public class SubscriptionUtilsTest extends TestCase {
 
-  /** Tests the DEFAULT ClientTokenGenerator. */
-  public void testDefaultClientTokenGenerator() throws Exception {
-    ClientTokenGenerator def = ClientTokenGenerator.DEFAULT_RANDOM_GENERATOR;
-    String firstToken = def.generateToken();
-    String secondToken = def.generateToken();
+  public void testGenerateRandomClientToken() throws Exception {
+    String firstToken = SubscriptionUtils.generateRandomClientToken();
+    String secondToken = SubscriptionUtils.generateRandomClientToken();
 
     assertNotNull(firstToken);
     assertNotNull(secondToken);

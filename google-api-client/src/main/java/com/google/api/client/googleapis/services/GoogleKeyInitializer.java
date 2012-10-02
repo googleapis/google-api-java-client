@@ -35,8 +35,10 @@ import com.google.api.client.http.json.JsonHttpRequestInitializer;
  *
  * @since 1.8
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.13) Instead use either
+ *             {@link CommonGoogleClientRequestInitializer} or a subclass of it.
  */
-@SuppressWarnings("deprecation")
+@Deprecated
 public class GoogleKeyInitializer
     implements
       JsonHttpRequestInitializer,

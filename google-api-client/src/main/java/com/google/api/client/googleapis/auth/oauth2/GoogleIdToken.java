@@ -20,8 +20,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Clock;
 import com.google.api.client.util.Key;
 
-import java.io.IOException;
-
 /**
  * Google ID tokens.
  *
@@ -44,12 +42,17 @@ public class GoogleIdToken extends JsonWebSignature {
   /**
    * Parses the given ID token string and returns the parsed {@link GoogleIdToken}.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param jsonFactory JSON factory
    * @param idTokenString ID token string
    * @return parsed Google ID token
    */
   public static GoogleIdToken parse(JsonFactory jsonFactory, String idTokenString)
-      throws IOException {
+      throws Exception {
     JsonWebSignature jws =
         JsonWebSignature.parser(jsonFactory).setPayloadClass(Payload.class).parse(idTokenString);
     return new GoogleIdToken(jws.getHeader(), (Payload) jws.getPayload(), jws.getSignatureBytes(),

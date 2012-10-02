@@ -89,7 +89,7 @@ public class GoogleHeadersTest extends TestCase {
 
   }
 
-  public void testFromHttpResponse_normalFlow() {
+  public void testFromHttpResponse_normalFlow() throws Exception {
     String[] names = new String[] { "Content-Type", "Slug" };
     String[] values = new String[] { "foo/bar", "123456789" };
     MockLowLevelHttpResponse httpResponse = new MockLowLevelHttpResponse(names, values);
@@ -107,7 +107,7 @@ public class GoogleHeadersTest extends TestCase {
     assertEquals("123456789", googleHeaders.getSlug());
   }
 
-  public void testFromHttpResponse_doubleConvert() {
+  public void testFromHttpResponse_doubleConvert() throws Exception {
     String[] names = new String[] { "Content-Type", "Slug" };
     String[] values = new String[] { "foo/bar", "123456789" };
     MockLowLevelHttpResponse httpResponse = new MockLowLevelHttpResponse(names, values);

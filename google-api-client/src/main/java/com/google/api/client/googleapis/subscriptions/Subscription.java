@@ -48,7 +48,7 @@ public final class Subscription implements Serializable {
   private final String clientToken;
 
   /** The handler to call once a notification for this subscription has been received. */
-  private final NotificationCallback subscriptionHandler;
+  private final NotificationCallback notificationCallback;
 
   /**
    * Creates a new subscription.
@@ -61,7 +61,7 @@ public final class Subscription implements Serializable {
    */
   public <T> Subscription(String id, NotificationCallback handler, String clientToken) {
     this.subscriptionID = Preconditions.checkNotNull(id);
-    this.subscriptionHandler = Preconditions.checkNotNull(handler);
+    this.notificationCallback = Preconditions.checkNotNull(handler);
     this.clientToken = clientToken;
   }
 
@@ -75,8 +75,8 @@ public final class Subscription implements Serializable {
   /**
    * Returns the handler which should be called for every received {@link Notification}.
    */
-  public final NotificationCallback getSubscriptionHandler() {
-    return subscriptionHandler;
+  public final NotificationCallback getNotificationCallback() {
+    return notificationCallback;
   }
 
   /**
@@ -96,6 +96,6 @@ public final class Subscription implements Serializable {
   @Override
   public String toString() {
     return "Subscription{id=" + subscriptionID + ", clientToken=" + clientToken
-        + ", notificationCallback=" + subscriptionHandler + "}";
+        + ", notificationCallback=" + notificationCallback + "}";
   }
 }

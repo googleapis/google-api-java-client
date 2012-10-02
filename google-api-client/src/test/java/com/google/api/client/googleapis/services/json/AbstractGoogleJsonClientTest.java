@@ -14,7 +14,6 @@ package com.google.api.client.googleapis.services.json;
 
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.googleapis.services.json.AbstractGoogleJsonClient;
 import com.google.api.client.googleapis.testing.services.json.MockGoogleJsonClient;
 import com.google.api.client.googleapis.testing.services.json.MockGoogleJsonClientRequest;
 import com.google.api.client.http.HttpStatusCodes;
@@ -30,7 +29,6 @@ import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 
 import junit.framework.TestCase;
-import org.junit.Test;
 
 /**
  * Tests {@link AbstractGoogleJsonClient}.
@@ -39,7 +37,6 @@ import org.junit.Test;
  */
 public class AbstractGoogleJsonClientTest extends TestCase {
 
-  @Test
   public void testExecuteUnparsed_error() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
         @Override

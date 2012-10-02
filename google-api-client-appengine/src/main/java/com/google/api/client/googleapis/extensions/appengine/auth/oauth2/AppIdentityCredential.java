@@ -91,22 +91,18 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
 
   /**
    * Intercept the request by using the access token obtained from the {@link AppIdentityService}.
-   * Any thrown {@link AppIdentityServiceFailureException} will be wrapped with an
-   * {@link Exception}.
    *
    * <p>
    * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
+   * {@link java.io.IOException}. In prior version {@link AppIdentityServiceFailureException} was
+   * wrapped with an {@link Exception}, but now it is no longer wrapped.
    * </p>
    */
   @Override
   public void intercept(HttpRequest request) throws Exception {
-    try {
-      String accessToken = appIdentityService.getAccessToken(scopes).getAccessToken();
-      BearerToken.authorizationHeaderAccessMethod().intercept(request, accessToken);
-    } catch (AppIdentityServiceFailureException e) {
-      throw new Exception(e);
-    }
+    String accessToken =
+        AppIdentityServiceFactory.getAppIdentityService().getAccessToken(scopes).getAccessToken();
+    BearerToken.authorizationHeaderAccessMethod().intercept(request, accessToken);
   }
 
   /**

@@ -47,7 +47,7 @@ final class AuthKeyValueParser implements com.google.api.client.http.HttpParser,
     return "text/plain";
   }
 
-  public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
+  public <T> T parse(HttpResponse response, Class<T> dataClass) throws Exception {
     response.setContentLoggingLimit(0);
     InputStream content = response.getContent();
     try {

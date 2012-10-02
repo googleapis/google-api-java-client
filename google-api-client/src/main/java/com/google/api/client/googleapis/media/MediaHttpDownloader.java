@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.media;
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.ExponentialBackOffPolicy;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -141,6 +142,28 @@ public final class MediaHttpDownloader {
    * @param outputStream destination output stream
    */
   public void download(GenericUrl requestUrl, OutputStream outputStream) throws Exception {
+    download(requestUrl, null, outputStream);
+  }
+
+  /**
+   * Executes a direct media download or a resumable media download.
+   *
+   * <p>
+   * This method does not close the given output stream.
+   * </p>
+   *
+   * <p>
+   * This method is not reentrant. A new instance of {@link MediaHttpDownloader} must be
+   * instantiated before download called be called again.
+   * </p>
+   *
+   * @param requestUrl The request URL where the download requests will be sent
+   * @param requestHeaders request headers or {@code null} to ignore
+   * @param outputStream destination output stream
+   * @since 1.12
+   */
+  public void download(GenericUrl requestUrl, HttpHeaders requestHeaders, OutputStream outputStream)
+      throws Exception {
     Preconditions.checkArgument(downloadState == DownloadState.NOT_STARTED);
     requestUrl.put("alt", "media");
 
@@ -148,6 +171,9 @@ public final class MediaHttpDownloader {
       updateStateAndNotifyListener(DownloadState.MEDIA_IN_PROGRESS);
 
       HttpRequest request = requestFactory.buildGetRequest(requestUrl);
+      if (requestHeaders != null) {
+        request.getHeaders().putAll(requestHeaders);
+      }
       HttpResponse response = request.execute();
 
       try {
@@ -165,6 +191,9 @@ public final class MediaHttpDownloader {
     // Download the media content in chunks.
     while (true) {
       HttpRequest request = requestFactory.buildGetRequest(requestUrl);
+      if (requestHeaders != null) {
+        request.getHeaders().putAll(requestHeaders);
+      }
       request.getHeaders().setRange(
           "bytes=" + bytesDownloaded + "-" + (bytesDownloaded + chunkSize - 1));
 
