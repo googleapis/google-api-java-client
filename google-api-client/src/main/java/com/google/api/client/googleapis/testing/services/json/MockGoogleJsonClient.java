@@ -34,10 +34,12 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
    * @param rootUrl root URL of the service
    * @param servicePath service path
    * @param httpRequestInitializer HTTP request initializer or {@code null} for none
+   * @param legacyDataWrapper whether using the legacy data wrapper in responses
    */
   public MockGoogleJsonClient(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
-      String servicePath, HttpRequestInitializer httpRequestInitializer) {
-    super(transport, jsonFactory, rootUrl, servicePath, httpRequestInitializer);
+      String servicePath, HttpRequestInitializer httpRequestInitializer,
+      boolean legacyDataWrapper) {
+    super(transport, jsonFactory, rootUrl, servicePath, httpRequestInitializer, legacyDataWrapper);
   }
 
   /**

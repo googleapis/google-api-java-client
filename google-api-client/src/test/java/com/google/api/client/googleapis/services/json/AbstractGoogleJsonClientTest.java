@@ -57,7 +57,7 @@ public class AbstractGoogleJsonClientTest extends TestCase {
     };
     JsonFactory jsonFactory = new JacksonFactory();
     MockGoogleJsonClient client =
-        new MockGoogleJsonClient(transport, jsonFactory, HttpTesting.SIMPLE_URL, "", null);
+        new MockGoogleJsonClient(transport, jsonFactory, HttpTesting.SIMPLE_URL, "", null, false);
     MockGoogleJsonClientRequest<String> request =
         new MockGoogleJsonClientRequest<String>(client, "GET", "foo", null, String.class);
     try {

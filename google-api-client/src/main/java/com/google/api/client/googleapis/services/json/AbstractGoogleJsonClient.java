@@ -35,11 +35,13 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
    * @param rootUrl root URL of the service
    * @param servicePath service path
    * @param httpRequestInitializer HTTP request initializer or {@code null} for none
+   * @param legacyDataWrapper whether using the legacy data wrapper in responses
    */
   protected AbstractGoogleJsonClient(HttpTransport transport, JsonFactory jsonFactory,
-      String rootUrl, String servicePath, HttpRequestInitializer httpRequestInitializer) {
-    super(transport, httpRequestInitializer, rootUrl, servicePath, new JsonObjectParser(
-        jsonFactory));
+      String rootUrl, String servicePath, HttpRequestInitializer httpRequestInitializer,
+      boolean legacyDataWrapper) {
+    super(transport, httpRequestInitializer, rootUrl, servicePath, newObjectParser(
+        jsonFactory, legacyDataWrapper));
   }
 
   /**
@@ -51,7 +53,7 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
    * @param googleClientRequestInitializer Google request initializer or {@code null} for none
    * @param applicationName application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
-   * @param subscriptionStore subscription store
+   * @param subscriptionStore subscription store or {@code null} for none
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
    */
@@ -75,6 +77,14 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
   }
 
   /**
+   * @param jsonFactory JSON factory
+   * @param legacyDataWrapper whether using the legacy data wrapper in responses
+   */
+  static JsonObjectParser newObjectParser(JsonFactory jsonFactory, boolean legacyDataWrapper) {
+    return legacyDataWrapper ? new JsonCParser(jsonFactory) : new JsonObjectParser(jsonFactory);
+  }
+
+  /**
    * Builder for {@link AbstractGoogleJsonClient}.
    *
    * <p>
@@ -94,13 +104,12 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
     protected Builder(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
         String servicePath, HttpRequestInitializer httpRequestInitializer,
         boolean legacyDataWrapper) {
-      super(transport, rootUrl, servicePath, legacyDataWrapper
-          ? new JsonCParser(jsonFactory) : new JsonObjectParser(jsonFactory),
+      super(transport, rootUrl, servicePath, newObjectParser(jsonFactory, legacyDataWrapper),
           httpRequestInitializer);
     }
 
     @Override
-    public JsonObjectParser getObjectParser() {
+    public final JsonObjectParser getObjectParser() {
       return (JsonObjectParser) super.getObjectParser();
     }
 
