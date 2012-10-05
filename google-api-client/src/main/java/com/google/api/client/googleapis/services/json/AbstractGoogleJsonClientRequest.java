@@ -19,6 +19,7 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.json.JsonCContent;
 import com.google.api.client.googleapis.json.JsonCParser;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
+import com.google.api.client.googleapis.subscriptions.Subscription;
 import com.google.api.client.googleapis.subscriptions.SubscriptionUtils;
 import com.google.api.client.googleapis.subscriptions.json.JsonNotificationCallback;
 import com.google.api.client.http.HttpHeaders;
@@ -82,6 +83,11 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
       String notificationClientToken) {
     return (AbstractGoogleJsonClientRequest<T>) super.setNotificationClientToken(
         notificationClientToken);
+  }
+
+  @Override
+  protected AbstractGoogleJsonClientRequest<T> setLastSubscription(Subscription lastSubscription) {
+    return (AbstractGoogleJsonClientRequest<T>) super.setLastSubscription(lastSubscription);
   }
 
   /**
