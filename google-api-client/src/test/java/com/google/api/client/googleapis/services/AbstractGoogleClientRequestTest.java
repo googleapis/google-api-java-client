@@ -51,10 +51,11 @@ public class AbstractGoogleClientRequestTest extends TestCase {
   public void testExecuteUnparsed_error() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
         @Override
-      public LowLevelHttpRequest buildRequest(String name, final String url) {
+      public LowLevelHttpRequest buildRequest(final String method, final String url) {
         return new MockLowLevelHttpRequest() {
             @Override
           public LowLevelHttpResponse execute() {
+            assertEquals("GET", method);
             assertEquals("https://www.googleapis.com/test/path/v1/tests/foo", url);
             MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
             result.setStatusCode(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED);
@@ -77,5 +78,27 @@ public class AbstractGoogleClientRequestTest extends TestCase {
       // expected
       assertEquals("401" + StringUtils.LINE_SEPARATOR + ERROR_CONTENT, e.getMessage());
     }
+  }
+
+  public void testExecuteUsingHead() throws Exception {
+    HttpTransport transport = new MockHttpTransport() {
+        @Override
+      public LowLevelHttpRequest buildRequest(final String method, final String url) {
+        return new MockLowLevelHttpRequest() {
+            @Override
+          public LowLevelHttpResponse execute() {
+            assertEquals("HEAD", method);
+            assertEquals("https://www.googleapis.com/test/path/v1/tests/foo", url);
+            return new MockLowLevelHttpResponse();
+          }
+        };
+      }
+    };
+    MockGoogleClient client = new MockGoogleClient.Builder(
+        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
+    MockGoogleClientRequest<String> request = new MockGoogleClientRequest<String>(
+        client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
+    request.put("testId", "foo");
+    request.executeUsingHead();
   }
 }

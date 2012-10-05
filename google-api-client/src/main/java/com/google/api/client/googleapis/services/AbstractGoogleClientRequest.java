@@ -382,16 +382,38 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   }
 
   /**
-   * Create an {@link HttpRequest} suitable for use against this service.
+   * Create a request suitable for use against this service.
    *
    * <p>
    * Subclasses may override by calling the super implementation.
    * </p>
    */
   public HttpRequest buildHttpRequest() throws Exception {
+    return buildHttpRequest(false);
+  }
+
+  /**
+   * Create a request suitable for use against this service, but using HEAD instead of GET.
+   *
+   * <p>
+   * Only supported when the original request method is GET.
+   * </p>
+   *
+   * <p>
+   * Subclasses may override by calling the super implementation.
+   * </p>
+   */
+  protected HttpRequest buildHttpRequestUsingHead() throws Exception {
+    return buildHttpRequest(true);
+  }
+
+  /** Create a request suitable for use against this service. */
+  private HttpRequest buildHttpRequest(boolean usingHead) throws Exception {
     Preconditions.checkArgument(uploader == null);
+    Preconditions.checkArgument(!usingHead || requestMethod.equals(HttpMethods.GET));
+    String requestMethodToUse = usingHead ? HttpMethods.HEAD : requestMethod;
     HttpRequest httpRequest = getAbstractGoogleClient()
-        .getRequestFactory().buildRequest(requestMethod, buildHttpRequestUrl(), httpContent);
+        .getRequestFactory().buildRequest(requestMethodToUse, buildHttpRequestUrl(), httpContent);
     new MethodOverride().intercept(httpRequest);
     httpRequest.setParser(getAbstractGoogleClient().getObjectParser());
     // custom methods may use POST with no content but require a Content-Length header
@@ -426,11 +448,47 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * @return the {@link HttpResponse}
    */
   public HttpResponse executeUnparsed() throws Exception {
+    return executeUnparsed(false);
+  }
+
+  /**
+   * Sends the request using HEAD to the server and returns the raw {@link HttpResponse} for the
+   * response headers.
+   *
+   * <p>
+   * Only supported when the original request method is GET. The response content is assumed to be
+   * empty and ignored. Calls {@link HttpResponse#ignore()} so there is no need to disconnect the
+   * response. Example usage:
+   * </p>
+   *
+   * <pre>
+     HttpResponse response = request.executeUsingHead();
+     // look at response.getHeaders()
+   * </pre>
+   *
+   * <p>
+   * Subclasses may override by calling the super implementation.
+   * </p>
+   *
+   * @return the {@link HttpResponse}
+   */
+  protected HttpResponse executeUsingHead() throws Exception {
+    Preconditions.checkArgument(uploader == null);
+    HttpResponse response = executeUnparsed(true);
+    response.ignore();
+    return response;
+  }
+
+  /**
+   * Sends the request using the given request method to the server and returns the raw
+   * {@link HttpResponse}.
+   */
+  private HttpResponse executeUnparsed(boolean usingHead) throws Exception {
     boolean throwExceptionOnExecuteError;
     HttpResponse response;
     if (uploader == null) {
       // normal request (not upload)
-      HttpRequest request = buildHttpRequest();
+      HttpRequest request = buildHttpRequest(usingHead);
       request.setEnableGZipContent(!disableGZipContent);
       throwExceptionOnExecuteError = request.getThrowExceptionOnExecuteError();
       request.setThrowExceptionOnExecuteError(false);
