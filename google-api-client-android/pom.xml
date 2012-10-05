@@ -51,5 +51,9 @@
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-android</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.google.android.google-play-services</groupId>
+      <artifactId>google-play-services</artifactId>
+    </dependency>
   </dependencies>
 </project>
