@@ -100,8 +100,7 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
    */
   @Override
   public void intercept(HttpRequest request) throws Exception {
-    String accessToken =
-        AppIdentityServiceFactory.getAppIdentityService().getAccessToken(scopes).getAccessToken();
+    String accessToken = appIdentityService.getAccessToken(scopes).getAccessToken();
     BearerToken.authorizationHeaderAccessMethod().intercept(request, accessToken);
   }
 
