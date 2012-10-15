@@ -21,6 +21,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.ObjectParser;
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -195,7 +196,7 @@ public abstract class AbstractGoogleClient {
       ...
     }
 
-    public Get get(String userId) throws Exception {
+    public Get get(String userId) throws IOException {
       Get result = new Get(userId);
       initialize(result);
       return result;
@@ -208,7 +209,7 @@ public abstract class AbstractGoogleClient {
    *
    * @param httpClientRequest Google client request type
    */
-  protected void initialize(AbstractGoogleClientRequest<?> httpClientRequest) throws Exception {
+  protected void initialize(AbstractGoogleClientRequest<?> httpClientRequest) throws IOException {
     if (getGoogleClientRequestInitializer() != null) {
       getGoogleClientRequestInitializer().initialize(httpClientRequest);
     }

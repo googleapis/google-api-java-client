@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.subscriptions;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -29,7 +30,7 @@ import java.io.InputStream;
  * <b>Example usage:</b>
  * <pre>
     void handleNotification(Subscription subscription, UnparsedNotification notification)
-        throws Exception {
+        throws IOException {
       BufferedReader reader = new BufferedReader(new InputStreamReader(notification.getContent()));
       System.out.println(reader.readLine());
       reader.close();
@@ -93,7 +94,7 @@ public final class UnparsedNotification extends Notification {
    *          notification could not be delivered and the subscription should be cancelled.
    * @throws IllegalArgumentException if there is a client-token mismatch
    */
-  public boolean deliverNotification(SubscriptionStore subscriptionStore) throws Exception {
+  public boolean deliverNotification(SubscriptionStore subscriptionStore) throws IOException {
     // Find out the handler to whom this notification should go.
     Subscription subscription =
         subscriptionStore.getSubscription(Preconditions.checkNotNull(getSubscriptionID()));

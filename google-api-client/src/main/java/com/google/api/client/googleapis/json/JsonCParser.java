@@ -22,6 +22,7 @@ import com.google.api.client.json.JsonToken;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Type;
@@ -92,18 +93,13 @@ public final class JsonCParser extends JsonObjectParser {
    * the {@code "data"} or {@code "error} key.
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param parser the parser which should be initialized for normal parsing
    * @throws IllegalArgumentException if content type is not {@link Json#MEDIA_TYPE} or if expected
    *         {@code "data"} or {@code "error"} key is not found
    * @returns the parser which was passed as a parameter
    * @since 1.10
    */
-  public static JsonParser initializeParser(JsonParser parser) throws Exception {
+  public static JsonParser initializeParser(JsonParser parser) throws IOException {
     // parse
     boolean failed = true;
     try {
@@ -121,12 +117,12 @@ public final class JsonCParser extends JsonObjectParser {
   }
 
   @Override
-  public Object parseAndClose(InputStream in, Charset charset, Type dataType) throws Exception {
+  public Object parseAndClose(InputStream in, Charset charset, Type dataType) throws IOException {
     return initializeParser(jsonFactory.createJsonParser(in, charset)).parse(dataType, true, null);
   }
 
   @Override
-  public Object parseAndClose(Reader reader, Type dataType) throws Exception {
+  public Object parseAndClose(Reader reader, Type dataType) throws IOException {
     return initializeParser(jsonFactory.createJsonParser(reader)).parse(dataType, true, null);
   }
 }

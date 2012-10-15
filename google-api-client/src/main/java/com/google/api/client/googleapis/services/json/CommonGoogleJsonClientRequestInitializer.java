@@ -15,6 +15,8 @@ package com.google.api.client.googleapis.services.json;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.CommonGoogleClientRequestInitializer;
 
+import java.io.IOException;
+
 /**
  * Google JSON client request initializer implementation for setting properties like key and userIp.
  *
@@ -45,7 +47,7 @@ import com.google.api.client.googleapis.services.CommonGoogleClientRequestInitia
 
     {@literal @}Override
     public void initialize(AbstractGoogleJsonClientRequest{@literal <}?{@literal >} request)
-        throws Exception {
+        throws IOException {
       // custom logic
     }
   }
@@ -64,7 +66,7 @@ import com.google.api.client.googleapis.services.CommonGoogleClientRequestInitia
 
     {@literal @}Override
     public void initialize(AbstractGoogleJsonClientRequest{@literal <}?{@literal >} request)
-        throws Exception {
+        throws IOException {
       // custom logic
     }
   }
@@ -99,7 +101,7 @@ public class CommonGoogleJsonClientRequestInitializer extends CommonGoogleClient
   }
 
   @Override
-  public final void initialize(AbstractGoogleClientRequest<?> request) throws Exception {
+  public final void initialize(AbstractGoogleClientRequest<?> request) throws IOException {
     super.initialize(request);
     initialize((AbstractGoogleJsonClientRequest<?>) request);
   }
@@ -110,7 +112,9 @@ public class CommonGoogleJsonClientRequestInitializer extends CommonGoogleClient
    * <p>
    * Default implementation does nothing.
    * </p>
+   *
+   * @throws IOException I/O exception
    */
-  protected void initialize(AbstractGoogleJsonClientRequest<?> request) throws Exception {
+  protected void initialize(AbstractGoogleJsonClientRequest<?> request) throws IOException {
   }
 }

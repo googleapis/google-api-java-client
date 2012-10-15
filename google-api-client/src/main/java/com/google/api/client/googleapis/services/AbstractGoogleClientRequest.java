@@ -38,6 +38,7 @@ import com.google.api.client.http.UriTemplate;
 import com.google.api.client.util.GenericData;
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -388,7 +389,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * Subclasses may override by calling the super implementation.
    * </p>
    */
-  public HttpRequest buildHttpRequest() throws Exception {
+  public HttpRequest buildHttpRequest() throws IOException {
     return buildHttpRequest(false);
   }
 
@@ -403,12 +404,12 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * Subclasses may override by calling the super implementation.
    * </p>
    */
-  protected HttpRequest buildHttpRequestUsingHead() throws Exception {
+  protected HttpRequest buildHttpRequestUsingHead() throws IOException {
     return buildHttpRequest(true);
   }
 
   /** Create a request suitable for use against this service. */
-  private HttpRequest buildHttpRequest(boolean usingHead) throws Exception {
+  private HttpRequest buildHttpRequest(boolean usingHead) throws IOException {
     Preconditions.checkArgument(uploader == null);
     Preconditions.checkArgument(!usingHead || requestMethod.equals(HttpMethods.GET));
     String requestMethodToUse = usingHead ? HttpMethods.HEAD : requestMethod;
@@ -448,7 +449,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    *
    * @return the {@link HttpResponse}
    */
-  public HttpResponse executeUnparsed() throws Exception {
+  public HttpResponse executeUnparsed() throws IOException {
     return executeUnparsed(false);
   }
 
@@ -473,7 +474,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    *
    * @return the {@link HttpResponse}
    */
-  protected HttpResponse executeUsingHead() throws Exception {
+  protected HttpResponse executeUsingHead() throws IOException {
     Preconditions.checkArgument(uploader == null);
     HttpResponse response = executeUnparsed(true);
     response.ignore();
@@ -484,7 +485,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * Sends the request using the given request method to the server and returns the raw
    * {@link HttpResponse}.
    */
-  private HttpResponse executeUnparsed(boolean usingHead) throws Exception {
+  private HttpResponse executeUnparsed(boolean usingHead) throws IOException {
     boolean throwExceptionOnExecuteError;
     HttpResponse response;
     if (uploader == null) {
@@ -538,7 +539,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * @param response HTTP response
    * @return exception to throw
    */
-  protected Exception newExceptionOnError(HttpResponse response) {
+  protected IOException newExceptionOnError(HttpResponse response) {
     return new HttpResponseException(response);
   }
 
@@ -551,7 +552,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    *
    * @return parsed HTTP response
    */
-  public T execute() throws Exception {
+  public T execute() throws IOException {
     HttpResponse response = executeUnparsed();
     // TODO(yanivi): remove workaround when feature is implemented
     // workaround for http://code.google.com/p/google-http-java-client/issues/detail?id=110
@@ -584,7 +585,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    *
    * @return input stream of the response content
    */
-  public InputStream executeAsInputStream() throws Exception {
+  public InputStream executeAsInputStream() throws IOException {
     HttpResponse response = executeUnparsed();
     return response.getContent();
   }
@@ -599,7 +600,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    *
    * @param outputStream destination output stream
    */
-  public final void download(OutputStream outputStream) throws Exception {
+  public final void download(OutputStream outputStream) throws IOException {
     if (downloader == null) {
       HttpResponse response = executeUnparsed();
       response.download(outputStream);
@@ -624,7 +625,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    */
   public final <E> void queue(
       BatchRequest batchRequest, Class<E> errorClass, BatchCallback<T, E> callback)
-      throws Exception {
+      throws IOException {
     Preconditions.checkArgument(notificationCallback == null,
         "subscribing with a notification callback during batch is not yet implemented");
     batchRequest.queue(buildHttpRequest(), getResponseClass(), errorClass, callback);

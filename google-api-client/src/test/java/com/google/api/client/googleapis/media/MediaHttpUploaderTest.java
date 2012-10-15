@@ -27,6 +27,7 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import junit.framework.TestCase;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -161,7 +162,7 @@ public class MediaHttpUploaderTest extends TestCase {
     public ResumableProgressListenerWithTwoUploadCalls() {
     }
 
-    public void progressChanged(MediaHttpUploader uploader) throws Exception {
+    public void progressChanged(MediaHttpUploader uploader) throws IOException {
       progressListenerCalls++;
 
       switch (uploader.getUploadState()) {
@@ -194,7 +195,7 @@ public class MediaHttpUploaderTest extends TestCase {
     public DirectProgressListener() {
     }
 
-    public void progressChanged(MediaHttpUploader uploader) throws Exception {
+    public void progressChanged(MediaHttpUploader uploader) throws IOException {
       progressListenerCalls++;
 
       switch (uploader.getUploadState()) {

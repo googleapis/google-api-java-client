@@ -27,6 +27,8 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.UriTemplate;
 import com.google.api.client.http.json.JsonHttpContent;
 
+import java.io.IOException;
+
 /**
  * Google JSON request for a {@link AbstractGoogleJsonClient}.
  *
@@ -118,12 +120,12 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
    * @param callback batch callback
    */
   public final void queue(BatchRequest batchRequest, JsonBatchCallback<T> callback)
-      throws Exception {
+      throws IOException {
     super.queue(batchRequest, GoogleJsonErrorContainer.class, callback);
   }
 
   @Override
-  protected Exception newExceptionOnError(HttpResponse response) {
+  protected GoogleJsonResponseException newExceptionOnError(HttpResponse response) {
     return GoogleJsonResponseException.from(getAbstractGoogleClient().getJsonFactory(), response);
   }
 

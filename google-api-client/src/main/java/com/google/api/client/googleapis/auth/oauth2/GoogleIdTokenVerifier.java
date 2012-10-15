@@ -26,6 +26,8 @@ import com.google.api.client.util.StringUtils;
 import com.google.common.base.Preconditions;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.cert.CertificateFactory;
@@ -178,15 +180,10 @@ public class GoogleIdTokenVerifier {
    * Verifies that the given ID token is valid using {@link #verify(GoogleIdToken, String)} with the
    * {@link #getClientIds()}.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param idToken Google ID token
    * @return {@code true} if verified successfully or {@code false} if failed
    */
-  public boolean verify(GoogleIdToken idToken) throws Exception {
+  public boolean verify(GoogleIdToken idToken) throws GeneralSecurityException, IOException {
     return verify(clientIds, idToken);
   }
 
@@ -194,16 +191,11 @@ public class GoogleIdTokenVerifier {
    * Returns a Google ID token if the given ID token string is valid using
    * {@link #verify(GoogleIdToken, String)} with the {@link #getClientIds()}.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param idTokenString Google ID token string
    * @return Google ID token if verified successfully or {@code null} if failed
    * @since 1.9
    */
-  public GoogleIdToken verify(String idTokenString) throws Exception {
+  public GoogleIdToken verify(String idTokenString) throws GeneralSecurityException, IOException {
     GoogleIdToken idToken = GoogleIdToken.parse(jsonFactory, idTokenString);
     return verify(idToken) ? idToken : null;
   }
@@ -224,17 +216,13 @@ public class GoogleIdTokenVerifier {
    * <li>
    * </ul>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param idToken Google ID token
    * @param clientId client ID or {@code null} to skip checking it
    * @return {@code true} if verified successfully or {@code false} if failed
    * @since 1.8
    */
-  public boolean verify(GoogleIdToken idToken, String clientId) throws Exception {
+  public boolean verify(GoogleIdToken idToken, String clientId)
+      throws GeneralSecurityException, IOException {
     return verify(
         clientId == null ? Collections.<String>emptySet() : Collections.singleton(clientId),
         idToken);
@@ -256,17 +244,13 @@ public class GoogleIdTokenVerifier {
    * <li>
    * </ul>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param idToken Google ID token
    * @param clientIds set of client IDs
    * @return {@code true} if verified successfully or {@code false} if failed
    * @since 1.9
    */
-  public boolean verify(Set<String> clientIds, GoogleIdToken idToken) throws Exception {
+  public boolean verify(Set<String> clientIds, GoogleIdToken idToken)
+      throws GeneralSecurityException, IOException {
     // check the payload
     GoogleIdToken.Payload payload = idToken.getPayload();
     if (!payload.isValidTime(300) || !"accounts.google.com".equals(payload.getIssuer())
@@ -308,13 +292,8 @@ public class GoogleIdTokenVerifier {
    * expiration time is very close, so normally this doesn't need to be called. Only call this
    * method explicitly to force the public keys to be updated.
    * </p>
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
    */
-  public GoogleIdTokenVerifier loadPublicCerts() throws Exception {
+  public GoogleIdTokenVerifier loadPublicCerts() throws GeneralSecurityException, IOException {
     lock.lock();
     try {
       publicKeys = new ArrayList<PublicKey>();

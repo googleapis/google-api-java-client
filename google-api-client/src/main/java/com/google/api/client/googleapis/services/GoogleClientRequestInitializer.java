@@ -12,6 +12,7 @@
 
 package com.google.api.client.googleapis.services;
 
+import java.io.IOException;
 
 /**
  * Google client request initializer.
@@ -38,5 +39,5 @@ package com.google.api.client.googleapis.services;
 public interface GoogleClientRequestInitializer {
 
   /** Initializes a Google client request. */
-  void initialize(AbstractGoogleClientRequest<?> request) throws Exception;
+  void initialize(AbstractGoogleClientRequest<?> request) throws IOException;
 }

@@ -122,7 +122,7 @@ public class AbstractGoogleClientTest extends TestCase {
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     MockHttpTransport transport = new MockHttpTransport() {
         @Override
-      public LowLevelHttpRequest buildRequest(String method, String url) throws Exception {
+      public LowLevelHttpRequest buildRequest(String method, String url) {
         return new MockLowLevelHttpRequest(url) {
             @Override
           public LowLevelHttpResponse execute() {

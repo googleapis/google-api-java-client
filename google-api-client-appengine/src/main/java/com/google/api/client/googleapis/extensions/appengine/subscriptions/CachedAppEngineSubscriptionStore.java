@@ -20,6 +20,8 @@ import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
+import java.io.IOException;
+
 /**
  * Implementation of a persistent {@link SubscriptionStore} making use of native DataStore and
  * the Memcache API on AppEngine.
@@ -52,19 +54,19 @@ public final class CachedAppEngineSubscriptionStore extends AppEngineSubscriptio
       CachedAppEngineSubscriptionStore.class.getCanonicalName());
 
   @Override
-  public void removeSubscription(Subscription subscription) throws Exception {
+  public void removeSubscription(Subscription subscription) throws IOException {
     super.removeSubscription(subscription);
     memCache.delete(subscription.getSubscriptionID());
   }
 
   @Override
-  public void storeSubscription(Subscription subscription) throws Exception {
+  public void storeSubscription(Subscription subscription) throws IOException {
     super.storeSubscription(subscription);
     memCache.put(subscription.getSubscriptionID(), subscription);
   }
 
   @Override
-  public Subscription getSubscription(String subscriptionID) throws Exception {
+  public Subscription getSubscription(String subscriptionID) throws IOException {
     if (memCache.contains(subscriptionID)) {
       return (Subscription) memCache.get(subscriptionID);
     }

@@ -69,8 +69,6 @@ public class AppEngineSubscriptionStore implements SubscriptionStore {
     try {
       new ObjectOutputStream(baos).writeObject(obj);
       return new Blob(baos.toByteArray());
-    } catch (IOException ex) {
-      throw new IOException("Failed to serialize object", ex);
     } finally {
       baos.close();
     }
@@ -78,7 +76,7 @@ public class AppEngineSubscriptionStore implements SubscriptionStore {
 
   /** Deserializes the specified object from a Blob using an {@link ObjectInputStream}. */
   @SuppressWarnings("unchecked")
-  private <T> T deserialize(Blob data, Class<T> dataType) throws Exception {
+  private <T> T deserialize(Blob data, Class<T> dataType) throws IOException {
     ByteArrayInputStream bais = new ByteArrayInputStream(data.getBytes());
     try {
       Object obj = new ObjectInputStream(bais).readObject();
@@ -86,21 +84,21 @@ public class AppEngineSubscriptionStore implements SubscriptionStore {
         return null;
       }
       return (T) obj;
-    } catch (IOException ex) {
-      throw new IOException("Failed to deserialize object", ex);
+    } catch (ClassNotFoundException exception) {
+      throw new IOException("Failed to deserialize object", exception);
     } finally {
       bais.close();
     }
   }
 
   /** Parses the specified Entity and returns the contained Subscription object. */
-  private Subscription getSubscriptionFromEntity(Entity entity) throws Exception {
+  private Subscription getSubscriptionFromEntity(Entity entity) throws IOException {
     Blob serializedSubscription = (Blob) entity.getProperty(FIELD_SUBSCRIPTION);
     return deserialize(serializedSubscription, Subscription.class);
   }
 
   @Override
-  public void storeSubscription(Subscription subscription) throws Exception {
+  public void storeSubscription(Subscription subscription) throws IOException {
     DatastoreService service = DatastoreServiceFactory.getDatastoreService();
     Entity entity = new Entity(KIND, subscription.getSubscriptionID());
     entity.setProperty(FIELD_SUBSCRIPTION, serialize(subscription));
@@ -108,7 +106,7 @@ public class AppEngineSubscriptionStore implements SubscriptionStore {
   }
 
   @Override
-  public void removeSubscription(Subscription subscription) throws Exception {
+  public void removeSubscription(Subscription subscription) throws IOException {
     if (subscription == null) {
       return;
     }
@@ -118,7 +116,7 @@ public class AppEngineSubscriptionStore implements SubscriptionStore {
   }
 
   @Override
-  public List<Subscription> listSubscriptions() throws Exception {
+  public List<Subscription> listSubscriptions() throws IOException {
     List<Subscription> list = Lists.newArrayList();
     DatastoreService service = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = service.prepare(new Query(KIND));
@@ -131,7 +129,7 @@ public class AppEngineSubscriptionStore implements SubscriptionStore {
   }
 
   @Override
-  public Subscription getSubscription(String subscriptionID) throws Exception {
+  public Subscription getSubscription(String subscriptionID) throws IOException {
     try {
       DatastoreService service = DatastoreServiceFactory.getDatastoreService();
       Entity entity = service.get(KeyFactory.createKey(KIND, subscriptionID));

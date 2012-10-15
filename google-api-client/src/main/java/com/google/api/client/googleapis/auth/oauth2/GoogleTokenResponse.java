@@ -16,6 +16,9 @@ package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.auth.openidconnect.IdTokenResponse;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
 /**
  * Google OAuth 2.0 JSON model for a successful access token response as specified in <a
  * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-23#section-5.1">Successful Response</a>,
@@ -70,7 +73,7 @@ public class GoogleTokenResponse extends IdTokenResponse {
   }
 
   @Override
-  public GoogleIdToken parseIdToken() throws Exception {
+  public GoogleIdToken parseIdToken() throws IOException {
     return GoogleIdToken.parse(getFactory(), getIdToken());
   }
 
@@ -78,14 +81,10 @@ public class GoogleTokenResponse extends IdTokenResponse {
    * Verifies the ID token as specified in {@link GoogleIdTokenVerifier#verify} by passing it
    * {@link #parseIdToken}.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param verifier Google ID token verifier
    */
-  public boolean verifyIdToken(GoogleIdTokenVerifier verifier) throws Exception {
+  public boolean verifyIdToken(GoogleIdTokenVerifier verifier)
+      throws GeneralSecurityException, IOException {
     return verifier.verify(parseIdToken());
   }
 }

@@ -22,6 +22,7 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
 import java.util.EnumSet;
 
 /**
@@ -97,7 +98,7 @@ public final class MethodOverride implements HttpExecuteInterceptor, HttpRequest
     request.setInterceptor(this);
   }
 
-  public void intercept(HttpRequest request) throws Exception {
+  public void intercept(HttpRequest request) throws IOException {
     if (overrideThisMethod(request)) {
       String requestMethod = request.getRequestMethod();
       request.setRequestMethod(HttpMethods.POST);
@@ -109,7 +110,7 @@ public final class MethodOverride implements HttpExecuteInterceptor, HttpRequest
     }
   }
 
-  private boolean overrideThisMethod(HttpRequest request) throws Exception {
+  private boolean overrideThisMethod(HttpRequest request) throws IOException {
     String requestMethod = request.getRequestMethod();
     boolean supportsMethod = request.getTransport().supportsMethod(requestMethod);
     if (requestMethod.equals(HttpMethods.GET) || requestMethod.equals(HttpMethods.POST)) {

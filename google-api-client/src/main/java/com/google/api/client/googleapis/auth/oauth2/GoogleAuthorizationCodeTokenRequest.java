@@ -25,6 +25,8 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
+
 /**
  * Google-specific implementation of the OAuth 2.0 request for an access token based on an
  * authorization code (as specified in <a
@@ -42,7 +44,7 @@ import com.google.common.base.Preconditions;
  * </p>
  *
  * <pre>
-  static void requestAccessToken() throws Exception {
+  static void requestAccessToken() throws IOException {
     try {
       GoogleTokenResponse response =
           new GoogleAuthorizationCodeTokenRequest(new NetHttpTransport(), new JacksonFactory(),
@@ -141,7 +143,7 @@ public class GoogleAuthorizationCodeTokenRequest extends AuthorizationCodeTokenR
   }
 
   @Override
-  public GoogleTokenResponse execute() throws Exception {
+  public GoogleTokenResponse execute() throws IOException {
     return executeUnparsed().parseAs(GoogleTokenResponse.class);
   }
 }

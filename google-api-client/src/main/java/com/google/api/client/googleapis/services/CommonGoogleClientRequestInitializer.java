@@ -12,6 +12,8 @@
 
 package com.google.api.client.googleapis.services;
 
+import java.io.IOException;
+
 
 /**
  * Google common client request initializer implementation for setting properties like key and
@@ -44,7 +46,7 @@ package com.google.api.client.googleapis.services;
 
     {@literal @}Override
     public void initialize(AbstractGoogleClientRequest{@literal <}?{@literal >} request)
-        throws Exception {
+        throws IOException {
       // custom logic
     }
   }
@@ -63,7 +65,7 @@ package com.google.api.client.googleapis.services;
 
     {@literal @}Override
     public void initialize(AbstractGoogleClientRequest{@literal <}?{@literal >} request)
-        throws Exception {
+        throws IOException {
       super.initialize(request); // must be called to set the key and userIp parameters
       // insert some additional logic
     }
@@ -107,8 +109,10 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
 
   /**
    * Subclasses should call super implementation in order to set the key and userIp.
+   *
+   * @throws IOException I/O exception
    */
-  public void initialize(AbstractGoogleClientRequest<?> request) throws Exception {
+  public void initialize(AbstractGoogleClientRequest<?> request) throws IOException {
     if (key != null) {
       request.put("key", key);
     }

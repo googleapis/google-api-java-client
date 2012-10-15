@@ -16,6 +16,8 @@ package com.google.api.client.googleapis.media;
 
 import com.google.api.client.http.ExponentialBackOffPolicy;
 
+import java.io.IOException;
+
 /**
  * Extension of {@link ExponentialBackOffPolicy} that calls the Media HTTP Uploader call back method
  * before backing off requests.
@@ -45,7 +47,7 @@ class MediaUploadExponentialBackOffPolicy extends ExponentialBackOffPolicy {
    *         more retries should be made
    */
   @Override
-  public long getNextBackOffMillis() throws Exception {
+  public long getNextBackOffMillis() throws IOException {
     // Call the Media HTTP Uploader to calculate how much data was uploaded before the error and
     // then adjust the HTTP request before the retry.
     uploader.serverErrorCallback();

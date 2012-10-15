@@ -26,6 +26,8 @@ import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.StringUtils;
 
+import java.io.IOException;
+
 /**
  * Client Login authentication method as described in <a
  * href="http://code.google.com/apis/accounts/docs/AuthForInstalledApps.html" >ClientLogin for
@@ -162,15 +164,10 @@ public final class ClientLogin {
   /**
    * Authenticates based on the provided field values.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @throws ClientLoginResponseException if the authentication response has an error code, such as
    *         for a CAPTCHA challenge.
    */
-  public Response authenticate() throws Exception {
+  public Response authenticate() throws IOException {
     GenericUrl url = serverUrl.clone();
     url.appendRawPath("/accounts/ClientLogin");
     HttpRequest request =

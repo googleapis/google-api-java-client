@@ -52,7 +52,7 @@ public class JsonNotificationCallbackTest extends TestCase {
     }
 
     @Override
-    protected JsonFactory createJsonFactory() throws Exception {
+    protected JsonFactory createJsonFactory() {
       return new JacksonFactory();
     }
   }
