@@ -14,7 +14,9 @@ package com.google.api.client.googleapis.services;
 
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest;
+import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.HttpMethods;
+import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.http.HttpTransport;
@@ -30,6 +32,8 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.StringUtils;
 
 import junit.framework.TestCase;
+
+import java.util.Arrays;
 
 /**
  * Tests {@link AbstractGoogleClientRequest}.
@@ -100,5 +104,28 @@ public class AbstractGoogleClientRequestTest extends TestCase {
         client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
     request.put("testId", "foo");
     request.executeUsingHead();
+  }
+
+  public void testBuildHttpRequest() throws Exception {
+    for (String method : Arrays.asList("GET", "HEAD", "DELETE", "FOO")) {
+      subtestBuildHttpRequest(method, false);
+    }
+    for (String method : Arrays.asList("POST", "PUT", "PATCH")) {
+      subtestBuildHttpRequest(method, true);
+    }
+  }
+
+  public void subtestBuildHttpRequest(String method, boolean expectEmptyContent) throws Exception {
+    HttpTransport transport = new MockHttpTransport();
+    MockGoogleClient client = new MockGoogleClient.Builder(
+        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
+    MockGoogleClientRequest<String> request =
+        new MockGoogleClientRequest<String>(client, method, URI_TEMPLATE, null, String.class);
+    HttpRequest httpRequest = request.buildHttpRequest();
+    if (expectEmptyContent) {
+      assertTrue(httpRequest.getContent() instanceof EmptyContent);
+    } else {
+      assertNull(httpRequest.getContent());
+    }
   }
 }

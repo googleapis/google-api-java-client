@@ -417,7 +417,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     new MethodOverride().intercept(httpRequest);
     httpRequest.setParser(getAbstractGoogleClient().getObjectParser());
     // custom methods may use POST with no content but require a Content-Length header
-    if (httpContent == null && requestMethod.equals(HttpMethods.POST)) {
+    if (httpContent == null && (requestMethod.equals(HttpMethods.POST)
+        || requestMethod.equals(HttpMethods.PUT) || requestMethod.equals("PATCH"))) {
       httpRequest.setContent(new EmptyContent());
     }
     httpRequest.getHeaders().putAll(requestHeaders);
