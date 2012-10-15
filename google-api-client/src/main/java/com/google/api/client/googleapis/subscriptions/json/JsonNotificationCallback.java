@@ -20,6 +20,8 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.util.ObjectParser;
 
+import java.io.IOException;
+
 /**
  * A {@link TypedNotificationCallback} which uses an JSON content encoding.
  *
@@ -69,7 +71,7 @@ public abstract class JsonNotificationCallback<T> extends TypedNotificationCallb
   /**
    * Returns the JSON-factory used by this handler.
    */
-  public final JsonFactory getJsonFactory() throws Exception {
+  public final JsonFactory getJsonFactory() throws IOException {
     if (jsonFactory == null) {
       jsonFactory = createJsonFactory();
     }
@@ -81,10 +83,10 @@ public abstract class JsonNotificationCallback<T> extends TypedNotificationCallb
   /**
    * Creates a new JSON factory which is used to deserialize notifications.
    */
-  protected abstract JsonFactory createJsonFactory() throws Exception;
+  protected abstract JsonFactory createJsonFactory() throws IOException;
 
   @Override
-  protected final ObjectParser getParser(UnparsedNotification notification) throws Exception {
+  protected final ObjectParser getParser(UnparsedNotification notification) throws IOException {
     return new JsonObjectParser(getJsonFactory());
   }
 }

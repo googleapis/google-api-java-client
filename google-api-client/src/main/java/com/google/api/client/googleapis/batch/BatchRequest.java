@@ -181,13 +181,8 @@ public final class BatchRequest {
    * {@link BatchRequest} object can be reused to {@link #queue} and {@link #execute()} requests
    * again.
    * </p>
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
    */
-  public void execute() throws Exception {
+  public void execute() throws IOException {
     boolean retryAllowed;
     Preconditions.checkState(!requestInfos.isEmpty());
     HttpRequest batchRequest = requestFactory.buildPostRequest(this.batchUrl, null);
@@ -265,7 +260,7 @@ public final class BatchRequest {
       this.originalInterceptor = originalInterceptor;
     }
 
-    public void intercept(HttpRequest batchRequest) throws Exception {
+    public void intercept(HttpRequest batchRequest) throws IOException {
       if (originalInterceptor != null) {
         originalInterceptor.intercept(batchRequest);
       }

@@ -25,6 +25,7 @@ import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.rpc2.JsonRpcRequest;
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -287,15 +288,10 @@ public final class GoogleJsonRpcHttpTransport {
    * {@link JsonParser}, and {@link JsonParser#parseAndClose(Class, CustomizeJsonParser)}.
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
-   * throw an exception.
-   * </p>
-   *
    * @param request JSON-RPC request object
    * @return HTTP request
    */
-  public HttpRequest buildPostRequest(JsonRpcRequest request) throws Exception {
+  public HttpRequest buildPostRequest(JsonRpcRequest request) throws IOException {
     return internalExecute(request);
   }
 
@@ -309,19 +305,14 @@ public final class GoogleJsonRpcHttpTransport {
    * {@link JsonParser#parseArrayAndClose(Collection, Class, CustomizeJsonParser)} .
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
-   * throw an exception.
-   * </p>
-   *
    * @param requests JSON-RPC request objects
    * @return HTTP request
    */
-  public HttpRequest buildPostRequest(List<JsonRpcRequest> requests) throws Exception {
+  public HttpRequest buildPostRequest(List<JsonRpcRequest> requests) throws IOException {
     return internalExecute(requests);
   }
 
-  private HttpRequest internalExecute(Object data) throws Exception {
+  private HttpRequest internalExecute(Object data) throws IOException {
     JsonHttpContent content = new JsonHttpContent(jsonFactory, data);
     content.setMediaType(new HttpMediaType(mimeType));
     HttpRequest httpRequest;

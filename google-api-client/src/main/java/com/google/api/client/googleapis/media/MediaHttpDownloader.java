@@ -25,6 +25,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -133,15 +134,10 @@ public final class MediaHttpDownloader {
    * instantiated before download called be called again.
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param requestUrl The request URL where the download requests will be sent
    * @param outputStream destination output stream
    */
-  public void download(GenericUrl requestUrl, OutputStream outputStream) throws Exception {
+  public void download(GenericUrl requestUrl, OutputStream outputStream) throws IOException {
     download(requestUrl, null, outputStream);
   }
 
@@ -163,7 +159,7 @@ public final class MediaHttpDownloader {
    * @since 1.12
    */
   public void download(GenericUrl requestUrl, HttpHeaders requestHeaders, OutputStream outputStream)
-      throws Exception {
+      throws IOException {
     Preconditions.checkArgument(downloadState == DownloadState.NOT_STARTED);
     requestUrl.put("alt", "media");
 
@@ -370,7 +366,7 @@ public final class MediaHttpDownloader {
    *
    * @param downloadState value to set to
    */
-  private void updateStateAndNotifyListener(DownloadState downloadState) throws Exception {
+  private void updateStateAndNotifyListener(DownloadState downloadState) throws IOException {
     this.downloadState = downloadState;
     if (progressListener != null) {
       progressListener.progressChanged(this);

@@ -14,6 +14,7 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
+import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -37,14 +38,14 @@ public interface SubscriptionStore {
   /**
    * Returns all known/registered subscriptions.
    */
-  Collection<Subscription> listSubscriptions() throws Exception;
+  Collection<Subscription> listSubscriptions() throws IOException;
 
   /**
    * Retrieves a known subscription (or {@code null} if not found).
    *
    * @param subscriptionID ID of the subscription to retrieve
    */
-  Subscription getSubscription(String subscriptionID) throws Exception;
+  Subscription getSubscription(String subscriptionID) throws IOException;
 
   /**
    * Stores the Subscription in the applications data store. Will replace any existing subscription
@@ -52,12 +53,12 @@ public interface SubscriptionStore {
    *
    * @param subscription New or existing {@link Subscription} to store/update
    */
-  void storeSubscription(Subscription subscription) throws Exception;
+  void storeSubscription(Subscription subscription) throws IOException;
 
   /**
    * Removes a registered subscription from the store.
    *
    * @param subscription {@link Subscription} to remove or {@code null} to ignore
    */
-  void removeSubscription(Subscription subscription) throws Exception;
+  void removeSubscription(Subscription subscription) throws IOException;
 }

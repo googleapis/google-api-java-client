@@ -21,6 +21,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.Key;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -36,11 +37,6 @@ public class GoogleJsonError extends GenericJson {
   /**
    * Parses the given error HTTP response using the given JSON factory.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param jsonFactory JSON factory
    * @param response HTTP response
    * @return new instance of the Google JSON error information
@@ -48,7 +44,7 @@ public class GoogleJsonError extends GenericJson {
    *         expected {@code "data"} or {@code "error"} key is not found
    */
   public static GoogleJsonError parse(JsonFactory jsonFactory, HttpResponse response)
-      throws Exception {
+      throws IOException {
     return new JsonCParser(jsonFactory).parseAndClose(
         response.getContent(), response.getContentCharset(), GoogleJsonError.class);
   }

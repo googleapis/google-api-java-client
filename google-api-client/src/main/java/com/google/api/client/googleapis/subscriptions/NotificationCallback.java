@@ -14,6 +14,7 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -61,5 +62,5 @@ public interface NotificationCallback extends Serializable {
    * @param notification Notification which was delivered to this application
    */
   void handleNotification(Subscription subscription, UnparsedNotification notification)
-      throws Exception;
+      throws IOException;
 }

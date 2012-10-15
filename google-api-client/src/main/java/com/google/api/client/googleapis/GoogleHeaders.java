@@ -34,15 +34,9 @@ public class GoogleHeaders extends HttpHeaders {
   public static final PercentEscaper SLUG_ESCAPER =
       new PercentEscaper(" !\"#$&'()*+,-./:;<=>?@[\\]^_`{|}~", false);
 
-  /**
-   * {@code "GData-Version"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.12) Use {@link #getGDataVersion} or
-   *             {@link #setGDataVersion}
-   */
-  @Deprecated
+  /** {@code "GData-Version"} header. */
   @Key("GData-Version")
-  public String gdataVersion;
+  private String gdataVersion;
 
   /**
    * Escaped {@code "Slug"} header value, which must be escaped using {@link #SLUG_ESCAPER}.

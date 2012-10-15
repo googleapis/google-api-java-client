@@ -17,7 +17,6 @@ package com.google.api.client.googleapis.extensions.servlet.subscriptions;
 import com.google.api.client.googleapis.subscriptions.SubscriptionHeaders;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.googleapis.subscriptions.UnparsedNotification;
-import com.google.common.base.Throwables;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -147,9 +146,6 @@ public abstract class AbstractWebHookServlet extends HttpServlet {
       if (!notification.deliverNotification(getSubscriptionStore())) {
         sendUnsubscribeResponse(resp, notification);
       }
-    } catch (Exception e) {
-      Throwables.propagateIfPossible(e, IOException.class, ServletException.class);
-      throw new ServletException(e);
     } finally {
       contentStream.close();
     }

@@ -30,6 +30,7 @@ import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -160,11 +161,6 @@ public class GoogleClient extends JsonHttpClient {
   /**
    * Create an {@link HttpRequest} suitable for use against this service.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param method HTTP Method type
    * @param url The complete URL of the service where requests should be sent. It includes the base
    *        path along with the URI template
@@ -173,7 +169,7 @@ public class GoogleClient extends JsonHttpClient {
    */
   @Override
   protected HttpRequest buildHttpRequest(HttpMethod method, GenericUrl url, Object body)
-      throws Exception {
+      throws IOException {
     HttpRequest httpRequest = super.buildHttpRequest(method, url, body);
     new MethodOverride().intercept(httpRequest);
     // custom methods may use POST with no content but require a Content-Length header
@@ -237,13 +233,13 @@ public class GoogleClient extends JsonHttpClient {
 
   @Override
   protected HttpResponse executeUnparsed(HttpMethod method, GenericUrl url, Object body)
-      throws Exception {
+      throws IOException {
     HttpRequest request = buildHttpRequest(method, url, body);
     return executeUnparsed(request);
   }
 
   @Override
-  protected HttpResponse executeUnparsed(HttpRequest request) throws Exception {
+  protected HttpResponse executeUnparsed(HttpRequest request) throws IOException {
     return GoogleJsonResponseException.execute(getJsonFactory(), request);
   }
 

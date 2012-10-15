@@ -19,6 +19,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Key;
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -159,22 +160,9 @@ public final class GoogleClientSecrets extends GenericJson {
     }
   }
 
-  /**
-   * Loads the {@code client_secrets.json} file from the given input stream.
-   *
-   * <p>
-   * <b>Upgrade Warning:</b> Prior to version 1.11 this method would assume that the input stream
-   * was encoded in UTF-8. Since 1.11 the underlying JSON-library tries to determine the charset
-   * automatically.
-   * </p>
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
+  /** Loads the {@code client_secrets.json} file from the given input stream. */
   public static GoogleClientSecrets load(JsonFactory jsonFactory, InputStream inputStream)
-      throws Exception {
+      throws IOException {
     // TODO(mlinder): Change this method to take a charset
     return jsonFactory.fromInputStream(inputStream, GoogleClientSecrets.class);
   }

@@ -25,6 +25,8 @@ import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.StringUtils;
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
+
 /**
  * Exception thrown when an error status code is detected in an HTTP response to a Google API that
  * uses the JSON format, using the format specified in <a
@@ -115,7 +117,7 @@ public class GoogleJsonResponseException extends HttpResponseException {
               detailString = details.toPrettyString();
             }
           }
-        } catch (Exception exception) {
+        } catch (IOException exception) {
           // it would be bad to throw an exception while throwing an exception
           exception.printStackTrace();
         } finally {
@@ -128,7 +130,7 @@ public class GoogleJsonResponseException extends HttpResponseException {
       } else {
         detailString = response.parseAsString();
       }
-    } catch (Exception exception) {
+    } catch (IOException exception) {
       // it would be bad to throw an exception while throwing an exception
       exception.printStackTrace();
     }
@@ -160,21 +162,17 @@ public class GoogleJsonResponseException extends HttpResponseException {
      }
    * </pre>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param jsonFactory JSON factory
    * @param request HTTP request
    * @return HTTP response for an HTTP success code (or error code if
    *         {@link HttpRequest#getThrowExceptionOnExecuteError()})
    * @throws GoogleJsonResponseException for an HTTP error code (only if not
    *         {@link HttpRequest#getThrowExceptionOnExecuteError()})
+   * @throws IOException some other kind of I/O exception
    * @since 1.7
    */
   public static HttpResponse execute(JsonFactory jsonFactory, HttpRequest request)
-      throws Exception {
+      throws GoogleJsonResponseException, IOException {
     Preconditions.checkNotNull(jsonFactory);
     boolean originalThrowExceptionOnExecuteError = request.getThrowExceptionOnExecuteError();
     if (originalThrowExceptionOnExecuteError) {

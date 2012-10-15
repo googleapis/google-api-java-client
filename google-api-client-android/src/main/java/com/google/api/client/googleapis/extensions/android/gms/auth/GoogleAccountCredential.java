@@ -14,6 +14,7 @@
 
 package com.google.api.client.googleapis.extensions.android.gms.auth;
 
+import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
@@ -34,6 +35,11 @@ import java.io.IOException;
 
 /**
  * Manages authorization and account selection for Google accounts.
+ *
+ * <p>
+ * Any thrown {@link GoogleAuthException} when fetching a token would be wrapped inside of an
+ * {@link IOException}.
+ * </p>
  *
  * @since 1.12
  * @author Yaniv Inbar
@@ -174,7 +180,7 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
    * Must be run from a background thread, not the main UI thread.
    * </p>
    */
-  public final String getToken() throws Exception {
+  public final String getToken() throws IOException, GoogleAuthException {
     BackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
     while (true) {
       try {
@@ -201,9 +207,15 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
     boolean received401;
     String token;
 
-    public void intercept(HttpRequest request) throws Exception {
-      token = getToken();
-      request.getHeaders().setAuthorization("Bearer " + token);
+    public void intercept(HttpRequest request) throws IOException {
+      try {
+        token = getToken();
+        request.getHeaders().setAuthorization("Bearer " + token);
+      } catch (GoogleAuthException exception) {
+        IOException e = new IOException();
+        e.initCause(exception);
+        throw e;
+      }
     }
 
     public boolean handleResponse(

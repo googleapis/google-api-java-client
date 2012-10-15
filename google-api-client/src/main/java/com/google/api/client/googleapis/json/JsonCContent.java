@@ -19,6 +19,7 @@ import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -61,7 +62,7 @@ public final class JsonCContent extends JsonHttpContent {
   }
 
   @Override
-  public void writeTo(OutputStream out) throws Exception {
+  public void writeTo(OutputStream out) throws IOException {
     JsonGenerator generator = getJsonFactory().createJsonGenerator(out, getCharset());
     generator.writeStartObject();
     generator.writeFieldName("data");
