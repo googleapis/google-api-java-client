@@ -1,6 +1,4 @@
 /*
- * Copyright (c) 2012 Google Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
  *
@@ -16,6 +14,7 @@ package com.google.api.client.googleapis.extensions.android.gms.auth;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
 import com.google.api.client.http.BackOffPolicy;
@@ -37,8 +36,12 @@ import java.io.IOException;
  * Manages authorization and account selection for Google accounts.
  *
  * <p>
- * Any thrown {@link GoogleAuthException} when fetching a token would be wrapped inside of an
- * {@link IOException}.
+ * When fetching a token, any thrown {@link GoogleAuthException} would be wrapped:
+ * <ul>
+ * <li>{@link UserRecoverableAuthException} would be wrapped inside of
+ * {@link UserRecoverableAuthIOException}</li>
+ * <li>{@link GoogleAuthException} when be wrapped inside of {@link GoogleAuthIOException}</li>
+ * </ul>
  * </p>
  *
  * @since 1.12
@@ -211,10 +214,10 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
       try {
         token = getToken();
         request.getHeaders().setAuthorization("Bearer " + token);
-      } catch (GoogleAuthException exception) {
-        IOException e = new IOException();
-        e.initCause(exception);
-        throw e;
+      } catch (UserRecoverableAuthException e) {
+        throw new UserRecoverableAuthIOException(e);
+      } catch (GoogleAuthException e) {
+        throw new GoogleAuthIOException(e);
       }
     }
 
