@@ -427,7 +427,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   }
 
   /**
-   * Sends the request to the server and returns the raw {@link HttpResponse}.
+   * Sends the metadata request to the server and returns the raw metadata {@link HttpResponse}.
    *
    * <p>
    * Callers are responsible for disconnecting the HTTP response by calling
@@ -454,8 +454,36 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   }
 
   /**
-   * Sends the request using HEAD to the server and returns the raw {@link HttpResponse} for the
-   * response headers.
+   * Sends the media request to the server and returns the raw media {@link HttpResponse}.
+   *
+   * <p>
+   * Callers are responsible for disconnecting the HTTP response by calling
+   * {@link HttpResponse#disconnect}. Example usage:
+   * </p>
+   *
+   * <pre>
+     HttpResponse response = request.executeMedia();
+     try {
+       // process response..
+     } finally {
+       response.disconnect();
+     }
+   * </pre>
+   *
+   * <p>
+   * Subclasses may override by calling the super implementation.
+   * </p>
+   *
+   * @return the {@link HttpResponse}
+   */
+  protected HttpResponse executeMedia() throws IOException {
+    set("alt", "media");
+    return executeUnparsed();
+  }
+
+  /**
+   * Sends the metadata request using HEAD to the server and returns the raw metadata
+   * {@link HttpResponse} for the response headers.
    *
    * <p>
    * Only supported when the original request method is GET. The response content is assumed to be
@@ -482,8 +510,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   }
 
   /**
-   * Sends the request using the given request method to the server and returns the raw
-   * {@link HttpResponse}.
+   * Sends the metadata request using the given request method to the server and returns the raw
+   * metadata {@link HttpResponse}.
    */
   private HttpResponse executeUnparsed(boolean usingHead) throws IOException {
     boolean throwExceptionOnExecuteError;
@@ -544,7 +572,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   }
 
   /**
-   * Sends the request to the server and returns the parsed response.
+   * Sends the metadata request to the server and returns the parsed metadata response.
    *
    * <p>
    * Subclasses may override by calling the super implementation.
@@ -564,7 +592,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   }
 
   /**
-   * Sends the request to the server and returns the content input stream of {@link HttpResponse}.
+   * Sends the metadata request to the server and returns the metadata content input stream of
+   * {@link HttpResponse}.
    *
    * <p>
    * Callers are responsible for closing the input stream after it is processed. Example sample:
@@ -586,24 +615,78 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * @return input stream of the response content
    */
   public InputStream executeAsInputStream() throws IOException {
-    HttpResponse response = executeUnparsed();
-    return response.getContent();
+    return executeUnparsed().getContent();
   }
 
   /**
-   * Sends the request to the server and writes the content input stream of {@link HttpResponse}
-   * into the given destination output stream.
+   * Sends the media request to the server and returns the media content input stream of
+   * {@link HttpResponse}.
+   *
+   * <p>
+   * Callers are responsible for closing the input stream after it is processed. Example sample:
+   * </p>
+   *
+   * <pre>
+     InputStream is = request.executeMediaAsInputStream();
+     try {
+       // Process input stream..
+     } finally {
+       is.close();
+     }
+   * </pre>
+   *
+   * <p>
+   * Subclasses may override by calling the super implementation.
+   * </p>
+   *
+   * @return input stream of the response content
+   */
+  protected InputStream executeMediaAsInputStream() throws IOException {
+    return executeMedia().getContent();
+  }
+
+  /**
+   * Sends the metadata request to the server and writes the metadata content input stream of
+   * {@link HttpResponse} into the given destination output stream.
    *
    * <p>
    * This method closes the content of the HTTP response from {@link HttpResponse#getContent()}.
    * </p>
    *
+   * <p>
+   * Subclasses may override by calling the super implementation.
+   * </p>
+   *
+   * <p>
+   * Upgrade warning: for API methods with media content, in prior version 1.11 this downloaded the
+   * media, but starting with version 1.12 this downloads the metadata content (to be more
+   * consistent with behavior for API methods without media content). To download the media instead
+   * use {@link #downloadMedia(OutputStream)}.
+   * </p>
+   *
    * @param outputStream destination output stream
    */
-  public final void download(OutputStream outputStream) throws IOException {
+  public void download(OutputStream outputStream) throws IOException {
+    executeUnparsed().download(outputStream);
+  }
+
+  /**
+   * Sends the media request to the server and writes the media content input stream of
+   * {@link HttpResponse} into the given destination output stream.
+   *
+   * <p>
+   * This method closes the content of the HTTP response from {@link HttpResponse#getContent()}.
+   * </p>
+   *
+   * <p>
+   * Subclasses may override by calling the super implementation.
+   * </p>
+   *
+   * @param outputStream destination output stream
+   */
+  protected void downloadMedia(OutputStream outputStream) throws IOException {
     if (downloader == null) {
-      HttpResponse response = executeUnparsed();
-      response.download(outputStream);
+      executeMedia().download(outputStream);
     } else {
       Preconditions.checkArgument(notificationCallback == null,
           "subscribing with a notification callback during media download is not yet implemented");
