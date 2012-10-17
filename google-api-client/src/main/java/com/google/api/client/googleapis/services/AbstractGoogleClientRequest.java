@@ -657,16 +657,9 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * Subclasses may override by calling the super implementation.
    * </p>
    *
-   * <p>
-   * Upgrade warning: for API methods with media content, in prior version 1.11 this downloaded the
-   * media, but starting with version 1.12 this downloads the metadata content (to be more
-   * consistent with behavior for API methods without media content). To download the media instead
-   * use {@link #downloadMedia(OutputStream)}.
-   * </p>
-   *
    * @param outputStream destination output stream
    */
-  public void download(OutputStream outputStream) throws IOException {
+  public void executeAndDownloadTo(OutputStream outputStream) throws IOException {
     executeUnparsed().download(outputStream);
   }
 
@@ -684,7 +677,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    *
    * @param outputStream destination output stream
    */
-  protected void downloadMedia(OutputStream outputStream) throws IOException {
+  protected void executeMediaAndDownloadTo(OutputStream outputStream) throws IOException {
     if (downloader == null) {
       executeMedia().download(outputStream);
     } else {
