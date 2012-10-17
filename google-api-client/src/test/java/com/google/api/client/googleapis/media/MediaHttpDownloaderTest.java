@@ -26,7 +26,6 @@ import junit.framework.TestCase;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 
 /**
  * Tests {@link MediaHttpDownloader}.
@@ -37,13 +36,6 @@ public class MediaHttpDownloaderTest extends TestCase {
 
   private static final String TEST_REQUEST_URL = "http://www.test.com/request/url?alt=media";
   private static final int TEST_CHUNK_SIZE = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE;
-  static InputStream testChunkStream = new ByteArrayInputStream(new byte[TEST_CHUNK_SIZE]);
-
-  @Override
-  public void setUp() throws Exception {
-    super.setUp();
-    testChunkStream = new ByteArrayInputStream(new byte[TEST_CHUNK_SIZE]);
-  }
 
   private static class MediaTransport extends MockHttpTransport {
 
@@ -71,7 +63,8 @@ public class MediaHttpDownloaderTest extends TestCase {
           if (directDownloadEnabled) {
             response.setStatusCode(200);
             response.addHeader("Content-Length", String.valueOf(contentLength));
-            response.setContent(testChunkStream);
+            response.setContent(
+                new ByteArrayInputStream(new byte[contentLength - bytesDownloaded]));
             return response;
           }
 
@@ -90,18 +83,21 @@ public class MediaHttpDownloaderTest extends TestCase {
           }
 
           response.setStatusCode(206);
-          response.addHeader("Content-Range", "bytes " + bytesDownloaded + "-"
-              + (bytesDownloaded + TEST_CHUNK_SIZE - 1) + "/" + contentLength);
-          response.setContent(testChunkStream);
-          bytesDownloaded += TEST_CHUNK_SIZE;
+          int upper = Math.min(bytesDownloaded + TEST_CHUNK_SIZE, contentLength) - 1;
+          response.addHeader(
+              "Content-Range", "bytes " + bytesDownloaded + "-" + upper + "/" + contentLength);
+          int bytesDownloadedCur = upper - bytesDownloaded + 1;
+          response.setContent(new ByteArrayInputStream(new byte[bytesDownloadedCur]));
+          bytesDownloaded += bytesDownloadedCur;
           return response;
         }
       };
     }
   }
 
-  private static class ProgressListenerWithTwoDownloadCalls implements
-      MediaHttpDownloaderProgressListener {
+  private static class ProgressListenerWithTwoDownloadCalls
+      implements
+        MediaHttpDownloaderProgressListener {
 
     int progressListenerCalls;
 
@@ -132,7 +128,7 @@ public class MediaHttpDownloaderTest extends TestCase {
     MediaTransport fakeTransport = new MediaTransport(contentLength);
     MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
     downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
-    assertEquals(TEST_CHUNK_SIZE, outputStream.size());
+    assertEquals(contentLength, outputStream.size());
 
     // There should be 1 download call made.
     assertEquals(1, fakeTransport.lowLevelExecCalls);
@@ -164,6 +160,7 @@ public class MediaHttpDownloaderTest extends TestCase {
 
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
+    assertEquals(10000, outputStream.size());
 
     // There should be 1 download call made.
     assertEquals(1, fakeTransport.lowLevelExecCalls);
@@ -175,7 +172,7 @@ public class MediaHttpDownloaderTest extends TestCase {
     MediaTransport fakeTransport = new MediaTransport(contentLength);
     MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
     downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
-    assertEquals(TEST_CHUNK_SIZE, outputStream.size());
+    assertEquals(contentLength, outputStream.size());
 
     // There should be 3 download calls made.
     assertEquals(3, fakeTransport.lowLevelExecCalls);
@@ -249,6 +246,23 @@ public class MediaHttpDownloaderTest extends TestCase {
     downloader.setDirectDownloadEnabled(true);
     downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
     assertEquals(TEST_CHUNK_SIZE, outputStream.size());
+
+    // There should be 1 download call made.
+    assertEquals(1, fakeTransport.lowLevelExecCalls);
+  }
+
+  public void testSetBytesDownloadedWithDirectDownload() throws Exception {
+    int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE;
+    MediaTransport fakeTransport = new MediaTransport(contentLength);
+    fakeTransport.directDownloadEnabled = true;
+    fakeTransport.bytesDownloaded = contentLength - 10000;
+    MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
+    downloader.setDirectDownloadEnabled(true);
+    downloader.setBytesDownloaded(contentLength - 10000);
+
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
+    assertEquals(10000, outputStream.size());
 
     // There should be 1 download call made.
     assertEquals(1, fakeTransport.lowLevelExecCalls);
