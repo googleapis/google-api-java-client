@@ -170,6 +170,9 @@ public final class MediaHttpDownloader {
       if (requestHeaders != null) {
         request.getHeaders().putAll(requestHeaders);
       }
+      if (bytesDownloaded != 0) {
+        request.getHeaders().setRange("bytes=" + bytesDownloaded + "-");
+      }
       HttpResponse response = request.execute();
 
       try {
