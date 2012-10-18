@@ -88,8 +88,8 @@ public class AbstractGoogleClientTest extends TestCase {
     String applicationName = "Test Application";
 
     AbstractGoogleClient.Builder setApplicationName = new MockGoogleClient.Builder(
-        TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null).setApplicationName(applicationName)
-        .setGoogleClientRequestInitializer(jsonHttpRequestInitializer);
+        TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null).setApplicationName(
+        applicationName).setGoogleClientRequestInitializer(jsonHttpRequestInitializer);
     AbstractGoogleClient client = setApplicationName.build();
 
     assertEquals(rootUrl + servicePath, client.getBaseUrl());
@@ -229,5 +229,25 @@ public class AbstractGoogleClientTest extends TestCase {
     rq.initializeMediaUpload(mediaContent);
     A result = rq.execute();
     assertEquals("somevalue", result.foo);
+  }
+
+  public void testMediaUpload_disableGZip() throws Exception {
+    MediaTransport transport = new MediaTransport();
+    AbstractGoogleClient client = new MockGoogleClient.Builder(
+        transport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER, null).setApplicationName(
+        "Test Application").build();
+    InputStream is = new ByteArrayInputStream(new byte[MediaHttpUploader.DEFAULT_CHUNK_SIZE]);
+    InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
+    mediaContent.setLength(MediaHttpUploader.DEFAULT_CHUNK_SIZE);
+    MockGoogleClientRequest<A> rq =
+        new MockGoogleClientRequest<A>(client, "POST", "", null, A.class);
+    rq.initializeMediaUpload(mediaContent);
+    rq.setDisableGZipContent(true);
+    try {
+      rq.execute();
+      fail("expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
   }
 }

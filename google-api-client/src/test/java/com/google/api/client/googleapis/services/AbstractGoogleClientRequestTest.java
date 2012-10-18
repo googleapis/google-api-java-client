@@ -106,16 +106,17 @@ public class AbstractGoogleClientRequestTest extends TestCase {
     request.executeUsingHead();
   }
 
-  public void testBuildHttpRequest() throws Exception {
+  public void testBuildHttpRequest_emptyContent() throws Exception {
     for (String method : Arrays.asList("GET", "HEAD", "DELETE", "FOO")) {
-      subtestBuildHttpRequest(method, false);
+      subtestBuildHttpRequest_emptyContent(method, false);
     }
     for (String method : Arrays.asList("POST", "PUT", "PATCH")) {
-      subtestBuildHttpRequest(method, true);
+      subtestBuildHttpRequest_emptyContent(method, true);
     }
   }
 
-  public void subtestBuildHttpRequest(String method, boolean expectEmptyContent) throws Exception {
+  private void subtestBuildHttpRequest_emptyContent(String method, boolean expectEmptyContent)
+      throws Exception {
     HttpTransport transport = new MockHttpTransport();
     MockGoogleClient client = new MockGoogleClient.Builder(
         transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
@@ -127,5 +128,19 @@ public class AbstractGoogleClientRequestTest extends TestCase {
     } else {
       assertNull(httpRequest.getContent());
     }
+  }
+
+  public void testBuildHttpRequest() throws Exception {
+    HttpTransport transport = new MockHttpTransport();
+    MockGoogleClient client = new MockGoogleClient.Builder(
+        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
+    MockGoogleClientRequest<String> request = new MockGoogleClientRequest<String>(
+        client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
+    assertFalse(request.getDisableGZipContent());
+    HttpRequest httpRequest = request.buildHttpRequest();
+    assertTrue(httpRequest.getEnableGZipContent());
+    request.setDisableGZipContent(true);
+    httpRequest = request.buildHttpRequest();
+    assertFalse(httpRequest.getEnableGZipContent());
   }
 }
