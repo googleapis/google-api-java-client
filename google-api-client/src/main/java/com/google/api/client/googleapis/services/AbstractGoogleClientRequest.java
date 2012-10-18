@@ -423,6 +423,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       httpRequest.setContent(new EmptyContent());
     }
     httpRequest.getHeaders().putAll(requestHeaders);
+    httpRequest.setEnableGZipContent(!disableGZipContent);
     return httpRequest;
   }
 
@@ -519,12 +520,12 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     if (uploader == null) {
       // normal request (not upload)
       HttpRequest request = buildHttpRequest(usingHead);
-      request.setEnableGZipContent(!disableGZipContent);
       throwExceptionOnExecuteError = request.getThrowExceptionOnExecuteError();
       request.setThrowExceptionOnExecuteError(false);
       response = request.execute();
     } else {
       // upload request
+      Preconditions.checkArgument(!disableGZipContent);
       GenericUrl httpRequestUrl = buildHttpRequestUrl();
       HttpRequest httpRequest = getAbstractGoogleClient()
           .getRequestFactory().buildRequest(requestMethod, httpRequestUrl, httpContent);
