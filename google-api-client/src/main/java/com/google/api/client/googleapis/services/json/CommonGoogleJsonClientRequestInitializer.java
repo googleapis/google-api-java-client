@@ -65,8 +65,8 @@ import java.io.IOException;
     }
 
     {@literal @}Override
-    public void initialize(AbstractGoogleJsonClientRequest{@literal <}?{@literal >} request)
-        throws IOException {
+    public void initializeJsonRequest(AbstractGoogleJsonClientRequest{
+        @literal <}?{@literal >} request) throws IOException {
       // custom logic
     }
   }
@@ -103,18 +103,20 @@ public class CommonGoogleJsonClientRequestInitializer extends CommonGoogleClient
   @Override
   public final void initialize(AbstractGoogleClientRequest<?> request) throws IOException {
     super.initialize(request);
-    initialize((AbstractGoogleJsonClientRequest<?>) request);
+    initializeJsonRequest((AbstractGoogleJsonClientRequest<?>) request);
   }
 
   /**
    * Initializes a Google JSON client request.
    *
    * <p>
-   * Default implementation does nothing.
+   * Default implementation does nothing. Called from
+   * {@link #initialize(AbstractGoogleClientRequest)}.
    * </p>
    *
    * @throws IOException I/O exception
    */
-  protected void initialize(AbstractGoogleJsonClientRequest<?> request) throws IOException {
+  protected void initializeJsonRequest(AbstractGoogleJsonClientRequest<?> request)
+      throws IOException {
   }
 }
