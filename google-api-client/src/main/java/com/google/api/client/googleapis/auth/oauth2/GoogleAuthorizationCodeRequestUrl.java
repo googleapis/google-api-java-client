@@ -79,7 +79,21 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
    */
   public GoogleAuthorizationCodeRequestUrl(
       String clientId, String redirectUri, Iterable<String> scopes) {
-    super(GoogleOAuthConstants.AUTHORIZATION_SERVER_URL, clientId);
+    this(GoogleOAuthConstants.AUTHORIZATION_SERVER_URL, clientId, redirectUri, scopes);
+  }
+
+  /**
+   * @param authorizationServerEncodedUrl authorization server encoded URL
+   * @param clientId client identifier
+   * @param redirectUri URI that the authorization server directs the resource owner's user-agent
+   *        back to the client after a successful authorization grant
+   * @param scopes scopes (see {@link #setScopes(Iterable)})
+   *
+   * @since 1.12
+   */
+  public GoogleAuthorizationCodeRequestUrl(String authorizationServerEncodedUrl,
+      String clientId, String redirectUri, Iterable<String> scopes) {
+    super(authorizationServerEncodedUrl, clientId);
     setRedirectUri(redirectUri);
     setScopes(scopes);
   }

@@ -127,6 +127,7 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
     // don't want to specify redirectUri to give control of it to user of this class
     return new GoogleAuthorizationCodeTokenRequest(getTransport(),
         getJsonFactory(),
+        getTokenServerEncodedUrl(),
         "",
         "",
         authorizationCode,
@@ -138,8 +139,11 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
   @Override
   public GoogleAuthorizationCodeRequestUrl newAuthorizationUrl() {
     // don't want to specify redirectUri to give control of it to user of this class
-    return new GoogleAuthorizationCodeRequestUrl(
-        getClientId(), "", Collections.singleton(getScopes())).setAccessType(accessType)
+    return new GoogleAuthorizationCodeRequestUrl(getAuthorizationServerEncodedUrl(),
+        getClientId(),
+        "",
+        Collections.singleton(getScopes()))
+        .setAccessType(accessType)
         .setApprovalPrompt(approvalPrompt);
   }
 
