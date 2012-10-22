@@ -31,10 +31,12 @@ import com.google.api.client.googleapis.extensions.servlet.subscriptions.WebHook
  * <b>Example usage:</b>
  *
  * <pre>
-    SubscriptionManager pm = new SubscriptionManager(new CachedAppEngineSubscriptionStore(),
-        new AppEngineWebHookDeliveryMethod("https://example.appspot.com/notifications")
-            .build());
-    service.setSubscriptionManager(pm);
+  private static final String DELIVERY_METHOD =
+      new AppEngineWebHookDeliveryMethod("https://example.appspot.com/notifications").build();
+
+  ...
+
+    request.subscribe(DELIVERY_METHOD, ...).execute();
  * </pre>
  *
  * @author Matthias Linder (mlinder)

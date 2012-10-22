@@ -37,8 +37,7 @@ import java.io.IOException;
  *
  * <b>Example usage:</b>
  * <pre>
-    SubscriptionStore store = new CahcedAppEngineSubscriptionStore();
-    service.setSubscriptionManager(new SubscriptionManager(store));
+    service.setSubscriptionStore(new CachedAppEngineSubscriptionStore());
  * </pre>
  *
  * @author Matthias Linder (mlinder)
