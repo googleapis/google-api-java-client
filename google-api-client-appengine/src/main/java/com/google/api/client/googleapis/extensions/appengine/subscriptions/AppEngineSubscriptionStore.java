@@ -41,10 +41,8 @@ import java.util.List;
  * </p>
  *
  * <b>Example usage:</b>
- *
  * <pre>
-    SubscriptionStore store = new AppEngineSubscriptionStore();
-    service.setSubscriptionManager(new SubscriptionManager(store));
+    service.setSubscriptionStore(new AppEngineSubscriptionStore());
  * </pre>
  *
  * @author Matthias Linder (mlinder)

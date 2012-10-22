@@ -37,8 +37,7 @@ import javax.jdo.annotations.PrimaryKey;
  *
  * <b>Example usage:</b>
  * <pre>
-    SubscriptionStore store = new JdoSubscriptionStore();
-    service.setSubscriptionManager(new SubscriptionManager(store));
+    service.setSubscriptionStore(new JdoSubscriptionStore());
  * </pre>
  *
  * @author Matthias Linder (mlinder)

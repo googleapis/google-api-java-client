@@ -29,11 +29,14 @@ import com.google.common.base.Preconditions;
  * </p>
  *
  * <b>Example usage:</b>
+ *
  * <pre>
-    SubscriptionManager pm = new SubscriptionManager(
-        new MemorySubscriptionStore(),
-        new WebHookDeliveryMethod("https://example.com/notifications").build())
-    service.setSubscriptionManager(pm);
+  private static final String DELIVERY_METHOD =
+      new WebHookDeliveryMethod("https://example.com/notifications").build();
+
+  ...
+
+    request.subscribe(DELIVERY_METHOD, ...).execute();
  * </pre>
  *
  * @author Matthias Linder (mlinder)
