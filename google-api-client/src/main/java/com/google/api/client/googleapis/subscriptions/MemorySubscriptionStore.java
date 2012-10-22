@@ -30,8 +30,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * <b>Example usage:</b>
  * <pre>
-    SubscriptionStore store = new MemorySubscriptionStore();
-    service.setSubscriptionManager(new SubscriptionManager(store));
+    service.setSubscriptionStore(new MemorySubscriptionStore());
  * </pre>
  *
  * @author Matthias Linder (mlinder)

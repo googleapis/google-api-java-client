@@ -24,12 +24,6 @@ import java.util.Collection;
  * Implementation should be thread-safe.
  * </p>
  *
- * <b>Example usage:</b>
- * <pre>
-    SubscriptionStore store = new MemorySubscriptionStore();
-    SubscriptionManager subscriptionManager = new SubscriptionManager(store);
- * </pre>
- *
  * @author Matthias Linder (mlinder)
  * @since 1.12
  */
