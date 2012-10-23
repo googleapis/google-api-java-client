@@ -91,7 +91,7 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
     for (String extraScope : extraScopes) {
       scopeBuilder.append(' ').append(extraScope);
     }
-    return new GoogleAccountCredential(context, scope);
+    return new GoogleAccountCredential(context, scopeBuilder.toString());
   }
 
   /**
@@ -103,8 +103,7 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
    */
   public static GoogleAccountCredential usingAudience(Context context, String audience) {
     Preconditions.checkArgument(audience.length() != 0);
-    String scope = "audience:" + audience;
-    return new GoogleAccountCredential(context, scope);
+    return new GoogleAccountCredential(context, "audience:" + audience);
   }
 
   /**
