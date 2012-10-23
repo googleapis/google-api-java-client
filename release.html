@@ -9,12 +9,32 @@
   <li>Make sure you have permission to post to the <a
     href="http://google-api-java-client.blogspot.com/">Announcement Blog</a>.</li>
   <li>Download <a href="http://sourceforge.net/projects/javadiff/">JDiff</a>.</li>
-  <li>Set up for pushing to central Maven repository
-  <ul>
-    <li>Sign up for a Sonatype JIRA account at <a
-      href="https://issues.sonatype.org/">https://issues.sonatype.org</a>. Click
-    <i>Sign Up</i> in the Login box, fill out the simple form, and click <i>Sign
-    Up</i>.</li>
+  <li>Set up for pushing to the central Maven repository
+    <ul>
+      <li>Sign up for a Sonatype JIRA account at <a
+        href="https://issues.sonatype.org/">https://issues.sonatype.org</a>. Click
+      <i>Sign Up</i> in the Login box, fill out the simple form, and click <i>Sign
+      Up</i>.</li>
+      <li>Request publishing rights to the maven project:</li>
+        <ul>
+          <li>Go to <a href="https://issues.sonatype.org/browse/OSSRH">
+            https://issues.sonatype.org/browse/OSSRH</a></li>
+          <li>Click "Create Issue" in the top-right corner.</li>
+          <li>Fill our the ticket form as follows, or use <a href="https://issues.sonatype.org/browse/OSSRH-4565">this</a> previous issue as a
+            template:
+            <ul>
+              <li><b>Type:</b> New Project</li>
+              <li><b>Summary:</b> Publish rights for already existing project</li>
+              <li><b>Description: </b>This project already exists, I just need to have publish rights to deploy a new release. Thank you.</li>
+              <li><b>Group Id:</b> com.google.api.client</li>
+              <li><b>Project URL:</b> http://code.google.com/p/google-api-java-client/</li>
+              <li><b>SCM url:</b> https://google-api-java-client.googlecode.com/hg/</li>
+              <li><b>Username:</b> <i>YourUsername</i></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
     <li>Install a GPG client from <a href="http://www.gnupg.org/">http://www.gnupg.org/</a>,
     and then create a GPG key using <a
       href="http://www.sonatype.com/people/2010/01/how-to-generate-pgp-signatures-with-maven/">these
