@@ -14,6 +14,7 @@ package com.google.api.client.googleapis.extensions.android.gms.auth;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
@@ -38,6 +39,8 @@ import java.io.IOException;
  * <p>
  * When fetching a token, any thrown {@link GoogleAuthException} would be wrapped:
  * <ul>
+ * <li>{@link GooglePlayServicesAvailabilityException} would be wrapped inside of
+ * {@link GooglePlayServicesAvailabilityIOException}</li>
  * <li>{@link UserRecoverableAuthException} would be wrapped inside of
  * {@link UserRecoverableAuthIOException}</li>
  * <li>{@link GoogleAuthException} when be wrapped inside of {@link GoogleAuthIOException}</li>
@@ -213,6 +216,8 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
       try {
         token = getToken();
         request.getHeaders().setAuthorization("Bearer " + token);
+      } catch (GooglePlayServicesAvailabilityException e) {
+        throw new GooglePlayServicesAvailabilityIOException(e);
       } catch (UserRecoverableAuthException e) {
         throw new UserRecoverableAuthIOException(e);
       } catch (GoogleAuthException e) {
