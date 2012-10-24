@@ -273,9 +273,6 @@
           <configuration>
             <archive>
               <addMavenDescriptor>false</addMavenDescriptor>
-              <manifest>
-                <addClasspath>true</addClasspath>
-              </manifest>
             </archive>
           </configuration>
         </plugin>
