@@ -29,7 +29,9 @@ public class UnparsedNotificationTest extends TestCase {
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     MockNotificationCallback handler = new MockNotificationCallback();
 
-    store.storeSubscription(new Subscription("id", handler, "clientToken"));
+    Subscription s = new Subscription(handler, new SubscriptionHeaders().setSubscriptionID("id")
+        .setClientToken("clientToken").setTopicID("topicID"));
+    store.storeSubscription(s);
 
     // Send a notification
     InputStream contentStream = new ByteArrayInputStream(new byte[] {1, 2, 3});
@@ -44,7 +46,9 @@ public class UnparsedNotificationTest extends TestCase {
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     MockNotificationCallback handler = new MockNotificationCallback();
 
-    store.storeSubscription(new Subscription("differentId", handler, "clientToken"));
+    Subscription s = new Subscription(handler, new SubscriptionHeaders().setSubscriptionID(
+        "differentId").setClientToken("clientToken").setTopicID("topicID"));
+    store.storeSubscription(s);
 
     // Send a notification
     InputStream contentStream = new ByteArrayInputStream(new byte[] {1, 2, 3});
@@ -60,7 +64,8 @@ public class UnparsedNotificationTest extends TestCase {
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     MockNotificationCallback handler = new MockNotificationCallback();
 
-    Subscription s = new Subscription("id", handler, "randomToken");
+    Subscription s = new Subscription(handler, new SubscriptionHeaders().setSubscriptionID("id")
+        .setClientToken("randomToken").setTopicID("topicID"));
     store.storeSubscription(s);
 
     // Send a notification
