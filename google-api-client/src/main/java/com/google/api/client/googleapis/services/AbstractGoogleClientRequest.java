@@ -542,9 +542,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     if (isSubscribing) {
       lastSubscriptionHeaders = new SubscriptionHeaders(lastResponseHeaders);
       if (notificationCallback != null) {
-        lastSubscription = new Subscription(
-            lastSubscriptionHeaders.getSubscriptionID(), notificationCallback,
-            lastSubscriptionHeaders.getClientToken());
+        lastSubscription = new Subscription(notificationCallback, lastSubscriptionHeaders);
         getAbstractGoogleClient().getSubscriptionStore().storeSubscription(lastSubscription);
       }
     }

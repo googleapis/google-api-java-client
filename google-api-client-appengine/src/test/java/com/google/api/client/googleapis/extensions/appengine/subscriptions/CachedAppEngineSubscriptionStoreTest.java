@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.extensions.appengine.subscriptions;
 
 import com.google.api.client.googleapis.subscriptions.NotificationCallback;
 import com.google.api.client.googleapis.subscriptions.Subscription;
+import com.google.api.client.googleapis.subscriptions.SubscriptionHeaders;
 import com.google.api.client.googleapis.subscriptions.UnparsedNotification;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
@@ -62,8 +63,9 @@ public class CachedAppEngineSubscriptionStoreTest extends TestCase {
 
   @Test
   public void testStoreAndGet() throws Exception {
-    Subscription subscription =
-        new Subscription("someID", new SomeNotificationCallback(), "clientToken123");
+    Subscription subscription = new Subscription(
+        new SomeNotificationCallback(), new SubscriptionHeaders().setSubscriptionID("someID")
+            .setClientToken("clientToken123").setTopicID("topicID"));
 
     // Store a single subscription
     CachedAppEngineSubscriptionStore caess = new CachedAppEngineSubscriptionStore();
@@ -79,8 +81,9 @@ public class CachedAppEngineSubscriptionStoreTest extends TestCase {
 
   @Test
   public void testRemoveAndGet() throws Exception {
-    Subscription subscription =
-        new Subscription("someID", new SomeNotificationCallback(), "clientToken");
+    Subscription subscription = new Subscription(
+        new SomeNotificationCallback(), new SubscriptionHeaders().setSubscriptionID("someID")
+            .setClientToken("clientToken").setTopicID("topicID"));
 
     // Store a single subscription
     CachedAppEngineSubscriptionStore caess = new CachedAppEngineSubscriptionStore();
@@ -96,8 +99,9 @@ public class CachedAppEngineSubscriptionStoreTest extends TestCase {
 
   @Test
   public void testGet() throws Exception {
-    Subscription subscription =
-        new Subscription("someID", new SomeNotificationCallback(), "clientToken");
+    Subscription subscription = new Subscription(
+        new SomeNotificationCallback(), new SubscriptionHeaders().setSubscriptionID("someID")
+            .setClientToken("clientToken").setTopicID("topicID"));
 
     // Store a single subscription
     new AppEngineSubscriptionStore().storeSubscription(subscription);
@@ -115,9 +119,12 @@ public class CachedAppEngineSubscriptionStoreTest extends TestCase {
 
   @Test
   public void testStore_overwrite() throws Exception {
-    Subscription subscription =
-        new Subscription("someID", new SomeNotificationCallback(), "clientToken");
-    Subscription subscriptionB = new Subscription("someID", new SomeNotificationCallback(), "bbb");
+    Subscription subscription = new Subscription(
+        new SomeNotificationCallback(), new SubscriptionHeaders().setSubscriptionID("someID")
+            .setClientToken("clientToken").setTopicID("topicID"));
+    Subscription subscriptionB = new Subscription(
+        new SomeNotificationCallback(), new SubscriptionHeaders().setSubscriptionID("someID")
+            .setClientToken("bbb").setTopicID("topicID"));
 
     // Store a single subscription
     CachedAppEngineSubscriptionStore caess = new CachedAppEngineSubscriptionStore();
