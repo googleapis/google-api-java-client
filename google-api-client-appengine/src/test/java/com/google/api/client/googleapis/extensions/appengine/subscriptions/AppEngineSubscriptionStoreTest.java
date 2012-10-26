@@ -1,5 +1,5 @@
 /*
- *1 * Copyright (c) 2012 Google Inc.
+ * 1 * Copyright (c) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.extensions.appengine.subscriptions;
 
 import com.google.api.client.googleapis.subscriptions.NotificationCallback;
 import com.google.api.client.googleapis.subscriptions.Subscription;
+import com.google.api.client.googleapis.subscriptions.SubscriptionHeaders;
 import com.google.api.client.googleapis.subscriptions.UnparsedNotification;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -60,8 +61,9 @@ public class AppEngineSubscriptionStoreTest extends TestCase {
 
   @Test
   public void testStoreAndGet() throws Exception {
-    Subscription subscription =
-        new Subscription("someID", new SomeNotificationCallback(), "clientToken");
+    Subscription subscription = new Subscription(
+        new SomeNotificationCallback(), new SubscriptionHeaders().setSubscriptionID("someID")
+            .setClientToken("clientToken").setTopicID("topicID"));
     AppEngineSubscriptionStore aess = new AppEngineSubscriptionStore();
 
     // Store and retrieve the subscription
@@ -73,10 +75,12 @@ public class AppEngineSubscriptionStoreTest extends TestCase {
 
   @Test
   public void testStoreAndGet_overwrite() throws Exception {
-    Subscription subscription =
-        new Subscription("someID", new SomeNotificationCallback(), "clientToken");
-    Subscription subscriptionB =
-        new Subscription("someID", new SomeNotificationCallback(), "clientToken2");
+    Subscription subscription = new Subscription(
+        new SomeNotificationCallback(), new SubscriptionHeaders().setSubscriptionID("someID")
+            .setClientToken("clientToken").setTopicID("topicID"));
+    Subscription subscriptionB = new Subscription(
+        new SomeNotificationCallback(), new SubscriptionHeaders().setSubscriptionID("someID")
+            .setClientToken("clientToken2").setTopicID("topicID"));
     AppEngineSubscriptionStore aess = new AppEngineSubscriptionStore();
 
     // Store and retrieve the subscription
@@ -89,8 +93,9 @@ public class AppEngineSubscriptionStoreTest extends TestCase {
 
   @Test
   public void testStoreAndRemove() throws Exception {
-    Subscription subscription =
-        new Subscription("someID", new SomeNotificationCallback(), "clientToken");
+    Subscription subscription = new Subscription(
+        new SomeNotificationCallback(), new SubscriptionHeaders().setSubscriptionID("someID")
+            .setClientToken("clientToken").setTopicID("topicID"));
     AppEngineSubscriptionStore aess = new AppEngineSubscriptionStore();
 
     // Store and retrieve the subscription
@@ -103,10 +108,12 @@ public class AppEngineSubscriptionStoreTest extends TestCase {
 
   @Test
   public void testList() throws Exception {
-    Subscription subscription =
-        new Subscription("someID", new SomeNotificationCallback(), "clientToken");
-    Subscription subscriptionB =
-        new Subscription("someOtherID", new SomeNotificationCallback(), "clientToken");
+    Subscription subscription = new Subscription(
+        new SomeNotificationCallback(), new SubscriptionHeaders().setSubscriptionID("someID")
+            .setClientToken("clientToken").setTopicID("topicID"));
+    Subscription subscriptionB = new Subscription(
+        new SomeNotificationCallback(), new SubscriptionHeaders().setSubscriptionID("someOtherID")
+            .setClientToken("clientToken").setTopicID("topicID"));
     AppEngineSubscriptionStore aess = new AppEngineSubscriptionStore();
 
     // Store and retrieve the subscription

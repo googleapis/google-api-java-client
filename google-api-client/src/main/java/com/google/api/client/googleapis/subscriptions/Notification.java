@@ -37,6 +37,12 @@ import com.google.common.base.Preconditions;
  */
 public abstract class Notification {
 
+  /**
+   * Header name for the textual indication of the type of change that occurred to the underlying
+   * resource or topic provided on notification delivery.
+   */
+  public static final String EVENT_TYPE_HEADER = "X-Event-Type";
+
   /** SubscriptionID header. */
   private final String subscriptionID;
 

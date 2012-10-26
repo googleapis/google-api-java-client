@@ -14,6 +14,7 @@
 
 package com.google.api.client.googleapis.extensions.servlet.subscriptions;
 
+import com.google.api.client.googleapis.subscriptions.Notification;
 import com.google.api.client.googleapis.subscriptions.SubscriptionHeaders;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.googleapis.subscriptions.UnparsedNotification;
@@ -79,6 +80,12 @@ import javax.servlet.http.HttpServletResponse;
 @SuppressWarnings("serial")
 public abstract class AbstractWebHookServlet extends HttpServlet {
 
+  /**
+   * Header name to specify the subscription ID for the subscription for which you no longer wish to
+   * receive notifications (used in the response to a WebHook notification).
+   */
+  public static final String UNSUBSCRIBE_HEADER = "X-Unsubscribe";
+
   /** Globally shared/cached {@link SubscriptionStore}. */
   private static SubscriptionStore subscriptionStore;
 
@@ -105,7 +112,7 @@ public abstract class AbstractWebHookServlet extends HttpServlet {
       HttpServletResponse resp, UnparsedNotification notification) {
     // Subscriptions can be removed by sending an 200 OK with the X-Unsubscribe header.
     resp.setStatus(HttpServletResponse.SC_OK);
-    resp.setHeader(SubscriptionHeaders.UNSUBSCRIBE, notification.getSubscriptionID());
+    resp.setHeader(UNSUBSCRIBE_HEADER, notification.getSubscriptionID());
   }
 
   @Override
@@ -122,7 +129,7 @@ public abstract class AbstractWebHookServlet extends HttpServlet {
 
     String topicId = req.getHeader(SubscriptionHeaders.TOPIC_ID);
     String topicUri = req.getHeader(SubscriptionHeaders.TOPIC_URI);
-    String eventType = req.getHeader(SubscriptionHeaders.EVENT_TYPE);
+    String eventType = req.getHeader(Notification.EVENT_TYPE_HEADER);
     String clientToken = req.getHeader(SubscriptionHeaders.CLIENT_TOKEN);
 
     if (topicId == null || topicUri == null || eventType == null) {

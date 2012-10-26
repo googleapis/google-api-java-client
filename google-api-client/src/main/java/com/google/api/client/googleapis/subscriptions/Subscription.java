@@ -14,25 +14,17 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 import java.io.Serializable;
 
 /**
- * Data type containing essential information about a subscription. Usually stored in a
- * {@link SubscriptionStore}.
+ * Client subscription information after the subscription has been created.
  *
  * <p>
- * Thread-safe implementation.
+ * Should be stored in a {@link SubscriptionStore}. Implementation is thread safe.
  * </p>
- *
- * <b>Example usage:</b>
- *
- * <pre>
-    void handleNotification(Subscription subscription, UnparsedNotification notification) {
-      System.out.println(subscription.getSubscriptionId());
-    }
- * </pre>
  *
  * @author Matthias Linder (mlinder)
  * @since 1.12
@@ -41,61 +33,79 @@ public final class Subscription implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  /** ID of the subscription. */
-  private final String subscriptionID;
-
-  /** The token used to verify the authority of the notifications' origin or {@code null}. */
-  private final String clientToken;
-
-  /** The handler to call once a notification for this subscription has been received. */
+  /** Notification handler called when a notification is received for this subscription. */
   private final NotificationCallback notificationCallback;
 
-  /**
-   * Creates a new subscription.
-   *
-   * @param id ID of the subscription
-   * @param handler The handler to call once a notification for this subscription has been received.
-   *        Should be thread-safe.
-   * @param clientToken The token used to verify the authority of the notifications' origin, or
-   *        {@code null} if unused
-   */
-  public <T> Subscription(String id, NotificationCallback handler, String clientToken) {
-    this.subscriptionID = Preconditions.checkNotNull(id);
-    this.notificationCallback = Preconditions.checkNotNull(handler);
-    this.clientToken = clientToken;
-  }
+  /** Unique subscription ID. */
+  private final String subscriptionID;
 
   /**
-   * Returns the ID of this subscription which was received as the subscription was made.
+   * Opaque string provided by the client when it creates the subscription and echoed back to the
+   * client for every notification it receives for that subscription or {@code null} for none.
    */
-  public final String getSubscriptionID() {
+  private final String clientToken;
+
+  /** Opaque ID for the subscribed resource that is stable across API versions. */
+  private final String topicID;
+
+  /**
+   * HTTP Date indicating the time at which the subscription will expire or {@code null} for an
+   * infinite TTL.
+   */
+  private final String subscriptionExpires;
+
+  /**
+   * @param handler notification handler called when a notification is received for this
+   *        subscription
+   * @param subscriptionHeaders subscription headers
+   */
+  public <T> Subscription(NotificationCallback handler, SubscriptionHeaders subscriptionHeaders) {
+    this.notificationCallback = Preconditions.checkNotNull(handler);
+    this.subscriptionID = Preconditions.checkNotNull(subscriptionHeaders.getSubscriptionID());
+    this.clientToken = subscriptionHeaders.getClientToken();
+    this.topicID = Preconditions.checkNotNull(subscriptionHeaders.getTopicID());
+    this.subscriptionExpires = subscriptionHeaders.getSubscriptionExpires();
+  }
+
+  /** Returns the unique subscription ID. */
+  public String getSubscriptionID() {
     return subscriptionID;
   }
 
   /**
-   * Returns the handler which should be called for every received {@link Notification}.
+   * Returns the notification handler called when a notification is received for this subscription.
    */
-  public final NotificationCallback getNotificationCallback() {
+  public NotificationCallback getNotificationCallback() {
     return notificationCallback;
   }
 
   /**
-   * Returns the ClientToken with which this subscription was created, or {@code null} if unused.
-   *
-   * <p>
-   * The ClientToken can be considered as some kind of 'salt' which is used to ensure that the
-   * {@link Notification} has been received from the endpoint where the subscription was made. It is
-   * especially useful for delivery-methods like WebHook where any possible source might call the
-   * servlet.
-   * </p>
+   * Returns the opaque string provided by the client when it creates the subscription and echoed
+   * back to the client for every notification it receives for that subscription or {@code null} for
+   * none.
    */
-  public final String getClientToken() {
+  public String getClientToken() {
     return clientToken;
+  }
+
+  /** Returns the opaque ID for the subscribed resource that is stable across API versions. */
+  public String getTopicID() {
+    return topicID;
+  }
+
+  /**
+   * Returns the HTTP Date indicating the time at which the subscription will expire or {@code null}
+   * for an infinite TTL.
+   */
+  public String getSubscriptionExpires() {
+    return subscriptionExpires;
   }
 
   @Override
   public String toString() {
-    return "Subscription{id=" + subscriptionID + ", clientToken=" + clientToken
-        + ", notificationCallback=" + notificationCallback + "}";
+    return Objects.toStringHelper(Subscription.class).add("subscriptionID", subscriptionID)
+        .add("clientToken", clientToken).add("topicID", topicID)
+        .add("subscriptionExpires", subscriptionExpires)
+        .add("notificationCallback", notificationCallback).toString();
   }
 }
