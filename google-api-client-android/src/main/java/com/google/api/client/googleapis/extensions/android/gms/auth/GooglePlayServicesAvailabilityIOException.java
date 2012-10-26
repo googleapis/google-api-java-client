@@ -36,7 +36,7 @@ import java.io.IOException;
           Dialog dialog = GooglePlayServicesUtil.getErrorDialog(
               availabilityException.getConnectionStatusCode(),
               myActivity,
-              MyActivity.AUTH_REQUEST_CODE);
+              MyActivity.REQUEST_GOOGLE_PLAY_SERVICES);
           dialog.show();
         }
       });

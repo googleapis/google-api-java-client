@@ -31,7 +31,7 @@ import java.io.IOException;
  * <pre>
     } catch (UserRecoverableAuthIOException userRecoverableException) {
       myActivity.startActivityForResult(
-          userRecoverableException.getIntent(), MyActivity.AUTH_REQUEST_CODE);
+          userRecoverableException.getIntent(), MyActivity.REQUEST_AUTHORIZATION);
     }
  * </pre>
  *
