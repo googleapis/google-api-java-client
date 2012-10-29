@@ -13,7 +13,6 @@
 package com.google.api.client.googleapis.services;
 
 import com.google.api.client.googleapis.batch.BatchRequest;
-import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -62,9 +61,6 @@ public abstract class AbstractGoogleClient {
   /** Object parser or {@code null} for none. */
   private final ObjectParser objectParser;
 
-  /** Subscription store or {@code null} for none. */
-  private SubscriptionStore subscriptionStore;
-
   /** Whether discovery pattern checks should be suppressed on required parameters. */
   private boolean suppressPatternChecks;
 
@@ -84,7 +80,7 @@ public abstract class AbstractGoogleClient {
   protected AbstractGoogleClient(HttpTransport transport,
       HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
       ObjectParser objectParser) {
-    this(transport, httpRequestInitializer, rootUrl, servicePath, objectParser, null, null, null,
+    this(transport, httpRequestInitializer, rootUrl, servicePath, objectParser, null, null,
         false);
   }
 
@@ -97,14 +93,13 @@ public abstract class AbstractGoogleClient {
    * @param googleClientRequestInitializer Google request initializer or {@code null} for none
    * @param applicationName application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
-   * @param subscriptionStore subscription store or {@code null} for none
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
    */
   protected AbstractGoogleClient(HttpTransport transport,
       HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
       ObjectParser objectParser, GoogleClientRequestInitializer googleClientRequestInitializer,
-      String applicationName, SubscriptionStore subscriptionStore, boolean suppressPatternChecks) {
+      String applicationName, boolean suppressPatternChecks) {
     this.googleClientRequestInitializer = googleClientRequestInitializer;
     this.rootUrl = normalizeRootUrl(rootUrl);
     this.servicePath = normalizeServicePath(servicePath);
@@ -112,7 +107,6 @@ public abstract class AbstractGoogleClient {
     this.requestFactory = httpRequestInitializer == null
         ? transport.createRequestFactory() : transport.createRequestFactory(httpRequestInitializer);
     this.objectParser = objectParser;
-    this.subscriptionStore = subscriptionStore;
     this.suppressPatternChecks = suppressPatternChecks;
   }
 
@@ -260,11 +254,6 @@ public abstract class AbstractGoogleClient {
     return batch;
   }
 
-  /** Returns the subscription store or {@code null} for none. */
-  public final SubscriptionStore getSubscriptionStore() {
-    return subscriptionStore;
-  }
-
   /** Returns whether discovery pattern checks should be suppressed on required parameters. */
   public final boolean getSuppressPatternChecks() {
     return suppressPatternChecks;
@@ -335,9 +324,6 @@ public abstract class AbstractGoogleClient {
      * none.
      */
     private String applicationName;
-
-    /** Subscription store or {@code null} for none. */
-    private SubscriptionStore subscriptionStore;
 
     /** Whether discovery pattern checks should be suppressed on required parameters. */
     private boolean suppressPatternChecks;
@@ -500,23 +486,6 @@ public abstract class AbstractGoogleClient {
      */
     public Builder setApplicationName(String applicationName) {
       this.applicationName = applicationName;
-      return this;
-    }
-
-    /**
-     * Returns the {@link SubscriptionStore} used to make subscription requests, or {@code null} for
-     * none.
-     */
-    public final SubscriptionStore getSubscriptionStore() {
-      return subscriptionStore;
-    }
-
-    /**
-     * Sets the {@link SubscriptionStore} used to make subscription requests, or {@code null} for
-     * none.
-     */
-    public Builder setSubscriptionStore(SubscriptionStore subscriptionStore) {
-      this.subscriptionStore = subscriptionStore;
       return this;
     }
 

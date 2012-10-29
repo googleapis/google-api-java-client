@@ -13,11 +13,8 @@
 package com.google.api.client.googleapis.services;
 
 import com.google.api.client.googleapis.media.MediaHttpUploader;
-import com.google.api.client.googleapis.subscriptions.MemorySubscriptionStore;
-import com.google.api.client.googleapis.subscriptions.SubscriptionHeaders;
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest;
-import com.google.api.client.googleapis.testing.subscriptions.MockNotificationCallback;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.http.LowLevelHttpRequest;
@@ -115,38 +112,6 @@ public class AbstractGoogleClientTest extends TestCase {
         "Test Application").setGoogleClientRequestInitializer(remoteRequestInitializer).build();
     client.initialize(null);
     assertTrue(remoteRequestInitializer.isCalled);
-  }
-
-  /** Tests the normal flow execution. */
-  public void testSubscribe() throws Exception {
-    MemorySubscriptionStore store = new MemorySubscriptionStore();
-    MockHttpTransport transport = new MockHttpTransport() {
-        @Override
-      public LowLevelHttpRequest buildRequest(String method, String url) {
-        return new MockLowLevelHttpRequest(url) {
-            @Override
-          public LowLevelHttpResponse execute() {
-            MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
-            assertEquals("something", getHeaders().get("x-subscribe").get(0));
-            String clientToken = getHeaders().get("x-client-token").get(0);
-
-            response.addHeader(SubscriptionHeaders.SUBSCRIPTION_ID, "12345");
-            response.addHeader(SubscriptionHeaders.CLIENT_TOKEN, clientToken);
-            response.addHeader(SubscriptionHeaders.TOPIC_ID, "topicID");
-            response.addHeader(SubscriptionHeaders.TOPIC_URI, "http://topic.uri/");
-            return response;
-          }
-        };
-      }
-    };
-    AbstractGoogleClient client = new MockGoogleClient.Builder(
-        transport, HttpTesting.SIMPLE_URL, "", JSON_OBJECT_PARSER, null).setApplicationName(
-        "Test Application").setSubscriptionStore(store).build();
-    MockGoogleClientRequest<String> rq =
-        new MockGoogleClientRequest<String>(client, "GET", "", null, String.class);
-    rq.subscribeUnparsed("something", new MockNotificationCallback()).executeUnparsed();
-    assertEquals(1, store.listSubscriptions().size());
-    assertEquals("12345", rq.getLastSubscription().getSubscriptionID());
   }
 
   private static final String TEST_RESUMABLE_REQUEST_URL =
