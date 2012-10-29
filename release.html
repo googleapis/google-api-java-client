@@ -119,6 +119,7 @@ sed -i "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g" pom.xml
 sed -i "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g" */pom.xml
 for filename in google-api-client-assembly/android-properties/*.properties; do newname=`echo $filename | sed -e "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g"`; hg mv $filename $newname; done
 sed -i -e "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g" -e "s@${ESC_VER_PREV}${VER_SUFFIX}@${ESC_VER_CUR}${VER_SUFFIX}@g" jdiff.xml
+sed -i "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g" google-api-client/src/main/java/com/google/api/client/googleapis/GoogleUtils.java
 sed -i -e "s@${ESC_VER_CUR}@${ESC_VER_NEXT}@g" -e "s@${ESC_VER_PREV}@${ESC_VER_CUR}@g" release.html
 echo -n && read -e -p "Version which comes after ${VER_NEXT}: " NV && sed -i -e "s@VER_NEXT=${ESC_VER_NEXT}@VER_NEXT=${NV}@g" release.html
 </pre></li>
@@ -152,6 +153,9 @@ cp google-api-client-appengine/target/site/dependencies.html google-api-client-a
 cp google-api-client-java6/target/site/dependencies.html google-api-client-assembly/dependencies/java6-dependencies.html
 cp google-api-client-servlet/target/site/dependencies.html google-api-client-assembly/dependencies/servlet-dependencies.html
 
+sed s/-SNAPSHOT//g &lt;google-api-client/src/main/java/com/google/api/client/googleapis/GoogleUtils.java &gt;/tmp/GoogleUtils.java
+cp /tmp/GoogleUtils.java google-api-client/src/main/java/com/google/api/client/googleapis/GoogleUtils.java
+
 for filename in google-api-client-assembly/android-properties/*.properties; do newname=`echo $filename | sed -e 's/-SNAPSHOT//g'`; mv $filename $newname; done
 
 hg add
@@ -181,7 +185,9 @@ NEXT_VERSION=<i>(next bug fix version 1.13.X-beta)</i>
 for filename in google-api-client-assembly/android-properties/*.properties; do newname=`echo $filename | sed -e "s/1.13.0-beta/$NEXT_VERSION/g"`; mv $filename $newname; done
 sed s/1.13.0-beta/$NEXT_VERSION/g &lt;jdiff.xml &gt;/tmp/jdiff.xml
 sed s/1.13.0-beta/$NEXT_VERSION/g &lt;release.html &gt;/tmp/release.html
+sed s/1.13.0-beta/$NEXT_VERSION/g &lt;google-api-client/src/main/java/com/google/api/client/googleapis/GoogleUtils.java &gt;/tmp/GoogleUtils.java
 mv /tmp/jdiff.xml /tmp/release.html .
+mv /tmp/GoogleUtils.java google-api-client/src/main/java/com/google/api/client/googleapis/
 Consider changing value of $project.http.version and $project.oauth.version variables in pom.xml
 hg add
 Remove all old android-properties files
