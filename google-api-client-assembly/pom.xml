@@ -55,7 +55,7 @@
             <configuration>
               <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
               <outputDirectory>${project.build.directory}/libs</outputDirectory>
-              <excludeArtifactIds>android,opengl-api,google-collections,xmlParserAPIs,servlet-api,commons-codec,json</excludeArtifactIds>
+              <excludeArtifactIds>android,opengl-api,google-collections,xmlParserAPIs,servlet-api,commons-codec,json,google-play-services</excludeArtifactIds>
             </configuration>
           </execution>
           <execution>
@@ -68,7 +68,7 @@
               <classifier>sources</classifier>
               <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
               <outputDirectory>${project.build.directory}/libs-sources</outputDirectory>
-              <excludeArtifactIds>android,opengl-api,google-collections,xmlParserAPIs,servlet-api,commons-codec,json</excludeArtifactIds>
+              <excludeArtifactIds>android,opengl-api,google-collections,xmlParserAPIs,servlet-api,commons-codec,json,google-play-services</excludeArtifactIds>
             </configuration>
           </execution>
         </executions>
