@@ -38,7 +38,7 @@ import java.io.InputStream;
  * </pre>
  *
  * @author Matthias Linder (mlinder)
- * @since 1.12
+ * @since 1.13
  */
 public final class UnparsedNotification extends Notification {
 
@@ -90,7 +90,7 @@ public final class UnparsedNotification extends Notification {
    * Handles a newly received notification, and delegates it to the registered handler.
    *
    * @param subscriptionStore subscription store
-   * @returns {@code true} if the notification was delivered successfully, or {@code false} if this
+   * @return {@code true} if the notification was delivered successfully, or {@code false} if this
    *          notification could not be delivered and the subscription should be cancelled.
    * @throws IllegalArgumentException if there is a client-token mismatch
    */

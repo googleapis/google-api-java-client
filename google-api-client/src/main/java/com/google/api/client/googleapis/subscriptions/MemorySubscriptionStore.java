@@ -34,7 +34,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * </pre>
  *
  * @author Matthias Linder (mlinder)
- * @since 1.12
+ * @since 1.13
  */
 public class MemorySubscriptionStore implements SubscriptionStore {
 

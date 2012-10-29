@@ -54,11 +54,17 @@ public class MockGoogleClientRequest<T> extends AbstractGoogleClientRequest<T> {
     return (MockGoogleClientRequest<T>) super.setRequestHeaders(headers);
   }
 
+  /**
+   * @since 1.13
+   */
   @Override
   public AbstractGoogleClientRequest<T> setNotificationClientToken(String notificationClientToken) {
     return super.setNotificationClientToken(notificationClientToken);
   }
 
+  /**
+   * @since 1.13
+   */
   @Override
   public MockGoogleClientRequest<T> subscribeUnparsed(
       String notificationDeliveryMethod, NotificationCallback notificationCallback) {
@@ -66,6 +72,9 @@ public class MockGoogleClientRequest<T> extends AbstractGoogleClientRequest<T> {
         notificationDeliveryMethod, notificationCallback);
   }
 
+  /**
+   * @since 1.13
+   */
   @Override
   public MockGoogleClientRequest<T> subscribe(
       String notificationDeliveryMethod, TypedNotificationCallback<T> typedNotificationCallback) {

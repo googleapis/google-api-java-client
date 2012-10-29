@@ -47,7 +47,7 @@ import javax.servlet.http.HttpServletResponse;
 
       private static final long serialVersionUID = 1L;
 
-      @Override
+      {@literal @}Override
       protected SubscriptionStore createSubscriptionStore() {
         return new CachedAppEngineSubscriptionStore();
       }
@@ -75,7 +75,7 @@ import javax.servlet.http.HttpServletResponse;
  * </pre>
  *
  * @author Matthias Linder (mlinder)
- * @since 1.12
+ * @since 1.13
  */
 @SuppressWarnings("serial")
 public abstract class AbstractWebHookServlet extends HttpServlet {

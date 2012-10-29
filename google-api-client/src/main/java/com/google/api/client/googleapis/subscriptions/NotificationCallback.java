@@ -51,7 +51,7 @@ import java.io.Serializable;
  * </pre>
  *
  * @author Matthias Linder (mlinder)
- * @since 1.12
+ * @since 1.13
  */
 public interface NotificationCallback extends Serializable {
 

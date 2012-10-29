@@ -80,6 +80,9 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
     return (AbstractGoogleJsonClientRequest<T>) super.setRequestHeaders(headers);
   }
 
+  /**
+   * @since 1.13
+   */
   @Override
   public AbstractGoogleJsonClientRequest<T> setNotificationClientToken(
       String notificationClientToken) {
@@ -87,6 +90,9 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
         notificationClientToken);
   }
 
+  /**
+   * @since 1.13
+   */
   @Override
   protected AbstractGoogleJsonClientRequest<T> setLastSubscription(Subscription lastSubscription) {
     return (AbstractGoogleJsonClientRequest<T>) super.setLastSubscription(lastSubscription);
@@ -145,6 +151,8 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
    *
    * @param notificationDeliveryMethod notification delivery method
    * @param notificationCallback JSON notification callback or {@code null} for none
+   *
+   * @since 1.13
    */
   protected AbstractGoogleJsonClientRequest<T> subscribe(
       String notificationDeliveryMethod, JsonNotificationCallback<T> notificationCallback) {

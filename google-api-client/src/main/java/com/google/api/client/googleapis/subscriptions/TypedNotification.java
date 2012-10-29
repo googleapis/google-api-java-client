@@ -40,7 +40,7 @@ package com.google.api.client.googleapis.subscriptions;
  * @param <T> Data content from the underlying response stored within this notification
  *
  * @author Matthias Linder (mlinder)
- * @since 1.12
+ * @since 1.13
  */
 public final class TypedNotification<T> extends Notification {
 

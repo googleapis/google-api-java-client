@@ -20,7 +20,7 @@ import java.security.SecureRandom;
  * Utility methods for subscriptions.
  *
  * @author Yaniv Inbar
- * @since 1.12
+ * @since 1.13
  */
 public class SubscriptionUtils {
 
