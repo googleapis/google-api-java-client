@@ -18,11 +18,6 @@ import com.google.api.client.googleapis.batch.BatchCallback;
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.media.MediaHttpDownloader;
 import com.google.api.client.googleapis.media.MediaHttpUploader;
-import com.google.api.client.googleapis.subscriptions.NotificationCallback;
-import com.google.api.client.googleapis.subscriptions.Subscription;
-import com.google.api.client.googleapis.subscriptions.SubscriptionHeaders;
-import com.google.api.client.googleapis.subscriptions.SubscriptionUtils;
-import com.google.api.client.googleapis.subscriptions.TypedNotificationCallback;
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
@@ -85,18 +80,6 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
 
   /** Response class to parse into. */
   private Class<T> responseClass;
-
-  /** Whether to subscribe to notifications. */
-  private boolean isSubscribing;
-
-  /** Callback for processing subscription notifications or {@code null} for none. */
-  private NotificationCallback notificationCallback;
-
-  /** Subscription headers from the last response or {@code null} for none. */
-  private SubscriptionHeaders lastSubscriptionHeaders;
-
-  /** Subscription details of the last response or {@code null} for none. */
-  private Subscription lastSubscription;
 
   /** Media HTTP uploader or {@code null} for none. */
   private MediaHttpUploader uploader;
@@ -225,115 +208,6 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /** Returns the response class to parse into. */
   public final Class<T> getResponseClass() {
     return responseClass;
-  }
-
-  /** Returns whether to subscribe to notifications. */
-  public final boolean isSubscribing() {
-    return isSubscribing;
-  }
-
-  /** Returns the callback for processing subscription notifications or {@code null} for none. */
-  public final NotificationCallback getNotificationCallback() {
-    return notificationCallback;
-  }
-
-  /** Returns the notification delivery method or {@code null} for none. */
-  public final String getNotificationDeliveryMethod() {
-    return (String) requestHeaders.get(SubscriptionHeaders.SUBSCRIBE);
-  }
-
-  /** Returns the notification client token or {@code null} for none. */
-  public final String getNotificationClientToken() {
-    return (String) requestHeaders.get(SubscriptionHeaders.CLIENT_TOKEN);
-  }
-
-  /**
-   * Sets the notification client token or {@code null} for none.
-   *
-   * <p>
-   * Overriding is only supported for the purpose of changing visibility to public, but nothing
-   * else.
-   * </p>
-   */
-  public AbstractGoogleClientRequest<T> setNotificationClientToken(String notificationClientToken) {
-    requestHeaders.set(SubscriptionHeaders.CLIENT_TOKEN, notificationClientToken);
-    return this;
-  }
-
-  /**
-   * Subscribes to unparsed notifications.
-   *
-   * <p>
-   * A notification client token is randomly generated using
-   * {@link SubscriptionUtils#generateRandomClientToken()}. You may override using
-   * {@link #setNotificationClientToken(String)}.
-   * </p>
-   *
-   * <p>
-   * Overriding is only supported for the purpose of changing visibility to public, but nothing
-   * else.
-   * </p>
-   *
-   * @param notificationDeliveryMethod notification delivery method
-   * @param notificationCallback notification callback or {@code null} for none
-   */
-  @SuppressWarnings("unchecked")
-  protected AbstractGoogleClientRequest<T> subscribeUnparsed(
-      String notificationDeliveryMethod, NotificationCallback notificationCallback) {
-    this.notificationCallback = notificationCallback;
-    requestHeaders.set(
-        SubscriptionHeaders.SUBSCRIBE, Preconditions.checkNotNull(notificationDeliveryMethod));
-    setNotificationClientToken(SubscriptionUtils.generateRandomClientToken());
-    if (notificationCallback instanceof TypedNotificationCallback<?>) {
-      ((TypedNotificationCallback<T>) notificationCallback).setDataType(responseClass);
-    }
-    isSubscribing = true;
-    return this;
-  }
-
-  /**
-   * Subscribes to parsed notifications.
-   *
-   * <p>
-   * A notification client token is randomly generated using
-   * {@link SubscriptionUtils#generateRandomClientToken()}. You may override using
-   * {@link #setNotificationClientToken(String)}.
-   * </p>
-   *
-   * <p>
-   * Overriding is only supported for the purpose of changing visibility to public, but nothing
-   * else.
-   * </p>
-   *
-   * @param notificationDeliveryMethod notification delivery method
-   * @param typedNotificationCallback typed notification callback or {@code null} for none
-   */
-  protected AbstractGoogleClientRequest<T> subscribe(
-      String notificationDeliveryMethod, TypedNotificationCallback<T> typedNotificationCallback) {
-    return subscribeUnparsed(notificationDeliveryMethod, typedNotificationCallback);
-  }
-
-  /** Returns the subscription details of the last response or {@code null} for none. */
-  public final Subscription getLastSubscription() {
-    return lastSubscription;
-  }
-
-  /** Returns the subscription headers from the last response or {@code null} for none. */
-  public final SubscriptionHeaders getLastSubscriptionHeaders() {
-    return lastSubscriptionHeaders;
-  }
-
-  /**
-   * Sets the subscription details of the last response or {@code null} for none.
-   *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
-   */
-  protected AbstractGoogleClientRequest<T> setLastSubscription(Subscription lastSubscription) {
-    this.lastSubscription = lastSubscription;
-    return this;
   }
 
   /** Returns the media HTTP Uploader or {@code null} for none. */
@@ -538,14 +412,6 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     lastResponseHeaders = response.getHeaders();
     lastStatusCode = response.getStatusCode();
     lastStatusMessage = response.getStatusMessage();
-    // process subscriptions
-    if (isSubscribing) {
-      lastSubscriptionHeaders = new SubscriptionHeaders(lastResponseHeaders);
-      if (notificationCallback != null) {
-        lastSubscription = new Subscription(notificationCallback, lastSubscriptionHeaders);
-        getAbstractGoogleClient().getSubscriptionStore().storeSubscription(lastSubscription);
-      }
-    }
     // process any error
     if (throwExceptionOnExecuteError && !response.isSuccessStatusCode()) {
       throw newExceptionOnError(response);
@@ -680,8 +546,6 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     if (downloader == null) {
       executeMedia().download(outputStream);
     } else {
-      Preconditions.checkArgument(notificationCallback == null,
-          "subscribing with a notification callback during media download is not yet implemented");
       downloader.download(buildHttpRequestUrl(), requestHeaders, outputStream);
     }
   }
@@ -701,8 +565,6 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   public final <E> void queue(
       BatchRequest batchRequest, Class<E> errorClass, BatchCallback<T, E> callback)
       throws IOException {
-    Preconditions.checkArgument(notificationCallback == null,
-        "subscribing with a notification callback during batch is not yet implemented");
     batchRequest.queue(buildHttpRequest(), getResponseClass(), errorClass, callback);
   }
 }

@@ -19,9 +19,6 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.json.JsonCContent;
 import com.google.api.client.googleapis.json.JsonCParser;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
-import com.google.api.client.googleapis.subscriptions.Subscription;
-import com.google.api.client.googleapis.subscriptions.SubscriptionUtils;
-import com.google.api.client.googleapis.subscriptions.json.JsonNotificationCallback;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.UriTemplate;
@@ -80,18 +77,6 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
     return (AbstractGoogleJsonClientRequest<T>) super.setRequestHeaders(headers);
   }
 
-  @Override
-  public AbstractGoogleJsonClientRequest<T> setNotificationClientToken(
-      String notificationClientToken) {
-    return (AbstractGoogleJsonClientRequest<T>) super.setNotificationClientToken(
-        notificationClientToken);
-  }
-
-  @Override
-  protected AbstractGoogleJsonClientRequest<T> setLastSubscription(Subscription lastSubscription) {
-    return (AbstractGoogleJsonClientRequest<T>) super.setLastSubscription(lastSubscription);
-  }
-
   /**
    * Queues the request into the specified batch request container.
    *
@@ -127,29 +112,6 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
   @Override
   protected GoogleJsonResponseException newExceptionOnError(HttpResponse response) {
     return GoogleJsonResponseException.from(getAbstractGoogleClient().getJsonFactory(), response);
-  }
-
-  /**
-   * Subscribes to parsed JSON notifications.
-   *
-   * <p>
-   * A notification client token is randomly generated using
-   * {@link SubscriptionUtils#generateRandomClientToken()}. You may override using
-   * {@link #setNotificationClientToken(String)}.
-   * </p>
-   *
-   * <p>
-   * Overriding is only supported for the purpose of changing visibility to public, but nothing
-   * else.
-   * </p>
-   *
-   * @param notificationDeliveryMethod notification delivery method
-   * @param notificationCallback JSON notification callback or {@code null} for none
-   */
-  protected AbstractGoogleJsonClientRequest<T> subscribe(
-      String notificationDeliveryMethod, JsonNotificationCallback<T> notificationCallback) {
-    return (AbstractGoogleJsonClientRequest<T>) super.subscribe(
-        notificationDeliveryMethod, notificationCallback);
   }
 
   /** Returns POJO that can be serialized into JSON content or {@code null} for none. */

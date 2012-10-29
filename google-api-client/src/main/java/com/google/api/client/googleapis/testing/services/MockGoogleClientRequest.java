@@ -14,8 +14,6 @@ package com.google.api.client.googleapis.testing.services;
 
 import com.google.api.client.googleapis.services.AbstractGoogleClient;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
-import com.google.api.client.googleapis.subscriptions.NotificationCallback;
-import com.google.api.client.googleapis.subscriptions.TypedNotificationCallback;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.UriTemplate;
@@ -52,24 +50,5 @@ public class MockGoogleClientRequest<T> extends AbstractGoogleClientRequest<T> {
   @Override
   public MockGoogleClientRequest<T> setRequestHeaders(HttpHeaders headers) {
     return (MockGoogleClientRequest<T>) super.setRequestHeaders(headers);
-  }
-
-  @Override
-  public AbstractGoogleClientRequest<T> setNotificationClientToken(String notificationClientToken) {
-    return super.setNotificationClientToken(notificationClientToken);
-  }
-
-  @Override
-  public MockGoogleClientRequest<T> subscribeUnparsed(
-      String notificationDeliveryMethod, NotificationCallback notificationCallback) {
-    return (MockGoogleClientRequest<T>) super.subscribeUnparsed(
-        notificationDeliveryMethod, notificationCallback);
-  }
-
-  @Override
-  public MockGoogleClientRequest<T> subscribe(
-      String notificationDeliveryMethod, TypedNotificationCallback<T> typedNotificationCallback) {
-    return (MockGoogleClientRequest<T>) super.subscribe(
-        notificationDeliveryMethod, typedNotificationCallback);
   }
 }

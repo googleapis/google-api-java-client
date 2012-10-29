@@ -15,7 +15,6 @@ package com.google.api.client.googleapis.services.json;
 import com.google.api.client.googleapis.json.JsonCParser;
 import com.google.api.client.googleapis.services.AbstractGoogleClient;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
-import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -53,7 +52,6 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
    * @param googleClientRequestInitializer Google request initializer or {@code null} for none
    * @param applicationName application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
-   * @param subscriptionStore subscription store or {@code null} for none
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
    */
@@ -61,9 +59,9 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
       HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
       JsonObjectParser jsonObjectParser,
       GoogleClientRequestInitializer googleClientRequestInitializer, String applicationName,
-      SubscriptionStore subscriptionStore, boolean suppressPatternChecks) {
+      boolean suppressPatternChecks) {
     super(transport, httpRequestInitializer, rootUrl, servicePath, jsonObjectParser,
-        googleClientRequestInitializer, applicationName, subscriptionStore, suppressPatternChecks);
+        googleClientRequestInitializer, applicationName, suppressPatternChecks);
   }
 
   @Override
@@ -145,11 +143,6 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
     @Override
     public Builder setApplicationName(String applicationName) {
       return (Builder) super.setApplicationName(applicationName);
-    }
-
-    @Override
-    public Builder setSubscriptionStore(SubscriptionStore subscriptionStore) {
-      return (Builder) super.setSubscriptionStore(subscriptionStore);
     }
 
     @Override

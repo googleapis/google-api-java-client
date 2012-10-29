@@ -14,7 +14,6 @@ package com.google.api.client.googleapis.testing.services.json;
 
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.google.api.client.googleapis.services.json.AbstractGoogleJsonClient;
-import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -51,7 +50,6 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
    * @param googleClientRequestInitializer Google request initializer or {@code null} for none
    * @param applicationName application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
-   * @param subscriptionStore subscription store
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
    */
@@ -59,9 +57,9 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
       HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
       JsonObjectParser jsonObjectParser,
       GoogleClientRequestInitializer googleClientRequestInitializer, String applicationName,
-      SubscriptionStore subscriptionStore, boolean suppressPatternChecks) {
+      boolean suppressPatternChecks) {
     super(transport, httpRequestInitializer, rootUrl, servicePath, jsonObjectParser,
-        googleClientRequestInitializer, applicationName, subscriptionStore, suppressPatternChecks);
+        googleClientRequestInitializer, applicationName, suppressPatternChecks);
   }
 
   /**
@@ -92,7 +90,7 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
     public MockGoogleJsonClient build() {
       return new MockGoogleJsonClient(getTransport(), getHttpRequestInitializer(), getRootUrl(),
           getServicePath(), getObjectParser(), getGoogleClientRequestInitializer(),
-          getApplicationName(), getSubscriptionStore(), getSuppressPatternChecks());
+          getApplicationName(), getSuppressPatternChecks());
     }
 
     @Override
@@ -119,11 +117,6 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
     @Override
     public Builder setApplicationName(String applicationName) {
       return (Builder) super.setApplicationName(applicationName);
-    }
-
-    @Override
-    public Builder setSubscriptionStore(SubscriptionStore subscriptionStore) {
-      return (Builder) super.setSubscriptionStore(subscriptionStore);
     }
 
     @Override
