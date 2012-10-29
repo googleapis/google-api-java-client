@@ -96,7 +96,7 @@ public final class JsonCParser extends JsonObjectParser {
    * @param parser the parser which should be initialized for normal parsing
    * @throws IllegalArgumentException if content type is not {@link Json#MEDIA_TYPE} or if expected
    *         {@code "data"} or {@code "error"} key is not found
-   * @returns the parser which was passed as a parameter
+   * @return the parser which was passed as a parameter
    * @since 1.10
    */
   public static JsonParser initializeParser(JsonParser parser) throws IOException {

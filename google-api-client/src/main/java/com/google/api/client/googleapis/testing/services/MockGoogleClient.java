@@ -48,28 +48,43 @@ public class MockGoogleClient extends AbstractGoogleClient {
    * @param googleClientRequestInitializer Google request initializer or {@code null} for none
    * @param applicationName application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
+   * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
+   *        parameters
+   *
+   * @deprecated (scheduled to be removed in 1.14) Use {@link #MockGoogleClient(HttpTransport,
+   *             HttpRequestInitializer, String, String, ObjectParser,
+   *             GoogleClientRequestInitializer, String, SubscriptionStore, boolean)} instead
+   */
+  @Deprecated
+  public MockGoogleClient(HttpTransport transport, HttpRequestInitializer httpRequestInitializer,
+      String rootUrl, String servicePath, ObjectParser objectParser,
+      GoogleClientRequestInitializer googleClientRequestInitializer, String applicationName,
+      boolean suppressPatternChecks) {
+    super(transport, httpRequestInitializer, rootUrl, servicePath, objectParser,
+        googleClientRequestInitializer, applicationName, suppressPatternChecks);
+  }
+
+  /**
+   * @param transport HTTP transport
+   * @param httpRequestInitializer HTTP request initializer or {@code null} for none
+   * @param rootUrl root URL of the service
+   * @param servicePath service path
+   * @param objectParser object parser or {@code null} for none
+   * @param googleClientRequestInitializer Google request initializer or {@code null} for none
+   * @param applicationName application name to be sent in the User-Agent header of requests or
+   *        {@code null} for none
    * @param subscriptionStore subscription store
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
+   *
+   * @since 1.13
    */
-  public MockGoogleClient(HttpTransport transport,
-      HttpRequestInitializer httpRequestInitializer,
-      String rootUrl,
-      String servicePath,
-      ObjectParser objectParser,
-      GoogleClientRequestInitializer googleClientRequestInitializer,
-      String applicationName,
-      SubscriptionStore subscriptionStore,
-      boolean suppressPatternChecks) {
-    super(transport,
-        httpRequestInitializer,
-        rootUrl,
-        servicePath,
-        objectParser,
-        googleClientRequestInitializer,
-        applicationName,
-        subscriptionStore,
-        suppressPatternChecks);
+  public MockGoogleClient(HttpTransport transport, HttpRequestInitializer httpRequestInitializer,
+      String rootUrl, String servicePath, ObjectParser objectParser,
+      GoogleClientRequestInitializer googleClientRequestInitializer, String applicationName,
+      SubscriptionStore subscriptionStore, boolean suppressPatternChecks) {
+    super(transport, httpRequestInitializer, rootUrl, servicePath, objectParser,
+        googleClientRequestInitializer, applicationName, subscriptionStore, suppressPatternChecks);
   }
 
   /**
@@ -94,15 +109,9 @@ public class MockGoogleClient extends AbstractGoogleClient {
 
     @Override
     public MockGoogleClient build() {
-      return new MockGoogleClient(getTransport(),
-          getHttpRequestInitializer(),
-          getRootUrl(),
-          getServicePath(),
-          getObjectParser(),
-          getGoogleClientRequestInitializer(),
-          getApplicationName(),
-          getSubscriptionStore(),
-          getSuppressPatternChecks());
+      return new MockGoogleClient(getTransport(), getHttpRequestInitializer(), getRootUrl(),
+          getServicePath(), getObjectParser(), getGoogleClientRequestInitializer(),
+          getApplicationName(), getSubscriptionStore(), getSuppressPatternChecks());
     }
 
     @Override
@@ -131,6 +140,9 @@ public class MockGoogleClient extends AbstractGoogleClient {
       return (Builder) super.setApplicationName(applicationName);
     }
 
+    /**
+     * @since 1.13
+     */
     @Override
     public Builder setSubscriptionStore(SubscriptionStore subscriptionStore) {
       return (Builder) super.setSubscriptionStore(subscriptionStore);

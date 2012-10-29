@@ -22,7 +22,7 @@ import com.google.api.client.googleapis.subscriptions.UnparsedNotification;
  * Mock for the {@link NotificationCallback} class.
  *
  * @author Matthias Linder (mlinder)
- * @since 1.12
+ * @since 1.13
  */
 @SuppressWarnings("rawtypes")
 public class MockNotificationCallback implements NotificationCallback {

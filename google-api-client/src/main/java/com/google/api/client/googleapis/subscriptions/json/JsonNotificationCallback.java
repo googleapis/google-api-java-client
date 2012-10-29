@@ -60,7 +60,7 @@ import java.io.IOException;
  *
  * @param <T> Type of the data contained within a notification
  * @author Matthias Linder (mlinder)
- * @since 1.12
+ * @since 1.13
  */
 @SuppressWarnings("serial")
 public abstract class JsonNotificationCallback<T> extends TypedNotificationCallback<T> {

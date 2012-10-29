@@ -41,7 +41,7 @@ import java.io.IOException;
  * </pre>
  *
  * @author Matthias Linder (mlinder)
- * @since 1.12
+ * @since 1.13
  */
 public final class CachedAppEngineSubscriptionStore extends AppEngineSubscriptionStore {
 

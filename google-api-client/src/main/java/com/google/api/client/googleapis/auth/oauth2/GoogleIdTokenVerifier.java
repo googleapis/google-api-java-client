@@ -108,7 +108,7 @@ public class GoogleIdTokenVerifier {
    * Constructor with required parameters.
    *
    * <p>
-   * Use {@link #GoogleIdTokenVerifier.Builder} to specify client IDs.
+   * Use {@link GoogleIdTokenVerifier.Builder} to specify client IDs.
    * </p>
    *
    * @param transport HTTP transport

@@ -227,22 +227,38 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     return responseClass;
   }
 
-  /** Returns whether to subscribe to notifications. */
+  /**
+   * Returns whether to subscribe to notifications.
+   *
+   * @since 1.13
+   */
   public final boolean isSubscribing() {
     return isSubscribing;
   }
 
-  /** Returns the callback for processing subscription notifications or {@code null} for none. */
+  /**
+   * Returns the callback for processing subscription notifications or {@code null} for none.
+   *
+   * @since 1.13
+   */
   public final NotificationCallback getNotificationCallback() {
     return notificationCallback;
   }
 
-  /** Returns the notification delivery method or {@code null} for none. */
+  /**
+   * Returns the notification delivery method or {@code null} for none.
+   *
+   * @since 1.13
+   */
   public final String getNotificationDeliveryMethod() {
     return (String) requestHeaders.get(SubscriptionHeaders.SUBSCRIBE);
   }
 
-  /** Returns the notification client token or {@code null} for none. */
+  /**
+   * Returns the notification client token or {@code null} for none.
+   *
+   * @since 1.13
+   */
   public final String getNotificationClientToken() {
     return (String) requestHeaders.get(SubscriptionHeaders.CLIENT_TOKEN);
   }
@@ -254,6 +270,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * Overriding is only supported for the purpose of changing visibility to public, but nothing
    * else.
    * </p>
+   *
+   * @since 1.13
    */
   public AbstractGoogleClientRequest<T> setNotificationClientToken(String notificationClientToken) {
     requestHeaders.set(SubscriptionHeaders.CLIENT_TOKEN, notificationClientToken);
@@ -276,6 +294,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    *
    * @param notificationDeliveryMethod notification delivery method
    * @param notificationCallback notification callback or {@code null} for none
+   *
+   * @since 1.13
    */
   @SuppressWarnings("unchecked")
   protected AbstractGoogleClientRequest<T> subscribeUnparsed(
@@ -307,18 +327,28 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    *
    * @param notificationDeliveryMethod notification delivery method
    * @param typedNotificationCallback typed notification callback or {@code null} for none
+   *
+   * @since 1.13
    */
   protected AbstractGoogleClientRequest<T> subscribe(
       String notificationDeliveryMethod, TypedNotificationCallback<T> typedNotificationCallback) {
     return subscribeUnparsed(notificationDeliveryMethod, typedNotificationCallback);
   }
 
-  /** Returns the subscription details of the last response or {@code null} for none. */
+  /**
+   * Returns the subscription details of the last response or {@code null} for none.
+   *
+   * @since 1.13
+   */
   public final Subscription getLastSubscription() {
     return lastSubscription;
   }
 
-  /** Returns the subscription headers from the last response or {@code null} for none. */
+  /**
+   * Returns the subscription headers from the last response or {@code null} for none.
+   *
+   * @since 1.13
+   */
   public final SubscriptionHeaders getLastSubscriptionHeaders() {
     return lastSubscriptionHeaders;
   }
@@ -330,6 +360,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * Overriding is only supported for the purpose of calling the super implementation and changing
    * the return type, but nothing else.
    * </p>
+   *
+   * @since 1.13
    */
   protected AbstractGoogleClientRequest<T> setLastSubscription(Subscription lastSubscription) {
     this.lastSubscription = lastSubscription;

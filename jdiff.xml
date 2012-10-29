@@ -21,7 +21,6 @@
       <old name="Google API Client Library for Java 1.12.0-beta">
         <!-- This is the location of your old source files -->
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.12.0-beta/google-api-client/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.12.0-beta/google-api-client-servlet/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.12.0-beta/google-api-client-appengine/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.12.0-beta/google-api-client-android/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.12.0-beta/google-api-client-android2/src/main/java" />
