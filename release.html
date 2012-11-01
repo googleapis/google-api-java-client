@@ -184,7 +184,7 @@ NEXT_VERSION=<i>(next bug fix version 1.12.X-beta)</i>
 for filename in google-api-client-assembly/android-properties/*.properties; do newname=`echo $filename | sed -e "s/1.12.1-beta/$NEXT_VERSION/g"`; mv $filename $newname; done
 sed s/1.12.1-beta/$NEXT_VERSION/g &lt;jdiff.xml &gt;/tmp/jdiff.xml
 sed s/1.12.1-beta/$NEXT_VERSION/g &lt;release.html &gt;/tmp/release.html
-sed s/1.12.1-beta/$NEXT_VERSION/g &lt;google-api-client/src/main/java/com/google/api/client/googleapis/GoogleUtils.java &gt;/tmp/GoogleUtils.java
+sed s/1.12.1-beta/$NEXT_VERSION-SNAPSHOT/g &lt;google-api-client/src/main/java/com/google/api/client/googleapis/GoogleUtils.java &gt;/tmp/GoogleUtils.java
 mv /tmp/jdiff.xml /tmp/release.html .
 mv /tmp/GoogleUtils.java google-api-client/src/main/java/com/google/api/client/googleapis/
 Consider changing value of $project.http.version and $project.oauth.version variables in pom.xml
