@@ -14,7 +14,7 @@
 
 package com.google.api.client.googleapis.extensions.servlet.subscriptions;
 
-import com.google.api.client.googleapis.subscriptions.Notification;
+import com.google.api.client.googleapis.subscriptions.NotificationHeaders;
 import com.google.api.client.googleapis.subscriptions.SubscriptionHeaders;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.googleapis.subscriptions.UnparsedNotification;
@@ -129,10 +129,12 @@ public abstract class AbstractWebHookServlet extends HttpServlet {
 
     String topicId = req.getHeader(SubscriptionHeaders.TOPIC_ID);
     String topicUri = req.getHeader(SubscriptionHeaders.TOPIC_URI);
-    String eventType = req.getHeader(Notification.EVENT_TYPE_HEADER);
+    String eventType = req.getHeader(NotificationHeaders.EVENT_TYPE_HEADER);
+    String changeType = req.getHeader(NotificationHeaders.CHANGED_HEADER);
     String clientToken = req.getHeader(SubscriptionHeaders.CLIENT_TOKEN);
+    String messageNumber = req.getHeader(NotificationHeaders.MESSAGE_NUMBER_HEADER);
 
-    if (topicId == null || topicUri == null || eventType == null) {
+    if (topicId == null || topicUri == null || eventType == null || messageNumber == null) {
       resp.sendError(HttpServletResponse.SC_BAD_REQUEST,
           "Notification did not contain all required information.");
       return;
@@ -146,7 +148,9 @@ public abstract class AbstractWebHookServlet extends HttpServlet {
           topicId,
           topicUri,
           clientToken,
+          Long.valueOf(messageNumber),
           eventType,
+          changeType,
           req.getContentType(),
           contentStream);
 

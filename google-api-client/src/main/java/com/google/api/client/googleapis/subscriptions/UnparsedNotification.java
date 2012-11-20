@@ -55,7 +55,9 @@ public final class UnparsedNotification extends Notification {
    * @param topicID Topic ID of the subscribed topic
    * @param topicURI Topic URL of the subscribed topic
    * @param clientToken Client-Token used for origin verification
+   * @param messageNumber the message number for this notification
    * @param eventType Type of Event which caused this notification to be sent
+   * @param changeType the type of change which caused this notification to be sent or {@code null}
    * @param contentType Content-Type of the unparsed content or {@code null}
    * @param unparsedStream Unparsed content in form of a {@link InputStream}. Caller has the
    *        responsibility of closing the stream.
@@ -64,10 +66,12 @@ public final class UnparsedNotification extends Notification {
       String topicID,
       String topicURI,
       String clientToken,
+      long messageNumber,
       String eventType,
+      String changeType,
       String contentType,
       InputStream unparsedStream) {
-    super(subscriptionID, topicID, topicURI, clientToken, eventType);
+    super(subscriptionID, topicID, topicURI, clientToken, messageNumber, eventType, changeType);
     this.contentType = contentType;
     this.content = Preconditions.checkNotNull(unparsedStream);
   }

@@ -37,12 +37,6 @@ import com.google.common.base.Preconditions;
  */
 public abstract class Notification {
 
-  /**
-   * Header name for the textual indication of the type of change that occurred to the underlying
-   * resource or topic provided on notification delivery.
-   */
-  public static final String EVENT_TYPE_HEADER = "X-Event-Type";
-
   /** SubscriptionID header. */
   private final String subscriptionID;
 
@@ -55,8 +49,14 @@ public abstract class Notification {
   /** ConfirmationToken which was passed when subscribing to the service. */
   private final String clientToken;
 
+  /** Message number */
+  private final long messageNumber;
+
   /** Name of the event which was performed on the resource. */
   private final String eventType;
+
+  /** Type of change which was performed on the resource. */
+  private final String changeType;
 
   /**
    * Creates a notification containing push information as well as the normal data content.
@@ -66,15 +66,19 @@ public abstract class Notification {
    * @param topicURI URI of the topic
    * @param clientToken The token which is used for verification and was passed along the response,
    *        or {@code null}
+   * @param messageNumber The message number that was provied with the notification.
    * @param eventType Type of event which was performed on the resource
+   * @param changeType type of change which was performed on the resource or {@code null}.
    */
   protected Notification(String subscriptionID, String topicID, String topicURI, String clientToken,
-      String eventType) {
+      long messageNumber, String eventType, String changeType) {
     this.subscriptionID = Preconditions.checkNotNull(subscriptionID);
     this.topicID = Preconditions.checkNotNull(topicID);
     this.topicURI = Preconditions.checkNotNull(topicURI);
     this.eventType = Preconditions.checkNotNull(eventType);
+    this.messageNumber = messageNumber;
     this.clientToken = clientToken;
+    this.changeType = changeType;
   }
 
   /**
@@ -83,8 +87,9 @@ public abstract class Notification {
    * @param source notification whose information is copied
    */
   protected Notification(Notification source) {
-    this(source.getSubscriptionID(), source.getTopicID(), source.getTopicURI(), source
-        .getClientToken(), source.getEventType());
+    this(source.getSubscriptionID(), source.getTopicID(), source.getTopicURI(),
+        source.getClientToken(), source.getMessageNumber(), source.getEventType(),
+        source.getChangeType());
   }
 
   /** Returns the subscription ID to which this notification belongs. */
@@ -102,9 +107,19 @@ public abstract class Notification {
     return clientToken;
   }
 
+  /** Returns the message number received with this notification. */
+  public final long getMessageNumber() {
+    return messageNumber;
+  }
+
   /** Returns the event type of this notification (for example {@code "added"}). */
   public final String getEventType() {
     return eventType;
+  }
+
+  /** Returns the change type received with this notification or {@code null} for none. */
+  public final String getChangeType() {
+    return changeType;
   }
 
   /** Returns the topic URI. */
