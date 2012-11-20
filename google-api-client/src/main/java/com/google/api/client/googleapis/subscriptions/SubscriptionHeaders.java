@@ -42,37 +42,37 @@ public final class SubscriptionHeaders extends GoogleHeaders {
    * Header name for the notifications delivery method provided by the client when it creates the
    * subscription.
    */
-  public static final String SUBSCRIBE = "X-Subscribe";
+  public static final String SUBSCRIBE = "X-Goog-Subscribe";
 
   /**
    * Header name for the unique subscription ID (found in subscription response).
    */
-  public static final String SUBSCRIPTION_ID = "X-Subscription-ID";
+  public static final String SUBSCRIPTION_ID = "X-Goog-Subscription-ID";
 
   /**
    * Header name for the opaque ID for the subscribed resource that is stable across API versions
    * (found in subscription response).
    */
-  public static final String TOPIC_ID = "X-Topic-ID";
+  public static final String TOPIC_ID = "X-Goog-Topic-ID";
 
   /**
    * Header name for the opaque ID (in the form of a canonicalized URI) for the subscribed resource
    * that sensitive to the API version (found in subscription response).
    */
-  public static final String TOPIC_URI = "X-Topic-URI";
+  public static final String TOPIC_URI = "X-Goog-Topic-URI";
 
   /**
    * Header name for the opaque string provided by the client when it creates the subscription and
    * echoed back to the client for every notification it receives for that subscription.
    */
-  public static final String CLIENT_TOKEN = "X-Client-Token";
+  public static final String CLIENT_TOKEN = "X-Goog-Client-Token";
 
   /**
    * Header sent that provides an HTTP Date indicating the time at which the subscription will
    * expire (found in subscription response) or if not provided the subscription is assumed to have
    * an infinite TTL.
    */
-  public static final String SUBSCRIPTION_EXPIRES = "X-Subscription-Expires";
+  public static final String SUBSCRIPTION_EXPIRES = "X-Goog-Subscription-Expires";
 
   /**
    * Notifications delivery method provided by the client when it creates the subscription or

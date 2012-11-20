@@ -36,7 +36,8 @@ public class UnparsedNotificationTest extends TestCase {
     // Send a notification
     InputStream contentStream = new ByteArrayInputStream(new byte[] {1, 2, 3});
     UnparsedNotification notification = new UnparsedNotification(
-        "id", "topicID", "topicURI", "clientToken", "eventType", "foo/bar", contentStream);
+        "id", "topicID", "topicURI", "clientToken", 456, "eventType", "changeType", "foo/bar",
+        contentStream);
     assertTrue(notification.deliverNotification(store));
     assertEquals(true, handler.wasCalled());
   }
@@ -53,7 +54,8 @@ public class UnparsedNotificationTest extends TestCase {
     // Send a notification
     InputStream contentStream = new ByteArrayInputStream(new byte[] {1, 2, 3});
     UnparsedNotification notification = new UnparsedNotification(
-        "id", "topicID", "topicURI", "clientToken", "eventType", "foo/bar", contentStream);
+        "id", "topicID", "topicURI", "clientToken", 456, "eventType", "changeType", "foo/bar",
+        contentStream);
 
     assertFalse(notification.deliverNotification(store));
     assertEquals(false, handler.wasCalled());
@@ -71,7 +73,8 @@ public class UnparsedNotificationTest extends TestCase {
     // Send a notification
     InputStream contentStream = new ByteArrayInputStream(new byte[] {1, 2, 3});
     UnparsedNotification notification = new UnparsedNotification(
-        "id", "topicID", "topicURI", "differentClientToken", "eventType", "foo/bar", contentStream);
+        "id", "topicID", "topicURI", "differentClientToken", 456, "eventType", "changeType",
+        "foo/bar", contentStream);
 
     try {
       assertTrue(notification.deliverNotification(store));

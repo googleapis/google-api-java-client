@@ -71,18 +71,22 @@ public final class TypedNotification<T> extends Notification {
    * @param subscriptionID The subscription ID to which this notification is being sent
    * @param topicID The topic ID to which this subscription belongs
    * @param topicURI URI of the topic
-   * @param content The normal data content of this notification or {@code null}
-   * @param eventType Type of event which was performed on the resource
    * @param clientToken The token which is used for verification and was passed along the response,
    *        or {@code null}
+   * @param messageNumber The message number for this notification
+   * @param eventType Type of event which was performed on the resource
+   * @param changeType the type of change which was performed on the resource or {@code null}.
+   * @param content The normal data content of this notification or {@code null}
    */
   public TypedNotification(String subscriptionID,
       String topicID,
       String topicURI,
       String clientToken,
+      long messageNumber,
       String eventType,
+      String changeType,
       T content) {
-    super(subscriptionID, topicID, topicURI, clientToken, eventType);
+    super(subscriptionID, topicID, topicURI, clientToken, messageNumber, eventType, changeType);
     this.content = content;
   }
 }

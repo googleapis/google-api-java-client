@@ -41,6 +41,7 @@ import com.google.common.base.Preconditions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.UUID;
 
 /**
  * Abstract Google client request for a {@link AbstractGoogleClient}.
@@ -59,8 +60,9 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /** Google client. */
   private final AbstractGoogleClient abstractGoogleClient;
 
+  // TODO(yanivi): Make final again
   /** HTTP method. */
-  private final String requestMethod;
+  private String requestMethod;
 
   /** URI template for the path relative to the base URL. */
   private final String uriTemplate;
@@ -301,8 +303,12 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   protected AbstractGoogleClientRequest<T> subscribeUnparsed(
       String notificationDeliveryMethod, NotificationCallback notificationCallback) {
     this.notificationCallback = notificationCallback;
+    this.requestMethod = HttpMethods.POST;
+    this.responseClass = (Class<T>) Void.class;
     requestHeaders.set(
         SubscriptionHeaders.SUBSCRIBE, Preconditions.checkNotNull(notificationDeliveryMethod));
+    requestHeaders.set(
+        SubscriptionHeaders.SUBSCRIPTION_ID, UUID.randomUUID().toString());
     setNotificationClientToken(SubscriptionUtils.generateRandomClientToken());
     if (notificationCallback instanceof TypedNotificationCallback<?>) {
       ((TypedNotificationCallback<T>) notificationCallback).setDataType(responseClass);

@@ -18,6 +18,7 @@ import com.google.api.client.googleapis.subscriptions.SubscriptionHeaders;
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest;
 import com.google.api.client.googleapis.testing.subscriptions.MockNotificationCallback;
+import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.http.LowLevelHttpRequest;
@@ -76,6 +77,7 @@ public class AbstractGoogleClientTest extends TestCase {
     TestRemoteRequestInitializer() {
     }
 
+    @Override
     public void initialize(AbstractGoogleClientRequest<?> request) {
       isCalled = true;
     }
@@ -122,13 +124,17 @@ public class AbstractGoogleClientTest extends TestCase {
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     MockHttpTransport transport = new MockHttpTransport() {
         @Override
-      public LowLevelHttpRequest buildRequest(String method, String url) {
+      public LowLevelHttpRequest buildRequest(final String method, String url) {
         return new MockLowLevelHttpRequest(url) {
             @Override
           public LowLevelHttpResponse execute() {
             MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
-            assertEquals("something", getHeaders().get("x-subscribe").get(0));
-            String clientToken = getHeaders().get("x-client-token").get(0);
+            assertEquals(HttpMethods.POST, method);
+            // Headers are always stored internally as all lower case
+            assertEquals("something",
+                getHeaders().get(SubscriptionHeaders.SUBSCRIBE.toLowerCase()).get(0));
+            String clientToken =
+                getHeaders().get(SubscriptionHeaders.CLIENT_TOKEN.toLowerCase()).get(0);
 
             response.addHeader(SubscriptionHeaders.SUBSCRIPTION_ID, "12345");
             response.addHeader(SubscriptionHeaders.CLIENT_TOKEN, clientToken);
