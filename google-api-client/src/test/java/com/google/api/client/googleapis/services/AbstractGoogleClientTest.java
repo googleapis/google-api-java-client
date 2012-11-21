@@ -77,7 +77,6 @@ public class AbstractGoogleClientTest extends TestCase {
     TestRemoteRequestInitializer() {
     }
 
-    @Override
     public void initialize(AbstractGoogleClientRequest<?> request) {
       isCalled = true;
     }
