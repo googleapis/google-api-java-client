@@ -14,6 +14,8 @@ package com.google.api.client.googleapis.services;
 
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.googleapis.subscriptions.MemorySubscriptionStore;
+import com.google.api.client.googleapis.subscriptions.SubscribeRequest;
+import com.google.api.client.googleapis.subscriptions.SubscribeResponse;
 import com.google.api.client.googleapis.subscriptions.SubscriptionHeaders;
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest;
@@ -123,19 +125,17 @@ public class AbstractGoogleClientTest extends TestCase {
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     MockHttpTransport transport = new MockHttpTransport() {
         @Override
-      public LowLevelHttpRequest buildRequest(final String method, String url) {
+      public LowLevelHttpRequest buildRequest(String method, String url) {
+        assertEquals(HttpMethods.POST, method);
         return new MockLowLevelHttpRequest(url) {
             @Override
           public LowLevelHttpResponse execute() {
             MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
-            assertEquals(HttpMethods.POST, method);
-            // Headers are always stored internally as all lower case
-            assertEquals("something",
-                getHeaders().get(SubscriptionHeaders.SUBSCRIBE.toLowerCase()).get(0));
-            String clientToken =
-                getHeaders().get(SubscriptionHeaders.CLIENT_TOKEN.toLowerCase()).get(0);
-
-            response.addHeader(SubscriptionHeaders.SUBSCRIPTION_ID, "12345");
+            assertEquals("someDeliveryMethod", getFirstHeaderValue(SubscriptionHeaders.SUBSCRIBE));
+            String clientToken = getFirstHeaderValue(SubscriptionHeaders.CLIENT_TOKEN);
+            String id = getFirstHeaderValue(SubscriptionHeaders.SUBSCRIPTION_ID);
+            assertEquals("someClientToken", clientToken);
+            response.addHeader(SubscriptionHeaders.SUBSCRIPTION_ID, id);
             response.addHeader(SubscriptionHeaders.CLIENT_TOKEN, clientToken);
             response.addHeader(SubscriptionHeaders.TOPIC_ID, "topicID");
             response.addHeader(SubscriptionHeaders.TOPIC_URI, "http://topic.uri/");
@@ -146,12 +146,15 @@ public class AbstractGoogleClientTest extends TestCase {
     };
     AbstractGoogleClient client = new MockGoogleClient.Builder(
         transport, HttpTesting.SIMPLE_URL, "", JSON_OBJECT_PARSER, null).setApplicationName(
-        "Test Application").setSubscriptionStore(store).build();
+        "Test Application").build();
     MockGoogleClientRequest<String> rq =
         new MockGoogleClientRequest<String>(client, "GET", "", null, String.class);
-    rq.subscribeUnparsed("something", new MockNotificationCallback()).executeUnparsed();
+    SubscribeRequest subscribeRequest = rq.subscribe("someDeliveryMethod");
+    SubscribeResponse response = subscribeRequest.withNotificationCallback(
+        store, new MockNotificationCallback()).setClientToken("someClientToken").execute();
     assertEquals(1, store.listSubscriptions().size());
-    assertEquals("12345", rq.getLastSubscription().getSubscriptionID());
+    assertEquals(
+        subscribeRequest.getSubscriptionId(), response.getSubscription().getSubscriptionId());
   }
 
   private static final String TEST_RESUMABLE_REQUEST_URL =
@@ -176,9 +179,9 @@ public class AbstractGoogleClientTest extends TestCase {
             @Override
           public LowLevelHttpResponse execute() {
             // Assert that the required headers are set.
-            assertEquals(Integer.toString(contentLength),
-                getHeaders().get("x-upload-content-length").get(0));
-            assertEquals(TEST_CONTENT_TYPE, getHeaders().get("x-upload-content-type").get(0));
+            assertEquals(
+                Integer.toString(contentLength), getFirstHeaderValue("x-upload-content-length"));
+            assertEquals(TEST_CONTENT_TYPE, getFirstHeaderValue("x-upload-content-type"));
             // This is the initiation call. Return 200 with the upload URI.
             MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
             response.setStatusCode(200);
@@ -197,7 +200,7 @@ public class AbstractGoogleClientTest extends TestCase {
           String bytesRange =
               bytesUploaded + "-" + (bytesUploaded + MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1);
           String expectedContentRange = "bytes " + bytesRange + "/" + contentLength;
-          assertEquals(expectedContentRange, getHeaders().get("Content-Range").get(0));
+          assertEquals(expectedContentRange, getFirstHeaderValue("Content-Range"));
           bytesUploaded += MediaHttpUploader.DEFAULT_CHUNK_SIZE;
 
           if (bytesUploaded == contentLength) {

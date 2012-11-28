@@ -121,7 +121,7 @@ import java.util.List;
     public String access;
 
     public Category category = newKind("album");
-    
+
     private String getEditLink() {
       return Link.find(links, "edit");
     }
@@ -188,7 +188,7 @@ public class PicasaUrl extends GoogleUrl {
   private static HttpTransport setUpTransport() throws IOException {
     HttpTransport result = new NetHttpTransport();
     GoogleUtils.useMethodOverride(result);
-    GoogleHeaders headers = new GoogleHeaders();
+    HttpHeaders headers = new HttpHeaders();
     headers.setApplicationName("Google-PicasaSample/1.0");
     headers.gdataVersion = "2";
     AtomParser parser = new AtomParser();

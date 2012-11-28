@@ -16,7 +16,6 @@ package com.google.api.client.googleapis.extensions.appengine.subscriptions;
 
 import com.google.api.client.googleapis.subscriptions.NotificationCallback;
 import com.google.api.client.googleapis.subscriptions.Subscription;
-import com.google.api.client.googleapis.subscriptions.SubscriptionHeaders;
 import com.google.api.client.googleapis.subscriptions.UnparsedNotification;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
@@ -64,14 +63,14 @@ public class CachedAppEngineSubscriptionStoreTest extends TestCase {
   @Test
   public void testStoreAndGet() throws Exception {
     Subscription subscription = new Subscription(
-        new SomeNotificationCallback(), new SubscriptionHeaders().setSubscriptionID("someID")
-            .setClientToken("clientToken123").setTopicID("topicID"));
+        new SomeNotificationCallback(), "clientToken123", "someID").processResponse(
+        null, "topicID");
 
     // Store a single subscription
     CachedAppEngineSubscriptionStore caess = new CachedAppEngineSubscriptionStore();
     caess.storeSubscription(subscription);
     Subscription sub = caess.getSubscription("someID");
-    assertEquals(subscription.getSubscriptionID(), sub.getSubscriptionID());
+    assertEquals(subscription.getSubscriptionId(), sub.getSubscriptionId());
     assertEquals(1, MemcacheServiceFactory.getMemcacheService().getStatistics().getItemCount());
 
     // Delete the item from the data store, and confirm that the cached value is returned
@@ -82,14 +81,13 @@ public class CachedAppEngineSubscriptionStoreTest extends TestCase {
   @Test
   public void testRemoveAndGet() throws Exception {
     Subscription subscription = new Subscription(
-        new SomeNotificationCallback(), new SubscriptionHeaders().setSubscriptionID("someID")
-            .setClientToken("clientToken").setTopicID("topicID"));
+        new SomeNotificationCallback(), "clientToken", "someID").processResponse(null, "topicID");
 
     // Store a single subscription
     CachedAppEngineSubscriptionStore caess = new CachedAppEngineSubscriptionStore();
     caess.storeSubscription(subscription);
     Subscription sub = caess.getSubscription("someID");
-    assertEquals(subscription.getSubscriptionID(), sub.getSubscriptionID());
+    assertEquals(subscription.getSubscriptionId(), sub.getSubscriptionId());
     assertEquals(1, MemcacheServiceFactory.getMemcacheService().getStatistics().getItemCount());
 
     // Delete the item from the data store, and confirm that the cached value is returned
@@ -100,8 +98,7 @@ public class CachedAppEngineSubscriptionStoreTest extends TestCase {
   @Test
   public void testGet() throws Exception {
     Subscription subscription = new Subscription(
-        new SomeNotificationCallback(), new SubscriptionHeaders().setSubscriptionID("someID")
-            .setClientToken("clientToken").setTopicID("topicID"));
+        new SomeNotificationCallback(), "clientToken", "someID").processResponse(null, "topicID");
 
     // Store a single subscription
     new AppEngineSubscriptionStore().storeSubscription(subscription);
@@ -109,7 +106,7 @@ public class CachedAppEngineSubscriptionStoreTest extends TestCase {
     // Delete the item from the data store, and confirm that the cached value is returned
     CachedAppEngineSubscriptionStore caess = new CachedAppEngineSubscriptionStore();
     assertEquals(
-        subscription.getSubscriptionID(), caess.getSubscription("someID").getSubscriptionID());
+        subscription.getSubscriptionId(), caess.getSubscription("someID").getSubscriptionId());
     assertEquals(1, MemcacheServiceFactory.getMemcacheService().getStatistics().getItemCount());
 
     // Check that the 'null' result is also cached
@@ -120,11 +117,10 @@ public class CachedAppEngineSubscriptionStoreTest extends TestCase {
   @Test
   public void testStore_overwrite() throws Exception {
     Subscription subscription = new Subscription(
-        new SomeNotificationCallback(), new SubscriptionHeaders().setSubscriptionID("someID")
-            .setClientToken("clientToken").setTopicID("topicID"));
-    Subscription subscriptionB = new Subscription(
-        new SomeNotificationCallback(), new SubscriptionHeaders().setSubscriptionID("someID")
-            .setClientToken("bbb").setTopicID("topicID"));
+        new SomeNotificationCallback(), "clientToken", "someID").processResponse(null, "topicID");
+    Subscription subscriptionB =
+        new Subscription(new SomeNotificationCallback(), "bbb", "someID").processResponse(
+            null, "topicID");
 
     // Store a single subscription
     CachedAppEngineSubscriptionStore caess = new CachedAppEngineSubscriptionStore();

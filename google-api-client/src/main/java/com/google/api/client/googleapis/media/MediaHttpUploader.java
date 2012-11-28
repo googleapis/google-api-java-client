@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2011 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -14,13 +14,12 @@
 
 package com.google.api.client.googleapis.media;
 
-import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpMethod;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
@@ -39,23 +38,37 @@ import java.io.InputStream;
 /**
  * Media HTTP Uploader, with support for both direct and resumable media uploads. Documentation is
  * available <a href='http://code.google.com/p/google-api-java-client/wiki/MediaUpload'>here</a>.
- *
+ * 
  * <p>
  * If the provided {@link InputStream} has {@link InputStream#markSupported} as {@code false} then
  * it is wrapped in an {@link BufferedInputStream} to support the {@link InputStream#mark} and
  * {@link InputStream#reset} methods required for handling server errors.
  * </p>
- *
+ * 
  * <p>
  * Implementation is not thread-safe.
  * </p>
- *
+ * 
  * @since 1.9
- *
+ * 
  * @author rmistry@google.com (Ravi Mistry)
  */
 @SuppressWarnings("deprecation")
 public final class MediaHttpUploader {
+
+  /**
+   * Upload content type header.
+   * 
+   * @since 1.13
+   */
+  public static final String CONTENT_LENGTH_HEADER = "X-Upload-Content-Length";
+
+  /**
+   * Upload content length header.
+   * 
+   * @since 1.13
+   */
+  public static final String CONTENT_TYPE_HEADER = "X-Upload-Content-Type";
 
   /**
    * Upload state associated with the Media HTTP uploader.
@@ -113,16 +126,8 @@ public final class MediaHttpUploader {
   private long mediaContentLength;
 
   /**
-   * The HTTP method used for the initiation request. Can only be {@link HttpMethod#POST} (for media
-   * upload) or {@link HttpMethod#PUT} (for media update). The default value is
-   * {@link HttpMethod#POST}.
-   */
-  @Deprecated
-  private HttpMethod initiationMethod = HttpMethod.POST;
-
-  /**
    * The HTTP method used for the initiation request.
-   *
+   * 
    * <p>
    * Can only be {@link HttpMethods#POST} (for media upload) or {@link HttpMethods#PUT} (for media
    * update). The default value is {@link HttpMethods#POST}.
@@ -131,7 +136,7 @@ public final class MediaHttpUploader {
   private String initiationRequestMethod = HttpMethods.POST;
 
   /** The HTTP headers used in the initiation request. */
-  private GoogleHeaders initiationHeaders = new GoogleHeaders();
+  private HttpHeaders initiationHeaders = new HttpHeaders();
 
   /**
    * The HTTP request object that is currently used to send upload requests or {@code null} before
@@ -173,7 +178,7 @@ public final class MediaHttpUploader {
 
   /**
    * Construct the {@link MediaHttpUploader}.
-   *
+   * 
    * @param mediaContent The Input stream content of the media to be uploaded. The input stream
    *        received by calling {@link AbstractInputStreamContent#getInputStream} is closed when the
    *        upload process is successfully completed. If the input stream has
@@ -195,29 +200,29 @@ public final class MediaHttpUploader {
   /**
    * Executes a direct media upload or resumable media upload conforming to the specifications
    * listed <a href='http://code.google.com/apis/gdata/docs/resumable_upload.html'>here.</a>
-   *
+   * 
    * <p>
    * This method is not reentrant. A new instance of {@link MediaHttpUploader} must be instantiated
    * before upload called be called again.
    * </p>
-   *
+   * 
    * <p>
    * If an error is encountered during the request execution the caller is responsible for parsing
    * the response correctly. For example for JSON errors:
-   *
+   * 
    * <pre>
     if (!response.isSuccessStatusCode()) {
       throw GoogleJsonResponseException.from(jsonFactory, response);
     }
    * </pre>
    * </p>
-   *
+   * 
    * <p>
    * Callers should call {@link HttpResponse#disconnect} when the returned HTTP response object is
    * no longer needed. However, {@link HttpResponse#disconnect} does not have to be called if the
    * response stream is properly closed. Example usage:
    * </p>
-   *
+   * 
    * <pre>
      HttpResponse response = batch.upload(initiationRequestUrl);
      try {
@@ -226,7 +231,7 @@ public final class MediaHttpUploader {
        response.disconnect();
      }
    * </pre>
-   *
+   * 
    * @param initiationRequestUrl The request URL where the initiation request will be sent
    * @return HTTP response
    */
@@ -332,7 +337,7 @@ public final class MediaHttpUploader {
 
   /**
    * This method sends a POST request with empty content to get the unique upload URL.
-   *
+   * 
    * @param initiationRequestUrl The request URL where the initiation request will be sent
    */
   private HttpResponse executeUploadInitiation(GenericUrl initiationRequestUrl) throws IOException {
@@ -343,8 +348,8 @@ public final class MediaHttpUploader {
     HttpRequest request =
         requestFactory.buildRequest(initiationRequestMethod, initiationRequestUrl, content);
     addMethodOverride(request);
-    initiationHeaders.setUploadContentType(mediaContent.getType());
-    initiationHeaders.setUploadContentLength(Long.valueOf(getMediaContentLength()));
+    initiationHeaders.set(CONTENT_TYPE_HEADER, mediaContent.getType())
+        .set(CONTENT_LENGTH_HEADER, getMediaContentLength());
     request.getHeaders().putAll(initiationHeaders);
     request.setThrowExceptionOnExecuteError(false);
     request.setRetryOnExecuteIOException(true);
@@ -364,10 +369,10 @@ public final class MediaHttpUploader {
   }
 
   /**
-   * Wraps PUT HTTP requests inside of a POST request and uses {@code "X-HTTP-Method-Override"}
-   * header to specify the actual HTTP method. This is done in case the HTTP transport does not
-   * support PUT.
-   *
+   * Wraps PUT HTTP requests inside of a POST request and uses {@link MethodOverride#HEADER} header
+   * to specify the actual HTTP method. This is done in case the HTTP transport does not support
+   * PUT.
+   * 
    * @param request HTTP request
    */
   private void addMethodOverride(HttpRequest request) throws IOException {
@@ -377,7 +382,7 @@ public final class MediaHttpUploader {
   /**
    * Sets the HTTP media content chunk and the required headers that should be used in the upload
    * request.
-   *
+   * 
    * @param bytesWritten The number of bytes that have been successfully uploaded on the server
    */
   private void setContentAndHeadersOnCurrentRequest(long bytesWritten) throws IOException {
@@ -399,7 +404,7 @@ public final class MediaHttpUploader {
    * The call back method that will be invoked by
    * {@link MediaUploadExponentialBackOffPolicy#getNextBackOffMillis} if it encounters a server
    * error. This method should only be used as a call back method after {@link #upload} is invoked.
-   *
+   * 
    * <p>
    * This method will query the current status of the upload to find how many bytes were
    * successfully uploaded before the server error occurred. It will then adjust the HTTP Request
@@ -445,9 +450,9 @@ public final class MediaHttpUploader {
 
   /**
    * Returns the next byte index identifying data that the server has not yet received, obtained
-   * from the HTTP Range header (E.g a header of "Range: 0-55" would cause 56 to be returned).
+   * from the HTTP Range header (E.g a header of "Range: 0-55" would cause 56 to be returned). 
    * <code>null</code> or malformed headers cause 0 to be returned.
-   *
+   * 
    * @param rangeHeader in the HTTP response
    * @return the byte index beginning where the server has yet to receive data
    */
@@ -503,7 +508,7 @@ public final class MediaHttpUploader {
    * direct upload will be done where the whole media content is uploaded in a single request. If
    * value is set to {@code false} then the upload uses the resumable media upload protocol to
    * upload in data chunks. Defaults to {@code false}.
-   *
+   * 
    * @since 1.9
    */
   public MediaHttpUploader setDirectUploadEnabled(boolean directUploadEnabled) {
@@ -516,7 +521,7 @@ public final class MediaHttpUploader {
    * then a direct upload will be done where the whole media content is uploaded in a single
    * request. If value is set to {@code false} then the upload uses the resumable media upload
    * protocol to upload in data chunks. Defaults to {@code false}.
-   *
+   * 
    * @since 1.9
    */
   public boolean isDirectUploadEnabled() {
@@ -541,7 +546,7 @@ public final class MediaHttpUploader {
   /**
    * Sets the maximum size of individual chunks that will get uploaded by single HTTP requests. The
    * default value is {@link #DEFAULT_CHUNK_SIZE}.
-   *
+   * 
    * <p>
    * The minimum allowable value is {@link #MINIMUM_CHUNK_SIZE}.
    * </p>
@@ -561,33 +566,12 @@ public final class MediaHttpUploader {
   }
 
   /**
-   * Sets the HTTP method used for the initiation request. Can only be {@link HttpMethod#POST} (for
-   * media upload) or {@link HttpMethod#PUT} (for media update). The default value is
-   * {@link HttpMethod#POST}.
-   * @deprecated (scheduled to be removed in 1.13) Use {@link #setInitiationRequestMethod} instead
-   */
-  @Deprecated
-  public MediaHttpUploader setInitiationMethod(HttpMethod initiationMethod) {
-    return setInitiationRequestMethod(initiationMethod.toString());
-  }
-
-  /**
-   * Returns the HTTP method used for the initiation request. The default value is
-   * {@link HttpMethod#POST}.
-   * @deprecated (scheduled to be removed in 1.13) Use {@link #getInitiationRequestMethod} instead
-   */
-  @Deprecated
-  public HttpMethod getInitiationMethod() {
-    return initiationMethod;
-  }
-
-  /**
    * Returns the HTTP method used for the initiation request.
-   *
+   * 
    * <p>
    * The default value is {@link HttpMethods#POST}.
    * </p>
-   *
+   * 
    * @since 1.12
    */
   public String getInitiationRequestMethod() {
@@ -596,38 +580,52 @@ public final class MediaHttpUploader {
 
   /**
    * Sets the HTTP method used for the initiation request.
-   *
+   * 
    * <p>
    * Can only be {@link HttpMethods#POST} (for media upload) or {@link HttpMethods#PUT} (for media
    * update). The default value is {@link HttpMethods#POST}.
    * </p>
-   *
+   * 
    * @since 1.12
    */
-  @SuppressWarnings("deprecation")
   public MediaHttpUploader setInitiationRequestMethod(String initiationRequestMethod) {
     Preconditions.checkArgument(initiationRequestMethod.equals(HttpMethods.POST)
         || initiationRequestMethod.equals(HttpMethods.PUT));
     this.initiationRequestMethod = initiationRequestMethod;
-    this.initiationMethod =
-        initiationRequestMethod.equals(HttpMethods.POST) ? HttpMethod.POST : HttpMethod.PUT;
     return this;
   }
 
-  /** Sets the HTTP headers used for the initiation request. */
-  public MediaHttpUploader setInitiationHeaders(GoogleHeaders initiationHeaders) {
+  /**
+   * Sets the HTTP headers used for the initiation request.
+   * 
+   * <p>
+   * Upgrade warning: in prior version 1.12 the initiation headers were of type
+   * {@code GoogleHeaders}, but as of version 1.13 that type is deprecated, so we now use type
+   * {@link HttpHeaders}.
+   * </p>
+   */
+  public MediaHttpUploader setInitiationHeaders(HttpHeaders initiationHeaders) {
     this.initiationHeaders = initiationHeaders;
     return this;
   }
 
-  /** Returns the HTTP headers used for the initiation request. */
-  public GoogleHeaders getInitiationHeaders() {
+  /**
+   * Returns the HTTP headers used for the initiation request.
+   * 
+   * 
+   * <p>
+   * Upgrade warning: in prior version 1.12 the initiation headers were of type
+   * {@code GoogleHeaders}, but as of version 1.13 that type is deprecated, so we now use type
+   * {@link HttpHeaders}.
+   * </p>
+   */
+  public HttpHeaders getInitiationHeaders() {
     return initiationHeaders;
   }
 
   /**
    * Gets the total number of bytes uploaded by this uploader.
-   *
+   * 
    * @return the number of bytes uploaded
    */
   public long getNumBytesUploaded() {
@@ -636,7 +634,7 @@ public final class MediaHttpUploader {
 
   /**
    * Sets the upload state and notifies the progress listener.
-   *
+   * 
    * @param uploadState value to set to
    */
   private void updateStateAndNotifyListener(UploadState uploadState) throws IOException {
@@ -648,7 +646,7 @@ public final class MediaHttpUploader {
 
   /**
    * Gets the current upload state of the uploader.
-   *
+   * 
    * @return the upload state
    */
   public UploadState getUploadState() {
@@ -658,7 +656,7 @@ public final class MediaHttpUploader {
   /**
    * Gets the upload progress denoting the percentage of bytes that have been uploaded, represented
    * between 0.0 (0%) and 1.0 (100%).
-   *
+   * 
    * @return the upload progress
    */
   public double getProgress() throws IOException {

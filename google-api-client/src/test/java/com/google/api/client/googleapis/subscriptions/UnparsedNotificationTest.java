@@ -28,16 +28,13 @@ public class UnparsedNotificationTest extends TestCase {
   public void testDeliverPushNotification_simple() throws Exception {
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     MockNotificationCallback handler = new MockNotificationCallback();
-
-    Subscription s = new Subscription(handler, new SubscriptionHeaders().setSubscriptionID("id")
-        .setClientToken("clientToken").setTopicID("topicID"));
+    Subscription s =
+        new Subscription(handler, "clientToken", "id").processResponse(null, "topicID");
     store.storeSubscription(s);
-
     // Send a notification
     InputStream contentStream = new ByteArrayInputStream(new byte[] {1, 2, 3});
     UnparsedNotification notification = new UnparsedNotification(
-        "id", "topicID", "topicURI", "clientToken", 456, "eventType", "changeType", "foo/bar",
-        contentStream);
+        "id", "topicID", "topicURI", "clientToken", 1, "eventType", null, "foo/bar", contentStream);
     assertTrue(notification.deliverNotification(store));
     assertEquals(true, handler.wasCalled());
   }
@@ -46,16 +43,14 @@ public class UnparsedNotificationTest extends TestCase {
   public void testDeliverPushNotification_nonExistent() throws Exception {
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     MockNotificationCallback handler = new MockNotificationCallback();
-
-    Subscription s = new Subscription(handler, new SubscriptionHeaders().setSubscriptionID(
-        "differentId").setClientToken("clientToken").setTopicID("topicID"));
+    Subscription s =
+        new Subscription(handler, "clientToken", "differentId").processResponse(null, "topicID");
     store.storeSubscription(s);
 
     // Send a notification
     InputStream contentStream = new ByteArrayInputStream(new byte[] {1, 2, 3});
     UnparsedNotification notification = new UnparsedNotification(
-        "id", "topicID", "topicURI", "clientToken", 456, "eventType", "changeType", "foo/bar",
-        contentStream);
+        "id", "topicID", "topicURI", "clientToken", 1, "eventType", null, "foo/bar", contentStream);
 
     assertFalse(notification.deliverNotification(store));
     assertEquals(false, handler.wasCalled());
@@ -65,16 +60,15 @@ public class UnparsedNotificationTest extends TestCase {
   public void testDeliverPushNotification_invalidToken() throws Exception {
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     MockNotificationCallback handler = new MockNotificationCallback();
-
-    Subscription s = new Subscription(handler, new SubscriptionHeaders().setSubscriptionID("id")
-        .setClientToken("randomToken").setTopicID("topicID"));
+    Subscription s =
+        new Subscription(handler, "randomToken", "id").processResponse(null, "topicID");
     store.storeSubscription(s);
 
     // Send a notification
     InputStream contentStream = new ByteArrayInputStream(new byte[] {1, 2, 3});
     UnparsedNotification notification = new UnparsedNotification(
-        "id", "topicID", "topicURI", "differentClientToken", 456, "eventType", "changeType",
-        "foo/bar", contentStream);
+        "id", "topicID", "topicURI", "differentClientToken", 1, "eventType", null, "foo/bar",
+        contentStream);
 
     try {
       assertTrue(notification.deliverNotification(store));

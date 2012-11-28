@@ -55,23 +55,23 @@ public final class CachedAppEngineSubscriptionStore extends AppEngineSubscriptio
   @Override
   public void removeSubscription(Subscription subscription) throws IOException {
     super.removeSubscription(subscription);
-    memCache.delete(subscription.getSubscriptionID());
+    memCache.delete(subscription.getSubscriptionId());
   }
 
   @Override
   public void storeSubscription(Subscription subscription) throws IOException {
     super.storeSubscription(subscription);
-    memCache.put(subscription.getSubscriptionID(), subscription);
+    memCache.put(subscription.getSubscriptionId(), subscription);
   }
 
   @Override
-  public Subscription getSubscription(String subscriptionID) throws IOException {
-    if (memCache.contains(subscriptionID)) {
-      return (Subscription) memCache.get(subscriptionID);
+  public Subscription getSubscription(String subscriptionId) throws IOException {
+    if (memCache.contains(subscriptionId)) {
+      return (Subscription) memCache.get(subscriptionId);
     }
 
-    Subscription subscription = super.getSubscription(subscriptionID);
-    memCache.put(subscriptionID, subscription, Expiration.byDeltaSeconds(EXPIRATION_TIME));
+    Subscription subscription = super.getSubscription(subscriptionId);
+    memCache.put(subscriptionId, subscription, Expiration.byDeltaSeconds(EXPIRATION_TIME));
     return subscription;
   }
 }

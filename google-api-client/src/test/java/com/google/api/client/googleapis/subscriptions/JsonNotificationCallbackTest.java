@@ -71,9 +71,6 @@ public class JsonNotificationCallbackTest extends TestCase {
   @SuppressWarnings("unchecked")
   private Object parseNotification(Class<?> dataType, String dataStr) throws Exception {
     MyNotificationCallback handler = new MyNotificationCallback();
-    Subscription subscription = new Subscription(
-        handler, new SubscriptionHeaders().setSubscriptionID("id")
-            .setClientToken("clientToken").setTopicID("topicID"));
     handler.setDataType(dataType);
 
     String contentType = null;
@@ -86,9 +83,9 @@ public class JsonNotificationCallbackTest extends TestCase {
     } else {
       inputStream = new ByteArrayInputStream(new byte[0]);
     }
-    UnparsedNotification notification =
-        new UnparsedNotification("id", "topic", "uri", "token", 123, "event", "change", contentType,
-            inputStream);
+    UnparsedNotification notification = new UnparsedNotification(
+        "id", "topic", "uri", "token", 1, "event", null, contentType, inputStream);
+    Subscription subscription = new Subscription(handler, "clientToken", "id");
     handler.handleNotification(subscription, notification);
     return handler.lastNotification.getContent();
   }

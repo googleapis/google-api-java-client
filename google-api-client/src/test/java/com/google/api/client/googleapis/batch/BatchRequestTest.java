@@ -2,7 +2,6 @@
 
 package com.google.api.client.googleapis.batch;
 
-import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.batch.BatchRequest.RequestInfo;
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
@@ -12,6 +11,7 @@ import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest
 import com.google.api.client.http.ExponentialBackOffPolicy;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteInterceptor;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -96,13 +96,13 @@ public class BatchRequestTest extends TestCase {
     TestCallback1() {
     }
 
-    public void onSuccess(MockDataClass1 dataClass, GoogleHeaders responseHeaders) {
+    public void onSuccess(MockDataClass1 dataClass, HttpHeaders responseHeaders) {
       successCalls++;
       assertEquals(TEST_ID, dataClass.id);
       assertEquals(TEST_KIND, dataClass.kind);
     }
 
-    public void onFailure(GoogleJsonErrorContainer e, GoogleHeaders responseHeaders) {
+    public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
       fail("Should not be invoked in this test");
     }
   }
@@ -117,13 +117,13 @@ public class BatchRequestTest extends TestCase {
     TestCallback2() {
     }
 
-    public void onSuccess(MockDataClass2 dataClass, GoogleHeaders responseHeaders) {
+    public void onSuccess(MockDataClass2 dataClass, HttpHeaders responseHeaders) {
       successCalls++;
       assertEquals(TEST_NAME, dataClass.name);
       assertEquals(TEST_NUM, dataClass.number);
     }
 
-    public void onFailure(GoogleJsonErrorContainer e, GoogleHeaders responseHeaders) {
+    public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
       failureCalls++;
       GoogleJsonError error = e.getError();
       ErrorInfo errorInfo = error.getErrors().get(0);
@@ -143,12 +143,12 @@ public class BatchRequestTest extends TestCase {
     TestCallback3() {
     }
 
-    public void onSuccess(Void dataClass, GoogleHeaders responseHeaders) {
+    public void onSuccess(Void dataClass, HttpHeaders responseHeaders) {
       successCalls++;
       assertNull(dataClass);
     }
 
-    public void onFailure(Void e, GoogleHeaders responseHeaders) {
+    public void onFailure(Void e, HttpHeaders responseHeaders) {
       failureCalls++;
       assertNull(e);
     }

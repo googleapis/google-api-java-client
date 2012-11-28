@@ -75,7 +75,6 @@ public abstract class JsonNotificationCallback<T> extends TypedNotificationCallb
     if (jsonFactory == null) {
       jsonFactory = createJsonFactory();
     }
-
     return jsonFactory;
   }
 
@@ -88,5 +87,10 @@ public abstract class JsonNotificationCallback<T> extends TypedNotificationCallb
   @Override
   protected final ObjectParser getParser(UnparsedNotification notification) throws IOException {
     return new JsonObjectParser(getJsonFactory());
+  }
+
+  @Override
+  public JsonNotificationCallback<T> setDataType(Class<T> dataClass) {
+    return (JsonNotificationCallback<T>) super.setDataType(dataClass);
   }
 }

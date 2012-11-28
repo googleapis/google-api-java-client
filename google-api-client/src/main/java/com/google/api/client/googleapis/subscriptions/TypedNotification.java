@@ -16,22 +16,18 @@ package com.google.api.client.googleapis.subscriptions;
 
 
 /**
- * A typed notification which was sent to this application.
- *
- * <p>
- * Contains information about subscription ID, topic ID and URI, and the parsed content of the
- * notification.
- * </p>
+ * Typed notification sent to this client about a subscribed resource.
  *
  * <p>
  * Thread-safe implementation.
  * </p>
  *
  * <b>Example usage:</b>
+ *
  * <pre>
     void handleNotification(
         Subscription subscription, TypedNotification&lt;ItemList&gt; notification) {
-      for (Item item in notification.getContent().getItems()) {
+      for (Item item : notification.getContent().getItems()) {
         System.out.println(item.getId());
       }
     }
@@ -44,22 +40,17 @@ package com.google.api.client.googleapis.subscriptions;
  */
 public final class TypedNotification<T> extends Notification {
 
-  /** Typed content of this notification or {@code null}. */
+  /** Typed content or {@code null} for none. */
   private final T content;
 
-  /**
-   * @return content of this notification
-   */
+  /** Returns the typed content or {@code null} for none. */
   public final T getContent() {
     return content;
   }
 
   /**
-   * Creates a notification containing subscription information by using the {@link Notification} as
-   * a basis.
-   *
-   * @param notification The notification whose subscription info is used
-   * @param content The new (parsed) content
+   * @param notification notification whose information is copied
+   * @param content typed content or {@code null} for none
    */
   public TypedNotification(Notification notification, T content) {
     super(notification);
@@ -67,26 +58,19 @@ public final class TypedNotification<T> extends Notification {
   }
 
   /**
-   * Creates a notification containing information as well as the typed data content.
-   * @param subscriptionID The subscription ID to which this notification is being sent
-   * @param topicID The topic ID to which this subscription belongs
-   * @param topicURI URI of the topic
-   * @param clientToken The token which is used for verification and was passed along the response,
-   *        or {@code null}
-   * @param messageNumber The message number for this notification
-   * @param eventType Type of event which was performed on the resource
-   * @param changeType the type of change which was performed on the resource or {@code null}.
-   * @param content The normal data content of this notification or {@code null}
+   * @param subscriptionId subscription UUID
+   * @param topicId opaque ID for the subscribed resource that is stable across API versions
+   * @param topicURI opaque ID (in the form of a canonicalized URI) for the subscribed resource that
+   *        is sensitive to the API version
+   * @param clientToken client token (an opaque string) or {@code null} for none
+   * @param messageNumber message number (a monotonically increasing value starting with 1)
+   * @param eventType event type (see {@link EventTypes})
+   * @param changeType type of change performed on the resource or {@code null} for none
+   * @param content typed content or {@code null} for none
    */
-  public TypedNotification(String subscriptionID,
-      String topicID,
-      String topicURI,
-      String clientToken,
-      long messageNumber,
-      String eventType,
-      String changeType,
-      T content) {
-    super(subscriptionID, topicID, topicURI, clientToken, messageNumber, eventType, changeType);
+  public TypedNotification(String subscriptionId, String topicId, String topicURI,
+      String clientToken, long messageNumber, String eventType, String changeType, T content) {
+    super(subscriptionId, topicId, topicURI, clientToken, messageNumber, eventType, changeType);
     this.content = content;
   }
 }

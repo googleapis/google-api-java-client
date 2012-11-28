@@ -33,64 +33,65 @@ public final class Subscription implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  /** Notification handler called when a notification is received for this subscription. */
+  /** Notification callback called when a notification is received for this subscription. */
   private final NotificationCallback notificationCallback;
 
-  /** Unique subscription ID. */
-  private final String subscriptionID;
-
   /**
-   * Opaque string provided by the client when it creates the subscription and echoed back to the
-   * client for every notification it receives for that subscription or {@code null} for none.
+   * Opaque string provided by the client or {@code null} for none.
    */
   private final String clientToken;
-
-  /** Opaque ID for the subscribed resource that is stable across API versions. */
-  private final String topicID;
 
   /**
    * HTTP Date indicating the time at which the subscription will expire or {@code null} for an
    * infinite TTL.
    */
-  private final String subscriptionExpires;
+  private String subscriptionExpires;
+
+  /** Subscription UUID. */
+  private final String subscriptionId;
+
+  /** Opaque ID for the subscribed resource that is stable across API versions. */
+  private String topicId;
 
   /**
+   * Constructor to be called before making the subscribe request.
+   *
    * @param handler notification handler called when a notification is received for this
    *        subscription
-   * @param subscriptionHeaders subscription headers
+   * @param clientToken opaque string provided by the client or {@code null} for none
+   * @param subscriptionId subscription UUID
    */
-  public <T> Subscription(NotificationCallback handler, SubscriptionHeaders subscriptionHeaders) {
+  public Subscription(NotificationCallback handler, String clientToken, String subscriptionId) {
     this.notificationCallback = Preconditions.checkNotNull(handler);
-    this.subscriptionID = Preconditions.checkNotNull(subscriptionHeaders.getSubscriptionID());
-    this.clientToken = subscriptionHeaders.getClientToken();
-    this.topicID = Preconditions.checkNotNull(subscriptionHeaders.getTopicID());
-    this.subscriptionExpires = subscriptionHeaders.getSubscriptionExpires();
-  }
-
-  /** Returns the unique subscription ID. */
-  public String getSubscriptionID() {
-    return subscriptionID;
+    this.clientToken = clientToken;
+    this.subscriptionId = Preconditions.checkNotNull(subscriptionId);
   }
 
   /**
-   * Returns the notification handler called when a notification is received for this subscription.
+   * Process subscribe response.
+   *
+   * @param subscriptionExpires HTTP Date indicating the time at which the subscription will expire
+   *        or {@code null} for an infinite TTL
+   * @param topicId opaque ID for the subscribed resource that is stable across API versions
+   */
+  public Subscription processResponse(String subscriptionExpires, String topicId) {
+    this.subscriptionExpires = subscriptionExpires;
+    this.topicId = Preconditions.checkNotNull(topicId);
+    return this;
+  }
+
+  /**
+   * Returns the notification callback called when a notification is received for this subscription.
    */
   public NotificationCallback getNotificationCallback() {
     return notificationCallback;
   }
 
   /**
-   * Returns the opaque string provided by the client when it creates the subscription and echoed
-   * back to the client for every notification it receives for that subscription or {@code null} for
-   * none.
+   * Returns the Opaque string provided by the client or {@code null} for none.
    */
   public String getClientToken() {
     return clientToken;
-  }
-
-  /** Returns the opaque ID for the subscribed resource that is stable across API versions. */
-  public String getTopicID() {
-    return topicID;
   }
 
   /**
@@ -101,11 +102,38 @@ public final class Subscription implements Serializable {
     return subscriptionExpires;
   }
 
+  /** Returns the subscription UUID. */
+  public String getSubscriptionId() {
+    return subscriptionId;
+  }
+
+  /** Returns the opaque ID for the subscribed resource that is stable across API versions. */
+  public String getTopicId() {
+    return topicId;
+  }
+
   @Override
   public String toString() {
-    return Objects.toStringHelper(Subscription.class).add("subscriptionID", subscriptionID)
-        .add("clientToken", clientToken).add("topicID", topicID)
-        .add("subscriptionExpires", subscriptionExpires)
-        .add("notificationCallback", notificationCallback).toString();
+    return Objects.toStringHelper(Subscription.class)
+        .add("notificationCallback", notificationCallback).add("clientToken", clientToken)
+        .add("subscriptionExpires", subscriptionExpires).add("subscriptionID", subscriptionId)
+        .add("topicID", topicId).toString();
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    if (this == other) {
+      return true;
+    }
+    if (!(other instanceof Subscription)) {
+      return false;
+    }
+    Subscription o = (Subscription) other;
+    return subscriptionId.equals(o.subscriptionId);
+  }
+
+  @Override
+  public int hashCode() {
+    return subscriptionId.hashCode();
   }
 }

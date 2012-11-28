@@ -18,18 +18,10 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * A notification which was sent to this application.
- *
- * <p>
- * Contains information about subscription ID, topic ID and URI.
- * </p>
+ * Notification sent to this client about a subscribed resource.
  *
  * <p>
  * Implementation is thread-safe.
- * </p>
- *
- * <p>
- * This class is extended by {@link TypedNotification} and {@link UnparsedNotification}.
  * </p>
  *
  * @author Matthias Linder (mlinder)
@@ -37,47 +29,49 @@ import com.google.common.base.Preconditions;
  */
 public abstract class Notification {
 
-  /** SubscriptionID header. */
-  private final String subscriptionID;
+  /** Subscription UUID. */
+  private final String subscriptionId;
 
-  /** TopicID header. */
-  private final String topicID;
+  /** Opaque ID for the subscribed resource that is stable across API versions. */
+  private final String topicId;
 
-  /** TopicURI header. */
+  /**
+   * Opaque ID (in the form of a canonicalized URI) for the subscribed resource that is sensitive to
+   * the API version.
+   */
   private final String topicURI;
 
-  /** ConfirmationToken which was passed when subscribing to the service. */
+  /** Client token (an opaque string) or {@code null} for none. */
   private final String clientToken;
 
-  /** Message number */
+  /** Message number (a monotonically increasing value starting with 1). */
   private final long messageNumber;
 
-  /** Name of the event which was performed on the resource. */
+  /** Event type (see {@link EventTypes}). */
   private final String eventType;
 
-  /** Type of change which was performed on the resource. */
+  /** Type of change performed on the resource or {@code null} for none. */
   private final String changeType;
 
   /**
-   * Creates a notification containing push information as well as the normal data content.
-   *
-   * @param subscriptionID The subscription ID to which this notification is being sent
-   * @param topicID The topic ID to which this subscription belongs
-   * @param topicURI URI of the topic
-   * @param clientToken The token which is used for verification and was passed along the response,
-   *        or {@code null}
-   * @param messageNumber The message number that was provied with the notification.
-   * @param eventType Type of event which was performed on the resource
-   * @param changeType type of change which was performed on the resource or {@code null}.
+   * @param subscriptionId subscription UUID
+   * @param topicId opaque ID for the subscribed resource that is stable across API versions
+   * @param topicURI opaque ID (in the form of a canonicalized URI) for the subscribed resource that
+   *        is sensitive to the API version
+   * @param clientToken client token (an opaque string) or {@code null} for none
+   * @param messageNumber message number (a monotonically increasing value starting with 1)
+   * @param eventType event type (see {@link EventTypes})
+   * @param changeType type of change performed on the resource or {@code null} for none
    */
-  protected Notification(String subscriptionID, String topicID, String topicURI, String clientToken,
+  protected Notification(String subscriptionId, String topicId, String topicURI, String clientToken,
       long messageNumber, String eventType, String changeType) {
-    this.subscriptionID = Preconditions.checkNotNull(subscriptionID);
-    this.topicID = Preconditions.checkNotNull(topicID);
+    this.subscriptionId = Preconditions.checkNotNull(subscriptionId);
+    this.topicId = Preconditions.checkNotNull(topicId);
     this.topicURI = Preconditions.checkNotNull(topicURI);
     this.eventType = Preconditions.checkNotNull(eventType);
-    this.messageNumber = messageNumber;
     this.clientToken = clientToken;
+    Preconditions.checkArgument(messageNumber >= 1);
+    this.messageNumber = messageNumber;
     this.changeType = changeType;
   }
 
@@ -87,43 +81,46 @@ public abstract class Notification {
    * @param source notification whose information is copied
    */
   protected Notification(Notification source) {
-    this(source.getSubscriptionID(), source.getTopicID(), source.getTopicURI(),
-        source.getClientToken(), source.getMessageNumber(), source.getEventType(),
-        source.getChangeType());
+    this(source.getSubscriptionId(), source.getTopicId(), source.getTopicURI(), source
+        .getClientToken(), source.getMessageNumber(), source.getEventType(), source
+        .getChangeType());
   }
 
-  /** Returns the subscription ID to which this notification belongs. */
-  public final String getSubscriptionID() {
-    return subscriptionID;
+  /** Returns the subscription UUID. */
+  public final String getSubscriptionId() {
+    return subscriptionId;
   }
 
-  /** Returns the topic ID on which this notification was broadcasted. */
-  public final String getTopicID() {
-    return topicID;
+  /** Returns the opaque ID for the subscribed resource that is stable across API versions. */
+  public final String getTopicId() {
+    return topicId;
   }
 
-  /** Returns the client token received with this notification or {@code null} for none. */
+  /** Returns the client token (an opaque string) or {@code null} for none. */
   public final String getClientToken() {
     return clientToken;
   }
 
-  /** Returns the message number received with this notification. */
-  public final long getMessageNumber() {
-    return messageNumber;
-  }
-
-  /** Returns the event type of this notification (for example {@code "added"}). */
+  /** Returns the event type (see {@link EventTypes}). */
   public final String getEventType() {
     return eventType;
   }
 
-  /** Returns the change type received with this notification or {@code null} for none. */
-  public final String getChangeType() {
-    return changeType;
-  }
-
-  /** Returns the topic URI. */
+  /**
+   * Returns the opaque ID (in the form of a canonicalized URI) for the subscribed resource that is
+   * sensitive to the API version.
+   */
   public final String getTopicURI() {
     return topicURI;
+  }
+
+  /** Returns the message number (a monotonically increasing value starting with 1). */
+  public final long getMessageNumber() {
+    return messageNumber;
+  }
+
+  /** Returns the type of change performed on the resource or {@code null} for none. */
+  public final String getChangeType() {
+    return changeType;
   }
 }

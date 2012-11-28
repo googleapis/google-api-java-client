@@ -27,6 +27,7 @@ import java.io.InputStream;
  *
  * @author Matthias Linder (mlinder)
  */
+@Deprecated
 public class GoogleHeadersTest extends TestCase {
   private static class MockLowLevelHttpResponse extends LowLevelHttpResponse {
     private String[] headerNames;

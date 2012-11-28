@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.subscriptions;
 
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.util.ObjectParser;
+import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -64,28 +65,31 @@ import java.nio.charset.Charset;
 @SuppressWarnings("serial")
 public abstract class TypedNotificationCallback<T> implements NotificationCallback {
 
-  /** Data class of the expected content. */
+  /**
+   * Data type which this handler can parse or {@code Void.class} if no data type is expected.
+   */
   private Class<T> dataClass;
 
   /**
-   * Returns the data type which this handler can parse.
+   * Returns the data type which this handler can parse or {@code Void.class} if no data type is
+   * expected.
    */
   public final Class<T> getDataClass() {
     return dataClass;
   }
 
   /**
-   * Sets the data type which this handler can parse or {@code null}/{@code Void.class} if no data
-   * type is expected.
+   * Sets the data type which this handler can parse or {@code Void.class} if no data type is
+   * expected.
+   *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
    */
-  public final void setDataType(Class<T> dataClass) {
-    this.dataClass = dataClass;
-  }
-
-  /**
-   * Creates a new blank TypedSubscriptionHandler.
-   */
-  public TypedNotificationCallback() {
+  public TypedNotificationCallback<T> setDataType(Class<T> dataClass) {
+    this.dataClass = Preconditions.checkNotNull(dataClass);
+    return this;
   }
 
   /**
@@ -108,8 +112,7 @@ public abstract class TypedNotificationCallback<T> implements NotificationCallba
   private Object parseContent(ObjectParser parser, UnparsedNotification notification)
       throws IOException {
     // Return null if no content is expected
-    if (dataClass == null || notification.getContentType() == null
-        || Void.class.equals(dataClass)) {
+    if (notification.getContentType() == null || Void.class.equals(dataClass)) {
       return null;
     }
 

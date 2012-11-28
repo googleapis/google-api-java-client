@@ -14,9 +14,6 @@ package com.google.api.client.googleapis.testing.services.json;
 
 import com.google.api.client.googleapis.services.json.AbstractGoogleJsonClient;
 import com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest;
-import com.google.api.client.googleapis.subscriptions.NotificationCallback;
-import com.google.api.client.googleapis.subscriptions.Subscription;
-import com.google.api.client.googleapis.subscriptions.json.JsonNotificationCallback;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.UriTemplate;
 
@@ -56,42 +53,5 @@ public class MockGoogleJsonClientRequest<T> extends AbstractGoogleJsonClientRequ
   @Override
   public MockGoogleJsonClientRequest<T> setRequestHeaders(HttpHeaders headers) {
     return (MockGoogleJsonClientRequest<T>) super.setRequestHeaders(headers);
-  }
-
-  /**
-   * @since 1.13
-   */
-  @Override
-  public AbstractGoogleJsonClientRequest<T> setNotificationClientToken(
-      String notificationClientToken) {
-    return super.setNotificationClientToken(notificationClientToken);
-  }
-
-  /**
-   * @since 1.13
-   */
-  @Override
-  public MockGoogleJsonClientRequest<T> subscribe(
-      String notificationDeliveryMethod, JsonNotificationCallback<T> notificationCallback) {
-    return (MockGoogleJsonClientRequest<T>) super.subscribe(
-        notificationDeliveryMethod, notificationCallback);
-  }
-
-  /**
-   * @since 1.13
-   */
-  @Override
-  public MockGoogleJsonClientRequest<T> subscribeUnparsed(
-      String notificationDeliveryMethod, NotificationCallback notificationCallback) {
-    return (MockGoogleJsonClientRequest<T>) super.subscribeUnparsed(
-        notificationDeliveryMethod, notificationCallback);
-  }
-
-  /**
-   * @since 1.13
-   */
-  @Override
-  protected MockGoogleJsonClientRequest<T> setLastSubscription(Subscription lastSubscription) {
-    return (MockGoogleJsonClientRequest<T>) super.setLastSubscription(lastSubscription);
   }
 }

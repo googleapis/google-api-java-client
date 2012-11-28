@@ -18,9 +18,10 @@ package com.google.api.client.googleapis.subscriptions;
  * Standard event-types used by notifications.
  *
  * <b>Example usage:</b>
+ *
  * <pre>
     void handleNotification(Subscription subscription, UnparsedNotification notification) {
-      if (notification.getEventType().equals(EventTypes.ADDED)) {
+      if (notification.getEventType().equals(EventTypes.UPDATED)) {
         // add items in the notification to the local client state ...
       }
     }
@@ -31,18 +32,16 @@ package com.google.api.client.googleapis.subscriptions;
  */
 public final class EventTypes {
 
-  /** Sent when a resource was modified, but when DELETED or ADDED did not apply. */
+  /** Notification that the subscription is alive (comes with no payload). */
+  public static final String SYNC = "sync";
+
+  /** Resource was modified. */
   public static final String UPDATED = "updated";
 
-  /** Sent when the subscribed-to resource has been deleted. */
+  /** Resource was deleted. */
   public static final String DELETED = "deleted";
 
-  /** Sent when an item has been added to the subscribed-to collection. */
-  public static final String ADDED = "added";
-
-  /** Sent when an item has been removed from the subscribed-to collection. */
-  public static final String REMOVED = "removed";
-
   /** Private constructor to prevent instantiation. */
-  private EventTypes() {}
+  private EventTypes() {
+  }
 }

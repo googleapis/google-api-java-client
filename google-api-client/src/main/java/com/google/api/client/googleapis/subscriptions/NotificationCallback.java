@@ -39,7 +39,7 @@ import java.io.Serializable;
     class MyNotificationCallback extends NotificationCallback {
       void handleNotification(
           Subscription subscription, UnparsedNotification notification) {
-         if (notification.getEventType().equals(EventTypes.ADDED)) {
+         if (notification.getEventType().equals(EventTypes.UPDATED)) {
           // add items in the notification to the local client state ...
         }
       }

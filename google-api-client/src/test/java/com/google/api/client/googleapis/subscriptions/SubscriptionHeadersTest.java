@@ -30,20 +30,35 @@ public class SubscriptionHeadersTest extends TestCase {
   private static final String CLIENT_TOKEN_VALUE = "someClienToken";
   private static final String SUBSCRIPTION_EXPIRES_VALUE = "Fri, 07 Sep 2012 18:52:00 GMT";
 
-  public void testConstructor() {
-    HttpHeaders httpHeaders = new HttpHeaders();
-    httpHeaders.put(SubscriptionHeaders.SUBSCRIBE, SUBSCRIBE_VALUE);
-    httpHeaders.put(SubscriptionHeaders.SUBSCRIPTION_ID, SUBSCRIPTION_ID_VALUE);
-    httpHeaders.put(SubscriptionHeaders.TOPIC_ID, TOPIC_ID_VALUE);
-    httpHeaders.put(SubscriptionHeaders.TOPIC_URI, TOPIC_URI_VALUE);
-    httpHeaders.put(SubscriptionHeaders.CLIENT_TOKEN, CLIENT_TOKEN_VALUE);
-    httpHeaders.put(SubscriptionHeaders.SUBSCRIPTION_EXPIRES, SUBSCRIPTION_EXPIRES_VALUE);
-    SubscriptionHeaders headers = new SubscriptionHeaders(httpHeaders);
-    assertEquals(SUBSCRIBE_VALUE, headers.getSubscribe());
-    assertEquals(SUBSCRIPTION_ID_VALUE, headers.getSubscriptionID());
-    assertEquals(TOPIC_ID_VALUE, headers.getTopicID());
-    assertEquals(TOPIC_URI_VALUE, headers.getTopicUri());
-    assertEquals(CLIENT_TOKEN_VALUE, headers.getClientToken());
-    assertEquals(SUBSCRIPTION_EXPIRES_VALUE, headers.getSubscriptionExpires());
+  public void testGetters() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.put(SubscriptionHeaders.SUBSCRIBE, SUBSCRIBE_VALUE);
+    headers.put(SubscriptionHeaders.SUBSCRIPTION_ID, SUBSCRIPTION_ID_VALUE);
+    headers.put(SubscriptionHeaders.TOPIC_ID, TOPIC_ID_VALUE);
+    headers.put(SubscriptionHeaders.TOPIC_URI, TOPIC_URI_VALUE);
+    headers.put(SubscriptionHeaders.CLIENT_TOKEN, CLIENT_TOKEN_VALUE);
+    headers.put(SubscriptionHeaders.SUBSCRIPTION_EXPIRES, SUBSCRIPTION_EXPIRES_VALUE);
+    assertEquals(SUBSCRIBE_VALUE, SubscriptionHeaders.getSubscribe(headers));
+    assertEquals(SUBSCRIPTION_ID_VALUE, SubscriptionHeaders.getSubscriptionId(headers));
+    assertEquals(TOPIC_ID_VALUE, SubscriptionHeaders.getTopicId(headers));
+    assertEquals(TOPIC_URI_VALUE, SubscriptionHeaders.getTopicUri(headers));
+    assertEquals(CLIENT_TOKEN_VALUE, SubscriptionHeaders.getClientToken(headers));
+    assertEquals(SUBSCRIPTION_EXPIRES_VALUE, SubscriptionHeaders.getSubscriptionExpires(headers));
+  }
+
+  public void testSetters() {
+    HttpHeaders headers = new HttpHeaders();
+    SubscriptionHeaders.setSubscribe(headers, SUBSCRIBE_VALUE);
+    SubscriptionHeaders.setSubscriptionId(headers, SUBSCRIPTION_ID_VALUE);
+    SubscriptionHeaders.setTopicId(headers, TOPIC_ID_VALUE);
+    SubscriptionHeaders.setTopicUri(headers, TOPIC_URI_VALUE);
+    SubscriptionHeaders.setClientToken(headers, CLIENT_TOKEN_VALUE);
+    SubscriptionHeaders.setSubscriptionExpires(headers, SUBSCRIPTION_EXPIRES_VALUE);
+    assertEquals(SUBSCRIBE_VALUE, headers.get(SubscriptionHeaders.SUBSCRIBE));
+    assertEquals(SUBSCRIPTION_ID_VALUE, headers.get(SubscriptionHeaders.SUBSCRIPTION_ID));
+    assertEquals(TOPIC_ID_VALUE, headers.get(SubscriptionHeaders.TOPIC_ID));
+    assertEquals(TOPIC_URI_VALUE, headers.get(SubscriptionHeaders.TOPIC_URI));
+    assertEquals(CLIENT_TOKEN_VALUE, headers.get(SubscriptionHeaders.CLIENT_TOKEN));
+    assertEquals(SUBSCRIPTION_EXPIRES_VALUE, headers.get(SubscriptionHeaders.SUBSCRIPTION_EXPIRES));
   }
 }

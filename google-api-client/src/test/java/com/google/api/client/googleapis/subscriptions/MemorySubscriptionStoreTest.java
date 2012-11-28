@@ -28,9 +28,7 @@ public class MemorySubscriptionStoreTest extends TestCase {
 
   public void testStoreAndGet() {
     MockNotificationCallback handler = new MockNotificationCallback();
-    Subscription s = new Subscription(handler, new SubscriptionHeaders().setSubscriptionID("id")
-        .setClientToken("clientToken").setTopicID("topicID"));
-
+    Subscription s = new Subscription(handler, "clientToken", "id");
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     store.storeSubscription(s);
     assertEquals(s, store.getSubscription("id"));
@@ -39,11 +37,8 @@ public class MemorySubscriptionStoreTest extends TestCase {
 
   public void testList() {
     MockNotificationCallback handler = new MockNotificationCallback();
-    Subscription s1 = new Subscription(handler, new SubscriptionHeaders().setSubscriptionID("id1")
-        .setClientToken("clientToken").setTopicID("topicID"));
-    Subscription s2 = new Subscription(handler, new SubscriptionHeaders().setSubscriptionID("id2")
-        .setClientToken("clientToken").setTopicID("topicID"));
-
+    Subscription s1 = new Subscription(handler, "clientToken", "id1");
+    Subscription s2 = new Subscription(handler, "clientToken", "id2");
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     store.storeSubscription(s1);
     store.storeSubscription(s2);
@@ -53,13 +48,10 @@ public class MemorySubscriptionStoreTest extends TestCase {
 
   public void testRemove() {
     MockNotificationCallback handler = new MockNotificationCallback();
-    Subscription s = new Subscription(handler, new SubscriptionHeaders().setSubscriptionID("id")
-        .setClientToken("clientToken").setTopicID("topicID"));
-
+    Subscription s = new Subscription(handler, "clientToken", "id");
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     store.storeSubscription(s);
     store.removeSubscription(s);
-
     assertEquals(null, store.getSubscription("id"));
   }
 }

@@ -1,6 +1,4 @@
 /*
- * Copyright (c) 2012 Google Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
  *
@@ -15,31 +13,26 @@
 package com.google.api.client.googleapis.subscriptions;
 
 /**
- * Contains all header constants related to notifications.
- *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * Headers for notifications.
  *
  * @author Kyle Marvin (kmarvin)
  * @since 1.13
  */
-public class NotificationHeaders {
+public final class NotificationHeaders {
+
+  /** Name of header for the event type (see {@link EventTypes}). */
+  public static final String EVENT_TYPE_HEADER = "X-Goog-Event-Type";
 
   /**
-   * Header name for the textual indication of the type of event that occurred to the underlying
-   * resource or topic provided on notification delivery.
-   */
-  public static final String EVENT_TYPE_HEADER = "X-Goog-Event-Type";
-  /**
-   * Header name for the textual indication of the type of change that occurred to the underlying
-   * resource or topic provided on notification delivery.
+   * Name of header for the type of change performed on the resource.
    */
   public static final String CHANGED_HEADER = "X-Goog-Changed";
+
   /**
-   * Header name for the message number provided on notification delivery.   The message number is
-   * a monotonically increasing value for notifications associated with a subscription.
+   * Name of header for the message number (a monotonically increasing value starting with 1).
    */
   public static final String MESSAGE_NUMBER_HEADER = "X-Goog-Message-Number";
 
+  private NotificationHeaders() {
+  }
 }

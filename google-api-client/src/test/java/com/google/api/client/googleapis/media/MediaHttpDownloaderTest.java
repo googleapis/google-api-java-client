@@ -70,7 +70,7 @@ public class MediaHttpDownloaderTest extends TestCase {
 
           // Assert that the required headers are set.
           assertEquals("bytes=" + bytesDownloaded + "-" + (bytesDownloaded + TEST_CHUNK_SIZE - 1),
-              getHeaders().get("Range").get(0));
+              getFirstHeaderValue("Range"));
 
           if (testServerError && lowLevelExecCalls == 2) {
             // Send a server error in the 2nd request.

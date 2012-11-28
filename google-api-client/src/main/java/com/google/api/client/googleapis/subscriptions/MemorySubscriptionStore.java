@@ -48,7 +48,7 @@ public class MemorySubscriptionStore implements SubscriptionStore {
   public void storeSubscription(Subscription subscription) {
     lock.lock();
     try {
-      storedSubscriptions.put(subscription.getSubscriptionID(), subscription);
+      storedSubscriptions.put(subscription.getSubscriptionId(), subscription);
     } finally {
       lock.unlock();
     }
@@ -57,7 +57,7 @@ public class MemorySubscriptionStore implements SubscriptionStore {
   public void removeSubscription(Subscription subscription) {
     lock.lock();
     try {
-      storedSubscriptions.remove(subscription.getSubscriptionID());
+      storedSubscriptions.remove(subscription.getSubscriptionId());
     } finally {
       lock.unlock();
     }
@@ -72,10 +72,10 @@ public class MemorySubscriptionStore implements SubscriptionStore {
     }
   }
 
-  public Subscription getSubscription(String subscriptionID) {
+  public Subscription getSubscription(String subscriptionId) {
     lock.lock();
     try {
-      return storedSubscriptions.get(subscriptionID);
+      return storedSubscriptions.get(subscriptionId);
     } finally {
       lock.unlock();
     }
