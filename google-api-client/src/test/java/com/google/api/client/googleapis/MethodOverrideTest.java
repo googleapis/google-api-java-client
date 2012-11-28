@@ -14,15 +14,21 @@
 
 package com.google.api.client.googleapis;
 
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.UrlEncodedContent;
+import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 import junit.framework.TestCase;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -64,11 +70,39 @@ public class MethodOverrideTest extends TestCase {
 
   private void subtestIntercept(boolean shouldOverride, HttpTransport transport,
       MethodOverride interceptor, String requestMethod) throws Exception {
-    HttpRequest request = transport.createRequestFactory().buildRequest(requestMethod, null, null);
+    HttpRequest request = transport.createRequestFactory()
+        .buildRequest(requestMethod, HttpTesting.SIMPLE_GENERIC_URL, null);
     interceptor.intercept(request);
     assertEquals(requestMethod, shouldOverride ? HttpMethods.POST : requestMethod,
         request.getRequestMethod());
     assertEquals(requestMethod, shouldOverride ? requestMethod : null,
-        request.getHeaders().get("X-HTTP-Method-Override"));
+        request.getHeaders().get(MethodOverride.HEADER));
+  }
+
+  public void testInterceptMaxLength() throws IOException {
+    HttpTransport transport = new MockHttpTransport();
+    GenericUrl url = new GenericUrl(HttpTesting.SIMPLE_URL);
+    url.set("a", "foo");
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    new MethodOverride().intercept(request);
+    assertEquals(HttpMethods.GET, request.getRequestMethod());
+    assertNull(request.getHeaders().get(MethodOverride.HEADER));
+    assertNull(request.getContent());
+    char[] arr = new char[MethodOverride.MAX_URL_LENGTH];
+    Arrays.fill(arr, 'x');
+    url.set("a", new String(arr));
+    request.setUrl(url);
+    new MethodOverride().intercept(request);
+    assertEquals(HttpMethods.POST, request.getRequestMethod());
+    assertEquals(HttpMethods.GET, request.getHeaders().get(MethodOverride.HEADER));
+    char[] arr2 = new char[arr.length + 2];
+    Arrays.fill(arr2, 'x');
+    arr2[0] = 'a';
+    arr2[1] = '=';
+    UrlEncodedContent content = (UrlEncodedContent)request.getContent();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    content.writeTo(out);
+    assertEquals(new String(arr2), out.toString());
   }
 }

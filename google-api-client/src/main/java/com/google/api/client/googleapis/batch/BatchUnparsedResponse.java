@@ -14,11 +14,11 @@
 
 package com.google.api.client.googleapis.batch;
 
-import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.batch.BatchRequest.RequestInfo;
 import com.google.api.client.http.BackOffPolicy;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpStatusCodes;
@@ -147,7 +147,7 @@ final class BatchUnparsedResponse {
       throws IOException {
     BatchCallback<T, E> callback = requestInfo.callback;
 
-    GoogleHeaders responseHeaders = new GoogleHeaders(response.getHeaders());
+    HttpHeaders responseHeaders = response.getHeaders();
     HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler =
         requestInfo.request.getUnsuccessfulResponseHandler();
     BackOffPolicy backOffPolicy = requestInfo.request.getBackOffPolicy();

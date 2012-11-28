@@ -35,14 +35,14 @@ public interface SubscriptionStore {
   Collection<Subscription> listSubscriptions() throws IOException;
 
   /**
-   * Retrieves a known subscription (or {@code null} if not found).
+   * Retrieves a known subscription or {@code null} if not found.
    *
-   * @param subscriptionID ID of the subscription to retrieve
+   * @param subscriptionId ID of the subscription to retrieve
    */
-  Subscription getSubscription(String subscriptionID) throws IOException;
+  Subscription getSubscription(String subscriptionId) throws IOException;
 
   /**
-   * Stores the Subscription in the applications data store. Will replace any existing subscription
+   * Stores the subscription in the applications data store, replacing any existing subscription
    * with the same id.
    *
    * @param subscription New or existing {@link Subscription} to store/update

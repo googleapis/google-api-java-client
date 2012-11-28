@@ -34,13 +34,12 @@ public class SubscriptionTest extends TestCase {
   private static final String SUBSCRIPTION_EXPIRES_VALUE = "Fri, 07 Sep 2012 18:52:00 GMT";
 
   public void testConstructor() {
-    SubscriptionHeaders headers = new SubscriptionHeaders().setSubscriptionID(SUBSCRIPTION_ID_VALUE)
-        .setClientToken(CLIENT_TOKEN_VALUE).setTopicID(TOPIC_ID_VALUE)
-        .setSubscriptionExpires(SUBSCRIPTION_EXPIRES_VALUE);
     SomeNotificationCallback callback = new SomeNotificationCallback();
-    Subscription subscription = new Subscription(callback, headers);
-    assertEquals(SUBSCRIPTION_ID_VALUE, subscription.getSubscriptionID());
-    assertEquals(TOPIC_ID_VALUE, subscription.getTopicID());
+    Subscription subscription = new Subscription(
+        callback, CLIENT_TOKEN_VALUE, SUBSCRIPTION_ID_VALUE).processResponse(
+        SUBSCRIPTION_EXPIRES_VALUE, TOPIC_ID_VALUE);
+    assertEquals(SUBSCRIPTION_ID_VALUE, subscription.getSubscriptionId());
+    assertEquals(TOPIC_ID_VALUE, subscription.getTopicId());
     assertEquals(CLIENT_TOKEN_VALUE, subscription.getClientToken());
     assertEquals(SUBSCRIPTION_EXPIRES_VALUE, subscription.getSubscriptionExpires());
     assertEquals(callback, subscription.getNotificationCallback());

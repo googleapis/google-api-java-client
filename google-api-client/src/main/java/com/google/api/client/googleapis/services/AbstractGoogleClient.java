@@ -62,9 +62,6 @@ public abstract class AbstractGoogleClient {
   /** Object parser or {@code null} for none. */
   private final ObjectParser objectParser;
 
-  /** Subscription store or {@code null} for none. */
-  private SubscriptionStore subscriptionStore;
-
   /** Whether discovery pattern checks should be suppressed on required parameters. */
   private boolean suppressPatternChecks;
 
@@ -84,8 +81,7 @@ public abstract class AbstractGoogleClient {
   protected AbstractGoogleClient(HttpTransport transport,
       HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
       ObjectParser objectParser) {
-    this(transport, httpRequestInitializer, rootUrl, servicePath, objectParser, null, null, null,
-        false);
+    this(transport, httpRequestInitializer, rootUrl, servicePath, objectParser, null, null, false);
   }
 
   /**
@@ -99,38 +95,11 @@ public abstract class AbstractGoogleClient {
    *        {@code null} for none
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #AbstractGoogleClient(HttpTransport,
-   *             HttpRequestInitializer, String, String, ObjectParser,
-   *             GoogleClientRequestInitializer, String, SubscriptionStore, boolean)} instead
    */
-  @Deprecated
   protected AbstractGoogleClient(HttpTransport transport,
       HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
       ObjectParser objectParser, GoogleClientRequestInitializer googleClientRequestInitializer,
       String applicationName, boolean suppressPatternChecks) {
-    this(transport, httpRequestInitializer, rootUrl, servicePath, objectParser,
-        googleClientRequestInitializer, applicationName, null, suppressPatternChecks);
-  }
-
-  /**
-   * @param transport HTTP transport
-   * @param httpRequestInitializer HTTP request initializer or {@code null} for none
-   * @param rootUrl root URL of the service
-   * @param servicePath service path
-   * @param objectParser object parser or {@code null} for none
-   * @param googleClientRequestInitializer Google request initializer or {@code null} for none
-   * @param applicationName application name to be sent in the User-Agent header of requests or
-   *        {@code null} for none
-   * @param subscriptionStore subscription store or {@code null} for none
-   * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
-   *        parameters
-   *
-   * @since 1.13
-   */
-  protected AbstractGoogleClient(HttpTransport transport,
-      HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
-      ObjectParser objectParser, GoogleClientRequestInitializer googleClientRequestInitializer,
-      String applicationName, SubscriptionStore subscriptionStore, boolean suppressPatternChecks) {
     this.googleClientRequestInitializer = googleClientRequestInitializer;
     this.rootUrl = normalizeRootUrl(rootUrl);
     this.servicePath = normalizeServicePath(servicePath);
@@ -138,7 +107,6 @@ public abstract class AbstractGoogleClient {
     this.requestFactory = httpRequestInitializer == null
         ? transport.createRequestFactory() : transport.createRequestFactory(httpRequestInitializer);
     this.objectParser = objectParser;
-    this.subscriptionStore = subscriptionStore;
     this.suppressPatternChecks = suppressPatternChecks;
   }
 
@@ -284,15 +252,6 @@ public abstract class AbstractGoogleClient {
         new BatchRequest(getRequestFactory().getTransport(), httpRequestInitializer);
     batch.setBatchUrl(new GenericUrl(getRootUrl() + "batch"));
     return batch;
-  }
-
-  /**
-   * Returns the subscription store or {@code null} for none.
-   *
-   * @since 1.13
-   */
-  public final SubscriptionStore getSubscriptionStore() {
-    return subscriptionStore;
   }
 
   /** Returns whether discovery pattern checks should be suppressed on required parameters. */

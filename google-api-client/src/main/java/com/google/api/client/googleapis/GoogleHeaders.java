@@ -27,7 +27,9 @@ import com.google.api.client.util.escape.PercentEscaper;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.14) Use {@link HttpHeaders}
  */
+@Deprecated
 public class GoogleHeaders extends HttpHeaders {
 
   /** Escaper for the {@link #slug} header. */
@@ -73,7 +75,8 @@ public class GoogleHeaders extends HttpHeaders {
   /**
    * Creates an empty GoogleHeaders object.
    */
-  public GoogleHeaders() {}
+  public GoogleHeaders() {
+  }
 
   /**
    * Creates a GoogleHeaders object using the headers present in the specified {@link HttpHeaders}.
@@ -168,7 +171,10 @@ public class GoogleHeaders extends HttpHeaders {
   /**
    * Returns Google Login {@code "Authorization"} header value based on the given authentication
    * token.
+   * @deprecated (scheduled to be removed in 1.14) Use
+   *             {@code ClientLogin.getAuthorizationHeaderValue}
    */
+  @Deprecated
   public static String getGoogleLoginValue(String authToken) {
     return "GoogleLogin auth=" + authToken;
   }

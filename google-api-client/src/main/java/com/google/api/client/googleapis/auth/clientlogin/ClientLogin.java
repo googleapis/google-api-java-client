@@ -14,7 +14,6 @@
 
 package com.google.api.client.googleapis.auth.clientlogin;
 
-import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
@@ -133,7 +132,7 @@ public final class ClientLogin {
 
     /** Returns the authorization header value to use based on the authentication token. */
     public String getAuthorizationHeaderValue() {
-      return GoogleHeaders.getGoogleLoginValue(auth);
+      return ClientLogin.getAuthorizationHeaderValue(auth);
     }
 
     public void initialize(HttpRequest request) {
@@ -188,5 +187,15 @@ public final class ClientLogin {
       message.append(StringUtils.LINE_SEPARATOR).append(detailString);
     }
     throw new ClientLoginResponseException(response, details, message.toString());
+  }
+
+  /**
+   * Returns Google Login {@code "Authorization"} header value based on the given authentication
+   * token.
+   *
+   * @since 1.13
+   */
+  public static String getAuthorizationHeaderValue(String authToken) {
+    return "GoogleLogin auth=" + authToken;
   }
 }

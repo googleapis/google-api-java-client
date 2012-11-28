@@ -14,7 +14,7 @@
 
 package com.google.api.client.googleapis.batch;
 
-import com.google.api.client.googleapis.GoogleHeaders;
+import com.google.api.client.http.HttpHeaders;
 
 import java.io.IOException;
 
@@ -29,12 +29,12 @@ import java.io.IOException;
    batch.queue(volumesList.buildHttpRequest(), Volumes.class, GoogleJsonErrorContainer.class,
        new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
 
-     public void onSuccess(Volumes volumes, GoogleHeaders responseHeaders) {
+     public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
        log("Success");
        printVolumes(volumes.getItems());
      }
 
-     public void onFailure(GoogleJsonErrorContainer e, GoogleHeaders responseHeaders) {
+     public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
        log(e.getError().getMessage());
      }
    });
@@ -55,16 +55,28 @@ public interface BatchCallback<T, E> {
    * not throw an exception.
    * </p>
    *
+   * <p>
+   * Upgrade warning: in prior version 1.12 the response headers were of type
+   * {@code GoogleHeaders}, but as of version 1.13 that type is deprecated, so we now use type
+   * {@link HttpHeaders}.
+   * </p>
+   *
    * @param t instance of the parsed data model class
    * @param responseHeaders Headers of the batch response
    */
-  void onSuccess(T t, GoogleHeaders responseHeaders) throws IOException;
+  void onSuccess(T t, HttpHeaders responseHeaders) throws IOException;
 
   /**
    * Called if the individual batch response is unsuccessful.
    *
+   * <p>
+   * Upgrade warning: in prior version 1.12 the response headers were of type
+   * {@code GoogleHeaders}, but as of version 1.13 that type is deprecated, so we now use type
+   * {@link HttpHeaders}.
+   * </p>
+   *
    * @param e instance of data class representing the error response content
    * @param responseHeaders Headers of the batch response
    */
-  void onFailure(E e, GoogleHeaders responseHeaders) throws IOException;
+  void onFailure(E e, HttpHeaders responseHeaders) throws IOException;
 }

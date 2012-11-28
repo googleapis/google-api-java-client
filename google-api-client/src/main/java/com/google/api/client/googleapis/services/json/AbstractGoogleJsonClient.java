@@ -55,12 +55,7 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
    *        {@code null} for none
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
-   * @deprecated (scheduled to be removed in 1.14) Use
-   *             {@link #AbstractGoogleJsonClient(HttpTransport,
-   *             HttpRequestInitializer, String, String, JsonObjectParser,
-   *             GoogleClientRequestInitializer, String, SubscriptionStore, boolean)} instead
    */
-  @Deprecated
   protected AbstractGoogleJsonClient(HttpTransport transport,
       HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
       JsonObjectParser jsonObjectParser,
@@ -68,30 +63,6 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
       boolean suppressPatternChecks) {
     super(transport, httpRequestInitializer, rootUrl, servicePath, jsonObjectParser,
         googleClientRequestInitializer, applicationName, suppressPatternChecks);
-  }
-
-  /**
-   * @param transport HTTP transport
-   * @param httpRequestInitializer HTTP request initializer or {@code null} for none
-   * @param rootUrl root URL of the service
-   * @param servicePath service path
-   * @param jsonObjectParser JSON object parser
-   * @param googleClientRequestInitializer Google request initializer or {@code null} for none
-   * @param applicationName application name to be sent in the User-Agent header of requests or
-   *        {@code null} for none
-   * @param subscriptionStore subscription store or {@code null} for none
-   * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
-   *        parameters
-   *
-   * @since 1.13
-   */
-  protected AbstractGoogleJsonClient(HttpTransport transport,
-      HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
-      JsonObjectParser jsonObjectParser,
-      GoogleClientRequestInitializer googleClientRequestInitializer, String applicationName,
-      SubscriptionStore subscriptionStore, boolean suppressPatternChecks) {
-    super(transport, httpRequestInitializer, rootUrl, servicePath, jsonObjectParser,
-        googleClientRequestInitializer, applicationName, subscriptionStore, suppressPatternChecks);
   }
 
   @Override

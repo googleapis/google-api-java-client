@@ -98,7 +98,7 @@ public class AppEngineSubscriptionStore implements SubscriptionStore {
   @Override
   public void storeSubscription(Subscription subscription) throws IOException {
     DatastoreService service = DatastoreServiceFactory.getDatastoreService();
-    Entity entity = new Entity(KIND, subscription.getSubscriptionID());
+    Entity entity = new Entity(KIND, subscription.getSubscriptionId());
     entity.setProperty(FIELD_SUBSCRIPTION, serialize(subscription));
     service.put(entity);
   }
@@ -110,7 +110,7 @@ public class AppEngineSubscriptionStore implements SubscriptionStore {
     }
 
     DatastoreService service = DatastoreServiceFactory.getDatastoreService();
-    service.delete(KeyFactory.createKey(KIND, subscription.getSubscriptionID()));
+    service.delete(KeyFactory.createKey(KIND, subscription.getSubscriptionId()));
   }
 
   @Override
@@ -127,10 +127,10 @@ public class AppEngineSubscriptionStore implements SubscriptionStore {
   }
 
   @Override
-  public Subscription getSubscription(String subscriptionID) throws IOException {
+  public Subscription getSubscription(String subscriptionId) throws IOException {
     try {
       DatastoreService service = DatastoreServiceFactory.getDatastoreService();
-      Entity entity = service.get(KeyFactory.createKey(KIND, subscriptionID));
+      Entity entity = service.get(KeyFactory.createKey(KIND, subscriptionId));
       return getSubscriptionFromEntity(entity);
     } catch (EntityNotFoundException exception) {
       return null;

@@ -14,214 +14,148 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
-import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.util.Key;
+
 
 /**
- * Contains all header constants related to subscriptions.
- *
- * <p>
- * Implementation is not thread-safe.
- * </p>
- *
- * <b>Example usage:</b>
- *
- * <pre>
-    HttpResponse response = request.execute();
-    SubscriptionHeaders headers = new SubscriptionHeaders(response.getHeaders());
-    System.out.println(headers.getSubscriptionId());
- * </pre>
+ * Headers for subscribe request and response.
  *
  * @author Matthias Linder (mlinder)
  * @since 1.13
  */
-public final class SubscriptionHeaders extends GoogleHeaders {
+public final class SubscriptionHeaders {
 
   /**
-   * Header name for the notifications delivery method provided by the client when it creates the
-   * subscription.
-   */
-  public static final String SUBSCRIBE = "X-Goog-Subscribe";
-
-  /**
-   * Header name for the unique subscription ID (found in subscription response).
-   */
-  public static final String SUBSCRIPTION_ID = "X-Goog-Subscription-ID";
-
-  /**
-   * Header name for the opaque ID for the subscribed resource that is stable across API versions
-   * (found in subscription response).
-   */
-  public static final String TOPIC_ID = "X-Goog-Topic-ID";
-
-  /**
-   * Header name for the opaque ID (in the form of a canonicalized URI) for the subscribed resource
-   * that sensitive to the API version (found in subscription response).
-   */
-  public static final String TOPIC_URI = "X-Goog-Topic-URI";
-
-  /**
-   * Header name for the opaque string provided by the client when it creates the subscription and
-   * echoed back to the client for every notification it receives for that subscription.
+   * Name of header for the client token (an opaque string) provided by the client in the subscribe
+   * request and returned in the subscribe response.
    */
   public static final String CLIENT_TOKEN = "X-Goog-Client-Token";
 
   /**
-   * Header sent that provides an HTTP Date indicating the time at which the subscription will
-   * expire (found in subscription response) or if not provided the subscription is assumed to have
-   * an infinite TTL.
+   * Name of header for the notifications delivery method in the subscribe request.
+   */
+  public static final String SUBSCRIBE = "X-Goog-Subscribe";
+
+  /**
+   * Name of header for the HTTP Date indicating the time at which the subscription will expire
+   * returned in the subscribe response or if not returned for an infinite TTL.
    */
   public static final String SUBSCRIPTION_EXPIRES = "X-Goog-Subscription-Expires";
 
   /**
-   * Notifications delivery method provided by the client when it creates the subscription or
-   * {@code null} for none.
+   * Name of header for the subscription UUID provided by the client in the subscribe request and
+   * returned in the subscribe response.
    */
-  @Key(SubscriptionHeaders.SUBSCRIBE)
-  private String subscribe;
+  public static final String SUBSCRIPTION_ID = "X-Goog-Subscription-ID";
 
   /**
-   * Unique subscription ID (found in subscription response) or {@code null} for none.
+   * Name of header for the opaque ID for the subscribed resource that is stable across API versions
+   * returned in the subscribe response.
    */
-  @Key(SubscriptionHeaders.SUBSCRIPTION_ID)
-  private String subscriptionID;
+  public static final String TOPIC_ID = "X-Goog-Topic-ID";
 
   /**
-   * Opaque ID for the subscribed resource that is stable across API versions (in subscription
-   * response) or {@code null} for none.
+   * Name of header for the opaque ID (in the form of a canonicalized URI) for the subscribed
+   * resource that is sensitive to the API version returned in the subscribe response.
    */
-  @Key(SubscriptionHeaders.TOPIC_ID)
-  private String topicID;
+  public static final String TOPIC_URI = "X-Goog-Topic-URI";
 
   /**
-   * Opaque ID (in the form of a canonicalized URI) for the subscribed resource that sensitive to
-   * the API version (found in subscription response) or {@code null} for none.
+   * Returns the client token (an opaque string) provided by the client in the subscribe request and
+   * returned in the subscribe response or {@code null} for none.
    */
-  @Key(SubscriptionHeaders.TOPIC_URI)
-  private String topicUri;
-
-  /**
-   * Opaque string provided by the client when it creates the subscription and echoed back to the
-   * client for every notification it receives for that subscription or {@code null} for none.
-   */
-  @Key(SubscriptionHeaders.CLIENT_TOKEN)
-  private String clientToken;
-
-  /**
-   * HTTP Date indicating the time at which the subscription will expire (found in subscription
-   * response) or {@code null} for an infinite TTL.
-   */
-  @Key(SubscriptionHeaders.SUBSCRIPTION_EXPIRES)
-  private String subscriptionExpires;
-
-  public SubscriptionHeaders() {
+  public static String getClientToken(HttpHeaders headers) {
+    return headers.getFirstHeaderStringValue(CLIENT_TOKEN);
   }
 
   /**
-   * @param headers headers to copy from
+   * Sets the client token (an opaque string) provided by the client in the subscribe request and
+   * returned in the subscribe response or {@code null} for none.
    */
-  public SubscriptionHeaders(HttpHeaders headers) {
-    fromHttpHeaders(headers);
+  public static void setClientToken(HttpHeaders headers, String clienToken) {
+    headers.set(CLIENT_TOKEN, clienToken);
   }
 
   /**
-   * Returns the unique subscription ID (found in subscription response) or {@code null} for none.
+   * Returns the notifications delivery method in the subscribe request or {@code null} for none.
+   *
+   * @param headers HTTP headers
    */
-  public String getSubscriptionID() {
-    return subscriptionID;
-  }
-
-  /** Sets the unique subscription ID (found in subscription response) or {@code null} for none. */
-  public SubscriptionHeaders setSubscriptionID(String subscriptionID) {
-    this.subscriptionID = subscriptionID;
-    return this;
+  public static String getSubscribe(HttpHeaders headers) {
+    return headers.getFirstHeaderStringValue(SUBSCRIBE);
   }
 
   /**
-   * Returns the opaque ID for the subscribed resource that is stable across API versions (in
-   * subscription response) or {@code null} for none.
+   * Sets the notifications delivery method in the subscribe request or {@code null} for none.
    */
-  public String getTopicID() {
-    return topicID;
+  public static void setSubscribe(HttpHeaders headers, String subscribe) {
+    headers.set(SUBSCRIBE, subscribe);
   }
 
   /**
-   * Sets the opaque ID for the subscribed resource that is stable across API versions (in
-   * subscription response) or {@code null} for none.
+   * Returns the HTTP Date indicating the time at which the subscription will expire returned in the
+   * subscribe response or {@code null} for an infinite TTL.
    */
-  public SubscriptionHeaders setTopicID(String topicID) {
-    this.topicID = topicID;
-    return this;
+  public static String getSubscriptionExpires(HttpHeaders headers) {
+    return headers.getFirstHeaderStringValue(SUBSCRIPTION_EXPIRES);
   }
 
   /**
-   * Returns the opaque ID (in the form of a canonicalized URI) for the subscribed resource that
-   * sensitive to the API version (found in subscription response) or {@code null} for none.
+   * Sets the HTTP Date indicating the time at which the subscription will expire returned in the
+   * subscribe response or {@code null} for an infinite TTL.
    */
-  public String getTopicUri() {
-    return topicUri;
+  public static void setSubscriptionExpires(HttpHeaders headers, String subscriptionExpires) {
+    headers.set(SUBSCRIPTION_EXPIRES, subscriptionExpires);
   }
 
   /**
-   * Sets the opaque ID (in the form of a canonicalized URI) for the subscribed resource that
-   * sensitive to the API version (found in subscription response) or {@code null} for none.
+   * Returns the subscription UUID provided by the client in the subscribe request and returned in
+   * the subscribe response or {@code null} for none.
    */
-  public SubscriptionHeaders setTopicUri(String topicUri) {
-    this.topicUri = topicUri;
-    return this;
+  public static String getSubscriptionId(HttpHeaders headers) {
+    return headers.getFirstHeaderStringValue(SUBSCRIPTION_ID);
   }
 
   /**
-   * Returns the opaque string provided by the client when it creates the subscription and echoed
-   * back to the client for every notification it receives for that subscription or {@code null} for
-   * none.
+   * Sets the subscription UUID provided by the client in the subscribe request and returned in the
+   * subscribe response or {@code null} for none.
    */
-  public String getClientToken() {
-    return clientToken;
+  public static void setSubscriptionId(HttpHeaders headers, String subscriptionId) {
+    headers.set(SUBSCRIPTION_ID, subscriptionId);
   }
 
   /**
-   * Sets the opaque string provided by the client when it creates the subscription and echoed back
-   * to the client for every notification it receives for that subscription or {@code null} for
-   * none.
+   * Returns the opaque ID for the subscribed resource that is stable across API versions returned
+   * in the subscribe response or {@code null} for none.
    */
-  public SubscriptionHeaders setClientToken(String clienToken) {
-    this.clientToken = clienToken;
-    return this;
+  public static String getTopicId(HttpHeaders headers) {
+    return headers.getFirstHeaderStringValue(TOPIC_ID);
   }
 
   /**
-   * Returns the notifications delivery method provided by the client when it creates the
-   * subscription or {@code null} for none.
+   * Sets the opaque ID for the subscribed resource that is stable across API versions returned in
+   * the subscribe response or {@code null} for none.
    */
-  public String getSubscribe() {
-    return subscribe;
+  public static void setTopicId(HttpHeaders headers, String topicId) {
+    headers.set(TOPIC_ID, topicId);
   }
 
   /**
-   * Sets the notifications delivery method provided by the client when it creates the subscription
-   * or {@code null} for none.
+   * Returns the opaque ID (in the form of a canonicalized URI) for the subscribed resource that is
+   * sensitive to the API version returned in the subscribe response or {@code null} for none.
    */
-  public SubscriptionHeaders setSubscribe(String subscribe) {
-    this.subscribe = subscribe;
-    return this;
+  public static String getTopicUri(HttpHeaders headers) {
+    return headers.getFirstHeaderStringValue(TOPIC_URI);
   }
 
   /**
-   * Returns the HTTP Date indicating the time at which the subscription will expire (found in
-   * subscription response) or {@code null} for an infinite TTL.
+   * Sets the opaque ID (in the form of a canonicalized URI) for the subscribed resource that is
+   * sensitive to the API version returned in the subscribe response or {@code null} for none.
    */
-  public String getSubscriptionExpires() {
-    return subscriptionExpires;
+  public static void setTopicUri(HttpHeaders headers, String topicUri) {
+    headers.set(TOPIC_URI, topicUri);
   }
 
-  /**
-   * Sets the HTTP Date indicating the time at which the subscription will expire (found in
-   * subscription response) or {@code null} for an infinite TTL.
-   */
-  public SubscriptionHeaders setSubscriptionExpires(String subscriptionExpires) {
-    this.subscriptionExpires = subscriptionExpires;
-    return this;
+  private SubscriptionHeaders() {
   }
 }

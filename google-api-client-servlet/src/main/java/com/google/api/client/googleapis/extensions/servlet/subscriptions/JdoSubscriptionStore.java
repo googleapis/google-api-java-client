@@ -36,6 +36,7 @@ import javax.jdo.annotations.PrimaryKey;
  * </p>
  *
  * <b>Example usage:</b>
+ *
  * <pre>
     service.setSubscriptionStore(new JdoSubscriptionStore());
  * </pre>
@@ -45,13 +46,11 @@ import javax.jdo.annotations.PrimaryKey;
  */
 public final class JdoSubscriptionStore implements SubscriptionStore {
 
-  /** The persistence manager factory used to create JDO persistence managers. */
+  /** Persistence manager factory. */
   private final PersistenceManagerFactory persistenceManagerFactory;
 
   /**
-   * Creates a new {@link JdoSubscriptionStore} using the specified PersistenceManagerFactory.
-   *
-   * @param persistenceManagerFactory Initialized PersistenceManager used to store and retrieve data
+   * @param persistenceManagerFactory persistence manager factory
    */
   public JdoSubscriptionStore(PersistenceManagerFactory persistenceManagerFactory) {
     this.persistenceManagerFactory = persistenceManagerFactory;
@@ -59,7 +58,7 @@ public final class JdoSubscriptionStore implements SubscriptionStore {
 
   /** Container class for storing subscriptions in the JDO DataStore. */
   @PersistenceCapable
-  private static class StoredSubscription {
+  private static final class StoredSubscription {
 
     @Persistent(serialized = "true")
     private Subscription subscription;
@@ -73,9 +72,9 @@ public final class JdoSubscriptionStore implements SubscriptionStore {
     }
 
     /**
-     * Creates a StoredSubscription from an existing Subscription.
+     * Creates a stored subscription from an existing subscription.
      *
-     * @param s Subscription to store
+     * @param s subscription to store
      */
     public StoredSubscription(Subscription s) {
       setSubscription(s);
@@ -89,7 +88,7 @@ public final class JdoSubscriptionStore implements SubscriptionStore {
     }
 
     /**
-     * ID of the contained subscription.
+     * Returns the subscription ID.
      */
     @SuppressWarnings("unused")
     public String getSubscriptionId() {
@@ -98,26 +97,29 @@ public final class JdoSubscriptionStore implements SubscriptionStore {
 
     /**
      * Changes the subscription stored in this database entry.
+     *
      * @param subscription The new subscription to store
      */
     public void setSubscription(Subscription subscription) {
       this.subscription = subscription;
-      this.subscriptionId = subscription.getSubscriptionID();
+      this.subscriptionId = subscription.getSubscriptionId();
     }
   }
 
   public void storeSubscription(Subscription subscription) {
     Preconditions.checkNotNull(subscription);
 
-    StoredSubscription dbEntry = getStoredSubscription(subscription.getSubscriptionID());
+    StoredSubscription dbEntry = getStoredSubscription(subscription.getSubscriptionId());
     PersistenceManager persistenceManager = persistenceManagerFactory.getPersistenceManager();
     try {
       // Check if this subscription is being updated or newly created
-      if (dbEntry != null) { // Existing entry
+      if (dbEntry != null) {
+        // Existing entry
         dbEntry.setSubscription(subscription);
-      } else { // New entry
+      } else {
+        // New entry
         dbEntry = new StoredSubscription(subscription);
-        persistenceManager.makePersistent(dbEntry); // Store the object in the datastore.
+        persistenceManager.makePersistent(dbEntry);
       }
     } finally {
       persistenceManager.close();
@@ -125,8 +127,7 @@ public final class JdoSubscriptionStore implements SubscriptionStore {
   }
 
   public void removeSubscription(Subscription subscription) {
-    StoredSubscription dbEntry = getStoredSubscription(subscription.getSubscriptionID());
-
+    StoredSubscription dbEntry = getStoredSubscription(subscription.getSubscriptionId());
     if (dbEntry != null) {
       PersistenceManager persistenceManager = persistenceManagerFactory.getPersistenceManager();
       try {
@@ -158,7 +159,6 @@ public final class JdoSubscriptionStore implements SubscriptionStore {
   @SuppressWarnings("unchecked")
   private StoredSubscription getStoredSubscription(String subscriptionID) {
     Iterable<StoredSubscription> results = null;
-
     PersistenceManager persistenceManager = persistenceManagerFactory.getPersistenceManager();
     try {
       Query getByIDQuery = persistenceManager.newQuery(StoredSubscription.class);
@@ -166,9 +166,9 @@ public final class JdoSubscriptionStore implements SubscriptionStore {
       getByIDQuery.declareParameters("String idParam");
       getByIDQuery.setRange(0, 1);
       results = (Iterable<StoredSubscription>) getByIDQuery.execute(subscriptionID);
-
+      // return the first result
       for (StoredSubscription dbEntry : results) {
-        return dbEntry; // return the first result
+        return dbEntry;
       }
       return null;
     } finally {

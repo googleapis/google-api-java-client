@@ -95,8 +95,8 @@ public class MediaHttpUploaderTest extends TestCase {
             if (!directUploadEnabled) {
               // Assert that the required headers are set.
               assertEquals(Integer.toString(contentLength),
-                  getHeaders().get("x-upload-content-length").get(0));
-              assertEquals(TEST_CONTENT_TYPE, getHeaders().get("x-upload-content-type").get(0));
+                  getFirstHeaderValue("x-upload-content-length"));
+              assertEquals(TEST_CONTENT_TYPE, getFirstHeaderValue("x-upload-content-type"));
             }
             // This is the initiation call. Return 200 with the upload URI.
             MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
@@ -121,7 +121,7 @@ public class MediaHttpUploaderTest extends TestCase {
               return response;
             } else if (lowLevelExecCalls == 4) {
               // Assert that the 4th request is a range query request.
-              assertEquals("bytes */" + contentLength, getHeaders().get("Content-Range").get(0));
+              assertEquals("bytes */" + contentLength, getFirstHeaderValue("Content-Range"));
               // Return 308 and the Range of bytes uploaded so far.
               response.setStatusCode(308);
               response.addHeader("Range", "0-" + (MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1));
@@ -136,7 +136,7 @@ public class MediaHttpUploaderTest extends TestCase {
           String bytesRange =
               bytesUploaded + "-" + (bytesUploaded + MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1);
           String expectedContentRange = "bytes " + bytesRange + "/" + contentLength;
-          assertEquals(expectedContentRange, getHeaders().get("Content-Range").get(0));
+          assertEquals(expectedContentRange, getFirstHeaderValue("Content-Range"));
           bytesUploaded += MediaHttpUploader.DEFAULT_CHUNK_SIZE;
 
           if (bytesUploaded == contentLength) {

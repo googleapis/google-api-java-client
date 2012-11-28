@@ -28,6 +28,7 @@ import java.io.InputStream;
  * </p>
  *
  * <b>Example usage:</b>
+ *
  * <pre>
     void handleNotification(Subscription subscription, UnparsedNotification notification)
         throws IOException {
@@ -51,27 +52,21 @@ public final class UnparsedNotification extends Notification {
   /**
    * Creates a {@link Notification} whose content has not yet been read and parsed.
    *
-   * @param subscriptionID ID of the linked {@link Subscription}
-   * @param topicID Topic ID of the subscribed topic
-   * @param topicURI Topic URL of the subscribed topic
-   * @param clientToken Client-Token used for origin verification
-   * @param messageNumber the message number for this notification
-   * @param eventType Type of Event which caused this notification to be sent
-   * @param changeType the type of change which caused this notification to be sent or {@code null}
-   * @param contentType Content-Type of the unparsed content or {@code null}
+   * @param subscriptionId subscription UUID
+   * @param topicId opaque ID for the subscribed resource that is stable across API versions
+   * @param topicURI opaque ID (in the form of a canonicalized URI) for the subscribed resource that
+   *        is sensitive to the API version
+   * @param clientToken client token (an opaque string) or {@code null} for none
+   * @param messageNumber message number (a monotonically increasing value starting with 1)
+   * @param eventType event type (see {@link EventTypes})
+   * @param changeType type of change performed on the resource or {@code null} for none
    * @param unparsedStream Unparsed content in form of a {@link InputStream}. Caller has the
    *        responsibility of closing the stream.
    */
-  public UnparsedNotification(String subscriptionID,
-      String topicID,
-      String topicURI,
-      String clientToken,
-      long messageNumber,
-      String eventType,
-      String changeType,
-      String contentType,
-      InputStream unparsedStream) {
-    super(subscriptionID, topicID, topicURI, clientToken, messageNumber, eventType, changeType);
+  public UnparsedNotification(String subscriptionId, String topicId, String topicURI,
+      String clientToken, long messageNumber, String eventType, String changeType,
+      String contentType, InputStream unparsedStream) {
+    super(subscriptionId, topicId, topicURI, clientToken, messageNumber, eventType, changeType);
     this.contentType = contentType;
     this.content = Preconditions.checkNotNull(unparsedStream);
   }
@@ -95,24 +90,22 @@ public final class UnparsedNotification extends Notification {
    *
    * @param subscriptionStore subscription store
    * @return {@code true} if the notification was delivered successfully, or {@code false} if this
-   *          notification could not be delivered and the subscription should be cancelled.
+   *         notification could not be delivered and the subscription should be cancelled.
    * @throws IllegalArgumentException if there is a client-token mismatch
    */
   public boolean deliverNotification(SubscriptionStore subscriptionStore) throws IOException {
     // Find out the handler to whom this notification should go.
     Subscription subscription =
-        subscriptionStore.getSubscription(Preconditions.checkNotNull(getSubscriptionID()));
+        subscriptionStore.getSubscription(Preconditions.checkNotNull(getSubscriptionId()));
     if (subscription == null) {
       return false;
     }
-
     // Validate the notification.
     String expectedToken = subscription.getClientToken();
     Preconditions.checkArgument(
         Strings.isNullOrEmpty(expectedToken) || expectedToken.equals(getClientToken()),
-        "Token mismatch for subscription with id=%s -- got=%s expected=%s", getSubscriptionID(),
+        "Token mismatch for subscription with id=%s -- got=%s expected=%s", getSubscriptionId(),
         getClientToken(), expectedToken);
-
     // Invoke the handler associated with this subscription.
     NotificationCallback h = subscription.getNotificationCallback();
     h.handleNotification(subscription, this);

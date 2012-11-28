@@ -119,7 +119,7 @@ public class YouTubeUrl extends GoogleUrl {
   private static HttpTransport setUpTransport() throws IOException {
     HttpTransport result = new NetHttpTransport();
     GoogleUtils.useMethodOverride(result);
-    GoogleHeaders headers = new GoogleHeaders();
+    HttpHeaders headers = new HttpHeaders();
     headers.setApplicationName("Google-YouTubeSample/1.0");
     headers.gdataVersion = "2";
     JsonCParser parser = new JsonCParser();

@@ -41,24 +41,24 @@ import java.util.List;
    batch.queue(volumesList, Volumes.class, GoogleJsonErrorContainer.class,
        new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
 
-     public void onSuccess(Volumes volumes, GoogleHeaders responseHeaders) {
+     public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
        log("Success");
        printVolumes(volumes.getItems());
      }
 
-     public void onFailure(GoogleJsonErrorContainer e, GoogleHeaders responseHeaders) {
+     public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
        log(e.getError().getMessage());
      }
    });
    batch.queue(volumesList, Volumes.class, GoogleJsonErrorContainer.class,
        new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
 
-     public void onSuccess(Volumes volumes, GoogleHeaders responseHeaders) {
+     public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
        log("Success");
        printVolumes(volumes.getItems());
      }
 
-     public void onFailure(GoogleJsonErrorContainer e, GoogleHeaders responseHeaders) {
+     public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
        log(e.getError().getMessage());
      }
    });
@@ -157,7 +157,7 @@ public final class BatchRequest {
       Class<E> errorClass,
       BatchCallback<T, E> callback) throws IOException {
     Preconditions.checkNotNull(httpRequest);
-    // TODO(rmistry): Add BatchUnparsedCallback with onResponse(InputStream content, GoogleHeaders).
+    // TODO(rmistry): Add BatchUnparsedCallback with onResponse(InputStream content, HttpHeaders).
     Preconditions.checkNotNull(callback);
     Preconditions.checkNotNull(dataClass);
     Preconditions.checkNotNull(errorClass);
