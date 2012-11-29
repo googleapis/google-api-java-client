@@ -13,7 +13,6 @@
 package com.google.api.client.googleapis.services;
 
 import com.google.api.client.googleapis.batch.BatchRequest;
-import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -325,9 +324,6 @@ public abstract class AbstractGoogleClient {
      */
     private String applicationName;
 
-    /** Subscription store or {@code null} for none. */
-    private SubscriptionStore subscriptionStore;
-
     /** Whether discovery pattern checks should be suppressed on required parameters. */
     private boolean suppressPatternChecks;
 
@@ -489,27 +485,6 @@ public abstract class AbstractGoogleClient {
      */
     public Builder setApplicationName(String applicationName) {
       this.applicationName = applicationName;
-      return this;
-    }
-
-    /**
-     * Returns the {@link SubscriptionStore} used to make subscription requests, or {@code null} for
-     * none.
-     *
-     * @since 1.13
-     */
-    public final SubscriptionStore getSubscriptionStore() {
-      return subscriptionStore;
-    }
-
-    /**
-     * Sets the {@link SubscriptionStore} used to make subscription requests, or {@code null} for
-     * none.
-     *
-     * @since 1.13
-     */
-    public Builder setSubscriptionStore(SubscriptionStore subscriptionStore) {
-      this.subscriptionStore = subscriptionStore;
       return this;
     }
 
