@@ -100,7 +100,7 @@ public class MethodOverrideTest extends TestCase {
     Arrays.fill(arr2, 'x');
     arr2[0] = 'a';
     arr2[1] = '=';
-    UrlEncodedContent content = (UrlEncodedContent)request.getContent();
+    UrlEncodedContent content = (UrlEncodedContent) request.getContent();
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     content.writeTo(out);
     assertEquals(new String(arr2), out.toString());
