@@ -544,6 +544,25 @@ public class GoogleCredential extends Credential {
     }
 
     /**
+     * Sets the private key to use with the the service account flow or {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     *
+     * @param pemFile input stream to the PEM file (closed at the end of this method in a finally
+     *        block)
+     * @since 1.13
+     */
+    public Builder setServiceAccountPrivateKeyFromPemFile(File pemFile)
+        throws GeneralSecurityException, IOException {
+      serviceAccountPrivateKey =
+          PrivateKeys.loadFromPkcs8PemFile(pemFile);
+      return this;
+    }
+
+    /**
      * Returns the email address of the user the application is trying to impersonate in the service
      * account flow or {@code null} for none.
      */
