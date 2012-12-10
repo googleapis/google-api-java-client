@@ -21,7 +21,8 @@ import java.io.IOException;
  * An interface for receiving progress notifications for uploads.
  *
  * <p>
- * Sample usage:
+ * Sample usage (if media content length is provided, else consider using
+ * {@link MediaHttpUploader#getNumBytesUploaded} instead of {@link MediaHttpUploader#getProgress}:
  * </p>
  *
  * <pre>

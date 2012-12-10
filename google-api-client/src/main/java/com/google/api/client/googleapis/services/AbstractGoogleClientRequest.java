@@ -425,13 +425,14 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       response = buildHttpRequest(usingHead).execute();
     } else {
       // upload request
-      Preconditions.checkArgument(!disableGZipContent);
       GenericUrl httpRequestUrl = buildHttpRequestUrl();
       HttpRequest httpRequest = getAbstractGoogleClient()
           .getRequestFactory().buildRequest(requestMethod, httpRequestUrl, httpContent);
-      uploader.setInitiationHeaders(requestHeaders);
       boolean throwExceptionOnExecuteError = httpRequest.getThrowExceptionOnExecuteError();
-      response = uploader.upload(httpRequestUrl);
+
+      response = uploader.setInitiationHeaders(requestHeaders)
+          .setDisableGZipContent(disableGZipContent)
+          .upload(httpRequestUrl);
       response.getRequest().setParser(getAbstractGoogleClient().getObjectParser());
       // process any error
       if (throwExceptionOnExecuteError && !response.isSuccessStatusCode()) {
