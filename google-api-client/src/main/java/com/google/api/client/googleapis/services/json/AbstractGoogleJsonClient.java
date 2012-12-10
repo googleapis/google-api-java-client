@@ -15,7 +15,6 @@ package com.google.api.client.googleapis.services.json;
 import com.google.api.client.googleapis.json.JsonCParser;
 import com.google.api.client.googleapis.services.AbstractGoogleClient;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
-import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -144,14 +143,6 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
     @Override
     public Builder setApplicationName(String applicationName) {
       return (Builder) super.setApplicationName(applicationName);
-    }
-
-    /**
-     * @since 1.13
-     */
-    @Override
-    public Builder setSubscriptionStore(SubscriptionStore subscriptionStore) {
-      return (Builder) super.setSubscriptionStore(subscriptionStore);
     }
 
     @Override
