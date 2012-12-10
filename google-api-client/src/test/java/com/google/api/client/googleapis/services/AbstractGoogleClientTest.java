@@ -20,7 +20,10 @@ import com.google.api.client.googleapis.subscriptions.SubscriptionHeaders;
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest;
 import com.google.api.client.googleapis.testing.subscriptions.MockNotificationCallback;
+import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpMethods;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.http.LowLevelHttpRequest;
@@ -239,11 +242,37 @@ public class AbstractGoogleClientTest extends TestCase {
     assertEquals("somevalue", result.foo);
   }
 
+  private static class GZipCheckerInitializer implements HttpRequestInitializer {
+
+    private boolean gzipDisabled;
+
+    public GZipCheckerInitializer(boolean gzipDisabled) {
+      this.gzipDisabled = gzipDisabled;
+    }
+
+    public void initialize(HttpRequest request) {
+      request.setInterceptor(new GZipCheckerInterceptor(gzipDisabled));
+    }
+  }
+
+  private static class GZipCheckerInterceptor implements HttpExecuteInterceptor {
+
+    private boolean gzipDisabled;
+
+    public GZipCheckerInterceptor(boolean gzipDisabled) {
+      this.gzipDisabled = gzipDisabled;
+    }
+
+    public void intercept(HttpRequest request) {
+      assertEquals(!gzipDisabled, request.getEnableGZipContent());
+    }
+  }
+
   public void testMediaUpload_disableGZip() throws Exception {
     MediaTransport transport = new MediaTransport();
     AbstractGoogleClient client = new MockGoogleClient.Builder(
-        transport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER, null).setApplicationName(
-        "Test Application").build();
+        transport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER,
+        new GZipCheckerInitializer(true)).setApplicationName("Test Application").build();
     InputStream is = new ByteArrayInputStream(new byte[MediaHttpUploader.DEFAULT_CHUNK_SIZE]);
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
     mediaContent.setLength(MediaHttpUploader.DEFAULT_CHUNK_SIZE);
@@ -251,11 +280,38 @@ public class AbstractGoogleClientTest extends TestCase {
         new MockGoogleClientRequest<A>(client, "POST", "", null, A.class);
     rq.initializeMediaUpload(mediaContent);
     rq.setDisableGZipContent(true);
-    try {
-      rq.execute();
-      fail("expected " + IllegalArgumentException.class);
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
+    A result = rq.execute();
+    assertEquals("somevalue", result.foo);
+  }
+
+  public void testMediaUpload_enableGZip() throws Exception {
+    MediaTransport transport = new MediaTransport();
+    AbstractGoogleClient client = new MockGoogleClient.Builder(
+        transport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER,
+        new GZipCheckerInitializer(false)).setApplicationName("Test Application").build();
+    InputStream is = new ByteArrayInputStream(new byte[MediaHttpUploader.DEFAULT_CHUNK_SIZE]);
+    InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
+    mediaContent.setLength(MediaHttpUploader.DEFAULT_CHUNK_SIZE);
+    MockGoogleClientRequest<A> rq =
+        new MockGoogleClientRequest<A>(client, "POST", "", null, A.class);
+    rq.initializeMediaUpload(mediaContent);
+    rq.setDisableGZipContent(false);
+    A result = rq.execute();
+    assertEquals("somevalue", result.foo);
+  }
+
+  public void testMediaUpload_defaultGZip() throws Exception {
+    MediaTransport transport = new MediaTransport();
+    AbstractGoogleClient client = new MockGoogleClient.Builder(
+        transport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER,
+        new GZipCheckerInitializer(false)).setApplicationName("Test Application").build();
+    InputStream is = new ByteArrayInputStream(new byte[MediaHttpUploader.DEFAULT_CHUNK_SIZE]);
+    InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
+    mediaContent.setLength(MediaHttpUploader.DEFAULT_CHUNK_SIZE);
+    MockGoogleClientRequest<A> rq =
+        new MockGoogleClientRequest<A>(client, "POST", "", null, A.class);
+    rq.initializeMediaUpload(mediaContent);
+    A result = rq.execute();
+    assertEquals("somevalue", result.foo);
   }
 }
