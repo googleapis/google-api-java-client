@@ -42,6 +42,7 @@ public class MediaHttpDownloaderTest extends TestCase {
     int lowLevelExecCalls;
     int contentLength;
     int bytesDownloaded;
+    int lastBytePos = -1;
     boolean testServerError;
     boolean testClientError;
     boolean directDownloadEnabled;
@@ -61,6 +62,14 @@ public class MediaHttpDownloaderTest extends TestCase {
           MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
 
           if (directDownloadEnabled) {
+            if (bytesDownloaded != 0) {
+              if (lastBytePos == -1) {
+                assertEquals("bytes=" + bytesDownloaded + "-", getFirstHeaderValue("Range"));
+              } else {
+                assertEquals(
+                    "bytes=" + bytesDownloaded + "-" + lastBytePos, getFirstHeaderValue("Range"));
+              }
+            }
             response.setStatusCode(200);
             response.addHeader("Content-Length", String.valueOf(contentLength));
             response.setContent(
@@ -69,8 +78,12 @@ public class MediaHttpDownloaderTest extends TestCase {
           }
 
           // Assert that the required headers are set.
-          assertEquals("bytes=" + bytesDownloaded + "-" + (bytesDownloaded + TEST_CHUNK_SIZE - 1),
-              getFirstHeaderValue("Range"));
+          long currentRequestLastBytePos = bytesDownloaded + TEST_CHUNK_SIZE - 1;
+          if (lastBytePos != -1) {
+            currentRequestLastBytePos = Math.min(lastBytePos, currentRequestLastBytePos);
+          }
+          assertEquals("bytes=" + bytesDownloaded + "-" + currentRequestLastBytePos,
+                       getFirstHeaderValue("Range"));
 
           if (testServerError && lowLevelExecCalls == 2) {
             // Send a server error in the 2nd request.
@@ -251,6 +264,56 @@ public class MediaHttpDownloaderTest extends TestCase {
     assertEquals(1, fakeTransport.lowLevelExecCalls);
   }
 
+  public void testSetBytesDownloadedWithIllegalArguments() throws Exception {
+    int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE;
+    MediaTransport fakeTransport = new MediaTransport(contentLength);
+    MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
+    try {
+      downloader.setBytesDownloaded(-1);
+      fail("Expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      // Expected.
+    }
+
+    // Anything >= 0 should be accepted.
+    downloader.setBytesDownloaded(0);
+    downloader.setBytesDownloaded(1);
+  }
+
+  public void testSetContentRangeWithIllegalArguments() throws Exception {
+    int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE;
+    MediaTransport fakeTransport = new MediaTransport(contentLength);
+    MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
+
+    try {
+      downloader.setContentRange(-1, 0);
+      fail("Expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      // Expected.
+    }
+
+    try {
+      downloader.setContentRange(1, 0);
+      fail("Expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      // Expected.
+    }
+
+    try {
+      downloader.setContentRange(200, 199);
+      fail("Expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      // Expected.
+    }
+
+    // The following should be accepted
+    downloader.setContentRange(0, 0);
+    downloader.setContentRange(0, 1);
+    downloader.setContentRange(1, 1);
+    downloader.setContentRange(199, 200);
+    downloader.setContentRange(200, 200);
+  }
+
   public void testSetBytesDownloadedWithDirectDownload() throws Exception {
     int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE;
     MediaTransport fakeTransport = new MediaTransport(contentLength);
@@ -259,6 +322,42 @@ public class MediaHttpDownloaderTest extends TestCase {
     MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
     downloader.setDirectDownloadEnabled(true);
     downloader.setBytesDownloaded(contentLength - 10000);
+
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
+    assertEquals(10000, outputStream.size());
+
+    // There should be 1 download call made.
+    assertEquals(1, fakeTransport.lowLevelExecCalls);
+  }
+
+  public void testSetContentRangeWithResumableDownload() throws Exception {
+    int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE;
+    MediaTransport fakeTransport = new MediaTransport(contentLength);
+    fakeTransport.bytesDownloaded = contentLength - 10000;
+    fakeTransport.lastBytePos = contentLength;
+
+    MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
+    downloader.setContentRange(contentLength - 10000, contentLength);
+
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
+    assertEquals(10000, outputStream.size());
+
+    // There should be 1 download call made.
+    assertEquals(1, fakeTransport.lowLevelExecCalls);
+  }
+
+  public void testSetContentRangeWithDirectDownload() throws Exception {
+    int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE;
+    MediaTransport fakeTransport = new MediaTransport(contentLength);
+    fakeTransport.directDownloadEnabled = true;
+    fakeTransport.bytesDownloaded = contentLength - 10000;
+    fakeTransport.lastBytePos = contentLength;
+
+    MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
+    downloader.setDirectDownloadEnabled(true);
+    downloader.setContentRange(contentLength - 10000, contentLength);
 
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);

@@ -108,6 +108,15 @@ public final class MediaHttpDownloader {
   private long bytesDownloaded;
 
   /**
+   * The last byte position of the media file we want to download, default value is {@code -1}.
+   *
+   * <p>
+   * If its value is {@code -1} it means there is no upper limit on the byte position.
+   * </p>
+   */
+  private long lastBytePos = -1;
+
+  /**
    * Construct the {@link MediaHttpDownloader}.
    *
    * @param transport The transport to use for requests
@@ -171,7 +180,12 @@ public final class MediaHttpDownloader {
         request.getHeaders().putAll(requestHeaders);
       }
       if (bytesDownloaded != 0) {
-        request.getHeaders().setRange("bytes=" + bytesDownloaded + "-");
+        StringBuilder rangeHeader = new StringBuilder();
+        rangeHeader.append("bytes=").append(bytesDownloaded).append("-");
+        if (lastBytePos != -1) {
+          rangeHeader.append(lastBytePos);
+        }
+        request.getHeaders().setRange(rangeHeader.toString());
       }
       HttpResponse response = request.execute();
 
@@ -193,8 +207,14 @@ public final class MediaHttpDownloader {
       if (requestHeaders != null) {
         request.getHeaders().putAll(requestHeaders);
       }
+
+      long currentRequestLastBytePos = bytesDownloaded + chunkSize - 1;
+      if (lastBytePos != -1) {
+        // If last byte position has been specified use it iff it is smaller than the chunksize.
+        currentRequestLastBytePos = Math.min(lastBytePos, currentRequestLastBytePos);
+      }
       request.getHeaders().setRange(
-          "bytes=" + bytesDownloaded + "-" + (bytesDownloaded + chunkSize - 1));
+          "bytes=" + bytesDownloaded + "-" + currentRequestLastBytePos);
 
       if (backOffPolicyEnabled) {
         // Set ExponentialBackOffPolicy as the BackOffPolicy of the HTTP Request which will
@@ -246,13 +266,38 @@ public final class MediaHttpDownloader {
    * </p>
    *
    * <p>
-   * This method is only applicable for resumable media download.
+   * Use {@link #setContentRange} if you need to specify both the bytes downloaded and the last byte
+   * position.
    * </p>
    *
    * @param bytesDownloaded The total number of bytes downloaded
    */
   public MediaHttpDownloader setBytesDownloaded(long bytesDownloaded) {
+    Preconditions.checkArgument(bytesDownloaded >= 0);
     this.bytesDownloaded = bytesDownloaded;
+    return this;
+  }
+
+  /**
+   * Sets the content range of the next download request. Eg: bytes=firstBytePos-lastBytePos.
+   *
+   * <p>
+   * If a download was aborted mid-way due to a connection failure then users can resume the
+   * download from the point where it left off.
+   * </p>
+   *
+   * <p>
+   * Use {@link #setBytesDownloaded} if you only need to specify the first byte position.
+   * </p>
+   *
+   * @param firstBytePos The first byte position in the content range string
+   * @param lastBytePos The last byte position in the content range string.
+   * @since 1.13
+   */
+  public MediaHttpDownloader setContentRange(long firstBytePos, int lastBytePos) {
+    Preconditions.checkArgument(lastBytePos >= firstBytePos);
+    setBytesDownloaded(firstBytePos);
+    this.lastBytePos = lastBytePos;
     return this;
   }
 
@@ -362,6 +407,17 @@ public final class MediaHttpDownloader {
    */
   public long getNumBytesDownloaded() {
     return bytesDownloaded;
+  }
+
+  /**
+   * Gets the last byte position of the media file we want to download or {@code -1} if there is no
+   * upper limit on the byte position.
+   *
+   * @return the last byte position
+   * @since 1.13
+   */
+  public long getLastBytePosition() {
+    return lastBytePos;
   }
 
   /**
