@@ -592,6 +592,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   public final <E> void queue(
       BatchRequest batchRequest, Class<E> errorClass, BatchCallback<T, E> callback)
       throws IOException {
+    Preconditions.checkArgument(uploader == null, "Batching media requests is not supported");
     batchRequest.queue(buildHttpRequest(), getResponseClass(), errorClass, callback);
   }
 }
