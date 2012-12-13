@@ -337,7 +337,8 @@ public class BatchRequestTest extends TestCase {
       boolean testExponentialBackOff, boolean testRedirect) throws Exception {
     transport = new MockTransport(
         testServerError, testAuthenticationError, testExponentialBackOff, testRedirect);
-    MockGoogleClient client = new MockGoogleClient(transport, null, ROOT_URL, SERVICE_PATH, null);
+    MockGoogleClient client = new MockGoogleClient(
+        transport, null, ROOT_URL, SERVICE_PATH, null, null, "Test Application", false);
     MockGoogleClientRequest<String> jsonHttpRequest1 =
         new MockGoogleClientRequest<String>(client, METHOD1, URI_TEMPLATE1, null, String.class);
     MockGoogleClientRequest<String> jsonHttpRequest2 =
@@ -425,7 +426,8 @@ public class BatchRequestTest extends TestCase {
 
   public void subTestExecuteWithVoidCallback(boolean testServerError) throws Exception {
     MockTransport transport = new MockTransport(testServerError, false, false, false);
-    MockGoogleClient client = new MockGoogleClient(transport, null, ROOT_URL, SERVICE_PATH, null);
+    MockGoogleClient client = new MockGoogleClient(
+        transport, null, ROOT_URL, SERVICE_PATH, null, null, "Test Application", false);
     MockGoogleClientRequest<String> jsonHttpRequest1 =
         new MockGoogleClientRequest<String>(client, METHOD1, URI_TEMPLATE1, null, String.class);
     MockGoogleClientRequest<String> jsonHttpRequest2 =
