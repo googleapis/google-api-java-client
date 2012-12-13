@@ -1,19 +1,28 @@
 	<classpathentry kind="lib" path="libs/google-api-client-${project.version}.jar" sourcepath="libs-sources/google-api-client-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-api-client-android-${project.version}.jar" sourcepath="libs-sources/google-api-client-android-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-api-client-appengine-${project.version}.jar" sourcepath="libs-sources/google-api-client-appengine-${project.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-api-client-java6-${project.version}.jar" sourcepath="libs-sources/google-api-client-java6-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-api-client-servlet-${project.version}.jar" sourcepath="libs-sources/google-api-client-servlet-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-oauth-client-${project.oauth.version}.jar" sourcepath="libs-sources/google-oauth-client-${project.oauth.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-oauth-client-appengine-${project.oauth.version}.jar" sourcepath="libs-sources/google-oauth-client-appengine-${project.oauth.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-oauth-client-java6-${project.oauth.version}.jar" sourcepath="libs-sources/google-oauth-client-java6-${project.oauth.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-oauth-client-java7-${project.oauth.version}.jar" sourcepath="libs-sources/google-oauth-client-java7-${project.oauth.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-oauth-client-jetty-${project.oauth.version}.jar" sourcepath="libs-sources/google-oauth-client-jetty-${project.oauth.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-oauth-client-servlet-${project.oauth.version}.jar" sourcepath="libs-sources/google-oauth-client-servlet-${project.oauth.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-http-client-${project.http.version}.jar" sourcepath="libs-sources/google-http-client-${project.http.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-http-client-android-${project.http.version}.jar" sourcepath="libs-sources/google-http-client-android-${project.http.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-http-client-appengine-${project.http.version}.jar" sourcepath="libs-sources/google-http-client-appengine-${project.http.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-http-client-protobuf-${project.http.version}.jar" sourcepath="libs-sources/google-http-client-protobuf-${project.http.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-http-client-gson-${project.http.version}.jar" sourcepath="libs-sources/google-http-client-gson-${project.http.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-http-client-jackson-${project.http.version}.jar" sourcepath="libs-sources/google-http-client-jackson-${project.http.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-http-client-jackson2-${project.http.version}.jar" sourcepath="libs-sources/google-http-client-jackson2-${project.http.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/commons-logging-${project.commons-logging.version}.jar" sourcepath="libs-sources/commons-logging-${project.commons-logging.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/gson-${project.gson.version}.jar" sourcepath="libs-sources/gson-${project.gson.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/guava-jdk5-${project.guava.version}.jar" sourcepath="libs-sources/guava-jdk5-${project.guava.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/httpclient-${project.httpclient.version}.jar" sourcepath="libs-sources/httpclient-${project.httpclient.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/httpcore-${project.httpcore.version}.jar" sourcepath="libs-sources/httpcore-${project.httpcore.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/jackson-core-asl-${project.jackson-core-asl.version}.jar" sourcepath="libs-sources/jackson-core-asl-${project.jackson-core-asl.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/jackson-core-${project.jackson-core2.version}.jar" sourcepath="libs-sources/jackson-core-${project.jackson-core2.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/jdo2-api-${project.jdo2-api.version}.jar" sourcepath="libs-sources/jdo2-api-${project.jdo2-api.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/jsr305-${project.jsr305.version}.jar"/>
 	<classpathentry kind="lib" path="libs/protobuf-java-${project.protobuf-java.version}.jar" sourcepath="libs-sources/protobuf-java-${project.protobuf-java.version}-sources.jar"/>

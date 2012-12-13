@@ -14,6 +14,7 @@ package com.google.api.client.googleapis.services.json;
 
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
@@ -31,7 +32,8 @@ public class CommonGoogleJsonClientRequestInitializerTest extends TestCase {
   public static class MyClient extends AbstractGoogleJsonClient {
 
     public MyClient(HttpTransport transport) {
-      super(transport, new JacksonFactory(), HttpTesting.SIMPLE_URL, "test/", null, false);
+      super(transport, null, HttpTesting.SIMPLE_URL, "test/", new JsonObjectParser(
+          new JacksonFactory()), null, "Test Application", false);
     }
   }
 

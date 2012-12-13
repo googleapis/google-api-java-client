@@ -19,6 +19,7 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.ObjectParser;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -102,6 +103,9 @@ public abstract class AbstractGoogleClient {
     this.googleClientRequestInitializer = googleClientRequestInitializer;
     this.rootUrl = normalizeRootUrl(rootUrl);
     this.servicePath = normalizeServicePath(servicePath);
+    if (Strings.isNullOrEmpty(applicationName)) {
+      LOGGER.warning("Application name is not set. Call Builder#setApplicationName.");
+    }
     this.applicationName = applicationName;
     this.requestFactory = httpRequestInitializer == null
         ? transport.createRequestFactory() : transport.createRequestFactory(httpRequestInitializer);

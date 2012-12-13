@@ -55,26 +55,6 @@ public class AbstractGoogleClientTest extends TestCase {
   private static final JsonObjectParser JSON_OBJECT_PARSER = new JsonObjectParser(JSON_FACTORY);
   private static final HttpTransport TRANSPORT = new NetHttpTransport();
 
-  public static class MyC4lient extends AbstractGoogleClient {
-
-    public MyC4lient(HttpTransport transport, String rootUrl, String servicePath) {
-      super(transport, null, rootUrl, servicePath, null);
-    }
-
-    public static class Builder extends AbstractGoogleClient.Builder {
-
-      protected Builder(HttpTransport transport) {
-        super(transport, HttpTesting.SIMPLE_URL, "test/", null, null);
-      }
-
-      @Override
-      public AbstractGoogleClient build() {
-        return new MyC4lient(getTransport(), getRootUrl(), getServicePath());
-      }
-
-    }
-  }
-
   static private class TestRemoteRequestInitializer implements GoogleClientRequestInitializer {
 
     boolean isCalled;
