@@ -30,7 +30,8 @@ public class CommonGoogleClientRequestInitializerTest extends TestCase {
   public static class MyClient extends AbstractGoogleClient {
 
     public MyClient(HttpTransport transport) {
-      super(transport, null, HttpTesting.SIMPLE_URL, "test/", null);
+      super(
+          transport, null, HttpTesting.SIMPLE_URL, "test/", null, null, "Test Application", false);
     }
   }
 

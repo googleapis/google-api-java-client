@@ -79,7 +79,7 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
      * @param httpRequestInitializer HTTP request initializer or {@code null} for none
      * @param legacyDataWrapper whether using the legacy data wrapper in responses
      */
-    protected Builder(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
+    public Builder(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
         String servicePath, HttpRequestInitializer httpRequestInitializer,
         boolean legacyDataWrapper) {
       super(

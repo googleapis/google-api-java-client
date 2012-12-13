@@ -71,7 +71,8 @@ public class AbstractGoogleClientRequestTest extends TestCase {
       }
     };
     MockGoogleClient client = new MockGoogleClient.Builder(
-        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
+        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).setApplicationName(
+        "Test Application").build();
     MockGoogleClientRequest<String> request = new MockGoogleClientRequest<String>(
         client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
     try {
@@ -99,7 +100,8 @@ public class AbstractGoogleClientRequestTest extends TestCase {
       }
     };
     MockGoogleClient client = new MockGoogleClient.Builder(
-        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
+        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).setApplicationName(
+        "Test Application").build();
     MockGoogleClientRequest<String> request = new MockGoogleClientRequest<String>(
         client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
     request.put("testId", "foo");
@@ -119,7 +121,8 @@ public class AbstractGoogleClientRequestTest extends TestCase {
       throws Exception {
     HttpTransport transport = new MockHttpTransport();
     MockGoogleClient client = new MockGoogleClient.Builder(
-        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
+        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).setApplicationName(
+        "Test Application").build();
     MockGoogleClientRequest<String> request =
         new MockGoogleClientRequest<String>(client, method, URI_TEMPLATE, null, String.class);
     HttpRequest httpRequest = request.buildHttpRequest();
@@ -133,7 +136,8 @@ public class AbstractGoogleClientRequestTest extends TestCase {
   public void testBuildHttpRequest() throws Exception {
     HttpTransport transport = new MockHttpTransport();
     MockGoogleClient client = new MockGoogleClient.Builder(
-        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
+        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).setApplicationName(
+        "Test Application").build();
     MockGoogleClientRequest<String> request = new MockGoogleClientRequest<String>(
         client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
     assertFalse(request.getDisableGZipContent());
