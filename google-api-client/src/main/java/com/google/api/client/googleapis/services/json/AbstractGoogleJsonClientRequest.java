@@ -127,7 +127,7 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
    * @param notificationDeliveryMethod notification delivery method
    * @throws IOException
    *
-   * @since 1.13
+   * @since 1.14
    */
   @Override
   protected JsonSubscribeRequest subscribe(String notificationDeliveryMethod) throws IOException {

@@ -21,7 +21,7 @@ import com.google.api.client.http.HttpHeaders;
  * Headers for subscribe request and response.
  *
  * @author Matthias Linder (mlinder)
- * @since 1.13
+ * @since 1.14
  */
 public final class SubscriptionHeaders {
 

@@ -25,7 +25,7 @@ import java.util.Collection;
  * </p>
  *
  * @author Matthias Linder (mlinder)
- * @since 1.13
+ * @since 1.14
  */
 public interface SubscriptionStore {
 

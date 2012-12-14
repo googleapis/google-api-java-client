@@ -29,7 +29,7 @@ import java.io.IOException;
  * Subscribe JSON request.
  *
  * @author Yaniv Inbar
- * @since 1.13
+ * @since 1.14
  */
 public class JsonSubscribeRequest extends SubscribeRequest {
 

@@ -20,7 +20,7 @@ import com.google.common.base.Preconditions;
  * Subscribe response.
  *
  * @author Yaniv Inbar
- * @since 1.13
+ * @since 1.14
  */
 public class SubscribeResponse {
 

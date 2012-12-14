@@ -40,7 +40,7 @@ import com.google.common.base.Preconditions;
  * </pre>
  *
  * @author Matthias Linder (mlinder)
- * @since 1.13
+ * @since 1.14
  */
 public class WebHookDeliveryMethod {
 

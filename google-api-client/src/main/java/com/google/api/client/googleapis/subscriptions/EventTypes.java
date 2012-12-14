@@ -28,7 +28,7 @@ package com.google.api.client.googleapis.subscriptions;
  * </pre>
  *
  * @author Matthias Linder (mlinder)
- * @since 1.13
+ * @since 1.14
  */
 public final class EventTypes {
 
