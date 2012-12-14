@@ -75,7 +75,7 @@ import javax.servlet.http.HttpServletResponse;
  * </pre>
  *
  * @author Matthias Linder (mlinder)
- * @since 1.13
+ * @since 1.14
  */
 @SuppressWarnings("serial")
 public abstract class AbstractWebHookServlet extends HttpServlet {

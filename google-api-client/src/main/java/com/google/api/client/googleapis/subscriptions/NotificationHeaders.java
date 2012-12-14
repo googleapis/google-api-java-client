@@ -16,7 +16,7 @@ package com.google.api.client.googleapis.subscriptions;
  * Headers for notifications.
  *
  * @author Kyle Marvin (kmarvin)
- * @since 1.13
+ * @since 1.14
  */
 public final class NotificationHeaders {
 

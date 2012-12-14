@@ -20,13 +20,14 @@ import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * Parses JSON-C response content into an data class of key/value pairs, assuming the data is
@@ -103,7 +104,7 @@ public final class JsonCParser extends JsonObjectParser {
     // parse
     boolean failed = true;
     try {
-      String match = parser.skipToKey(Sets.newHashSet("data", "error"));
+      String match = parser.skipToKey(new HashSet<String>(Arrays.asList("data", "error")));
       if (match == null || parser.getCurrentToken() == JsonToken.END_OBJECT) {
         throw new IllegalArgumentException("data key not found");
       }

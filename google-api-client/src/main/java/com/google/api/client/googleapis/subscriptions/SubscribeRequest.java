@@ -33,7 +33,7 @@ import java.util.UUID;
  * </p>
  *
  * @author Yaniv Inbar
- * @since 1.13
+ * @since 1.14
  */
 public class SubscribeRequest {
 

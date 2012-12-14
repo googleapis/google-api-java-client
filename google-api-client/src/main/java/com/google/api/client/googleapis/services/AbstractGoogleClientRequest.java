@@ -222,7 +222,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * @param notificationDeliveryMethod notification delivery method
    * @throws IOException
    *
-   * @since 1.13
+   * @since 1.14
    */
   protected SubscribeRequest subscribe(String notificationDeliveryMethod) throws IOException {
     return new SubscribeRequest(buildHttpRequest(), notificationDeliveryMethod);

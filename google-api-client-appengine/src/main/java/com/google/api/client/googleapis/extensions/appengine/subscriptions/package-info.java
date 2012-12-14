@@ -20,7 +20,7 @@
  * possibly entirely removed in a future version of the library</b>
  * </p>
  *
- * @since 1.13
+ * @since 1.14
  * @author Matthias Linder (mlinder)
  */
 
