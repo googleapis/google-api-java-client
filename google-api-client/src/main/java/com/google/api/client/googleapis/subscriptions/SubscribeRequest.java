@@ -14,6 +14,7 @@ package com.google.api.client.googleapis.subscriptions;
 
 import com.google.api.client.googleapis.batch.BatchCallback;
 import com.google.api.client.googleapis.batch.BatchRequest;
+import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpMethods;
@@ -57,6 +58,7 @@ public class SubscribeRequest {
     this.request = Preconditions.checkNotNull(request);
     Preconditions.checkArgument(HttpMethods.GET.equals(request.getRequestMethod()));
     request.setRequestMethod(HttpMethods.POST);
+    request.setContent(new EmptyContent());
     setNotificationDeliveryMethod(notificationDeliveryMethod);
     setSubscriptionId(UUID.randomUUID().toString());
   }
