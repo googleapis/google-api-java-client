@@ -143,7 +143,6 @@ public class GoogleHeaders extends HttpHeaders {
    * Sets the {@code "X-Upload-Content-Length"} header.
    *
    * @since 1.7
-   * @deprecated (scheduled to be removed in 1.13) Use {@link #setUploadContentLength(Long)} instead
    */
   @Deprecated
   public final void setUploadContentLength(long uploadContentLength) {

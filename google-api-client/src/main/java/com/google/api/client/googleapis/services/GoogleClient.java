@@ -38,7 +38,7 @@ import java.util.Arrays;
  *
  * @since 1.6
  * @author Ravi Mistry
- * @deprecated (scheduled to be removed in 1.13) Use {@code
+ * @deprecated (scheduled to be removed in 1.14) Use {@code
  *             com.google.api.client.googleapis.services.json.AbstractGoogleJsonClient} instead.
  */
 @Deprecated
@@ -260,7 +260,7 @@ public class GoogleClient extends JsonHttpClient {
    * </p>
    *
    * @since 1.6
-   * @deprecated (scheduled to be removed in 1.13) Use
+   * @deprecated (scheduled to be removed in 1.14) Use
    *             {@link com.google.api.client.googleapis.services.AbstractGoogleClient.Builder}
    *             instead.
    */
