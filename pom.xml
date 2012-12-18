@@ -329,6 +329,11 @@
           <artifactId>findbugs-maven-plugin</artifactId>
           <version>2.3.2</version>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>clirr-maven-plugin</artifactId>
+          <version>2.5</version>
+        </plugin>
         <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
         <plugin>
           <groupId>org.eclipse.m2e</groupId>
@@ -434,6 +439,21 @@
         <artifactId>findbugs-maven-plugin</artifactId>
         <configuration>
           <excludeFilterFile>${basedir}/../findbugs-exclude.xml</excludeFilterFile>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>clirr-maven-plugin</artifactId>
+        <configuration>
+          <comparisonVersion>1.13.0-beta</comparisonVersion>
+          <ignoredDifferencesFile>${basedir}/../clirr-ignored-differences.xml</ignoredDifferencesFile>
         </configuration>
         <executions>
           <execution>
