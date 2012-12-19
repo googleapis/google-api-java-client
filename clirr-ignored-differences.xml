@@ -2,5 +2,38 @@
 <!-- see http://mojo.codehaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
 
 <differences>
+  
+  <difference>
+    <!-- Method Removed -->
+    <differenceType>7002</differenceType>
+    <className>**/googleapis/services/AbstractGoogleClientRequest</className>
+    <method>*subscribe*</method>
+  </difference>
+  
+  <difference>
+    <!-- Method Removed -->
+    <differenceType>7002</differenceType>
+    <className>**/googleapis/services/json/AbstractGoogleJsonClientRequest</className>
+    <method>*subscribe*</method>
+  </difference>
+
+  <difference>
+    <!-- Class Removed -->
+    <differenceType>8001</differenceType>
+    <className>**/googleapis/subscriptions/**</className>
+  </difference>
+
+  <difference>
+    <!-- Class Removed -->
+    <differenceType>8001</differenceType>
+    <className>**/googleapis/testing/subscriptions/**</className>
+  </difference>
+  
+  <difference>
+    <!-- Class Removed -->
+    <differenceType>8001</differenceType>
+    <className>**/googleapis/extensions/appengine/subscriptions/**</className>
+  </difference>
+
 </differences>
 
