@@ -13,15 +13,9 @@
 package com.google.api.client.googleapis.services;
 
 import com.google.api.client.googleapis.media.MediaHttpUploader;
-import com.google.api.client.googleapis.subscriptions.MemorySubscriptionStore;
-import com.google.api.client.googleapis.subscriptions.SubscribeRequest;
-import com.google.api.client.googleapis.subscriptions.SubscribeResponse;
-import com.google.api.client.googleapis.subscriptions.SubscriptionHeaders;
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest;
-import com.google.api.client.googleapis.testing.subscriptions.MockNotificationCallback;
 import com.google.api.client.http.HttpExecuteInterceptor;
-import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
@@ -32,7 +26,6 @@ import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson.JacksonFactory;
-import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
@@ -100,43 +93,6 @@ public class AbstractGoogleClientTest extends TestCase {
         "Test Application").setGoogleClientRequestInitializer(remoteRequestInitializer).build();
     client.initialize(null);
     assertTrue(remoteRequestInitializer.isCalled);
-  }
-
-  /** Tests the normal flow execution. */
-  public void testSubscribe() throws Exception {
-    MemorySubscriptionStore store = new MemorySubscriptionStore();
-    MockHttpTransport transport = new MockHttpTransport() {
-        @Override
-      public LowLevelHttpRequest buildRequest(String method, String url) {
-        assertEquals(HttpMethods.POST, method);
-        return new MockLowLevelHttpRequest(url) {
-            @Override
-          public LowLevelHttpResponse execute() {
-            MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
-            assertEquals("someDeliveryMethod", getFirstHeaderValue(SubscriptionHeaders.SUBSCRIBE));
-            String clientToken = getFirstHeaderValue(SubscriptionHeaders.CLIENT_TOKEN);
-            String id = getFirstHeaderValue(SubscriptionHeaders.SUBSCRIPTION_ID);
-            assertEquals("someClientToken", clientToken);
-            response.addHeader(SubscriptionHeaders.SUBSCRIPTION_ID, id);
-            response.addHeader(SubscriptionHeaders.CLIENT_TOKEN, clientToken);
-            response.addHeader(SubscriptionHeaders.TOPIC_ID, "topicID");
-            response.addHeader(SubscriptionHeaders.TOPIC_URI, "http://topic.uri/");
-            return response;
-          }
-        };
-      }
-    };
-    AbstractGoogleClient client = new MockGoogleClient.Builder(
-        transport, HttpTesting.SIMPLE_URL, "", JSON_OBJECT_PARSER, null).setApplicationName(
-        "Test Application").build();
-    MockGoogleClientRequest<String> rq =
-        new MockGoogleClientRequest<String>(client, "GET", "", null, String.class);
-    SubscribeRequest subscribeRequest = rq.subscribe("someDeliveryMethod");
-    SubscribeResponse response = subscribeRequest.withNotificationCallback(
-        store, new MockNotificationCallback()).setClientToken("someClientToken").execute();
-    assertEquals(1, store.listSubscriptions().size());
-    assertEquals(
-        subscribeRequest.getSubscriptionId(), response.getSubscription().getSubscriptionId());
   }
 
   private static final String TEST_RESUMABLE_REQUEST_URL =
