@@ -440,13 +440,13 @@
         <configuration>
           <excludeFilterFile>${basedir}/../findbugs-exclude.xml</excludeFilterFile>
         </configuration>
-        <!--<executions>
+        <executions>
           <execution>
             <goals>
               <goal>check</goal>
             </goals>
           </execution>
-        </executions>-->
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -455,13 +455,13 @@
           <comparisonVersion>1.13.0-beta</comparisonVersion>
           <ignoredDifferencesFile>${basedir}/../clirr-ignored-differences.xml</ignoredDifferencesFile>
         </configuration>
-        <executions>
+        <!--<executions>
           <execution>
             <goals>
               <goal>check</goal>
             </goals>
           </execution>
-        </executions>
+        </executions>-->
       </plugin>
     </plugins>
   </build>
