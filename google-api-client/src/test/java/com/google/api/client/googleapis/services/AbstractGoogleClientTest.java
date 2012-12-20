@@ -104,6 +104,7 @@ public class AbstractGoogleClientTest extends TestCase {
 
     int bytesUploaded;
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE;
+    boolean contentLengthNotSpecified;
 
     protected MediaTransport() {
     }
@@ -117,8 +118,10 @@ public class AbstractGoogleClientTest extends TestCase {
             @Override
           public LowLevelHttpResponse execute() {
             // Assert that the required headers are set.
-            assertEquals(
-                Integer.toString(contentLength), getFirstHeaderValue("x-upload-content-length"));
+            if (!contentLengthNotSpecified) {
+              assertEquals(
+                  Integer.toString(contentLength), getFirstHeaderValue("x-upload-content-length"));
+            }
             assertEquals(TEST_CONTENT_TYPE, getFirstHeaderValue("x-upload-content-type"));
             // This is the initiation call. Return 200 with the upload URI.
             MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
@@ -205,12 +208,12 @@ public class AbstractGoogleClientTest extends TestCase {
 
   public void testMediaUpload_disableGZip() throws Exception {
     MediaTransport transport = new MediaTransport();
+    transport.contentLengthNotSpecified = true;
     AbstractGoogleClient client = new MockGoogleClient.Builder(
         transport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER,
         new GZipCheckerInitializer(true)).setApplicationName("Test Application").build();
     InputStream is = new ByteArrayInputStream(new byte[MediaHttpUploader.DEFAULT_CHUNK_SIZE]);
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
-    mediaContent.setLength(MediaHttpUploader.DEFAULT_CHUNK_SIZE);
     MockGoogleClientRequest<A> rq =
         new MockGoogleClientRequest<A>(client, "POST", "", null, A.class);
     rq.initializeMediaUpload(mediaContent);
@@ -221,12 +224,12 @@ public class AbstractGoogleClientTest extends TestCase {
 
   public void testMediaUpload_enableGZip() throws Exception {
     MediaTransport transport = new MediaTransport();
+    transport.contentLengthNotSpecified = true;
     AbstractGoogleClient client = new MockGoogleClient.Builder(
         transport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER,
         new GZipCheckerInitializer(false)).setApplicationName("Test Application").build();
     InputStream is = new ByteArrayInputStream(new byte[MediaHttpUploader.DEFAULT_CHUNK_SIZE]);
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
-    mediaContent.setLength(MediaHttpUploader.DEFAULT_CHUNK_SIZE);
     MockGoogleClientRequest<A> rq =
         new MockGoogleClientRequest<A>(client, "POST", "", null, A.class);
     rq.initializeMediaUpload(mediaContent);
@@ -237,12 +240,12 @@ public class AbstractGoogleClientTest extends TestCase {
 
   public void testMediaUpload_defaultGZip() throws Exception {
     MediaTransport transport = new MediaTransport();
+    transport.contentLengthNotSpecified = true;
     AbstractGoogleClient client = new MockGoogleClient.Builder(
         transport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER,
         new GZipCheckerInitializer(false)).setApplicationName("Test Application").build();
     InputStream is = new ByteArrayInputStream(new byte[MediaHttpUploader.DEFAULT_CHUNK_SIZE]);
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
-    mediaContent.setLength(MediaHttpUploader.DEFAULT_CHUNK_SIZE);
     MockGoogleClientRequest<A> rq =
         new MockGoogleClientRequest<A>(client, "POST", "", null, A.class);
     rq.initializeMediaUpload(mediaContent);

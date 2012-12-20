@@ -329,7 +329,7 @@ public class MediaHttpUploaderTest extends TestCase {
     MediaTransport fakeTransport = new MediaTransport(contentLength, false, false, false);
     InputStream is = new ByteArrayInputStream(new byte[contentLength]);
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
-    mediaContent.setLength(contentLength);
+    fakeTransport.contentLengthNotSpecified = true;
 
     // Disable GZip content.
     MediaHttpUploader uploader = new MediaHttpUploader(
@@ -345,7 +345,7 @@ public class MediaHttpUploaderTest extends TestCase {
     MediaTransport fakeTransport = new MediaTransport(contentLength, false, false, false);
     InputStream is = new ByteArrayInputStream(new byte[contentLength]);
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
-    mediaContent.setLength(contentLength);
+    fakeTransport.contentLengthNotSpecified = true;
 
     // Enable GZip content.
     MediaHttpUploader uploader = new MediaHttpUploader(
@@ -361,7 +361,7 @@ public class MediaHttpUploaderTest extends TestCase {
     MediaTransport fakeTransport = new MediaTransport(contentLength, false, false, false);
     InputStream is = new ByteArrayInputStream(new byte[contentLength]);
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
-    mediaContent.setLength(contentLength);
+    fakeTransport.contentLengthNotSpecified = true;
 
     // GZip content must be disabled by default.
     MediaHttpUploader uploader = new MediaHttpUploader(
