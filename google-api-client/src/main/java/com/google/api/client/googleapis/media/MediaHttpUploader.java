@@ -50,6 +50,11 @@ import java.io.InputStream;
  * </p>
  *
  * <p>
+ * See {@link #setDisableGZipContent(boolean)} for information on when content is gzipped
+ * and how to control that behavior.
+ * </p>
+ *
+ * <p>
  * Implementation is not thread-safe.
  * </p>
  *
@@ -353,7 +358,13 @@ public final class MediaHttpUploader {
       }
       currentRequest.setThrowExceptionOnExecuteError(false);
       currentRequest.setRetryOnExecuteIOException(true);
-      currentRequest.setEnableGZipContent(!disableGZipContent);
+      if (getMediaContentLength() >= 0) {
+        // TODO(rmistry): Support gzipping content for the case where media content length is
+        // known (https://code.google.com/p/google-api-java-client/issues/detail?id=691).
+        currentRequest.setEnableGZipContent(false);
+      } else {
+        currentRequest.setEnableGZipContent(!disableGZipContent);
+      }
       response = currentRequest.execute();
       boolean returningResponse = false;
       try {
@@ -721,6 +732,13 @@ public final class MediaHttpUploader {
    *
    * <p>
    * By default it is {@code false}.
+   * </p>
+   *
+   * <p>
+   * If {@link #setDisableGZipContent(boolean)} is set to false (the default value) then content is
+   * gzipped for direct media upload and resumable media uploads when content length is not known.
+   * Due to a current limitation, content is not gzipped for resumable media uploads when content
+   * length is known; this limitation will be removed in the future.
    * </p>
    *
    * @since 1.13
