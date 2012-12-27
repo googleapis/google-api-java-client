@@ -403,7 +403,7 @@
                 </group>
                 <group>
                   <title>google-api-client-servlet</title>
-                  <packages>com.google.api.client.googleapis.extensions.auth*</packages>
+                  <packages>com.google.api.client.googleapis.extensions.servlet*</packages>
                 </group>
                 <group>
                   <title>google-api-client-android</title>
