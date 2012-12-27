@@ -41,8 +41,8 @@ import java.util.List;
 public class MethodOverrideTest extends TestCase {
 
   private static final List<String> OVERRIDDEN_METHODS = ImmutableList.of(
-      "FOO", HttpMethods.DELETE, HttpMethods.HEAD, HttpMethods.OPTIONS, "PATCH", HttpMethods.PUT,
-      HttpMethods.TRACE);
+      "FOO", HttpMethods.DELETE, HttpMethods.HEAD, HttpMethods.OPTIONS, HttpMethods.PATCH,
+      HttpMethods.PUT, HttpMethods.TRACE);
 
   private static final List<String> SUPPORTED_METHODS = ImmutableList.<String>builder()
       .addAll(OVERRIDDEN_METHODS).add(HttpMethods.GET, HttpMethods.POST).build();
