@@ -306,8 +306,9 @@ public class MediaHttpUploaderTest extends TestCase {
       this.gzipDisabled = gzipDisabled;
     }
 
+    @SuppressWarnings("deprecation")
     public void intercept(HttpRequest request) {
-      assertEquals(!gzipDisabled, request.getEnableGZipContent());
+      assertEquals(!gzipDisabled, request.getEncoding() != null);
     }
   }
 

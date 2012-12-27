@@ -14,7 +14,6 @@
 
 package com.google.api.client.googleapis.media;
 
-import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.ExponentialBackOffPolicy;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpHeaders;
@@ -23,6 +22,7 @@ import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.util.io.IOUtils;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
@@ -194,7 +194,7 @@ public final class MediaHttpDownloader {
         mediaContentLength = response.getHeaders().getContentLength();
         bytesDownloaded = mediaContentLength;
         updateStateAndNotifyListener(DownloadState.MEDIA_COMPLETE);
-        AbstractInputStreamContent.copy(response.getContent(), outputStream);
+        IOUtils.copy(response.getContent(), outputStream);
       } finally {
         response.disconnect();
       }
@@ -223,7 +223,7 @@ public final class MediaHttpDownloader {
       }
 
       HttpResponse response = request.execute();
-      AbstractInputStreamContent.copy(response.getContent(), outputStream);
+      IOUtils.copy(response.getContent(), outputStream);
 
       String contentRange = response.getHeaders().getContentRange();
       long nextByteIndex = getNextByteIndex(contentRange);
