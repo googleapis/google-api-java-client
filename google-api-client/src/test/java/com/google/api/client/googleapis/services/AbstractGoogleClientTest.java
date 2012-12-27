@@ -245,8 +245,9 @@ public class AbstractGoogleClientTest extends TestCase {
       this.gzipDisabled = gzipDisabled;
     }
 
+    @SuppressWarnings("deprecation")
     public void intercept(HttpRequest request) {
-      assertEquals(!gzipDisabled, request.getEnableGZipContent());
+      assertEquals(!gzipDisabled, request.getEncoding() != null);
     }
   }
 

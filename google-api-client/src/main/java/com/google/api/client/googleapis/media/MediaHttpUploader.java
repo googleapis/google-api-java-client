@@ -18,6 +18,7 @@ import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.EmptyContent;
+import com.google.api.client.http.GZipEncoding;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
@@ -302,7 +303,9 @@ public final class MediaHttpUploader {
           requestFactory.buildRequest(initiationRequestMethod, initiationRequestUrl, content);
       request.getHeaders().putAll(initiationHeaders);
       request.setThrowExceptionOnExecuteError(false);
-      request.setEnableGZipContent(!disableGZipContent);
+      if (!disableGZipContent) {
+        request.setEncoding(new GZipEncoding());
+      }
       addMethodOverride(request);
 
       // We do not have to do anything special here if media content length is unspecified because
@@ -361,9 +364,8 @@ public final class MediaHttpUploader {
       if (getMediaContentLength() >= 0) {
         // TODO(rmistry): Support gzipping content for the case where media content length is
         // known (https://code.google.com/p/google-api-java-client/issues/detail?id=691).
-        currentRequest.setEnableGZipContent(false);
-      } else {
-        currentRequest.setEnableGZipContent(!disableGZipContent);
+      } else if (!disableGZipContent) {
+        currentRequest.setEncoding(new GZipEncoding());
       }
       response = currentRequest.execute();
       boolean returningResponse = false;
@@ -432,7 +434,9 @@ public final class MediaHttpUploader {
     request.getHeaders().putAll(initiationHeaders);
     request.setThrowExceptionOnExecuteError(false);
     request.setRetryOnExecuteIOException(true);
-    request.setEnableGZipContent(!disableGZipContent);
+    if (!disableGZipContent) {
+      request.setEncoding(new GZipEncoding());
+    }
     HttpResponse response = request.execute();
     boolean notificationCompleted = false;
 

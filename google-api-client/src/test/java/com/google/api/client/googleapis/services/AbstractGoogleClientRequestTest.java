@@ -133,6 +133,7 @@ public class AbstractGoogleClientRequestTest extends TestCase {
     }
   }
 
+  @Deprecated
   public void testBuildHttpRequest() throws Exception {
     HttpTransport transport = new MockHttpTransport();
     MockGoogleClient client = new MockGoogleClient.Builder(

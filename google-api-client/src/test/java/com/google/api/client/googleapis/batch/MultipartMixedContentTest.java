@@ -92,6 +92,7 @@ public class MultipartMixedContentTest extends TestCase {
             return -1;
           }
 
+          @Deprecated
           public String getEncoding() {
             return null;
           }

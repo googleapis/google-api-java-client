@@ -20,6 +20,7 @@ import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.googleapis.subscriptions.SubscribeRequest;
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.EmptyContent;
+import com.google.api.client.http.GZipEncoding;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
@@ -301,6 +302,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   }
 
   /** Create a request suitable for use against this service. */
+  @SuppressWarnings("deprecation")
   private HttpRequest buildHttpRequest(boolean usingHead) throws IOException {
     Preconditions.checkArgument(uploader == null);
     Preconditions.checkArgument(!usingHead || requestMethod.equals(HttpMethods.GET));
@@ -315,7 +317,10 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       httpRequest.setContent(new EmptyContent());
     }
     httpRequest.getHeaders().putAll(requestHeaders);
-    httpRequest.setEnableGZipContent(!disableGZipContent);
+    if (!disableGZipContent) {
+      httpRequest.setEnableGZipContent(true);
+      httpRequest.setEncoding(new GZipEncoding());
+    }
     final HttpResponseInterceptor responseInterceptor = httpRequest.getResponseInterceptor();
     httpRequest.setResponseInterceptor(new HttpResponseInterceptor() {
 
