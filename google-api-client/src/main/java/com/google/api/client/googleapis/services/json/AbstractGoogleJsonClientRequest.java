@@ -111,7 +111,6 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
   }
 
   @Override
-  @Deprecated
   protected GoogleJsonResponseException newExceptionOnError(HttpResponse response) {
     return GoogleJsonResponseException.from(getAbstractGoogleClient().getJsonFactory(), response);
   }
