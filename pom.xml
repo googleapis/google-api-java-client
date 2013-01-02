@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-parent</artifactId>
-  <version>1.13.2-beta</version>
+  <version>1.13.3-beta-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Parent for the Google API Client Library for Java</name>
 
