@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jdiff" default="jdiff_report" basedir=".">
+
+  <target name="jdiff_report" depends="">
+
+    <!-- Set to the installation location of JDiff 1.1.1. -->
+    <property name="JDIFF_HOME" value=".../jdiff-1.1.1" />
+
+    <!-- Set to the location of your local Maven repository. -->
+    <property name="MAVEN_REPOSITORY_HOME" value=".../.m2/repository" />
+
+    <!-- Set to the location of your local hg clone of the "javadoc" repository. -->
+    <property name="JAVADOC_PROJECT_ROOT_DIR" value="../javadoc" />
+
+    <property name="TMP_PROJECT_ROOT_DIR" value="/tmp/google-api-java-client" />
+
+    <taskdef name="jdiff" classname="jdiff.JDiffAntTask"
+      classpath="${JDIFF_HOME}/antjdiff.jar:${MAVEN_REPOSITORY_HOME}/xpp3/xpp3/1.1.4c/xpp3-1.1.4c.jar" />
+    <jdiff destdir="${JAVADOC_PROJECT_ROOT_DIR}/1.13.2-beta/jdiff" verbose="on"
+      stats="on" docchanges="on">
+      <old name="Google API Client Library for Java 1.12.0-beta">
+        <!-- This is the location of your old source files -->
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.12.0-beta/google-api-client/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.12.0-beta/google-api-client-appengine/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.12.0-beta/google-api-client-android/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.12.0-beta/google-api-client-android2/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.12.0-beta/google-api-client-java6/src/main/java" />
+      </old>
+      <new name="Google API Client Library for Java 1.13.2-beta">
+        <!-- This is the location of your new source files -->
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.2-beta/google-api-client/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.2-beta/google-api-client-appengine/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.2-beta/google-api-client-android/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.2-beta/google-api-client-java6/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.2-beta/google-api-client-servlet/src/main/java" />
+      </new>
+    </jdiff>
+  </target>
+
+</project>
