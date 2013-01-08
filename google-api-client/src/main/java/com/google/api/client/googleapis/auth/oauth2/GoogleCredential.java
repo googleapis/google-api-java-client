@@ -24,7 +24,6 @@ import com.google.api.client.auth.oauth2.CredentialRefreshListener;
 import com.google.api.client.auth.oauth2.CredentialStore;
 import com.google.api.client.auth.oauth2.TokenRequest;
 import com.google.api.client.auth.oauth2.TokenResponse;
-import com.google.api.client.auth.security.PrivateKeys;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets.Details;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteInterceptor;
@@ -33,10 +32,12 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Clock;
+import com.google.api.client.util.SecurityUtils;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
@@ -538,8 +539,9 @@ public class GoogleCredential extends Credential {
      */
     public Builder setServiceAccountPrivateKeyFromP12File(File p12File)
         throws GeneralSecurityException, IOException {
-      serviceAccountPrivateKey =
-          PrivateKeys.loadFromP12File(p12File, "notasecret", "privatekey", "notasecret");
+      serviceAccountPrivateKey = SecurityUtils.loadPrivateKeyFromKeyStore(
+          SecurityUtils.getPkcs12KeyStore(), new FileInputStream(p12File), "notasecret",
+          "privatekey", "notasecret");
       return this;
     }
 
@@ -557,8 +559,8 @@ public class GoogleCredential extends Credential {
      */
     public Builder setServiceAccountPrivateKeyFromPemFile(File pemFile)
         throws GeneralSecurityException, IOException {
-      serviceAccountPrivateKey =
-          PrivateKeys.loadFromPkcs8PemFile(pemFile);
+      serviceAccountPrivateKey = SecurityUtils.loadPkcs8PrivateKeyFromPem(
+          SecurityUtils.getRsaKeyFactory(), new FileInputStream(pemFile));
       return this;
     }
 
