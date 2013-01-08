@@ -22,6 +22,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.Clock;
+import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.StringUtils;
 import com.google.common.base.Preconditions;
 
@@ -268,7 +269,7 @@ public class GoogleIdTokenVerifier {
         if (publicKeys == null || clock.currentTimeMillis() + 300000 > expirationTimeMilliseconds) {
           loadPublicCerts();
         }
-        Signature signer = Signature.getInstance("SHA256withRSA");
+        Signature signer = SecurityUtils.getSha256WithRsaSignatureAlgorithm();
         for (PublicKey publicKey : publicKeys) {
           signer.initVerify(publicKey);
           signer.update(idToken.getSignedContentBytes());
@@ -298,7 +299,7 @@ public class GoogleIdTokenVerifier {
     try {
       publicKeys = new ArrayList<PublicKey>();
       // HTTP request to public endpoint
-      CertificateFactory factory = CertificateFactory.getInstance("X509");
+      CertificateFactory factory = SecurityUtils.getX509CertificateFactory();
       HttpResponse certsResponse = transport.createRequestFactory()
           .buildGetRequest(new GenericUrl("https://www.googleapis.com/oauth2/v1/certs")).execute();
       // parse Cache-Control max-age parameter
