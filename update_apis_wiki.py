@@ -238,10 +238,6 @@ def ProcessApis(out, apis, samples):
     out.write('%s [%s Download the latest version of the library] '
               '_`[`[http://www.apache.org/licenses/LICENSE-2.0 Apache License 2.0]`]`_\n'
               % (download_icon_url, zip_url))
-    out.write('\n');
-    out.write('_Warning: service jars can be temporarily found at /%s/google/%s/%s/%s/java/%s '
-              '(they will soon be moved back into /%s)_\n'
-              % (name, name, version, rev, codegen_version, name))
     # TODO: 'all versions' link once it is available in codegen server
     # Javadoc
     out.write('\n');
