@@ -17,8 +17,6 @@ package com.google.api.client.googleapis;
 import junit.framework.TestCase;
 
 import java.security.KeyStore;
-import java.security.KeyStore.Entry;
-import java.security.KeyStore.TrustedCertificateEntry;
 import java.util.Enumeration;
 
 /**
@@ -30,16 +28,13 @@ public class GoogleUtilsTest extends TestCase {
 
   public void testGetCertificateTrustStore() throws Exception {
     KeyStore trustStore = GoogleUtils.getCertificateTrustStore();
-    int i = 0;
     Enumeration<String> aliases = trustStore.aliases();
     while (aliases.hasMoreElements()) {
       String alias = aliases.nextElement();
-      Entry entry = trustStore.getEntry(alias, null);
-      assertTrue(entry instanceof TrustedCertificateEntry);
-      i++;
+      assertTrue(trustStore.isCertificateEntry(alias));
     }
     // intentionally check the count of certificates, so it can help us detect if a new certificate
     // has been added or removed
-    assertEquals(70, i);
+    assertEquals(70, trustStore.size());
   }
 }
