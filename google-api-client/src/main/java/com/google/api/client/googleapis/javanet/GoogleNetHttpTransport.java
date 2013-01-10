@@ -31,11 +31,11 @@ public class GoogleNetHttpTransport {
 
   /**
    * Returns a new instance of {@link NetHttpTransport} that uses
-   * {@link #getCertificateTrustStore()} for the trusted certificates using
-   * {@link NetHttpTransport.Builder#trustCertificates(KeyStore)}.
+   * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates using {@link com.google.api.client.http.javanet.NetHttpTransport.Builder#trustCertificates(KeyStore)}
+   * .
    */
-  public static NetHttpTransport newTrustedTransport() throws GeneralSecurityException,
-      IOException {
+  public static NetHttpTransport newTrustedTransport()
+      throws GeneralSecurityException, IOException {
     return new NetHttpTransport.Builder().trustCertificates(GoogleUtils.getCertificateTrustStore())
         .build();
   }
