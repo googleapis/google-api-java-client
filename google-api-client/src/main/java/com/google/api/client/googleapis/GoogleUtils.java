@@ -14,8 +14,6 @@
 
 package com.google.api.client.googleapis;
 
-import com.google.api.client.http.apache.ApacheHttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.util.SecurityUtils;
 
 import java.io.IOException;
@@ -31,37 +29,33 @@ import java.security.KeyStore;
  */
 public final class GoogleUtils {
 
-  /** Current version of the Google API Client Library for Java. */
-  public static final String VERSION = "1.14.0-beta-SNAPSHOT";
+  /**
+   * Major part of the current release version.
+   *
+   * @since 1.14
+   */
+  public static final int MAJOR_VERSION = 1;
+
+  /**
+   * Minor part of the current release version.
+   *
+   * @since 1.14
+   */
+  public static final int MINOR_VERSION = 14;
+
+  /**
+   * Bug fix part of the current release version.
+   *
+   * @since 1.14
+   */
+  public static final int BUGFIX_VERSION = 0;
+
+  /** Current release version. */
+  public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + BUGFIX_VERSION
+      + "-beta-SNAPSHOT";
 
   /** Cached value for {@link #getCertificateTrustStore()}. */
   static KeyStore certTrustStore;
-
-  /**
-   * Returns a new instance of {@link NetHttpTransport} that uses
-   * {@link #getCertificateTrustStore()} for the trusted certificates using
-   * {@link NetHttpTransport.Builder#trustCertificates(KeyStore)}.
-   *
-   * @since 1.14
-   */
-  @SuppressWarnings("javadoc")
-  public static NetHttpTransport newTrustedNetHttpTransport()
-      throws GeneralSecurityException, IOException {
-    return new NetHttpTransport.Builder().trustCertificates(getCertificateTrustStore()).build();
-  }
-
-  /**
-   * Returns a new instance of {@link ApacheHttpTransport} that uses
-   * {@link #getCertificateTrustStore()} for the trusted certificates using
-   * {@link ApacheHttpTransport.Builder#trustCertificates(KeyStore)}.
-   *
-   * @since 1.14
-   */
-  @SuppressWarnings("javadoc")
-  public static ApacheHttpTransport newTrustedApacheHttpTransport()
-      throws GeneralSecurityException, IOException {
-    return new ApacheHttpTransport.Builder().trustCertificates(getCertificateTrustStore()).build();
-  }
 
   /**
    * Returns the key store for trusted root certificates to use for Google APIs.
