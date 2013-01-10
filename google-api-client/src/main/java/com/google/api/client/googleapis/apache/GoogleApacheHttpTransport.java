@@ -31,8 +31,8 @@ public final class GoogleApacheHttpTransport {
 
   /**
    * Returns a new instance of {@link ApacheHttpTransport} that uses
-   * {@link #getCertificateTrustStore()} for the trusted certificates using
-   * {@link ApacheHttpTransport.Builder#trustCertificates(KeyStore)}.
+   * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates using
+   * {@link com.google.api.client.http.apache.ApacheHttpTransport.Builder#trustCertificates(KeyStore)}.
    */
   public static ApacheHttpTransport newTrustedTransport() throws GeneralSecurityException,
       IOException {

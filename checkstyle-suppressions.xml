@@ -5,7 +5,7 @@
 
 <suppressions>
 
-  <suppress checks="LineLength" files="com/google/api/client/googleapis/extensions/auth/helpers/appengine/GoogleAppAssertionFlow.java"/>
-  <suppress checks="LineLength" files="com/google/api/client/googleapis/extensions/android2/auth/GoogleAccountManager.java"/>
+  <suppress checks="LineLength" files="com/google/api/client/googleapis/apache/GoogleApacheHttpTransport.java"/>
+  <suppress checks="LineLength" files="com/google/api/client/googleapis/javanet/GoogleNetHttpTransport.java"/>
 
 </suppressions>
