@@ -185,8 +185,25 @@ public class GoogleCredential extends Credential {
    * </p>
    */
   public GoogleCredential() {
-    super(BearerToken.authorizationHeaderAccessMethod(), null, null,
-        GoogleOAuthConstants.TOKEN_SERVER_URL, null, null, null);
+    this (new Builder());
+  }
+
+  /**
+   * @param builder Google credential builder
+   *
+   * @since 1.14
+   */
+  protected GoogleCredential(Builder builder) {
+    super(builder);
+    if (builder.serviceAccountPrivateKey == null) {
+      Preconditions.checkArgument(builder.serviceAccountId == null
+          && builder.serviceAccountScopes == null && builder.serviceAccountUser == null);
+    } else {
+      serviceAccountId = Preconditions.checkNotNull(builder.serviceAccountId);
+      serviceAccountScopes = Preconditions.checkNotNull(builder.serviceAccountScopes);
+      serviceAccountPrivateKey = builder.serviceAccountPrivateKey;
+      serviceAccountUser = builder.serviceAccountUser;
+    }
   }
 
   /**
@@ -211,7 +228,9 @@ public class GoogleCredential extends Credential {
    * @param serviceAccountUser email address of the user the application is trying to impersonate in
    *        the service account flow or {@code null} for none or if not using the service account
    *        flow
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleCredential(Builder)}
    */
+  @Deprecated
   protected GoogleCredential(AccessMethod method, HttpTransport transport, JsonFactory jsonFactory,
       String tokenServerEncodedUrl, HttpExecuteInterceptor clientAuthentication,
       HttpRequestInitializer requestInitializer, List<CredentialRefreshListener> refreshListeners,
@@ -246,7 +265,9 @@ public class GoogleCredential extends Credential {
    *        flow
    * @param clock The clock to use for expiration check
    * @since 1.9
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleCredential(Builder)}
    */
+  @Deprecated
   protected GoogleCredential(AccessMethod method, HttpTransport transport, JsonFactory jsonFactory,
       String tokenServerEncodedUrl, HttpExecuteInterceptor clientAuthentication,
       HttpRequestInitializer requestInitializer, List<CredentialRefreshListener> refreshListeners,
@@ -368,22 +389,22 @@ public class GoogleCredential extends Credential {
   public static class Builder extends Credential.Builder {
 
     /** Service account ID (typically an e-mail address) or {@code null} for none. */
-    private String serviceAccountId;
+    String serviceAccountId;
 
     /**
      * Space-separated OAuth scopes to use with the the service account flow or {@code null} for
      * none.
      */
-    private String serviceAccountScopes;
+    String serviceAccountScopes;
 
     /** Private key to use with the the service account flow or {@code null} for none. */
-    private PrivateKey serviceAccountPrivateKey;
+    PrivateKey serviceAccountPrivateKey;
 
     /**
      * Email address of the user the application is trying to impersonate in the service account
      * flow or {@code null} for none.
      */
-    private String serviceAccountUser;
+    String serviceAccountUser;
 
     public Builder() {
       super(BearerToken.authorizationHeaderAccessMethod());
@@ -392,11 +413,7 @@ public class GoogleCredential extends Credential {
 
     @Override
     public GoogleCredential build() {
-      return new GoogleCredential(getMethod(), getTransport(), getJsonFactory(),
-          getTokenServerUrl() == null ? null : getTokenServerUrl().build(),
-          getClientAuthentication(), getRequestInitializer(), getRefreshListeners(),
-          serviceAccountId, serviceAccountScopes, serviceAccountPrivateKey, serviceAccountUser,
-          getClock());
+      return new GoogleCredential(this);
     }
 
     @Override

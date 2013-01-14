@@ -21,10 +21,9 @@ import java.security.GeneralSecurityException;
 
 /**
  * Google OAuth 2.0 JSON model for a successful access token response as specified in <a
- * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-23#section-5.1">Successful Response</a>,
- * including an ID token as specified in <a
- * href="http://openid.net/specs/openid-connect-session-1_0.html">OpenID Connect Session Management
- * 1.0</a>.
+ * href="http://tools.ietf.org/html/rfc6749#section-5.1">Successful Response</a>, including an ID
+ * token as specified in <a href="http://openid.net/specs/openid-connect-session-1_0.html">OpenID
+ * Connect Session Management 1.0</a>.
  *
  * <p>
  * This response object is the result of {@link GoogleAuthorizationCodeTokenRequest#execute()} and

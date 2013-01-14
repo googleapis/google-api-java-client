@@ -28,9 +28,8 @@ import java.io.IOException;
 
 /**
  * Google-specific implementation of the OAuth 2.0 request to refresh an access token using a
- * refresh token as specified in <a
- * href="http://tools.ietf.org/html/draft-ietf-oauth-v2-23#section-6">Refreshing an Access
- * Token</a>.
+ * refresh token as specified in <a href="http://tools.ietf.org/html/rfc6749#section-6">Refreshing
+ * an Access Token</a>.
  *
  * <p>
  * Use {@link GoogleCredential} to access protected resources from the resource server using the
