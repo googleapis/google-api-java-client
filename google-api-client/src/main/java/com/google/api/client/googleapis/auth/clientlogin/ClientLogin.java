@@ -179,14 +179,18 @@ public final class ClientLogin {
     if (response.isSuccessStatusCode()) {
       return response.parseAs(Response.class);
     }
+    HttpResponseException.Builder builder = new HttpResponseException.Builder(
+        response.getStatusCode(), response.getStatusMessage(), response.getHeaders());
     // On error, throw a ClientLoginResponseException with the parsed error details
     ErrorInfo details = response.parseAs(ErrorInfo.class);
     String detailString = details.toString();
     StringBuilder message = HttpResponseException.computeMessageBuffer(response);
     if (!com.google.common.base.Strings.isNullOrEmpty(detailString)) {
       message.append(StringUtils.LINE_SEPARATOR).append(detailString);
+      builder.setContent(detailString);
     }
-    throw new ClientLoginResponseException(response, details, message.toString());
+    builder.setMessage(message.toString());
+    throw new ClientLoginResponseException(builder, details);
   }
 
   /**
