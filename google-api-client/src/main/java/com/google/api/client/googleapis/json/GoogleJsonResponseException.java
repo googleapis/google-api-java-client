@@ -60,13 +60,11 @@ public class GoogleJsonResponseException extends HttpResponseException {
   private final transient GoogleJsonError details;
 
   /**
-   * @param response HTTP response
+   * @param builder builder
    * @param details Google JSON error details
-   * @param message message details
    */
-  private GoogleJsonResponseException(
-      HttpResponse response, GoogleJsonError details, String message) {
-    super(response, message);
+  GoogleJsonResponseException(Builder builder, GoogleJsonError details) {
+    super(builder);
     this.details = details;
   }
 
@@ -92,6 +90,8 @@ public class GoogleJsonResponseException extends HttpResponseException {
    * @return new instance of {@link GoogleJsonResponseException}
    */
   public static GoogleJsonResponseException from(JsonFactory jsonFactory, HttpResponse response) {
+    HttpResponseException.Builder builder = new HttpResponseException.Builder(
+        response.getStatusCode(), response.getStatusMessage(), response.getHeaders());
     // details
     Preconditions.checkNotNull(jsonFactory);
     GoogleJsonError details = null;
@@ -138,9 +138,11 @@ public class GoogleJsonResponseException extends HttpResponseException {
     StringBuilder message = HttpResponseException.computeMessageBuffer(response);
     if (!com.google.common.base.Strings.isNullOrEmpty(detailString)) {
       message.append(StringUtils.LINE_SEPARATOR).append(detailString);
+      builder.setContent(detailString);
     }
+    builder.setMessage(message.toString());
     // result
-    return new GoogleJsonResponseException(response, details, message.toString());
+    return new GoogleJsonResponseException(builder, details);
   }
 
   /**

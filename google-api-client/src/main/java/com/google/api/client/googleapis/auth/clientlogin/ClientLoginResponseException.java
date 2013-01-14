@@ -15,7 +15,6 @@
 package com.google.api.client.googleapis.auth.clientlogin;
 
 import com.google.api.client.googleapis.auth.clientlogin.ClientLogin.ErrorInfo;
-import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 
 /**
@@ -37,12 +36,11 @@ public class ClientLoginResponseException extends HttpResponseException {
   private final transient ErrorInfo details;
 
   /**
-   * @param response HTTP response
+   * @param builder builder
    * @param details error details or {@code null} for none
-   * @param message message details
    */
-  ClientLoginResponseException(HttpResponse response, ErrorInfo details, String message) {
-    super(response, message);
+  ClientLoginResponseException(Builder builder, ErrorInfo details) {
+    super(builder);
     this.details = details;
   }
 
