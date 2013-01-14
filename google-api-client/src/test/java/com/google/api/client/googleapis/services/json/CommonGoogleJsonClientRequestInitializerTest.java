@@ -12,9 +12,8 @@
 
 package com.google.api.client.googleapis.services.json;
 
+import com.google.api.client.googleapis.testing.services.json.MockGoogleJsonClient;
 import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
@@ -29,20 +28,12 @@ import junit.framework.TestCase;
  */
 public class CommonGoogleJsonClientRequestInitializerTest extends TestCase {
 
-  public static class MyClient extends AbstractGoogleJsonClient {
-
-    public MyClient(HttpTransport transport) {
-      super(transport, null, HttpTesting.SIMPLE_URL, "test/", new JsonObjectParser(
-          new JacksonFactory()), null, "Test Application", false);
-    }
-  }
-
   public static class MyRequest extends AbstractGoogleJsonClientRequest<String> {
     @Key
     String key;
 
-    protected MyRequest(MyClient client, String method, String uriTemplate, HttpContent content,
-        Class<String> responseClass) {
+    protected MyRequest(MockGoogleJsonClient client, String method, String uriTemplate,
+        HttpContent content, Class<String> responseClass) {
       super(client, method, uriTemplate, content, responseClass);
     }
   }
@@ -50,7 +41,9 @@ public class CommonGoogleJsonClientRequestInitializerTest extends TestCase {
   public void testInitialize() throws Exception {
     CommonGoogleJsonClientRequestInitializer key =
         new CommonGoogleJsonClientRequestInitializer("foo");
-    MyClient client = new MyClient(new MockHttpTransport());
+    MockGoogleJsonClient client = new MockGoogleJsonClient.Builder(
+        new MockHttpTransport(), new JacksonFactory(), HttpTesting.SIMPLE_URL, "test/", null,
+        false).setApplicationName("Test Application").build();
     MyRequest request = new MyRequest(client, "GET", "", null, String.class);
     assertNull(request.key);
     key.initialize(request);

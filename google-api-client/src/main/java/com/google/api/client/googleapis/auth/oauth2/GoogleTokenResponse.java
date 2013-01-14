@@ -18,6 +18,7 @@ import com.google.api.client.auth.openidconnect.IdTokenResponse;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Collection;
 
 /**
  * Google OAuth 2.0 JSON model for a successful access token response as specified in <a
@@ -28,8 +29,8 @@ import java.security.GeneralSecurityException;
  * <p>
  * This response object is the result of {@link GoogleAuthorizationCodeTokenRequest#execute()} and
  * {@link GoogleRefreshTokenRequest#execute()}. Use {@link #parseIdToken()} to parse the
- * {@link GoogleIdToken} and then call {@link GoogleIdToken#verify(GoogleIdTokenVerifier)} to verify
- * it (or just call {@link #verifyIdToken(GoogleIdTokenVerifier)}).
+ * {@link GoogleIdToken} and then call
+ * {@link GoogleIdTokenVerifier#verify(GoogleIdToken, Collection, Collection)}.
  * </p>
  *
  * <p>
@@ -81,7 +82,12 @@ public class GoogleTokenResponse extends IdTokenResponse {
    * {@link #parseIdToken}.
    *
    * @param verifier Google ID token verifier
+   *
+   * @deprecated (scheduled to be removed in 1.15) Use
+   *             {@link GoogleIdTokenVerifier#verify(GoogleIdToken, Collection, Collection)} with
+   *             {@link #parseIdToken()}
    */
+  @Deprecated
   public boolean verifyIdToken(GoogleIdTokenVerifier verifier)
       throws GeneralSecurityException, IOException {
     return verifier.verify(parseIdToken());

@@ -28,6 +28,15 @@ import com.google.api.client.json.JsonObjectParser;
 public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
 
   /**
+   * @param builder builder
+   *
+   * @since 1.14
+   */
+  protected MockGoogleJsonClient(Builder builder) {
+    super(builder);
+  }
+
+  /**
    * @param transport HTTP transport
    * @param jsonFactory JSON factory
    * @param rootUrl root URL of the service
@@ -38,7 +47,8 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
   public MockGoogleJsonClient(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
       String servicePath, HttpRequestInitializer httpRequestInitializer,
       boolean legacyDataWrapper) {
-    super(transport, jsonFactory, rootUrl, servicePath, httpRequestInitializer, legacyDataWrapper);
+    this(new Builder(
+        transport, jsonFactory, rootUrl, servicePath, httpRequestInitializer, legacyDataWrapper));
   }
 
   /**
@@ -52,7 +62,9 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
    *        {@code null} for none
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
+   * @deprecated (scheduled to be removed in 1.15) Use {@link Builder}
    */
+  @Deprecated
   public MockGoogleJsonClient(HttpTransport transport,
       HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
       JsonObjectParser jsonObjectParser,
@@ -88,9 +100,7 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
 
     @Override
     public MockGoogleJsonClient build() {
-      return new MockGoogleJsonClient(getTransport(), getHttpRequestInitializer(), getRootUrl(),
-          getServicePath(), getObjectParser(), getGoogleClientRequestInitializer(),
-          getApplicationName(), getSuppressPatternChecks());
+      return new MockGoogleJsonClient(this);
     }
 
     @Override

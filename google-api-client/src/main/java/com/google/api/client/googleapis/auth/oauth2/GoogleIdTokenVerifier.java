@@ -34,6 +34,7 @@ import java.security.Signature;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -51,8 +52,7 @@ import java.util.regex.Pattern;
  * {@code "https://www.googleapis.com/oauth2/v1/certs"}. The public keys are cached in this instance
  * of {@link GoogleIdTokenVerifier}. Therefore, for maximum efficiency, applications should use a
  * single globally-shared instance of the {@link GoogleIdTokenVerifier}. Use
- * {@link #verify(GoogleIdToken)} or {@link GoogleIdToken#verify(GoogleIdTokenVerifier)} to verify a
- * Google ID token.
+ * {@link #verify(GoogleIdToken, Collection, Collection)} to verify a Google ID token.
  * </p>
  *
  * <p>
@@ -94,6 +94,7 @@ public class GoogleIdTokenVerifier {
   private long expirationTimeMilliseconds;
 
   /** Set of Client IDs. */
+  @Deprecated
   private Set<String> clientIds;
 
   /** HTTP transport. */
@@ -116,7 +117,20 @@ public class GoogleIdTokenVerifier {
    * @param jsonFactory JSON factory
    */
   public GoogleIdTokenVerifier(HttpTransport transport, JsonFactory jsonFactory) {
-    this(null, transport, jsonFactory);
+    this(new Builder(transport, jsonFactory));
+  }
+
+  /**
+   * @param builder builder
+   *
+   * @since 1.14
+   */
+  protected GoogleIdTokenVerifier(Builder builder) {
+    clientIds = builder.clientIds == null
+        ? Collections.<String>emptySet() : Collections.unmodifiableSet(builder.clientIds);
+    transport = Preconditions.checkNotNull(builder.transport);
+    jsonFactory = Preconditions.checkNotNull(builder.jsonFactory);
+    clock = Preconditions.checkNotNull(builder.clock);
   }
 
   /**
@@ -126,7 +140,11 @@ public class GoogleIdTokenVerifier {
    * @param transport HTTP transport
    * @param jsonFactory JSON factory
    * @since 1.9
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleIdTokenVerifier(Builder)} and
+   *             {@link #verify(GoogleIdToken, Collection, Collection)} or
+   *             {@link #verify(String, Collection, Collection)}
    */
+  @Deprecated
   protected GoogleIdTokenVerifier(
       Set<String> clientIds, HttpTransport transport, JsonFactory jsonFactory) {
     this(clientIds, transport, jsonFactory, Clock.SYSTEM);
@@ -140,7 +158,11 @@ public class GoogleIdTokenVerifier {
    * @param jsonFactory JSON factory
    * @param clock Clock for expiration checks
    * @since 1.9
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleIdTokenVerifier(Builder)} and
+   *             {@link #verify(GoogleIdToken, Collection, Collection)} or
+   *             {@link #verify(String, Collection, Collection)}
    */
+  @Deprecated
   protected GoogleIdTokenVerifier(
       Set<String> clientIds, HttpTransport transport, JsonFactory jsonFactory, Clock clock) {
     this.clientIds =
@@ -148,6 +170,15 @@ public class GoogleIdTokenVerifier {
     this.transport = Preconditions.checkNotNull(transport);
     this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
     this.clock = Preconditions.checkNotNull(clock);
+  }
+
+  /**
+   * Returns the HTTP transport.
+   *
+   * @since 1.14
+   */
+  public final HttpTransport getTransport() {
+    return transport;
   }
 
   /** Returns the JSON factory. */
@@ -159,7 +190,11 @@ public class GoogleIdTokenVerifier {
    * Returns the set of client IDs.
    *
    * @since 1.9
+   * @deprecated (scheduled to be removed in 1.15) Use
+   *             {@link #verify(GoogleIdToken, Collection, Collection)} or
+   *             {@link #verify(String, Collection, Collection)}
    */
+  @Deprecated
   public final Set<String> getClientIds() {
     return clientIds;
   }
@@ -183,7 +218,10 @@ public class GoogleIdTokenVerifier {
    *
    * @param idToken Google ID token
    * @return {@code true} if verified successfully or {@code false} if failed
+   * @deprecated (scheduled to be removed in 1.15) Use
+   *             {@link #verify(GoogleIdToken, Collection, Collection)}
    */
+  @Deprecated
   public boolean verify(GoogleIdToken idToken) throws GeneralSecurityException, IOException {
     return verify(clientIds, idToken);
   }
@@ -195,8 +233,29 @@ public class GoogleIdTokenVerifier {
    * @param idTokenString Google ID token string
    * @return Google ID token if verified successfully or {@code null} if failed
    * @since 1.9
+   * @deprecated (scheduled to be removed in 1.15) Use
+   *             {@link #verify(String, Collection, Collection)}
    */
+  @Deprecated
   public GoogleIdToken verify(String idTokenString) throws GeneralSecurityException, IOException {
+    GoogleIdToken idToken = GoogleIdToken.parse(jsonFactory, idTokenString);
+    return verify(idToken) ? idToken : null;
+  }
+
+  /**
+   * Returns a Google ID token if the given ID token string is verified using
+   * {@link #verify(GoogleIdToken, Collection, Collection)}.
+   *
+   * @param idTokenString Google ID token string
+   * @param issuees issues to allow or {@code null} to skip
+   * @param audiences audiences to allow or {@code null} to skip
+   * @return Google ID token if verified successfully or {@code null} if failed
+   *
+   * @since 1.14
+   */
+  public GoogleIdToken verify(
+      String idTokenString, Collection<String> issuees, Collection<String> audiences)
+      throws GeneralSecurityException, IOException {
     GoogleIdToken idToken = GoogleIdToken.parse(jsonFactory, idTokenString);
     return verify(idToken) ? idToken : null;
   }
@@ -212,16 +271,18 @@ public class GoogleIdTokenVerifier {
    * <li>The current time against the issued at and expiration time (allowing for a 5 minute clock
    * skew).</li>
    * <li>The issuer is {@code "accounts.google.com"}.</li>
-   * <li>The audience and issuee match the client ID (skipped if {@code clientId} is {@code null}.
+   * <li>The audience and issuee match the client ID (skipped if {@code clientId} is {@code null}).
    * </li>
-   * <li>
    * </ul>
    *
    * @param idToken Google ID token
    * @param clientId client ID or {@code null} to skip checking it
    * @return {@code true} if verified successfully or {@code false} if failed
    * @since 1.8
+   * @deprecated (scheduled to be removed in 1.15) Use
+   *             {@link #verify(GoogleIdToken, Collection, Collection)}
    */
+  @Deprecated
   public boolean verify(GoogleIdToken idToken, String clientId)
       throws GeneralSecurityException, IOException {
     return verify(
@@ -249,14 +310,48 @@ public class GoogleIdTokenVerifier {
    * @param clientIds set of client IDs
    * @return {@code true} if verified successfully or {@code false} if failed
    * @since 1.9
+   * @deprecated (scheduled to be removed in 1.15) Use
+   *             {@link #verify(GoogleIdToken, Collection, Collection)}
    */
+  @Deprecated
   public boolean verify(Set<String> clientIds, GoogleIdToken idToken)
+      throws GeneralSecurityException, IOException {
+    Set<String> allowed = clientIds.isEmpty() ? null : clientIds;
+    return verify(idToken, allowed, allowed);
+  }
+
+  /**
+   * Verifies that the given ID token is valid using the cached public keys and a set of parameters.
+   *
+   * It verifies:
+   *
+   * <ul>
+   * <li>The RS256 signature, which uses RSA and SHA-256 based on the public keys downloaded from
+   * the public certificate endpoint.</li>
+   * <li>The current time against the issued at and expiration time (allowing for a 5 minute clock
+   * skew).</li>
+   * <li>The issuer is {@code "accounts.google.com"}.</li>
+   * <li>The audience is one of the specified audiences (skipped if {@code null}).</li>
+   * <li>The issuee is one of the specified issuees (skipped if {@code null}). For some use cases,
+   * this may be identical to the audiences.</li>
+   * <li>
+   * </ul>
+   *
+   * @param idToken Google ID token
+   * @param issuees issues to allow or {@code null} to skip
+   * @param audiences audiences to allow or {@code null} to skip
+   * @return {@code true} if verified successfully or {@code false} if failed
+   *
+   * @since 1.14
+   */
+  public boolean verify(
+      GoogleIdToken idToken, Collection<String> issuees, Collection<String> audiences)
       throws GeneralSecurityException, IOException {
     // check the payload
     GoogleIdToken.Payload payload = idToken.getPayload();
     if (!payload.isValidTime(300) || !"accounts.google.com".equals(payload.getIssuer())
-        || !clientIds.isEmpty() && (!clientIds.contains(payload.getAudience())
-            || !clientIds.contains(payload.getIssuee()))) {
+        || issuees != null && !issuees.contains(payload.getIssuee()) || audiences != null
+        && !audiences.contains(payload.getAudience())) {
       return false;
     }
     // check the signature
@@ -348,13 +443,17 @@ public class GoogleIdTokenVerifier {
   public static class Builder {
 
     /** HTTP transport. */
-    private final HttpTransport transport;
+    final HttpTransport transport;
 
     /** JSON factory. */
-    private final JsonFactory jsonFactory;
+    final JsonFactory jsonFactory;
 
     /** Set of Client IDs. */
-    private Set<String> clientIds = new HashSet<String>();
+    @Deprecated
+    Set<String> clientIds = new HashSet<String>();
+
+    /** Clock. */
+    Clock clock = Clock.SYSTEM;
 
     /**
      * Returns an instance of a new builder.
@@ -369,7 +468,7 @@ public class GoogleIdTokenVerifier {
 
     /** Builds a new instance of {@link GoogleIdTokenVerifier}. */
     public GoogleIdTokenVerifier build() {
-      return new GoogleIdTokenVerifier(clientIds, transport, jsonFactory);
+      return new GoogleIdTokenVerifier(this);
     }
 
     /** Returns the HTTP transport. */
@@ -382,7 +481,14 @@ public class GoogleIdTokenVerifier {
       return jsonFactory;
     }
 
-    /** Returns the set of client IDs. */
+    /**
+     * Returns the set of client IDs.
+     *
+     * @deprecated (scheduled to be removed in 1.15) Use
+     *             {@link #verify(GoogleIdToken, Collection, Collection)} or
+     *             {@link #verify(String, Collection, Collection)}
+     */
+    @Deprecated
     public final Set<String> getClientIds() {
       return clientIds;
     }
@@ -394,7 +500,12 @@ public class GoogleIdTokenVerifier {
      * Overriding is only supported for the purpose of calling the super implementation and changing
      * the return type, but nothing else.
      * </p>
+     *
+     * @deprecated (scheduled to be removed in 1.15) Use
+     *             {@link #verify(GoogleIdToken, Collection, Collection)} or
+     *             {@link #verify(String, Collection, Collection)}
      */
+    @Deprecated
     public Builder setClientIds(Iterable<String> clientIds) {
       this.clientIds.clear();
       for (String clientId : clientIds) {
@@ -410,10 +521,38 @@ public class GoogleIdTokenVerifier {
      * Overriding is only supported for the purpose of calling the super implementation and changing
      * the return type, but nothing else.
      * </p>
+     * @deprecated (scheduled to be removed in 1.15) Use
+     *             {@link #verify(GoogleIdToken, Collection, Collection)} or
+     *             {@link #verify(String, Collection, Collection)}
      */
+    @Deprecated
     public Builder setClientIds(String... clientIds) {
       this.clientIds.clear();
       Collections.addAll(this.clientIds, clientIds);
+      return this;
+    }
+
+    /**
+     * Returns the clock.
+     *
+     * @since 1.14
+     */
+    public final Clock getClock() {
+      return clock;
+    }
+
+    /**
+     * Sets the clock.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     *
+     * @since 1.14
+     */
+    public Builder setClock(Clock clock) {
+      this.clock = Preconditions.checkNotNull(clock);
       return this;
     }
   }

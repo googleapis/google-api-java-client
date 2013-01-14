@@ -22,6 +22,7 @@ import com.google.api.client.util.Key;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Collection;
 
 /**
  * Google ID tokens.
@@ -70,7 +71,11 @@ public class GoogleIdToken extends JsonWebSignature {
 
   /**
    * Verifies that this ID token is valid using {@link GoogleIdTokenVerifier#verify(GoogleIdToken)}.
+   *
+   * @deprecated (scheduled to be removed in 1.15) Use
+   *             {@link GoogleIdTokenVerifier#verify(GoogleIdToken, Collection, Collection)}
    */
+  @Deprecated
   public boolean verify(GoogleIdTokenVerifier verifier)
       throws GeneralSecurityException, IOException {
     return verifier.verify(this);
