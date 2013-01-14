@@ -27,12 +27,38 @@ import com.google.api.client.util.ObjectParser;
 public class MockGoogleClient extends AbstractGoogleClient {
 
   /**
+   * @param transport The transport to use for requests
+   * @param rootUrl root URL of the service. Must end with a "/"
+   * @param servicePath service path
+   * @param objectParser object parser or {@code null} for none
+   * @param httpRequestInitializer HTTP request initializer or {@code null} for none
+   *
+   * @since 1.14
+   */
+  public MockGoogleClient(HttpTransport transport, String rootUrl, String servicePath,
+      ObjectParser objectParser, HttpRequestInitializer httpRequestInitializer) {
+    this(new Builder(transport, rootUrl, servicePath, objectParser, httpRequestInitializer));
+  }
+
+  /**
+   * @param builder builder
+   *
+   * @since 1.14
+   */
+  protected MockGoogleClient(Builder builder) {
+    super(builder);
+  }
+
+  /**
    * @param transport HTTP transport
    * @param httpRequestInitializer HTTP request initializer or {@code null} for none
    * @param rootUrl root URL of the service
    * @param servicePath service path
    * @param objectParser object parser
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #MockGoogleClient(HttpTransport,
+   *             String, String, ObjectParser, HttpRequestInitializer)}
    */
+  @Deprecated
   public MockGoogleClient(HttpTransport transport, HttpRequestInitializer httpRequestInitializer,
       String rootUrl, String servicePath, ObjectParser objectParser) {
     super(transport, httpRequestInitializer, rootUrl, servicePath, objectParser);
@@ -49,7 +75,9 @@ public class MockGoogleClient extends AbstractGoogleClient {
    *        {@code null} for none
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
+   * @deprecated (scheduled to be removed in 1.15) Use {@link Builder}
    */
+  @Deprecated
   public MockGoogleClient(HttpTransport transport, HttpRequestInitializer httpRequestInitializer,
       String rootUrl, String servicePath, ObjectParser objectParser,
       GoogleClientRequestInitializer googleClientRequestInitializer, String applicationName,
@@ -71,6 +99,7 @@ public class MockGoogleClient extends AbstractGoogleClient {
      * @param transport The transport to use for requests
      * @param rootUrl root URL of the service. Must end with a "/"
      * @param servicePath service path
+     * @param objectParser object parser or {@code null} for none
      * @param httpRequestInitializer HTTP request initializer or {@code null} for none
      */
     public Builder(HttpTransport transport, String rootUrl, String servicePath,
@@ -80,9 +109,7 @@ public class MockGoogleClient extends AbstractGoogleClient {
 
     @Override
     public MockGoogleClient build() {
-      return new MockGoogleClient(getTransport(), getHttpRequestInitializer(), getRootUrl(),
-          getServicePath(), getObjectParser(), getGoogleClientRequestInitializer(),
-          getApplicationName(), getSuppressPatternChecks());
+      return new MockGoogleClient(this);
     }
 
     @Override

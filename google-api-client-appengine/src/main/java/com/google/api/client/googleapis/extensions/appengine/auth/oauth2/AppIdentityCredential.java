@@ -21,7 +21,6 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
 import com.google.appengine.api.appidentity.AppIdentityServiceFailureException;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
 import java.io.IOException;
@@ -63,14 +62,27 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
    * @param scopes OAuth scopes
    */
   public AppIdentityCredential(Iterable<String> scopes) {
-    this(AppIdentityServiceFactory.getAppIdentityService(), ImmutableList.copyOf(scopes));
+    this(new Builder(scopes));
   }
 
   /**
    * @param scopes OAuth scopes
    */
   public AppIdentityCredential(String... scopes) {
-    this(AppIdentityServiceFactory.getAppIdentityService(), ImmutableList.copyOf(scopes));
+    this(new Builder(scopes));
+  }
+
+  /**
+   * @param builder builder
+   *
+   * @since 1.14
+   */
+  protected AppIdentityCredential(Builder builder) {
+    // Lazily retrieved rather than setting as the default value in order to not add runtime
+    // dependencies on AppIdentityServiceFactory unless it is actually being used.
+    appIdentityService = builder.appIdentityService == null
+        ? AppIdentityServiceFactory.getAppIdentityService() : builder.appIdentityService;
+    scopes = ImmutableList.copyOf(builder.scopes);
   }
 
   /**
@@ -78,9 +90,14 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
    * @param scopes OAuth scopes
    *
    * @since 1.12
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #AppIdentityCredential(Builder)}
    */
+  @Deprecated
   protected AppIdentityCredential(AppIdentityService appIdentityService, List<String> scopes) {
-    this.appIdentityService = Preconditions.checkNotNull(appIdentityService);
+    // Lazily retrieved rather than setting as the default value in order to not add runtime
+    // dependencies on AppIdentityServiceFactory unless it is actually being used.
+    this.appIdentityService = appIdentityService == null
+        ? AppIdentityServiceFactory.getAppIdentityService() : appIdentityService;
     this.scopes = ImmutableList.copyOf(scopes);
   }
 
@@ -133,11 +150,14 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
    */
   public static class Builder {
 
-    /** App Identity Service that provides the access token. */
-    private AppIdentityService appIdentityService;
+    /**
+     * App Identity Service that provides the access token or {@code null} to use
+     * {@link AppIdentityServiceFactory#getAppIdentityService()}.
+     */
+    AppIdentityService appIdentityService;
 
     /** OAuth scopes. */
-    private final ImmutableList<String> scopes;
+    final ImmutableList<String> scopes;
 
     /**
      * Returns an instance of a new builder.
@@ -158,11 +178,18 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
     }
 
     /**
-     * Sets the App Identity Service that provides the access token.
-     * <p>
-     * If not explicitly set, the {@link AppIdentityServiceFactory#getAppIdentityService()} method
-     * will be used to provide the App Identity Service.
-     * </p>
+     * Returns the App Identity Service that provides the access token or {@code null} to use
+     * {@link AppIdentityServiceFactory#getAppIdentityService()}.
+     *
+     * @since 1.14
+     */
+    public final AppIdentityService getAppIdentityService() {
+      return appIdentityService;
+    }
+
+    /**
+     * Sets the App Identity Service that provides the access token or {@code null} to use
+     * {@link AppIdentityServiceFactory#getAppIdentityService()}.
      *
      * <p>
      * Overriding is only supported for the purpose of calling the super implementation and changing
@@ -170,7 +197,7 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
      * </p>
      */
     public Builder setAppIdentityService(AppIdentityService appIdentityService) {
-      this.appIdentityService = Preconditions.checkNotNull(appIdentityService);
+      this.appIdentityService = appIdentityService;
       return this;
     }
 
@@ -178,13 +205,7 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
      * Returns a new {@link AppIdentityCredential}.
      */
     public AppIdentityCredential build() {
-      AppIdentityService appIdentityService = this.appIdentityService;
-      if (appIdentityService == null) {
-        // Lazily retrieved rather than setting as the default value in order to not add runtime
-        // dependencies on AppIdentityServiceFactory unless it is actually being used.
-        appIdentityService = AppIdentityServiceFactory.getAppIdentityService();
-      }
-      return new AppIdentityCredential(appIdentityService, scopes);
+      return new AppIdentityCredential(this);
     }
   }
 }

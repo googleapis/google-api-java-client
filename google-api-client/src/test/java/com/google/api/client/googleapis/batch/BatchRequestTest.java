@@ -229,11 +229,9 @@ public class BatchRequestTest extends TestCase {
               responseContent.append("--" + RESPONSE_BOUNDARY + "\n")
                   .append("Content-Type: application/http\n")
                   .append("Content-Transfer-Encoding: binary\n")
-                  .append("Content-ID: response-1\n\n")
-                  .append("HTTP/1.1 200 OK\n")
+                  .append("Content-ID: response-1\n\n").append("HTTP/1.1 200 OK\n")
                   .append("Content-Type: application/json; charset=UTF-8\n")
-                  .append("Content-Length: " + content2.length() + "\n\n")
-                  .append(content2 + "\n\n")
+                  .append("Content-Length: " + content2.length() + "\n\n").append(content2 + "\n\n")
                   .append("--" + RESPONSE_BOUNDARY + "--\n\n");
             } else {
               String errorContent = new StringBuilder().append(
@@ -248,8 +246,7 @@ public class BatchRequestTest extends TestCase {
                   .append("HTTP/1.1 " + ERROR_CODE + " Not Found\n")
                   .append("Content-Type: application/json; charset=UTF-8\n")
                   .append("Content-Length: " + errorContent.length() + "\n\n")
-                  .append(errorContent + "\n\n")
-                  .append("--" + RESPONSE_BOUNDARY + "--\n\n");
+                  .append(errorContent + "\n\n").append("--" + RESPONSE_BOUNDARY + "--\n\n");
             }
           } else if (returnErrorAuthenticatedContent) {
             responseContent.append("Content-Type: application/http\n")
@@ -262,21 +259,16 @@ public class BatchRequestTest extends TestCase {
             responseContent.append("HTTP/1.1 " + ERROR_CODE + " Not Found\n")
                 .append("Content-Type: application/json; charset=UTF-8\n")
                 .append("Content-Length: " + errorContent.length() + "\n\n")
-                .append(errorContent + "\n\n")
-                .append("--" + RESPONSE_BOUNDARY + "--\n\n");
+                .append(errorContent + "\n\n").append("--" + RESPONSE_BOUNDARY + "--\n\n");
           } else {
             responseContent.append("--" + RESPONSE_BOUNDARY + "\n")
                 .append("Content-Type: application/http\n")
-                .append("Content-Transfer-Encoding: binary\n")
-                .append("Content-ID: response-1\n\n")
+                .append("Content-Transfer-Encoding: binary\n").append("Content-ID: response-1\n\n")
                 .append("HTTP/1.1 200 OK\n")
                 .append("Content-Type: application/json; charset=UTF-8\n")
-                .append("Content-Length: " + content1.length() + "\n\n")
-                .append(content1 + "\n\n")
-                .append("--" + RESPONSE_BOUNDARY + "\n")
-                .append("Content-Type: application/http\n")
-                .append("Content-Transfer-Encoding: binary\n")
-                .append("Content-ID: response-2\n\n");
+                .append("Content-Length: " + content1.length() + "\n\n").append(content1 + "\n\n")
+                .append("--" + RESPONSE_BOUNDARY + "\n").append("Content-Type: application/http\n")
+                .append("Content-Transfer-Encoding: binary\n").append("Content-ID: response-2\n\n");
 
             if (testServerError) {
               String errorContent = new StringBuilder().append(
@@ -287,8 +279,7 @@ public class BatchRequestTest extends TestCase {
               responseContent.append("HTTP/1.1 " + ERROR_CODE + " Not Found\n")
                   .append("Content-Type: application/json; charset=UTF-8\n")
                   .append("Content-Length: " + errorContent.length() + "\n\n")
-                  .append(errorContent + "\n\n")
-                  .append("--" + RESPONSE_BOUNDARY + "--\n\n");
+                  .append(errorContent + "\n\n").append("--" + RESPONSE_BOUNDARY + "--\n\n");
             } else if (testAuthenticationError) {
               responseContent.append("HTTP/1.1 401 Unauthorized\n")
                   .append("Content-Type: application/json; charset=UTF-8\n\n")
@@ -301,8 +292,7 @@ public class BatchRequestTest extends TestCase {
             } else {
               responseContent.append("HTTP/1.1 200 OK\n")
                   .append("Content-Type: application/json; charset=UTF-8\n")
-                  .append("Content-Length: " + content2.length() + "\n\n")
-                  .append(content2 + "\n\n")
+                  .append("Content-Length: " + content2.length() + "\n\n").append(content2 + "\n\n")
                   .append("--" + RESPONSE_BOUNDARY + "--\n\n");
             }
           }
@@ -337,8 +327,9 @@ public class BatchRequestTest extends TestCase {
       boolean testExponentialBackOff, boolean testRedirect) throws Exception {
     transport = new MockTransport(
         testServerError, testAuthenticationError, testExponentialBackOff, testRedirect);
-    MockGoogleClient client = new MockGoogleClient(
-        transport, null, ROOT_URL, SERVICE_PATH, null, null, "Test Application", false);
+    MockGoogleClient client = new MockGoogleClient.Builder(
+        transport, ROOT_URL, SERVICE_PATH, null, null).setApplicationName("Test Application")
+        .build();
     MockGoogleClientRequest<String> jsonHttpRequest1 =
         new MockGoogleClientRequest<String>(client, METHOD1, URI_TEMPLATE1, null, String.class);
     MockGoogleClientRequest<String> jsonHttpRequest2 =
@@ -426,8 +417,9 @@ public class BatchRequestTest extends TestCase {
 
   public void subTestExecuteWithVoidCallback(boolean testServerError) throws Exception {
     MockTransport transport = new MockTransport(testServerError, false, false, false);
-    MockGoogleClient client = new MockGoogleClient(
-        transport, null, ROOT_URL, SERVICE_PATH, null, null, "Test Application", false);
+    MockGoogleClient client = new MockGoogleClient.Builder(
+        transport, ROOT_URL, SERVICE_PATH, null, null).setApplicationName("Test Application")
+        .build();
     MockGoogleClientRequest<String> jsonHttpRequest1 =
         new MockGoogleClientRequest<String>(client, METHOD1, URI_TEMPLATE1, null, String.class);
     MockGoogleClientRequest<String> jsonHttpRequest2 =

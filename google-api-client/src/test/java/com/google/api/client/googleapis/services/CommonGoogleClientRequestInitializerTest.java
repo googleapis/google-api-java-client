@@ -12,8 +12,8 @@
 
 package com.google.api.client.googleapis.services;
 
+import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.util.Key;
@@ -27,27 +27,20 @@ import junit.framework.TestCase;
  */
 public class CommonGoogleClientRequestInitializerTest extends TestCase {
 
-  public static class MyClient extends AbstractGoogleClient {
-
-    public MyClient(HttpTransport transport) {
-      super(
-          transport, null, HttpTesting.SIMPLE_URL, "test/", null, null, "Test Application", false);
-    }
-  }
-
   public static class MyRequest extends AbstractGoogleClientRequest<String> {
     @Key
     String key;
 
-    protected MyRequest(MyClient client, String method, String uriTemplate, HttpContent content,
-        Class<String> responseClass) {
+    protected MyRequest(MockGoogleClient client, String method, String uriTemplate,
+        HttpContent content, Class<String> responseClass) {
       super(client, method, uriTemplate, content, responseClass);
     }
   }
 
   public void testInitialize() throws Exception {
     CommonGoogleClientRequestInitializer key = new CommonGoogleClientRequestInitializer("foo");
-    MyClient client = new MyClient(new MockHttpTransport());
+    MockGoogleClient client = new MockGoogleClient.Builder(new MockHttpTransport(),
+        HttpTesting.SIMPLE_URL, "test/", null, null).setApplicationName("Test Application").build();
     MyRequest request = new MyRequest(client, "GET", "", null, String.class);
     assertNull(request.key);
     key.initialize(request);

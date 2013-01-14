@@ -66,6 +66,26 @@ public abstract class AbstractGoogleClient {
   private boolean suppressPatternChecks;
 
   /**
+   * @param builder builder
+   *
+   * @since 1.14
+   */
+  protected AbstractGoogleClient(Builder builder) {
+    googleClientRequestInitializer = builder.googleClientRequestInitializer;
+    rootUrl = normalizeRootUrl(builder.rootUrl);
+    servicePath = normalizeServicePath(builder.servicePath);
+    if (Strings.isNullOrEmpty(builder.applicationName)) {
+      LOGGER.warning("Application name is not set. Call Builder#setApplicationName.");
+    }
+    applicationName = builder.applicationName;
+    requestFactory = builder.httpRequestInitializer == null
+        ? builder.transport.createRequestFactory()
+        : builder.transport.createRequestFactory(builder.httpRequestInitializer);
+    objectParser = builder.objectParser;
+    suppressPatternChecks = builder.suppressPatternChecks;
+  }
+
+  /**
    * Constructor with required parameters.
    *
    * <p>
@@ -77,7 +97,9 @@ public abstract class AbstractGoogleClient {
    * @param rootUrl root URL of the service
    * @param servicePath service path
    * @param objectParser object parser
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #AbstractGoogleClient(Builder)}
    */
+  @Deprecated
   protected AbstractGoogleClient(HttpTransport transport,
       HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
       ObjectParser objectParser) {
@@ -95,7 +117,9 @@ public abstract class AbstractGoogleClient {
    *        {@code null} for none
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #AbstractGoogleClient(Builder)}
    */
+  @Deprecated
   protected AbstractGoogleClient(HttpTransport transport,
       HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
       ObjectParser objectParser, GoogleClientRequestInitializer googleClientRequestInitializer,
@@ -302,34 +326,34 @@ public abstract class AbstractGoogleClient {
   public abstract static class Builder {
 
     /** HTTP transport. */
-    private final HttpTransport transport;
+    final HttpTransport transport;
 
     /**
      * Initializer to use when creating an {@link AbstractGoogleClientRequest} or {@code null} for
      * none.
      */
-    private GoogleClientRequestInitializer googleClientRequestInitializer;
+    GoogleClientRequestInitializer googleClientRequestInitializer;
 
     /** HTTP request initializer or {@code null} for none. */
-    private HttpRequestInitializer httpRequestInitializer;
+    HttpRequestInitializer httpRequestInitializer;
 
     /** Object parser to use for parsing responses. */
-    private final ObjectParser objectParser;
+    final ObjectParser objectParser;
 
     /** The root URL of the service, for example {@code "https://www.googleapis.com/"}. */
-    private String rootUrl;
+    String rootUrl;
 
     /** The service path of the service, for example {@code "tasks/v1/"}. */
-    private String servicePath;
+    String servicePath;
 
     /**
      * Application name to be sent in the User-Agent header of each request or {@code null} for
      * none.
      */
-    private String applicationName;
+    String applicationName;
 
     /** Whether discovery pattern checks should be suppressed on required parameters. */
-    private boolean suppressPatternChecks;
+    boolean suppressPatternChecks;
 
     /**
      * Returns an instance of a new builder.
@@ -337,12 +361,13 @@ public abstract class AbstractGoogleClient {
      * @param transport The transport to use for requests
      * @param rootUrl root URL of the service. Must end with a "/"
      * @param servicePath service path
+     * @param objectParser object parser or {@code null} for none
      * @param httpRequestInitializer HTTP request initializer or {@code null} for none
      */
     protected Builder(HttpTransport transport, String rootUrl, String servicePath,
         ObjectParser objectParser, HttpRequestInitializer httpRequestInitializer) {
       this.transport = Preconditions.checkNotNull(transport);
-      this.objectParser = Preconditions.checkNotNull(objectParser);
+      this.objectParser = objectParser;
       setRootUrl(rootUrl);
       setServicePath(servicePath);
       this.httpRequestInitializer = httpRequestInitializer;
@@ -357,7 +382,7 @@ public abstract class AbstractGoogleClient {
     }
 
     /**
-     * Returns the object parser used or {@code null} if not specified. *
+     * Returns the object parser or {@code null} for none.
      *
      * <p>
      * Overriding is only supported for the purpose of calling the super implementation and changing
