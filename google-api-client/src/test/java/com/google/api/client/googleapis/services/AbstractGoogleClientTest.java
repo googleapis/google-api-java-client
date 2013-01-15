@@ -24,6 +24,7 @@ import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.http.LowLevelHttpRequest;
@@ -102,7 +103,6 @@ public class AbstractGoogleClientTest extends TestCase {
     assertTrue(remoteRequestInitializer.isCalled);
   }
 
-  /** Tests the normal flow execution. */
   public void testSubscribe() throws Exception {
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     MockHttpTransport transport = new MockHttpTransport() {
@@ -137,6 +137,35 @@ public class AbstractGoogleClientTest extends TestCase {
     assertEquals(1, store.listSubscriptions().size());
     assertEquals(
         subscribeRequest.getSubscriptionId(), response.getSubscription().getSubscriptionId());
+  }
+
+  public void testSubscribeFailed() throws Exception {
+    MemorySubscriptionStore store = new MemorySubscriptionStore();
+    MockHttpTransport transport = new MockHttpTransport() {
+        @Override
+      public LowLevelHttpRequest buildRequest(String method, String url) {
+        assertEquals(HttpMethods.POST, method);
+        return new MockLowLevelHttpRequest(url) {
+            @Override
+          public LowLevelHttpResponse execute() {
+            return new MockLowLevelHttpResponse().setStatusCode(404);
+          }
+        };
+      }
+    };
+    AbstractGoogleClient client = new MockGoogleClient.Builder(
+        transport, HttpTesting.SIMPLE_URL, "", JSON_OBJECT_PARSER, null).setApplicationName(
+        "Test Application").build();
+    MockGoogleClientRequest<String> rq =
+        new MockGoogleClientRequest<String>(client, "GET", "", null, String.class);
+    SubscribeRequest subscribeRequest = rq.subscribe("someDeliveryMethod");
+    try {
+      subscribeRequest.withNotificationCallback(store, new MockNotificationCallback())
+          .setClientToken("someClientToken").execute();
+      fail("exepected " + HttpResponseException.class);
+    } catch (HttpResponseException e) {
+      // expected
+    }
   }
 
   private static final String TEST_RESUMABLE_REQUEST_URL =
