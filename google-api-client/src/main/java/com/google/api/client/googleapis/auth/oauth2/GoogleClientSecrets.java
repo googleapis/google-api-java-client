@@ -158,6 +158,16 @@ public final class GoogleClientSecrets extends GenericJson {
       this.tokenUri = tokenUri;
       return this;
     }
+
+    @Override
+    public Details set(String fieldName, Object value) {
+      return (Details) super.set(fieldName, value);
+    }
+  }
+
+  @Override
+  public GoogleClientSecrets set(String fieldName, Object value) {
+    return (GoogleClientSecrets) super.set(fieldName, value);
   }
 
   /** Loads the {@code client_secrets.json} file from the given input stream. */

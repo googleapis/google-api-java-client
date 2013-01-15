@@ -174,4 +174,9 @@ public class GoogleAuthorizationCodeTokenRequest extends AuthorizationCodeTokenR
   public GoogleTokenResponse execute() throws IOException {
     return executeUnparsed().parseAs(GoogleTokenResponse.class);
   }
+
+  @Override
+  public GoogleAuthorizationCodeTokenRequest set(String fieldName, Object value) {
+    return (GoogleAuthorizationCodeTokenRequest) super.set(fieldName, value);
+  }
 }

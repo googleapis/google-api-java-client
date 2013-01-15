@@ -138,4 +138,9 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
   public Object getJsonContent() {
     return jsonContent;
   }
+
+  @Override
+  public AbstractGoogleJsonClientRequest<T> set(String fieldName, Object value) {
+    return (AbstractGoogleJsonClientRequest<T>) super.set(fieldName, value);
+  }
 }

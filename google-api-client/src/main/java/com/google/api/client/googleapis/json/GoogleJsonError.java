@@ -172,6 +172,11 @@ public class GoogleJsonError extends GenericJson {
     public final void setLocationType(String locationType) {
       this.locationType = locationType;
     }
+
+    @Override
+    public ErrorInfo set(String fieldName, Object value) {
+      return (ErrorInfo) super.set(fieldName, value);
+    }
   }
 
   /** List of detailed errors or {@code null} for none. */
@@ -239,4 +244,10 @@ public class GoogleJsonError extends GenericJson {
   public final void setMessage(String message) {
     this.message = message;
   }
+
+  @Override
+  public GoogleJsonError set(String fieldName, Object value) {
+    return (GoogleJsonError) super.set(fieldName, value);
+  }
+
 }

@@ -128,4 +128,9 @@ public class GoogleRefreshTokenRequest extends RefreshTokenRequest {
   public GoogleTokenResponse execute() throws IOException {
     return executeUnparsed().parseAs(GoogleTokenResponse.class);
   }
+
+  @Override
+  public GoogleRefreshTokenRequest set(String fieldName, Object value) {
+    return (GoogleRefreshTokenRequest) super.set(fieldName, value);
+  }
 }
