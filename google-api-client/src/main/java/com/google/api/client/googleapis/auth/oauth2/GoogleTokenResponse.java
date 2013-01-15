@@ -92,4 +92,9 @@ public class GoogleTokenResponse extends IdTokenResponse {
       throws GeneralSecurityException, IOException {
     return verifier.verify(parseIdToken());
   }
+
+  @Override
+  public GoogleTokenResponse set(String fieldName, Object value) {
+    return (GoogleTokenResponse) super.set(fieldName, value);
+  }
 }

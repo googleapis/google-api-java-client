@@ -51,4 +51,9 @@ public class MockGoogleClientRequest<T> extends AbstractGoogleClientRequest<T> {
   public MockGoogleClientRequest<T> setRequestHeaders(HttpHeaders headers) {
     return (MockGoogleClientRequest<T>) super.setRequestHeaders(headers);
   }
+
+  @Override
+  public MockGoogleClientRequest<T> set(String fieldName, Object value) {
+    return (MockGoogleClientRequest<T>) super.set(fieldName, value);
+  }
 }

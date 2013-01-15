@@ -600,4 +600,14 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     Preconditions.checkArgument(uploader == null, "Batching media requests is not supported");
     batchRequest.queue(buildHttpRequest(), getResponseClass(), errorClass, callback);
   }
+
+  // @SuppressWarnings was added here because this is generic class.
+  // see: http://stackoverflow.com/questions/4169806/java-casting-object-to-a-generic-type and
+  // http://www.angelikalanger.com/GenericsFAQ/FAQSections/TechnicalDetails.html#Type%20Erasure
+  // for more details
+  @SuppressWarnings("unchecked")
+  @Override
+  public AbstractGoogleClientRequest<T> set(String fieldName, Object value) {
+    return (AbstractGoogleClientRequest<T>) super.set(fieldName, value);
+  }
 }

@@ -231,5 +231,10 @@ public class GoogleIdToken extends JsonWebSignature {
       this.emailVerified = emailVerified;
       return this;
     }
+
+    @Override
+    public Payload set(String fieldName, Object value) {
+      return (Payload) super.set(fieldName, value);
+    }
   }
 }

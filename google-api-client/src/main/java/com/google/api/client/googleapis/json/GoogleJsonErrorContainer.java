@@ -37,4 +37,9 @@ public class GoogleJsonErrorContainer extends GenericJson {
   public final void setError(GoogleJsonError error) {
     this.error = error;
   }
+
+  @Override
+  public GoogleJsonErrorContainer set(String fieldName, Object value) {
+    return (GoogleJsonErrorContainer) super.set(fieldName, value);
+  }
 }

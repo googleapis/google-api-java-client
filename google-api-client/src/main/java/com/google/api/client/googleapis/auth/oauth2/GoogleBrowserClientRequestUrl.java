@@ -144,4 +144,9 @@ public class GoogleBrowserClientRequestUrl extends BrowserClientRequestUrl {
   public GoogleBrowserClientRequestUrl setState(String state) {
     return (GoogleBrowserClientRequestUrl) super.setState(state);
   }
+
+  @Override
+  public GoogleBrowserClientRequestUrl set(String fieldName, Object value) {
+    return (GoogleBrowserClientRequestUrl) super.set(fieldName, value);
+  }
 }
