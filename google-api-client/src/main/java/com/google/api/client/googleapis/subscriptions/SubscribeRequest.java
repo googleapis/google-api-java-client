@@ -100,9 +100,9 @@ public class SubscribeRequest {
 
       public void interceptResponse(HttpResponse response) throws IOException {
         HttpHeaders headers = response.getHeaders();
-        Preconditions.checkArgument(
-            SubscriptionHeaders.getSubscriptionId(headers).equals(getSubscriptionId()));
         if (response.isSuccessStatusCode()) {
+          Preconditions.checkArgument(
+              SubscriptionHeaders.getSubscriptionId(headers).equals(getSubscriptionId()));
           subscription.processResponse(SubscriptionHeaders.getSubscriptionExpires(headers),
               SubscriptionHeaders.getTopicId(headers));
           subscriptionStore.storeSubscription(subscription);
