@@ -198,4 +198,9 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
   public GoogleAuthorizationCodeRequestUrl set(String fieldName, Object value) {
     return (GoogleAuthorizationCodeRequestUrl) super.set(fieldName, value);
   }
+
+  @Override
+  public GoogleAuthorizationCodeRequestUrl clone() {
+    return (GoogleAuthorizationCodeRequestUrl) super.clone();
+  }
 }

@@ -97,4 +97,9 @@ public class GoogleTokenResponse extends IdTokenResponse {
   public GoogleTokenResponse set(String fieldName, Object value) {
     return (GoogleTokenResponse) super.set(fieldName, value);
   }
+
+  @Override
+  public GoogleTokenResponse clone() {
+    return (GoogleTokenResponse) super.clone();
+  }
 }

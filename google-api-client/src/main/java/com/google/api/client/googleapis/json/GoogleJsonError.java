@@ -177,6 +177,11 @@ public class GoogleJsonError extends GenericJson {
     public ErrorInfo set(String fieldName, Object value) {
       return (ErrorInfo) super.set(fieldName, value);
     }
+
+    @Override
+    public ErrorInfo clone() {
+      return (ErrorInfo) super.clone();
+    }
   }
 
   /** List of detailed errors or {@code null} for none. */
@@ -250,4 +255,8 @@ public class GoogleJsonError extends GenericJson {
     return (GoogleJsonError) super.set(fieldName, value);
   }
 
+  @Override
+  public GoogleJsonError clone() {
+    return (GoogleJsonError) super.clone();
+  }
 }
