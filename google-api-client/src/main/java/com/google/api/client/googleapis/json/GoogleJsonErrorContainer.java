@@ -42,4 +42,9 @@ public class GoogleJsonErrorContainer extends GenericJson {
   public GoogleJsonErrorContainer set(String fieldName, Object value) {
     return (GoogleJsonErrorContainer) super.set(fieldName, value);
   }
+
+  @Override
+  public GoogleJsonErrorContainer clone() {
+    return (GoogleJsonErrorContainer) super.clone();
+  }
 }

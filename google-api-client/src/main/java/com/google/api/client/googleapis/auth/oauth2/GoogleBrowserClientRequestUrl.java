@@ -149,4 +149,9 @@ public class GoogleBrowserClientRequestUrl extends BrowserClientRequestUrl {
   public GoogleBrowserClientRequestUrl set(String fieldName, Object value) {
     return (GoogleBrowserClientRequestUrl) super.set(fieldName, value);
   }
+
+  @Override
+  public GoogleBrowserClientRequestUrl clone() {
+    return (GoogleBrowserClientRequestUrl) super.clone();
+  }
 }

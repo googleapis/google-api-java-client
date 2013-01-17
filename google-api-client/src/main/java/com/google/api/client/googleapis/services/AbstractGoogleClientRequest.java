@@ -610,4 +610,9 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   public AbstractGoogleClientRequest<T> set(String fieldName, Object value) {
     return (AbstractGoogleClientRequest<T>) super.set(fieldName, value);
   }
+
+  @Override
+  public GenericData clone() {
+    throw new UnsupportedOperationException();
+  }
 }

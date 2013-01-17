@@ -163,11 +163,21 @@ public final class GoogleClientSecrets extends GenericJson {
     public Details set(String fieldName, Object value) {
       return (Details) super.set(fieldName, value);
     }
+
+    @Override
+    public Details clone() {
+      return (Details) super.clone();
+    }
   }
 
   @Override
   public GoogleClientSecrets set(String fieldName, Object value) {
     return (GoogleClientSecrets) super.set(fieldName, value);
+  }
+
+  @Override
+  public GoogleClientSecrets clone() {
+    return (GoogleClientSecrets) super.clone();
   }
 
   /** Loads the {@code client_secrets.json} file from the given input stream. */

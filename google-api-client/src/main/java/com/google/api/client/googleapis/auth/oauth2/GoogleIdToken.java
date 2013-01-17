@@ -236,5 +236,10 @@ public class GoogleIdToken extends JsonWebSignature {
     public Payload set(String fieldName, Object value) {
       return (Payload) super.set(fieldName, value);
     }
+
+    @Override
+    public Payload clone() {
+      return (Payload) super.clone();
+    }
   }
 }
