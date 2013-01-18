@@ -65,6 +65,9 @@ public abstract class AbstractGoogleClient {
   /** Whether discovery pattern checks should be suppressed on required parameters. */
   private boolean suppressPatternChecks;
 
+  /** Whether discovery required parameter checks should be suppressed. */
+  private boolean suppressRequiredParameterChecks;
+
   /**
    * @param builder builder
    *
@@ -83,6 +86,7 @@ public abstract class AbstractGoogleClient {
         : builder.transport.createRequestFactory(builder.httpRequestInitializer);
     objectParser = builder.objectParser;
     suppressPatternChecks = builder.suppressPatternChecks;
+    suppressRequiredParameterChecks = builder.suppressRequiredParameterChecks;
   }
 
   /**
@@ -286,6 +290,15 @@ public abstract class AbstractGoogleClient {
     return suppressPatternChecks;
   }
 
+  /**
+   * Returns whether discovery required parameter checks should be suppressed.
+   *
+   * @since 1.14
+   */
+  public final boolean getSuppressRequiredParameterChecks() {
+    return suppressRequiredParameterChecks;
+  }
+
   /** If the specified root URL does not end with a "/" then a "/" is added to the end. */
   static String normalizeRootUrl(String rootUrl) {
     Preconditions.checkNotNull(rootUrl, "root URL cannot be null.");
@@ -354,6 +367,9 @@ public abstract class AbstractGoogleClient {
 
     /** Whether discovery pattern checks should be suppressed on required parameters. */
     boolean suppressPatternChecks;
+
+    /** Whether discovery required parameter checks should be suppressed. */
+    private boolean suppressRequiredParameterChecks;
 
     /**
      * Returns an instance of a new builder.
@@ -537,6 +553,48 @@ public abstract class AbstractGoogleClient {
     public Builder setSuppressPatternChecks(boolean suppressPatternChecks) {
       this.suppressPatternChecks = suppressPatternChecks;
       return this;
+    }
+
+    /**
+     * Returns whether discovery required parameter checks should be suppressed.
+     *
+     * @since 1.14
+     */
+    public final boolean getSuppressRequiredParameterChecks() {
+      return suppressRequiredParameterChecks;
+    }
+
+    /**
+     * Sets whether discovery required parameter checks should be suppressed.
+     *
+     * <p>
+     * Default value is {@code false}.
+     * </p>
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     *
+     * @since 1.14
+     */
+    public Builder setSuppressRequiredParameterChecks(boolean suppressRequiredParameterChecks) {
+      this.suppressRequiredParameterChecks = suppressRequiredParameterChecks;
+      return this;
+    }
+
+    /**
+     * Suppresses all discovery pattern and required parameter checks.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     *
+     * @since 1.14
+     */
+    public Builder setSuppressAllChecks(boolean suppressAllChecks) {
+      return setSuppressPatternChecks(true).setSuppressRequiredParameterChecks(true);
     }
   }
 }

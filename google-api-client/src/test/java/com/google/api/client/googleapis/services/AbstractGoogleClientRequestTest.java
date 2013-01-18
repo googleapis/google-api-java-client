@@ -148,4 +148,23 @@ public class AbstractGoogleClientRequestTest extends TestCase {
     httpRequest = request.buildHttpRequest();
     assertFalse(httpRequest.getEnableGZipContent());
   }
+
+  public void testCheckRequiredParameter() throws Exception {
+    HttpTransport transport = new MockHttpTransport();
+    MockGoogleClient client = new MockGoogleClient.Builder(
+        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).setApplicationName(
+        "Test Application").build();
+    MockGoogleClientRequest<String> request = new MockGoogleClientRequest<String>(
+        client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
+
+    // Should not throw an Exception.
+    request.checkRequiredParameter("Not Null", "notNull()");
+
+    try {
+      request.checkRequiredParameter(null, "content.getTest().getAnotherTest()");
+      fail("Expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException iae) {
+      // Expected.
+    }
+  }
 }
