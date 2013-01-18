@@ -75,7 +75,8 @@ public class AbstractGoogleClientTest extends TestCase {
 
     AbstractGoogleClient.Builder setApplicationName = new MockGoogleClient.Builder(
         TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null).setApplicationName(
-        applicationName).setGoogleClientRequestInitializer(jsonHttpRequestInitializer);
+        applicationName).setGoogleClientRequestInitializer(jsonHttpRequestInitializer)
+        .setSuppressAllChecks(true);
     AbstractGoogleClient client = setApplicationName.build();
 
     assertEquals(rootUrl + servicePath, client.getBaseUrl());
@@ -83,6 +84,23 @@ public class AbstractGoogleClientTest extends TestCase {
     assertEquals(servicePath, client.getServicePath());
     assertEquals(applicationName, client.getApplicationName());
     assertEquals(jsonHttpRequestInitializer, client.getGoogleClientRequestInitializer());
+    assertTrue(client.getSuppressPatternChecks());
+    assertTrue(client.getSuppressRequiredParameterChecks());
+  }
+
+  public void testGoogleClientSuppressionDefaults() {
+    String rootUrl = "http://www.testgoogleapis.com/test/";
+    String servicePath = "path/v1/";
+
+    // Assert suppression defaults.
+    AbstractGoogleClient.Builder googleClientBuilder = new MockGoogleClient.Builder(
+        TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null);
+    assertFalse(googleClientBuilder.getSuppressPatternChecks());
+    assertFalse(googleClientBuilder.getSuppressRequiredParameterChecks());
+
+    AbstractGoogleClient googleClient = googleClientBuilder.build();
+    assertFalse(googleClient.getSuppressPatternChecks());
+    assertFalse(googleClient.getSuppressRequiredParameterChecks());
   }
 
   public void testBaseServerAndBasePathBuilder() {
