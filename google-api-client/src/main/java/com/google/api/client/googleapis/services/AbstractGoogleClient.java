@@ -369,7 +369,7 @@ public abstract class AbstractGoogleClient {
     boolean suppressPatternChecks;
 
     /** Whether discovery required parameter checks should be suppressed. */
-    private boolean suppressRequiredParameterChecks;
+    boolean suppressRequiredParameterChecks;
 
     /**
      * Returns an instance of a new builder.
