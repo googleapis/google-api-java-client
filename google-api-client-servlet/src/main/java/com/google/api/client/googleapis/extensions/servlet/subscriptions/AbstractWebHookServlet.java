@@ -95,7 +95,7 @@ public abstract class AbstractWebHookServlet extends HttpServlet {
   protected abstract SubscriptionStore createSubscriptionStore();
 
   /** Returns the (cached) subscription store. */
-  public final SubscriptionStore getSubscriptionStore() {
+  public final synchronized SubscriptionStore getSubscriptionStore() {
     if (subscriptionStore == null) {
       subscriptionStore = createSubscriptionStore();
     }
