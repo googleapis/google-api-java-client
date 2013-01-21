@@ -615,4 +615,20 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   public GenericData clone() {
     throw new UnsupportedOperationException();
   }
+
+  /**
+   * Ensures that the specified required parameter is not null or
+   * {@link AbstractGoogleClient#getSuppressRequiredParameterChecks()} is true.
+   *
+   * @param value the value of the required parameter
+   * @param name the name of the required parameter
+   * @throws IllegalArgumentException if the specified required parameter is null and
+             {@link AbstractGoogleClient#getSuppressRequiredParameterChecks()} is false
+   * @since 1.14
+   */
+  protected final void checkRequiredParameter(Object value, String name) {
+    Preconditions.checkArgument(
+        abstractGoogleClient.getSuppressRequiredParameterChecks() || value != null,
+        "Required parameter %s must be specified", name);
+  }
 }
