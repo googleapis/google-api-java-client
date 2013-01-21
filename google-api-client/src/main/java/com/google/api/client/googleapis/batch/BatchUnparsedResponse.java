@@ -28,7 +28,6 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.StringUtils;
-import com.google.common.base.Preconditions;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -107,7 +106,6 @@ final class BatchUnparsedResponse {
 
     // Extract the status code.
     String statusLine = bufferedReader.readLine();
-    Preconditions.checkState(statusLine != null);
     String[] statusParts = statusLine.split(" ");
     int statusCode = Integer.parseInt(statusParts[1]);
 
