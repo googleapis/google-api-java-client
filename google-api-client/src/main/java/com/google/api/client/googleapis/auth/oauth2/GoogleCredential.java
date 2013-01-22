@@ -39,6 +39,7 @@ import com.google.common.base.Preconditions;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.util.Arrays;
@@ -577,7 +578,8 @@ public class GoogleCredential extends Credential {
     public Builder setServiceAccountPrivateKeyFromPemFile(File pemFile)
         throws GeneralSecurityException, IOException {
       serviceAccountPrivateKey = SecurityUtils.loadPkcs8PrivateKeyFromPem(
-          SecurityUtils.getRsaKeyFactory(), new FileInputStream(pemFile));
+          SecurityUtils.getRsaKeyFactory(), new FileInputStream(pemFile),
+          Charset.defaultCharset().name());
       return this;
     }
 
