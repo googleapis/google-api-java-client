@@ -611,11 +611,6 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     return (AbstractGoogleClientRequest<T>) super.set(fieldName, value);
   }
 
-  @Override
-  public GenericData clone() {
-    throw new UnsupportedOperationException();
-  }
-
   /**
    * Ensures that the specified required parameter is not null or
    * {@link AbstractGoogleClient#getSuppressRequiredParameterChecks()} is true.
