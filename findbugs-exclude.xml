@@ -7,11 +7,6 @@
 
   <!-- The following are known to be bugs and should be fixed -->
   <And>
-    <Bug pattern="DM_DEFAULT_ENCODING"/>
-    <!-- Reliance on default encoding -->
-    <Class name="com.google.api.client.googleapis.batch.MultipartMixedContent"/>
-  </And>
-  <And>
     <Package name="com.google.api.client.googleapis.auth.clientlogin"/>
   </And>
 

@@ -29,13 +29,14 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
-import com.google.api.client.http.MultipartRelatedContent;
+import com.google.api.client.http.MultipartContent;
 import com.google.common.base.Preconditions;
 import com.google.common.io.LimitInputStream;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 /**
  * Media HTTP Uploader, with support for both direct and resumable media uploads. Documentation is
@@ -294,7 +295,7 @@ public final class MediaHttpUploader {
 
       HttpContent content = mediaContent;
       if (metadata != null) {
-        content = new MultipartRelatedContent(metadata, mediaContent);
+        content = new MultipartContent().setContentParts(Arrays.asList(metadata, mediaContent));
         initiationRequestUrl.put("uploadType", "multipart");
       } else {
         initiationRequestUrl.put("uploadType", "media");
