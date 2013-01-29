@@ -17,11 +17,13 @@ package com.google.api.client.googleapis.batch;
 import com.google.api.client.http.BackOffPolicy;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteInterceptor;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.MultipartContent;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
@@ -99,9 +101,7 @@ public final class BatchRequest {
     final Class<E> errorClass;
     final HttpRequest request;
 
-    RequestInfo(BatchCallback<T, E> callback,
-        Class<T> dataClass,
-        Class<E> errorClass,
+    RequestInfo(BatchCallback<T, E> callback, Class<T> dataClass, Class<E> errorClass,
         HttpRequest request) {
       this.callback = callback;
       this.dataClass = dataClass;
@@ -119,8 +119,7 @@ public final class BatchRequest {
    */
   public BatchRequest(HttpTransport transport, HttpRequestInitializer httpRequestInitializer) {
     this.requestFactory = httpRequestInitializer == null
-        ? transport.createRequestFactory() : transport
-        .createRequestFactory(httpRequestInitializer);
+        ? transport.createRequestFactory() : transport.createRequestFactory(httpRequestInitializer);
   }
 
   /**
@@ -152,9 +151,7 @@ public final class BatchRequest {
    * @return this Batch request
    * @throws IOException If building the HTTP Request fails
    */
-  public <T, E> BatchRequest queue(HttpRequest httpRequest,
-      Class<T> dataClass,
-      Class<E> errorClass,
+  public <T, E> BatchRequest queue(HttpRequest httpRequest, Class<T> dataClass, Class<E> errorClass,
       BatchCallback<T, E> callback) throws IOException {
     Preconditions.checkNotNull(httpRequest);
     // TODO(rmistry): Add BatchUnparsedCallback with onResponse(InputStream content, HttpHeaders).
@@ -186,6 +183,7 @@ public final class BatchRequest {
     boolean retryAllowed;
     Preconditions.checkState(!requestInfos.isEmpty());
     HttpRequest batchRequest = requestFactory.buildPostRequest(this.batchUrl, null);
+    // NOTE: batch does not support gzip encoding
     HttpExecuteInterceptor originalInterceptor = batchRequest.getInterceptor();
     batchRequest.setInterceptor(new BatchInterceptor(originalInterceptor));
     int retriesRemaining = batchRequest.getNumberOfRetries();
@@ -198,7 +196,15 @@ public final class BatchRequest {
 
     do {
       retryAllowed = retriesRemaining > 0;
-      batchRequest.setContent(new MultipartMixedContent(requestInfos, "__END_OF_PART__"));
+      MultipartContent batchContent = new MultipartContent();
+      batchContent.getMediaType().setSubType("mixed");
+      int contentId = 1;
+      for (RequestInfo<?, ?> requestInfo : requestInfos) {
+        batchContent.addPart(new MultipartContent.Part(
+            new HttpHeaders().setAcceptEncoding(null).set("Content-ID", contentId++),
+            new HttpRequestContent(requestInfo.request)));
+      }
+      batchRequest.setContent(batchContent);
       HttpResponse response = batchRequest.execute();
       BatchUnparsedResponse batchResponse;
       try {
