@@ -452,7 +452,7 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>clirr-maven-plugin</artifactId>
         <configuration>
-          <comparisonVersion>1.13.0-beta</comparisonVersion>
+          <comparisonVersion>1.13.2-beta</comparisonVersion>
           <ignoredDifferencesFile>${basedir}/../clirr-ignored-differences.xml</ignoredDifferencesFile>
         </configuration>
         <executions>

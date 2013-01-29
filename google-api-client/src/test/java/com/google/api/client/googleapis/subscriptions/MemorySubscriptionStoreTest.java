@@ -15,7 +15,7 @@
 package com.google.api.client.googleapis.subscriptions;
 
 import com.google.api.client.googleapis.testing.subscriptions.MockNotificationCallback;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 import junit.framework.TestCase;
 
@@ -28,30 +28,30 @@ public class MemorySubscriptionStoreTest extends TestCase {
 
   public void testStoreAndGet() {
     MockNotificationCallback handler = new MockNotificationCallback();
-    Subscription s = new Subscription(handler, "clientToken", "id");
+    Subscription s = new Subscription(handler);
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     store.storeSubscription(s);
-    assertEquals(s, store.getSubscription("id"));
+    assertEquals(s, store.getSubscription(s.getSubscriptionId()));
     assertEquals(null, store.getSubscription("does_not_exist"));
   }
 
   public void testList() {
     MockNotificationCallback handler = new MockNotificationCallback();
-    Subscription s1 = new Subscription(handler, "clientToken", "id1");
-    Subscription s2 = new Subscription(handler, "clientToken", "id2");
+    Subscription s1 = new Subscription(handler);
+    Subscription s2 = new Subscription(handler);
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     store.storeSubscription(s1);
     store.storeSubscription(s2);
     assertEquals(2, store.listSubscriptions().size());
-    assertEquals(ImmutableList.of(s1, s2), ImmutableList.copyOf(store.listSubscriptions()));
+    assertEquals(ImmutableSet.of(s1, s2), ImmutableSet.copyOf(store.listSubscriptions()));
   }
 
   public void testRemove() {
     MockNotificationCallback handler = new MockNotificationCallback();
-    Subscription s = new Subscription(handler, "clientToken", "id");
+    Subscription s = new Subscription(handler);
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     store.storeSubscription(s);
     store.removeSubscription(s);
-    assertEquals(null, store.getSubscription("id"));
+    assertEquals(null, store.getSubscription(s.getSubscriptionId()));
   }
 }

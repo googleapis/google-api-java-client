@@ -15,7 +15,6 @@
 package com.google.api.client.googleapis.extensions.servlet.subscriptions;
 
 import com.google.api.client.googleapis.subscriptions.NotificationHeaders;
-import com.google.api.client.googleapis.subscriptions.SubscriptionHeaders;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.googleapis.subscriptions.UnparsedNotification;
 
@@ -117,11 +116,11 @@ public abstract class AbstractWebHookServlet extends HttpServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
     // Parse the relevant headers and create an unparsed notification.
-    String subscriptionId = req.getHeader(SubscriptionHeaders.SUBSCRIPTION_ID);
-    String topicId = req.getHeader(SubscriptionHeaders.TOPIC_ID);
-    String topicUri = req.getHeader(SubscriptionHeaders.TOPIC_URI);
+    String subscriptionId = req.getHeader(NotificationHeaders.SUBSCRIPTION_ID);
+    String topicId = req.getHeader(NotificationHeaders.TOPIC_ID);
+    String topicUri = req.getHeader(NotificationHeaders.TOPIC_URI);
     String eventType = req.getHeader(NotificationHeaders.EVENT_TYPE_HEADER);
-    String clientToken = req.getHeader(SubscriptionHeaders.CLIENT_TOKEN);
+    String clientToken = req.getHeader(NotificationHeaders.CLIENT_TOKEN);
     String messageNumber = req.getHeader(NotificationHeaders.MESSAGE_NUMBER_HEADER);
     String changeType = req.getHeader(NotificationHeaders.CHANGED_HEADER);
     if (subscriptionId == null || topicId == null || topicUri == null || eventType == null

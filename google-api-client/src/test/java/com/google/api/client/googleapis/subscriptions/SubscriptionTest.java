@@ -35,13 +35,15 @@ public class SubscriptionTest extends TestCase {
 
   public void testConstructor() {
     SomeNotificationCallback callback = new SomeNotificationCallback();
-    Subscription subscription = new Subscription(
-        callback, CLIENT_TOKEN_VALUE, SUBSCRIPTION_ID_VALUE).processResponse(
-        SUBSCRIPTION_EXPIRES_VALUE, TOPIC_ID_VALUE);
+    Subscription subscription = new Subscription(callback, SUBSCRIPTION_ID_VALUE).setClientToken(
+        CLIENT_TOKEN_VALUE)
+        .setSubscriptionExpires(SUBSCRIPTION_EXPIRES_VALUE).setTopicId(TOPIC_ID_VALUE);
     assertEquals(SUBSCRIPTION_ID_VALUE, subscription.getSubscriptionId());
     assertEquals(TOPIC_ID_VALUE, subscription.getTopicId());
     assertEquals(CLIENT_TOKEN_VALUE, subscription.getClientToken());
     assertEquals(SUBSCRIPTION_EXPIRES_VALUE, subscription.getSubscriptionExpires());
     assertEquals(callback, subscription.getNotificationCallback());
+    subscription = new Subscription(callback);
+    assertNotNull(subscription.getSubscriptionId());
   }
 }

@@ -17,7 +17,6 @@ import com.google.api.client.googleapis.batch.BatchCallback;
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.media.MediaHttpDownloader;
 import com.google.api.client.googleapis.media.MediaHttpUploader;
-import com.google.api.client.googleapis.subscriptions.SubscribeRequest;
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GZipEncoding;
@@ -210,23 +209,6 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /** Returns the response class to parse into. */
   public final Class<T> getResponseClass() {
     return responseClass;
-  }
-
-  /**
-   * Subscribes to notifications for a resource or collection.
-   *
-   * <p>
-   * Overriding is only supported for the purpose of changing visibility to public, but nothing
-   * else.
-   * </p>
-   *
-   * @param notificationDeliveryMethod notification delivery method
-   * @throws IOException
-   *
-   * @since 1.14
-   */
-  protected SubscribeRequest subscribe(String notificationDeliveryMethod) throws IOException {
-    return new SubscribeRequest(buildHttpRequest(), notificationDeliveryMethod);
   }
 
   /** Returns the media HTTP Uploader or {@code null} for none. */
