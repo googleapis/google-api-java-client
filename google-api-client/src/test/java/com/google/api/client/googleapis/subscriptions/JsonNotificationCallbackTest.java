@@ -85,7 +85,7 @@ public class JsonNotificationCallbackTest extends TestCase {
     }
     UnparsedNotification notification = new UnparsedNotification(
         "id", "topic", "uri", "token", 1, "event", null, contentType, inputStream);
-    Subscription subscription = new Subscription(handler, "clientToken", "id");
+    Subscription subscription = new Subscription(handler);
     handler.handleNotification(subscription, notification);
     return handler.lastNotification.getContent();
   }

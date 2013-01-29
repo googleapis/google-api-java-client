@@ -19,7 +19,6 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.json.JsonCContent;
 import com.google.api.client.googleapis.json.JsonCParser;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
-import com.google.api.client.googleapis.subscriptions.json.JsonSubscribeRequest;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.UriTemplate;
@@ -113,25 +112,6 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
   @Override
   protected GoogleJsonResponseException newExceptionOnError(HttpResponse response) {
     return GoogleJsonResponseException.from(getAbstractGoogleClient().getJsonFactory(), response);
-  }
-
-  /**
-   * Subscribes to parsed JSON notifications.
-   *
-   * <p>
-   * Overriding is only supported for the purpose of changing visibility to public, but nothing
-   * else.
-   * </p>
-   *
-   * @param notificationDeliveryMethod notification delivery method
-   * @throws IOException
-   *
-   * @since 1.14
-   */
-  @Override
-  protected JsonSubscribeRequest subscribe(String notificationDeliveryMethod) throws IOException {
-    return new JsonSubscribeRequest(
-        buildHttpRequest(), notificationDeliveryMethod, getAbstractGoogleClient().getJsonFactory());
   }
 
   /** Returns POJO that can be serialized into JSON content or {@code null} for none. */
