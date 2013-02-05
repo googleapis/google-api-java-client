@@ -24,6 +24,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.StringUtils;
+import com.google.api.client.util.Strings;
 
 import java.io.IOException;
 
@@ -185,7 +186,7 @@ public final class ClientLogin {
     ErrorInfo details = response.parseAs(ErrorInfo.class);
     String detailString = details.toString();
     StringBuilder message = HttpResponseException.computeMessageBuffer(response);
-    if (!com.google.common.base.Strings.isNullOrEmpty(detailString)) {
+    if (!Strings.isNullOrEmpty(detailString)) {
       message.append(StringUtils.LINE_SEPARATOR).append(detailString);
       builder.setContent(detailString);
     }

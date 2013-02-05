@@ -18,8 +18,8 @@ import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.ObjectParser;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+import com.google.api.client.util.Preconditions;
+import com.google.api.client.util.Strings;
 
 import java.io.IOException;
 import java.util.logging.Logger;

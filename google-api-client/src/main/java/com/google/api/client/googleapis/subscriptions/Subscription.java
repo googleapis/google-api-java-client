@@ -14,8 +14,8 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Objects;
+import com.google.api.client.util.Preconditions;
 
 import java.io.Serializable;
 import java.util.UUID;

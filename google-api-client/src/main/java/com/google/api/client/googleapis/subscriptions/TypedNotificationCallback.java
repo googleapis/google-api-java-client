@@ -16,7 +16,7 @@ package com.google.api.client.googleapis.subscriptions;
 
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.util.ObjectParser;
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

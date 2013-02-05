@@ -15,7 +15,7 @@
 package com.google.api.client.googleapis.extensions.servlet.subscriptions;
 
 import com.google.api.client.http.GenericUrl;
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 
 /**
  * Builds delivery method strings for subscribing to notifications via WebHook.
