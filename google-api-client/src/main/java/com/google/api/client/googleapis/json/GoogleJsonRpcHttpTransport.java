@@ -23,7 +23,7 @@ import com.google.api.client.json.CustomizeJsonParser;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.rpc2.JsonRpcRequest;
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
 import java.util.Collection;

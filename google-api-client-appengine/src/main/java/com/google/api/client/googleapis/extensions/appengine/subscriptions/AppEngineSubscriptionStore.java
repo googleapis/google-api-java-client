@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.extensions.appengine.subscriptions;
 
 import com.google.api.client.googleapis.subscriptions.Subscription;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
+import com.google.api.client.util.Lists;
 import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -24,7 +25,6 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-import com.google.common.collect.Lists;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

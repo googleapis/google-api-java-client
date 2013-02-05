@@ -14,7 +14,7 @@
 
 package com.google.api.client.googleapis.extensions.android.accounts;
 
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;

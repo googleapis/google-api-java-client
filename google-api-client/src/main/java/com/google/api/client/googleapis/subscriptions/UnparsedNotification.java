@@ -14,8 +14,8 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+import com.google.api.client.util.Preconditions;
+import com.google.api.client.util.Strings;
 
 import java.io.IOException;
 import java.io.InputStream;

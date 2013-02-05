@@ -32,9 +32,9 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Clock;
+import com.google.api.client.util.Joiner;
+import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 
 import java.io.File;
 import java.io.FileInputStream;

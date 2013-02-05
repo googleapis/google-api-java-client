@@ -25,7 +25,7 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 
 import android.accounts.Account;
 import android.content.Context;

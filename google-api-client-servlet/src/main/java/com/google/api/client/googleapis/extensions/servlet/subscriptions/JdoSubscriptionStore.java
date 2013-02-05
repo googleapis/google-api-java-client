@@ -16,8 +16,8 @@ package com.google.api.client.googleapis.extensions.servlet.subscriptions;
 
 import com.google.api.client.googleapis.subscriptions.Subscription;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
+import com.google.api.client.util.Lists;
+import com.google.api.client.util.Preconditions;
 
 import java.util.List;
 
