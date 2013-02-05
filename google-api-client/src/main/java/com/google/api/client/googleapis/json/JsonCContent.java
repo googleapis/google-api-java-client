@@ -49,7 +49,9 @@ import java.io.OutputStream;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.15) Use {@link JsonHttpContent} instead.
  */
+@Deprecated
 public final class JsonCContent extends JsonHttpContent {
 
   /**

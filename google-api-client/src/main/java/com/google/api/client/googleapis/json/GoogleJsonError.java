@@ -18,10 +18,12 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.Key;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,12 +42,14 @@ public class GoogleJsonError extends GenericJson {
    * @param jsonFactory JSON factory
    * @param response HTTP response
    * @return new instance of the Google JSON error information
-   * @throws IllegalArgumentException if content type is not {@link Json#MEDIA_TYPE} or if
-   *         expected {@code "data"} or {@code "error"} key is not found
+   * @throws IllegalArgumentException if content type is not {@link Json#MEDIA_TYPE} or if expected
+   *         {@code "data"} or {@code "error"} key is not found
    */
   public static GoogleJsonError parse(JsonFactory jsonFactory, HttpResponse response)
       throws IOException {
-    return new JsonCParser(jsonFactory).parseAndClose(
+    JsonObjectParser jsonObjectParser = new JsonObjectParser.Builder(jsonFactory).setWrapperKeys(
+        Collections.singleton("error")).build();
+    return jsonObjectParser.parseAndClose(
         response.getContent(), response.getContentCharset(), GoogleJsonError.class);
   }
 

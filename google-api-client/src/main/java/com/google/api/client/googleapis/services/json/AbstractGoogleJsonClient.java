@@ -20,6 +20,9 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 /**
  * Thread-safe Google JSON client.
  *
@@ -107,9 +110,10 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
     protected Builder(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
         String servicePath, HttpRequestInitializer httpRequestInitializer,
         boolean legacyDataWrapper) {
-      super(transport, rootUrl, servicePath, legacyDataWrapper
-          ? new JsonCParser(jsonFactory) : new JsonObjectParser(jsonFactory),
-          httpRequestInitializer);
+      super(transport, rootUrl, servicePath, new JsonObjectParser.Builder(jsonFactory)
+          .setWrapperKeys(
+              legacyDataWrapper ? Arrays.asList("data", "error") : Collections.<String>emptySet())
+          .build(), httpRequestInitializer);
     }
 
     @Override

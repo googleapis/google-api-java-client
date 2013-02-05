@@ -16,8 +16,6 @@ import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.batch.json.JsonBatchCallback;
 import com.google.api.client.googleapis.json.GoogleJsonErrorContainer;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.googleapis.json.JsonCContent;
-import com.google.api.client.googleapis.json.JsonCParser;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpResponse;
@@ -54,11 +52,10 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
    */
   protected AbstractGoogleJsonClientRequest(AbstractGoogleJsonClient abstractGoogleJsonClient,
       String requestMethod, String uriTemplate, Object jsonContent, Class<T> responseClass) {
-    super(abstractGoogleJsonClient, requestMethod, uriTemplate, jsonContent == null
-        ? null : (abstractGoogleJsonClient.getObjectParser() instanceof JsonCParser)
-            ? new JsonCContent(abstractGoogleJsonClient.getJsonFactory(), jsonContent)
-            : new JsonHttpContent(abstractGoogleJsonClient.getJsonFactory(), jsonContent),
-        responseClass);
+    super(abstractGoogleJsonClient, requestMethod, uriTemplate, jsonContent == null ? null
+        : new JsonHttpContent(abstractGoogleJsonClient.getJsonFactory(), jsonContent)
+            .setWrapperKey(abstractGoogleJsonClient.getObjectParser().getWrapperKeys().isEmpty()
+                ? null : "data"), responseClass);
     this.jsonContent = jsonContent;
   }
 

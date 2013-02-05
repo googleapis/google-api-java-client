@@ -62,7 +62,9 @@ import java.util.HashSet;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.15) Use {@link JsonObjectParser} instead.
  */
+@Deprecated
 @SuppressWarnings("javadoc")
 public final class JsonCParser extends JsonObjectParser {
   private final JsonFactory jsonFactory;
