@@ -11,7 +11,7 @@
       <source>LICENSE.txt</source>
     </file>
     <file>
-      <source>.classpath</source>
+      <source>classpath-include</source>
       <filtered>true</filtered>
     </file>
     <file>
