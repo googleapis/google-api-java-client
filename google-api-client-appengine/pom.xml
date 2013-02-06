@@ -116,5 +116,9 @@
       <artifactId>appengine-api-stubs</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava-jdk5</artifactId>
+    </dependency>
   </dependencies>
 </project>

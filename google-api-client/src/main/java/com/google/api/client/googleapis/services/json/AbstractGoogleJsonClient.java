@@ -12,7 +12,6 @@
 
 package com.google.api.client.googleapis.services.json;
 
-import com.google.api.client.googleapis.json.JsonCParser;
 import com.google.api.client.googleapis.services.AbstractGoogleClient;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -54,7 +53,8 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
       String rootUrl, String servicePath, HttpRequestInitializer httpRequestInitializer,
       boolean legacyDataWrapper) {
     super(transport, httpRequestInitializer, rootUrl, servicePath, legacyDataWrapper
-        ? new JsonCParser(jsonFactory) : new JsonObjectParser(jsonFactory));
+        ? new com.google.api.client.googleapis.json.JsonCParser(jsonFactory)
+        : new JsonObjectParser(jsonFactory));
   }
 
   /**
