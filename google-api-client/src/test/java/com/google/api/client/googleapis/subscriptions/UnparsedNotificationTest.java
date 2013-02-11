@@ -28,12 +28,12 @@ public class UnparsedNotificationTest extends TestCase {
   public void testDeliverPushNotification_simple() throws Exception {
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     MockNotificationCallback handler = new MockNotificationCallback();
-    Subscription s = new Subscription(handler).setClientToken("clientToken").setTopicId("topicID");
+    StoredSubscription s = new StoredSubscription(handler).setClientToken("clientToken").setTopicId("topicID");
     store.storeSubscription(s);
     // Send a notification
     InputStream contentStream = new ByteArrayInputStream(new byte[] {1, 2, 3});
     UnparsedNotification notification = new UnparsedNotification(
-        s.getSubscriptionId(), "topicID", "topicURI", "clientToken", 1, "eventType", null,
+        s.getId(), "topicID", "topicURI", "clientToken", 1, "eventType", null,
         "foo/bar", contentStream);
     assertTrue(notification.deliverNotification(store));
     assertEquals(true, handler.wasCalled());
@@ -43,7 +43,7 @@ public class UnparsedNotificationTest extends TestCase {
   public void testDeliverPushNotification_nonExistent() throws Exception {
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     MockNotificationCallback handler = new MockNotificationCallback();
-    Subscription s = new Subscription(handler).setClientToken("clientToken").setTopicId("topicID");
+    StoredSubscription s = new StoredSubscription(handler).setClientToken("clientToken").setTopicId("topicID");
     store.storeSubscription(s);
 
     // Send a notification
@@ -59,13 +59,13 @@ public class UnparsedNotificationTest extends TestCase {
   public void testDeliverPushNotification_invalidToken() throws Exception {
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     MockNotificationCallback handler = new MockNotificationCallback();
-    Subscription s = new Subscription(handler).setClientToken("randomToken").setTopicId("topicID");
+    StoredSubscription s = new StoredSubscription(handler).setClientToken("randomToken").setTopicId("topicID");
     store.storeSubscription(s);
 
     // Send a notification
     InputStream contentStream = new ByteArrayInputStream(new byte[] {1, 2, 3});
     UnparsedNotification notification = new UnparsedNotification(
-        s.getSubscriptionId(), "topicID", "topicURI", "differentClientToken", 1, "eventType", null,
+        s.getId(), "topicID", "topicURI", "differentClientToken", 1, "eventType", null,
         "foo/bar", contentStream);
 
     try {

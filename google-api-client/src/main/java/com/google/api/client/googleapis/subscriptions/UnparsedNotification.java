@@ -95,7 +95,7 @@ public final class UnparsedNotification extends Notification {
    */
   public boolean deliverNotification(SubscriptionStore subscriptionStore) throws IOException {
     // Find out the handler to whom this notification should go.
-    Subscription subscription =
+    StoredSubscription subscription =
         subscriptionStore.getSubscription(Preconditions.checkNotNull(getSubscriptionId()));
     if (subscription == null) {
       return false;

@@ -14,7 +14,7 @@
 
 package com.google.api.client.googleapis.extensions.appengine.subscriptions;
 
-import com.google.api.client.googleapis.subscriptions.Subscription;
+import com.google.api.client.googleapis.subscriptions.StoredSubscription;
 import com.google.api.client.googleapis.testing.subscriptions.MockNotificationCallback;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -48,50 +48,50 @@ public class AppEngineSubscriptionStoreTest extends TestCase {
 
   @Test
   public void testStoreAndGet() throws Exception {
-    Subscription subscription = new Subscription(new MockNotificationCallback());
+    StoredSubscription subscription = new StoredSubscription(new MockNotificationCallback());
     AppEngineSubscriptionStore aess = new AppEngineSubscriptionStore();
     // Store and retrieve the subscription
     aess.storeSubscription(subscription);
-    assertEquals(subscription.getSubscriptionId(),
-        aess.getSubscription(subscription.getSubscriptionId()).getSubscriptionId());
+    assertEquals(subscription.getId(),
+        aess.getSubscription(subscription.getId()).getId());
     assertNull(aess.getSubscription("nonexistent"));
   }
 
   @Test
   public void testStoreAndGet_overwrite() throws Exception {
-    Subscription subscription =
-        new Subscription(new MockNotificationCallback()).setClientToken("clientToken");
-    Subscription subscriptionB = new Subscription(
-        new MockNotificationCallback(), subscription.getSubscriptionId()).setClientToken(
+    StoredSubscription subscription =
+        new StoredSubscription(new MockNotificationCallback()).setClientToken("clientToken");
+    StoredSubscription subscriptionB = new StoredSubscription(
+        new MockNotificationCallback(), subscription.getId()).setClientToken(
         "clientToken2");
     AppEngineSubscriptionStore aess = new AppEngineSubscriptionStore();
     // Store and retrieve the subscription
     aess.storeSubscription(subscription);
     assertEquals(subscription.getClientToken(),
-        aess.getSubscription(subscription.getSubscriptionId()).getClientToken());
+        aess.getSubscription(subscription.getId()).getClientToken());
     aess.storeSubscription(subscriptionB);
     assertEquals(subscriptionB.getClientToken(),
-        aess.getSubscription(subscription.getSubscriptionId()).getClientToken());
+        aess.getSubscription(subscription.getId()).getClientToken());
   }
 
 
   @Test
   public void testStoreAndRemove() throws Exception {
-    Subscription subscription = new Subscription(new MockNotificationCallback());
+    StoredSubscription subscription = new StoredSubscription(new MockNotificationCallback());
     AppEngineSubscriptionStore aess = new AppEngineSubscriptionStore();
 
     // Store and retrieve the subscription
     aess.storeSubscription(subscription);
     aess.removeSubscription(subscription);
-    assertNull(aess.getSubscription(subscription.getSubscriptionId()));
+    assertNull(aess.getSubscription(subscription.getId()));
 
     aess.removeSubscription(null);
   }
 
   @Test
   public void testList() throws Exception {
-    Subscription subscription = new Subscription(new MockNotificationCallback());
-    Subscription subscriptionB = new Subscription(new MockNotificationCallback());
+    StoredSubscription subscription = new StoredSubscription(new MockNotificationCallback());
+    StoredSubscription subscriptionB = new StoredSubscription(new MockNotificationCallback());
     AppEngineSubscriptionStore aess = new AppEngineSubscriptionStore();
 
     // Store and retrieve the subscription

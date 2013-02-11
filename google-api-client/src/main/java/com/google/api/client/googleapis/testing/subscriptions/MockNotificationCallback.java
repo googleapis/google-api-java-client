@@ -15,7 +15,7 @@
 package com.google.api.client.googleapis.testing.subscriptions;
 
 import com.google.api.client.googleapis.subscriptions.NotificationCallback;
-import com.google.api.client.googleapis.subscriptions.Subscription;
+import com.google.api.client.googleapis.subscriptions.StoredSubscription;
 import com.google.api.client.googleapis.subscriptions.UnparsedNotification;
 
 /**
@@ -41,7 +41,7 @@ public class MockNotificationCallback implements NotificationCallback {
   }
 
   public void handleNotification(
-      Subscription subscription, UnparsedNotification notification) {
+      StoredSubscription subscription, UnparsedNotification notification) {
     wasCalled = true;
   }
 }
