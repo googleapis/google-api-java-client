@@ -28,17 +28,17 @@ public class MemorySubscriptionStoreTest extends TestCase {
 
   public void testStoreAndGet() {
     MockNotificationCallback handler = new MockNotificationCallback();
-    Subscription s = new Subscription(handler);
+    StoredSubscription s = new StoredSubscription(handler);
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     store.storeSubscription(s);
-    assertEquals(s, store.getSubscription(s.getSubscriptionId()));
+    assertEquals(s, store.getSubscription(s.getId()));
     assertEquals(null, store.getSubscription("does_not_exist"));
   }
 
   public void testList() {
     MockNotificationCallback handler = new MockNotificationCallback();
-    Subscription s1 = new Subscription(handler);
-    Subscription s2 = new Subscription(handler);
+    StoredSubscription s1 = new StoredSubscription(handler);
+    StoredSubscription s2 = new StoredSubscription(handler);
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     store.storeSubscription(s1);
     store.storeSubscription(s2);
@@ -48,10 +48,10 @@ public class MemorySubscriptionStoreTest extends TestCase {
 
   public void testRemove() {
     MockNotificationCallback handler = new MockNotificationCallback();
-    Subscription s = new Subscription(handler);
+    StoredSubscription s = new StoredSubscription(handler);
     MemorySubscriptionStore store = new MemorySubscriptionStore();
     store.storeSubscription(s);
     store.removeSubscription(s);
-    assertEquals(null, store.getSubscription(s.getSubscriptionId()));
+    assertEquals(null, store.getSubscription(s.getId()));
   }
 }

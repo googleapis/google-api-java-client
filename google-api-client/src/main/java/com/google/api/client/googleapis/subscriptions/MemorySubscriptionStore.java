@@ -42,28 +42,28 @@ public class MemorySubscriptionStore implements SubscriptionStore {
   private final Lock lock = new ReentrantLock();
 
   /** Map of all stored subscriptions. */
-  private final SortedMap<String, Subscription> storedSubscriptions =
-      new TreeMap<String, Subscription>();
+  private final SortedMap<String, StoredSubscription> storedSubscriptions =
+      new TreeMap<String, StoredSubscription>();
 
-  public void storeSubscription(Subscription subscription) {
+  public void storeSubscription(StoredSubscription subscription) {
     lock.lock();
     try {
-      storedSubscriptions.put(subscription.getSubscriptionId(), subscription);
+      storedSubscriptions.put(subscription.getId(), subscription);
     } finally {
       lock.unlock();
     }
   }
 
-  public void removeSubscription(Subscription subscription) {
+  public void removeSubscription(StoredSubscription subscription) {
     lock.lock();
     try {
-      storedSubscriptions.remove(subscription.getSubscriptionId());
+      storedSubscriptions.remove(subscription.getId());
     } finally {
       lock.unlock();
     }
   }
 
-  public Collection<Subscription> listSubscriptions() {
+  public Collection<StoredSubscription> listSubscriptions() {
     lock.lock();
     try {
       return Collections.unmodifiableCollection(storedSubscriptions.values());
@@ -72,7 +72,7 @@ public class MemorySubscriptionStore implements SubscriptionStore {
     }
   }
 
-  public Subscription getSubscription(String subscriptionId) {
+  public StoredSubscription getSubscription(String subscriptionId) {
     lock.lock();
     try {
       return storedSubscriptions.get(subscriptionId);

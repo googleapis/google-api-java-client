@@ -14,7 +14,7 @@
 
 package com.google.api.client.googleapis.extensions.servlet.subscriptions;
 
-import com.google.api.client.googleapis.subscriptions.Subscription;
+import com.google.api.client.googleapis.subscriptions.StoredSubscription;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.util.Lists;
 import com.google.api.client.util.Preconditions;
@@ -58,17 +58,17 @@ public final class JdoSubscriptionStore implements SubscriptionStore {
 
   /** Container class for storing subscriptions in the JDO DataStore. */
   @PersistenceCapable
-  private static final class StoredSubscription {
+  private static final class JdoStoredSubscription {
 
     @Persistent(serialized = "true")
-    private Subscription subscription;
+    private StoredSubscription subscription;
 
     @Persistent
     @PrimaryKey
     private String subscriptionId;
 
     @SuppressWarnings("unused")
-    StoredSubscription() {
+    JdoStoredSubscription() {
     }
 
     /**
@@ -76,14 +76,14 @@ public final class JdoSubscriptionStore implements SubscriptionStore {
      *
      * @param s subscription to store
      */
-    public StoredSubscription(Subscription s) {
+    public JdoStoredSubscription(StoredSubscription s) {
       setSubscription(s);
     }
 
     /**
      * Returns the stored subscription.
      */
-    public Subscription getSubscription() {
+    public StoredSubscription getSubscription() {
       return subscription;
     }
 
@@ -100,16 +100,16 @@ public final class JdoSubscriptionStore implements SubscriptionStore {
      *
      * @param subscription The new subscription to store
      */
-    public void setSubscription(Subscription subscription) {
+    public void setSubscription(StoredSubscription subscription) {
       this.subscription = subscription;
-      this.subscriptionId = subscription.getSubscriptionId();
+      this.subscriptionId = subscription.getId();
     }
   }
 
-  public void storeSubscription(Subscription subscription) {
+  public void storeSubscription(StoredSubscription subscription) {
     Preconditions.checkNotNull(subscription);
 
-    StoredSubscription dbEntry = getStoredSubscription(subscription.getSubscriptionId());
+    JdoStoredSubscription dbEntry = getStoredSubscription(subscription.getId());
     PersistenceManager persistenceManager = persistenceManagerFactory.getPersistenceManager();
     try {
       // Check if this subscription is being updated or newly created
@@ -118,7 +118,7 @@ public final class JdoSubscriptionStore implements SubscriptionStore {
         dbEntry.setSubscription(subscription);
       } else {
         // New entry
-        dbEntry = new StoredSubscription(subscription);
+        dbEntry = new JdoStoredSubscription(subscription);
         persistenceManager.makePersistent(dbEntry);
       }
     } finally {
@@ -126,8 +126,8 @@ public final class JdoSubscriptionStore implements SubscriptionStore {
     }
   }
 
-  public void removeSubscription(Subscription subscription) {
-    StoredSubscription dbEntry = getStoredSubscription(subscription.getSubscriptionId());
+  public void removeSubscription(StoredSubscription subscription) {
+    JdoStoredSubscription dbEntry = getStoredSubscription(subscription.getId());
     if (dbEntry != null) {
       PersistenceManager persistenceManager = persistenceManagerFactory.getPersistenceManager();
       try {
@@ -139,14 +139,15 @@ public final class JdoSubscriptionStore implements SubscriptionStore {
   }
 
   @SuppressWarnings("unchecked")
-  public List<Subscription> listSubscriptions() {
+  public List<StoredSubscription> listSubscriptions() {
     // Copy the results into a db-detached list.
-    List<Subscription> list = Lists.newArrayList();
+    List<StoredSubscription> list = Lists.newArrayList();
     PersistenceManager persistenceManager = persistenceManagerFactory.getPersistenceManager();
     try {
-      Query listQuery = persistenceManager.newQuery(StoredSubscription.class);
-      Iterable<StoredSubscription> resultList = (Iterable<StoredSubscription>) listQuery.execute();
-      for (StoredSubscription dbEntry : resultList) {
+      Query listQuery = persistenceManager.newQuery(JdoStoredSubscription.class);
+      Iterable<JdoStoredSubscription> resultList =
+          (Iterable<JdoStoredSubscription>) listQuery.execute();
+      for (JdoStoredSubscription dbEntry : resultList) {
         list.add(dbEntry.getSubscription());
       }
     } finally {
@@ -157,17 +158,17 @@ public final class JdoSubscriptionStore implements SubscriptionStore {
   }
 
   @SuppressWarnings("unchecked")
-  private StoredSubscription getStoredSubscription(String subscriptionID) {
-    Iterable<StoredSubscription> results = null;
+  private JdoStoredSubscription getStoredSubscription(String subscriptionID) {
+    Iterable<JdoStoredSubscription> results = null;
     PersistenceManager persistenceManager = persistenceManagerFactory.getPersistenceManager();
     try {
-      Query getByIDQuery = persistenceManager.newQuery(StoredSubscription.class);
+      Query getByIDQuery = persistenceManager.newQuery(JdoStoredSubscription.class);
       getByIDQuery.setFilter("subscriptionId == idParam");
       getByIDQuery.declareParameters("String idParam");
       getByIDQuery.setRange(0, 1);
-      results = (Iterable<StoredSubscription>) getByIDQuery.execute(subscriptionID);
+      results = (Iterable<JdoStoredSubscription>) getByIDQuery.execute(subscriptionID);
       // return the first result
-      for (StoredSubscription dbEntry : results) {
+      for (JdoStoredSubscription dbEntry : results) {
         return dbEntry;
       }
       return null;
@@ -176,8 +177,8 @@ public final class JdoSubscriptionStore implements SubscriptionStore {
     }
   }
 
-  public Subscription getSubscription(String subscriptionID) {
-    StoredSubscription dbEntry = getStoredSubscription(subscriptionID);
+  public StoredSubscription getSubscription(String subscriptionID) {
+    JdoStoredSubscription dbEntry = getStoredSubscription(subscriptionID);
     return dbEntry == null ? null : dbEntry.getSubscription();
   }
 }

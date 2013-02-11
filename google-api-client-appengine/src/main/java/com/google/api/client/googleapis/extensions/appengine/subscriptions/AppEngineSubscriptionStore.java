@@ -14,7 +14,7 @@
 
 package com.google.api.client.googleapis.extensions.appengine.subscriptions;
 
-import com.google.api.client.googleapis.subscriptions.Subscription;
+import com.google.api.client.googleapis.subscriptions.StoredSubscription;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.util.Lists;
 import com.google.appengine.api.datastore.Blob;
@@ -90,32 +90,32 @@ public class AppEngineSubscriptionStore implements SubscriptionStore {
   }
 
   /** Parses the specified Entity and returns the contained Subscription object. */
-  private Subscription getSubscriptionFromEntity(Entity entity) throws IOException {
+  private StoredSubscription getSubscriptionFromEntity(Entity entity) throws IOException {
     Blob serializedSubscription = (Blob) entity.getProperty(FIELD_SUBSCRIPTION);
-    return deserialize(serializedSubscription, Subscription.class);
+    return deserialize(serializedSubscription, StoredSubscription.class);
   }
 
   @Override
-  public void storeSubscription(Subscription subscription) throws IOException {
+  public void storeSubscription(StoredSubscription subscription) throws IOException {
     DatastoreService service = DatastoreServiceFactory.getDatastoreService();
-    Entity entity = new Entity(KIND, subscription.getSubscriptionId());
+    Entity entity = new Entity(KIND, subscription.getId());
     entity.setProperty(FIELD_SUBSCRIPTION, serialize(subscription));
     service.put(entity);
   }
 
   @Override
-  public void removeSubscription(Subscription subscription) throws IOException {
+  public void removeSubscription(StoredSubscription subscription) throws IOException {
     if (subscription == null) {
       return;
     }
 
     DatastoreService service = DatastoreServiceFactory.getDatastoreService();
-    service.delete(KeyFactory.createKey(KIND, subscription.getSubscriptionId()));
+    service.delete(KeyFactory.createKey(KIND, subscription.getId()));
   }
 
   @Override
-  public List<Subscription> listSubscriptions() throws IOException {
-    List<Subscription> list = Lists.newArrayList();
+  public List<StoredSubscription> listSubscriptions() throws IOException {
+    List<StoredSubscription> list = Lists.newArrayList();
     DatastoreService service = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = service.prepare(new Query(KIND));
 
@@ -127,7 +127,7 @@ public class AppEngineSubscriptionStore implements SubscriptionStore {
   }
 
   @Override
-  public Subscription getSubscription(String subscriptionId) throws IOException {
+  public StoredSubscription getSubscription(String subscriptionId) throws IOException {
     try {
       DatastoreService service = DatastoreServiceFactory.getDatastoreService();
       Entity entity = service.get(KeyFactory.createKey(KIND, subscriptionId));

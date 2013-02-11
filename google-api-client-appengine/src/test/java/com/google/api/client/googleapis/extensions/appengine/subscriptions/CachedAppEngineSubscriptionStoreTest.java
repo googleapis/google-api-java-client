@@ -14,7 +14,7 @@
 
 package com.google.api.client.googleapis.extensions.appengine.subscriptions;
 
-import com.google.api.client.googleapis.subscriptions.Subscription;
+import com.google.api.client.googleapis.subscriptions.StoredSubscription;
 import com.google.api.client.googleapis.testing.subscriptions.MockNotificationCallback;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
@@ -50,29 +50,29 @@ public class CachedAppEngineSubscriptionStoreTest extends TestCase {
 
   @Test
   public void testStoreAndGet() throws Exception {
-    Subscription subscription = new Subscription(new MockNotificationCallback());
+    StoredSubscription subscription = new StoredSubscription(new MockNotificationCallback());
 
     // Store a single subscription
     CachedAppEngineSubscriptionStore caess = new CachedAppEngineSubscriptionStore();
     caess.storeSubscription(subscription);
-    Subscription sub = caess.getSubscription(subscription.getSubscriptionId());
-    assertEquals(subscription.getSubscriptionId(), sub.getSubscriptionId());
+    StoredSubscription sub = caess.getSubscription(subscription.getId());
+    assertEquals(subscription.getId(), sub.getId());
     assertEquals(1, MemcacheServiceFactory.getMemcacheService().getStatistics().getItemCount());
 
     // Delete the item from the data store, and confirm that the cached value is returned
     new AppEngineSubscriptionStore().removeSubscription(sub);
     assertEquals(sub.getClientToken(),
-        caess.getSubscription(subscription.getSubscriptionId()).getClientToken());
+        caess.getSubscription(subscription.getId()).getClientToken());
   }
 
   @Test
   public void testRemoveAndGet() throws Exception {
-    Subscription subscription = new Subscription(new MockNotificationCallback());
+    StoredSubscription subscription = new StoredSubscription(new MockNotificationCallback());
     // Store a single subscription
     CachedAppEngineSubscriptionStore caess = new CachedAppEngineSubscriptionStore();
     caess.storeSubscription(subscription);
-    Subscription sub = caess.getSubscription(subscription.getSubscriptionId());
-    assertEquals(subscription.getSubscriptionId(), sub.getSubscriptionId());
+    StoredSubscription sub = caess.getSubscription(subscription.getId());
+    assertEquals(subscription.getId(), sub.getId());
     assertEquals(1, MemcacheServiceFactory.getMemcacheService().getStatistics().getItemCount());
 
     // Delete the item from the data store, and confirm that the cached value is returned
@@ -82,15 +82,15 @@ public class CachedAppEngineSubscriptionStoreTest extends TestCase {
 
   @Test
   public void testGet() throws Exception {
-    Subscription subscription = new Subscription(new MockNotificationCallback());
+    StoredSubscription subscription = new StoredSubscription(new MockNotificationCallback());
 
     // Store a single subscription
     new AppEngineSubscriptionStore().storeSubscription(subscription);
 
     // Delete the item from the data store, and confirm that the cached value is returned
     CachedAppEngineSubscriptionStore caess = new CachedAppEngineSubscriptionStore();
-    assertEquals(subscription.getSubscriptionId(),
-        caess.getSubscription(subscription.getSubscriptionId()).getSubscriptionId());
+    assertEquals(subscription.getId(),
+        caess.getSubscription(subscription.getId()).getId());
     assertEquals(1, MemcacheServiceFactory.getMemcacheService().getStatistics().getItemCount());
 
     // Check that the 'null' result is also cached
@@ -100,10 +100,10 @@ public class CachedAppEngineSubscriptionStoreTest extends TestCase {
 
   @Test
   public void testStore_overwrite() throws Exception {
-    Subscription subscription =
-        new Subscription(new MockNotificationCallback()).setClientToken("clientToken");
-    Subscription subscriptionB = new Subscription(
-        new MockNotificationCallback(), subscription.getSubscriptionId()).setClientToken(
+    StoredSubscription subscription =
+        new StoredSubscription(new MockNotificationCallback()).setClientToken("clientToken");
+    StoredSubscription subscriptionB = new StoredSubscription(
+        new MockNotificationCallback(), subscription.getId()).setClientToken(
         "clientToken2");
 
     // Store a single subscription
@@ -111,6 +111,6 @@ public class CachedAppEngineSubscriptionStoreTest extends TestCase {
     caess.storeSubscription(subscription);
     caess.storeSubscription(subscriptionB);
     assertEquals(subscriptionB.getClientToken(),
-        caess.getSubscription(subscription.getSubscriptionId()).getClientToken());
+        caess.getSubscription(subscription.getId()).getClientToken());
   }
 }

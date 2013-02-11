@@ -47,7 +47,7 @@ public class JsonNotificationCallbackTest extends TestCase {
     }
 
     @Override
-    protected void handleNotification(Subscription subscription, TypedNotification notification) {
+    protected void handleNotification(StoredSubscription subscription, TypedNotification notification) {
       lastNotification = notification;
     }
 
@@ -85,7 +85,7 @@ public class JsonNotificationCallbackTest extends TestCase {
     }
     UnparsedNotification notification = new UnparsedNotification(
         "id", "topic", "uri", "token", 1, "event", null, contentType, inputStream);
-    Subscription subscription = new Subscription(handler);
+    StoredSubscription subscription = new StoredSubscription(handler);
     handler.handleNotification(subscription, notification);
     return handler.lastNotification.getContent();
   }

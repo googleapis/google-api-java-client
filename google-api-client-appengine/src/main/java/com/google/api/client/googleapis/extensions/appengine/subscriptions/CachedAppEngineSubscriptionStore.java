@@ -14,7 +14,7 @@
 
 package com.google.api.client.googleapis.extensions.appengine.subscriptions;
 
-import com.google.api.client.googleapis.subscriptions.Subscription;
+import com.google.api.client.googleapis.subscriptions.StoredSubscription;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
@@ -53,24 +53,24 @@ public final class CachedAppEngineSubscriptionStore extends AppEngineSubscriptio
       CachedAppEngineSubscriptionStore.class.getCanonicalName());
 
   @Override
-  public void removeSubscription(Subscription subscription) throws IOException {
+  public void removeSubscription(StoredSubscription subscription) throws IOException {
     super.removeSubscription(subscription);
-    memCache.delete(subscription.getSubscriptionId());
+    memCache.delete(subscription.getId());
   }
 
   @Override
-  public void storeSubscription(Subscription subscription) throws IOException {
+  public void storeSubscription(StoredSubscription subscription) throws IOException {
     super.storeSubscription(subscription);
-    memCache.put(subscription.getSubscriptionId(), subscription);
+    memCache.put(subscription.getId(), subscription);
   }
 
   @Override
-  public Subscription getSubscription(String subscriptionId) throws IOException {
+  public StoredSubscription getSubscription(String subscriptionId) throws IOException {
     if (memCache.contains(subscriptionId)) {
-      return (Subscription) memCache.get(subscriptionId);
+      return (StoredSubscription) memCache.get(subscriptionId);
     }
 
-    Subscription subscription = super.getSubscription(subscriptionId);
+    StoredSubscription subscription = super.getSubscription(subscriptionId);
     memCache.put(subscriptionId, subscription, Expiration.byDeltaSeconds(EXPIRATION_TIME));
     return subscription;
   }

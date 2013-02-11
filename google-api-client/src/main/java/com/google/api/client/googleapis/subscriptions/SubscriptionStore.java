@@ -32,27 +32,27 @@ public interface SubscriptionStore {
   /**
    * Returns all known/registered subscriptions.
    */
-  Collection<Subscription> listSubscriptions() throws IOException;
+  Collection<StoredSubscription> listSubscriptions() throws IOException;
 
   /**
    * Retrieves a known subscription or {@code null} if not found.
    *
    * @param subscriptionId ID of the subscription to retrieve
    */
-  Subscription getSubscription(String subscriptionId) throws IOException;
+  StoredSubscription getSubscription(String subscriptionId) throws IOException;
 
   /**
    * Stores the subscription in the applications data store, replacing any existing subscription
    * with the same id.
    *
-   * @param subscription New or existing {@link Subscription} to store/update
+   * @param subscription New or existing {@link StoredSubscription} to store/update
    */
-  void storeSubscription(Subscription subscription) throws IOException;
+  void storeSubscription(StoredSubscription subscription) throws IOException;
 
   /**
    * Removes a registered subscription from the store.
    *
-   * @param subscription {@link Subscription} to remove or {@code null} to ignore
+   * @param subscription {@link StoredSubscription} to remove or {@code null} to ignore
    */
-  void removeSubscription(Subscription subscription) throws IOException;
+  void removeSubscription(StoredSubscription subscription) throws IOException;
 }

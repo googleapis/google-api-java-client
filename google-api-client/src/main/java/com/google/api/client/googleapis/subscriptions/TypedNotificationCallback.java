@@ -99,7 +99,7 @@ public abstract class TypedNotificationCallback<T> implements NotificationCallba
    * @param notification Typed notification which was delivered to this application
    */
   protected abstract void handleNotification(
-      Subscription subscription, TypedNotification<T> notification) throws IOException;
+      StoredSubscription subscription, TypedNotification<T> notification) throws IOException;
 
   /**
    * Returns an {@link ObjectParser} which can be used to parse this notification.
@@ -122,7 +122,7 @@ public abstract class TypedNotificationCallback<T> implements NotificationCallba
     return parser.parseAndClose(notification.getContent(), charset, dataClass);
   }
 
-  public void handleNotification(Subscription subscription, UnparsedNotification notification)
+  public void handleNotification(StoredSubscription subscription, UnparsedNotification notification)
       throws IOException {
     ObjectParser parser = getParser(notification);
     @SuppressWarnings("unchecked")

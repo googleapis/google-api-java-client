@@ -61,6 +61,6 @@ public interface NotificationCallback extends Serializable {
    * @param subscription Subscription to which this notification belongs
    * @param notification Notification which was delivered to this application
    */
-  void handleNotification(Subscription subscription, UnparsedNotification notification)
+  void handleNotification(StoredSubscription subscription, UnparsedNotification notification)
       throws IOException;
 }
