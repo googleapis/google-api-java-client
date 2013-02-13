@@ -13,5 +13,10 @@
     <differenceType>3003</differenceType>
     <className>com/google/api/client/googleapis/GoogleUtils</className>
   </difference>
+  <difference>
+    <!-- 8001 (Class removed): className -->
+    <differenceType>8001</differenceType>
+    <className>com/google/api/client/googleapis/services/GoogleKeyInitializer</className>
+  </difference>
 </differences>
 
