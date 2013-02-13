@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.auth.jsontoken.JsonWebSignature;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -397,14 +398,8 @@ public class GoogleIdTokenVerifier {
       CertificateFactory factory = SecurityUtils.getX509CertificateFactory();
       HttpResponse certsResponse = transport.createRequestFactory()
           .buildGetRequest(new GenericUrl("https://www.googleapis.com/oauth2/v1/certs")).execute();
-      // parse Cache-Control max-age parameter
-      for (String arg : certsResponse.getHeaders().getCacheControl().split(",")) {
-        Matcher m = MAX_AGE_PATTERN.matcher(arg);
-        if (m.matches()) {
-          expirationTimeMilliseconds = clock.currentTimeMillis() + Long.valueOf(m.group(1)) * 1000;
-          break;
-        }
-      }
+      expirationTimeMilliseconds = clock.currentTimeMillis()
+          + getCacheTimeInSec(certsResponse.getHeaders()) * 1000;
       // parse each public key in the JSON response
       JsonParser parser = jsonFactory.createJsonParser(certsResponse.getContent());
       JsonToken currentToken = parser.getCurrentToken();
@@ -429,6 +424,30 @@ public class GoogleIdTokenVerifier {
     } finally {
       lock.unlock();
     }
+  }
+
+  /**
+   * Gets the cache time in seconds. "max-age" in "Cache-Control" header and
+   * "Age" header are considered.
+   *
+   * @param httpHeaders the http header of the response
+   * @return the cache time in seconds or zero if the response should not be cached
+   */
+  long getCacheTimeInSec(HttpHeaders httpHeaders) {
+    long cacheTimeInSec = 0;
+    if (httpHeaders.getCacheControl() != null) {
+      for (String arg : httpHeaders.getCacheControl().split(",")) {
+        Matcher m = MAX_AGE_PATTERN.matcher(arg);
+        if (m.matches()) {
+          cacheTimeInSec = Long.valueOf(m.group(1));
+          break;
+        }
+      }
+    }
+    if (httpHeaders.getAge() != null) {
+        cacheTimeInSec -= httpHeaders.getAge();
+    }
+    return Math.max(0, cacheTimeInSec);
   }
 
   /**
