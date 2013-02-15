@@ -55,7 +55,7 @@ public class MockGoogleClient extends AbstractGoogleClient {
    * @param rootUrl root URL of the service
    * @param servicePath service path
    * @param objectParser object parser
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #MockGoogleClient(HttpTransport,
+   * @deprecated (scheduled to be removed in the future) Use {@link #MockGoogleClient(HttpTransport,
    *             String, String, ObjectParser, HttpRequestInitializer)}
    */
   @Deprecated
@@ -75,7 +75,7 @@ public class MockGoogleClient extends AbstractGoogleClient {
    *        {@code null} for none
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
-   * @deprecated (scheduled to be removed in 1.15) Use {@link Builder}
+   * @deprecated (scheduled to be removed in the future) Use {@link Builder}
    */
   @Deprecated
   public MockGoogleClient(HttpTransport transport, HttpRequestInitializer httpRequestInitializer,

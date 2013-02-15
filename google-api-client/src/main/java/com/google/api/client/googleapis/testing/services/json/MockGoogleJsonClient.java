@@ -62,7 +62,7 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
    *        {@code null} for none
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
-   * @deprecated (scheduled to be removed in 1.15) Use {@link Builder}
+   * @deprecated (scheduled to be removed in the future) Use {@link Builder}
    */
   @Deprecated
   public MockGoogleJsonClient(HttpTransport transport,
