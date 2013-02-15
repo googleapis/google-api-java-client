@@ -120,7 +120,8 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
    * @param approvalPrompt Prompt for consent behavior ({@code "auto"} to request auto-approval or
    *        {@code "force"} to force the approval UI to show) or {@code null} for the default
    *        behavior
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleAuthorizationCodeFlow(Builder)}
+   * @deprecated (scheduled to be removed in the future) Use
+   *             {@link #GoogleAuthorizationCodeFlow(Builder)}
    */
   @Deprecated
   protected GoogleAuthorizationCodeFlow(AccessMethod method, HttpTransport transport,

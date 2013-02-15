@@ -141,8 +141,8 @@ public class GoogleIdTokenVerifier {
    * @param transport HTTP transport
    * @param jsonFactory JSON factory
    * @since 1.9
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleIdTokenVerifier(Builder)} and
-   *             {@link #verify(GoogleIdToken, Collection, Collection)} or
+   * @deprecated (scheduled to be removed in the future) Use {@link #GoogleIdTokenVerifier(Builder)}
+   *             and {@link #verify(GoogleIdToken, Collection, Collection)} or
    *             {@link #verify(String, Collection, Collection)}
    */
   @Deprecated
@@ -159,8 +159,8 @@ public class GoogleIdTokenVerifier {
    * @param jsonFactory JSON factory
    * @param clock Clock for expiration checks
    * @since 1.9
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleIdTokenVerifier(Builder)} and
-   *             {@link #verify(GoogleIdToken, Collection, Collection)} or
+   * @deprecated (scheduled to be removed in the future) Use {@link #GoogleIdTokenVerifier(Builder)}
+   *             and {@link #verify(GoogleIdToken, Collection, Collection)} or
    *             {@link #verify(String, Collection, Collection)}
    */
   @Deprecated
@@ -191,7 +191,7 @@ public class GoogleIdTokenVerifier {
    * Returns the set of client IDs.
    *
    * @since 1.9
-   * @deprecated (scheduled to be removed in 1.15) Use
+   * @deprecated (scheduled to be removed in the future) Use
    *             {@link #verify(GoogleIdToken, Collection, Collection)} or
    *             {@link #verify(String, Collection, Collection)}
    */
@@ -219,7 +219,7 @@ public class GoogleIdTokenVerifier {
    *
    * @param idToken Google ID token
    * @return {@code true} if verified successfully or {@code false} if failed
-   * @deprecated (scheduled to be removed in 1.15) Use
+   * @deprecated (scheduled to be removed in the future) Use
    *             {@link #verify(GoogleIdToken, Collection, Collection)}
    */
   @Deprecated
@@ -234,7 +234,7 @@ public class GoogleIdTokenVerifier {
    * @param idTokenString Google ID token string
    * @return Google ID token if verified successfully or {@code null} if failed
    * @since 1.9
-   * @deprecated (scheduled to be removed in 1.15) Use
+   * @deprecated (scheduled to be removed in the future) Use
    *             {@link #verify(String, Collection, Collection)}
    */
   @Deprecated
@@ -280,7 +280,7 @@ public class GoogleIdTokenVerifier {
    * @param clientId client ID or {@code null} to skip checking it
    * @return {@code true} if verified successfully or {@code false} if failed
    * @since 1.8
-   * @deprecated (scheduled to be removed in 1.15) Use
+   * @deprecated (scheduled to be removed in the future) Use
    *             {@link #verify(GoogleIdToken, Collection, Collection)}
    */
   @Deprecated
@@ -311,7 +311,7 @@ public class GoogleIdTokenVerifier {
    * @param clientIds set of client IDs
    * @return {@code true} if verified successfully or {@code false} if failed
    * @since 1.9
-   * @deprecated (scheduled to be removed in 1.15) Use
+   * @deprecated (scheduled to be removed in the future) Use
    *             {@link #verify(GoogleIdToken, Collection, Collection)}
    */
   @Deprecated
@@ -503,7 +503,7 @@ public class GoogleIdTokenVerifier {
     /**
      * Returns the set of client IDs.
      *
-     * @deprecated (scheduled to be removed in 1.15) Use
+     * @deprecated (scheduled to be removed in the future) Use
      *             {@link #verify(GoogleIdToken, Collection, Collection)} or
      *             {@link #verify(String, Collection, Collection)}
      */
@@ -520,7 +520,7 @@ public class GoogleIdTokenVerifier {
      * the return type, but nothing else.
      * </p>
      *
-     * @deprecated (scheduled to be removed in 1.15) Use
+     * @deprecated (scheduled to be removed in the future) Use
      *             {@link #verify(GoogleIdToken, Collection, Collection)} or
      *             {@link #verify(String, Collection, Collection)}
      */
@@ -540,7 +540,7 @@ public class GoogleIdTokenVerifier {
      * Overriding is only supported for the purpose of calling the super implementation and changing
      * the return type, but nothing else.
      * </p>
-     * @deprecated (scheduled to be removed in 1.15) Use
+     * @deprecated (scheduled to be removed in the future) Use
      *             {@link #verify(GoogleIdToken, Collection, Collection)} or
      *             {@link #verify(String, Collection, Collection)}
      */

@@ -72,7 +72,7 @@ public class GoogleIdToken extends JsonWebSignature {
   /**
    * Verifies that this ID token is valid using {@link GoogleIdTokenVerifier#verify(GoogleIdToken)}.
    *
-   * @deprecated (scheduled to be removed in 1.15) Use
+   * @deprecated (scheduled to be removed in the future) Use
    *             {@link GoogleIdTokenVerifier#verify(GoogleIdToken, Collection, Collection)}
    */
   @Deprecated
