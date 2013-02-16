@@ -162,7 +162,7 @@ public final class MediaHttpDownloader {
    * instantiated before download called be called again.
    * </p>
    *
-   * @param requestUrl The request URL where the download requests will be sent
+   * @param requestUrl request URL where the download requests will be sent
    * @param requestHeaders request headers or {@code null} to ignore
    * @param outputStream destination output stream
    * @since 1.12
@@ -174,56 +174,24 @@ public final class MediaHttpDownloader {
 
     if (directDownloadEnabled) {
       updateStateAndNotifyListener(DownloadState.MEDIA_IN_PROGRESS);
-
-      HttpRequest request = requestFactory.buildGetRequest(requestUrl);
-      if (requestHeaders != null) {
-        request.getHeaders().putAll(requestHeaders);
-      }
-      if (bytesDownloaded != 0) {
-        StringBuilder rangeHeader = new StringBuilder();
-        rangeHeader.append("bytes=").append(bytesDownloaded).append("-");
-        if (lastBytePos != -1) {
-          rangeHeader.append(lastBytePos);
-        }
-        request.getHeaders().setRange(rangeHeader.toString());
-      }
-      HttpResponse response = request.execute();
-
-      try {
-        // All required bytes have been downloaded from the server.
-        mediaContentLength = response.getHeaders().getContentLength();
-        bytesDownloaded = mediaContentLength;
-        updateStateAndNotifyListener(DownloadState.MEDIA_COMPLETE);
-        IOUtils.copy(response.getContent(), outputStream);
-      } finally {
-        response.disconnect();
-      }
+      HttpResponse response =
+          executeCurrentRequest(lastBytePos, requestUrl, requestHeaders, outputStream);
+      // All required bytes have been downloaded from the server.
+      mediaContentLength = response.getHeaders().getContentLength();
+      bytesDownloaded = mediaContentLength;
+      updateStateAndNotifyListener(DownloadState.MEDIA_COMPLETE);
       return;
     }
 
     // Download the media content in chunks.
     while (true) {
-      HttpRequest request = requestFactory.buildGetRequest(requestUrl);
-      if (requestHeaders != null) {
-        request.getHeaders().putAll(requestHeaders);
-      }
-
       long currentRequestLastBytePos = bytesDownloaded + chunkSize - 1;
       if (lastBytePos != -1) {
         // If last byte position has been specified use it iff it is smaller than the chunksize.
         currentRequestLastBytePos = Math.min(lastBytePos, currentRequestLastBytePos);
       }
-      request.getHeaders().setRange(
-          "bytes=" + bytesDownloaded + "-" + currentRequestLastBytePos);
-
-      if (backOffPolicyEnabled) {
-        // Set ExponentialBackOffPolicy as the BackOffPolicy of the HTTP Request which will
-        // retry the same request again if there is a server error.
-        request.setBackOffPolicy(new ExponentialBackOffPolicy());
-      }
-
-      HttpResponse response = request.execute();
-      IOUtils.copy(response.getContent(), outputStream);
+      HttpResponse response = executeCurrentRequest(currentRequestLastBytePos, requestUrl,
+          requestHeaders, outputStream);
 
       String contentRange = response.getHeaders().getContentRange();
       long nextByteIndex = getNextByteIndex(contentRange);
@@ -239,6 +207,46 @@ public final class MediaHttpDownloader {
       bytesDownloaded = nextByteIndex;
       updateStateAndNotifyListener(DownloadState.MEDIA_IN_PROGRESS);
     }
+  }
+
+  /**
+   * Executes the current request.
+   *
+   * @param currentRequestLastBytePos last byte position for current request
+   * @param requestUrl request URL where the download requests will be sent
+   * @param requestHeaders request headers or {@code null} to ignore
+   * @param outputStream destination output stream
+   * @return HTTP response
+   */
+  private HttpResponse executeCurrentRequest(long currentRequestLastBytePos, GenericUrl requestUrl,
+      HttpHeaders requestHeaders, OutputStream outputStream) throws IOException {
+    // prepare the GET request
+    HttpRequest request = requestFactory.buildGetRequest(requestUrl);
+    // add request headers
+    if (requestHeaders != null) {
+      request.getHeaders().putAll(requestHeaders);
+    }
+    // set Range header (if necessary)
+    if (bytesDownloaded != 0 || currentRequestLastBytePos != -1) {
+      StringBuilder rangeHeader = new StringBuilder();
+      rangeHeader.append("bytes=").append(bytesDownloaded).append("-");
+      if (currentRequestLastBytePos != -1) {
+        rangeHeader.append(currentRequestLastBytePos);
+      }
+      request.getHeaders().setRange(rangeHeader.toString());
+    }
+    // use exponential backoff on server error
+    if (backOffPolicyEnabled) {
+      request.setBackOffPolicy(new ExponentialBackOffPolicy());
+    }
+    // execute the request and copy into the output stream
+    HttpResponse response = request.execute();
+    try {
+      IOUtils.copy(response.getContent(), outputStream);
+    } finally {
+      response.disconnect();
+    }
+    return response;
   }
 
   /**

@@ -18,6 +18,7 @@ import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.EmptyContent;
+import com.google.api.client.http.ExponentialBackOffPolicy;
 import com.google.api.client.http.GZipEncoding;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
@@ -303,15 +304,9 @@ public final class MediaHttpUploader {
       HttpRequest request =
           requestFactory.buildRequest(initiationRequestMethod, initiationRequestUrl, content);
       request.getHeaders().putAll(initiationHeaders);
-      request.setThrowExceptionOnExecuteError(false);
-      if (!disableGZipContent) {
-        request.setEncoding(new GZipEncoding());
-      }
-      addMethodOverride(request);
-
       // We do not have to do anything special here if media content length is unspecified because
       // direct media upload works even when the media content length == -1.
-      HttpResponse response = request.execute();
+      HttpResponse response = executeCurrentRequestWithBackOffAndGZip(request);
       boolean responseProcessed = false;
       try {
         if (getMediaContentLength() >= 0) {
@@ -353,22 +348,18 @@ public final class MediaHttpUploader {
     // Upload the media content in chunks.
     while (true) {
       currentRequest = requestFactory.buildPutRequest(uploadUrl, null);
-      addMethodOverride(currentRequest); // needed for PUT
       setContentAndHeadersOnCurrentRequest(bytesUploaded);
+      // use media exponential backoff on server error
       if (backOffPolicyEnabled) {
-        // Set MediaExponentialBackOffPolicy as the BackOffPolicy of the HTTP Request which will
-        // callback to this instance if there is a server error.
         currentRequest.setBackOffPolicy(new MediaUploadExponentialBackOffPolicy(this));
       }
-      currentRequest.setThrowExceptionOnExecuteError(false);
-      currentRequest.setRetryOnExecuteIOException(true);
       if (getMediaContentLength() >= 0) {
         // TODO(rmistry): Support gzipping content for the case where media content length is
         // known (https://code.google.com/p/google-api-java-client/issues/detail?id=691).
       } else if (!disableGZipContent) {
         currentRequest.setEncoding(new GZipEncoding());
       }
-      response = currentRequest.execute();
+      response = executeCurrentRequest(currentRequest);
       boolean returningResponse = false;
       try {
         if (response.isSuccessStatusCode()) {
@@ -427,18 +418,12 @@ public final class MediaHttpUploader {
     HttpContent content = metadata == null ? new EmptyContent() : metadata;
     HttpRequest request =
         requestFactory.buildRequest(initiationRequestMethod, initiationRequestUrl, content);
-    addMethodOverride(request);
     initiationHeaders.set(CONTENT_TYPE_HEADER, mediaContent.getType());
     if (getMediaContentLength() >= 0) {
       initiationHeaders.set(CONTENT_LENGTH_HEADER, getMediaContentLength());
     }
     request.getHeaders().putAll(initiationHeaders);
-    request.setThrowExceptionOnExecuteError(false);
-    request.setRetryOnExecuteIOException(true);
-    if (!disableGZipContent) {
-      request.setEncoding(new GZipEncoding());
-    }
-    HttpResponse response = request.execute();
+    HttpResponse response = executeCurrentRequestWithBackOffAndGZip(request);
     boolean notificationCompleted = false;
 
     try {
@@ -453,14 +438,43 @@ public final class MediaHttpUploader {
   }
 
   /**
-   * Wraps PUT HTTP requests inside of a POST request and uses {@link MethodOverride#HEADER} header
-   * to specify the actual HTTP method. This is done in case the HTTP transport does not support
-   * PUT.
+   * Executes the current request with some minimal common code.
    *
-   * @param request HTTP request
+   * @param request current request
+   * @return HTTP response
    */
-  private void addMethodOverride(HttpRequest request) throws IOException {
+  private HttpResponse executeCurrentRequest(HttpRequest request) throws IOException {
+    // method override for non-POST verbs
     new MethodOverride().intercept(request);
+    // don't throw an exception so we can let a custom Google exception be thrown
+    request.setThrowExceptionOnExecuteError(false);
+    // allow retry on I/O errors
+    request.setRetryOnExecuteIOException(true);
+    // execute the request
+    HttpResponse response = request.execute();
+    return response;
+  }
+
+  /**
+   * Executes the current request with some common code that includes exponential backoff and GZip
+   * encoding.
+   *
+   * @param request current request
+   * @return HTTP response
+   */
+  private HttpResponse executeCurrentRequestWithBackOffAndGZip(HttpRequest request)
+      throws IOException {
+    // use exponential backoff on server error
+    if (backOffPolicyEnabled) {
+      request.setBackOffPolicy(new ExponentialBackOffPolicy());
+    }
+    // enable GZip encoding if necessary
+    if (!disableGZipContent && !(request.getContent() instanceof EmptyContent)) {
+      request.setEncoding(new GZipEncoding());
+    }
+    // execute request
+    HttpResponse response = executeCurrentRequest(request);
+    return response;
   }
 
   /**
@@ -539,15 +553,19 @@ public final class MediaHttpUploader {
     }
 
     currentRequest.setContent(contentChunk);
-
-    currentRequest.getHeaders().setContentRange("bytes " + bytesWritten + "-" +
-        (bytesWritten + actualBlockSize - 1) + "/" + mediaContentLengthStr);
+    if (actualBlockSize == 0) {
+      // special case of zero content media being uploaded
+      currentRequest.getHeaders().setContentRange("bytes */0");
+    } else {
+      currentRequest.getHeaders().setContentRange("bytes " + bytesWritten + "-"
+          + (bytesWritten + actualBlockSize - 1) + "/" + mediaContentLengthStr);
+    }
   }
 
   /**
    * The call back method that will be invoked by
    * {@link MediaUploadExponentialBackOffPolicy#getNextBackOffMillis} if it encounters a server
-   * error. This method should only be used as a call back method after {@link #upload} is invoked.
+   * error during resumable upload inside {@link #upload}.
    *
    * <p>
    * This method will query the current status of the upload to find how many bytes were
@@ -559,16 +577,12 @@ public final class MediaHttpUploader {
     Preconditions.checkNotNull(currentRequest, "The current request should not be null");
 
     // TODO(rmistry): Handle timeouts here similar to how server errors are handled.
-    // Query the current status of the upload by issuing an empty POST request on the upload URI.
-    HttpRequest request = requestFactory.buildPutRequest(currentRequest.getUrl(), null);
-    addMethodOverride(request); // needed for PUT
-
+    // Query the current status of the upload by issuing an empty PUT request on the upload URI.
+    HttpRequest request =
+        requestFactory.buildPutRequest(currentRequest.getUrl(), new EmptyContent());
     request.getHeaders().setContentRange("bytes */" + (
         getMediaContentLength() >= 0 ? getMediaContentLength() : "*"));
-    request.setContent(new EmptyContent());
-    request.setThrowExceptionOnExecuteError(false);
-    request.setRetryOnExecuteIOException(true);
-    HttpResponse response = request.execute();
+    HttpResponse response = executeCurrentRequestWithBackOffAndGZip(request);
 
     try {
       long bytesWritten = getNextByteIndex(response.getHeaders().getRange());
@@ -654,10 +668,24 @@ public final class MediaHttpUploader {
   }
 
   /**
-   * Sets whether direct media upload is enabled or disabled. If value is set to {@code true} then a
-   * direct upload will be done where the whole media content is uploaded in a single request. If
-   * value is set to {@code false} then the upload uses the resumable media upload protocol to
-   * upload in data chunks. Defaults to {@code false}.
+   * Sets whether direct media upload is enabled or disabled.
+   *
+   * <p>
+   * If value is set to {@code true} then a direct upload will be done where the whole media content
+   * is uploaded in a single request. If value is set to {@code false} then the upload uses the
+   * resumable media upload protocol to upload in data chunks.
+   * </p>
+   *
+   * <p>
+   * Direct upload is recommended if the content size falls below a certain minimum limit. This is
+   * because there's minimum block write size for some Google APIs, so if the resumable request
+   * fails in the space of that first block, the client will have to restart from the beginning
+   * anyway.
+   * </p>
+   *
+   * <p>
+   * Defaults to {@code false}.
+   * </p>
    *
    * @since 1.9
    */
