@@ -70,6 +70,11 @@ public class MediaHttpDownloaderTest extends TestCase {
                     "bytes=" + bytesDownloaded + "-" + lastBytePos, getFirstHeaderValue("Range"));
               }
             }
+            if (testServerError && lowLevelExecCalls == 1) {
+              // send a server error in the 1st request
+              response.setStatusCode(500);
+              return response;
+            }
             response.setStatusCode(200);
             response.addHeader("Content-Length", String.valueOf(contentLength));
             response.setContent(
@@ -89,7 +94,8 @@ public class MediaHttpDownloaderTest extends TestCase {
             // Send a server error in the 2nd request.
             response.setStatusCode(500);
             return response;
-          } else if (testClientError) {
+          }
+          if (testClientError) {
             // Return a 404.
             response.setStatusCode(404);
             return response;
@@ -364,6 +370,38 @@ public class MediaHttpDownloaderTest extends TestCase {
     assertEquals(10000, outputStream.size());
 
     // There should be 1 download call made.
+    assertEquals(1, fakeTransport.lowLevelExecCalls);
+  }
+
+  public void testDirectDownloadServerErrorWithBackOffEnabled() throws Exception {
+    int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE * 2;
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    MediaTransport fakeTransport = new MediaTransport(contentLength);
+    fakeTransport.directDownloadEnabled = true;
+    fakeTransport.testServerError = true;
+    MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
+    downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
+
+    // should be 2 calls made: 1 download request w/server error and 1 successful download request
+    assertEquals(2, fakeTransport.lowLevelExecCalls);
+  }
+
+  public void testDirectDownloadServerErrorWithBackOffDisabled() throws Exception {
+    int contentLength = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE * 2;
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    MediaTransport fakeTransport = new MediaTransport(contentLength);
+    fakeTransport.directDownloadEnabled = true;
+    fakeTransport.testServerError = true;
+    MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
+    downloader.setBackOffPolicyEnabled(false);
+    try {
+      downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
+      fail("Expected " + HttpResponseException.class);
+    } catch (HttpResponseException e) {
+      // Expected
+    }
+
+    // should be 1 call made: 1 download request with server error
     assertEquals(1, fakeTransport.lowLevelExecCalls);
   }
 }

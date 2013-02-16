@@ -15,6 +15,7 @@ package com.google.api.client.googleapis.services;
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest;
+import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -221,7 +222,8 @@ public class AbstractGoogleClientTest extends TestCase {
 
     @SuppressWarnings("deprecation")
     public void intercept(HttpRequest request) {
-      assertEquals(!gzipDisabled, request.getEncoding() != null);
+      assertEquals(!gzipDisabled && !(request.getContent() instanceof EmptyContent),
+          request.getEncoding() != null);
     }
   }
 
