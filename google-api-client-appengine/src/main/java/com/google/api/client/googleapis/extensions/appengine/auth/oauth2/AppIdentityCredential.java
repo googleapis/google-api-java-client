@@ -90,7 +90,7 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
    * @param scopes OAuth scopes
    *
    * @since 1.12
-   * @deprecated (scheduled to be removed in the future) Use {@link #AppIdentityCredential(Builder)}
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #AppIdentityCredential(Builder)}
    */
   @Deprecated
   protected AppIdentityCredential(AppIdentityService appIdentityService, List<String> scopes) {

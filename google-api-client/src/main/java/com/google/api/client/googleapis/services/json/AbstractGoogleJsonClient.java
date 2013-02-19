@@ -46,8 +46,7 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
    * @param servicePath service path
    * @param httpRequestInitializer HTTP request initializer or {@code null} for none
    * @param legacyDataWrapper whether using the legacy data wrapper in responses
-   * @deprecated (scheduled to be removed in the future) Use
-   *             {@link #AbstractGoogleJsonClient(Builder)}
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #AbstractGoogleJsonClient(Builder)}
    */
   @Deprecated
   protected AbstractGoogleJsonClient(HttpTransport transport, JsonFactory jsonFactory,
@@ -69,8 +68,7 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
    *        {@code null} for none
    * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
    *        parameters
-   * @deprecated (scheduled to be removed in the future) Use
-   *             {@link #AbstractGoogleJsonClient(Builder)}
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #AbstractGoogleJsonClient(Builder)}
    */
   @Deprecated
   protected AbstractGoogleJsonClient(HttpTransport transport,

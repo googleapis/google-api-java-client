@@ -144,7 +144,7 @@ public class GoogleIdTokenVerifier {
    * @param transport HTTP transport
    * @param jsonFactory JSON factory
    * @since 1.9
-   * @deprecated (scheduled to be removed in the future) Use {@link #GoogleIdTokenVerifier(Builder)}
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleIdTokenVerifier(Builder)}
    */
   @Deprecated
   protected GoogleIdTokenVerifier(
@@ -160,7 +160,7 @@ public class GoogleIdTokenVerifier {
    * @param jsonFactory JSON factory
    * @param clock Clock for expiration checks
    * @since 1.9
-   * @deprecated (scheduled to be removed in the future) Use {@link #GoogleIdTokenVerifier(Builder)}
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleIdTokenVerifier(Builder)}
    */
   @Deprecated
   protected GoogleIdTokenVerifier(
@@ -190,7 +190,7 @@ public class GoogleIdTokenVerifier {
    * Returns the set of client IDs.
    *
    * @since 1.9
-   * @deprecated (scheduled to be removed in the future) Use {@link GoogleIdToken#verifyAudience}
+   * @deprecated (scheduled to be removed in 1.15) Use {@link GoogleIdToken#verifyAudience}
    */
   @Deprecated
   public final Set<String> getClientIds() {
@@ -292,7 +292,7 @@ public class GoogleIdTokenVerifier {
    * @param clientId client ID or {@code null} to skip checking it
    * @return {@code true} if verified successfully or {@code false} if failed
    * @since 1.8
-   * @deprecated (scheduled to be removed in the future) Use {@link #verify(GoogleIdToken)}
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #verify(GoogleIdToken)}
    */
   @Deprecated
   public boolean verify(GoogleIdToken idToken, String clientId)
@@ -322,7 +322,7 @@ public class GoogleIdTokenVerifier {
    * @param clientIds set of client IDs
    * @return {@code true} if verified successfully or {@code false} if failed
    * @since 1.9
-   * @deprecated (scheduled to be removed in the future) Use {@link #verify(GoogleIdToken)}
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #verify(GoogleIdToken)}
    */
   @Deprecated
   public boolean verify(Set<String> clientIds, GoogleIdToken idToken)
@@ -483,7 +483,7 @@ public class GoogleIdTokenVerifier {
     /**
      * Returns the set of client IDs.
      *
-     * @deprecated (scheduled to be removed in the future) Use {@link GoogleIdToken#verifyAudience}
+     * @deprecated (scheduled to be removed in 1.15) Use {@link GoogleIdToken#verifyAudience}
      */
     @Deprecated
     public final Set<String> getClientIds() {
@@ -498,7 +498,7 @@ public class GoogleIdTokenVerifier {
      * the return type, but nothing else.
      * </p>
      *
-     * @deprecated (scheduled to be removed in the future) Use {@link GoogleIdToken#verifyAudience}
+     * @deprecated (scheduled to be removed in 1.15) Use {@link GoogleIdToken#verifyAudience}
      */
     @Deprecated
     public Builder setClientIds(Iterable<String> clientIds) {
@@ -516,7 +516,7 @@ public class GoogleIdTokenVerifier {
      * Overriding is only supported for the purpose of calling the super implementation and changing
      * the return type, but nothing else.
      * </p>
-     * @deprecated (scheduled to be removed in the future) Use {@link GoogleIdToken#verifyAudience}
+     * @deprecated (scheduled to be removed in 1.15) Use {@link GoogleIdToken#verifyAudience}
      */
     @Deprecated
     public Builder setClientIds(String... clientIds) {
