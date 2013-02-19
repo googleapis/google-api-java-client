@@ -27,7 +27,7 @@ import com.google.api.client.util.Key;
  *
  * @since 1.0
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in the future) Use {@link GenericUrl}
+ * @deprecated (scheduled to be removed in 1.14) Use {@link GenericUrl}
  */
 @Deprecated
 public class GoogleUrl extends GenericUrl {

@@ -128,7 +128,7 @@ public class GoogleIdToken extends IdToken {
      * Constructs a new Payload and uses the specified {@link Clock}.
      * @param clock Clock to use for expiration checks.
      * @since 1.9
-     * @deprecated (scheduled to be removed in the future) Use {@link #Payload()} instead
+     * @deprecated (scheduled to be removed in 1.15) Use {@link #Payload()} instead
      */
     @Deprecated
     public Payload(Clock clock) {

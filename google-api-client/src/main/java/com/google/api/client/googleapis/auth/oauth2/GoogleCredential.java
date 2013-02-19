@@ -230,7 +230,7 @@ public class GoogleCredential extends Credential {
    * @param serviceAccountUser email address of the user the application is trying to impersonate in
    *        the service account flow or {@code null} for none or if not using the service account
    *        flow
-   * @deprecated (scheduled to be removed in the future) Use {@link #GoogleCredential(Builder)}
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleCredential(Builder)}
    */
   @Deprecated
   protected GoogleCredential(AccessMethod method, HttpTransport transport, JsonFactory jsonFactory,
@@ -267,7 +267,7 @@ public class GoogleCredential extends Credential {
    *        flow
    * @param clock The clock to use for expiration check
    * @since 1.9
-   * @deprecated (scheduled to be removed in the future) Use {@link #GoogleCredential(Builder)}
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleCredential(Builder)}
    */
   @Deprecated
   protected GoogleCredential(AccessMethod method, HttpTransport transport, JsonFactory jsonFactory,

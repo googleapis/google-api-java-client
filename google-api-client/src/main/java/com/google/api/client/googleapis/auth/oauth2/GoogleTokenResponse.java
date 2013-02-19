@@ -116,7 +116,7 @@ public class GoogleTokenResponse extends TokenResponse {
    *
    * @param verifier Google ID token verifier
    *
-   * @deprecated (scheduled to be removed in the future) Use
+   * @deprecated (scheduled to be removed in 1.15) Use
    *             {@link GoogleIdTokenVerifier#verify(GoogleIdToken)} with {@link #parseIdToken()}
    */
   @Deprecated

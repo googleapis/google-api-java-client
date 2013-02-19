@@ -27,7 +27,7 @@ import com.google.api.client.util.escape.PercentEscaper;
  *
  * @since 1.0
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in the future) Use {@link HttpHeaders}
+ * @deprecated (scheduled to be removed in 1.14) Use {@link HttpHeaders}
  */
 @Deprecated
 public class GoogleHeaders extends HttpHeaders {
@@ -170,7 +170,7 @@ public class GoogleHeaders extends HttpHeaders {
   /**
    * Returns Google Login {@code "Authorization"} header value based on the given authentication
    * token.
-   * @deprecated (scheduled to be removed in the future) Use
+   * @deprecated (scheduled to be removed in 1.14) Use
    *             {@code ClientLogin.getAuthorizationHeaderValue}
    */
   @Deprecated
