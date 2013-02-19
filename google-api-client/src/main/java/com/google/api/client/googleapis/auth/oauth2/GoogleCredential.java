@@ -14,9 +14,6 @@
 
 package com.google.api.client.googleapis.auth.oauth2;
 
-import com.google.api.client.auth.jsontoken.JsonWebSignature;
-import com.google.api.client.auth.jsontoken.JsonWebToken;
-import com.google.api.client.auth.jsontoken.RsaSHA256Signer;
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
 import com.google.api.client.auth.oauth2.Credential;
@@ -31,17 +28,21 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.webtoken.JsonWebSignature;
+import com.google.api.client.json.webtoken.JsonWebToken;
 import com.google.api.client.util.Clock;
 import com.google.api.client.util.Joiner;
+import com.google.api.client.util.PemReader;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Arrays;
 import java.util.List;
 
@@ -322,23 +323,24 @@ public class GoogleCredential extends Credential {
     if (serviceAccountPrivateKey == null) {
       return super.executeRefreshToken();
     }
-    // service accounts
+    // service accounts: no refresh token; instead use private key to request new access token
     JsonWebSignature.Header header = new JsonWebSignature.Header();
     header.setAlgorithm("RS256");
     header.setType("JWT");
-    JsonWebToken.Payload payload = new JsonWebToken.Payload(getClock());
+    JsonWebToken.Payload payload = new JsonWebToken.Payload();
     long currentTime = getClock().currentTimeMillis();
-    payload.setIssuer(serviceAccountId).setAudience(getTokenServerEncodedUrl())
-        .setIssuedAtTimeSeconds(currentTime / 1000)
-        .setExpirationTimeSeconds(currentTime / 1000 + 3600).setPrincipal(serviceAccountUser);
+    payload.setIssuer(serviceAccountId);
+    payload.setAudience(getTokenServerEncodedUrl());
+    payload.setIssuedAtTimeSeconds(currentTime / 1000);
+    payload.setExpirationTimeSeconds(currentTime / 1000 + 3600);
+    payload.setSubject(serviceAccountUser);
     payload.put("scope", serviceAccountScopes);
     try {
-      String assertion =
-          RsaSHA256Signer.sign(serviceAccountPrivateKey, getJsonFactory(), header, payload);
+      String assertion = JsonWebSignature.signUsingRsaSha256(
+          serviceAccountPrivateKey, getJsonFactory(), header, payload);
       TokenRequest request = new TokenRequest(
           getTransport(), getJsonFactory(), new GenericUrl(getTokenServerEncodedUrl()),
-          "assertion");
-      request.put("assertion_type", "http://oauth.net/grant_type/jwt/1.0/bearer");
+          "urn:ietf:params:oauth:grant-type:jwt-bearer");
       request.put("assertion", assertion);
       return request.execute();
     } catch (GeneralSecurityException exception) {
@@ -577,9 +579,10 @@ public class GoogleCredential extends Credential {
      */
     public Builder setServiceAccountPrivateKeyFromPemFile(File pemFile)
         throws GeneralSecurityException, IOException {
-      serviceAccountPrivateKey = SecurityUtils.loadPkcs8PrivateKeyFromPem(
-          SecurityUtils.getRsaKeyFactory(), new FileInputStream(pemFile),
-          Charset.defaultCharset().name());
+      byte[] bytes = PemReader.readFirstSectionAndClose(new FileReader(pemFile), "PRIVATE KEY")
+          .getBase64DecodedBytes();
+      serviceAccountPrivateKey =
+          SecurityUtils.getRsaKeyFactory().generatePrivate(new PKCS8EncodedKeySpec(bytes));
       return this;
     }
 

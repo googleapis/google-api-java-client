@@ -34,4 +34,9 @@
     <!-- Method call passes null for nonnull parameter -->
     <Class name="com.google.api.client.googleapis.batch.BatchUnparsedResponse"/>
   </And>
+  <And>
+    <Bug pattern="DM_DEFAULT_ENCODING"/>
+    <!-- Reliance on default encoding -->
+    <Class name="com.google.api.client.googleapis.auth.oauth2.GoogleCredential$Builder"/>
+  </And>
 </FindBugsFilter>

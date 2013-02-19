@@ -14,34 +14,38 @@
 
 package com.google.api.client.googleapis.auth.oauth2;
 
-import com.google.api.client.auth.jsontoken.JsonWebSignature;
-import com.google.api.client.auth.jsontoken.JsonWebToken;
+import com.google.api.client.auth.openidconnect.IdToken;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.webtoken.JsonWebSignature;
 import com.google.api.client.util.Clock;
 import com.google.api.client.util.Key;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Collection;
 
 /**
  * Google ID tokens.
  *
  * <p>
- * Google ID tokens contain useful information such as the {@link Payload#getUserId() obfuscated
- * Google user ID}. Google ID tokens are signed and the signature must be verified using
- * {@link #verify(GoogleIdTokenVerifier)}, which also checks that your application's client ID is
- * the intended audience.
+ * Google ID tokens contain useful information about the authorized end user. Google ID tokens are
+ * signed and the signature must be verified using {@link #verify(GoogleIdTokenVerifier)}.
  * </p>
  *
  * <p>
  * Implementation is not thread-safe.
  * </p>
  *
+ * <p>
+ * Upgrade warning: in prior version 1.13 this extended
+ * {@link com.google.api.client.auth.jsontoken.JsonWebSignature}, but starting with version 1.14 it
+ * now extends {@link IdToken}.
+ * </p>
+ *
  * @since 1.7
  * @author Yaniv Inbar
  */
-public class GoogleIdToken extends JsonWebSignature {
+@SuppressWarnings("javadoc")
+public class GoogleIdToken extends IdToken {
 
   /**
    * Parses the given ID token string and returns the parsed {@link GoogleIdToken}.
@@ -71,11 +75,7 @@ public class GoogleIdToken extends JsonWebSignature {
 
   /**
    * Verifies that this ID token is valid using {@link GoogleIdTokenVerifier#verify(GoogleIdToken)}.
-   *
-   * @deprecated (scheduled to be removed in the future) Use
-   *             {@link GoogleIdTokenVerifier#verify(GoogleIdToken, Collection, Collection)}
    */
-  @Deprecated
   public boolean verify(GoogleIdTokenVerifier verifier)
       throws GeneralSecurityException, IOException {
     return verifier.verify(this);
@@ -86,8 +86,17 @@ public class GoogleIdToken extends JsonWebSignature {
     return (Payload) super.getPayload();
   }
 
-  /** Google ID token payload. */
-  public static class Payload extends JsonWebToken.Payload {
+  /**
+   * Google ID token payload.
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.13 this extended
+   * {@link com.google.api.client.auth.jsontoken.JsonWebSignature.Payload}, but starting with
+   * version 1.14 it now extends {@link IdToken.Payload}.
+   * </p>
+   */
+  public static class Payload extends IdToken.Payload {
+
     /** Obfuscated Google user ID or {@code null} for none. */
     @Key("id")
     private String userId;
@@ -112,20 +121,18 @@ public class GoogleIdToken extends JsonWebSignature {
     @Key("verified_email")
     private boolean emailVerified;
 
-    /**
-     * Constructs a new Payload using default settings.
-     */
     public Payload() {
-      this(Clock.SYSTEM);
     }
 
     /**
      * Constructs a new Payload and uses the specified {@link Clock}.
      * @param clock Clock to use for expiration checks.
      * @since 1.9
+     * @deprecated (scheduled to be removed in the future) Use {@link #Payload()} instead
      */
+    @Deprecated
     public Payload(Clock clock) {
-      super(clock);
+      super();
     }
 
     /** Returns the obfuscated Google user id or {@code null} for none. */
