@@ -14,11 +14,13 @@
 
 package com.google.api.client.googleapis.auth.oauth2;
 
-import com.google.api.client.auth.openidconnect.IdTokenResponse;
+import com.google.api.client.auth.oauth2.TokenResponse;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.util.Key;
+import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Collection;
 
 /**
  * Google OAuth 2.0 JSON model for a successful access token response as specified in <a
@@ -30,22 +32,27 @@ import java.util.Collection;
  * This response object is the result of {@link GoogleAuthorizationCodeTokenRequest#execute()} and
  * {@link GoogleRefreshTokenRequest#execute()}. Use {@link #parseIdToken()} to parse the
  * {@link GoogleIdToken} and then call
- * {@link GoogleIdTokenVerifier#verify(GoogleIdToken, Collection, Collection)}.
+ * {@link GoogleIdTokenVerifier#verify(GoogleIdToken)}.
  * </p>
  *
  * <p>
  * Implementation is not thread-safe.
  * </p>
  *
+ * <p>
+ * Upgrade warning: in prior version 1.13 this extended
+ * {@link com.google.api.client.auth.openidconnect.IdTokenResponse}, but starting with version 1.14
+ * it now extends {@link TokenResponse}.
+ * </p>
+ *
  * @since 1.7
  * @author Yaniv Inbar
  */
-public class GoogleTokenResponse extends IdTokenResponse {
+public class GoogleTokenResponse extends TokenResponse {
 
-  @Override
-  public GoogleTokenResponse setIdToken(String idToken) {
-    return (GoogleTokenResponse) super.setIdToken(idToken);
-  }
+  /** ID token. */
+  @Key("id_token")
+  private String idToken;
 
   @Override
   public GoogleTokenResponse setAccessToken(String accessToken) {
@@ -72,7 +79,33 @@ public class GoogleTokenResponse extends IdTokenResponse {
     return (GoogleTokenResponse) super.setScope(scope);
   }
 
-  @Override
+  /** Returns the ID token. */
+  public final String getIdToken() {
+    return idToken;
+  }
+
+  /**
+   * Sets the ID token.
+   *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.13 {@code null} was allowed, but starting with version 1.14
+   * {@code null} is not allowed.
+   * </p>
+   */
+  public GoogleTokenResponse setIdToken(String idToken) {
+    this.idToken = Preconditions.checkNotNull(idToken);
+    return this;
+  }
+
+  /**
+   * Parses using {@link GoogleIdToken#parse(JsonFactory, String)} based on the
+   * {@link #getFactory() JSON factory} and {@link #getIdToken() ID token}.
+   */
   public GoogleIdToken parseIdToken() throws IOException {
     return GoogleIdToken.parse(getFactory(), getIdToken());
   }
@@ -84,8 +117,7 @@ public class GoogleTokenResponse extends IdTokenResponse {
    * @param verifier Google ID token verifier
    *
    * @deprecated (scheduled to be removed in the future) Use
-   *             {@link GoogleIdTokenVerifier#verify(GoogleIdToken, Collection, Collection)} with
-   *             {@link #parseIdToken()}
+   *             {@link GoogleIdTokenVerifier#verify(GoogleIdToken)} with {@link #parseIdToken()}
    */
   @Deprecated
   public boolean verifyIdToken(GoogleIdTokenVerifier verifier)

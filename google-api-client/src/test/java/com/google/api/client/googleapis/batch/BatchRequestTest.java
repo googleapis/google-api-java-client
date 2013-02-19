@@ -560,7 +560,7 @@ public class BatchRequestTest extends TestCase {
     MockHttpTransport transport = new MockHttpTransport() {
 
       @Override
-      protected LowLevelHttpRequest buildRequest(String method, String url) {
+      public LowLevelHttpRequest buildRequest(String method, String url) {
         return new MockLowLevelHttpRequest(url) {
 
           @Override
