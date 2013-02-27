@@ -37,8 +37,7 @@ import java.util.Map;
  * @since 1.10
  * @author Yaniv Inbar
  */
-@SuppressWarnings("deprecation")
-final class AuthKeyValueParser implements com.google.api.client.http.HttpParser, ObjectParser {
+final class AuthKeyValueParser implements ObjectParser {
 
   /** Singleton instance. */
   public static final AuthKeyValueParser INSTANCE = new AuthKeyValueParser();

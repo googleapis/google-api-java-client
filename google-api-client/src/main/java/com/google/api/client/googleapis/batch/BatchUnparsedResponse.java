@@ -26,7 +26,6 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
-import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.StringUtils;
 
 import java.io.BufferedReader;
@@ -192,20 +191,15 @@ final class BatchUnparsedResponse {
     }
   }
 
-  @SuppressWarnings("deprecation")
   private <A, T, E> A getParsedDataClass(
       Class<A> dataClass, HttpResponse response, RequestInfo<T, E> requestInfo, String contentType)
       throws IOException {
-    // TODO(mlinder): Remove the HttpResponse reference and directly parse the InputStream
-    com.google.api.client.http.HttpParser oldParser = requestInfo.request.getParser(contentType);
-    ObjectParser parser = requestInfo.request.getParser();
-    A parsed = null;
-    if (dataClass != Void.class) {
-      parsed = parser != null ? parser.parseAndClose(
-          response.getContent(), response.getContentCharset(), dataClass) : oldParser.parse(
-          response, dataClass);
+    // TODO(yanivi): Remove the HttpResponse reference and directly parse the InputStream
+    if (dataClass == Void.class) {
+      return null;
     }
-    return parsed;
+    return requestInfo.request.getParser().parseAndClose(
+        response.getContent(), response.getContentCharset(), dataClass);
   }
 
   /** Create a fake HTTP response object populated with the partContent and the statusCode. */
@@ -250,23 +244,8 @@ final class BatchUnparsedResponse {
     }
 
     @Override
-    protected LowLevelHttpRequest buildDeleteRequest(String url) {
-      return null;
-    }
-
-    @Override
-    protected LowLevelHttpRequest buildGetRequest(String url) {
-      return null;
-    }
-
-    @Override
-    protected LowLevelHttpRequest buildPostRequest(String url) {
+    protected LowLevelHttpRequest buildRequest(String method, String url) {
       return new FakeLowLevelHttpRequest(partContent, statusCode, headerNames, headerValues);
-    }
-
-    @Override
-    protected LowLevelHttpRequest buildPutRequest(String url) {
-      return null;
     }
   }
 

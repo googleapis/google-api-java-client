@@ -50,17 +50,6 @@ public interface BatchCallback<T, E> {
   /**
    * Called if the individual batch response is successful.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.12 the response headers were of type
-   * {@code GoogleHeaders}, but as of version 1.13 that type is deprecated, so we now use type
-   * {@link HttpHeaders}.
-   * </p>
-   *
    * @param t instance of the parsed data model class
    * @param responseHeaders Headers of the batch response
    */
@@ -68,12 +57,6 @@ public interface BatchCallback<T, E> {
 
   /**
    * Called if the individual batch response is unsuccessful.
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.12 the response headers were of type
-   * {@code GoogleHeaders}, but as of version 1.13 that type is deprecated, so we now use type
-   * {@link HttpHeaders}.
-   * </p>
    *
    * @param e instance of data class representing the error response content
    * @param responseHeaders Headers of the batch response
