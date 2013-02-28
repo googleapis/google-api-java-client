@@ -18,11 +18,13 @@ import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.util.Lists;
 import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
-import com.google.common.collect.ImmutableList;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -54,8 +56,8 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
   /** App Identity Service that provides the access token. */
   private final AppIdentityService appIdentityService;
 
-  /** OAuth scopes. */
-  private final ImmutableList<String> scopes;
+  /** OAuth scopes (unmodifiable). */
+  private final List<String> scopes;
 
   /**
    * @param scopes OAuth scopes
@@ -81,7 +83,7 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
     // dependencies on AppIdentityServiceFactory unless it is actually being used.
     appIdentityService = builder.appIdentityService == null
         ? AppIdentityServiceFactory.getAppIdentityService() : builder.appIdentityService;
-    scopes = ImmutableList.copyOf(builder.scopes);
+    scopes = builder.scopes;
   }
 
   /**
@@ -97,7 +99,7 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
     // dependencies on AppIdentityServiceFactory unless it is actually being used.
     this.appIdentityService = appIdentityService == null
         ? AppIdentityServiceFactory.getAppIdentityService() : appIdentityService;
-    this.scopes = ImmutableList.copyOf(scopes);
+    this.scopes = Lists.newArrayList(scopes);
   }
 
   @Override
@@ -121,7 +123,7 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
   }
 
   /**
-   * Gets the OAuth scopes.
+   * Gets the OAuth scopes (unmodifiable).
    *
    * @since 1.12
    */
@@ -146,8 +148,8 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
      */
     AppIdentityService appIdentityService;
 
-    /** OAuth scopes. */
-    final ImmutableList<String> scopes;
+    /** OAuth scopes (unmodifiable). */
+    final List<String> scopes;
 
     /**
      * Returns an instance of a new builder.
@@ -155,7 +157,7 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
      * @param scopes OAuth scopes
      */
     public Builder(Iterable<String> scopes) {
-      this.scopes = ImmutableList.copyOf(scopes);
+      this.scopes = Collections.unmodifiableList(Lists.newArrayList(scopes));
     }
 
     /**
@@ -164,7 +166,7 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
      * @param scopes OAuth scopes
      */
     public Builder(String... scopes) {
-      this.scopes = ImmutableList.copyOf(scopes);
+      this(Arrays.asList(scopes));
     }
 
     /**
@@ -196,6 +198,15 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
      */
     public AppIdentityCredential build() {
       return new AppIdentityCredential(this);
+    }
+
+    /**
+     * Returns the OAuth scopes (unmodifiable).
+     *
+     * @since 1.14
+     */
+    public final List<String> getScopes() {
+      return scopes;
     }
   }
 }
