@@ -45,7 +45,7 @@ public class GoogleClientTest extends TestCase {
   public void testExecuteUnparsed_error() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
       @Override
-      public LowLevelHttpRequest buildGetRequest(String url) {
+      public LowLevelHttpRequest buildRequest(String method, String url) {
         return new MockLowLevelHttpRequest() {
           @Override
           public LowLevelHttpResponse execute() {

@@ -250,23 +250,8 @@ final class BatchUnparsedResponse {
     }
 
     @Override
-    protected LowLevelHttpRequest buildDeleteRequest(String url) {
-      return null;
-    }
-
-    @Override
-    protected LowLevelHttpRequest buildGetRequest(String url) {
-      return null;
-    }
-
-    @Override
-    protected LowLevelHttpRequest buildPostRequest(String url) {
+    protected LowLevelHttpRequest buildRequest(String method, String url) {
       return new FakeLowLevelHttpRequest(partContent, statusCode, headerNames, headerValues);
-    }
-
-    @Override
-    protected LowLevelHttpRequest buildPutRequest(String url) {
-      return null;
     }
   }
 
