@@ -28,6 +28,7 @@ import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
+import com.google.api.client.testing.util.TestableByteArrayInputStream;
 
 import junit.framework.TestCase;
 
@@ -435,6 +436,25 @@ public class MediaHttpUploaderTest extends TestCase {
     assertEquals(6, fakeTransport.lowLevelExecCalls);
   }
 
+  public void testUploadMultipleCalls_WithNoContentSizeProvidedChunkedInput() throws Exception {
+    int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 5;
+    MediaTransport fakeTransport = new MediaTransport(contentLength);
+    fakeTransport.contentLengthNotSpecified = true;
+    InputStream is = new ByteArrayInputStream(new byte[contentLength]){
+
+      @Override
+      public synchronized int read(byte[] b, int off, int len) {
+        return super.read(b, off, Math.min(len, MediaHttpUploader.DEFAULT_CHUNK_SIZE / 10));
+      }
+    };
+    InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
+    MediaHttpUploader uploader = new MediaHttpUploader(mediaContent, fakeTransport, null);
+    uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
+
+    // There should be 6 calls made. 1 initiation request and 5 upload requests.
+    assertEquals(6, fakeTransport.lowLevelExecCalls);
+  }
+
   public void testUploadMultipleCalls_WithNoContentSizeProvided_WithExtraByte() throws Exception {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 5 + 1;
     MediaTransport fakeTransport = new MediaTransport(contentLength);
@@ -800,5 +820,29 @@ public class MediaHttpUploaderTest extends TestCase {
 
     // There should be 2 calls made. 1 initiation request and 1 upload request.
     assertEquals(2, fakeTransport.lowLevelExecCalls);
+  }
+
+  public void testResumableMediaUploadWithContentClose() throws Exception {
+    int contentLength = 0;
+    MediaTransport fakeTransport = new MediaTransport(contentLength);
+    TestableByteArrayInputStream inputStream =
+        new TestableByteArrayInputStream(new byte[contentLength]);
+    InputStreamContent mediaContent =
+        new InputStreamContent(TEST_CONTENT_TYPE, inputStream).setLength(contentLength);
+    MediaHttpUploader uploader = new MediaHttpUploader(mediaContent, fakeTransport, null);
+    uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
+    assertTrue(inputStream.isClosed());
+  }
+
+  public void testResumableMediaUploadWithoutContentClose() throws Exception {
+    int contentLength = 0;
+    MediaTransport fakeTransport = new MediaTransport(contentLength);
+    TestableByteArrayInputStream inputStream =
+        new TestableByteArrayInputStream(new byte[contentLength]);
+    InputStreamContent mediaContent = new InputStreamContent(
+        TEST_CONTENT_TYPE, inputStream).setLength(contentLength).setCloseInputStream(false);
+    MediaHttpUploader uploader = new MediaHttpUploader(mediaContent, fakeTransport, null);
+    uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
+    assertFalse(inputStream.isClosed());
   }
 }

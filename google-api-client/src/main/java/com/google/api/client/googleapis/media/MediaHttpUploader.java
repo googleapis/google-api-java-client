@@ -364,7 +364,9 @@ public final class MediaHttpUploader {
       try {
         if (response.isSuccessStatusCode()) {
           bytesUploaded = getMediaContentLength();
-          contentInputStream.close();
+          if (mediaContent.getCloseInputStream()) {
+            contentInputStream.close();
+          }
           updateStateAndNotifyListener(UploadState.MEDIA_COMPLETE);
           returningResponse = true;
           return response;
@@ -516,15 +518,13 @@ public final class MediaHttpUploader {
       int contentBufferStartIndex = 0;
       if (currentRequestContentBuffer == null) {
         bytesAllowedToRead = cachedByte == null ? blockSize + 1 : blockSize;
-        InputStream limitInputStream = ByteStreams.limit(contentInputStream, bytesAllowedToRead);
-
         currentRequestContentBuffer = new byte[blockSize + 1];
         if (cachedByte != null) {
           currentRequestContentBuffer[0] = cachedByte;
         }
-
-        actualBytesRead = limitInputStream.read(currentRequestContentBuffer, blockSize + 1 -
-            bytesAllowedToRead, bytesAllowedToRead);
+        actualBytesRead = ByteStreams.read(
+            contentInputStream, currentRequestContentBuffer, blockSize + 1 - bytesAllowedToRead,
+            bytesAllowedToRead);
       } else {
         // currentRequestContentBuffer is not null that means this is a request to recover from a
         // server error. The new request will be constructed from the previous request's byte
