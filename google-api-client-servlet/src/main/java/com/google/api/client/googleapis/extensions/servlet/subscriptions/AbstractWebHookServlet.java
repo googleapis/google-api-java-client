@@ -27,8 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * WebHook-Servlet used in conjunction with the {@link WebHookDeliveryMethod} to receive
- * {@link UnparsedNotification}.
+ * WebHook Servlet to receive {@link UnparsedNotification}.
  *
  * <p>
  * In order to use this servlet you should create a class inheriting from
