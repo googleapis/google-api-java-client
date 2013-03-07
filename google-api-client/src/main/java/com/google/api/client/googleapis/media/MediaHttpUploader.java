@@ -729,12 +729,6 @@ public final class MediaHttpUploader {
    * The minimum allowable value is {@link #MINIMUM_CHUNK_SIZE} and the specified chunk size must
    * be a multiple of {@link #MINIMUM_CHUNK_SIZE}.
    * </p>
-   *
-   * <p>
-   * Upgrade warning: Prior to version 1.13.0-beta {@link #setChunkSize} accepted any chunk size
-   * above {@link #MINIMUM_CHUNK_SIZE}, it now accepts only multiples of
-   * {@link #MINIMUM_CHUNK_SIZE}.
-   * </p>
    */
   public MediaHttpUploader setChunkSize(int chunkSize) {
     Preconditions.checkArgument(chunkSize > 0 && chunkSize % MINIMUM_CHUNK_SIZE == 0);
@@ -810,29 +804,13 @@ public final class MediaHttpUploader {
     return this;
   }
 
-  /**
-   * Sets the HTTP headers used for the initiation request.
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.12 the initiation headers were of type
-   * {@code GoogleHeaders}, but as of version 1.13 that type is deprecated, so we now use type
-   * {@link HttpHeaders}.
-   * </p>
-   */
+  /** Sets the HTTP headers used for the initiation request. */
   public MediaHttpUploader setInitiationHeaders(HttpHeaders initiationHeaders) {
     this.initiationHeaders = initiationHeaders;
     return this;
   }
 
-  /**
-   * Returns the HTTP headers used for the initiation request.
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.12 the initiation headers were of type
-   * {@code GoogleHeaders}, but as of version 1.13 that type is deprecated, so we now use type
-   * {@link HttpHeaders}.
-   * </p>
-   */
+  /** Returns the HTTP headers used for the initiation request. */
   public HttpHeaders getInitiationHeaders() {
     return initiationHeaders;
   }

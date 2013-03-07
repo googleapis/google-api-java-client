@@ -57,12 +57,6 @@ public abstract class JsonBatchCallback<T> implements BatchCallback<T, GoogleJso
   /**
    * Called if the individual batch response is unsuccessful.
    *
-   * <p>
-   * Upgrade warning: in prior version 1.12 the response headers were of type
-   * {@code GoogleHeaders}, but as of version 1.13 that type is deprecated, so we now use type
-   * {@link HttpHeaders}.
-   * </p>
-   *
    * @param e Google JSON error response content
    * @param responseHeaders Headers of the batch response
    */

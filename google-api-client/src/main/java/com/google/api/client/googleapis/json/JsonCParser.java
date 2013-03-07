@@ -55,11 +55,6 @@ import java.util.HashSet;
  * Implementation is thread-safe.
  * </p>
  *
- * <p>
- * Upgrade warning: this class now extends {@link JsonObjectParser}, whereas in prior version 1.11
- * it extended {@link com.google.api.client.http.json.JsonHttpParser}.
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  * @deprecated (scheduled to be removed in 1.15) Use {@link JsonObjectParser} instead.
