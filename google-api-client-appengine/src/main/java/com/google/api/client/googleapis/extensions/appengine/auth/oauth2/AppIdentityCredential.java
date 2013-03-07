@@ -21,7 +21,6 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.util.Lists;
 import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
-import com.google.appengine.api.appidentity.AppIdentityServiceFailureException;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -32,6 +31,11 @@ import java.util.List;
  * OAuth 2.0 credential in which a client Google App Engine application needs to access data that it
  * owns, based on <a href="http://code.google.com/appengine/docs/java/appidentity/overview.html
  * #Asserting_Identity_to_Google_APIs">Asserting Identity to Google APIs</a>.
+ *
+ * <p>
+ * Intercepts the request by using the access token obtained from
+ * {@link AppIdentityService#getAccessToken(Iterable)}.
+ * </p>
  *
  * <p>
  * Sample usage:
@@ -108,15 +112,6 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
     request.setInterceptor(this);
   }
 
-  /**
-   * Intercept the request by using the access token obtained from the {@link AppIdentityService}.
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.11 {@link AppIdentityServiceFailureException} was wrapped
-   * with an {@link IOException}, but now it is no longer wrapped because it is a
-   * {@link RuntimeException}.
-   * </p>
-   */
   @Override
   public void intercept(HttpRequest request) throws IOException {
     String accessToken = appIdentityService.getAccessToken(scopes).getAccessToken();
