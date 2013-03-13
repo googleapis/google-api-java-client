@@ -29,6 +29,7 @@ import com.google.api.client.http.json.JsonHttpRequest;
 import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
+import com.google.api.client.util.Experimental;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -42,6 +43,7 @@ import java.util.Arrays;
  *             com.google.api.client.googleapis.services.json.AbstractGoogleJsonClient} instead.
  */
 @Deprecated
+@Experimental
 public class GoogleClient extends JsonHttpClient {
 
   /** Whether discovery pattern checks should be suppressed on required parameters. */
@@ -265,6 +267,7 @@ public class GoogleClient extends JsonHttpClient {
    *             instead.
    */
   @Deprecated
+  @Experimental
   public static class Builder extends JsonHttpClient.Builder {
 
     /** Whether discovery pattern checks should be suppressed on required parameters. */

@@ -27,6 +27,7 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Clock;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 
 import java.util.Collections;
@@ -123,6 +124,7 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
    * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleAuthorizationCodeFlow(Builder)}
    */
   @Deprecated
+  @Experimental
   protected GoogleAuthorizationCodeFlow(AccessMethod method, HttpTransport transport,
       JsonFactory jsonFactory, GenericUrl tokenServerUrl,
       HttpExecuteInterceptor clientAuthentication, String clientId,

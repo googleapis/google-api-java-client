@@ -13,18 +13,14 @@
  */
 
 /**
+ * {@link com.google.api.client.util.Experimental} <br/>
  * Google's legacy ClientLogin authentication method as described in <a
  * href="http://code.google.com/apis/accounts/docs/AuthForInstalledApps.html">ClientLogin for
  * Installed Applications</a>.
  *
- * <p>
- * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
- * possibly entirely removed in a future version of the library</b>
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  */
-
+@com.google.api.client.util.Experimental
 package com.google.api.client.googleapis.auth.clientlogin;
 

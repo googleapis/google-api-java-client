@@ -15,6 +15,7 @@
 package com.google.api.client.googleapis;
 
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Key;
 
 /**
@@ -30,6 +31,7 @@ import com.google.api.client.util.Key;
  * @deprecated (scheduled to be removed in 1.14) Use {@link GenericUrl}
  */
 @Deprecated
+@Experimental
 public class GoogleUrl extends GenericUrl {
 
   /** Whether to pretty print the output. */

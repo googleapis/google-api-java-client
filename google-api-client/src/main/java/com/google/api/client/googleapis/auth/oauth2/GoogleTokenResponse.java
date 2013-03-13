@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Preconditions;
 
@@ -31,8 +32,7 @@ import java.security.GeneralSecurityException;
  * <p>
  * This response object is the result of {@link GoogleAuthorizationCodeTokenRequest#execute()} and
  * {@link GoogleRefreshTokenRequest#execute()}. Use {@link #parseIdToken()} to parse the
- * {@link GoogleIdToken} and then call
- * {@link GoogleIdTokenVerifier#verify(GoogleIdToken)}.
+ * {@link GoogleIdToken} and then call {@link GoogleIdTokenVerifier#verify(GoogleIdToken)}.
  * </p>
  *
  * <p>
@@ -103,9 +103,11 @@ public class GoogleTokenResponse extends TokenResponse {
   }
 
   /**
-   * Parses using {@link GoogleIdToken#parse(JsonFactory, String)} based on the
-   * {@link #getFactory() JSON factory} and {@link #getIdToken() ID token}.
+   * {@link Experimental} <br/>
+   * Parses using {@link GoogleIdToken#parse(JsonFactory, String)} based on the {@link #getFactory()
+   * JSON factory} and {@link #getIdToken() ID token}.
    */
+  @Experimental
   public GoogleIdToken parseIdToken() throws IOException {
     return GoogleIdToken.parse(getFactory(), getIdToken());
   }
@@ -120,6 +122,7 @@ public class GoogleTokenResponse extends TokenResponse {
    *             {@link GoogleIdTokenVerifier#verify(GoogleIdToken)} with {@link #parseIdToken()}
    */
   @Deprecated
+  @Experimental
   public boolean verifyIdToken(GoogleIdTokenVerifier verifier)
       throws GeneralSecurityException, IOException {
     return verifier.verify(parseIdToken());

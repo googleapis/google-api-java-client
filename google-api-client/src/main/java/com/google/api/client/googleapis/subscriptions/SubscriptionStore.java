@@ -14,10 +14,13 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
+import com.google.api.client.util.Experimental;
+
 import java.io.IOException;
 import java.util.Collection;
 
 /**
+ * {@link Experimental} <br/>
  * Stores and manages registered subscriptions and their handlers.
  *
  * <p>
@@ -27,6 +30,7 @@ import java.util.Collection;
  * @author Matthias Linder (mlinder)
  * @since 1.14
  */
+@Experimental
 public interface SubscriptionStore {
 
   /**

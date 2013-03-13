@@ -14,6 +14,7 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Strings;
 
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * {@link Experimental} <br/>
  * A notification whose content has not been parsed yet.
  *
  * <p>
@@ -41,6 +43,7 @@ import java.io.InputStream;
  * @author Matthias Linder (mlinder)
  * @since 1.14
  */
+@Experimental
 public final class UnparsedNotification extends Notification {
 
   /** The input stream containing the content. */

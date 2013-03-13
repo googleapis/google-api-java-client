@@ -22,6 +22,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.UrlEncodedContent;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.Strings;
@@ -29,6 +30,7 @@ import com.google.api.client.util.Strings;
 import java.io.IOException;
 
 /**
+ * {@link Experimental} <br/>
  * Client Login authentication method as described in <a
  * href="http://code.google.com/apis/accounts/docs/AuthForInstalledApps.html" >ClientLogin for
  * Installed Applications</a>.
@@ -36,6 +38,7 @@ import java.io.IOException;
  * @since 1.0
  * @author Yaniv Inbar
  */
+@Experimental
 public final class ClientLogin {
 
   /**

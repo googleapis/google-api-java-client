@@ -18,6 +18,7 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
+import com.google.api.client.util.Experimental;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,6 +50,7 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
    * @deprecated (scheduled to be removed in 1.15) Use {@link #AbstractGoogleJsonClient(Builder)}
    */
   @Deprecated
+  @Experimental
   protected AbstractGoogleJsonClient(HttpTransport transport, JsonFactory jsonFactory,
       String rootUrl, String servicePath, HttpRequestInitializer httpRequestInitializer,
       boolean legacyDataWrapper) {
@@ -71,6 +73,7 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
    * @deprecated (scheduled to be removed in 1.15) Use {@link #AbstractGoogleJsonClient(Builder)}
    */
   @Deprecated
+  @Experimental
   protected AbstractGoogleJsonClient(HttpTransport transport,
       HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
       JsonObjectParser jsonObjectParser,

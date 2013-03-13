@@ -18,6 +18,7 @@ import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
+import com.google.api.client.util.Experimental;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -52,6 +53,7 @@ import java.io.OutputStream;
  * @deprecated (scheduled to be removed in 1.15) Use {@link JsonHttpContent} instead.
  */
 @Deprecated
+@Experimental
 public final class JsonCContent extends JsonHttpContent {
 
   /**

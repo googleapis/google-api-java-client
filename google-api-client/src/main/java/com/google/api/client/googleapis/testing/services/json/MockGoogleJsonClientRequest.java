@@ -16,14 +16,17 @@ import com.google.api.client.googleapis.services.json.AbstractGoogleJsonClient;
 import com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.UriTemplate;
+import com.google.api.client.util.Experimental;
 
 /**
+ * {@link Experimental} <br/>
  * Thread-safe mock Google JSON request.
  *
  * @param <T> type of the response
  * @since 1.12
  * @author Yaniv Inbar
  */
+@Experimental
 public class MockGoogleJsonClientRequest<T> extends AbstractGoogleJsonClientRequest<T> {
 
   /**

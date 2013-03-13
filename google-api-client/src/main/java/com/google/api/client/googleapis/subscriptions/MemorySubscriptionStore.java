@@ -14,6 +14,8 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
+import com.google.api.client.util.Experimental;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.SortedMap;
@@ -22,6 +24,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
+ * {@link Experimental} <br/>
  * {@link SubscriptionStore} which stores all subscription information in memory.
  *
  * <p>
@@ -36,6 +39,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Matthias Linder (mlinder)
  * @since 1.14
  */
+@Experimental
 public class MemorySubscriptionStore implements SubscriptionStore {
 
   /** Lock on the token response information. */

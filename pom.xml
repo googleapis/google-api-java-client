@@ -434,6 +434,13 @@
         <artifactId>findbugs-maven-plugin</artifactId>
         <configuration>
           <excludeFilterFile>${basedir}/../findbugs-exclude.xml</excludeFilterFile>
+          <plugins>
+            <plugin>
+              <groupId>com.google.http-client</groupId>
+              <artifactId>google-http-client-findbugs</artifactId>
+              <version>${project.http.version}</version>
+            </plugin>
+          </plugins>
         </configuration>
         <executions>
           <execution>

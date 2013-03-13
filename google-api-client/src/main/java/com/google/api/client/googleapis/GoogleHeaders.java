@@ -15,6 +15,7 @@
 package com.google.api.client.googleapis;
 
 import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.escape.PercentEscaper;
 
@@ -30,6 +31,7 @@ import com.google.api.client.util.escape.PercentEscaper;
  * @deprecated (scheduled to be removed in 1.14) Use {@link HttpHeaders}
  */
 @Deprecated
+@Experimental
 public class GoogleHeaders extends HttpHeaders {
 
   /** Escaper for the {@link #slug} header. */

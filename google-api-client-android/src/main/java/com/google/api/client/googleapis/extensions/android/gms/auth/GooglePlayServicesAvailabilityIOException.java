@@ -14,12 +14,14 @@ package com.google.api.client.googleapis.extensions.android.gms.auth;
 
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.api.client.util.Experimental;
 
 import android.app.Activity;
 
 import java.io.IOException;
 
 /**
+ * {@link Experimental} <br/>
  * Wraps a {@link GooglePlayServicesAvailabilityException} into an {@link IOException} so it can be
  * caught directly.
  *
@@ -45,6 +47,7 @@ import java.io.IOException;
  * @since 1.12
  * @author Yaniv Inbar
  */
+@Experimental
 public class GooglePlayServicesAvailabilityIOException extends UserRecoverableAuthIOException {
 
   private static final long serialVersionUID = 1L;

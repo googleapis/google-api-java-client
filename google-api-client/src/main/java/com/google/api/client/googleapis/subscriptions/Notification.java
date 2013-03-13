@@ -14,10 +14,11 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 
-
 /**
+ * {@link Experimental} <br/>
  * Notification sent to this client about a subscribed resource.
  *
  * <p>
@@ -27,6 +28,7 @@ import com.google.api.client.util.Preconditions;
  * @author Matthias Linder (mlinder)
  * @since 1.14
  */
+@Experimental
 public abstract class Notification {
 
   /** Subscription UUID. */
