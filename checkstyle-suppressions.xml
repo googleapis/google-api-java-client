@@ -8,4 +8,7 @@
   <suppress checks="LineLength" files="com/google/api/client/googleapis/apache/GoogleApacheHttpTransport.java"/>
   <suppress checks="LineLength" files="com/google/api/client/googleapis/javanet/GoogleNetHttpTransport.java"/>
 
+  <!-- Don't check JavaDoc on package-info. -->
+  <suppress checks="JavadocStyleCheck" files="package-info.java"/>
+
 </suppressions>
