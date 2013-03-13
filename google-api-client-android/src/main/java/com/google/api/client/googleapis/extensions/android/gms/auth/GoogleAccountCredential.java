@@ -27,6 +27,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
+import com.google.api.client.util.Sleeper;
 
 import android.accounts.Account;
 import android.content.Context;
@@ -72,6 +73,9 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
 
   /** Selected Google account or {@code null} for none. */
   private Account selectedAccount;
+
+  /** Sleeper. */
+  private Sleeper sleeper = Sleeper.DEFAULT;
 
   /**
    * @param context context
@@ -201,12 +205,31 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
         }
         // sleep
         try {
-          Thread.sleep(backOffMillis);
+          sleeper.sleep(backOffMillis);
         } catch (InterruptedException e2) {
           // ignore
         }
       }
     }
+  }
+
+  /**
+   * Returns the sleeper.
+   *
+   * @since 1.15
+   */
+  public final Sleeper getSleeper() {
+    return sleeper;
+  }
+
+  /**
+   * Sets the sleeper.
+   *
+   * @since 1.15
+   */
+  public final GoogleAccountCredential setSleeper(Sleeper sleeper) {
+    this.sleeper = Preconditions.checkNotNull(sleeper);
+    return this;
   }
 
   @Experimental
