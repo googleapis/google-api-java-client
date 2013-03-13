@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.extensions.servlet.subscriptions;
 import com.google.api.client.googleapis.subscriptions.NotificationHeaders;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.googleapis.subscriptions.UnparsedNotification;
+import com.google.api.client.util.Experimental;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * {@link Experimental} <br/>
  * WebHook Servlet to receive {@link UnparsedNotification}.
  *
  * <p>
@@ -76,6 +78,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 1.14
  */
 @SuppressWarnings("serial")
+@Experimental
 public abstract class AbstractWebHookServlet extends HttpServlet {
 
   /**

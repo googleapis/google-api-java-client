@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.extensions.servlet.subscriptions;
 
 import com.google.api.client.googleapis.subscriptions.StoredSubscription;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Lists;
 import com.google.api.client.util.Preconditions;
 
@@ -29,6 +30,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 /**
+ * {@link Experimental} <br/>
  * {@link SubscriptionStore} making use of JDO.
  *
  * <p>
@@ -44,6 +46,7 @@ import javax.jdo.annotations.PrimaryKey;
  * @author Matthias Linder (mlinder)
  * @since 1.14
  */
+@Experimental
 public final class JdoSubscriptionStore implements SubscriptionStore {
 
   /** Persistence manager factory. */
@@ -58,6 +61,7 @@ public final class JdoSubscriptionStore implements SubscriptionStore {
 
   /** Container class for storing subscriptions in the JDO DataStore. */
   @PersistenceCapable
+  @Experimental
   private static final class JdoStoredSubscription {
 
     @Persistent(serialized = "true")

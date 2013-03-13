@@ -19,6 +19,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
@@ -60,6 +61,7 @@ import java.util.HashSet;
  * @deprecated (scheduled to be removed in 1.15) Use {@link JsonObjectParser} instead.
  */
 @Deprecated
+@Experimental
 @SuppressWarnings("javadoc")
 public final class JsonCParser extends JsonObjectParser {
   private final JsonFactory jsonFactory;

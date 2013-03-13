@@ -31,6 +31,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.webtoken.JsonWebSignature;
 import com.google.api.client.json.webtoken.JsonWebToken;
 import com.google.api.client.util.Clock;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Joiner;
 import com.google.api.client.util.PemReader;
 import com.google.api.client.util.Preconditions;
@@ -233,6 +234,7 @@ public class GoogleCredential extends Credential {
    * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleCredential(Builder)}
    */
   @Deprecated
+  @Experimental
   protected GoogleCredential(AccessMethod method, HttpTransport transport, JsonFactory jsonFactory,
       String tokenServerEncodedUrl, HttpExecuteInterceptor clientAuthentication,
       HttpRequestInitializer requestInitializer, List<CredentialRefreshListener> refreshListeners,
@@ -270,6 +272,7 @@ public class GoogleCredential extends Credential {
    * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleCredential(Builder)}
    */
   @Deprecated
+  @Experimental
   protected GoogleCredential(AccessMethod method, HttpTransport transport, JsonFactory jsonFactory,
       String tokenServerEncodedUrl, HttpExecuteInterceptor clientAuthentication,
       HttpRequestInitializer requestInitializer, List<CredentialRefreshListener> refreshListeners,
@@ -319,6 +322,7 @@ public class GoogleCredential extends Credential {
   }
 
   @Override
+  @Experimental
   protected TokenResponse executeRefreshToken() throws IOException {
     if (serviceAccountPrivateKey == null) {
       return super.executeRefreshToken();

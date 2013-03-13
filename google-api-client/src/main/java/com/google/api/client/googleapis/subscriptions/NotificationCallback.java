@@ -14,10 +14,13 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
+import com.google.api.client.util.Experimental;
+
 import java.io.IOException;
 import java.io.Serializable;
 
 /**
+ * {@link Experimental} <br/>
  * Callback which is used to receive {@link UnparsedNotification}s after subscribing to a topic.
  *
  * <p>
@@ -53,6 +56,7 @@ import java.io.Serializable;
  * @author Matthias Linder (mlinder)
  * @since 1.14
  */
+@Experimental
 public interface NotificationCallback extends Serializable {
 
   /**

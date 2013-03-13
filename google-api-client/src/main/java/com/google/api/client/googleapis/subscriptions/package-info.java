@@ -13,16 +13,13 @@
  */
 
 /**
+ * {@link com.google.api.client.util.Experimental} <br/>
  * Support for creating subscriptions and receiving notifications for Google APIs.
- *
- * <p>
- * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
- * possibly entirely removed in a future version of the library</b>
- * </p>
  *
  * @since 1.14
  * @author Matthias Linder (mlinder)
  */
 
+@com.google.api.client.util.Experimental
 package com.google.api.client.googleapis.subscriptions;
 

@@ -14,6 +14,7 @@
 
 package com.google.api.client.googleapis.extensions.android.accounts;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 
 import android.accounts.Account;
@@ -21,11 +22,13 @@ import android.accounts.AccountManager;
 import android.content.Context;
 
 /**
+ * {@link Experimental} <br/>
  * Account manager wrapper for Google accounts.
  *
  * @since 1.11
  * @author Yaniv Inbar
  */
+@Experimental
 public final class GoogleAccountManager {
 
   /** Google account type. */

@@ -11,16 +11,12 @@
  */
 
 /**
+ * {@link com.google.api.client.util.Experimental} <br/>
  * Test utilities for the {@code com.google.api.client.googleapis.json} package.
- *
- * <p>
- * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
- * possibly entirely removed in a future version of the library</b>
- * </p>
  *
  * @since 1.12
  * @author Yaniv Inbar
  */
-
+@com.google.api.client.util.Experimental
 package com.google.api.client.googleapis.testing.services.json;
 

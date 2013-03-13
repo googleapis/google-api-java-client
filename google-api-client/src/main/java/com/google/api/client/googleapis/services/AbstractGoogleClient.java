@@ -17,6 +17,7 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Strings;
@@ -104,6 +105,7 @@ public abstract class AbstractGoogleClient {
    * @deprecated (scheduled to be removed in 1.15) Use {@link #AbstractGoogleClient(Builder)}
    */
   @Deprecated
+  @Experimental
   protected AbstractGoogleClient(HttpTransport transport,
       HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
       ObjectParser objectParser) {
@@ -124,6 +126,7 @@ public abstract class AbstractGoogleClient {
    * @deprecated (scheduled to be removed in 1.15) Use {@link #AbstractGoogleClient(Builder)}
    */
   @Deprecated
+  @Experimental
   protected AbstractGoogleClient(HttpTransport transport,
       HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
       ObjectParser objectParser, GoogleClientRequestInitializer googleClientRequestInitializer,

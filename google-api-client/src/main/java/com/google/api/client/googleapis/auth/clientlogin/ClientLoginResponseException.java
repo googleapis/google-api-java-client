@@ -16,8 +16,10 @@ package com.google.api.client.googleapis.auth.clientlogin;
 
 import com.google.api.client.googleapis.auth.clientlogin.ClientLogin.ErrorInfo;
 import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.util.Experimental;
 
 /**
+ * {@link Experimental} <br/>
  * Exception thrown when an error status code is detected in an HTTP response to a Google
  * ClientLogin request in {@link ClientLogin} .
  *
@@ -28,6 +30,7 @@ import com.google.api.client.http.HttpResponseException;
  * @since 1.7
  * @author Yaniv Inbar
  */
+@Experimental
 public class ClientLoginResponseException extends HttpResponseException {
 
   private static final long serialVersionUID = 4974317674023010928L;

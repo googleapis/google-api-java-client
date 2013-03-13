@@ -18,11 +18,13 @@ import com.google.api.client.googleapis.subscriptions.TypedNotificationCallback;
 import com.google.api.client.googleapis.subscriptions.UnparsedNotification;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.ObjectParser;
 
 import java.io.IOException;
 
 /**
+ * {@link Experimental} <br/>
  * A {@link TypedNotificationCallback} which uses an JSON content encoding.
  *
  * <p>
@@ -63,6 +65,7 @@ import java.io.IOException;
  * @since 1.14
  */
 @SuppressWarnings("serial")
+@Experimental
 public abstract class JsonNotificationCallback<T> extends TypedNotificationCallback<T> {
 
   /** JSON factory used to deserialize notifications. {@code null} until first used. */

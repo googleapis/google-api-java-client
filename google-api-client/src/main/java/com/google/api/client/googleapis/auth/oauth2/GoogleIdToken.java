@@ -18,6 +18,7 @@ import com.google.api.client.auth.openidconnect.IdToken;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.webtoken.JsonWebSignature;
 import com.google.api.client.util.Clock;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Key;
 
 import java.io.IOException;
@@ -45,6 +46,7 @@ import java.security.GeneralSecurityException;
  * @author Yaniv Inbar
  */
 @SuppressWarnings("javadoc")
+@Experimental
 public class GoogleIdToken extends IdToken {
 
   /**

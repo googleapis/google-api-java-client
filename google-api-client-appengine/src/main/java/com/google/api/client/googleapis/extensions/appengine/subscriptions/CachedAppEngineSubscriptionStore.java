@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.extensions.appengine.subscriptions;
 
 import com.google.api.client.googleapis.subscriptions.StoredSubscription;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
+import com.google.api.client.util.Experimental;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
@@ -23,6 +24,7 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import java.io.IOException;
 
 /**
+ * {@link Experimental} <br/>
  * Implementation of a persistent {@link SubscriptionStore} making use of native DataStore and
  * the Memcache API on AppEngine.
  *
@@ -43,6 +45,7 @@ import java.io.IOException;
  * @author Matthias Linder (mlinder)
  * @since 1.14
  */
+@Experimental
 public final class CachedAppEngineSubscriptionStore extends AppEngineSubscriptionStore {
 
   /** Cache expiration time in seconds. */

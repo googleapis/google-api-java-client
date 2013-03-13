@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.auth.clientlogin;
 
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.util.ClassInfo;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.ObjectParser;
@@ -32,12 +33,14 @@ import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
+ * {@link Experimental} <br/>
  * HTTP parser for Google response to an Authorization request.
  *
  * @since 1.10
  * @author Yaniv Inbar
  */
 @SuppressWarnings("deprecation")
+@Experimental
 final class AuthKeyValueParser implements com.google.api.client.http.HttpParser, ObjectParser {
 
   /** Singleton instance. */

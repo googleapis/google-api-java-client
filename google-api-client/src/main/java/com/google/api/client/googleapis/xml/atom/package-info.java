@@ -13,6 +13,7 @@
  */
 
 /**
+ * {@link com.google.api.client.util.Experimental} <br/>
  * Utilities for Google's Atom XML implementation (see detailed package specification).
  *
  * <h2>Package Specification</h2>
@@ -28,7 +29,8 @@
  * The optional value parameter of this @{@link com.google.api.client.util.Key} annotation specifies
  * the XPath name to use to represent the field. For example, an XML attribute <code>a</code> has an
  * XPath name of <code>@a</code>, an XML element <code>&lt;a&gt;</code> has an XPath name of <code>
- * a</code>, and an XML text content has an XPath name of <code>text()</code>. These are named based
+ *a
+ * </code>, and an XML text content has an XPath name of <code>text()</code>. These are named based
  * on their usage with the <a
  * href="http://code.google.com/apis/gdata/docs/2.0/reference.html#PartialResponse">partial
  * response/update syntax</a> for Google API's. If the @{@link com.google.api.client.util.Key}
@@ -309,14 +311,9 @@ public class PicasaUrl extends GoogleUrl {
  * parse the returned byte stream.
  * </p>
  *
- * <p>
- * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
- * possibly entirely removed in a future version of the library</b>
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  */
-
+@com.google.api.client.util.Experimental
 package com.google.api.client.googleapis.xml.atom;
 

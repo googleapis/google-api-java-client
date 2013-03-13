@@ -15,6 +15,7 @@
 package com.google.api.client.googleapis.subscriptions;
 
 import com.google.api.client.json.GenericJson;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Objects;
 import com.google.api.client.util.Preconditions;
 
@@ -22,6 +23,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
+ * {@link Experimental} <br/>
  * Client subscription information to be stored in a {@link SubscriptionStore}.
  *
  * <p>
@@ -31,6 +33,7 @@ import java.util.UUID;
  * @author Matthias Linder (mlinder)
  * @since 1.14
  */
+@Experimental
 public final class StoredSubscription implements Serializable {
 
   private static final long serialVersionUID = 1L;
