@@ -25,6 +25,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.MultipartContent;
 import com.google.api.client.util.Preconditions;
+import com.google.api.client.util.Sleeper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -94,6 +95,9 @@ public final class BatchRequest {
   /** The list of queued request infos. */
   List<RequestInfo<?, ?>> requestInfos = new ArrayList<RequestInfo<?, ?>>();
 
+  /** Sleeper. */
+  private Sleeper sleeper = Sleeper.DEFAULT;
+
   /** A container class used to hold callbacks and data classes. */
   static class RequestInfo<T, E> {
     final BatchCallback<T, E> callback;
@@ -134,6 +138,25 @@ public final class BatchRequest {
   /** Returns the URL that will be hit when {@link #execute()} is called. */
   public GenericUrl getBatchUrl() {
     return batchUrl;
+  }
+
+  /**
+   * Returns the sleeper.
+   *
+   * @since 1.15
+   */
+  public Sleeper getSleeper() {
+    return sleeper;
+  }
+
+  /**
+   * Sets the sleeper.
+   *
+   * @since 1.15
+   */
+  public BatchRequest setSleeper(Sleeper sleeper) {
+    this.sleeper = Preconditions.checkNotNull(sleeper);
+    return this;
   }
 
   /**
@@ -230,7 +253,11 @@ public final class BatchRequest {
         if (batchResponse.backOffRequired && backOffPolicy != null) {
           long backOffTime = backOffPolicy.getNextBackOffMillis();
           if (backOffTime != BackOffPolicy.STOP) {
-            sleep(backOffTime);
+            try {
+              sleeper.sleep(backOffTime);
+            } catch (InterruptedException exception) {
+              // ignore
+            }
           }
         }
       } else {
@@ -239,19 +266,6 @@ public final class BatchRequest {
       retriesRemaining--;
     } while (retryAllowed);
     requestInfos.clear();
-  }
-
-  /**
-   * An exception safe sleep where if the sleeping is interrupted the exception is ignored.
-   *
-   * @param millis to sleep
-   */
-  private void sleep(long millis) {
-    try {
-      Thread.sleep(millis);
-    } catch (InterruptedException e) {
-      // Ignore.
-    }
   }
 
   /**
