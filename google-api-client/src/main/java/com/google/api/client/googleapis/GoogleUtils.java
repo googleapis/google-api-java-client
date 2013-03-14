@@ -52,7 +52,7 @@ public final class GoogleUtils {
 
   /** Current release version. */
   public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + BUGFIX_VERSION
-      + "-beta-SNAPSHOT";
+      + "-beta";
 
   /** Cached value for {@link #getCertificateTrustStore()}. */
   static KeyStore certTrustStore;
