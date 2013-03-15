@@ -28,7 +28,7 @@
 
   <scm>
     <connection>scm:hg:https://code.google.com/p/google-api-java-client/</connection>
-    <developerConnection>scm:hg:code.google.com/p/google-api-java-client/</developerConnection>
+    <developerConnection>scm:hg:https://code.google.com/p/google-api-java-client/</developerConnection>
     <url>http://code.google.com/p/google-api-java-client/source/browse/</url>
   </scm>
 
