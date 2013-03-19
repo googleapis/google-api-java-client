@@ -23,6 +23,7 @@
 	<classpathentry kind="lib" path="libs/jackson-core-asl-${project.jackson-core-asl.version}.jar" sourcepath="libs-sources/jackson-core-asl-${project.jackson-core-asl.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/jackson-core-${project.jackson-core2.version}.jar" sourcepath="libs-sources/jackson-core-${project.jackson-core2.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/jdo2-api-${project.jdo2-api.version}.jar" sourcepath="libs-sources/jdo2-api-${project.jdo2-api.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/jsr305-${project.jsr305.version}.jar"/>
 	<classpathentry kind="lib" path="libs/protobuf-java-${project.protobuf-java.version}.jar" sourcepath="libs-sources/protobuf-java-${project.protobuf-java.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/transaction-api-${project.transaction-api.version}.jar" sourcepath="libs-sources/transaction-api-${project.transaction-api.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/xpp3-${project.xpp3.version}.jar" sourcepath="libs-sources/xpp3-${project.xpp3.version}-sources.jar"/>
