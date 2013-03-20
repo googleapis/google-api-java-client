@@ -468,8 +468,8 @@
   </build>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>1.14.1-beta-SNAPSHOT</project.http.version>
-    <project.oauth.version>1.14.1-beta-SNAPSHOT</project.oauth.version>
+    <project.http.version>1.14.1-beta</project.http.version>
+    <project.oauth.version>1.14.1-beta</project.oauth.version>
     <project.jsr305.version>1.3.9</project.jsr305.version>
     <project.gson.version>2.1</project.gson.version>
     <project.jackson-core-asl.version>1.9.11</project.jackson-core-asl.version>
