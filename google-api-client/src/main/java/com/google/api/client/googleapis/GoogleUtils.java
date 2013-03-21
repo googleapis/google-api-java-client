@@ -48,7 +48,7 @@ public final class GoogleUtils {
    *
    * @since 1.14
    */
-  public static final int BUGFIX_VERSION = 0;
+  public static final int BUGFIX_VERSION = 1;
 
   /** Current release version. */
   public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + BUGFIX_VERSION
