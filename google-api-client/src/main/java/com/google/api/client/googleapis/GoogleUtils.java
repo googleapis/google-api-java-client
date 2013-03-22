@@ -51,8 +51,9 @@ public final class GoogleUtils {
   public static final int BUGFIX_VERSION = 1;
 
   /** Current release version. */
-  public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + BUGFIX_VERSION
-      + "-beta";
+  // NOTE: toString() so compiler thinks it isn't a constant, so it won't inline it
+  public static final String VERSION = (MAJOR_VERSION + "." + MINOR_VERSION + "." + BUGFIX_VERSION
+      + "-beta").toString();
 
   /** Cached value for {@link #getCertificateTrustStore()}. */
   static KeyStore certTrustStore;
