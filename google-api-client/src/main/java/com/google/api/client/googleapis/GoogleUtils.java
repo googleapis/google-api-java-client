@@ -29,26 +29,27 @@ import java.security.KeyStore;
  */
 public final class GoogleUtils {
 
+  // NOTE: Integer instead of int so compiler thinks it isn't a constant, so it won't inline it
   /**
    * Major part of the current release version.
    *
    * @since 1.14
    */
-  public static final int MAJOR_VERSION = 1;
+  public static final Integer MAJOR_VERSION = 1;
 
   /**
    * Minor part of the current release version.
    *
    * @since 1.14
    */
-  public static final int MINOR_VERSION = 14;
+  public static final Integer MINOR_VERSION = 14;
 
   /**
    * Bug fix part of the current release version.
    *
    * @since 1.14
    */
-  public static final int BUGFIX_VERSION = 1;
+  public static final Integer BUGFIX_VERSION = 1;
 
   /** Current release version. */
   // NOTE: toString() so compiler thinks it isn't a constant, so it won't inline it
