@@ -46,6 +46,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * {@link Experimental} <br/>
  * Thread-safe Google ID token verifier.
  *
  * <p>
@@ -78,6 +79,7 @@ import java.util.regex.Pattern;
  * </pre>
  * @since 1.7
  */
+@Experimental
 public class GoogleIdTokenVerifier {
 
   /** Pattern for the max-age header element of Cache-Control. */
@@ -100,7 +102,6 @@ public class GoogleIdTokenVerifier {
 
   /** Set of Client IDs. */
   @Deprecated
-  @Experimental
   private Set<String> clientIds;
 
   /** HTTP transport. */
@@ -131,7 +132,6 @@ public class GoogleIdTokenVerifier {
    *
    * @since 1.14
    */
-  @Experimental
   protected GoogleIdTokenVerifier(Builder builder) {
     clientIds = builder.clientIds == null
         ? Collections.<String>emptySet() : Collections.unmodifiableSet(builder.clientIds);
@@ -150,7 +150,6 @@ public class GoogleIdTokenVerifier {
    * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleIdTokenVerifier(Builder)}
    */
   @Deprecated
-  @Experimental
   protected GoogleIdTokenVerifier(
       Set<String> clientIds, HttpTransport transport, JsonFactory jsonFactory) {
     this(clientIds, transport, jsonFactory, Clock.SYSTEM);
@@ -167,7 +166,6 @@ public class GoogleIdTokenVerifier {
    * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleIdTokenVerifier(Builder)}
    */
   @Deprecated
-  @Experimental
   protected GoogleIdTokenVerifier(
       Set<String> clientIds, HttpTransport transport, JsonFactory jsonFactory, Clock clock) {
     this.clientIds =
@@ -198,7 +196,6 @@ public class GoogleIdTokenVerifier {
    * @deprecated (scheduled to be removed in 1.15) Use {@link GoogleIdToken#verifyAudience}
    */
   @Deprecated
-  @Experimental
   public final Set<String> getClientIds() {
     return clientIds;
   }
@@ -237,7 +234,6 @@ public class GoogleIdTokenVerifier {
    * @param idToken Google ID token
    * @return {@code true} if verified successfully or {@code false} if failed
    */
-  @Experimental
   public boolean verify(GoogleIdToken idToken) throws GeneralSecurityException, IOException {
     // if specifying client IDs, assume want deprecated method
     if (!clientIds.isEmpty()) {
@@ -275,7 +271,6 @@ public class GoogleIdTokenVerifier {
    * @return Google ID token if verified successfully or {@code null} if failed
    * @since 1.9
    */
-  @Experimental
   public GoogleIdToken verify(String idTokenString) throws GeneralSecurityException, IOException {
     GoogleIdToken idToken = GoogleIdToken.parse(jsonFactory, idTokenString);
     return verify(idToken) ? idToken : null;
@@ -303,7 +298,6 @@ public class GoogleIdTokenVerifier {
    * @deprecated (scheduled to be removed in 1.15) Use {@link #verify(GoogleIdToken)}
    */
   @Deprecated
-  @Experimental
   public boolean verify(GoogleIdToken idToken, String clientId)
       throws GeneralSecurityException, IOException {
     return verify(
@@ -334,7 +328,6 @@ public class GoogleIdTokenVerifier {
    * @deprecated (scheduled to be removed in 1.15) Use {@link #verify(GoogleIdToken)}
    */
   @Deprecated
-  @Experimental
   public boolean verify(Set<String> clientIds, GoogleIdToken idToken)
       throws GeneralSecurityException, IOException {
     // check the payload
@@ -441,6 +434,7 @@ public class GoogleIdTokenVerifier {
   }
 
   /**
+   * {@link Experimental} <br/>
    * Builder for {@link GoogleIdTokenVerifier}.
    *
    * <p>
@@ -449,6 +443,7 @@ public class GoogleIdTokenVerifier {
    *
    * @since 1.9
    */
+  @Experimental
   public static class Builder {
 
     /** HTTP transport. */
@@ -459,7 +454,6 @@ public class GoogleIdTokenVerifier {
 
     /** Set of Client IDs. */
     @Deprecated
-    @Experimental
     Set<String> clientIds = new HashSet<String>();
 
     /** Clock. */
@@ -477,7 +471,6 @@ public class GoogleIdTokenVerifier {
     }
 
     /** Builds a new instance of {@link GoogleIdTokenVerifier}. */
-    @Experimental
     public GoogleIdTokenVerifier build() {
       return new GoogleIdTokenVerifier(this);
     }
@@ -498,7 +491,6 @@ public class GoogleIdTokenVerifier {
      * @deprecated (scheduled to be removed in 1.15) Use {@link GoogleIdToken#verifyAudience}
      */
     @Deprecated
-    @Experimental
     public final Set<String> getClientIds() {
       return clientIds;
     }
@@ -514,7 +506,6 @@ public class GoogleIdTokenVerifier {
      * @deprecated (scheduled to be removed in 1.15) Use {@link GoogleIdToken#verifyAudience}
      */
     @Deprecated
-    @Experimental
     public Builder setClientIds(Iterable<String> clientIds) {
       this.clientIds.clear();
       for (String clientId : clientIds) {
@@ -533,7 +524,6 @@ public class GoogleIdTokenVerifier {
      * @deprecated (scheduled to be removed in 1.15) Use {@link GoogleIdToken#verifyAudience}
      */
     @Deprecated
-    @Experimental
     public Builder setClientIds(String... clientIds) {
       this.clientIds.clear();
       Collections.addAll(this.clientIds, clientIds);

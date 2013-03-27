@@ -113,7 +113,7 @@ public class GoogleJsonResponseException extends HttpResponseException {
             // make sure there is an "error" key
             parser.skipToKey("error");
             if (parser.getCurrentToken() != JsonToken.END_OBJECT) {
-              details = parser.parseAndClose(GoogleJsonError.class, null);
+              details = parser.parseAndClose(GoogleJsonError.class);
               detailString = details.toPrettyString();
             }
           }

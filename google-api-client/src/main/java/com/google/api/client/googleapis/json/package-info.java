@@ -177,11 +177,6 @@ public class YouTubeUrl extends GoogleUrl {
  * call {@link com.google.api.client.http.HttpRequest#execute()} and parse the returned byte stream.
  * </p>
  *
- * <p>
- * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
- * possibly entirely removed in a future version of the library</b>
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  */

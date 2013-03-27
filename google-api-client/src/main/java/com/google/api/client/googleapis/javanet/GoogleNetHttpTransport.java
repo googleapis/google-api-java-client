@@ -31,7 +31,8 @@ public class GoogleNetHttpTransport {
 
   /**
    * Returns a new instance of {@link NetHttpTransport} that uses
-   * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates using {@link com.google.api.client.http.javanet.NetHttpTransport.Builder#trustCertificates(KeyStore)}
+   * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates using
+   * {@link com.google.api.client.http.javanet.NetHttpTransport.Builder#trustCertificates(KeyStore)}
    * .
    *
    * <p>

@@ -23,6 +23,7 @@ import com.google.api.client.json.CustomizeJsonParser;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.rpc2.JsonRpcRequest;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
@@ -30,6 +31,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
+ * {@link Experimental} <br/>
  * JSON-RPC 2.0 HTTP transport for RPC requests for Google API's, including both singleton and
  * batched requests.
  *
@@ -45,6 +47,7 @@ import java.util.List;
  * @since 1.3
  * @author Yaniv Inbar
  */
+@Experimental
 public final class GoogleJsonRpcHttpTransport {
 
   private static final String JSON_RPC_CONTENT_TYPE = "application/json-rpc";
@@ -144,6 +147,7 @@ public final class GoogleJsonRpcHttpTransport {
   }
 
   /**
+   * {@link Experimental} <br/>
    * {@link GoogleJsonRpcHttpTransport} Builder.
    *
    * <p>
@@ -152,6 +156,7 @@ public final class GoogleJsonRpcHttpTransport {
    *
    * @since 1.9
    */
+  @Experimental
   public static class Builder {
 
     /** Default RPC server URL. */
@@ -283,9 +288,10 @@ public final class GoogleJsonRpcHttpTransport {
   /**
    * Builds a POST HTTP request for the JSON-RPC requests objects specified in the given JSON-RPC
    * request object.
+   *
    * <p>
    * You may use {@link JsonFactory#createJsonParser(java.io.InputStream)} to get the
-   * {@link JsonParser}, and {@link JsonParser#parseAndClose(Class, CustomizeJsonParser)}.
+   * {@link JsonParser}, and {@link JsonParser#parseAndClose(Class)}.
    * </p>
    *
    * @param request JSON-RPC request object

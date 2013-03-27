@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 /**
+ * {@link Experimental} <br/>
  * Google ID tokens.
  *
  * <p>
@@ -89,6 +90,7 @@ public class GoogleIdToken extends IdToken {
   }
 
   /**
+   * {@link Experimental} <br/>
    * Google ID token payload.
    *
    * <p>
@@ -97,6 +99,7 @@ public class GoogleIdToken extends IdToken {
    * version 1.14 it now extends {@link IdToken.Payload}.
    * </p>
    */
+  @Experimental
   public static class Payload extends IdToken.Payload {
 
     /** Obfuscated Google user ID or {@code null} for none. */

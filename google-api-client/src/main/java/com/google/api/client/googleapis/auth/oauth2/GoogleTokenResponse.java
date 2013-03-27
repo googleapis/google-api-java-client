@@ -79,12 +79,17 @@ public class GoogleTokenResponse extends TokenResponse {
     return (GoogleTokenResponse) super.setScope(scope);
   }
 
-  /** Returns the ID token. */
+  /**
+   * {@link Experimental} <br/>
+   * Returns the ID token.
+   */
+  @Experimental
   public final String getIdToken() {
     return idToken;
   }
 
   /**
+   * {@link Experimental} <br/>
    * Sets the ID token.
    *
    * <p>
@@ -97,6 +102,7 @@ public class GoogleTokenResponse extends TokenResponse {
    * {@code null} is not allowed.
    * </p>
    */
+  @Experimental
   public GoogleTokenResponse setIdToken(String idToken) {
     this.idToken = Preconditions.checkNotNull(idToken);
     return this;
