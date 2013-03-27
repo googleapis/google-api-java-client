@@ -37,7 +37,6 @@ import java.util.List;
  *
  * @author Yaniv Inbar
  */
-@SuppressWarnings("deprecation")
 public class MethodOverrideTest extends TestCase {
 
   private static final List<String> OVERRIDDEN_METHODS = ImmutableList.of(

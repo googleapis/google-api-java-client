@@ -19,7 +19,6 @@ import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
 import com.google.api.client.auth.oauth2.Credential.AccessMethod;
 import com.google.api.client.auth.oauth2.CredentialStore;
-import com.google.api.client.auth.oauth2.TokenRequest;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteInterceptor;
@@ -27,7 +26,6 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Clock;
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 
 import java.util.Collections;
@@ -103,40 +101,6 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
     approvalPrompt = builder.approvalPrompt;
   }
 
-  /**
-   * @param method method of presenting the access token to the resource server (for example
-   *        {@link BearerToken#authorizationHeaderAccessMethod})
-   * @param transport HTTP transport
-   * @param jsonFactory JSON factory
-   * @param tokenServerUrl token server URL
-   * @param clientAuthentication client authentication or {@code null} for none (see
-   *        {@link TokenRequest#setClientAuthentication(HttpExecuteInterceptor)})
-   * @param clientId client identifier
-   * @param authorizationServerEncodedUrl authorization server encoded URL
-   * @param credentialStore credential persistence store or {@code null} for none
-   * @param requestInitializer HTTP request initializer or {@code null} for none
-   * @param scopes space-separated list of scopes or {@code null} for none
-   * @param accessType access type ({@code "online"} to request online access or {@code "offline"}
-   *        to request offline access) or {@code null} for the default behavior
-   * @param approvalPrompt Prompt for consent behavior ({@code "auto"} to request auto-approval or
-   *        {@code "force"} to force the approval UI to show) or {@code null} for the default
-   *        behavior
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #GoogleAuthorizationCodeFlow(Builder)}
-   */
-  @Deprecated
-  @Experimental
-  protected GoogleAuthorizationCodeFlow(AccessMethod method, HttpTransport transport,
-      JsonFactory jsonFactory, GenericUrl tokenServerUrl,
-      HttpExecuteInterceptor clientAuthentication, String clientId,
-      String authorizationServerEncodedUrl, CredentialStore credentialStore,
-      HttpRequestInitializer requestInitializer, String scopes, String accessType,
-      String approvalPrompt) {
-    super(method, transport, jsonFactory, tokenServerUrl, clientAuthentication, clientId,
-        authorizationServerEncodedUrl, credentialStore, requestInitializer, scopes);
-    this.accessType = accessType;
-    this.approvalPrompt = approvalPrompt;
-  }
-
   @Override
   public GoogleAuthorizationCodeTokenRequest newTokenRequest(String authorizationCode) {
     // don't need to specify clientId & clientSecret because specifying clientAuthentication
@@ -145,7 +109,6 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
         getTokenServerEncodedUrl(), "", "", authorizationCode, "").setClientAuthentication(
         getClientAuthentication())
         .setRequestInitializer(getRequestInitializer()).setScopes(getScopes());
-
   }
 
   @Override

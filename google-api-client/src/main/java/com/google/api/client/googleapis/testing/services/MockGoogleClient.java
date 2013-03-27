@@ -53,43 +53,6 @@ public class MockGoogleClient extends AbstractGoogleClient {
   }
 
   /**
-   * @param transport HTTP transport
-   * @param httpRequestInitializer HTTP request initializer or {@code null} for none
-   * @param rootUrl root URL of the service
-   * @param servicePath service path
-   * @param objectParser object parser
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #MockGoogleClient(HttpTransport,
-   *             String, String, ObjectParser, HttpRequestInitializer)}
-   */
-  @Deprecated
-  public MockGoogleClient(HttpTransport transport, HttpRequestInitializer httpRequestInitializer,
-      String rootUrl, String servicePath, ObjectParser objectParser) {
-    super(transport, httpRequestInitializer, rootUrl, servicePath, objectParser);
-  }
-
-  /**
-   * @param transport HTTP transport
-   * @param httpRequestInitializer HTTP request initializer or {@code null} for none
-   * @param rootUrl root URL of the service
-   * @param servicePath service path
-   * @param objectParser object parser or {@code null} for none
-   * @param googleClientRequestInitializer Google request initializer or {@code null} for none
-   * @param applicationName application name to be sent in the User-Agent header of requests or
-   *        {@code null} for none
-   * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
-   *        parameters
-   * @deprecated (scheduled to be removed in 1.15) Use {@link Builder}
-   */
-  @Deprecated
-  public MockGoogleClient(HttpTransport transport, HttpRequestInitializer httpRequestInitializer,
-      String rootUrl, String servicePath, ObjectParser objectParser,
-      GoogleClientRequestInitializer googleClientRequestInitializer, String applicationName,
-      boolean suppressPatternChecks) {
-    super(transport, httpRequestInitializer, rootUrl, servicePath, objectParser,
-        googleClientRequestInitializer, applicationName, suppressPatternChecks);
-  }
-
-  /**
    * Builder for {@link MockGoogleClient}.
    *
    * <p>

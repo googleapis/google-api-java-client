@@ -17,7 +17,6 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Strings;
@@ -88,60 +87,6 @@ public abstract class AbstractGoogleClient {
     objectParser = builder.objectParser;
     suppressPatternChecks = builder.suppressPatternChecks;
     suppressRequiredParameterChecks = builder.suppressRequiredParameterChecks;
-  }
-
-  /**
-   * Constructor with required parameters.
-   *
-   * <p>
-   * Use {@link Builder} if you need to specify any of the optional parameters.
-   * </p>
-   *
-   * @param transport HTTP transport
-   * @param httpRequestInitializer HTTP request initializer or {@code null} for none
-   * @param rootUrl root URL of the service
-   * @param servicePath service path
-   * @param objectParser object parser
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #AbstractGoogleClient(Builder)}
-   */
-  @Deprecated
-  @Experimental
-  protected AbstractGoogleClient(HttpTransport transport,
-      HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
-      ObjectParser objectParser) {
-    this(transport, httpRequestInitializer, rootUrl, servicePath, objectParser, null, null, false);
-  }
-
-  /**
-   * @param transport HTTP transport
-   * @param httpRequestInitializer HTTP request initializer or {@code null} for none
-   * @param rootUrl root URL of the service
-   * @param servicePath service path
-   * @param objectParser object parser or {@code null} for none
-   * @param googleClientRequestInitializer Google request initializer or {@code null} for none
-   * @param applicationName application name to be sent in the User-Agent header of requests or
-   *        {@code null} for none
-   * @param suppressPatternChecks whether discovery pattern checks should be suppressed on required
-   *        parameters
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #AbstractGoogleClient(Builder)}
-   */
-  @Deprecated
-  @Experimental
-  protected AbstractGoogleClient(HttpTransport transport,
-      HttpRequestInitializer httpRequestInitializer, String rootUrl, String servicePath,
-      ObjectParser objectParser, GoogleClientRequestInitializer googleClientRequestInitializer,
-      String applicationName, boolean suppressPatternChecks) {
-    this.googleClientRequestInitializer = googleClientRequestInitializer;
-    this.rootUrl = normalizeRootUrl(rootUrl);
-    this.servicePath = normalizeServicePath(servicePath);
-    if (Strings.isNullOrEmpty(applicationName)) {
-      LOGGER.warning("Application name is not set. Call Builder#setApplicationName.");
-    }
-    this.applicationName = applicationName;
-    this.requestFactory = httpRequestInitializer == null
-        ? transport.createRequestFactory() : transport.createRequestFactory(httpRequestInitializer);
-    this.objectParser = objectParser;
-    this.suppressPatternChecks = suppressPatternChecks;
   }
 
   /**

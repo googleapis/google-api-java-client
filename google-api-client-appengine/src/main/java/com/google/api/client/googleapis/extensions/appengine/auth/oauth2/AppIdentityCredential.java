@@ -18,7 +18,6 @@ import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Lists;
 import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
@@ -90,23 +89,6 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
     appIdentityService = builder.appIdentityService == null
         ? AppIdentityServiceFactory.getAppIdentityService() : builder.appIdentityService;
     scopes = builder.scopes;
-  }
-
-  /**
-   * @param appIdentityService App Identity Service that provides the access token
-   * @param scopes OAuth scopes
-   *
-   * @since 1.12
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #AppIdentityCredential(Builder)}
-   */
-  @Deprecated
-  @Experimental
-  protected AppIdentityCredential(AppIdentityService appIdentityService, List<String> scopes) {
-    // Lazily retrieved rather than setting as the default value in order to not add runtime
-    // dependencies on AppIdentityServiceFactory unless it is actually being used.
-    this.appIdentityService = appIdentityService == null
-        ? AppIdentityServiceFactory.getAppIdentityService() : appIdentityService;
-    this.scopes = Lists.newArrayList(scopes);
   }
 
   @Override

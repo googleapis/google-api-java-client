@@ -612,11 +612,6 @@ public class BatchRequestTest extends TestCase {
             return -1;
           }
 
-          @Deprecated
-          public String getEncoding() {
-            return null;
-          }
-
           public String getType() {
             return null;
           }

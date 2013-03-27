@@ -284,7 +284,6 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   }
 
   /** Create a request suitable for use against this service. */
-  @SuppressWarnings("deprecation")
   private HttpRequest buildHttpRequest(boolean usingHead) throws IOException {
     Preconditions.checkArgument(uploader == null);
     Preconditions.checkArgument(!usingHead || requestMethod.equals(HttpMethods.GET));
@@ -300,7 +299,6 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     }
     httpRequest.getHeaders().putAll(requestHeaders);
     if (!disableGZipContent) {
-      httpRequest.setEnableGZipContent(true);
       httpRequest.setEncoding(new GZipEncoding());
     }
     final HttpResponseInterceptor responseInterceptor = httpRequest.getResponseInterceptor();
