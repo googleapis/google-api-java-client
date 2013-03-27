@@ -16,11 +16,13 @@ package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.List;
 
 /**
@@ -180,10 +182,26 @@ public final class GoogleClientSecrets extends GenericJson {
     return (GoogleClientSecrets) super.clone();
   }
 
-  /** Loads the {@code client_secrets.json} file from the given input stream. */
+  /**
+   * {@link Experimental} <br/>
+   * Loads the {@code client_secrets.json} file from the given input stream.
+   *
+   * @deprecated (scheduled to be removed in 1.16) Use {@link #load(JsonFactory, Reader)} instead.
+   */
+  @Deprecated
+  @Experimental
   public static GoogleClientSecrets load(JsonFactory jsonFactory, InputStream inputStream)
       throws IOException {
-    // TODO(mlinder): Change this method to take a charset
     return jsonFactory.fromInputStream(inputStream, GoogleClientSecrets.class);
+  }
+
+  /**
+   * Loads the {@code client_secrets.json} file from the given reader.
+   *
+   * @since 1.15
+   */
+  public static GoogleClientSecrets load(JsonFactory jsonFactory, Reader reader)
+      throws IOException {
+    return jsonFactory.fromReader(reader, GoogleClientSecrets.class);
   }
 }

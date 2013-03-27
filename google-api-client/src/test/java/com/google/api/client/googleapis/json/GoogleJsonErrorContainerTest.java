@@ -34,7 +34,7 @@ public class GoogleJsonErrorContainerTest extends TestCase {
 
   public void test_json() throws Exception {
     JsonParser parser = FACTORY.createJsonParser(ERROR);
-    GoogleJsonErrorContainer e = parser.parse(GoogleJsonErrorContainer.class, null);
+    GoogleJsonErrorContainer e = parser.parse(GoogleJsonErrorContainer.class);
     assertEquals(ERROR, FACTORY.toString(e));
   }
 }

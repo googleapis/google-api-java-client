@@ -15,11 +15,6 @@
 /**
  * Google App Engine utilities for OAuth 2.0 for Google APIs.
  *
- * <p>
- * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
- * possibly entirely removed in a future version of the library</b>
- * </p>
- *
  * @since 1.7
  * @author Yaniv Inbar
  */

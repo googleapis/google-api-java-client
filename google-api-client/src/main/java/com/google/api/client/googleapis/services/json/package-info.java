@@ -13,13 +13,9 @@
 /**
  * Contains the basis for the generated service-specific libraries based on the JSON format.
  *
- * <p>
- * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
- * possibly entirely removed in a future version of the library</b>
- * </p>
- *
  * @since 1.12
  * @author Yaniv Inbar
  */
 
 package com.google.api.client.googleapis.services.json;
+
