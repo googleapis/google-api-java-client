@@ -21,7 +21,6 @@ import com.google.api.client.util.Key;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 
 /**
  * Google OAuth 2.0 JSON model for a successful access token response as specified in <a
@@ -37,12 +36,6 @@ import java.security.GeneralSecurityException;
  *
  * <p>
  * Implementation is not thread-safe.
- * </p>
- *
- * <p>
- * Upgrade warning: in prior version 1.13 this extended
- * {@link com.google.api.client.auth.openidconnect.IdTokenResponse}, but starting with version 1.14
- * it now extends {@link TokenResponse}.
  * </p>
  *
  * @since 1.7
@@ -96,11 +89,6 @@ public class GoogleTokenResponse extends TokenResponse {
    * Overriding is only supported for the purpose of calling the super implementation and changing
    * the return type, but nothing else.
    * </p>
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.13 {@code null} was allowed, but starting with version 1.14
-   * {@code null} is not allowed.
-   * </p>
    */
   @Experimental
   public GoogleTokenResponse setIdToken(String idToken) {
@@ -116,22 +104,6 @@ public class GoogleTokenResponse extends TokenResponse {
   @Experimental
   public GoogleIdToken parseIdToken() throws IOException {
     return GoogleIdToken.parse(getFactory(), getIdToken());
-  }
-
-  /**
-   * Verifies the ID token as specified in {@link GoogleIdTokenVerifier#verify} by passing it
-   * {@link #parseIdToken}.
-   *
-   * @param verifier Google ID token verifier
-   *
-   * @deprecated (scheduled to be removed in 1.15) Use
-   *             {@link GoogleIdTokenVerifier#verify(GoogleIdToken)} with {@link #parseIdToken()}
-   */
-  @Deprecated
-  @Experimental
-  public boolean verifyIdToken(GoogleIdTokenVerifier verifier)
-      throws GeneralSecurityException, IOException {
-    return verifier.verify(parseIdToken());
   }
 
   @Override

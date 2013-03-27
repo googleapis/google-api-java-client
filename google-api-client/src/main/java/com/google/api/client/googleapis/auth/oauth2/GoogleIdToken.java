@@ -17,7 +17,6 @@ package com.google.api.client.googleapis.auth.oauth2;
 import com.google.api.client.auth.openidconnect.IdToken;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.webtoken.JsonWebSignature;
-import com.google.api.client.util.Clock;
 import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Key;
 
@@ -35,12 +34,6 @@ import java.security.GeneralSecurityException;
  *
  * <p>
  * Implementation is not thread-safe.
- * </p>
- *
- * <p>
- * Upgrade warning: in prior version 1.13 this extended
- * {@link com.google.api.client.auth.jsontoken.JsonWebSignature}, but starting with version 1.14 it
- * now extends {@link IdToken}.
  * </p>
  *
  * @since 1.7
@@ -92,12 +85,6 @@ public class GoogleIdToken extends IdToken {
   /**
    * {@link Experimental} <br/>
    * Google ID token payload.
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.13 this extended
-   * {@link com.google.api.client.auth.jsontoken.JsonWebSignature.Payload}, but starting with
-   * version 1.14 it now extends {@link IdToken.Payload}.
-   * </p>
    */
   @Experimental
   public static class Payload extends IdToken.Payload {
@@ -127,17 +114,6 @@ public class GoogleIdToken extends IdToken {
     private boolean emailVerified;
 
     public Payload() {
-    }
-
-    /**
-     * Constructs a new Payload and uses the specified {@link Clock}.
-     * @param clock Clock to use for expiration checks.
-     * @since 1.9
-     * @deprecated (scheduled to be removed in 1.15) Use {@link #Payload()} instead
-     */
-    @Deprecated
-    public Payload(Clock clock) {
-      super();
     }
 
     /** Returns the obfuscated Google user id or {@code null} for none. */

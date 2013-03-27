@@ -26,7 +26,6 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
-import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.StringUtils;
 
 import java.io.BufferedReader;
@@ -192,24 +191,18 @@ final class BatchUnparsedResponse {
     }
   }
 
-  @SuppressWarnings("deprecation")
   private <A, T, E> A getParsedDataClass(
       Class<A> dataClass, HttpResponse response, RequestInfo<T, E> requestInfo, String contentType)
       throws IOException {
-    // TODO(mlinder): Remove the HttpResponse reference and directly parse the InputStream
-    com.google.api.client.http.HttpParser oldParser = requestInfo.request.getParser(contentType);
-    ObjectParser parser = requestInfo.request.getParser();
-    A parsed = null;
-    if (dataClass != Void.class) {
-      parsed = parser != null ? parser.parseAndClose(
-          response.getContent(), response.getContentCharset(), dataClass) : oldParser.parse(
-          response, dataClass);
+    // TODO(yanivi): Remove the HttpResponse reference and directly parse the InputStream
+    if (dataClass == Void.class) {
+      return null;
     }
-    return parsed;
+    return requestInfo.request.getParser().parseAndClose(
+        response.getContent(), response.getContentCharset(), dataClass);
   }
 
   /** Create a fake HTTP response object populated with the partContent and the statusCode. */
-  @Deprecated
   private HttpResponse getFakeResponse(final int statusCode, final String partContent,
       List<String> headerNames, List<String> headerValues)
       throws IOException {
@@ -232,7 +225,6 @@ final class BatchUnparsedResponse {
     }
   }
 
-  @Deprecated
   private static class FakeResponseHttpTransport extends HttpTransport {
 
     private int statusCode;
@@ -255,7 +247,6 @@ final class BatchUnparsedResponse {
     }
   }
 
-  @Deprecated
   private static class FakeLowLevelHttpRequest extends LowLevelHttpRequest {
 
     // TODO(rmistry): Read in partContent as bytes instead of String for efficiency.
@@ -277,10 +268,6 @@ final class BatchUnparsedResponse {
     }
 
     @Override
-    public void setContent(HttpContent content) {
-    }
-
-    @Override
     public LowLevelHttpResponse execute() {
       FakeLowLevelHttpResponse response = new FakeLowLevelHttpResponse(new ByteArrayInputStream(
           StringUtils.getBytesUtf8(partContent)), statusCode, headerNames, headerValues);
@@ -288,7 +275,6 @@ final class BatchUnparsedResponse {
     }
   }
 
-  @Deprecated
   private static class FakeLowLevelHttpResponse extends LowLevelHttpResponse {
 
     private InputStream partContent;

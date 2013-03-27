@@ -65,7 +65,6 @@ import java.util.Arrays;
  *
  * @author rmistry@google.com (Ravi Mistry)
  */
-@SuppressWarnings("deprecation")
 public final class MediaHttpUploader {
 
   /**
