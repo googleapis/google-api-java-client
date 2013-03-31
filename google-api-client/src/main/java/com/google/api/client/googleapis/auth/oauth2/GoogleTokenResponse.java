@@ -16,7 +16,7 @@ package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Preconditions;
 
@@ -73,16 +73,16 @@ public class GoogleTokenResponse extends TokenResponse {
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Returns the ID token.
    */
-  @Experimental
+  @Beta
   public final String getIdToken() {
     return idToken;
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Sets the ID token.
    *
    * <p>
@@ -90,18 +90,18 @@ public class GoogleTokenResponse extends TokenResponse {
    * the return type, but nothing else.
    * </p>
    */
-  @Experimental
+  @Beta
   public GoogleTokenResponse setIdToken(String idToken) {
     this.idToken = Preconditions.checkNotNull(idToken);
     return this;
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Parses using {@link GoogleIdToken#parse(JsonFactory, String)} based on the {@link #getFactory()
    * JSON factory} and {@link #getIdToken() ID token}.
    */
-  @Experimental
+  @Beta
   public GoogleIdToken parseIdToken() throws IOException {
     return GoogleIdToken.parse(getFactory(), getIdToken());
   }

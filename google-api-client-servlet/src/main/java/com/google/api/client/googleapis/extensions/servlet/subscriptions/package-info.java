@@ -13,12 +13,12 @@
  */
 
 /**
- * {@link com.google.api.client.util.Experimental} <br/>
+ * {@link com.google.api.client.util.Beta} <br/>
  * Support for subscribing to topics and receiving notifications on servlet-based platforms.
  *
  * @since 1.14
  * @author Matthias Linder (mlinder)
  */
-@com.google.api.client.util.Experimental
+@com.google.api.client.util.Beta
 package com.google.api.client.googleapis.extensions.servlet.subscriptions;
 

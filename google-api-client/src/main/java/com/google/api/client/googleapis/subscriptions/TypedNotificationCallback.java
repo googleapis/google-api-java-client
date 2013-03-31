@@ -15,7 +15,7 @@
 package com.google.api.client.googleapis.subscriptions;
 
 import com.google.api.client.http.HttpMediaType;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.Preconditions;
 
@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Callback which is used to receive typed {@link Notification}s after subscribing to a topic.
  *
  * <p>
@@ -65,7 +65,7 @@ import java.nio.charset.Charset;
  * @since 1.14
  */
 @SuppressWarnings("serial")
-@Experimental
+@Beta
 public abstract class TypedNotificationCallback<T> implements NotificationCallback {
 
   /**

@@ -13,13 +13,13 @@
 package com.google.api.client.googleapis.extensions.android.gms.auth;
 
 import com.google.android.gms.auth.GoogleAuthException;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Wraps a {@link GoogleAuthException} into an {@link IOException} so it can be caught directly.
  *
  * <p>
@@ -29,7 +29,7 @@ import java.io.IOException;
  * @since 1.12
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public class GoogleAuthIOException extends IOException {
 
   private static final long serialVersionUID = 1L;

@@ -13,7 +13,7 @@
  */
 
 /**
- * {@link com.google.api.client.util.Experimental} <br/>
+ * {@link com.google.api.client.util.Beta} <br/>
  * Utilities for Google's Atom XML implementation (see detailed package specification).
  *
  * <h2>Package Specification</h2>
@@ -314,6 +314,6 @@ public class PicasaUrl extends GoogleUrl {
  * @since 1.0
  * @author Yaniv Inbar
  */
-@com.google.api.client.util.Experimental
+@com.google.api.client.util.Beta
 package com.google.api.client.googleapis.xml.atom;
 

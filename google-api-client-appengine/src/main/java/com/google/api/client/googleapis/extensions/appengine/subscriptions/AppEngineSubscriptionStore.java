@@ -16,7 +16,7 @@ package com.google.api.client.googleapis.extensions.appengine.subscriptions;
 
 import com.google.api.client.googleapis.subscriptions.StoredSubscription;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Lists;
 import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.DatastoreService;
@@ -35,7 +35,7 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Persistent {@link SubscriptionStore} making use of native DataStore on AppEngine.
  *
  * <p>
@@ -51,7 +51,7 @@ import java.util.List;
  * @author Matthias Linder (mlinder)
  * @since 1.14
  */
-@Experimental
+@Beta
 public class AppEngineSubscriptionStore implements SubscriptionStore {
 
   /** Name of the table in the AppEngine datastore. */

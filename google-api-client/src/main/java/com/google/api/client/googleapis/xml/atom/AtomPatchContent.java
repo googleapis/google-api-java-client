@@ -16,12 +16,12 @@ package com.google.api.client.googleapis.xml.atom;
 
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.xml.atom.AtomContent;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.xml.Xml;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Serializes Atom XML PATCH HTTP content based on the data key/value mapping object for an Atom
  * entry.
  *
@@ -49,7 +49,7 @@ import com.google.api.client.xml.XmlNamespaceDictionary;
  * @since 1.0
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public final class AtomPatchContent extends AtomContent {
 
   /**

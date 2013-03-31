@@ -25,7 +25,7 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Sleeper;
 
@@ -36,7 +36,7 @@ import android.content.Intent;
 import java.io.IOException;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Manages authorization and account selection for Google accounts.
  *
  * <p>
@@ -53,7 +53,7 @@ import java.io.IOException;
  * @since 1.12
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public class GoogleAccountCredential implements HttpRequestInitializer {
 
   /** Context. */
@@ -232,7 +232,7 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
     return this;
   }
 
-  @Experimental
+  @Beta
   class RequestHandler implements HttpExecuteInterceptor, HttpUnsuccessfulResponseHandler {
 
     /** Whether we've received a 401 error code indicating the token is invalid. */

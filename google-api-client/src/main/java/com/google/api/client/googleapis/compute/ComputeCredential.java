@@ -25,15 +25,15 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
 import java.util.List;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Google Compute Engine service accounts OAuth 2.0 credential based on <a
  * href="https://developers.google.com/compute/docs/authentication">Authenticating from Google
  * Compute Engine</a>.
@@ -56,7 +56,7 @@ import java.util.List;
  * @since 1.15
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public class ComputeCredential extends Credential {
 
   /** Metadata Service Account token server encoded URL. */
@@ -87,14 +87,14 @@ public class ComputeCredential extends Credential {
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Google Compute Engine credential builder.
    *
    * <p>
    * Implementation is not thread-safe.
    * </p>
    */
-  @Experimental
+  @Beta
   public static class Builder extends Credential.Builder {
 
     /**
