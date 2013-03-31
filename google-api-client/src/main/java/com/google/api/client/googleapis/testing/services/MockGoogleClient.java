@@ -16,17 +16,17 @@ import com.google.api.client.googleapis.services.AbstractGoogleClient;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.ObjectParser;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Thread-safe mock Google client.
  *
  * @since 1.12
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public class MockGoogleClient extends AbstractGoogleClient {
 
   /**
@@ -59,7 +59,7 @@ public class MockGoogleClient extends AbstractGoogleClient {
    * Implementation is not thread-safe.
    * </p>
    */
-  @Experimental
+  @Beta
   public static class Builder extends AbstractGoogleClient.Builder {
 
     /**

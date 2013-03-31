@@ -17,14 +17,14 @@ package com.google.api.client.googleapis.auth.oauth2;
 import com.google.api.client.auth.openidconnect.IdToken;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.webtoken.JsonWebSignature;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Key;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Google ID tokens.
  *
  * <p>
@@ -40,7 +40,7 @@ import java.security.GeneralSecurityException;
  * @author Yaniv Inbar
  */
 @SuppressWarnings("javadoc")
-@Experimental
+@Beta
 public class GoogleIdToken extends IdToken {
 
   /**
@@ -83,10 +83,10 @@ public class GoogleIdToken extends IdToken {
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Google ID token payload.
    */
-  @Experimental
+  @Beta
   public static class Payload extends IdToken.Payload {
 
     /** Obfuscated Google user ID or {@code null} for none. */

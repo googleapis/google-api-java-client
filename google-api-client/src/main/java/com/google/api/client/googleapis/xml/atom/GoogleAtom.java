@@ -15,9 +15,9 @@
 package com.google.api.client.googleapis.xml.atom;
 
 import com.google.api.client.util.ArrayMap;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.Data;
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Types;
@@ -27,13 +27,13 @@ import java.util.Map;
 import java.util.TreeSet;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Utilities for working with the Atom XML of Google Data APIs.
  *
  * @since 1.0
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public class GoogleAtom {
 
   /**

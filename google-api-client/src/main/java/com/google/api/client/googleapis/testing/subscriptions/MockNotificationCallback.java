@@ -17,17 +17,17 @@ package com.google.api.client.googleapis.testing.subscriptions;
 import com.google.api.client.googleapis.subscriptions.NotificationCallback;
 import com.google.api.client.googleapis.subscriptions.StoredSubscription;
 import com.google.api.client.googleapis.subscriptions.UnparsedNotification;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Mock for the {@link NotificationCallback} class.
  *
  * @author Matthias Linder (mlinder)
  * @since 1.14
  */
 @SuppressWarnings("rawtypes")
-@Experimental
+@Beta
 public class MockNotificationCallback implements NotificationCallback {
 
   private static final long serialVersionUID = 0L;

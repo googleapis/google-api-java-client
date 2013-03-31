@@ -21,8 +21,8 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.StringUtils;
@@ -42,7 +42,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Thread-safe Google ID token verifier.
  *
  * <p>
@@ -72,7 +72,7 @@ import java.util.regex.Pattern;
  * </pre>
  * @since 1.7
  */
-@Experimental
+@Beta
 public class GoogleIdTokenVerifier {
 
   /** Pattern for the max-age header element of Cache-Control. */
@@ -279,7 +279,7 @@ public class GoogleIdTokenVerifier {
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Builder for {@link GoogleIdTokenVerifier}.
    *
    * <p>
@@ -288,7 +288,7 @@ public class GoogleIdTokenVerifier {
    *
    * @since 1.9
    */
-  @Experimental
+  @Beta
   public static class Builder {
 
     /** HTTP transport. */

@@ -11,13 +11,13 @@
  */
 
 /**
- * {@link com.google.api.client.util.Experimental} <br/>
+ * {@link com.google.api.client.util.Beta} <br/>
  * Utilities based on <a href="https://developers.google.com/android/google-play-services/">Google
  * Play services</a>.
  *
  * @since 1.12
  * @author Yaniv Inbar
  */
-@com.google.api.client.util.Experimental
+@com.google.api.client.util.Beta
 package com.google.api.client.googleapis.extensions.android.gms.auth;
 

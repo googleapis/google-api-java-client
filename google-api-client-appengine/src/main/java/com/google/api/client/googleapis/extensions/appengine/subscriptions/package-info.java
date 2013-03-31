@@ -13,12 +13,12 @@
  */
 
 /**
- * {@link com.google.api.client.util.Experimental} <br/>
+ * {@link com.google.api.client.util.Beta} <br/>
  * Support for creating subscriptions and receiving notifications on AppEngine.
  *
  * @since 1.14
  * @author Matthias Linder (mlinder)
  */
-@com.google.api.client.util.Experimental
+@com.google.api.client.util.Beta
 package com.google.api.client.googleapis.extensions.appengine.subscriptions;
 

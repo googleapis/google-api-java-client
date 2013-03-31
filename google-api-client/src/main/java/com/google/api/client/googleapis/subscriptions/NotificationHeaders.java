@@ -12,16 +12,16 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Headers for notifications.
  *
  * @author Kyle Marvin (kmarvin)
  * @since 1.14
  */
-@Experimental
+@Beta
 public final class NotificationHeaders {
 
   /**

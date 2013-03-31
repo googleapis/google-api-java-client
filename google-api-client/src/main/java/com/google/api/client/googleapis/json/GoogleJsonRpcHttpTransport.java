@@ -23,7 +23,7 @@ import com.google.api.client.json.CustomizeJsonParser;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.rpc2.JsonRpcRequest;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * JSON-RPC 2.0 HTTP transport for RPC requests for Google API's, including both singleton and
  * batched requests.
  *
@@ -47,7 +47,7 @@ import java.util.List;
  * @since 1.3
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public final class GoogleJsonRpcHttpTransport {
 
   private static final String JSON_RPC_CONTENT_TYPE = "application/json-rpc";
@@ -147,7 +147,7 @@ public final class GoogleJsonRpcHttpTransport {
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * {@link GoogleJsonRpcHttpTransport} Builder.
    *
    * <p>
@@ -156,7 +156,7 @@ public final class GoogleJsonRpcHttpTransport {
    *
    * @since 1.9
    */
-  @Experimental
+  @Beta
   public static class Builder {
 
     /** Default RPC server URL. */

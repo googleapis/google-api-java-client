@@ -30,8 +30,8 @@ import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.webtoken.JsonWebSignature;
 import com.google.api.client.json.webtoken.JsonWebToken;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Joiner;
 import com.google.api.client.util.PemReader;
 import com.google.api.client.util.Preconditions;
@@ -240,7 +240,7 @@ public class GoogleCredential extends Credential {
   }
 
   @Override
-  @Experimental
+  @Beta
   protected TokenResponse executeRefreshToken() throws IOException {
     if (serviceAccountPrivateKey == null) {
       return super.executeRefreshToken();
@@ -273,41 +273,41 @@ public class GoogleCredential extends Credential {
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Returns the service account ID (typically an e-mail address) or {@code null} if not using the
    * service account flow.
    */
-  @Experimental
+  @Beta
   public final String getServiceAccountId() {
     return serviceAccountId;
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Returns the space-separated OAuth scopes to use with the the service account flow or
    * {@code null} if not using the service account flow.
    */
-  @Experimental
+  @Beta
   public final String getServiceAccountScopes() {
     return serviceAccountScopes;
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Returns the private key to use with the the service account flow or {@code null} if not using
    * the service account flow.
    */
-  @Experimental
+  @Beta
   public final PrivateKey getServiceAccountPrivateKey() {
     return serviceAccountPrivateKey;
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Returns the email address of the user the application is trying to impersonate in the service
    * account flow or {@code null} for none or if not using the service account flow.
    */
-  @Experimental
+  @Beta
   public final String getServiceAccountUser() {
     return serviceAccountUser;
   }
@@ -396,16 +396,16 @@ public class GoogleCredential extends Credential {
     }
 
     /**
-     * {@link Experimental} <br/>
+     * {@link Beta} <br/>
      * Returns the service account ID (typically an e-mail address) or {@code null} for none.
      */
-    @Experimental
+    @Beta
     public final String getServiceAccountId() {
       return serviceAccountId;
     }
 
     /**
-     * {@link Experimental} <br/>
+     * {@link Beta} <br/>
      * Sets the service account ID (typically an e-mail address) or {@code null} for none.
      *
      * <p>
@@ -413,24 +413,24 @@ public class GoogleCredential extends Credential {
      * the return type, but nothing else.
      * </p>
      */
-    @Experimental
+    @Beta
     public Builder setServiceAccountId(String serviceAccountId) {
       this.serviceAccountId = serviceAccountId;
       return this;
     }
 
     /**
-     * {@link Experimental} <br/>
+     * {@link Beta} <br/>
      * Returns the space-separated OAuth scopes to use with the the service account flow or
      * {@code null} for none.
      */
-    @Experimental
+    @Beta
     public final String getServiceAccountScopes() {
       return serviceAccountScopes;
     }
 
     /**
-     * {@link Experimental} <br/>
+     * {@link Beta} <br/>
      * Sets the space-separated OAuth scopes to use with the the service account flow or
      * {@code null} for none.
      *
@@ -442,14 +442,14 @@ public class GoogleCredential extends Credential {
      * @param serviceAccountScopes list of scopes to be joined by a space separator (or a single
      *        value containing multiple space-separated scopes)
      */
-    @Experimental
+    @Beta
     public Builder setServiceAccountScopes(String... serviceAccountScopes) {
       return setServiceAccountScopes(
           serviceAccountScopes == null ? null : Arrays.asList(serviceAccountScopes));
     }
 
     /**
-     * {@link Experimental} <br/>
+     * {@link Beta} <br/>
      * Sets the space-separated OAuth scopes to use with the the service account flow or
      * {@code null} for none.
      *
@@ -461,7 +461,7 @@ public class GoogleCredential extends Credential {
      * @param serviceAccountScopes list of scopes to be joined by a space separator (or a single
      *        value containing multiple space-separated scopes)
      */
-    @Experimental
+    @Beta
     public Builder setServiceAccountScopes(Iterable<String> serviceAccountScopes) {
       this.serviceAccountScopes =
           serviceAccountScopes == null ? null : Joiner.on(' ').join(serviceAccountScopes);
@@ -469,16 +469,16 @@ public class GoogleCredential extends Credential {
     }
 
     /**
-     * {@link Experimental} <br/>
+     * {@link Beta} <br/>
      * Returns the private key to use with the the service account flow or {@code null} for none.
      */
-    @Experimental
+    @Beta
     public final PrivateKey getServiceAccountPrivateKey() {
       return serviceAccountPrivateKey;
     }
 
     /**
-     * {@link Experimental} <br/>
+     * {@link Beta} <br/>
      * Sets the private key to use with the the service account flow or {@code null} for none.
      *
      * <p>
@@ -486,14 +486,14 @@ public class GoogleCredential extends Credential {
      * the return type, but nothing else.
      * </p>
      */
-    @Experimental
+    @Beta
     public Builder setServiceAccountPrivateKey(PrivateKey serviceAccountPrivateKey) {
       this.serviceAccountPrivateKey = serviceAccountPrivateKey;
       return this;
     }
 
     /**
-     * {@link Experimental} <br/>
+     * {@link Beta} <br/>
      * Sets the private key to use with the the service account flow or {@code null} for none.
      *
      * <p>
@@ -504,7 +504,7 @@ public class GoogleCredential extends Credential {
      * @param p12File input stream to the p12 file (closed at the end of this method in a finally
      *        block)
      */
-    @Experimental
+    @Beta
     public Builder setServiceAccountPrivateKeyFromP12File(File p12File)
         throws GeneralSecurityException, IOException {
       serviceAccountPrivateKey = SecurityUtils.loadPrivateKeyFromKeyStore(
@@ -514,7 +514,7 @@ public class GoogleCredential extends Credential {
     }
 
     /**
-     * {@link Experimental} <br/>
+     * {@link Beta} <br/>
      * Sets the private key to use with the the service account flow or {@code null} for none.
      *
      * <p>
@@ -526,7 +526,7 @@ public class GoogleCredential extends Credential {
      *        block)
      * @since 1.13
      */
-    @Experimental
+    @Beta
     public Builder setServiceAccountPrivateKeyFromPemFile(File pemFile)
         throws GeneralSecurityException, IOException {
       byte[] bytes = PemReader.readFirstSectionAndClose(new FileReader(pemFile), "PRIVATE KEY")
@@ -537,17 +537,17 @@ public class GoogleCredential extends Credential {
     }
 
     /**
-     * {@link Experimental} <br/>
+     * {@link Beta} <br/>
      * Returns the email address of the user the application is trying to impersonate in the service
      * account flow or {@code null} for none.
      */
-    @Experimental
+    @Beta
     public final String getServiceAccountUser() {
       return serviceAccountUser;
     }
 
     /**
-     * {@link Experimental} <br/>
+     * {@link Beta} <br/>
      * Sets the email address of the user the application is trying to impersonate in the service
      * account flow or {@code null} for none.
      *
@@ -556,7 +556,7 @@ public class GoogleCredential extends Credential {
      * the return type, but nothing else.
      * </p>
      */
-    @Experimental
+    @Beta
     public Builder setServiceAccountUser(String serviceAccountUser) {
       this.serviceAccountUser = serviceAccountUser;
       return this;

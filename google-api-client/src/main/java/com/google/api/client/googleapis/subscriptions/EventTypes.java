@@ -14,10 +14,10 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Standard event-types used by notifications.
  *
  * <b>Example usage:</b>
@@ -33,7 +33,7 @@ import com.google.api.client.util.Experimental;
  * @author Matthias Linder (mlinder)
  * @since 1.14
  */
-@Experimental
+@Beta
 public final class EventTypes {
 
   /** Notification that the subscription is alive (comes with no payload). */

@@ -14,10 +14,10 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Typed notification sent to this client about a subscribed resource.
  *
  * <p>
@@ -40,7 +40,7 @@ import com.google.api.client.util.Experimental;
  * @author Matthias Linder (mlinder)
  * @since 1.14
  */
-@Experimental
+@Beta
 public final class TypedNotification<T> extends Notification {
 
   /** Typed content or {@code null} for none. */

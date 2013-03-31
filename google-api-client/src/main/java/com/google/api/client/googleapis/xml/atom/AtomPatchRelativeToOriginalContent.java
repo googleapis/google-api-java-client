@@ -16,7 +16,7 @@ package com.google.api.client.googleapis.xml.atom;
 
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.xml.AbstractXmlHttpContent;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.api.client.xml.atom.Atom;
@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Serializes an optimal Atom XML PATCH HTTP content based on the data key/value mapping object for
  * an Atom entry, by comparing the original value to the patched value.
  *
@@ -48,7 +48,7 @@ import java.util.Map;
  * @since 1.0
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public final class AtomPatchRelativeToOriginalContent extends AbstractXmlHttpContent {
 
   /** Key/value pair data for the updated/patched Atom entry. */

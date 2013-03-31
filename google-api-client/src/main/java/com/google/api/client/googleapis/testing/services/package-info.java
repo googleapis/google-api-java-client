@@ -11,12 +11,12 @@
  */
 
 /**
- * {@link com.google.api.client.util.Experimental} <br/>
+ * {@link com.google.api.client.util.Beta} <br/>
  * Test utilities for the {@code com.google.api.client.googleapis} package.
  *
  * @since 1.12
  * @author Yaniv Inbar
  */
-@com.google.api.client.util.Experimental
+@com.google.api.client.util.Beta
 package com.google.api.client.googleapis.testing.services;
 

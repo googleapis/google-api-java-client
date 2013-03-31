@@ -17,16 +17,16 @@ import com.google.api.client.googleapis.services.json.AbstractGoogleJsonClient;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Thread-safe mock Google JSON client.
  *
  * @since 1.12
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
 
   /**
@@ -54,14 +54,14 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Builder for {@link MockGoogleJsonClient}.
    *
    * <p>
    * Implementation is not thread-safe.
    * </p>
    */
-  @Experimental
+  @Beta
   public static class Builder extends AbstractGoogleJsonClient.Builder {
 
     /**

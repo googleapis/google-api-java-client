@@ -15,8 +15,8 @@
 package com.google.api.client.googleapis.xml.atom;
 
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.ClassInfo;
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Types;
 import com.google.api.client.xml.Xml;
@@ -33,7 +33,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * GData Atom feed pull parser when the entry class can be computed from the kind.
  *
  * @param <T> feed type
@@ -41,7 +41,7 @@ import java.util.HashMap;
  * @since 1.0
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
 
   private final HashMap<String, Class<?>> kindToEntryClassMap = new HashMap<String, Class<?>>();

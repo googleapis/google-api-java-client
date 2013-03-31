@@ -17,17 +17,17 @@ import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.UriTemplate;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Thread-safe mock Google request.
  *
  * @param <T> type of the response
  * @since 1.12
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public class MockGoogleClientRequest<T> extends AbstractGoogleClientRequest<T> {
 
   /**

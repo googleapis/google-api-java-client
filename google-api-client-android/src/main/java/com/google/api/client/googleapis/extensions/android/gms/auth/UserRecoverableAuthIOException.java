@@ -13,7 +13,7 @@
 package com.google.api.client.googleapis.extensions.android.gms.auth;
 
 import com.google.android.gms.auth.UserRecoverableAuthException;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,7 +21,7 @@ import android.content.Intent;
 import java.io.IOException;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Wraps a {@link UserRecoverableAuthException} into an {@link IOException} so it can be caught
  * directly.
  *
@@ -40,7 +40,7 @@ import java.io.IOException;
  * @since 1.12
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public class UserRecoverableAuthIOException extends GoogleAuthIOException {
 
   private static final long serialVersionUID = 1L;
