@@ -3,9 +3,9 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.google</groupId>
-    <artifactId>google</artifactId>
-    <version>5</version>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
   </parent>
   <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-parent</artifactId>
@@ -31,6 +31,19 @@
     <developerConnection>scm:hg:https://code.google.com/p/google-api-java-client/</developerConnection>
     <url>http://code.google.com/p/google-api-java-client/source/browse/</url>
   </scm>
+
+  <organization>
+    <name>Google</name>
+    <url>http://www.google.com/</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
   <developers>
     <developer>
