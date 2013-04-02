@@ -39,11 +39,6 @@ import java.util.List;
  * This implementation is thread-safe.
  * </p>
  *
- * <p>
- * Warning: this is based on an undocumented experimental Google functionality that may stop working
- * or change in behavior at any time. Beware of this risk if running this in production code.
- * </p>
- *
  * @since 1.3
  * @author Yaniv Inbar
  */
