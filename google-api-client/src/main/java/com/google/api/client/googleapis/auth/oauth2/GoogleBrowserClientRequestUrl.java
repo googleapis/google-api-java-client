@@ -22,8 +22,8 @@ import com.google.api.client.util.Preconditions;
  * Google-specific implementation of the OAuth 2.0 URL builder for an authorization web page to
  * allow the end user to authorize the application to access their protected resources and that
  * returns the access token to a browser client using a scripting language such as JavaScript, as
- * specified in <a href="http://code.google.com/apis/accounts/docs/OAuth2UserAgent.html">Using OAuth
- * 2.0 for Client-side Applications (Experimental)</a>.
+ * specified in <a href="https://developers.google.com/accounts/docs/OAuth2UserAgent">Using OAuth
+ * 2.0 for Client-side Applications</a>.
  *
  * <p>
  * The default for {@link #getResponseTypes()} is {@code "token"}.
