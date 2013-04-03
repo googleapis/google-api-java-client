@@ -46,15 +46,14 @@ import java.util.regex.Pattern;
  * Thread-safe Google ID token verifier.
  *
  * <p>
- * The public keys are loaded Google's public certificate endpoint at
- * {@code "https://www.googleapis.com/oauth2/v1/certs"}. The public keys are cached in this instance
- * of {@link GoogleIdTokenVerifier}. Therefore, for maximum efficiency, applications should use a
- * single globally-shared instance of the {@link GoogleIdTokenVerifier}. Use
- * {@link #verify(GoogleIdToken)} to verify a Google ID token, and then
- * {@link GoogleIdToken#verifyAudience} to verify the client ID.
+ * The public keys are loaded from the public certificates endpoint at
+ * {@link #getPublicCertsEncodedUrl} and cached in this instance. Therefore, for maximum efficiency,
+ * applications should use a single globally-shared instance of the {@link GoogleIdTokenVerifier}.
  * </p>
  *
  * <p>
+ * Use {@link #verify(GoogleIdToken)} to verify a Google ID token, and then
+ * {@link GoogleIdToken#verifyAudience} to verify the client ID. <br/>
  * Samples usage:
  * </p>
  *
@@ -102,6 +101,9 @@ public class GoogleIdTokenVerifier {
   /** Clock to use for expiration checks. */
   private final Clock clock;
 
+  /** Public certificates encoded URL. */
+  private final String publicCertsEncodedUrl;
+
   /**
    * Constructor with required parameters.
    *
@@ -122,9 +124,10 @@ public class GoogleIdTokenVerifier {
    * @since 1.14
    */
   protected GoogleIdTokenVerifier(Builder builder) {
-    transport = Preconditions.checkNotNull(builder.transport);
-    jsonFactory = Preconditions.checkNotNull(builder.jsonFactory);
-    clock = Preconditions.checkNotNull(builder.clock);
+    transport = builder.transport;
+    jsonFactory = builder.jsonFactory;
+    clock = builder.clock;
+    publicCertsEncodedUrl = builder.publicCertsEncodedUrl;
   }
 
   /**
@@ -139,6 +142,15 @@ public class GoogleIdTokenVerifier {
   /** Returns the JSON factory. */
   public final JsonFactory getJsonFactory() {
     return jsonFactory;
+  }
+
+  /**
+   * Returns the public certificates encoded URL.
+   *
+   * @since 1.15
+   */
+  public final String getPublicCertsEncodedUrl() {
+    return publicCertsEncodedUrl;
   }
 
   /** Returns the public keys or {@code null} for none. */
@@ -210,7 +222,7 @@ public class GoogleIdTokenVerifier {
 
   /**
    * Downloads the public keys from the public certificates endpoint at
-   * {@code "https://www.googleapis.com/oauth2/v1/certs"}.
+   * {@link #getPublicCertsEncodedUrl}.
    *
    * <p>
    * This method is automatically called if the public keys have not yet been initialized or if the
@@ -225,7 +237,7 @@ public class GoogleIdTokenVerifier {
       // HTTP request to public endpoint
       CertificateFactory factory = SecurityUtils.getX509CertificateFactory();
       HttpResponse certsResponse = transport.createRequestFactory()
-          .buildGetRequest(new GenericUrl("https://www.googleapis.com/oauth2/v1/certs")).execute();
+          .buildGetRequest(new GenericUrl(publicCertsEncodedUrl)).execute();
       expirationTimeMilliseconds =
           clock.currentTimeMillis() + getCacheTimeInSec(certsResponse.getHeaders()) * 1000;
       // parse each public key in the JSON response
@@ -297,6 +309,9 @@ public class GoogleIdTokenVerifier {
     /** JSON factory. */
     final JsonFactory jsonFactory;
 
+    /** Public certificates encoded URL. */
+    String publicCertsEncodedUrl = GoogleOAuthConstants.DEFAULT_PUBLIC_CERTS_ENCODED_URL;
+
     /** Clock. */
     Clock clock = Clock.SYSTEM;
 
@@ -307,8 +322,8 @@ public class GoogleIdTokenVerifier {
      * @param jsonFactory JSON factory
      */
     public Builder(HttpTransport transport, JsonFactory jsonFactory) {
-      this.transport = transport;
-      this.jsonFactory = jsonFactory;
+      this.transport = Preconditions.checkNotNull(transport);
+      this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
     }
 
     /** Builds a new instance of {@link GoogleIdTokenVerifier}. */
@@ -324,6 +339,34 @@ public class GoogleIdTokenVerifier {
     /** Returns the JSON factory. */
     public final JsonFactory getJsonFactory() {
       return jsonFactory;
+    }
+
+    /**
+     * Returns the public certificates encoded URL.
+     *
+     * @since 1.15
+     */
+    public final String getPublicCertsEncodedUrl() {
+      return publicCertsEncodedUrl;
+    }
+
+    /**
+     * Sets the public certificates encoded URL.
+     *
+     * <p>
+     * The default value is {@link GoogleOAuthConstants#DEFAULT_PUBLIC_CERTS_ENCODED_URL}.
+     * </p>
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     *
+     * @since 1.15
+     */
+    public Builder setPublicCertsEncodedUrl(String publicCertsEncodedUrl) {
+      this.publicCertsEncodedUrl = Preconditions.checkNotNull(publicCertsEncodedUrl);
+      return this;
     }
 
     /**
