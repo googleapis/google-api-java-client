@@ -18,6 +18,7 @@ import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
 import com.google.api.client.auth.oauth2.Credential.AccessMethod;
+import com.google.api.client.auth.oauth2.CredentialRefreshListener;
 import com.google.api.client.auth.oauth2.CredentialStore;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.http.GenericUrl;
@@ -29,6 +30,7 @@ import com.google.api.client.util.Clock;
 import com.google.api.client.util.Preconditions;
 
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Thread-safe Google OAuth 2.0 authorization code flow that manages and persists end-user
@@ -276,6 +278,16 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
     @Override
     public Builder setClock(Clock clock) {
       return (Builder) super.setClock(clock);
+    }
+
+    @Override
+    public Builder addRefreshListener(CredentialRefreshListener refreshListener) {
+      return (Builder) super.addRefreshListener(refreshListener);
+    }
+
+    @Override
+    public Builder setRefreshListeners(List<CredentialRefreshListener> refreshListeners) {
+      return (Builder) super.setRefreshListeners(refreshListeners);
     }
 
     /**
