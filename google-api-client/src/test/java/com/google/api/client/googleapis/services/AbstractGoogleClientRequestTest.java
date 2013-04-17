@@ -54,10 +54,10 @@ public class AbstractGoogleClientRequestTest extends TestCase {
 
   public void testExecuteUnparsed_error() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
-        @Override
+      @Override
       public LowLevelHttpRequest buildRequest(final String method, final String url) {
         return new MockLowLevelHttpRequest() {
-            @Override
+          @Override
           public LowLevelHttpResponse execute() {
             assertEquals("GET", method);
             assertEquals("https://www.googleapis.com/test/path/v1/tests/foo", url);
@@ -87,10 +87,10 @@ public class AbstractGoogleClientRequestTest extends TestCase {
 
   public void testExecuteUsingHead() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
-        @Override
+      @Override
       public LowLevelHttpRequest buildRequest(final String method, final String url) {
         return new MockLowLevelHttpRequest() {
-            @Override
+          @Override
           public LowLevelHttpResponse execute() {
             assertEquals("HEAD", method);
             assertEquals("https://www.googleapis.com/test/path/v1/tests/foo", url);
@@ -150,5 +150,27 @@ public class AbstractGoogleClientRequestTest extends TestCase {
     } catch (IllegalArgumentException iae) {
       // Expected.
     }
+  }
+
+  public void testExecute_void() throws Exception {
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildRequest(final String method, final String url) {
+        return new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() {
+            return new MockLowLevelHttpResponse().setContent("{\"a\":\"ignored\"}")
+                .setContentType(Json.MEDIA_TYPE);
+          }
+        };
+      }
+    };
+    MockGoogleClient client = new MockGoogleClient.Builder(
+        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).setApplicationName(
+        "Test Application").build();
+    MockGoogleClientRequest<Void> request =
+        new MockGoogleClientRequest<Void>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
+    Void v = request.execute();
+    assertNull(v);
   }
 }

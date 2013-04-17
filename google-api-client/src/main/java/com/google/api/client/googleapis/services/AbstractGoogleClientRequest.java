@@ -416,8 +416,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       boolean throwExceptionOnExecuteError = httpRequest.getThrowExceptionOnExecuteError();
 
       response = uploader.setInitiationHeaders(requestHeaders)
-          .setDisableGZipContent(disableGZipContent)
-          .upload(httpRequestUrl);
+          .setDisableGZipContent(disableGZipContent).upload(httpRequestUrl);
       response.getRequest().setParser(getAbstractGoogleClient().getObjectParser());
       // process any error
       if (throwExceptionOnExecuteError && !response.isSuccessStatusCode()) {
@@ -458,14 +457,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * @return parsed HTTP response
    */
   public T execute() throws IOException {
-    HttpResponse response = executeUnparsed();
-    // TODO(yanivi): remove workaround when feature is implemented
-    // workaround for http://code.google.com/p/google-http-java-client/issues/detail?id=110
-    if (Void.class.equals(responseClass)) {
-      response.ignore();
-      return null;
-    }
-    return response.parseAs(responseClass);
+    return executeUnparsed().parseAs(responseClass);
   }
 
   /**
@@ -598,7 +590,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * @param value the value of the required parameter
    * @param name the name of the required parameter
    * @throws IllegalArgumentException if the specified required parameter is null and
-             {@link AbstractGoogleClient#getSuppressRequiredParameterChecks()} is false
+   *         {@link AbstractGoogleClient#getSuppressRequiredParameterChecks()} is false
    * @since 1.14
    */
   protected final void checkRequiredParameter(Object value, String name) {

@@ -115,7 +115,7 @@ public abstract class TypedNotificationCallback<T> implements NotificationCallba
   private Object parseContent(ObjectParser parser, UnparsedNotification notification)
       throws IOException {
     // Return null if no content is expected
-    if (notification.getContentType() == null || Void.class.equals(dataClass)) {
+    if (notification.getContentType() == null) {
       return null;
     }
 
