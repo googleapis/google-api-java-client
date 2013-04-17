@@ -114,5 +114,15 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
     public Builder setSuppressPatternChecks(boolean suppressPatternChecks) {
       return (Builder) super.setSuppressPatternChecks(suppressPatternChecks);
     }
+
+    @Override
+    public Builder setSuppressRequiredParameterChecks(boolean suppressRequiredParameterChecks) {
+      return (Builder) super.setSuppressRequiredParameterChecks(suppressRequiredParameterChecks);
+    }
+
+    @Override
+    public Builder setSuppressAllChecks(boolean suppressAllChecks) {
+      return (Builder) super.setSuppressAllChecks(suppressAllChecks);
+    }
   }
 }
