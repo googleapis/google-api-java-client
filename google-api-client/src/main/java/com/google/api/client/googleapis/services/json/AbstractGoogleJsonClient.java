@@ -123,5 +123,10 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
     public Builder setSuppressRequiredParameterChecks(boolean suppressRequiredParameterChecks) {
       return (Builder) super.setSuppressRequiredParameterChecks(suppressRequiredParameterChecks);
     }
+
+    @Override
+    public Builder setSuppressAllChecks(boolean suppressAllChecks) {
+      return (Builder) super.setSuppressAllChecks(suppressAllChecks);
+    }
   }
 }
