@@ -39,4 +39,21 @@
     <!-- Reliance on default encoding -->
     <Class name="com.google.api.client.googleapis.auth.oauth2.GoogleCredential$Builder"/>
   </And>
+  <And>
+    <Bug pattern="BETA_CLASS_USAGE,BETA_METHOD_USAGE"/>
+    <!-- Usage of an &#64;Beta class or method -->
+    <Class name="com.google.api.client.googleapis.batch.BatchUnparsedResponse"/>
+  </And>
+  <And>
+    <Bug pattern="BETA_CLASS_USAGE,BETA_METHOD_USAGE"/>
+    <Class name="com.google.api.client.googleapis.batch.BatchRequest"/>
+  </And>
+  <And>
+    <Bug pattern="BETA_CLASS_USAGE,BETA_METHOD_USAGE"/>
+    <Class name="com.google.api.client.googleapis.media.MediaHttpDownloader"/>
+  </And>
+  <And>
+    <Bug pattern="BETA_CLASS_USAGE,BETA_METHOD_USAGE"/>
+    <Class name="~com.google.api.client.googleapis.media.MediaHttpUploader"/>
+  </And>
 </FindBugsFilter>

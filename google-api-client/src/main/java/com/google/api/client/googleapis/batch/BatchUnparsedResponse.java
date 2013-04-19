@@ -42,6 +42,7 @@ import java.util.List;
  *
  * @author rmistry@google.com (Ravi Mistry)
  */
+@SuppressWarnings("deprecation")
 final class BatchUnparsedResponse {
 
   /** The boundary used in the batch response to separate individual responses. */

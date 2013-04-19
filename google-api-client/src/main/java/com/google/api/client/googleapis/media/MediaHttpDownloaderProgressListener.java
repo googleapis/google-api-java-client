@@ -16,7 +16,6 @@ package com.google.api.client.googleapis.media;
 
 import java.io.IOException;
 
-
 /**
  * An interface for receiving progress notifications for downloads.
  *

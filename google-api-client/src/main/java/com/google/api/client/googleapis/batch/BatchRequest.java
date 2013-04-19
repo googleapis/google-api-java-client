@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.batch;
 
 import com.google.api.client.http.BackOffPolicy;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpBackOffUnsuccessfulResponseHandler;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
@@ -23,6 +24,7 @@ import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.http.MultipartContent;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Sleeper;
@@ -81,9 +83,17 @@ import java.util.List;
  * Implementation is not thread-safe.
  * </p>
  *
+ * <p>
+ * Note: When setting an {@link HttpUnsuccessfulResponseHandler} by calling to
+ * {@link HttpRequest#setUnsuccessfulResponseHandler}, the handler is called for each unsuccessful
+ * part. As a result it's not recommended to use {@link HttpBackOffUnsuccessfulResponseHandler} on a
+ * batch request, since the back-off policy is invoked for each unsuccessful part.
+ * </p>
+ *
  * @since 1.9
  * @author rmistry@google.com (Ravi Mistry)
  */
+@SuppressWarnings("deprecation")
 public final class BatchRequest {
 
   /** The URL where batch requests are sent. */
@@ -150,7 +160,7 @@ public final class BatchRequest {
   }
 
   /**
-   * Sets the sleeper.
+   * Sets the sleeper. The default value is {@link Sleeper#DEFAULT}.
    *
    * @since 1.15
    */

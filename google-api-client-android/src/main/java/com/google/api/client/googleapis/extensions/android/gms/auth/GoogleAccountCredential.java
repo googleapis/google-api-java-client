@@ -18,14 +18,15 @@ import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
-import com.google.api.client.http.BackOffPolicy;
-import com.google.api.client.http.ExponentialBackOffPolicy;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
+import com.google.api.client.util.BackOff;
+import com.google.api.client.util.BackOffUtils;
 import com.google.api.client.util.Beta;
+import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Sleeper;
 
@@ -48,6 +49,12 @@ import java.io.IOException;
  * {@link UserRecoverableAuthIOException}</li>
  * <li>{@link GoogleAuthException} when be wrapped inside of {@link GoogleAuthIOException}</li>
  * </ul>
+ * </p>
+ *
+ * <p>
+ * Upgrade warning: in prior version 1.14 exponential back-off was enabled by default when I/O
+ * exception was thrown inside {@link #getToken}, but starting with version 1.15 you need to call
+ * {@link #setBackOff} with {@link ExponentialBackOff} to enable it.
  * </p>
  *
  * @since 1.12
@@ -76,6 +83,12 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
 
   /** Sleeper. */
   private Sleeper sleeper = Sleeper.DEFAULT;
+
+  /**
+   * Back-off policy which is used when an I/O exception is thrown inside {@link #getToken} or
+   * {@code null} for none.
+   */
+  private BackOff backOff;
 
   /**
    * @param context context
@@ -159,6 +172,46 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
   }
 
   /**
+   * Returns the back-off policy which is used when an I/O exception is thrown inside
+   * {@link #getToken} or {@code null} for none.
+   *
+   * @since 1.15
+   */
+  public BackOff getBackOff() {
+    return backOff;
+  }
+
+  /**
+   * Sets the back-off policy which is used when an I/O exception is thrown inside {@link #getToken}
+   * or {@code null} for none.
+   *
+   * @since 1.15
+   */
+  public GoogleAccountCredential setBackOff(BackOff backOff) {
+    this.backOff = backOff;
+    return this;
+  }
+
+  /**
+   * Returns the sleeper.
+   *
+   * @since 1.15
+   */
+  public final Sleeper getSleeper() {
+    return sleeper;
+  }
+
+  /**
+   * Sets the sleeper. The default value is {@link Sleeper#DEFAULT}.
+   *
+   * @since 1.15
+   */
+  public final GoogleAccountCredential setSleeper(Sleeper sleeper) {
+    this.sleeper = Preconditions.checkNotNull(sleeper);
+    return this;
+  }
+
+  /**
    * Returns the selected Google account name (e-mail address), for example
    * {@code "johndoe@gmail.com"}, or {@code null} for none.
    */
@@ -192,20 +245,20 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
    * Must be run from a background thread, not the main UI thread.
    * </p>
    */
-  public final String getToken() throws IOException, GoogleAuthException {
-    BackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
+  public String getToken() throws IOException, GoogleAuthException {
+    if (backOff != null) {
+      backOff.reset();
+    }
+
     while (true) {
       try {
         return GoogleAuthUtil.getToken(context, accountName, scope);
       } catch (IOException e) {
-        // network or server error, so retry using exponential backoff
-        long backOffMillis = backOffPolicy.getNextBackOffMillis();
-        if (backOffMillis == BackOffPolicy.STOP) {
-          throw e;
-        }
-        // sleep
+        // network or server error, so retry using back-off policy
         try {
-          sleeper.sleep(backOffMillis);
+          if (backOff == null || !BackOffUtils.next(sleeper, backOff)) {
+            throw e;
+          }
         } catch (InterruptedException e2) {
           // ignore
         }
@@ -213,24 +266,6 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
     }
   }
 
-  /**
-   * Returns the sleeper.
-   *
-   * @since 1.15
-   */
-  public final Sleeper getSleeper() {
-    return sleeper;
-  }
-
-  /**
-   * Sets the sleeper.
-   *
-   * @since 1.15
-   */
-  public final GoogleAccountCredential setSleeper(Sleeper sleeper) {
-    this.sleeper = Preconditions.checkNotNull(sleeper);
-    return this;
-  }
 
   @Beta
   class RequestHandler implements HttpExecuteInterceptor, HttpUnsuccessfulResponseHandler {
