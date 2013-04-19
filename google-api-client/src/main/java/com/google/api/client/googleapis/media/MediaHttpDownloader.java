@@ -16,12 +16,15 @@ package com.google.api.client.googleapis.media;
 
 import com.google.api.client.http.ExponentialBackOffPolicy;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpBackOffIOExceptionHandler;
+import com.google.api.client.http.HttpBackOffUnsuccessfulResponseHandler;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Preconditions;
 
@@ -37,10 +40,23 @@ import java.io.OutputStream;
  * Implementation is not thread-safe.
  * </p>
  *
+ * <p>
+ * Back-off is disabled by default. To enable it for an abnormal HTTP response and an I/O exception
+ * you should call {@link HttpRequest#setUnsuccessfulResponseHandler} with a new
+ * {@link HttpBackOffUnsuccessfulResponseHandler} instance and
+ * {@link HttpRequest#setIOExceptionHandler} with {@link HttpBackOffIOExceptionHandler}.
+ * </p>
+ *
+ * <p>
+ * Upgrade warning: in prior version 1.14 exponential back-off was enabled by default for an
+ * abnormal HTTP response. Starting with version 1.15 it's disabled by default.
+ * </p>
+ *
  * @since 1.9
  *
  * @author rmistry@google.com (Ravi Mistry)
  */
+@SuppressWarnings("deprecation")
 public final class MediaHttpDownloader {
 
   /**
@@ -70,11 +86,12 @@ public final class MediaHttpDownloader {
   private final HttpTransport transport;
 
   /**
-   * Determines whether the back off policy is enabled or disabled. If value is set to {@code false}
-   * then server errors are not handled and the download process will fail if a server error is
-   * encountered. Defaults to {@code true}.
+   * Determines whether the back off policy is enabled or disabled. The default value is
+   * {@code false}.
    */
-  private boolean backOffPolicyEnabled = true;
+  @Deprecated
+  @Beta
+  private boolean backOffPolicyEnabled = false;
 
   /**
    * Determines whether direct media download is enabled or disabled. If value is set to
@@ -123,12 +140,11 @@ public final class MediaHttpDownloader {
    * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
    *        {@code null} for none
    */
-  public MediaHttpDownloader(HttpTransport transport,
-      HttpRequestInitializer httpRequestInitializer) {
+  public MediaHttpDownloader(
+      HttpTransport transport, HttpRequestInitializer httpRequestInitializer) {
     this.transport = Preconditions.checkNotNull(transport);
-    this.requestFactory =
-        httpRequestInitializer == null ? transport.createRequestFactory() : transport
-            .createRequestFactory(httpRequestInitializer);
+    this.requestFactory = httpRequestInitializer == null
+        ? transport.createRequestFactory() : transport.createRequestFactory(httpRequestInitializer);
   }
 
   /**
@@ -190,8 +206,8 @@ public final class MediaHttpDownloader {
         // If last byte position has been specified use it iff it is smaller than the chunksize.
         currentRequestLastBytePos = Math.min(lastBytePos, currentRequestLastBytePos);
       }
-      HttpResponse response = executeCurrentRequest(currentRequestLastBytePos, requestUrl,
-          requestHeaders, outputStream);
+      HttpResponse response = executeCurrentRequest(
+          currentRequestLastBytePos, requestUrl, requestHeaders, outputStream);
 
       String contentRange = response.getHeaders().getContentRange();
       long nextByteIndex = getNextByteIndex(contentRange);
@@ -261,8 +277,8 @@ public final class MediaHttpDownloader {
     if (rangeHeader == null) {
       return 0L;
     }
-    return Long.parseLong(rangeHeader.substring(rangeHeader.indexOf('-') + 1,
-        rangeHeader.indexOf('/'))) + 1;
+    return Long.parseLong(
+        rangeHeader.substring(rangeHeader.indexOf('-') + 1, rangeHeader.indexOf('/'))) + 1;
   }
 
   /**
@@ -363,20 +379,37 @@ public final class MediaHttpDownloader {
   }
 
   /**
-   * Sets whether the back off policy is enabled or disabled. If value is set to {@code false} then
-   * server errors are not handled and the download process will fail if a server error is
-   * encountered. Defaults to {@code true}.
+   * {@link Beta} <br/>
+   * Sets whether the back off policy is enabled or disabled. The default value is {@code false}.
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.14 the default value was {@code true}, but starting with
+   * version 1.15 the default value is {@code false}.
+   * </p>
+   *
+   * @deprecated (scheduled to be removed in the 1.16). Use
+   *             {@link HttpRequest#setUnsuccessfulResponseHandler} with a new
+   *             {@link HttpBackOffUnsuccessfulResponseHandler} in {@link HttpRequestInitializer}
+   *             instead.
    */
+  @Beta
+  @Deprecated
   public MediaHttpDownloader setBackOffPolicyEnabled(boolean backOffPolicyEnabled) {
     this.backOffPolicyEnabled = backOffPolicyEnabled;
     return this;
   }
 
   /**
-   * Returns whether the back off policy is enabled or disabled. If value is set to {@code false}
-   * then server errors are not handled and the download process will fail if a server error is
-   * encountered. Defaults to {@code true}.
+   * {@link Beta} <br/>
+   * Returns whether the back off policy is enabled or disabled.
+   *
+   * @deprecated (scheduled to be removed in the 1.16). Use
+   *             {@link HttpRequest#setUnsuccessfulResponseHandler} with a new
+   *             {@link HttpBackOffUnsuccessfulResponseHandler} in {@link HttpRequestInitializer}
+   *             instead.
    */
+  @Beta
+  @Deprecated
   public boolean isBackOffPolicyEnabled() {
     return backOffPolicyEnabled;
   }

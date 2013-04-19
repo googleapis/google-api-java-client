@@ -21,6 +21,8 @@ import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.ExponentialBackOffPolicy;
 import com.google.api.client.http.GZipEncoding;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpBackOffIOExceptionHandler;
+import com.google.api.client.http.HttpBackOffUnsuccessfulResponseHandler;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpMethods;
@@ -31,8 +33,10 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.http.MultipartContent;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.ByteStreams;
 import com.google.api.client.util.Preconditions;
+import com.google.api.client.util.Sleeper;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -53,8 +57,22 @@ import java.util.Arrays;
  * </p>
  *
  * <p>
- * See {@link #setDisableGZipContent(boolean)} for information on when content is gzipped
- * and how to control that behavior.
+ * See {@link #setDisableGZipContent(boolean)} for information on when content is gzipped and how to
+ * control that behavior.
+ * </p>
+ *
+ * <p>
+ * Back-off is disabled by default. To enable it for an abnormal HTTP response and an I/O exception
+ * you should call {@link HttpRequest#setUnsuccessfulResponseHandler} with a new
+ * {@link HttpBackOffUnsuccessfulResponseHandler} instance and
+ * {@link HttpRequest#setIOExceptionHandler} with {@link HttpBackOffIOExceptionHandler}.
+ * </p>
+ *
+ * <p>
+ * Upgrade warning: in prior version 1.14 exponential back-off was enabled by default for an
+ * abnormal HTTP response and there was a regular retry (without back-off) when I/O exception was
+ * thrown. Starting with version 1.15 back-off is disabled and there is no retry on I/O exception by
+ * default.
  * </p>
  *
  * <p>
@@ -65,6 +83,7 @@ import java.util.Arrays;
  *
  * @author rmistry@google.com (Ravi Mistry)
  */
+@SuppressWarnings("deprecation")
 public final class MediaHttpUploader {
 
   /**
@@ -169,11 +188,12 @@ public final class MediaHttpUploader {
   private InputStream contentInputStream;
 
   /**
-   * Determines whether the back off policy is enabled or disabled. If value is set to {@code false}
-   * then server errors are not handled and the upload process will fail if a server error is
-   * encountered. Defaults to {@code true}.
+   * Determines whether the back off policy is enabled or disabled. The default value is
+   * {@code false}.
    */
-  private boolean backOffPolicyEnabled = true;
+  @Deprecated
+  @Beta
+  private boolean backOffPolicyEnabled = false;
 
   /**
    * Determines whether direct media upload is enabled or disabled. If value is set to {@code true}
@@ -223,13 +243,16 @@ public final class MediaHttpUploader {
    */
   private boolean disableGZipContent;
 
+  /** Sleeper. **/
+  Sleeper sleeper = Sleeper.DEFAULT;
+
   /**
    * Construct the {@link MediaHttpUploader}.
    *
    * <p>
    * The input stream received by calling {@link AbstractInputStreamContent#getInputStream} is
-   * closed when the upload process is successfully completed. For resumable uploads, when the
-   * media content length is known, if the input stream has {@link InputStream#markSupported} as
+   * closed when the upload process is successfully completed. For resumable uploads, when the media
+   * content length is known, if the input stream has {@link InputStream#markSupported} as
    * {@code false} then it is wrapped in an {@link BufferedInputStream} to support the
    * {@link InputStream#mark} and {@link InputStream#reset} methods required for handling server
    * errors. If the media content length is unknown then each chunk is stored temporarily in memory.
@@ -261,13 +284,13 @@ public final class MediaHttpUploader {
    * <p>
    * If an error is encountered during the request execution the caller is responsible for parsing
    * the response correctly. For example for JSON errors:
+   * </p>
    *
    * <pre>
     if (!response.isSuccessStatusCode()) {
       throw GoogleJsonResponseException.from(jsonFactory, response);
     }
    * </pre>
-   * </p>
    *
    * <p>
    * Callers should call {@link HttpResponse#disconnect} when the returned HTTP response object is
@@ -348,10 +371,15 @@ public final class MediaHttpUploader {
     while (true) {
       currentRequest = requestFactory.buildPutRequest(uploadUrl, null);
       setContentAndHeadersOnCurrentRequest(bytesUploaded);
-      // use media exponential backoff on server error
       if (backOffPolicyEnabled) {
+        // use exponential back-off on server error
         currentRequest.setBackOffPolicy(new MediaUploadExponentialBackOffPolicy(this));
+      } else {
+        // set mediaErrorHandler as I/O exception handler and as unsuccessful response handler for
+        // calling to serverErrorCallback on an I/O exception or an abnormal HTTP response
+        new MediaUploadErrorHandler(this, currentRequest);
       }
+
       if (getMediaContentLength() >= 0) {
         // TODO(rmistry): Support gzipping content for the case where media content length is
         // known (https://code.google.com/p/google-api-java-client/issues/detail?id=691).
@@ -449,8 +477,6 @@ public final class MediaHttpUploader {
     new MethodOverride().intercept(request);
     // don't throw an exception so we can let a custom Google exception be thrown
     request.setThrowExceptionOnExecuteError(false);
-    // allow retry on I/O errors
-    request.setRetryOnExecuteIOException(true);
     // execute the request
     HttpResponse response = request.execute();
     return response;
@@ -502,10 +528,9 @@ public final class MediaHttpUploader {
       contentInputStream.mark(blockSize);
 
       InputStream limitInputStream = ByteStreams.limit(contentInputStream, blockSize);
-      contentChunk = new InputStreamContent(mediaContent.getType(), limitInputStream)
-          .setRetrySupported(true)
-          .setLength(blockSize)
-          .setCloseInputStream(false);
+      contentChunk = new InputStreamContent(
+          mediaContent.getType(), limitInputStream).setRetrySupported(true)
+          .setLength(blockSize).setCloseInputStream(false);
       mediaContentLengthStr = String.valueOf(getMediaContentLength());
     } else {
       // If the media content length is not known we implement a custom buffered input stream that
@@ -562,14 +587,13 @@ public final class MediaHttpUploader {
   }
 
   /**
-   * The call back method that will be invoked by
-   * {@link MediaUploadExponentialBackOffPolicy#getNextBackOffMillis} if it encounters a server
-   * error during resumable upload inside {@link #upload}.
+   * The call back method that will be invoked on a server error or an I/O exception during
+   * resumable upload inside {@link #upload}.
    *
    * <p>
    * This method will query the current status of the upload to find how many bytes were
    * successfully uploaded before the server error occurred. It will then adjust the HTTP Request
-   * object used by the BackOffPolicy to contain the correct range header and media content chunk.
+   * object to contain the correct range header and media content chunk.
    * </p>
    */
   public void serverErrorCallback() throws IOException {
@@ -579,8 +603,8 @@ public final class MediaHttpUploader {
     // Query the current status of the upload by issuing an empty PUT request on the upload URI.
     HttpRequest request =
         requestFactory.buildPutRequest(currentRequest.getUrl(), new EmptyContent());
-    request.getHeaders().setContentRange("bytes */" + (
-        getMediaContentLength() >= 0 ? getMediaContentLength() : "*"));
+    request.getHeaders().setContentRange(
+        "bytes */" + (getMediaContentLength() >= 0 ? getMediaContentLength() : "*"));
     HttpResponse response = executeCurrentRequestWithBackOffAndGZip(request);
 
     try {
@@ -648,20 +672,37 @@ public final class MediaHttpUploader {
   }
 
   /**
-   * Sets whether the back off policy is enabled or disabled. If value is set to {@code false} then
-   * server errors are not handled and the upload process will fail if a server error is
-   * encountered. Defaults to {@code true}.
+   * {@link Beta} <br/>
+   * Sets whether the back off policy is enabled or disabled. The default value is {@code false}.
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.14 the default value was {@code true}, but starting with
+   * version 1.15 the default value is {@code false}.
+   * </p>
+   *
+   * @deprecated (scheduled to be removed in the 1.16). Use
+   *             {@link HttpRequest#setUnsuccessfulResponseHandler} with a new
+   *             {@link HttpBackOffUnsuccessfulResponseHandler} in {@link HttpRequestInitializer}
+   *             instead.
    */
+  @Beta
+  @Deprecated
   public MediaHttpUploader setBackOffPolicyEnabled(boolean backOffPolicyEnabled) {
     this.backOffPolicyEnabled = backOffPolicyEnabled;
     return this;
   }
 
   /**
-   * Returns whether the back off policy is enabled or disabled. If value is set to {@code false}
-   * then server errors are not handled and the upload process will fail if a server error is
-   * encountered. Defaults to {@code true}.
+   * {@link Beta} <br/>
+   * Returns whether the back off policy is enabled or disabled.
+   *
+   * @deprecated (scheduled to be removed in the 1.16). Use
+   *             {@link HttpRequest#setUnsuccessfulResponseHandler} with a new
+   *             {@link HttpBackOffUnsuccessfulResponseHandler} in {@link HttpRequestInitializer}
+   *             instead.
    */
+  @Beta
+  @Deprecated
   public boolean isBackOffPolicyEnabled() {
     return backOffPolicyEnabled;
   }
@@ -725,8 +766,8 @@ public final class MediaHttpUploader {
    * default value is {@link #DEFAULT_CHUNK_SIZE}.
    *
    * <p>
-   * The minimum allowable value is {@link #MINIMUM_CHUNK_SIZE} and the specified chunk size must
-   * be a multiple of {@link #MINIMUM_CHUNK_SIZE}.
+   * The minimum allowable value is {@link #MINIMUM_CHUNK_SIZE} and the specified chunk size must be
+   * a multiple of {@link #MINIMUM_CHUNK_SIZE}.
    * </p>
    */
   public MediaHttpUploader setChunkSize(int chunkSize) {
@@ -770,6 +811,25 @@ public final class MediaHttpUploader {
    */
   public MediaHttpUploader setDisableGZipContent(boolean disableGZipContent) {
     this.disableGZipContent = disableGZipContent;
+    return this;
+  }
+
+  /**
+   * Returns the sleeper.
+   *
+   * @since 1.15
+   */
+  public Sleeper getSleeper() {
+    return sleeper;
+  }
+
+  /**
+   * Sets the sleeper. The default value is {@link Sleeper#DEFAULT}.
+   *
+   * @since 1.15
+   */
+  public MediaHttpUploader setSleeper(Sleeper sleeper) {
+    this.sleeper = sleeper;
     return this;
   }
 
@@ -859,9 +919,9 @@ public final class MediaHttpUploader {
    * @return the upload progress
    */
   public double getProgress() throws IOException {
-    Preconditions.checkArgument(getMediaContentLength() >= 0, "Cannot call getProgress() if " +
-        "the specified AbstractInputStreamContent has no content length. Use " +
-        " getNumBytesUploaded() to denote progress instead.");
+    Preconditions.checkArgument(getMediaContentLength() >= 0, "Cannot call getProgress() if "
+        + "the specified AbstractInputStreamContent has no content length. Use "
+        + " getNumBytesUploaded() to denote progress instead.");
     return getMediaContentLength() == 0 ? 0 : (double) bytesUploaded / getMediaContentLength();
   }
 }

@@ -32,6 +32,7 @@ import java.io.ByteArrayOutputStream;
  *
  * @author rmistry@google.com (Ravi Mistry)
  */
+@SuppressWarnings("deprecation")
 public class MediaHttpDownloaderTest extends TestCase {
 
   private static final String TEST_REQUEST_URL = "http://www.test.com/request/url?alt=media";
@@ -212,6 +213,7 @@ public class MediaHttpDownloaderTest extends TestCase {
     MediaTransport fakeTransport = new MediaTransport(contentLength);
     fakeTransport.testServerError = true;
     MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
+    downloader.setBackOffPolicyEnabled(true);
     downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
 
     // There should be 3 calls made: 1 download request with server error and 2 successful download
@@ -225,7 +227,6 @@ public class MediaHttpDownloaderTest extends TestCase {
     MediaTransport fakeTransport = new MediaTransport(contentLength);
     fakeTransport.testServerError = true;
     MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
-    downloader.setBackOffPolicyEnabled(false);
     try {
       downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
       fail("Expected " + HttpResponseException.class);
@@ -244,7 +245,6 @@ public class MediaHttpDownloaderTest extends TestCase {
     MediaTransport fakeTransport = new MediaTransport(contentLength);
     fakeTransport.testClientError = true;
     MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
-    downloader.setBackOffPolicyEnabled(false);
     try {
       downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
       fail("Expected " + HttpResponseException.class);
@@ -380,6 +380,7 @@ public class MediaHttpDownloaderTest extends TestCase {
     fakeTransport.directDownloadEnabled = true;
     fakeTransport.testServerError = true;
     MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
+    downloader.setBackOffPolicyEnabled(true);
     downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
 
     // should be 2 calls made: 1 download request w/server error and 1 successful download request
@@ -393,7 +394,6 @@ public class MediaHttpDownloaderTest extends TestCase {
     fakeTransport.directDownloadEnabled = true;
     fakeTransport.testServerError = true;
     MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
-    downloader.setBackOffPolicyEnabled(false);
     try {
       downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
       fail("Expected " + HttpResponseException.class);

@@ -43,6 +43,7 @@ import java.util.List;
  *
  * @author rmistry@google.com (Ravi Mistry)
  */
+@SuppressWarnings("deprecation")
 public class BatchRequestTest extends TestCase {
 
   private static final String ROOT_URL = "http://www.test.com/";
@@ -187,6 +188,7 @@ public class BatchRequestTest extends TestCase {
 
   }
 
+  @Deprecated
   private static class MockExponentialBackOffPolicy extends ExponentialBackOffPolicy {
     public MockExponentialBackOffPolicy() {
     }

@@ -15,10 +15,12 @@
 package com.google.api.client.googleapis.media;
 
 import com.google.api.client.http.ExponentialBackOffPolicy;
+import com.google.api.client.util.Beta;
 
 import java.io.IOException;
 
 /**
+ * {@link Beta} <br/>
  * Extension of {@link ExponentialBackOffPolicy} that calls the Media HTTP Uploader call back method
  * before backing off requests.
  *
@@ -28,6 +30,9 @@ import java.io.IOException;
  *
  * @author rmistry@google.com (Ravi Mistry)
  */
+@Beta
+@Deprecated
+@SuppressWarnings("deprecation")
 class MediaUploadExponentialBackOffPolicy extends ExponentialBackOffPolicy {
 
   /** The uploader to callback on if there is a server error. */
