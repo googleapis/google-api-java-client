@@ -18,8 +18,8 @@ import com.google.api.client.http.AbstractHttpContent;
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpBackOffIOExceptionHandler;
 import com.google.api.client.http.HttpExecuteInterceptor;
-import com.google.api.client.http.HttpIOExceptionHandler;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
@@ -31,6 +31,7 @@ import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.testing.util.TestableByteArrayInputStream;
+import com.google.api.client.util.BackOff;
 
 import junit.framework.TestCase;
 
@@ -78,7 +79,8 @@ public class MediaHttpUploaderTest extends TestCase {
     boolean directUploadWithMetadata;
     boolean contentLengthNotSpecified;
     boolean assertTestHeaders;
-    boolean throwIOExceptionInsteadOf500;
+    boolean testIOException;
+    int maxByteIndexUploadedOnIOException = MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1;
 
     MediaTransport(int contentLength) {
       this.contentLength = contentLength;
@@ -114,6 +116,7 @@ public class MediaHttpUploaderTest extends TestCase {
             }
             // This is the initiation call.
             MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+            assertFalse(directUploadEnabled && testIOException);
             if (directUploadEnabled && testServerError && lowLevelExecCalls == 1) {
               // send a server error in the 1st request of a direct upload
               response.setStatusCode(500);
@@ -139,12 +142,12 @@ public class MediaHttpUploaderTest extends TestCase {
           lowLevelExecCalls++;
           MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
           String contentRangeHeader = getFirstHeaderValue("Content-Range");
-          if (testServerError) {
+          if (testServerError || testIOException) {
             switch (lowLevelExecCalls) {
               case 3:
-                // Send a server error or throw IOExpcetion in the 3rd request
-                if (throwIOExceptionInsteadOf500) {
-                    throw new IOException();
+                // Send a server error or throw IOException in the 3rd request
+                if (testIOException) {
+                  throw new IOException();
                 }
                 response.setStatusCode(500);
                 return response;
@@ -157,7 +160,7 @@ public class MediaHttpUploaderTest extends TestCase {
                 }
                 // Return 308 and the Range of bytes uploaded so far.
                 response.setStatusCode(308);
-                response.addHeader("Range", "0-" + (MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1));
+                response.addHeader("Range", "bytes=0-" + maxByteIndexUploadedOnIOException);
                 return response;
               default:
                 break;
@@ -180,7 +183,7 @@ public class MediaHttpUploaderTest extends TestCase {
             expectedContentRange = "bytes */0";
           } else if (contentLengthNotSpecified && (
               (bytesUploaded + MediaHttpUploader.DEFAULT_CHUNK_SIZE) < contentLength
-              || testServerError)) {
+              || testServerError || testIOException)) {
             expectedContentRange = "bytes " + bytesRange + "/*";
           } else {
             expectedContentRange = "bytes " + bytesRange + "/" + contentLength;
@@ -195,7 +198,7 @@ public class MediaHttpUploaderTest extends TestCase {
           } else {
             // Return 308 and the range since the upload is incomplete.
             response.setStatusCode(308);
-            response.addHeader("Range", bytesRange);
+            response.addHeader("Range", "bytes=" + bytesRange);
           }
           return response;
         }
@@ -542,8 +545,8 @@ public class MediaHttpUploaderTest extends TestCase {
         new MediaHttpUploader(mediaContent, fakeTransport, new HttpRequestInitializer() {
           public void initialize(HttpRequest request) {
             request.setUnsuccessfulResponseHandler(new HttpUnsuccessfulResponseHandler() {
-              public boolean handleResponse(HttpRequest request, HttpResponse response,
-                  boolean supportsRetry) {
+              public boolean handleResponse(
+                  HttpRequest request, HttpResponse response, boolean supportsRetry) {
                 return response.getStatusCode() != 308;
               }
             });
@@ -575,38 +578,66 @@ public class MediaHttpUploaderTest extends TestCase {
     assertEquals(3, fakeTransport.lowLevelExecCalls);
   }
 
-  public void testUploadIOExpcetion_WithIOExpcetionHandler() throws Exception {
+  public void testUpload_ResumableIOExceptionWithIOExceptionHandler() throws Exception {
+    // no bytes uploaded
+    subtestUpload_ResumableIOExceptionWithIOExceptionHandler(
+        false, MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1, null);
+    subtestUpload_ResumableIOExceptionWithIOExceptionHandler(
+        true, MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1, null);
+    // all bytes uploaded
+    subtestUpload_ResumableIOExceptionWithIOExceptionHandler(
+        false, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2 - 1, IllegalArgumentException.class);
+    subtestUpload_ResumableIOExceptionWithIOExceptionHandler(
+        true, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2 - 1, IllegalStateException.class);
+    // half of the bytes uploaded
+    subtestUpload_ResumableIOExceptionWithIOExceptionHandler(
+        false, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 3 / 2, IllegalArgumentException.class);
+    subtestUpload_ResumableIOExceptionWithIOExceptionHandler(
+        true, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 3 / 2, IllegalStateException.class);
+  }
+
+  public void subtestUpload_ResumableIOExceptionWithIOExceptionHandler(boolean contentLengthKnown,
+      int maxByteIndexUploadedOnIOException,
+      Class<? extends RuntimeException> expectedExceptionClass) throws Exception {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2;
     MediaTransport fakeTransport = new MediaTransport(contentLength);
-    fakeTransport.testServerError = true;
-    fakeTransport.throwIOExceptionInsteadOf500 = true;
+    fakeTransport.testIOException = true;
+    fakeTransport.contentLengthNotSpecified = !contentLengthKnown;
+    fakeTransport.maxByteIndexUploadedOnIOException = maxByteIndexUploadedOnIOException;
     InputStream is = new ByteArrayInputStream(new byte[contentLength]);
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
-    mediaContent.setLength(contentLength);
+    if (contentLengthKnown) {
+      mediaContent.setLength(contentLength);
+    }
     MediaHttpUploader uploader =
         new MediaHttpUploader(mediaContent, fakeTransport, new HttpRequestInitializer() {
           public void initialize(HttpRequest request) {
-            request.setIOExceptionHandler(new HttpIOExceptionHandler() {
-              public boolean handleIOException(HttpRequest request, boolean supportsRetry) {
-                return true;
-              }
-            });
+            request.setIOExceptionHandler(new HttpBackOffIOExceptionHandler(BackOff.ZERO_BACKOFF));
           }
         });
+    // actually the exceptions thrown are a bug: we should remove the expectation of an exception
+    // when the bug is fixed (https://code.google.com/p/google-api-java-client/issues/detail?id=772)
+    try {
+      HttpResponse response = uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
+      assertEquals(200, response.getStatusCode());
 
-    HttpResponse response = uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
-    assertEquals(200, response.getStatusCode());
-
-    // There should be 5 calls made. 1 initiation request, 1 upload request with server error,
-    // 1 call to query the range and 2 upload requests.
-    assertEquals(5, fakeTransport.lowLevelExecCalls);
+      // There should be 5 calls made. 1 initiation request, 1 upload request with server error,
+      // 1 call to query the range and 2 upload requests.
+      assertEquals(5, fakeTransport.lowLevelExecCalls);
+      if (expectedExceptionClass != null) {
+        fail("expected " + expectedExceptionClass);
+      }
+    } catch (RuntimeException e) {
+      if (expectedExceptionClass != e.getClass()) {
+        throw e;
+      }
+    }
   }
 
-  public void testUploadIOExpcetion_WithoutIOExpcetionHandler() throws Exception {
+  public void testUploadIOException_WithoutIOExceptionHandler() throws Exception {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2;
     MediaTransport fakeTransport = new MediaTransport(contentLength);
-    fakeTransport.testServerError = true;
-    fakeTransport.throwIOExceptionInsteadOf500 = true;
+    fakeTransport.testIOException = true;
     InputStream is = new ByteArrayInputStream(new byte[contentLength]);
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
     mediaContent.setLength(contentLength);
@@ -614,7 +645,7 @@ public class MediaHttpUploaderTest extends TestCase {
 
     try {
       uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
-      fail("expected IOExpcetion");
+      fail("expected " + IOException.class);
     } catch (IOException e) {
       // There should be 3 calls made. 1 initiation request, 1 successful upload request,
       // and 1 upload request with server error
