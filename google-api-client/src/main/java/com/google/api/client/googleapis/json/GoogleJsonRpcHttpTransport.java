@@ -41,7 +41,11 @@ import java.util.List;
  *
  * @since 1.3
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.16) Use the <a
+ *             href="https://code.google.com/p/google-api-java-client/wiki/APIs">Google API
+ *             libraries</a> or directly use {@link HttpTransport}.
  */
+@Deprecated
 @Beta
 public final class GoogleJsonRpcHttpTransport {
 
@@ -150,7 +154,9 @@ public final class GoogleJsonRpcHttpTransport {
    * </p>
    *
    * @since 1.9
+   * @deprecated (scheduled to be removed in 1.16)
    */
+  @Deprecated
   @Beta
   public static class Builder {
 
