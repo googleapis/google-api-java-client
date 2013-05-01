@@ -26,6 +26,7 @@ import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
 import com.google.api.client.util.Preconditions;
 
@@ -196,6 +197,7 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
       return new GoogleAuthorizationCodeFlow(this);
     }
 
+    @Beta
     @Override
     public Builder setCredentialStore(CredentialStore credentialStore) {
       return (Builder) super.setCredentialStore(credentialStore);
