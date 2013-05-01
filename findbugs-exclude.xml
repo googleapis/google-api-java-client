@@ -56,4 +56,8 @@
     <Bug pattern="BETA_CLASS_USAGE,BETA_METHOD_USAGE"/>
     <Class name="~com.google.api.client.googleapis.media.MediaHttpUploader"/>
   </And>
+  <And>
+    <Bug pattern="BETA_METHOD_USAGE"/>
+    <Class name="com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow$Builder"/>
+  </And>
 </FindBugsFilter>
