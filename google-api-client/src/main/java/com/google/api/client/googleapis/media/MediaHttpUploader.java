@@ -377,7 +377,8 @@ public final class MediaHttpUploader {
       } else {
         // set mediaErrorHandler as I/O exception handler and as unsuccessful response handler for
         // calling to serverErrorCallback on an I/O exception or an abnormal HTTP response
-        new MediaUploadErrorHandler(this, currentRequest);
+        // TODO(peleyal): uncomment this when issue 772 is fixed
+        // new MediaUploadErrorHandler(this, currentRequest);
       }
 
       if (getMediaContentLength() >= 0) {
@@ -587,6 +588,7 @@ public final class MediaHttpUploader {
   }
 
   /**
+   * {@link Beta} <br/>
    * The call back method that will be invoked on a server error or an I/O exception during
    * resumable upload inside {@link #upload}.
    *
@@ -596,6 +598,7 @@ public final class MediaHttpUploader {
    * object to contain the correct range header and media content chunk.
    * </p>
    */
+  @Beta
   public void serverErrorCallback() throws IOException {
     Preconditions.checkNotNull(currentRequest, "The current request should not be null");
 
