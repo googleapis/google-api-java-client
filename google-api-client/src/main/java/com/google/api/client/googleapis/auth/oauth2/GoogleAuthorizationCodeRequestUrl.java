@@ -16,15 +16,18 @@ package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.AuthorizationCodeResponseUrl;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Preconditions;
+
+import java.util.Collection;
 
 /**
  * Google-specific implementation of the OAuth 2.0 URL builder for an authorization web page to
  * allow the end user to authorize the application to access their protected resources and that
  * returns an authorization code, as specified in <a
- * href="https://developers.google.com/accounts/docs/OAuth2WebServer">Using OAuth 2.0 for Web
- * Server Applications</a>.
+ * href="https://developers.google.com/accounts/docs/OAuth2WebServer">Using OAuth 2.0 for Web Server
+ * Applications</a>.
  *
  * <p>
  * The default for {@link #getResponseTypes()} is {@code "code"}. Use
@@ -72,14 +75,60 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
   private String accessType;
 
   /**
+   * {@link Beta} <br/>
+   * Constructs a new {@link GoogleAuthorizationCodeRequestUrl}.
+   *
    * @param clientId client identifier
    * @param redirectUri URI that the authorization server directs the resource owner's user-agent
    *        back to the client after a successful authorization grant
    * @param scopes scopes (see {@link #setScopes(Iterable)})
+   *
+   * @deprecated (scheduled to be removed in 1.16) Use
+   *             {@link #GoogleAuthorizationCodeRequestUrl(String, String, Collection)} instead.
    */
+  @Beta
+  @Deprecated
   public GoogleAuthorizationCodeRequestUrl(
       String clientId, String redirectUri, Iterable<String> scopes) {
     this(GoogleOAuthConstants.AUTHORIZATION_SERVER_URL, clientId, redirectUri, scopes);
+  }
+
+  /**
+   * @param clientId client identifier
+   * @param redirectUri URI that the authorization server directs the resource owner's user-agent
+   *        back to the client after a successful authorization grant
+   * @param scopes scopes (see {@link #setScopes(Collection)})
+   *
+   * @since 1.15
+   */
+  public GoogleAuthorizationCodeRequestUrl(
+      String clientId, String redirectUri, Collection<String> scopes) {
+    this(GoogleOAuthConstants.AUTHORIZATION_SERVER_URL, clientId, redirectUri, scopes);
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Constructs a new {@link GoogleAuthorizationCodeRequestUrl}.
+   *
+   * @param authorizationServerEncodedUrl authorization server encoded URL
+   * @param clientId client identifier
+   * @param redirectUri URI that the authorization server directs the resource owner's user-agent
+   *        back to the client after a successful authorization grant
+   * @param scopes scopes (see {@link #setScopes(Iterable)})
+   *
+   * @deprecated (scheduled to be removed in 1.16) Use
+   *             {@link #GoogleAuthorizationCodeRequestUrl(String, String, String, Collection)}
+   *             instead.
+   *
+   * @since 1.12
+   */
+  @Beta
+  @Deprecated
+  public GoogleAuthorizationCodeRequestUrl(String authorizationServerEncodedUrl, String clientId,
+      String redirectUri, Iterable<String> scopes) {
+    super(authorizationServerEncodedUrl, clientId);
+    setRedirectUri(redirectUri);
+    setScopes(scopes);
   }
 
   /**
@@ -87,15 +136,37 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
    * @param clientId client identifier
    * @param redirectUri URI that the authorization server directs the resource owner's user-agent
    *        back to the client after a successful authorization grant
-   * @param scopes scopes (see {@link #setScopes(Iterable)})
+   * @param scopes scopes (see {@link #setScopes(Collection)})
    *
-   * @since 1.12
+   * @since 1.15
    */
-  public GoogleAuthorizationCodeRequestUrl(String authorizationServerEncodedUrl,
-      String clientId, String redirectUri, Iterable<String> scopes) {
+  public GoogleAuthorizationCodeRequestUrl(String authorizationServerEncodedUrl, String clientId,
+      String redirectUri, Collection<String> scopes) {
     super(authorizationServerEncodedUrl, clientId);
     setRedirectUri(redirectUri);
     setScopes(scopes);
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Constructs a new {@link GoogleAuthorizationCodeRequestUrl}.
+   *
+   * @param clientSecrets OAuth 2.0 client secrets JSON model as specified in <a
+   *        href="http://code.google.com/p/google-api-python-client/wiki/ClientSecrets">
+   *        client_secrets.json file format</a>
+   * @param redirectUri URI that the authorization server directs the resource owner's user-agent
+   *        back to the client after a successful authorization grant
+   * @param scopes scopes (see {@link #setScopes(Iterable)})
+   *
+   * @deprecated (scheduled to be removed in 1.16) Use {@link
+   *             #GoogleAuthorizationCodeRequestUrl(GoogleClientSecrets, String, Collection)}
+   *             instead.
+   */
+  @Beta
+  @Deprecated
+  public GoogleAuthorizationCodeRequestUrl(
+      GoogleClientSecrets clientSecrets, String redirectUri, Iterable<String> scopes) {
+    this(clientSecrets.getDetails().getClientId(), redirectUri, scopes);
   }
 
   /**
@@ -104,10 +175,12 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
    *        client_secrets.json file format</a>
    * @param redirectUri URI that the authorization server directs the resource owner's user-agent
    *        back to the client after a successful authorization grant
-   * @param scopes scopes (see {@link #setScopes(Iterable)})
+   * @param scopes scopes (see {@link #setScopes(Collection)})
+   *
+   * @since 1.15
    */
   public GoogleAuthorizationCodeRequestUrl(
-      GoogleClientSecrets clientSecrets, String redirectUri, Iterable<String> scopes) {
+      GoogleClientSecrets clientSecrets, String redirectUri, Collection<String> scopes) {
     this(clientSecrets.getDetails().getClientId(), redirectUri, scopes);
   }
 
@@ -157,12 +230,21 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
   }
 
   @Override
+  @Beta
+  @Deprecated
   public GoogleAuthorizationCodeRequestUrl setResponseTypes(String... responseTypes) {
     return (GoogleAuthorizationCodeRequestUrl) super.setResponseTypes(responseTypes);
   }
 
   @Override
+  @Beta
+  @Deprecated
   public GoogleAuthorizationCodeRequestUrl setResponseTypes(Iterable<String> responseTypes) {
+    return (GoogleAuthorizationCodeRequestUrl) super.setResponseTypes(responseTypes);
+  }
+
+  @Override
+  public GoogleAuthorizationCodeRequestUrl setResponseTypes(Collection<String> responseTypes) {
     return (GoogleAuthorizationCodeRequestUrl) super.setResponseTypes(responseTypes);
   }
 
@@ -173,13 +255,23 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
   }
 
   @Override
+  @Beta
+  @Deprecated
   public GoogleAuthorizationCodeRequestUrl setScopes(String... scopes) {
     Preconditions.checkArgument(scopes.length != 0);
     return (GoogleAuthorizationCodeRequestUrl) super.setScopes(scopes);
   }
 
   @Override
+  @Beta
+  @Deprecated
   public GoogleAuthorizationCodeRequestUrl setScopes(Iterable<String> scopes) {
+    Preconditions.checkArgument(scopes.iterator().hasNext());
+    return (GoogleAuthorizationCodeRequestUrl) super.setScopes(scopes);
+  }
+
+  @Override
+  public GoogleAuthorizationCodeRequestUrl setScopes(Collection<String> scopes) {
     Preconditions.checkArgument(scopes.iterator().hasNext());
     return (GoogleAuthorizationCodeRequestUrl) super.setScopes(scopes);
   }

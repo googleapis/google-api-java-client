@@ -30,8 +30,7 @@ import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
 import com.google.api.client.util.Preconditions;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Thread-safe Google OAuth 2.0 authorization code flow that manages and persists end-user
@@ -79,17 +78,39 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
   private final String accessType;
 
   /**
+   * {@link Beta} <br/>
+   * Constructs a new {@link GoogleAuthorizationCodeFlow}.
+   *
    * @param transport HTTP transport
    * @param jsonFactory JSON factory
    * @param clientId client identifier
    * @param clientSecret client secret
    * @param scopes list of scopes to be joined by a space separator (or a single value containing
    *        multiple space-separated scopes)
+   * @deprecated (scheduled to be removed in 1.16) Use {@link
+   *             #GoogleAuthorizationCodeFlow(HttpTransport, JsonFactory, String, String,
+   *             Collection)} instead.
    *
    * @since 1.14
    */
+  @Beta
+  @Deprecated
   public GoogleAuthorizationCodeFlow(HttpTransport transport, JsonFactory jsonFactory,
       String clientId, String clientSecret, Iterable<String> scopes) {
+    this(new Builder(transport, jsonFactory, clientId, clientSecret, scopes));
+  }
+
+  /**
+   * @param transport HTTP transport
+   * @param jsonFactory JSON factory
+   * @param clientId client identifier
+   * @param clientSecret client secret
+   * @param scopes collection of scopes to be joined by a space separator
+   *
+   * @since 1.15
+   */
+  public GoogleAuthorizationCodeFlow(HttpTransport transport, JsonFactory jsonFactory,
+      String clientId, String clientSecret, Collection<String> scopes) {
     this(new Builder(transport, jsonFactory, clientId, clientSecret, scopes));
   }
 
@@ -117,9 +138,9 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
   @Override
   public GoogleAuthorizationCodeRequestUrl newAuthorizationUrl() {
     // don't want to specify redirectUri to give control of it to user of this class
-    return new GoogleAuthorizationCodeRequestUrl(getAuthorizationServerEncodedUrl(), getClientId(),
-        "", Collections.singleton(getScopes())).setAccessType(accessType)
-        .setApprovalPrompt(approvalPrompt);
+    return new GoogleAuthorizationCodeRequestUrl(
+        getAuthorizationServerEncodedUrl(), getClientId(), "", getScopes()).setAccessType(
+        accessType).setApprovalPrompt(approvalPrompt);
   }
 
   /**
@@ -161,13 +182,20 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
     String accessType;
 
     /**
+     * {@link Beta} <br/>
+     * Constructs a new {@link Builder}.
+     *
      * @param transport HTTP transport
      * @param jsonFactory JSON factory
      * @param clientId client identifier
      * @param clientSecret client secret
      * @param scopes list of scopes to be joined by a space separator (or a single value containing
      *        multiple space-separated scopes)
+     * @deprecated (scheduled to be removed in 1.16) Use
+     *             {@link #Builder(HttpTransport, JsonFactory, String, String, Collection)} instead.
      */
+    @Beta
+    @Deprecated
     public Builder(HttpTransport transport, JsonFactory jsonFactory, String clientId,
         String clientSecret, Iterable<String> scopes) {
       super(BearerToken.authorizationHeaderAccessMethod(), transport, jsonFactory, new GenericUrl(
@@ -177,12 +205,39 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
     }
 
     /**
+     *
+     * @param transport HTTP transport
+     * @param jsonFactory JSON factory
+     * @param clientId client identifier
+     * @param clientSecret client secret
+     * @param scopes collection of scopes to be joined by a space separator (or a single value
+     *        containing multiple space-separated scopes)
+     *
+     * @since 1.15
+     */
+    public Builder(HttpTransport transport, JsonFactory jsonFactory, String clientId,
+        String clientSecret, Collection<String> scopes) {
+      super(BearerToken.authorizationHeaderAccessMethod(), transport, jsonFactory, new GenericUrl(
+          GoogleOAuthConstants.TOKEN_SERVER_URL), new ClientParametersAuthentication(
+          clientId, clientSecret), clientId, GoogleOAuthConstants.AUTHORIZATION_SERVER_URL);
+      setScopes(scopes);
+    }
+
+    /**
+     * {@link Beta} <br/>
+     * Constructs a new {@link Builder}.
+     *
      * @param transport HTTP transport
      * @param jsonFactory JSON factory
      * @param clientSecrets Google client secrets
      * @param scopes list of scopes to be joined by a space separator (or a single value containing
      *        multiple space-separated scopes)
+     * @deprecated (scheduled to be removed in 1.16) Use
+     *             {@link #Builder(HttpTransport, JsonFactory, GoogleClientSecrets, Collection)}
+     *             instead.
      */
+    @Beta
+    @Deprecated
     public Builder(HttpTransport transport, JsonFactory jsonFactory,
         GoogleClientSecrets clientSecrets, Iterable<String> scopes) {
       super(BearerToken.authorizationHeaderAccessMethod(), transport, jsonFactory, new GenericUrl(
@@ -190,6 +245,23 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
           clientSecrets.getDetails().getClientId(), clientSecrets.getDetails().getClientSecret()),
           clientSecrets.getDetails().getClientId(), GoogleOAuthConstants.AUTHORIZATION_SERVER_URL);
       setScopes(Preconditions.checkNotNull(scopes));
+    }
+
+    /**
+     * @param transport HTTP transport
+     * @param jsonFactory JSON factory
+     * @param clientSecrets Google client secrets
+     * @param scopes collection of scopes to be joined by a space separator
+     *
+     * @since 1.15
+     */
+    public Builder(HttpTransport transport, JsonFactory jsonFactory,
+        GoogleClientSecrets clientSecrets, Collection<String> scopes) {
+      super(BearerToken.authorizationHeaderAccessMethod(), transport, jsonFactory, new GenericUrl(
+          GoogleOAuthConstants.TOKEN_SERVER_URL), new ClientParametersAuthentication(
+          clientSecrets.getDetails().getClientId(), clientSecrets.getDetails().getClientSecret()),
+          clientSecrets.getDetails().getClientId(), GoogleOAuthConstants.AUTHORIZATION_SERVER_URL);
+      setScopes(scopes);
     }
 
     @Override
@@ -209,11 +281,21 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
     }
 
     @Override
+    public Builder setScopes(Collection<String> scopes) {
+      Preconditions.checkState(!scopes.isEmpty());
+      return (Builder) super.setScopes(scopes);
+    }
+
+    @Override
+    @Beta
+    @Deprecated
     public Builder setScopes(Iterable<String> scopes) {
       return (Builder) super.setScopes(scopes);
     }
 
     @Override
+    @Beta
+    @Deprecated
     public Builder setScopes(String... scopes) {
       return (Builder) super.setScopes(scopes);
     }
@@ -288,7 +370,7 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
     }
 
     @Override
-    public Builder setRefreshListeners(List<CredentialRefreshListener> refreshListeners) {
+    public Builder setRefreshListeners(Collection<CredentialRefreshListener> refreshListeners) {
       return (Builder) super.setRefreshListeners(refreshListeners);
     }
 

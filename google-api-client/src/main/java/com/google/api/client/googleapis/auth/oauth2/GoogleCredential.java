@@ -33,6 +33,7 @@ import com.google.api.client.json.webtoken.JsonWebToken;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
 import com.google.api.client.util.Joiner;
+import com.google.api.client.util.Lists;
 import com.google.api.client.util.PemReader;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
@@ -45,7 +46,8 @@ import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Thread-safe Google-specific implementation of the OAuth 2.0 helper for accessing protected
@@ -97,7 +99,7 @@ import java.util.List;
  * private key in a {@code .p12} file from the Google APIs Console. Use
  * {@link Builder#setServiceAccountId(String)},
  * {@link Builder#setServiceAccountPrivateKeyFromP12File(File)}, and
- * {@link Builder#setServiceAccountScopes(String...)}. Sample usage:
+ * {@link Builder#setServiceAccountScopes(Collection)}. Sample usage:
  * </p>
  *
  * <pre>
@@ -105,7 +107,7 @@ import java.util.List;
       HttpTransport transport,
       JsonFactory jsonFactory,
       String serviceAccountId,
-      Iterable&lt;String&gt; serviceAccountScopes,
+      Collection&lt;String&gt; serviceAccountScopes,
       File p12File) throws GeneralSecurityException, IOException {
     return new GoogleCredential.Builder().setTransport(transport)
         .setJsonFactory(jsonFactory)
@@ -127,7 +129,7 @@ import java.util.List;
       HttpTransport transport,
       JsonFactory jsonFactory,
       String serviceAccountId,
-      Iterable&lt;String&gt; serviceAccountScopes,
+      Collection&lt;String&gt; serviceAccountScopes,
       File p12File,
       String serviceAccountUser) throws GeneralSecurityException, IOException {
     return new GoogleCredential.Builder().setTransport(transport)
@@ -163,10 +165,10 @@ public class GoogleCredential extends Credential {
   private String serviceAccountId;
 
   /**
-   * Space-separated OAuth scopes to use with the the service account flow or {@code null} if not
+   * Collection of OAuth scopes to use with the the service account flow or {@code null} if not
    * using the service account flow.
    */
-  private String serviceAccountScopes;
+  private Collection<String> serviceAccountScopes;
 
   /**
    * Private key to use with the the service account flow or {@code null} if not using the service
@@ -203,7 +205,7 @@ public class GoogleCredential extends Credential {
           && builder.serviceAccountScopes == null && builder.serviceAccountUser == null);
     } else {
       serviceAccountId = Preconditions.checkNotNull(builder.serviceAccountId);
-      serviceAccountScopes = Preconditions.checkNotNull(builder.serviceAccountScopes);
+      serviceAccountScopes = Collections.unmodifiableCollection(builder.serviceAccountScopes);
       serviceAccountPrivateKey = builder.serviceAccountPrivateKey;
       serviceAccountUser = builder.serviceAccountUser;
     }
@@ -256,7 +258,7 @@ public class GoogleCredential extends Credential {
     payload.setIssuedAtTimeSeconds(currentTime / 1000);
     payload.setExpirationTimeSeconds(currentTime / 1000 + 3600);
     payload.setSubject(serviceAccountUser);
-    payload.put("scope", serviceAccountScopes);
+    payload.put("scope", Joiner.on(' ').join(serviceAccountScopes));
     try {
       String assertion = JsonWebSignature.signUsingRsaSha256(
           serviceAccountPrivateKey, getJsonFactory(), header, payload);
@@ -284,12 +286,30 @@ public class GoogleCredential extends Credential {
 
   /**
    * {@link Beta} <br/>
-   * Returns the space-separated OAuth scopes to use with the the service account flow or
-   * {@code null} if not using the service account flow.
+   * Returns a collection of OAuth scopes to use with the the service account flow or {@code null}
+   * if not using the service account flow.
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.14 this method returned a {@link String}, but starting with
+   * version 1.15 it returns a {@link Collection}. Use {@link #getServiceAccountScopesAsString} to
+   * retrieve a {@link String} with space-separated list of scopes.
+   * </p>
    */
   @Beta
-  public final String getServiceAccountScopes() {
+  public final Collection<String> getServiceAccountScopes() {
     return serviceAccountScopes;
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Returns the space-separated OAuth scopes to use with the the service account flow or
+   * {@code null} if not using the service account flow.
+   *
+   * @since 1.15
+   */
+  @Beta
+  public final String getServiceAccountScopesAsString() {
+    return serviceAccountScopes == null ? null : Joiner.on(' ').join(serviceAccountScopes);
   }
 
   /**
@@ -325,10 +345,9 @@ public class GoogleCredential extends Credential {
     String serviceAccountId;
 
     /**
-     * Space-separated OAuth scopes to use with the the service account flow or {@code null} for
-     * none.
+     * Collection of OAuth scopes to use with the the service account flow or {@code null} for none.
      */
-    String serviceAccountScopes;
+    Collection<String> serviceAccountScopes;
 
     /** Private key to use with the the service account flow or {@code null} for none. */
     PrivateKey serviceAccountPrivateKey;
@@ -421,11 +440,16 @@ public class GoogleCredential extends Credential {
 
     /**
      * {@link Beta} <br/>
-     * Returns the space-separated OAuth scopes to use with the the service account flow or
-     * {@code null} for none.
+     * Returns a collection of OAuth scopes to use with the the service account flow or {@code null}
+     * for none.
+     *
+     * <p>
+     * Upgrade warning: in prior version 1.14 this method returned a {@link String}, but starting
+     * with version 1.15 it returns a {@link Collection}.
+     * </p>
      */
     @Beta
-    public final String getServiceAccountScopes() {
+    public final Collection<String> getServiceAccountScopes() {
       return serviceAccountScopes;
     }
 
@@ -441,7 +465,10 @@ public class GoogleCredential extends Credential {
      *
      * @param serviceAccountScopes list of scopes to be joined by a space separator (or a single
      *        value containing multiple space-separated scopes)
+     * @deprecated (scheduled to be removed in 1.16) Use
+     *             {@link #setServiceAccountScopes(Collection)} instead.
      */
+    @Deprecated
     @Beta
     public Builder setServiceAccountScopes(String... serviceAccountScopes) {
       return setServiceAccountScopes(
@@ -460,11 +487,34 @@ public class GoogleCredential extends Credential {
      *
      * @param serviceAccountScopes list of scopes to be joined by a space separator (or a single
      *        value containing multiple space-separated scopes)
+     * @deprecated (scheduled to be removed in 1.16) Use
+     *             {@link #setServiceAccountScopes(Collection)} instead.
      */
+    @Deprecated
     @Beta
     public Builder setServiceAccountScopes(Iterable<String> serviceAccountScopes) {
       this.serviceAccountScopes =
-          serviceAccountScopes == null ? null : Joiner.on(' ').join(serviceAccountScopes);
+          serviceAccountScopes == null ? null : Lists.newArrayList(serviceAccountScopes);
+      return this;
+    }
+
+    /**
+     * {@link Beta} <br/>
+     * Sets the space-separated OAuth scopes to use with the the service account flow or
+     * {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     *
+     * @param serviceAccountScopes collection of scopes to be joined by a space separator (or a
+     *        single value containing multiple space-separated scopes)
+     * @since 1.15
+     */
+    @Beta
+    public Builder setServiceAccountScopes(Collection<String> serviceAccountScopes) {
+      this.serviceAccountScopes = serviceAccountScopes;
       return this;
     }
 
@@ -573,7 +623,7 @@ public class GoogleCredential extends Credential {
     }
 
     @Override
-    public Builder setRefreshListeners(List<CredentialRefreshListener> refreshListeners) {
+    public Builder setRefreshListeners(Collection<CredentialRefreshListener> refreshListeners) {
       return (Builder) super.setRefreshListeners(refreshListeners);
     }
 

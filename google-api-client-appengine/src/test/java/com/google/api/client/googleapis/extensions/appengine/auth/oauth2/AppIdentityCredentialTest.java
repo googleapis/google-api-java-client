@@ -14,9 +14,11 @@
 
 package com.google.api.client.googleapis.extensions.appengine.auth.oauth2;
 
-import com.google.common.collect.ImmutableList;
-
 import junit.framework.TestCase;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Tests {@link AppIdentityCredential}.
@@ -25,14 +27,15 @@ import junit.framework.TestCase;
  */
 public class AppIdentityCredentialTest extends TestCase {
 
-  private static final ImmutableList<String> SCOPES = ImmutableList.of("scope1", "scope2");
+  private static final Collection<String> SCOPES =
+      Collections.unmodifiableCollection(Arrays.asList("scope1", "scope2"));
 
   public void testBuilder() {
     String[] scopes = SCOPES.toArray(new String[SCOPES.size()]);
     AppIdentityCredential.Builder builder = new AppIdentityCredential.Builder(SCOPES);
     scopes[1] = "somethingelse";
-    assertEquals(SCOPES, builder.getScopes());
+    assertTrue(Arrays.deepEquals(SCOPES.toArray(), builder.getScopes().toArray()));
     AppIdentityCredential credential = builder.build();
-    assertEquals(SCOPES, credential.getScopes());
+    assertTrue(Arrays.deepEquals(SCOPES.toArray(), credential.getScopes().toArray()));
   }
 }
