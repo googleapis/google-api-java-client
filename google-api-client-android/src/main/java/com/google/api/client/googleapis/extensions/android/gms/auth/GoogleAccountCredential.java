@@ -27,6 +27,7 @@ import com.google.api.client.util.BackOff;
 import com.google.api.client.util.BackOffUtils;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.client.util.Joiner;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Sleeper;
 
@@ -35,6 +36,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  * {@link Beta} <br/>
@@ -101,13 +103,18 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
   }
 
   /**
-   * Constructor a new instance using OAuth 2.0 scopes.
+   * {@link Beta} <br/>
+   * Constructs a new instance using OAuth 2.0 scopes.
    *
    * @param context context
    * @param scope first OAuth 2.0 scope
    * @param extraScopes any additional OAuth 2.0 scopes
    * @return new instance
+   * @deprecated (scheduled to be removed in 1.16) Use {@link #usingOAuth2(Context, Collection)}
+   *             instead.
    */
+  @Beta
+  @Deprecated
   public static GoogleAccountCredential usingOAuth2(
       Context context, String scope, String... extraScopes) {
     StringBuilder scopeBuilder = new StringBuilder("oauth2:").append(scope);
@@ -115,6 +122,21 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
       scopeBuilder.append(' ').append(extraScope);
     }
     return new GoogleAccountCredential(context, scopeBuilder.toString());
+  }
+
+  /**
+   * Constructs a new instance using OAuth 2.0 scopes.
+   *
+   * @param context context
+   * @param scopes non empty OAuth 2.0 scope list
+   * @return new instance
+   *
+   * @since 1.15
+   */
+  public static GoogleAccountCredential usingOAuth2(Context context, Collection<String> scopes) {
+    Preconditions.checkArgument(scopes != null && scopes.iterator().hasNext());
+    String scopesStr = "oauth2: " + Joiner.on(' ').join(scopes);
+    return new GoogleAccountCredential(context, scopesStr);
   }
 
   /**

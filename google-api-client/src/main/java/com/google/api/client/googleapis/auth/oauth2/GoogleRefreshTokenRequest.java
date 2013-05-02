@@ -23,8 +23,10 @@ import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.util.Beta;
 
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  * Google-specific implementation of the OAuth 2.0 request to refresh an access token using a
@@ -99,12 +101,21 @@ public class GoogleRefreshTokenRequest extends RefreshTokenRequest {
   }
 
   @Override
+  @Beta
+  @Deprecated
   public GoogleRefreshTokenRequest setScopes(String... scopes) {
     return (GoogleRefreshTokenRequest) super.setScopes(scopes);
   }
 
   @Override
+  @Beta
+  @Deprecated
   public GoogleRefreshTokenRequest setScopes(Iterable<String> scopes) {
+    return (GoogleRefreshTokenRequest) super.setScopes(scopes);
+  }
+
+  @Override
+  public GoogleRefreshTokenRequest setScopes(Collection<String> scopes) {
     return (GoogleRefreshTokenRequest) super.setScopes(scopes);
   }
 
