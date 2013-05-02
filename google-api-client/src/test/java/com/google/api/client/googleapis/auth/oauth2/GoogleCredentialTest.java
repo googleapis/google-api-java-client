@@ -24,6 +24,8 @@ import com.google.api.client.testing.util.SecurityTestUtils;
 
 import junit.framework.TestCase;
 
+import java.util.Collections;
+
 /**
  * Tests {@link GoogleCredential}.
  *
@@ -33,7 +35,7 @@ public class GoogleCredentialTest extends TestCase {
 
   public void testRefreshToken_ServiceAccounts() throws Exception {
     GoogleCredential credential = new GoogleCredential.Builder().setServiceAccountId("id")
-        .setServiceAccountScopes("scope")
+        .setServiceAccountScopes(Collections.singleton("scope"))
         .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
         .setTransport(new MockHttpTransport() {
 

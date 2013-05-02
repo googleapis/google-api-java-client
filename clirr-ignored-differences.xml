@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- see http://mojo.codehaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
-
 <differences>
+<!-- 7006 (Method Return Type changed): className, method, to -->
+  <difference>
+    <differenceType>7006</differenceType>
+    <className>com/google/api/client/googleapis/auth/oauth2/GoogleCredential</className>
+    <method>java.lang.String getServiceAccountScopes()</method>
+    <to>java.util.Collection</to>
+  </difference>
+  <difference>
+    <differenceType>7006</differenceType>
+    <className>com/google/api/client/googleapis/auth/oauth2/GoogleCredential$Builder</className>
+    <method>java.lang.String getServiceAccountScopes()</method>
+    <to>java.util.Collection</to>
+  </difference>
 </differences>
