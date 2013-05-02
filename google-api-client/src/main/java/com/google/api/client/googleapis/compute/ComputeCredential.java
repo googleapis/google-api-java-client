@@ -30,7 +30,7 @@ import com.google.api.client.util.Clock;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * {@link Beta} <br/>
@@ -156,7 +156,7 @@ public class ComputeCredential extends Credential {
     }
 
     @Override
-    public Builder setRefreshListeners(List<CredentialRefreshListener> refreshListeners) {
+    public Builder setRefreshListeners(Collection<CredentialRefreshListener> refreshListeners) {
       return (Builder) super.setRefreshListeners(refreshListeners);
     }
   }

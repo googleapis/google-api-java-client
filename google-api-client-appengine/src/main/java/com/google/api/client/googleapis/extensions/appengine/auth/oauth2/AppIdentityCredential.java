@@ -18,12 +18,14 @@ import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Lists;
 import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -62,18 +64,40 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
   private final AppIdentityService appIdentityService;
 
   /** OAuth scopes (unmodifiable). */
-  private final List<String> scopes;
+  private final Collection<String> scopes;
 
   /**
    * @param scopes OAuth scopes
+   * @since 1.15
    */
+  public AppIdentityCredential(Collection<String> scopes) {
+    this(new Builder(scopes));
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Constructs a new {@link AppIdentityCredential}.
+   *
+   * @param scopes OAuth scopes
+   * @deprecated (scheduled to be removed in 1.16) Use {@link #AppIdentityCredential(Collection)}
+   *             instead.
+   */
+  @Beta
+  @Deprecated
   public AppIdentityCredential(Iterable<String> scopes) {
     this(new Builder(scopes));
   }
 
   /**
+   * {@link Beta} <br/>
+   * Constructs a new {@link AppIdentityCredential}.
+   *
    * @param scopes OAuth scopes
+   * @deprecated (scheduled to be removed in 1.16) Use {@link #AppIdentityCredential(Collection)}
+   *             instead.
    */
+  @Beta
+  @Deprecated
   public AppIdentityCredential(String... scopes) {
     this(new Builder(scopes));
   }
@@ -114,9 +138,14 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
   /**
    * Gets the OAuth scopes (unmodifiable).
    *
+   * <p>
+   * Upgrade warning: in prior version 1.14 this method returned a {@link List}, but starting with
+   * version 1.15 it returns a {@link Collection}.
+   * </p>
+   *
    * @since 1.12
    */
-  public final List<String> getScopes() {
+  public final Collection<String> getScopes() {
     return scopes;
   }
 
@@ -138,22 +167,40 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
     AppIdentityService appIdentityService;
 
     /** OAuth scopes (unmodifiable). */
-    final List<String> scopes;
+    final Collection<String> scopes;
 
     /**
      * Returns an instance of a new builder.
      *
      * @param scopes OAuth scopes
+     * @since 1.15
      */
+    public Builder(Collection<String> scopes) {
+      this.scopes = Collections.unmodifiableCollection(scopes);
+    }
+
+    /**
+     * {@link Beta} <br/>
+     * Returns an instance of a new builder.
+     *
+     * @param scopes OAuth scopes
+     * @deprecated (scheduled to be removed in 1.16) Use {@link #Builder(Collection)} instead.
+     */
+    @Beta
+    @Deprecated
     public Builder(Iterable<String> scopes) {
       this.scopes = Collections.unmodifiableList(Lists.newArrayList(scopes));
     }
 
     /**
+     * {@link Beta} <br/>
      * Returns an instance of a new builder.
      *
      * @param scopes OAuth scopes
+     * @deprecated (scheduled to be removed in 1.16) Use {@link #Builder(Collection)} instead.
      */
+    @Beta
+    @Deprecated
     public Builder(String... scopes) {
       this(Arrays.asList(scopes));
     }
@@ -192,9 +239,14 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
     /**
      * Returns the OAuth scopes (unmodifiable).
      *
+     * <p>
+     * Upgrade warning: in prior version 1.14 this method returned a {@link List}, but starting with
+     * version 1.15 it returns a {@link Collection}.
+     * </p>
+     *
      * @since 1.14
      */
-    public final List<String> getScopes() {
+    public final Collection<String> getScopes() {
       return scopes;
     }
   }
