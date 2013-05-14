@@ -184,7 +184,8 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
      * Returns an instance of a new builder.
      *
      * @param scopes OAuth scopes
-     * @deprecated (scheduled to be removed in 1.16) Use {@link #Builder(Collection)} instead.
+     * @deprecated (scheduled to be removed in 1.16) Use
+     *             {@link #AppIdentityCredential.Builder(Collection)} instead.
      */
     @Beta
     @Deprecated
@@ -197,7 +198,8 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
      * Returns an instance of a new builder.
      *
      * @param scopes OAuth scopes
-     * @deprecated (scheduled to be removed in 1.16) Use {@link #Builder(Collection)} instead.
+     * @deprecated (scheduled to be removed in 1.16) Use
+     *             {@link #AppIdentityCredential.Builder(Collection)} instead.
      */
     @Beta
     @Deprecated

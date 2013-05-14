@@ -191,8 +191,8 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
      * @param clientSecret client secret
      * @param scopes list of scopes to be joined by a space separator (or a single value containing
      *        multiple space-separated scopes)
-     * @deprecated (scheduled to be removed in 1.16) Use
-     *             {@link #Builder(HttpTransport, JsonFactory, String, String, Collection)} instead.
+     * @deprecated (scheduled to be removed in 1.16) Use {@link #GoogleAuthorizationCodeFlow.Builder
+     *             (HttpTransport, JsonFactory, String, String, Collection)} instead.
      */
     @Beta
     @Deprecated
@@ -233,8 +233,8 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
      * @param scopes list of scopes to be joined by a space separator (or a single value containing
      *        multiple space-separated scopes)
      * @deprecated (scheduled to be removed in 1.16) Use
-     *             {@link #Builder(HttpTransport, JsonFactory, GoogleClientSecrets, Collection)}
-     *             instead.
+     *             {@link #GoogleAuthorizationCodeFlow.Builder(HttpTransport, JsonFactory,
+     *             GoogleClientSecrets, Collection)} instead.
      */
     @Beta
     @Deprecated

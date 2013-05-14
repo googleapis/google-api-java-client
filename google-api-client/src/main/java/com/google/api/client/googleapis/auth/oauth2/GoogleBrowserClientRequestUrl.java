@@ -89,7 +89,7 @@ public class GoogleBrowserClientRequestUrl extends BrowserClientRequestUrl {
    *        back to the client after a successful authorization grant
    * @param scopes scopes (see {@link #setScopes(Collection)})
    *
-   * @Since 1.15
+   * @since 1.15
    */
   public GoogleBrowserClientRequestUrl(
       String clientId, String redirectUri, Collection<String> scopes) {
