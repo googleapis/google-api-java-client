@@ -42,7 +42,7 @@ public final class GoogleUtils {
    *
    * @since 1.14
    */
-  public static final Integer MINOR_VERSION = 17;
+  public static final Integer MINOR_VERSION = 16;
 
   /**
    * Bug fix part of the current release version.
