@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Google Inc.
+ * Copyright (c) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,83 +12,68 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.services.json;
+package com.google.api.client.googleapis.testing.services.protobuf;
 
-import com.google.api.client.googleapis.services.AbstractGoogleClient;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
+import com.google.api.client.googleapis.services.protobuf.AbstractGoogleProtoClient;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.JsonObjectParser;
-
-import java.util.Arrays;
-import java.util.Collections;
+import com.google.api.client.util.Beta;
 
 /**
- * Thread-safe Google JSON client.
+ * {@link Beta} <br/>
+ * Thread-safe mock Google protocol buffer client.
  *
- * @since 1.12
+ * @since 1.16
  * @author Yaniv Inbar
  */
-public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
+@Beta
+public class MockGoogleProtoClient extends AbstractGoogleProtoClient {
 
   /**
    * @param builder builder
-   *
-   * @since 1.14
    */
-  protected AbstractGoogleJsonClient(Builder builder) {
+  protected MockGoogleProtoClient(Builder builder) {
     super(builder);
   }
 
-  @Override
-  public JsonObjectParser getObjectParser() {
-    return (JsonObjectParser) super.getObjectParser();
-  }
-
-  /** Returns the JSON Factory. */
-  public final JsonFactory getJsonFactory() {
-    return getObjectParser().getJsonFactory();
+  /**
+   * @param transport HTTP transport
+   * @param rootUrl root URL of the service
+   * @param servicePath service path
+   * @param httpRequestInitializer HTTP request initializer or {@code null} for none
+   */
+  public MockGoogleProtoClient(HttpTransport transport, String rootUrl, String servicePath,
+      HttpRequestInitializer httpRequestInitializer) {
+    this(new Builder(transport, rootUrl, servicePath, httpRequestInitializer));
   }
 
   /**
-   * Builder for {@link AbstractGoogleJsonClient}.
+   * {@link Beta} <br/>
+   * Builder for {@link MockGoogleProtoClient}.
    *
    * <p>
    * Implementation is not thread-safe.
    * </p>
    */
-  public abstract static class Builder extends AbstractGoogleClient.Builder {
+  @Beta
+  public static class Builder extends AbstractGoogleProtoClient.Builder {
 
     /**
      * @param transport HTTP transport
-     * @param jsonFactory JSON factory
      * @param rootUrl root URL of the service
      * @param servicePath service path
      * @param httpRequestInitializer HTTP request initializer or {@code null} for none
-     * @param legacyDataWrapper whether using the legacy data wrapper in responses
      */
-    protected Builder(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
-        String servicePath, HttpRequestInitializer httpRequestInitializer,
-        boolean legacyDataWrapper) {
-      super(transport, rootUrl, servicePath, new JsonObjectParser.Builder(
-          jsonFactory).setWrapperKeys(
-          legacyDataWrapper ? Arrays.asList("data", "error") : Collections.<String>emptySet())
-          .build(), httpRequestInitializer);
+    public Builder(HttpTransport transport, String rootUrl, String servicePath,
+        HttpRequestInitializer httpRequestInitializer) {
+      super(transport, rootUrl, servicePath, httpRequestInitializer);
     }
 
     @Override
-    public final JsonObjectParser getObjectParser() {
-      return (JsonObjectParser) super.getObjectParser();
+    public MockGoogleProtoClient build() {
+      return new MockGoogleProtoClient(this);
     }
-
-    /** Returns the JSON Factory. */
-    public final JsonFactory getJsonFactory() {
-      return getObjectParser().getJsonFactory();
-    }
-
-    @Override
-    public abstract AbstractGoogleJsonClient build();
 
     @Override
     public Builder setRootUrl(String rootUrl) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Google Inc.
+ * Copyright (c) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -11,13 +11,18 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+ 
+syntax = "proto2";
+option optimize_for = LITE_RUNTIME;
+option java_package = "com.google.api.client.googleapis.services.protobuf";
 
-/**
- * Contains the basis for the generated service-specific libraries based on the JSON format.
- *
- * @since 1.12
- * @author Yaniv Inbar
- */
+message TestMessage {
+  required TestStatus status = 1;
+  required string name = 2;
+  required int64 value = 3;
+}
 
-package com.google.api.client.googleapis.services.json;
-
+enum TestStatus {
+  SUCCESS = 1;
+  FAILURE = 2;
+}

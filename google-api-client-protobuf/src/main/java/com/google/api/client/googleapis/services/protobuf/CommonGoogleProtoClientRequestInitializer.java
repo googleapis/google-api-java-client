@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Google Inc.
+ * Copyright (c) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,15 +12,18 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.services.json;
+package com.google.api.client.googleapis.services.protobuf;
 
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.CommonGoogleClientRequestInitializer;
+import com.google.api.client.util.Beta;
 
 import java.io.IOException;
 
 /**
- * Google JSON client request initializer implementation for setting properties like key and userIp.
+ * {@link Beta} <br/>
+ * Google protocol buffer client request initializer implementation for setting properties like key
+ * and userIp.
  *
  * <p>
  * The simplest usage is to use it to set the key parameter:
@@ -28,7 +31,7 @@ import java.io.IOException;
  *
  * <pre>
   public static final GoogleClientRequestInitializer KEY_INITIALIZER =
-      new CommonGoogleJsonClientRequestInitializer(KEY);
+      new CommonGoogleProtoClientRequestInitializer(KEY);
  * </pre>
  *
  * <p>
@@ -37,7 +40,7 @@ import java.io.IOException;
  *
  * <pre>
   public static final GoogleClientRequestInitializer INITIALIZER =
-      new CommonGoogleJsonClientRequestInitializer(KEY, USER_IP);
+      new CommonGoogleProtoClientRequestInitializer(KEY, USER_IP);
  * </pre>
  *
  * <p>
@@ -45,10 +48,10 @@ import java.io.IOException;
  * </p>
  *
  * <pre>
-  public static class MyRequestInitializer extends CommonGoogleJsonClientRequestInitializer {
+  public static class MyRequestInitializer extends CommonGoogleProtoClientRequestInitializer {
 
     {@literal @}Override
-    public void initialize(AbstractGoogleJsonClientRequest{@literal <}?{@literal >} request)
+    public void initialize(AbstractGoogleProtoClientRequest{@literal <}?{@literal >} request)
         throws IOException {
       // custom logic
     }
@@ -60,15 +63,15 @@ import java.io.IOException;
  * </p>
  *
  * <pre>
-  public static class MyKeyRequestInitializer extends CommonGoogleJsonClientRequestInitializer {
+  public static class MyKeyRequestInitializer extends CommonGoogleProtoClientRequestInitializer {
 
     public MyKeyRequestInitializer() {
       super(KEY, USER_IP);
     }
 
     {@literal @}Override
-    public void initializeJsonRequest(
-        AbstractGoogleJsonClientRequest{@literal <}?{@literal >} request) throws IOException {
+    public void initializeProtoRequest(
+        AbstractGoogleProtoClientRequest{@literal <}?{@literal >} request) throws IOException {
       // custom logic
     }
   }
@@ -78,19 +81,21 @@ import java.io.IOException;
  * Subclasses should be thread-safe.
  * </p>
  *
- * @since 1.12
+ * @since 1.16
  * @author Yaniv Inbar
  */
-public class CommonGoogleJsonClientRequestInitializer extends CommonGoogleClientRequestInitializer {
+@Beta
+public class CommonGoogleProtoClientRequestInitializer
+    extends CommonGoogleClientRequestInitializer {
 
-  public CommonGoogleJsonClientRequestInitializer() {
+  public CommonGoogleProtoClientRequestInitializer() {
     super();
   }
 
   /**
    * @param key API key or {@code null} to leave it unchanged
    */
-  public CommonGoogleJsonClientRequestInitializer(String key) {
+  public CommonGoogleProtoClientRequestInitializer(String key) {
     super(key);
   }
 
@@ -98,18 +103,18 @@ public class CommonGoogleJsonClientRequestInitializer extends CommonGoogleClient
    * @param key API key or {@code null} to leave it unchanged
    * @param userIp user IP or {@code null} to leave it unchanged
    */
-  public CommonGoogleJsonClientRequestInitializer(String key, String userIp) {
+  public CommonGoogleProtoClientRequestInitializer(String key, String userIp) {
     super(key, userIp);
   }
 
   @Override
   public final void initialize(AbstractGoogleClientRequest<?> request) throws IOException {
     super.initialize(request);
-    initializeJsonRequest((AbstractGoogleJsonClientRequest<?>) request);
+    initializeProtoRequest((AbstractGoogleProtoClientRequest<?>) request);
   }
 
   /**
-   * Initializes a Google JSON client request.
+   * Initializes a Google protocol buffer client request.
    *
    * <p>
    * Default implementation does nothing. Called from
@@ -118,7 +123,7 @@ public class CommonGoogleJsonClientRequestInitializer extends CommonGoogleClient
    *
    * @throws IOException I/O exception
    */
-  protected void initializeJsonRequest(AbstractGoogleJsonClientRequest<?> request)
+  protected void initializeProtoRequest(AbstractGoogleProtoClientRequest<?> request)
       throws IOException {
   }
 }

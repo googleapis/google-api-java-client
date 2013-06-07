@@ -2,6 +2,7 @@
 	<classpathentry kind="lib" path="libs/google-api-client-android-${project.version}.jar" sourcepath="libs-sources/google-api-client-android-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-api-client-appengine-${project.version}.jar" sourcepath="libs-sources/google-api-client-appengine-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-api-client-java6-${project.version}.jar" sourcepath="libs-sources/google-api-client-java6-${project.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-api-client-protobuf-${project.version}.jar" sourcepath="libs-sources/google-api-client-protobuf-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-api-client-servlet-${project.version}.jar" sourcepath="libs-sources/google-api-client-servlet-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-oauth-client-${project.oauth.version}.jar" sourcepath="libs-sources/google-oauth-client-${project.oauth.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-oauth-client-appengine-${project.oauth.version}.jar" sourcepath="libs-sources/google-oauth-client-appengine-${project.oauth.version}-sources.jar"/>
