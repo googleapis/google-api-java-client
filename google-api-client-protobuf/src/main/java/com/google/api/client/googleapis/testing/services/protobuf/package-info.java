@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Google Inc.
+ * Copyright (c) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,11 +13,12 @@
  */
 
 /**
- * Contains the basis for the generated service-specific libraries based on the JSON format.
+ * {@link com.google.api.client.util.Beta} <br/>
+ * Test utilities for the {@code com.google.api.client.googleapis.protobuf} package.
  *
- * @since 1.12
+ * @since 1.16
  * @author Yaniv Inbar
  */
-
-package com.google.api.client.googleapis.services.json;
+@com.google.api.client.util.Beta
+package com.google.api.client.googleapis.testing.services.protobuf;
 

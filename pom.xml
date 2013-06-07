@@ -63,7 +63,6 @@
   <!--
     If you add a new module, make sure to also add it in the following places:
     * below in the dependencyManagement and maven-javadoc-plugin sections
-    * jdiff.xml
     * google-api-client-assembly/classpath-include
     * google-api-client-assembly/pom.xml
     * google-api-client-assembly/readme.html
@@ -79,6 +78,7 @@
     <module>google-api-client-servlet</module>
     <module>google-api-client-android</module>
     <module>google-api-client-java6</module>
+    <module>google-api-client-protobuf</module>
   </modules>
 
   <dependencyManagement>
@@ -166,6 +166,11 @@
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-protobuf</artifactId>
+        <version>${project.http.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-jackson</artifactId>
         <version>${project.http.version}</version>
       </dependency>
@@ -223,6 +228,11 @@
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-java6</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api-client</groupId>
+        <artifactId>google-api-client-protobuf</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- mvn install:install-file \
@@ -423,20 +433,24 @@
                   <packages>com.google.api.client.googleapis*</packages>
                 </group>
                 <group>
-                  <title>google-api-client-appengine</title>
-                  <packages>com.google.api.client.googleapis.extensions.appengine*</packages>
-                </group>
-                <group>
-                  <title>google-api-client-servlet</title>
-                  <packages>com.google.api.client.googleapis.extensions.servlet*</packages>
-                </group>
-                <group>
                   <title>google-api-client-android</title>
                   <packages>com.google.api.client.googleapis.extensions.android.*</packages>
                 </group>
                 <group>
+                  <title>google-api-client-appengine</title>
+                  <packages>com.google.api.client.googleapis.extensions.appengine*</packages>
+                </group>
+                <group>
                   <title>google-api-client-java6</title>
                   <packages>com.google.api.client.googleapis.extensions.java6.*</packages>
+                </group>
+                <group>
+                  <title>google-api-client-protobuf</title>
+                  <packages>com.google.api.client.googleapis.services.protobuf.*,com.google.api.client.googleapis.testing.services.protobuf.*</packages>
+                </group>
+                <group>
+                  <title>google-api-client-servlet</title>
+                  <packages>com.google.api.client.googleapis.extensions.servlet*</packages>
                 </group>
               </groups>
               <windowtitle>google-api-java-client ${project.version}</windowtitle>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Google Inc.
+ * Copyright (c) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,83 +12,67 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.services.json;
+package com.google.api.client.googleapis.services.protobuf;
 
 import com.google.api.client.googleapis.services.AbstractGoogleClient;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.JsonObjectParser;
-
-import java.util.Arrays;
-import java.util.Collections;
+import com.google.api.client.protobuf.ProtoObjectParser;
+import com.google.api.client.util.Beta;
 
 /**
- * Thread-safe Google JSON client.
+ * {@link Beta} <br/>
+ * Thread-safe Google protocol buffer client.
  *
- * @since 1.12
+ * @since 1.16
  * @author Yaniv Inbar
  */
-public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
+@Beta
+public abstract class AbstractGoogleProtoClient extends AbstractGoogleClient {
 
   /**
    * @param builder builder
-   *
-   * @since 1.14
    */
-  protected AbstractGoogleJsonClient(Builder builder) {
+  protected AbstractGoogleProtoClient(Builder builder) {
     super(builder);
   }
 
   @Override
-  public JsonObjectParser getObjectParser() {
-    return (JsonObjectParser) super.getObjectParser();
-  }
-
-  /** Returns the JSON Factory. */
-  public final JsonFactory getJsonFactory() {
-    return getObjectParser().getJsonFactory();
+  public ProtoObjectParser getObjectParser() {
+    return (ProtoObjectParser) super.getObjectParser();
   }
 
   /**
-   * Builder for {@link AbstractGoogleJsonClient}.
+   * {@link Beta} <br/>
+   * Builder for {@link AbstractGoogleProtoClient}.
    *
    * <p>
    * Implementation is not thread-safe.
    * </p>
+   * @since 1.16
    */
+  @Beta
   public abstract static class Builder extends AbstractGoogleClient.Builder {
 
     /**
      * @param transport HTTP transport
-     * @param jsonFactory JSON factory
      * @param rootUrl root URL of the service
      * @param servicePath service path
      * @param httpRequestInitializer HTTP request initializer or {@code null} for none
-     * @param legacyDataWrapper whether using the legacy data wrapper in responses
      */
-    protected Builder(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
-        String servicePath, HttpRequestInitializer httpRequestInitializer,
-        boolean legacyDataWrapper) {
-      super(transport, rootUrl, servicePath, new JsonObjectParser.Builder(
-          jsonFactory).setWrapperKeys(
-          legacyDataWrapper ? Arrays.asList("data", "error") : Collections.<String>emptySet())
-          .build(), httpRequestInitializer);
+    protected Builder(HttpTransport transport, String rootUrl, String servicePath,
+        HttpRequestInitializer httpRequestInitializer) {
+      super(transport, rootUrl, servicePath, new ProtoObjectParser(), httpRequestInitializer);
     }
 
     @Override
-    public final JsonObjectParser getObjectParser() {
-      return (JsonObjectParser) super.getObjectParser();
-    }
-
-    /** Returns the JSON Factory. */
-    public final JsonFactory getJsonFactory() {
-      return getObjectParser().getJsonFactory();
+    public final ProtoObjectParser getObjectParser() {
+      return (ProtoObjectParser) super.getObjectParser();
     }
 
     @Override
-    public abstract AbstractGoogleJsonClient build();
+    public abstract AbstractGoogleProtoClient build();
 
     @Override
     public Builder setRootUrl(String rootUrl) {
