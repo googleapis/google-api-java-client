@@ -64,7 +64,7 @@
                 <mkdir dir="target/generated-test-sources" />
                 <exec failonerror="true" executable="protoc">
                   <arg value="--java_out=target/generated-test-sources" />
-                  <arg value="src/test/protobuf/simple_proto.proto" />
+                  <arg value="src/test/java/com/google/api/client/googleapis/services/protobuf/simple_proto.proto" />
                 </exec>
               </target>
             </configuration>
