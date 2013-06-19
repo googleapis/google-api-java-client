@@ -73,10 +73,12 @@
   -->
   <modules>
     <module>google-api-client</module>
-    <module>google-api-client-assembly</module>
-    <module>google-api-client-appengine</module>
     <module>google-api-client-servlet</module>
     <module>google-api-client-android</module>
+    <module>google-api-client-appengine</module>
+    <module>google-api-client-assembly</module>
+    <module>google-api-client-gson</module>
+    <module>google-api-client-jackson2</module>
     <module>google-api-client-java6</module>
     <module>google-api-client-protobuf</module>
   </modules>
@@ -166,6 +168,11 @@
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-jackson2</artifactId>
+        <version>${project.http.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-protobuf</artifactId>
         <version>${project.http.version}</version>
       </dependency>
@@ -228,6 +235,16 @@
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-java6</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api-client</groupId>
+        <artifactId>google-api-client-gson</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api-client</groupId>
+        <artifactId>google-api-client-jackson2</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -439,6 +456,14 @@
                 <group>
                   <title>google-api-client-appengine</title>
                   <packages>com.google.api.client.googleapis.extensions.appengine*</packages>
+                </group>
+                <group>
+                  <title>google-api-client-gson</title>
+                  <packages>com.google.api.client.googleapis.notifications.json.gson.*</packages>
+                </group>
+                <group>
+                  <title>google-api-client-jackson2</title>
+                  <packages>com.google.api.client.googleapis.notifications.json.jackson2.*</packages>
                 </group>
                 <group>
                   <title>google-api-client-java6</title>

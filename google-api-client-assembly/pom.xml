@@ -41,6 +41,14 @@
     </dependency>
     <dependency>
       <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client-gson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client-jackson2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client-java6</artifactId>
     </dependency>
     <dependency>
