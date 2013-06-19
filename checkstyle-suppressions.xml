@@ -6,6 +6,8 @@
 <suppressions>
 
   <suppress checks="LineLength" files="com/google/api/client/googleapis/apache/GoogleApacheHttpTransport.java"/>
+  <suppress checks="LineLength" files="com/google/api/client/googleapis/extensions/appengine/notifications/AppEngineNotificationServlet.java"/>
+  <suppress checks="LineLength" files="com/google/api/client/googleapis/extensions/servlet/notifications/NotificationServlet.java"/>
   <suppress checks="LineLength" files="com/google/api/client/googleapis/javanet/GoogleNetHttpTransport.java"/>
 
   <!-- Don't check JavaDoc on package-info. -->

@@ -20,6 +20,7 @@ import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
 import com.google.api.client.auth.oauth2.Credential.AccessMethod;
 import com.google.api.client.auth.oauth2.CredentialRefreshListener;
 import com.google.api.client.auth.oauth2.CredentialStore;
+import com.google.api.client.auth.oauth2.StoredCredential;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteInterceptor;
@@ -29,7 +30,10 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
 import com.google.api.client.util.Preconditions;
+import com.google.api.client.util.store.DataStore;
+import com.google.api.client.util.store.DataStoreFactory;
 
+import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -60,9 +64,10 @@ import java.util.Collection;
  * {@link Builder#setAccessType(String)}.
  * </p>
  *
- * @since 1.7
  * @author Yaniv Inbar
+ * @since 1.7
  */
+@SuppressWarnings("deprecation")
 public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
 
   /**
@@ -269,8 +274,25 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
       return new GoogleAuthorizationCodeFlow(this);
     }
 
+    @Override
+    public Builder setDataStoreFactory(DataStoreFactory dataStore) throws IOException {
+      return (Builder) super.setDataStoreFactory(dataStore);
+    }
+
+    @Override
+    public Builder setCredentialDataStore(DataStore<StoredCredential> typedDataStore) {
+      return (Builder) super.setCredentialDataStore(typedDataStore);
+    }
+
+    @Override
+    public Builder setCredentialCreatedListener(
+        CredentialCreatedListener credentialCreatedListener) {
+      return (Builder) super.setCredentialCreatedListener(credentialCreatedListener);
+    }
+
     @Beta
     @Override
+    @Deprecated
     public Builder setCredentialStore(CredentialStore credentialStore) {
       return (Builder) super.setCredentialStore(credentialStore);
     }

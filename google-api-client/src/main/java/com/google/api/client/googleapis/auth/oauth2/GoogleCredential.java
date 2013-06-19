@@ -18,7 +18,7 @@ import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.CredentialRefreshListener;
-import com.google.api.client.auth.oauth2.CredentialStore;
+import com.google.api.client.auth.oauth2.DataStoreCredentialRefreshListener;
 import com.google.api.client.auth.oauth2.TokenRequest;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets.Details;
@@ -37,6 +37,7 @@ import com.google.api.client.util.Lists;
 import com.google.api.client.util.PemReader;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
+import com.google.api.client.util.store.DataStoreFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -143,8 +144,9 @@ import java.util.Collections;
  * </pre>
  *
  * <p>
- * If you need to persist the access token in a data store, use {@link CredentialStore} and
- * {@link Builder#addRefreshListener(CredentialRefreshListener)}.
+ * If you need to persist the access token in a data store, use {@link DataStoreFactory} and
+ * {@link Builder#addRefreshListener(CredentialRefreshListener)} with
+ * {@link DataStoreCredentialRefreshListener}.
  * </p>
  *
  * <p>

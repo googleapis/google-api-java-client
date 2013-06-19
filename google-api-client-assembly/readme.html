@@ -102,28 +102,31 @@
     <li>google-oauth-client-${project.oauth.version}.jar</li>
     <li>google-http-client-${project.http.version}.jar</li>
     <li>jsr305-${project.jsr305.version}.jar</li>
-    <li>google-http-client-protobuf-${project.http.version}.jar (when using
+    <li>google-api-client-protobuf-${project.api.version}.jar (when using
       protobuf-java)
       <ul>
+        <li>google-http-client-protobuf-${project.http.version}.jar</li>
         <li>protobuf-java-${project.protobuf-java.version}.jar</li>
       </ul>
     </li>
-    <li>google-http-client-gson-${project.http.version}.jar (when using
+    <li>google-api-client-gson-${project.api.version}.jar (when using
       GSON)
       <ul>
+        <li>google-http-client-gson-${project.http.version}.jar</li>
         <li>gson-${project.gson.version}.jar</li>
       </ul>
     </li>
-    <li>google-http-client-jackson-${project.http.version}.jar (when using
-      Jackson)
-      <ul>
-        <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
-      </ul>
-    </li>
-    <li>google-http-client-jackson2-${project.http.version}.jar (when using
+    <li>google-api-client-jackson2-${project.api.version}.jar (when using
       Jackson 2)
       <ul>
+        <li>google-http-client-jackson2-${project.http.version}.jar</li>
         <li>jackson-core-${project.jackson-core2.version}.jar</li>
+      </ul>
+    </li>
+    <li>google-http-client-jackson-${project.http.version}.jar (when using
+      Jackson 1)
+      <ul>
+        <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
       </ul>
     </li>
   </ul>
