@@ -23,7 +23,6 @@ import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
@@ -88,19 +87,10 @@ public class GoogleAuthorizationCodeTokenRequest extends AuthorizationCodeTokenR
    * @param redirectUri redirect URL parameter matching the redirect URL parameter in the
    *        authorization request (see {@link #setRedirectUri(String)}
    */
-  public GoogleAuthorizationCodeTokenRequest(HttpTransport transport,
-      JsonFactory jsonFactory,
-      String clientId,
-      String clientSecret,
-      String code,
-      String redirectUri) {
-    this(transport,
-        jsonFactory,
-        GoogleOAuthConstants.TOKEN_SERVER_URL,
-        clientId,
-        clientSecret,
-        code,
-        redirectUri);
+  public GoogleAuthorizationCodeTokenRequest(HttpTransport transport, JsonFactory jsonFactory,
+      String clientId, String clientSecret, String code, String redirectUri) {
+    this(transport, jsonFactory, GoogleOAuthConstants.TOKEN_SERVER_URL, clientId, clientSecret,
+        code, redirectUri);
   }
 
   /**
@@ -115,12 +105,8 @@ public class GoogleAuthorizationCodeTokenRequest extends AuthorizationCodeTokenR
    *
    * @since 1.12
    */
-  public GoogleAuthorizationCodeTokenRequest(HttpTransport transport,
-      JsonFactory jsonFactory,
-      String tokenServerEncodedUrl,
-      String clientId,
-      String clientSecret,
-      String code,
+  public GoogleAuthorizationCodeTokenRequest(HttpTransport transport, JsonFactory jsonFactory,
+      String tokenServerEncodedUrl, String clientId, String clientSecret, String code,
       String redirectUri) {
     super(transport, jsonFactory, new GenericUrl(tokenServerEncodedUrl), code);
     setClientAuthentication(new ClientParametersAuthentication(clientId, clientSecret));
@@ -136,20 +122,6 @@ public class GoogleAuthorizationCodeTokenRequest extends AuthorizationCodeTokenR
   @Override
   public GoogleAuthorizationCodeTokenRequest setTokenServerUrl(GenericUrl tokenServerUrl) {
     return (GoogleAuthorizationCodeTokenRequest) super.setTokenServerUrl(tokenServerUrl);
-  }
-
-  @Override
-  @Beta
-  @Deprecated
-  public GoogleAuthorizationCodeTokenRequest setScopes(String... scopes) {
-    return (GoogleAuthorizationCodeTokenRequest) super.setScopes(scopes);
-  }
-
-  @Override
-  @Beta
-  @Deprecated
-  public GoogleAuthorizationCodeTokenRequest setScopes(Iterable<String> scopes) {
-    return (GoogleAuthorizationCodeTokenRequest) super.setScopes(scopes);
   }
 
   @Override

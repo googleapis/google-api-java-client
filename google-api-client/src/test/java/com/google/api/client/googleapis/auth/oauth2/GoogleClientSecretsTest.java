@@ -16,11 +16,9 @@ package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets.Details;
 import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.client.util.StringUtils;
 
 import junit.framework.TestCase;
 
-import java.io.ByteArrayInputStream;
 import java.io.StringReader;
 
 /**
@@ -36,17 +34,6 @@ public class GoogleClientSecretsTest extends TestCase {
 
   private final static String CLIENT_SECRETS = "{\"installed\": {\"client_id\": \"" + CLIENT_ID
       + "\",\"client_secret\": \"" + CLIENT_SECRET + "\"}}";
-
-  @SuppressWarnings("deprecation")
-  @Deprecated
-  public void testLoad_inputStream() throws Exception {
-    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
-        new GsonFactory(), new ByteArrayInputStream(StringUtils.getBytesUtf8(CLIENT_SECRETS)));
-    Details installed = clientSecrets.getInstalled();
-    assertNotNull(installed);
-    assertEquals(CLIENT_ID, installed.getClientId());
-    assertEquals(CLIENT_SECRET, installed.getClientSecret());
-  }
 
   public void testLoad() throws Exception {
     GoogleClientSecrets clientSecrets =

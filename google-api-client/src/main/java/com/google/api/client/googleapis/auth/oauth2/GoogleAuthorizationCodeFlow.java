@@ -83,29 +83,6 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
   private final String accessType;
 
   /**
-   * {@link Beta} <br/>
-   * Constructs a new {@link GoogleAuthorizationCodeFlow}.
-   *
-   * @param transport HTTP transport
-   * @param jsonFactory JSON factory
-   * @param clientId client identifier
-   * @param clientSecret client secret
-   * @param scopes list of scopes to be joined by a space separator (or a single value containing
-   *        multiple space-separated scopes)
-   * @deprecated (scheduled to be removed in 1.16) Use {@link
-   *             #GoogleAuthorizationCodeFlow(HttpTransport, JsonFactory, String, String,
-   *             Collection)} instead.
-   *
-   * @since 1.14
-   */
-  @Beta
-  @Deprecated
-  public GoogleAuthorizationCodeFlow(HttpTransport transport, JsonFactory jsonFactory,
-      String clientId, String clientSecret, Iterable<String> scopes) {
-    this(new Builder(transport, jsonFactory, clientId, clientSecret, scopes));
-  }
-
-  /**
    * @param transport HTTP transport
    * @param jsonFactory JSON factory
    * @param clientId client identifier
@@ -187,29 +164,6 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
     String accessType;
 
     /**
-     * {@link Beta} <br/>
-     * Constructs a new {@link Builder}.
-     *
-     * @param transport HTTP transport
-     * @param jsonFactory JSON factory
-     * @param clientId client identifier
-     * @param clientSecret client secret
-     * @param scopes list of scopes to be joined by a space separator (or a single value containing
-     *        multiple space-separated scopes)
-     * @deprecated (scheduled to be removed in 1.16) Use {@link #GoogleAuthorizationCodeFlow.Builder
-     *             (HttpTransport, JsonFactory, String, String, Collection)} instead.
-     */
-    @Beta
-    @Deprecated
-    public Builder(HttpTransport transport, JsonFactory jsonFactory, String clientId,
-        String clientSecret, Iterable<String> scopes) {
-      super(BearerToken.authorizationHeaderAccessMethod(), transport, jsonFactory, new GenericUrl(
-          GoogleOAuthConstants.TOKEN_SERVER_URL), new ClientParametersAuthentication(
-          clientId, clientSecret), clientId, GoogleOAuthConstants.AUTHORIZATION_SERVER_URL);
-      setScopes(Preconditions.checkNotNull(scopes));
-    }
-
-    /**
      *
      * @param transport HTTP transport
      * @param jsonFactory JSON factory
@@ -226,30 +180,6 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
           GoogleOAuthConstants.TOKEN_SERVER_URL), new ClientParametersAuthentication(
           clientId, clientSecret), clientId, GoogleOAuthConstants.AUTHORIZATION_SERVER_URL);
       setScopes(scopes);
-    }
-
-    /**
-     * {@link Beta} <br/>
-     * Constructs a new {@link Builder}.
-     *
-     * @param transport HTTP transport
-     * @param jsonFactory JSON factory
-     * @param clientSecrets Google client secrets
-     * @param scopes list of scopes to be joined by a space separator (or a single value containing
-     *        multiple space-separated scopes)
-     * @deprecated (scheduled to be removed in 1.16) Use
-     *             {@link #GoogleAuthorizationCodeFlow.Builder(HttpTransport, JsonFactory,
-     *             GoogleClientSecrets, Collection)} instead.
-     */
-    @Beta
-    @Deprecated
-    public Builder(HttpTransport transport, JsonFactory jsonFactory,
-        GoogleClientSecrets clientSecrets, Iterable<String> scopes) {
-      super(BearerToken.authorizationHeaderAccessMethod(), transport, jsonFactory, new GenericUrl(
-          GoogleOAuthConstants.TOKEN_SERVER_URL), new ClientParametersAuthentication(
-          clientSecrets.getDetails().getClientId(), clientSecrets.getDetails().getClientSecret()),
-          clientSecrets.getDetails().getClientId(), GoogleOAuthConstants.AUTHORIZATION_SERVER_URL);
-      setScopes(Preconditions.checkNotNull(scopes));
     }
 
     /**
@@ -305,20 +235,6 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
     @Override
     public Builder setScopes(Collection<String> scopes) {
       Preconditions.checkState(!scopes.isEmpty());
-      return (Builder) super.setScopes(scopes);
-    }
-
-    @Override
-    @Beta
-    @Deprecated
-    public Builder setScopes(Iterable<String> scopes) {
-      return (Builder) super.setScopes(scopes);
-    }
-
-    @Override
-    @Beta
-    @Deprecated
-    public Builder setScopes(String... scopes) {
       return (Builder) super.setScopes(scopes);
     }
 

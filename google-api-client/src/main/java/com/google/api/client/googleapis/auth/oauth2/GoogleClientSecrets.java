@@ -16,12 +16,10 @@ package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.util.Beta;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 import java.util.List;
 
@@ -180,19 +178,6 @@ public final class GoogleClientSecrets extends GenericJson {
   @Override
   public GoogleClientSecrets clone() {
     return (GoogleClientSecrets) super.clone();
-  }
-
-  /**
-   * {@link Beta} <br/>
-   * Loads the {@code client_secrets.json} file from the given input stream.
-   *
-   * @deprecated (scheduled to be removed in 1.16) Use {@link #load(JsonFactory, Reader)} instead.
-   */
-  @Deprecated
-  @Beta
-  public static GoogleClientSecrets load(JsonFactory jsonFactory, InputStream inputStream)
-      throws IOException {
-    return jsonFactory.fromInputStream(inputStream, GoogleClientSecrets.class);
   }
 
   /**

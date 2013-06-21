@@ -23,7 +23,6 @@ import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.util.Beta;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -98,20 +97,6 @@ public class GoogleRefreshTokenRequest extends RefreshTokenRequest {
   @Override
   public GoogleRefreshTokenRequest setTokenServerUrl(GenericUrl tokenServerUrl) {
     return (GoogleRefreshTokenRequest) super.setTokenServerUrl(tokenServerUrl);
-  }
-
-  @Override
-  @Beta
-  @Deprecated
-  public GoogleRefreshTokenRequest setScopes(String... scopes) {
-    return (GoogleRefreshTokenRequest) super.setScopes(scopes);
-  }
-
-  @Override
-  @Beta
-  @Deprecated
-  public GoogleRefreshTokenRequest setScopes(Iterable<String> scopes) {
-    return (GoogleRefreshTokenRequest) super.setScopes(scopes);
   }
 
   @Override

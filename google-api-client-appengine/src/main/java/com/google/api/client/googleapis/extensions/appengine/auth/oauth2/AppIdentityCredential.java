@@ -18,16 +18,12 @@ import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.util.Beta;
-import com.google.api.client.util.Lists;
 import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * OAuth 2.0 credential in which a client Google App Engine application needs to access data that it
@@ -75,34 +71,6 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
   }
 
   /**
-   * {@link Beta} <br/>
-   * Constructs a new {@link AppIdentityCredential}.
-   *
-   * @param scopes OAuth scopes
-   * @deprecated (scheduled to be removed in 1.16) Use {@link #AppIdentityCredential(Collection)}
-   *             instead.
-   */
-  @Beta
-  @Deprecated
-  public AppIdentityCredential(Iterable<String> scopes) {
-    this(new Builder(scopes));
-  }
-
-  /**
-   * {@link Beta} <br/>
-   * Constructs a new {@link AppIdentityCredential}.
-   *
-   * @param scopes OAuth scopes
-   * @deprecated (scheduled to be removed in 1.16) Use {@link #AppIdentityCredential(Collection)}
-   *             instead.
-   */
-  @Beta
-  @Deprecated
-  public AppIdentityCredential(String... scopes) {
-    this(new Builder(scopes));
-  }
-
-  /**
    * @param builder builder
    *
    * @since 1.14
@@ -137,11 +105,6 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
 
   /**
    * Gets the OAuth scopes (unmodifiable).
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.14 this method returned a {@link List}, but starting with
-   * version 1.15 it returns a {@link Collection}.
-   * </p>
    *
    * @since 1.12
    */
@@ -180,34 +143,6 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
     }
 
     /**
-     * {@link Beta} <br/>
-     * Returns an instance of a new builder.
-     *
-     * @param scopes OAuth scopes
-     * @deprecated (scheduled to be removed in 1.16) Use
-     *             {@link #AppIdentityCredential.Builder(Collection)} instead.
-     */
-    @Beta
-    @Deprecated
-    public Builder(Iterable<String> scopes) {
-      this.scopes = Collections.unmodifiableList(Lists.newArrayList(scopes));
-    }
-
-    /**
-     * {@link Beta} <br/>
-     * Returns an instance of a new builder.
-     *
-     * @param scopes OAuth scopes
-     * @deprecated (scheduled to be removed in 1.16) Use
-     *             {@link #AppIdentityCredential.Builder(Collection)} instead.
-     */
-    @Beta
-    @Deprecated
-    public Builder(String... scopes) {
-      this(Arrays.asList(scopes));
-    }
-
-    /**
      * Returns the App Identity Service that provides the access token or {@code null} to use
      * {@link AppIdentityServiceFactory#getAppIdentityService()}.
      *
@@ -240,11 +175,6 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
 
     /**
      * Returns the OAuth scopes (unmodifiable).
-     *
-     * <p>
-     * Upgrade warning: in prior version 1.14 this method returned a {@link List}, but starting with
-     * version 1.15 it returns a {@link Collection}.
-     * </p>
      *
      * @since 1.14
      */

@@ -103,28 +103,6 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
   }
 
   /**
-   * {@link Beta} <br/>
-   * Constructs a new instance using OAuth 2.0 scopes.
-   *
-   * @param context context
-   * @param scope first OAuth 2.0 scope
-   * @param extraScopes any additional OAuth 2.0 scopes
-   * @return new instance
-   * @deprecated (scheduled to be removed in 1.16) Use {@link #usingOAuth2(Context, Collection)}
-   *             instead.
-   */
-  @Beta
-  @Deprecated
-  public static GoogleAccountCredential usingOAuth2(
-      Context context, String scope, String... extraScopes) {
-    StringBuilder scopeBuilder = new StringBuilder("oauth2:").append(scope);
-    for (String extraScope : extraScopes) {
-      scopeBuilder.append(' ').append(extraScope);
-    }
-    return new GoogleAccountCredential(context, scopeBuilder.toString());
-  }
-
-  /**
    * Constructs a new instance using OAuth 2.0 scopes.
    *
    * @param context context

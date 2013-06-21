@@ -15,7 +15,6 @@
 package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.auth.oauth2.BrowserClientRequestUrl;
-import com.google.api.client.util.Beta;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Preconditions;
 
@@ -63,27 +62,6 @@ public class GoogleBrowserClientRequestUrl extends BrowserClientRequestUrl {
   private String approvalPrompt;
 
   /**
-   * {@link Beta} <br/>
-   * Constructs a new {@link GoogleBrowserClientRequestUrl}.
-   *
-   * @param clientId client identifier
-   * @param redirectUri URI that the authorization server directs the resource owner's user-agent
-   *        back to the client after a successful authorization grant
-   * @param scopes scopes (see {@link #setScopes(Iterable)})
-   *
-   * @deprecated (scheduled to be removed in 1.16) Use
-   *             {@link #GoogleBrowserClientRequestUrl(String, String, Collection)} instead.
-   */
-  @Beta
-  @Deprecated
-  public GoogleBrowserClientRequestUrl(
-      String clientId, String redirectUri, Iterable<String> scopes) {
-    super(GoogleOAuthConstants.AUTHORIZATION_SERVER_URL, clientId);
-    setRedirectUri(redirectUri);
-    setScopes(scopes);
-  }
-
-  /**
    * @param clientId client identifier
    * @param redirectUri URI that the authorization server directs the resource owner's user-agent
    *        back to the client after a successful authorization grant
@@ -96,28 +74,6 @@ public class GoogleBrowserClientRequestUrl extends BrowserClientRequestUrl {
     super(GoogleOAuthConstants.AUTHORIZATION_SERVER_URL, clientId);
     setRedirectUri(redirectUri);
     setScopes(scopes);
-  }
-
-  /**
-   * {@link Beta} <br/>
-   * Constructs a new {@link GoogleBrowserClientRequestUrl}.
-   *
-   * @param clientSecrets OAuth 2.0 client secrets JSON model as specified in <a
-   *        href="http://code.google.com/p/google-api-python-client/wiki/ClientSecrets">
-   *        client_secrets.json file format</a>
-   * @param redirectUri URI that the authorization server directs the resource owner's user-agent
-   *        back to the client after a successful authorization grant
-   * @param scopes scopes (see {@link #setScopes(Iterable)})
-   *
-   * @deprecated (scheduled to be removed in 1.16) Use
-   *             {@link #GoogleBrowserClientRequestUrl(GoogleClientSecrets, String, Collection)}
-   *             instead.
-   */
-  @Beta
-  @Deprecated
-  public GoogleBrowserClientRequestUrl(
-      GoogleClientSecrets clientSecrets, String redirectUri, Iterable<String> scopes) {
-    this(clientSecrets.getDetails().getClientId(), redirectUri, scopes);
   }
 
   /**
@@ -164,42 +120,12 @@ public class GoogleBrowserClientRequestUrl extends BrowserClientRequestUrl {
   }
 
   @Override
-  @Beta
-  @Deprecated
-  public GoogleBrowserClientRequestUrl setResponseTypes(String... responseTypes) {
-    return (GoogleBrowserClientRequestUrl) super.setResponseTypes(responseTypes);
-  }
-
-  @Override
-  @Beta
-  @Deprecated
-  public GoogleBrowserClientRequestUrl setResponseTypes(Iterable<String> responseTypes) {
-    return (GoogleBrowserClientRequestUrl) super.setResponseTypes(responseTypes);
-  }
-
-  @Override
   public GoogleBrowserClientRequestUrl setRedirectUri(String redirectUri) {
     return (GoogleBrowserClientRequestUrl) super.setRedirectUri(redirectUri);
   }
 
   @Override
   public GoogleBrowserClientRequestUrl setScopes(Collection<String> scopes) {
-    Preconditions.checkArgument(scopes.iterator().hasNext());
-    return (GoogleBrowserClientRequestUrl) super.setScopes(scopes);
-  }
-
-  @Override
-  @Beta
-  @Deprecated
-  public GoogleBrowserClientRequestUrl setScopes(String... scopes) {
-    Preconditions.checkArgument(scopes.length != 0);
-    return (GoogleBrowserClientRequestUrl) super.setScopes(scopes);
-  }
-
-  @Override
-  @Beta
-  @Deprecated
-  public GoogleBrowserClientRequestUrl setScopes(Iterable<String> scopes) {
     Preconditions.checkArgument(scopes.iterator().hasNext());
     return (GoogleBrowserClientRequestUrl) super.setScopes(scopes);
   }

@@ -33,7 +33,6 @@ import com.google.api.client.json.webtoken.JsonWebToken;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
 import com.google.api.client.util.Joiner;
-import com.google.api.client.util.Lists;
 import com.google.api.client.util.PemReader;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
@@ -46,7 +45,6 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -290,12 +288,6 @@ public class GoogleCredential extends Credential {
    * {@link Beta} <br/>
    * Returns a collection of OAuth scopes to use with the the service account flow or {@code null}
    * if not using the service account flow.
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.14 this method returned a {@link String}, but starting with
-   * version 1.15 it returns a {@link Collection}. Use {@link #getServiceAccountScopesAsString} to
-   * retrieve a {@link String} with space-separated list of scopes.
-   * </p>
    */
   @Beta
   public final Collection<String> getServiceAccountScopes() {
@@ -444,60 +436,10 @@ public class GoogleCredential extends Credential {
      * {@link Beta} <br/>
      * Returns a collection of OAuth scopes to use with the the service account flow or {@code null}
      * for none.
-     *
-     * <p>
-     * Upgrade warning: in prior version 1.14 this method returned a {@link String}, but starting
-     * with version 1.15 it returns a {@link Collection}.
-     * </p>
      */
     @Beta
     public final Collection<String> getServiceAccountScopes() {
       return serviceAccountScopes;
-    }
-
-    /**
-     * {@link Beta} <br/>
-     * Sets the space-separated OAuth scopes to use with the the service account flow or
-     * {@code null} for none.
-     *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
-     *
-     * @param serviceAccountScopes list of scopes to be joined by a space separator (or a single
-     *        value containing multiple space-separated scopes)
-     * @deprecated (scheduled to be removed in 1.16) Use
-     *             {@link #setServiceAccountScopes(Collection)} instead.
-     */
-    @Deprecated
-    @Beta
-    public Builder setServiceAccountScopes(String... serviceAccountScopes) {
-      return setServiceAccountScopes(
-          serviceAccountScopes == null ? null : Arrays.asList(serviceAccountScopes));
-    }
-
-    /**
-     * {@link Beta} <br/>
-     * Sets the space-separated OAuth scopes to use with the the service account flow or
-     * {@code null} for none.
-     *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
-     *
-     * @param serviceAccountScopes list of scopes to be joined by a space separator (or a single
-     *        value containing multiple space-separated scopes)
-     * @deprecated (scheduled to be removed in 1.16) Use
-     *             {@link #setServiceAccountScopes(Collection)} instead.
-     */
-    @Deprecated
-    @Beta
-    public Builder setServiceAccountScopes(Iterable<String> serviceAccountScopes) {
-      this.serviceAccountScopes =
-          serviceAccountScopes == null ? null : Lists.newArrayList(serviceAccountScopes);
-      return this;
     }
 
     /**

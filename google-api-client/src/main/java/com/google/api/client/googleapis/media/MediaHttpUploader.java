@@ -683,7 +683,7 @@ public final class MediaHttpUploader {
    * version 1.15 the default value is {@code false}.
    * </p>
    *
-   * @deprecated (scheduled to be removed in the 1.16). Use
+   * @deprecated (scheduled to be removed in 1.17). Use
    *             {@link HttpRequest#setUnsuccessfulResponseHandler} with a new
    *             {@link HttpBackOffUnsuccessfulResponseHandler} in {@link HttpRequestInitializer}
    *             instead.
@@ -699,7 +699,7 @@ public final class MediaHttpUploader {
    * {@link Beta} <br/>
    * Returns whether the back off policy is enabled or disabled.
    *
-   * @deprecated (scheduled to be removed in the 1.16). Use
+   * @deprecated (scheduled to be removed in 1.17). Use
    *             {@link HttpRequest#setUnsuccessfulResponseHandler} with a new
    *             {@link HttpBackOffUnsuccessfulResponseHandler} in {@link HttpRequestInitializer}
    *             instead.
