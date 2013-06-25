@@ -19,10 +19,12 @@ import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpBackOffIOExceptionHandler;
+import com.google.api.client.http.HttpBackOffUnsuccessfulResponseHandler;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
@@ -35,9 +37,14 @@ import com.google.api.client.util.BackOff;
 import junit.framework.TestCase;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Tests {@link MediaHttpUploader}.
@@ -54,6 +61,22 @@ public class MediaHttpUploaderTest extends TestCase {
       "http://www.test.com/request/url?uploadType=multipart";
   private static final String TEST_UPLOAD_URL = "http://www.test.com/media/upload/location";
   private static final String TEST_CONTENT_TYPE = "image/jpeg";
+
+  private static Logger LOGGER = Logger.getLogger(HttpTransport.class.getName());
+  private Level oldLevel;
+
+  @Override
+  public void setUp() {
+    // suppress logging warnings to the console
+    oldLevel = LOGGER.getLevel();
+    LOGGER.setLevel(Level.SEVERE);
+  }
+
+  @Override
+  public void tearDown() {
+    // back to the standard logging level for console
+    LOGGER.setLevel(oldLevel);
+  }
 
   private static class MockHttpContent extends AbstractHttpContent {
 
@@ -80,8 +103,21 @@ public class MediaHttpUploaderTest extends TestCase {
     boolean testIOException;
     int maxByteIndexUploadedOnIOException = MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1;
 
+    /**
+     * Bytes received by this server or {@code null} for none. To enable test content use the
+     * following constructor {@link #MediaTransport(int, boolean)}.
+     */
+    byte[] bytesReceived;
+
     MediaTransport(int contentLength) {
       this.contentLength = contentLength;
+    }
+
+    MediaTransport(int contentLength, boolean testContent) {
+      this(contentLength);
+      if (testContent) {
+        bytesReceived = new byte[contentLength];
+      }
     }
 
     @Override
@@ -143,6 +179,9 @@ public class MediaHttpUploaderTest extends TestCase {
           if (testServerError || testIOException) {
             switch (lowLevelExecCalls) {
               case 3:
+                int bytesToRead = maxByteIndexUploadedOnIOException + 1 - bytesUploaded;
+                copyBytesToBytesReceivedArray(bytesToRead);
+                bytesUploaded += bytesToRead;
                 // Send a server error or throw IOException in the 3rd request
                 if (testIOException) {
                   throw new IOException();
@@ -156,8 +195,11 @@ public class MediaHttpUploaderTest extends TestCase {
                 } else {
                   assertEquals("bytes */" + contentLength, contentRangeHeader);
                 }
-                // Return 308 and the Range of bytes uploaded so far.
-                response.setStatusCode(308);
+                // Return 308 in case there are more bytes to upload, otherwise return 200.
+                // set the Range header with the bytes uploaded so far.
+                response.setStatusCode(
+                    contentLength == maxByteIndexUploadedOnIOException + 1 ? 200 : 308);
+                bytesUploaded = maxByteIndexUploadedOnIOException + 1;
                 response.addHeader("Range", "bytes=0-" + maxByteIndexUploadedOnIOException);
                 return response;
               default:
@@ -171,7 +213,7 @@ public class MediaHttpUploaderTest extends TestCase {
 
           String bytesRange;
           if (bytesUploaded + MediaHttpUploader.DEFAULT_CHUNK_SIZE > contentLength) {
-            bytesRange = bytesUploaded + "-" + bytesUploaded;
+            bytesRange = bytesUploaded + "-" + (contentLength - 1);
           } else {
             bytesRange =
                 bytesUploaded + "-" + (bytesUploaded + MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1);
@@ -179,15 +221,17 @@ public class MediaHttpUploaderTest extends TestCase {
           String expectedContentRange;
           if (contentLength == 0) {
             expectedContentRange = "bytes */0";
-          } else if (contentLengthNotSpecified && (
-              (bytesUploaded + MediaHttpUploader.DEFAULT_CHUNK_SIZE) < contentLength
-              || testServerError || testIOException)) {
+          } else if (contentLengthNotSpecified
+              && ((bytesUploaded + MediaHttpUploader.DEFAULT_CHUNK_SIZE) < contentLength)) {
             expectedContentRange = "bytes " + bytesRange + "/*";
           } else {
             expectedContentRange = "bytes " + bytesRange + "/" + contentLength;
           }
 
           assertEquals(expectedContentRange, contentRangeHeader);
+
+          copyBytesToBytesReceivedArray(-1);
+
           bytesUploaded += MediaHttpUploader.DEFAULT_CHUNK_SIZE;
 
           if (bytesUploaded >= contentLength) {
@@ -199,6 +243,17 @@ public class MediaHttpUploaderTest extends TestCase {
             response.addHeader("Range", "bytes=" + bytesRange);
           }
           return response;
+        }
+
+        void copyBytesToBytesReceivedArray(int length) throws IOException {
+          if (bytesReceived == null || length == 0) {
+            return;
+          }
+          ByteArrayOutputStream stream = new ByteArrayOutputStream();
+          this.getStreamingContent().writeTo(stream);
+          byte[] currentRequest = stream.toByteArray();
+          System.arraycopy(currentRequest, 0, bytesReceived, bytesUploaded,
+              length == -1 ? currentRequest.length : length);
         }
       };
     }
@@ -448,7 +503,6 @@ public class MediaHttpUploaderTest extends TestCase {
     MediaTransport fakeTransport = new MediaTransport(contentLength);
     fakeTransport.contentLengthNotSpecified = true;
     InputStream is = new ByteArrayInputStream(new byte[contentLength]) {
-
       @Override
       public synchronized int read(byte[] b, int off, int len) {
         return super.read(b, off, Math.min(len, MediaHttpUploader.DEFAULT_CHUNK_SIZE / 10));
@@ -534,35 +588,6 @@ public class MediaHttpUploaderTest extends TestCase {
     assertEquals(5, fakeTransport.lowLevelExecCalls);
   }
 
-/*
- *  TODO(peleyal): uncomment this when issue 772 is fixed
-  public void testUploadServerError_WithUnsuccessfulHandler() throws Exception {
-    int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2;
-    MediaTransport fakeTransport = new MediaTransport(contentLength);
-    fakeTransport.testServerError = true;
-    InputStream is = new ByteArrayInputStream(new byte[contentLength]);
-    InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
-    mediaContent.setLength(contentLength);
-    MediaHttpUploader uploader =
-        new MediaHttpUploader(mediaContent, fakeTransport, new HttpRequestInitializer() {
-          public void initialize(HttpRequest request) {
-            request.setUnsuccessfulResponseHandler(new HttpUnsuccessfulResponseHandler() {
-              public boolean handleResponse(
-                  HttpRequest request, HttpResponse response, boolean supportsRetry) {
-                return response.getStatusCode() != 308;
-              }
-            });
-          }
-        });
-
-    HttpResponse response = uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
-    assertEquals(200, response.getStatusCode());
-
-    // There should be 5 calls made. 1 initiation request, 1 upload request with server error,
-    // 1 call to query the range and 2 upload requests.
-    assertEquals(5, fakeTransport.lowLevelExecCalls);
-  }
-*/
   public void testUploadServerError_WithoutUnsuccessfulHandler() throws Exception {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2;
     MediaTransport fakeTransport = new MediaTransport(contentLength);
@@ -580,36 +605,67 @@ public class MediaHttpUploaderTest extends TestCase {
     assertEquals(3, fakeTransport.lowLevelExecCalls);
   }
 
-/*
- *  TODO(peleyal): uncomment this when issue 772 is fixed
-  public void testUpload_ResumableIOExceptionWithIOExceptionHandler() throws Exception {
-    // no bytes uploaded
-    subtestUpload_ResumableIOExceptionWithIOExceptionHandler(
-        false, MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1, null);
-    subtestUpload_ResumableIOExceptionWithIOExceptionHandler(
-        true, MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1, null);
-    // all bytes uploaded
-    subtestUpload_ResumableIOExceptionWithIOExceptionHandler(
-        false, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2 - 1, IllegalArgumentException.class);
-    subtestUpload_ResumableIOExceptionWithIOExceptionHandler(
-        true, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2 - 1, IllegalStateException.class);
-    // half of the bytes uploaded
-    subtestUpload_ResumableIOExceptionWithIOExceptionHandler(
-        false, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 3 / 2, IllegalArgumentException.class);
-    subtestUpload_ResumableIOExceptionWithIOExceptionHandler(
-        true, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 3 / 2, IllegalStateException.class);
+  public void testUpload_ResumableIOException_WithIOExceptionHandler() throws Exception {
+    subtestUpload_ResumableWithError(ErrorType.IO_EXCEPTION);
   }
-*/
 
-  public void subtestUpload_ResumableIOExceptionWithIOExceptionHandler(boolean contentLengthKnown,
-      int maxByteIndexUploadedOnIOException,
-      Class<? extends RuntimeException> expectedExceptionClass) throws Exception {
-    int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2;
-    MediaTransport fakeTransport = new MediaTransport(contentLength);
-    fakeTransport.testIOException = true;
+  public void testUpload_ResumableServerError_WithoutUnsuccessfulHandler() throws Exception {
+    subtestUpload_ResumableWithError(ErrorType.SERVER_UNAVAILABLE);
+  }
+
+  private void subtestUpload_ResumableWithError(ErrorType error) throws Exception {
+    // no bytes were uploaded on second chunk
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2, false,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1);
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2, true,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1);
+
+    // all bytes were uploaded
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2, false,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2 - 1);
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2, true,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2 - 1);
+
+    // part of the bytes were uploaded (problem on last part)
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2, false,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4 / 3);
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2, true,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4 / 3);
+
+    // part of the bytes were uploaded (problem on a middle part)
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4, false,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4 / 3);
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4, true,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4 / 3);
+
+    // part of the bytes were uploaded (problem on a middle part, only 1 byte was uploaded)
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4, false,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE);
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4, true,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE);
+  }
+
+  /**
+   * Error type represents an error (I/O exception or server unavailable error) which will be raise
+   * when uploading media to the server.
+   */
+  enum ErrorType {
+    IO_EXCEPTION, SERVER_UNAVAILABLE
+  }
+
+  public void subtestUpload_ResumableWithError(ErrorType error, int contentLength,
+      boolean contentLengthKnown, int maxByteIndexUploadedOnIOException) throws Exception {
+    MediaTransport fakeTransport = new MediaTransport(contentLength, true);
+    if (error == ErrorType.IO_EXCEPTION) {
+      fakeTransport.testIOException = true;
+    } else if (error == ErrorType.SERVER_UNAVAILABLE) {
+      fakeTransport.testServerError = true;
+    }
     fakeTransport.contentLengthNotSpecified = !contentLengthKnown;
     fakeTransport.maxByteIndexUploadedOnIOException = maxByteIndexUploadedOnIOException;
-    InputStream is = new ByteArrayInputStream(new byte[contentLength]);
+    byte[] testedData = new byte[contentLength];
+    new Random().nextBytes(testedData);
+    InputStream is = new ByteArrayInputStream(testedData);
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
     if (contentLengthKnown) {
       mediaContent.setLength(contentLength);
@@ -618,25 +674,26 @@ public class MediaHttpUploaderTest extends TestCase {
         new MediaHttpUploader(mediaContent, fakeTransport, new HttpRequestInitializer() {
           public void initialize(HttpRequest request) {
             request.setIOExceptionHandler(new HttpBackOffIOExceptionHandler(BackOff.ZERO_BACKOFF));
+            request.setUnsuccessfulResponseHandler(
+                new HttpBackOffUnsuccessfulResponseHandler(BackOff.ZERO_BACKOFF));
           }
         });
-    // actually the exceptions thrown are a bug: we should remove the expectation of an exception
-    // when the bug is fixed (https://code.google.com/p/google-api-java-client/issues/detail?id=772)
-    try {
-      HttpResponse response = uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
-      assertEquals(200, response.getStatusCode());
 
-      // There should be 5 calls made. 1 initiation request, 1 upload request with server error,
-      // 1 call to query the range and 2 upload requests.
-      assertEquals(5, fakeTransport.lowLevelExecCalls);
-      if (expectedExceptionClass != null) {
-        fail("expected " + expectedExceptionClass);
-      }
-    } catch (RuntimeException e) {
-      if (expectedExceptionClass != e.getClass()) {
-        throw e;
-      }
-    }
+    // disable GZip - so we would be able to test byte received by server.
+    uploader.setDisableGZipContent(true);
+    HttpResponse response = uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
+    assertEquals(200, response.getStatusCode());
+
+    // There should be the following number of calls made:
+    // 1 initiation request
+    // 1 upload request with server error or I/O exception
+    // 1 call to query the range
+    // and content-length / chunk-size successful calls
+    int calls = contentLength / uploader.getChunkSize();
+    assertEquals(maxByteIndexUploadedOnIOException + 1 == contentLength ? calls + 2 : calls + 3,
+        fakeTransport.lowLevelExecCalls);
+
+    assertTrue(Arrays.equals(testedData, fakeTransport.bytesReceived));
   }
 
   public void testUploadIOException_WithoutIOExceptionHandler() throws Exception {
