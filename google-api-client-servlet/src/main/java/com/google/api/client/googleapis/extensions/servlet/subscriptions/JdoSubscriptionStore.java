@@ -14,11 +14,13 @@
 
 package com.google.api.client.googleapis.extensions.servlet.subscriptions;
 
+import com.google.api.client.googleapis.notifications.StoredChannel;
 import com.google.api.client.googleapis.subscriptions.StoredSubscription;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Lists;
 import com.google.api.client.util.Preconditions;
+import com.google.api.client.util.store.DataStoreFactory;
 
 import java.util.List;
 
@@ -45,7 +47,11 @@ import javax.jdo.annotations.PrimaryKey;
  *
  * @author Matthias Linder (mlinder)
  * @since 1.14
+ * @deprecated (scheduled to be removed in 1.17) Use
+ *             {@link StoredChannel#getDefaultDataStore(DataStoreFactory)} with
+ *             {@code com.google.api.client.extensions.jdo.JdoDataStoreFactory} instead.
  */
+@Deprecated
 @Beta
 public final class JdoSubscriptionStore implements SubscriptionStore {
 

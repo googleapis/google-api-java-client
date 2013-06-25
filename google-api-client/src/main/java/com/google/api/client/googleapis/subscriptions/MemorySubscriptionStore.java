@@ -14,7 +14,10 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
+import com.google.api.client.googleapis.notifications.StoredChannel;
 import com.google.api.client.util.Beta;
+import com.google.api.client.util.store.DataStoreFactory;
+import com.google.api.client.util.store.MemoryDataStoreFactory;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -32,13 +35,18 @@ import java.util.concurrent.locks.ReentrantLock;
  * </p>
  *
  * <b>Example usage:</b>
+ *
  * <pre>
     service.setSubscriptionStore(new MemorySubscriptionStore());
  * </pre>
  *
  * @author Matthias Linder (mlinder)
  * @since 1.14
+ * @deprecated (scheduled to be removed in 1.17) Use
+ *             {@link StoredChannel#getDefaultDataStore(DataStoreFactory)} with
+ *             {@link MemoryDataStoreFactory} instead.
  */
+@Deprecated
 @Beta
 public class MemorySubscriptionStore implements SubscriptionStore {
 

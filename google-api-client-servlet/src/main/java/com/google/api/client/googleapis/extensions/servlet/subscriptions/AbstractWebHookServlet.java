@@ -14,6 +14,7 @@
 
 package com.google.api.client.googleapis.extensions.servlet.subscriptions;
 
+import com.google.api.client.googleapis.extensions.servlet.notifications.NotificationServlet;
 import com.google.api.client.googleapis.subscriptions.NotificationHeaders;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.googleapis.subscriptions.UnparsedNotification;
@@ -76,7 +77,9 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Matthias Linder (mlinder)
  * @since 1.14
+ * @deprecated (scheduled to be removed in 1.17) Use {@link NotificationServlet} instead.
  */
+@Deprecated
 @SuppressWarnings("serial")
 @Beta
 public abstract class AbstractWebHookServlet extends HttpServlet {

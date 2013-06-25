@@ -39,7 +39,10 @@ import com.google.api.client.util.Beta;
  *
  * @author Matthias Linder (mlinder)
  * @since 1.14
+ * @deprecated (scheduled to be removed in 1.17) Use
+ *             {@link com.google.api.client.googleapis.notifications.TypedNotification} instead.
  */
+@Deprecated
 @Beta
 public final class TypedNotification<T> extends Notification {
 

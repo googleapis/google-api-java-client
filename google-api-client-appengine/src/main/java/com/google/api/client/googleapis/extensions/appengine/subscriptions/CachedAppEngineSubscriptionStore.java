@@ -14,9 +14,12 @@
 
 package com.google.api.client.googleapis.extensions.appengine.subscriptions;
 
+import com.google.api.client.extensions.appengine.datastore.AppEngineDataStoreFactory;
+import com.google.api.client.googleapis.notifications.StoredChannel;
 import com.google.api.client.googleapis.subscriptions.StoredSubscription;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.util.Beta;
+import com.google.api.client.util.store.DataStoreFactory;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
@@ -25,8 +28,8 @@ import java.io.IOException;
 
 /**
  * {@link Beta} <br/>
- * Implementation of a persistent {@link SubscriptionStore} making use of native DataStore and
- * the Memcache API on AppEngine.
+ * Implementation of a persistent {@link SubscriptionStore} making use of native DataStore and the
+ * Memcache API on AppEngine.
  *
  * <p>
  * Implementation is thread-safe.
@@ -38,13 +41,18 @@ import java.io.IOException;
  * </p>
  *
  * <b>Example usage:</b>
+ *
  * <pre>
     service.setSubscriptionStore(new CachedAppEngineSubscriptionStore());
  * </pre>
  *
  * @author Matthias Linder (mlinder)
  * @since 1.14
+ * @deprecated (scheduled to be removed in 1.17) Use
+ *             {@link StoredChannel#getDefaultDataStore(DataStoreFactory)} with
+ *             {@link AppEngineDataStoreFactory} instead.
  */
+@Deprecated
 @Beta
 public final class CachedAppEngineSubscriptionStore extends AppEngineSubscriptionStore {
 

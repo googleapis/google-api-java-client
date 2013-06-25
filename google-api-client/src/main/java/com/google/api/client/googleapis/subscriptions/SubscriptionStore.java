@@ -14,7 +14,9 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
+import com.google.api.client.googleapis.notifications.StoredChannel;
 import com.google.api.client.util.Beta;
+import com.google.api.client.util.store.DataStoreFactory;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -29,7 +31,10 @@ import java.util.Collection;
  *
  * @author Matthias Linder (mlinder)
  * @since 1.14
+ * @deprecated (scheduled to be removed in 1.17) Use {@link DataStoreFactory} instead with
+ *             {@link StoredChannel}.
  */
+@Deprecated
 @Beta
 public interface SubscriptionStore {
 

@@ -41,6 +41,7 @@ import java.io.IOException;
  * </p>
  *
  * <b>Example usage:</b>
+ *
  * <pre>
     class MyJsonNotificationCallback extends JsonNotificationCallback&lt;ItemList&gt; {
       void handleNotification(
@@ -63,7 +64,11 @@ import java.io.IOException;
  * @param <T> Type of the data contained within a notification
  * @author Matthias Linder (mlinder)
  * @since 1.14
+ * @deprecated (scheduled to be removed in 1.17) Use
+ *             {@link com.google.api.client.googleapis.notifications.json.JsonNotificationCallback}
+ *             instead.
  */
+@Deprecated
 @SuppressWarnings("serial")
 @Beta
 public abstract class JsonNotificationCallback<T> extends TypedNotificationCallback<T> {

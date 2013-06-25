@@ -14,6 +14,7 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
+import com.google.api.client.googleapis.notifications.ResourceStates;
 import com.google.api.client.util.Beta;
 
 /**
@@ -32,7 +33,9 @@ import com.google.api.client.util.Beta;
  *
  * @author Matthias Linder (mlinder)
  * @since 1.14
+ * @deprecated (scheduled to be removed in 1.17) Use {@link ResourceStates} instead.
  */
+@Deprecated
 @Beta
 public final class EventTypes {
 

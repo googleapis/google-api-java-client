@@ -14,6 +14,7 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
+import com.google.api.client.googleapis.notifications.AbstractNotification;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 
@@ -27,7 +28,9 @@ import com.google.api.client.util.Preconditions;
  *
  * @author Matthias Linder (mlinder)
  * @since 1.14
+ * @deprecated (scheduled to be removed in 1.17) Use {@link AbstractNotification} instead.
  */
+@Deprecated
 @Beta
 public abstract class Notification {
 

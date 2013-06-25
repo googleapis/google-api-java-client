@@ -63,7 +63,11 @@ import java.nio.charset.Charset;
  * @param <T> Type of the data contained within a notification
  * @author Matthias Linder (mlinder)
  * @since 1.14
+ * @deprecated (scheduled to be removed in 1.17) Use
+ *             {@link com.google.api.client.googleapis.notifications.TypedNotificationCallback}
+ *             instead.
  */
+@Deprecated
 @SuppressWarnings("serial")
 @Beta
 public abstract class TypedNotificationCallback<T> implements NotificationCallback {

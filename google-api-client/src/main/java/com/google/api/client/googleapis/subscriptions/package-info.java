@@ -16,10 +16,15 @@
  * {@link com.google.api.client.util.Beta} <br/>
  * Support for creating subscriptions and receiving notifications for Google APIs.
  *
+ * <p>
+ * Deprecated: (scheduled to be removed in 1.17) Use
+ * {@link com.google.api.client.googleapis.notifications} instead.
+ * </p>
+ *
  * @since 1.14
  * @author Matthias Linder (mlinder)
  */
-
+@Deprecated
 @com.google.api.client.util.Beta
 package com.google.api.client.googleapis.subscriptions;
 

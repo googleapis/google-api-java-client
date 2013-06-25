@@ -42,7 +42,10 @@ import java.io.InputStream;
  *
  * @author Matthias Linder (mlinder)
  * @since 1.14
+ * @deprecated (scheduled to be removed in 1.17) Use
+ *             {@link com.google.api.client.googleapis.notifications.UnparsedNotification} instead.
  */
+@Deprecated
 @Beta
 public final class UnparsedNotification extends Notification {
 
