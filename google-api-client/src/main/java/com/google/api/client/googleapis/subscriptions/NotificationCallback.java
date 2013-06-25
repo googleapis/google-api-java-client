@@ -14,6 +14,7 @@
 
 package com.google.api.client.googleapis.subscriptions;
 
+import com.google.api.client.googleapis.notifications.UnparsedNotificationCallback;
 import com.google.api.client.util.Beta;
 
 import java.io.IOException;
@@ -55,7 +56,9 @@ import java.io.Serializable;
  *
  * @author Matthias Linder (mlinder)
  * @since 1.14
+ * @deprecated (scheduled to be removed in 1.17) Use {@link UnparsedNotificationCallback} instead.
  */
+@Deprecated
 @Beta
 public interface NotificationCallback extends Serializable {
 

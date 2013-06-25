@@ -16,9 +16,15 @@
  * {@link com.google.api.client.util.Beta} <br/>
  * Test utilities for the Subscriptions extension package.
  *
+ * <p>
+ * Deprecated:(scheduled to be removed in 1.17) Use
+ * {@link com.google.api.client.googleapis.testing.notifications} instead.
+ * </p>
+ *
  * @since 1.14
  * @author Matthias Linder (mlinder)
  */
+@Deprecated
 @com.google.api.client.util.Beta
 package com.google.api.client.googleapis.testing.subscriptions;
 

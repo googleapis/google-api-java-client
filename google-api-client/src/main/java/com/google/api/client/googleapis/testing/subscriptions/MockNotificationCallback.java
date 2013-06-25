@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.testing.subscriptions;
 import com.google.api.client.googleapis.subscriptions.NotificationCallback;
 import com.google.api.client.googleapis.subscriptions.StoredSubscription;
 import com.google.api.client.googleapis.subscriptions.UnparsedNotification;
+import com.google.api.client.googleapis.testing.notifications.MockUnparsedNotificationCallback;
 import com.google.api.client.util.Beta;
 
 /**
@@ -25,7 +26,10 @@ import com.google.api.client.util.Beta;
  *
  * @author Matthias Linder (mlinder)
  * @since 1.14
+ * @deprecated (scheduled to be removed in 1.17) Use {@link MockUnparsedNotificationCallback}
+ *             instead.
  */
+@Deprecated
 @SuppressWarnings("rawtypes")
 @Beta
 public class MockNotificationCallback implements NotificationCallback {

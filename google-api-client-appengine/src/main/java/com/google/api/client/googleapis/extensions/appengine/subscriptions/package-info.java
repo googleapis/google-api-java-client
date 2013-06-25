@@ -16,9 +16,16 @@
  * {@link com.google.api.client.util.Beta} <br/>
  * Support for creating subscriptions and receiving notifications on AppEngine.
  *
+ * <p>
+ * Deprecated:(scheduled to be removed in 1.17) Use {@link com.google.api.client.googleapis.notifications.StoredChannel#getDefaultDataStore(com.google.api.client.util.store.DataStoreFactory)}
+ * with {@link com.google.api.client.extensions.appengine.datastore.AppEngineDataStoreFactory}
+ * instead.
+ * </p>
+ *
  * @since 1.14
  * @author Matthias Linder (mlinder)
  */
+@Deprecated
 @com.google.api.client.util.Beta
 package com.google.api.client.googleapis.extensions.appengine.subscriptions;
 

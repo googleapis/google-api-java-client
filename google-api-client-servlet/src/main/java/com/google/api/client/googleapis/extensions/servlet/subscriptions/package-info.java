@@ -16,9 +16,18 @@
  * {@link com.google.api.client.util.Beta} <br/>
  * Support for subscribing to topics and receiving notifications on servlet-based platforms.
  *
+ * <p>
+ * Deprecated:(scheduled to be removed in 1.17) Use
+ * {@link com.google.api.client.googleapis.extensions.servlet.notifications.NotificationServlet} or
+ * {@code com.google.api.client.extensions.jdo.JdoDataStoreFactory} with {@link StoredChannel}
+ * instead.
+ * </p>
+ *
  * @since 1.14
  * @author Matthias Linder (mlinder)
  */
+@Deprecated
 @com.google.api.client.util.Beta
 package com.google.api.client.googleapis.extensions.servlet.subscriptions;
+
 

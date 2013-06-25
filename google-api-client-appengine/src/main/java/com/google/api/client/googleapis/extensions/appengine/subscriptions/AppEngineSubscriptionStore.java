@@ -14,10 +14,13 @@
 
 package com.google.api.client.googleapis.extensions.appengine.subscriptions;
 
+import com.google.api.client.extensions.appengine.datastore.AppEngineDataStoreFactory;
+import com.google.api.client.googleapis.notifications.StoredChannel;
 import com.google.api.client.googleapis.subscriptions.StoredSubscription;
 import com.google.api.client.googleapis.subscriptions.SubscriptionStore;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Lists;
+import com.google.api.client.util.store.DataStoreFactory;
 import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -50,7 +53,12 @@ import java.util.List;
  *
  * @author Matthias Linder (mlinder)
  * @since 1.14
+ * @deprecated (scheduled to be removed in 1.17) Use
+ *             {@link StoredChannel#getDefaultDataStore(DataStoreFactory)} with
+ *             {@link AppEngineDataStoreFactory} instead, possibly setting
+ *             {@link AppEngineDataStoreFactory.Builder#setDisableMemcache} to {@code true}.
  */
+@Deprecated
 @Beta
 public class AppEngineSubscriptionStore implements SubscriptionStore {
 
