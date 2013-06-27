@@ -22,6 +22,7 @@ import com.google.api.client.util.Key;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.List;
 
 /**
  * {@link Beta} <br/>
@@ -85,6 +86,12 @@ public class GoogleIdToken extends IdToken {
   /**
    * {@link Beta} <br/>
    * Google ID token payload.
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.15 {@link #getAccessTokenHash()} and
+   * {@link #setAccessTokenHash(String)} accessed {@code "token_hash"}, but starting with version
+   * 1.16 they now access {@code "at_hash"}.
+   * </p>
    */
   @Beta
   public static class Payload extends IdToken.Payload {
@@ -96,10 +103,6 @@ public class GoogleIdToken extends IdToken {
     /** Client ID of issuee or {@code null} for none. */
     @Key("cid")
     private String issuee;
-
-    /** Hash of access token or {@code null} for none. */
-    @Key("token_hash")
-    private String accessTokenHash;
 
     /** Hosted domain name if asserted user is a domain managed user or {@code null} for none. */
     @Key("hd")
@@ -135,17 +138,6 @@ public class GoogleIdToken extends IdToken {
     /** Sets the client ID of issuee or {@code null} for none. */
     public Payload setIssuee(String issuee) {
       this.issuee = issuee;
-      return this;
-    }
-
-    /** Returns the hash of access token or {@code null} for none. */
-    public String getAccessTokenHash() {
-      return accessTokenHash;
-    }
-
-    /** Sets the hash of access token or {@code null} for none. */
-    public Payload setAccessTokenHash(String accessTokenHash) {
-      this.accessTokenHash = accessTokenHash;
       return this;
     }
 
@@ -218,6 +210,76 @@ public class GoogleIdToken extends IdToken {
     public Payload setEmailVerified(boolean emailVerified) {
       this.emailVerified = emailVerified;
       return this;
+    }
+
+    @Override
+    public Payload setAuthorizationTimeSeconds(Long authorizationTimeSeconds) {
+      return (Payload) super.setAuthorizationTimeSeconds(authorizationTimeSeconds);
+    }
+
+    @Override
+    public Payload setAuthorizedParty(String authorizedParty) {
+      return (Payload) super.setAuthorizedParty(authorizedParty);
+    }
+
+    @Override
+    public Payload setNonce(String nonce) {
+      return (Payload) super.setNonce(nonce);
+    }
+
+    @Override
+    public Payload setAccessTokenHash(String accessTokenHash) {
+      return (Payload) super.setAccessTokenHash(accessTokenHash);
+    }
+
+    @Override
+    public Payload setClassReference(String classReference) {
+      return (Payload) super.setClassReference(classReference);
+    }
+
+    @Override
+    public Payload setMethodsReferences(List<String> methodsReferences) {
+      return (Payload) super.setMethodsReferences(methodsReferences);
+    }
+
+    @Override
+    public Payload setExpirationTimeSeconds(Long expirationTimeSeconds) {
+      return (Payload) super.setExpirationTimeSeconds(expirationTimeSeconds);
+    }
+
+    @Override
+    public Payload setNotBeforeTimeSeconds(Long notBeforeTimeSeconds) {
+      return (Payload) super.setNotBeforeTimeSeconds(notBeforeTimeSeconds);
+    }
+
+    @Override
+    public Payload setIssuedAtTimeSeconds(Long issuedAtTimeSeconds) {
+      return (Payload) super.setIssuedAtTimeSeconds(issuedAtTimeSeconds);
+    }
+
+    @Override
+    public Payload setIssuer(String issuer) {
+      return (Payload) super.setIssuer(issuer);
+    }
+
+    @Override
+    public Payload setAudience(Object audience) {
+      return (Payload) super.setAudience(audience);
+    }
+
+    @Override
+    public Payload setJwtId(String jwtId) {
+      return (Payload) super.setJwtId(jwtId);
+    }
+
+    @Override
+    public Payload setType(String type) {
+      return (Payload) super.setType(type);
+    }
+
+    @Override
+    public Payload setSubject(String subject) {
+      return (Payload) super.setSubject(subject);
     }
 
     @Override

@@ -92,6 +92,19 @@
     <className>com/google/api/client/googleapis/extensions/android/gms/auth/GoogleAccountCredential</className>
     <method>com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential usingOAuth2(android.content.Context, java.lang.String, java.lang.String[])</method>
   </difference>
+  <!-- 7006 (Method Return Type changed): className, method, to (to is just the return type) -->
+  <difference>
+    <differenceType>7006</differenceType>
+    <className>com/google/api/client/googleapis/auth/oauth2/GoogleIdToken$Payload</className>
+    <method>*</method>
+    <to>*</to>
+  </difference>
+  <!-- 7009 (Method is now Less Accessible): className, method -->
+  <difference>
+    <differenceType>7009</differenceType>
+    <className>com/google/api/client/googleapis/media/MediaHttpUploader</className>
+    <method>void serverErrorCallback()</method>
+  </difference>
   <!-- 8001 (Class removed): className -->
   <difference>
     <differenceType>8001</differenceType>
