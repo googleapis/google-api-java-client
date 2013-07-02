@@ -19,8 +19,8 @@
  * <p>
  * Deprecated:(scheduled to be removed in 1.17) Use
  * {@link com.google.api.client.googleapis.extensions.servlet.notifications.NotificationServlet} or
- * {@code com.google.api.client.extensions.jdo.JdoDataStoreFactory} with {@link StoredChannel}
- * instead.
+ * {@code com.google.api.client.extensions.jdo.JdoDataStoreFactory} with
+ * {@link com.google.api.client.googleapis.notifications.StoredChannel} instead.
  * </p>
  *
  * @since 1.14
@@ -29,5 +29,4 @@
 @Deprecated
 @com.google.api.client.util.Beta
 package com.google.api.client.googleapis.extensions.servlet.subscriptions;
-
 
