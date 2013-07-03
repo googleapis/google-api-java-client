@@ -54,6 +54,7 @@
     <dependency>
       <groupId>com.google.android.google-play-services</groupId>
       <artifactId>google-play-services</artifactId>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
