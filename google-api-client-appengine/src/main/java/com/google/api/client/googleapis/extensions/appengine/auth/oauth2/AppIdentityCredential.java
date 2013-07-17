@@ -27,8 +27,8 @@ import java.util.Collections;
 
 /**
  * OAuth 2.0 credential in which a client Google App Engine application needs to access data that it
- * owns, based on <a href="http://code.google.com/appengine/docs/java/appidentity/overview.html
- * #Asserting_Identity_to_Google_APIs">Asserting Identity to Google APIs</a>.
+ * owns, based on <a href="https://developers.google.com/appengine/docs/java/appidentity/
+ * #Java_Asserting_identity_to_Google_APIs">Asserting Identity to Google APIs</a>
  *
  * <p>
  * Intercepts the request by using the access token obtained from
