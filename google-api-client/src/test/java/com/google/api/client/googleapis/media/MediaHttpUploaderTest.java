@@ -101,7 +101,7 @@ public class MediaHttpUploaderTest extends TestCase {
     boolean contentLengthNotSpecified;
     boolean assertTestHeaders;
     boolean testIOException;
-    int maxByteIndexUploadedOnIOException = MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1;
+    int maxByteIndexUploadedOnError = MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1;
 
     /**
      * Bytes received by this server or {@code null} for none. To enable test content use the
@@ -177,9 +177,10 @@ public class MediaHttpUploaderTest extends TestCase {
           MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
           String contentRangeHeader = getFirstHeaderValue("Content-Range");
           if (testServerError || testIOException) {
+            // TODO(peleyal): add test with two different failures in a row
             switch (lowLevelExecCalls) {
               case 3:
-                int bytesToRead = maxByteIndexUploadedOnIOException + 1 - bytesUploaded;
+                int bytesToRead = maxByteIndexUploadedOnError + 1 - bytesUploaded;
                 copyBytesToBytesReceivedArray(bytesToRead);
                 bytesUploaded += bytesToRead;
                 // Send a server error or throw IOException in the 3rd request
@@ -198,9 +199,9 @@ public class MediaHttpUploaderTest extends TestCase {
                 // Return 308 in case there are more bytes to upload, otherwise return 200.
                 // set the Range header with the bytes uploaded so far.
                 response.setStatusCode(
-                    contentLength == maxByteIndexUploadedOnIOException + 1 ? 200 : 308);
-                bytesUploaded = maxByteIndexUploadedOnIOException + 1;
-                response.addHeader("Range", "bytes=0-" + maxByteIndexUploadedOnIOException);
+                    contentLength == maxByteIndexUploadedOnError + 1 ? 200 : 308);
+                bytesUploaded = maxByteIndexUploadedOnError + 1;
+                response.addHeader("Range", "bytes=0-" + maxByteIndexUploadedOnError);
                 return response;
               default:
                 break;
@@ -614,35 +615,62 @@ public class MediaHttpUploaderTest extends TestCase {
   }
 
   private void subtestUpload_ResumableWithError(ErrorType error) throws Exception {
-    // no bytes were uploaded on second chunk
+    // no bytes were uploaded on the 2nd chunk. Client sends the following 3 media chunks:
+    // 0-[DEFAULT-1], DEFAULT-[2*DEFAULT-1], DEFAULT-[2*DEFAULT-1]
     subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2, false,
-        MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1);
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1, 3);
     subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2, true,
-        MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1);
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1, 3);
 
-    // all bytes were uploaded
+    // no bytes were uploaded on the 2nd chunk. Client sends the following 4 media chunks:
+    // 0-[DEFAULT-1], DEFAULT-[2*DEFAULT-1], DEFAULT-[2*DEFAULT-1], 2*DEFAULT-[3*DEFAULT-1]
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 3, false,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1, 4);
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 3, true,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1, 4);
+
+    // all bytes were uploaded in the 2nd chunk. Client sends the following 2 media chunks:
+    // 0-[DEFAULT-1], DEFAULT-[2*DEFAULT-1]
     subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2, false,
-        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2 - 1);
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2 - 1, 2);
     subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2, true,
-        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2 - 1);
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2 - 1, 2);
 
-    // part of the bytes were uploaded (problem on last part)
+    // all bytes were uploaded in the 2nd chunk. Client sends the following 3 media chunks:
+    // 0-[DEFAULT-1], DEFAULT-[2*DEFAULT-1], 2*DEFAULT-[3*DEFAULT-1]
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 3, false,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2 - 1, 3);
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 3, true,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2 - 1, 3);
+
+    // part of the bytes were uploaded in the 2nd chunk. Client sends the following 3 media chunks:
+    // 0-[DEFAULT-1], DEFAULT-[2*DEFAULT-1], DEFAULT*4/3-[2*DEFAULT-1]
     subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2, false,
-        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4 / 3);
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4 / 3, 3);
     subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2, true,
-        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4 / 3);
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4 / 3, 3);
 
-    // part of the bytes were uploaded (problem on a middle part)
-    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4, false,
-        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4 / 3);
-    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4, true,
-        MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4 / 3);
+    // part of the bytes were uploaded in the 2nd chunk. Client sends the following 3 media chunks:
+    // 0-[DEFAULT-1], DEFAULT-[2*DEFAULT-1], DEFAULT+5/[2*DEFAULT+2]
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2 + 3, false,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE + 4, 3);
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2 + 3, true,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE + 4, 3);
 
-    // part of the bytes were uploaded (problem on a middle part, only 1 byte was uploaded)
-    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4, false,
-        MediaHttpUploader.DEFAULT_CHUNK_SIZE);
-    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 4, true,
-        MediaHttpUploader.DEFAULT_CHUNK_SIZE);
+    // only 1 byte were uploaded in the 2nd chunk. Client sends the following 3 media chunks:
+    // 0-[DEFAULT-1], DEFAULT-[2*DEFAULT-1], [DEFAULT+1]-[2*DEFAULT]
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2, false,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE, 3);
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2, true,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE, 3);
+
+    // only 1 byte were uploaded in the 2nd chunk. Client sends the following 5 media chunks:
+    // 0-[DEFAULT-1], DEFAULT-[2*DEFAULT-1], [DEFAULT+1]-[2*DEFAULT], [2*DEFAULT+1]-[3*DEFAULT],
+    // [3*DEFAULT+1]-[3*DEFAULT+1]
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 3 + 2, false,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE, 5);
+    subtestUpload_ResumableWithError(error, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 3 + 2, true,
+        MediaHttpUploader.DEFAULT_CHUNK_SIZE, 5);
   }
 
   /**
@@ -654,7 +682,7 @@ public class MediaHttpUploaderTest extends TestCase {
   }
 
   public void subtestUpload_ResumableWithError(ErrorType error, int contentLength,
-      boolean contentLengthKnown, int maxByteIndexUploadedOnIOException) throws Exception {
+      boolean contentLengthKnown, int maxByteIndexUploadedOnError, int chunks) throws Exception {
     MediaTransport fakeTransport = new MediaTransport(contentLength, true);
     if (error == ErrorType.IO_EXCEPTION) {
       fakeTransport.testIOException = true;
@@ -662,7 +690,7 @@ public class MediaHttpUploaderTest extends TestCase {
       fakeTransport.testServerError = true;
     }
     fakeTransport.contentLengthNotSpecified = !contentLengthKnown;
-    fakeTransport.maxByteIndexUploadedOnIOException = maxByteIndexUploadedOnIOException;
+    fakeTransport.maxByteIndexUploadedOnError = maxByteIndexUploadedOnError;
     byte[] testedData = new byte[contentLength];
     new Random().nextBytes(testedData);
     InputStream is = new ByteArrayInputStream(testedData);
@@ -685,13 +713,9 @@ public class MediaHttpUploaderTest extends TestCase {
     assertEquals(200, response.getStatusCode());
 
     // There should be the following number of calls made:
-    // 1 initiation request
-    // 1 upload request with server error or I/O exception
-    // 1 call to query the range
-    // and content-length / chunk-size successful calls
-    int calls = contentLength / uploader.getChunkSize();
-    assertEquals(maxByteIndexUploadedOnIOException + 1 == contentLength ? calls + 2 : calls + 3,
-        fakeTransport.lowLevelExecCalls);
+    // 1 initiation request + 1 call to query the range + chunks
+    int calls = 2 + chunks;
+    assertEquals(calls, fakeTransport.lowLevelExecCalls);
 
     assertTrue(Arrays.equals(testedData, fakeTransport.bytesReceived));
   }

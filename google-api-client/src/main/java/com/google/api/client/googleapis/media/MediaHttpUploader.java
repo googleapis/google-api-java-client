@@ -215,6 +215,13 @@ public final class MediaHttpUploader {
   private MediaHttpUploaderProgressListener progressListener;
 
   /**
+   * The media content length is used in the "Content-Range" header. If we reached the end of the
+   * stream, this variable will be set with the length of the stream. This value is used only in
+   * resumable media upload.
+   */
+  String mediaContentLengthStr = "*";
+
+  /**
    * The number of bytes the server received so far. This value will not be calculated for direct
    * uploads when the content length is not known in advance.
    */
@@ -591,7 +598,6 @@ public final class MediaHttpUploader {
 
     AbstractInputStreamContent contentChunk;
     int actualBlockSize = blockSize;
-    String mediaContentLengthStr;
     if (isMediaLengthKnown()) {
       // Mark the current position in case we need to retry the request.
       contentInputStream.mark(blockSize);
@@ -612,7 +618,6 @@ public final class MediaHttpUploader {
       // amount of bytes which need to be copied from last chunk buffer
       int copyBytes = 0;
       if (currentRequestContentBuffer == null) {
-        totalBytesClientSent += currentChunkLength;
         bytesAllowedToRead = cachedByte == null ? blockSize + 1 : blockSize;
         currentRequestContentBuffer = new byte[blockSize + 1];
         if (cachedByte != null) {
@@ -627,8 +632,7 @@ public final class MediaHttpUploader {
         // and its "Range" header is "bytes=0-150".
         // In that case, the new request will be constructed from the previous request's byte buffer
         // plus new bytes from the stream.
-        copyBytes = (currentChunkLength - (int) (totalBytesServerReceived - totalBytesClientSent));
-        totalBytesClientSent = totalBytesServerReceived;
+        copyBytes = (int) (totalBytesClientSent - totalBytesServerReceived);
         // shift copyBytes bytes to the beginning - those are the bytes which weren't received by
         // the server in the last chunk.
         System.arraycopy(currentRequestContentBuffer, currentChunkLength - copyBytes,
@@ -636,7 +640,6 @@ public final class MediaHttpUploader {
         if (cachedByte != null) {
           // add the last cached byte to the buffer
           currentRequestContentBuffer[copyBytes] = cachedByte;
-          cachedByte = null;
         }
 
         bytesAllowedToRead = blockSize - copyBytes;
@@ -646,22 +649,25 @@ public final class MediaHttpUploader {
           contentInputStream, currentRequestContentBuffer, blockSize + 1 - bytesAllowedToRead,
           bytesAllowedToRead);
 
-      if (actualBytesRead < bytesAllowedToRead || bytesAllowedToRead == 0) {
+      if (actualBytesRead < bytesAllowedToRead) {
         actualBlockSize = copyBytes + Math.max(0, actualBytesRead);
         if (cachedByte != null) {
           actualBlockSize++;
           cachedByte = null;
         }
-        // At this point we know we reached the media content length because we either read less
-        // than the specified chunk size or there is no more data left to be read.
-        mediaContentLengthStr = String.valueOf(totalBytesServerReceived + actualBlockSize);
+
+        if (mediaContentLengthStr.equals("*")) {
+          // At this point we know we reached the media content length because we either read less
+          // than the specified chunk size or there is no more data left to be read.
+          mediaContentLengthStr = String.valueOf(totalBytesServerReceived + actualBlockSize);
+        }
       } else {
         cachedByte = currentRequestContentBuffer[blockSize];
-        mediaContentLengthStr = "*";
       }
 
       contentChunk = new ByteArrayContent(
           mediaContent.getType(), currentRequestContentBuffer, 0, actualBlockSize);
+      totalBytesClientSent = totalBytesServerReceived + actualBlockSize;
     }
 
     currentChunkLength = actualBlockSize;
