@@ -946,7 +946,6 @@ public final class MediaHttpUploader {
    *
    * @return the number of bytes the server received so far
    */
-  @Deprecated
   public long getNumBytesUploaded() {
     return totalBytesServerReceived;
   }
