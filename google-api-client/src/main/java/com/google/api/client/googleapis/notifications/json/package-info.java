@@ -14,7 +14,7 @@
 
 /**
  * {@link com.google.api.client.util.Beta} <br/>
- * JSON-based notification handling for subscriptions.
+ * JSON-based notification handling for notification channels.
  *
  * @author Yaniv Inbar
  * @since 1.16
