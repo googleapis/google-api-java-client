@@ -134,7 +134,7 @@ public class MediaHttpUploaderTest extends TestCase {
         }
 
         return new MockLowLevelHttpRequest() {
-          @Override
+            @Override
           public LowLevelHttpResponse execute() {
             lowLevelExecCalls++;
             if (!directUploadEnabled) {
@@ -171,7 +171,7 @@ public class MediaHttpUploaderTest extends TestCase {
       assertEquals(TEST_UPLOAD_URL, url);
       assertEquals("PUT", name);
       return new MockLowLevelHttpRequest() {
-        @Override
+          @Override
         public LowLevelHttpResponse execute() throws IOException {
           lowLevelExecCalls++;
           MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
@@ -385,6 +385,16 @@ public class MediaHttpUploaderTest extends TestCase {
     }
   }
 
+  // TODO(peleyal): ZeroBackOffRequestInitializer can go into http testing package?
+
+  static class ZeroBackOffRequestInitializer implements HttpRequestInitializer {
+    public void initialize(HttpRequest request) {
+      request.setIOExceptionHandler(new HttpBackOffIOExceptionHandler(BackOff.ZERO_BACKOFF));
+      request.setUnsuccessfulResponseHandler(
+          new HttpBackOffUnsuccessfulResponseHandler(BackOff.ZERO_BACKOFF));
+    }
+  }
+
   public void testUploadOneCall() throws Exception {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE;
     MediaTransport fakeTransport = new MediaTransport(contentLength);
@@ -458,6 +468,20 @@ public class MediaHttpUploaderTest extends TestCase {
     assertEquals(2, fakeTransport.lowLevelExecCalls);
   }
 
+  public void testUploadOneCall_WithContentSizeProvided() throws Exception {
+    int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE;
+    MediaTransport fakeTransport = new MediaTransport(contentLength);
+    InputStream is = new ByteArrayInputStream(new byte[contentLength]);
+    InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
+    mediaContent.setLength(contentLength);
+    MediaHttpUploader uploader =
+        new MediaHttpUploader(mediaContent, fakeTransport, new GZipCheckerInitializer(true));
+    uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
+
+    // There should be 2 calls made. 1 initiation request and 1 upload request.
+    assertEquals(2, fakeTransport.lowLevelExecCalls);
+  }
+
   public void testUploadMultipleCalls() throws Exception {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 5;
     MediaTransport fakeTransport = new MediaTransport(contentLength);
@@ -504,7 +528,7 @@ public class MediaHttpUploaderTest extends TestCase {
     MediaTransport fakeTransport = new MediaTransport(contentLength);
     fakeTransport.contentLengthNotSpecified = true;
     InputStream is = new ByteArrayInputStream(new byte[contentLength]) {
-      @Override
+        @Override
       public synchronized int read(byte[] b, int off, int len) {
         return super.read(b, off, Math.min(len, MediaHttpUploader.DEFAULT_CHUNK_SIZE / 10));
       }
@@ -553,40 +577,6 @@ public class MediaHttpUploaderTest extends TestCase {
     listener.contentLengthNotSpecified = true;
     uploader.setProgressListener(listener);
     uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
-  }
-
-  @SuppressWarnings("deprecation")
-  public void testUploadServerErrorWithBackOffEnabled() throws Exception {
-    int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2;
-    MediaTransport fakeTransport = new MediaTransport(contentLength);
-    fakeTransport.testServerError = true;
-    InputStream is = new ByteArrayInputStream(new byte[contentLength]);
-    InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
-    mediaContent.setLength(contentLength);
-    MediaHttpUploader uploader = new MediaHttpUploader(mediaContent, fakeTransport, null);
-    uploader.setBackOffPolicyEnabled(true);
-    uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
-
-    // There should be 5 calls made. 1 initiation request, 1 upload request with server error, 1
-    // call to query the range and 2 upload requests.
-    assertEquals(5, fakeTransport.lowLevelExecCalls);
-  }
-
-  @SuppressWarnings("deprecation")
-  public void testUploadServerErrorWithBackOffEnabled_WithNoContentSizeProvided() throws Exception {
-    int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2;
-    MediaTransport fakeTransport = new MediaTransport(contentLength);
-    fakeTransport.testServerError = true;
-    fakeTransport.contentLengthNotSpecified = true;
-    InputStream is = new ByteArrayInputStream(new byte[contentLength]);
-    InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
-    MediaHttpUploader uploader = new MediaHttpUploader(mediaContent, fakeTransport, null);
-    uploader.setBackOffPolicyEnabled(true);
-    uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
-
-    // There should be 5 calls made. 1 initiation request, 1 upload request with server error, 1
-    // call to query the range and 2 upload requests.
-    assertEquals(5, fakeTransport.lowLevelExecCalls);
   }
 
   public void testUploadServerError_WithoutUnsuccessfulHandler() throws Exception {
@@ -699,13 +689,7 @@ public class MediaHttpUploaderTest extends TestCase {
       mediaContent.setLength(contentLength);
     }
     MediaHttpUploader uploader =
-        new MediaHttpUploader(mediaContent, fakeTransport, new HttpRequestInitializer() {
-          public void initialize(HttpRequest request) {
-            request.setIOExceptionHandler(new HttpBackOffIOExceptionHandler(BackOff.ZERO_BACKOFF));
-            request.setUnsuccessfulResponseHandler(
-                new HttpBackOffUnsuccessfulResponseHandler(BackOff.ZERO_BACKOFF));
-          }
-        });
+        new MediaHttpUploader(mediaContent, fakeTransport, new ZeroBackOffRequestInitializer());
 
     // disable GZip - so we would be able to test byte received by server.
     uploader.setDisableGZipContent(true);
@@ -948,7 +932,6 @@ public class MediaHttpUploaderTest extends TestCase {
     }
   }
 
-  @SuppressWarnings("deprecation")
   public void testDirectUploadServerErrorWithBackOffEnabled() throws Exception {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 2;
     MediaTransport fakeTransport = new MediaTransport(contentLength);
@@ -956,9 +939,9 @@ public class MediaHttpUploaderTest extends TestCase {
     fakeTransport.directUploadEnabled = true;
     ByteArrayContent mediaContent =
         new ByteArrayContent(TEST_CONTENT_TYPE, new byte[contentLength]);
-    MediaHttpUploader uploader = new MediaHttpUploader(mediaContent, fakeTransport, null);
+    MediaHttpUploader uploader =
+        new MediaHttpUploader(mediaContent, fakeTransport, new ZeroBackOffRequestInitializer());
     uploader.setDirectUploadEnabled(true);
-    uploader.setBackOffPolicyEnabled(true);
     uploader.upload(new GenericUrl(TEST_DIRECT_REQUEST_URL));
 
     // should be 2 calls made: 1 upload request with server error, 1 successful upload request
