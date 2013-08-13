@@ -32,7 +32,6 @@ import java.io.ByteArrayOutputStream;
  *
  * @author rmistry@google.com (Ravi Mistry)
  */
-@SuppressWarnings("deprecation")
 public class MediaHttpDownloaderTest extends TestCase {
 
   private static final String TEST_REQUEST_URL = "http://www.test.com/request/url?alt=media";
@@ -57,7 +56,7 @@ public class MediaHttpDownloaderTest extends TestCase {
       assertEquals(TEST_REQUEST_URL, url);
 
       return new MockLowLevelHttpRequest() {
-        @Override
+          @Override
         public LowLevelHttpResponse execute() {
           lowLevelExecCalls++;
           MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
@@ -89,7 +88,7 @@ public class MediaHttpDownloaderTest extends TestCase {
             currentRequestLastBytePos = Math.min(lastBytePos, currentRequestLastBytePos);
           }
           assertEquals("bytes=" + bytesDownloaded + "-" + currentRequestLastBytePos,
-                       getFirstHeaderValue("Range"));
+              getFirstHeaderValue("Range"));
 
           if (testServerError && lowLevelExecCalls == 2) {
             // Send a server error in the 2nd request.
@@ -212,8 +211,8 @@ public class MediaHttpDownloaderTest extends TestCase {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     MediaTransport fakeTransport = new MediaTransport(contentLength);
     fakeTransport.testServerError = true;
-    MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
-    downloader.setBackOffPolicyEnabled(true);
+    MediaHttpDownloader downloader = new MediaHttpDownloader(
+        fakeTransport, new MediaHttpUploaderTest.ZeroBackOffRequestInitializer());
     downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
 
     // There should be 3 calls made: 1 download request with server error and 2 successful download
@@ -379,8 +378,8 @@ public class MediaHttpDownloaderTest extends TestCase {
     MediaTransport fakeTransport = new MediaTransport(contentLength);
     fakeTransport.directDownloadEnabled = true;
     fakeTransport.testServerError = true;
-    MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
-    downloader.setBackOffPolicyEnabled(true);
+    MediaHttpDownloader downloader = new MediaHttpDownloader(
+        fakeTransport, new MediaHttpUploaderTest.ZeroBackOffRequestInitializer());
     downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
 
     // should be 2 calls made: 1 download request w/server error and 1 successful download request

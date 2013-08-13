@@ -18,7 +18,6 @@ import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.EmptyContent;
-import com.google.api.client.http.ExponentialBackOffPolicy;
 import com.google.api.client.http.GZipEncoding;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpBackOffIOExceptionHandler;
@@ -194,14 +193,6 @@ public final class MediaHttpUploader {
   private InputStream contentInputStream;
 
   /**
-   * Determines whether the back off policy is enabled or disabled. The default value is
-   * {@code false}.
-   */
-  @Deprecated
-  @Beta
-  private boolean backOffPolicyEnabled = false;
-
-  /**
    * Determines whether direct media upload is enabled or disabled. If value is set to {@code true}
    * then a direct upload will be done where the whole media content is uploaded in a single request
    * If value is set to {@code false} then the upload uses the resumable media upload protocol to
@@ -366,7 +357,7 @@ public final class MediaHttpUploader {
     request.getHeaders().putAll(initiationHeaders);
     // We do not have to do anything special here if media content length is unspecified because
     // direct media upload works even when the media content length == -1.
-    HttpResponse response = executeCurrentRequestWithBackOffAndGZip(request);
+    HttpResponse response = executeCurrentRequest(request);
     boolean responseProcessed = false;
     try {
       if (isMediaLengthKnown()) {
@@ -416,22 +407,17 @@ public final class MediaHttpUploader {
     while (true) {
       currentRequest = requestFactory.buildPutRequest(uploadUrl, null);
       setContentAndHeadersOnCurrentRequest();
-      if (backOffPolicyEnabled) {
-        // use exponential back-off on server error
-        currentRequest.setBackOffPolicy(new MediaUploadExponentialBackOffPolicy(this));
-      } else {
-        // set mediaErrorHandler as I/O exception handler and as unsuccessful response handler for
-        // calling to serverErrorCallback on an I/O exception or an abnormal HTTP response
-        new MediaUploadErrorHandler(this, currentRequest);
-      }
+      // set mediaErrorHandler as I/O exception handler and as unsuccessful response handler for
+      // calling to serverErrorCallback on an I/O exception or an abnormal HTTP response
+      new MediaUploadErrorHandler(this, currentRequest);
 
       if (isMediaLengthKnown()) {
         // TODO(rmistry): Support gzipping content for the case where media content length is
         // known (https://code.google.com/p/google-api-java-client/issues/detail?id=691).
-      } else if (!disableGZipContent) {
-        currentRequest.setEncoding(new GZipEncoding());
+        response = executeCurrentRequestWithoutGZip(currentRequest);
+      } else {
+        response = executeCurrentRequest(currentRequest);
       }
-      response = executeCurrentRequest(currentRequest);
       boolean returningResponse = false;
       try {
         if (response.isSuccessStatusCode()) {
@@ -530,7 +516,7 @@ public final class MediaHttpUploader {
       initiationHeaders.set(CONTENT_LENGTH_HEADER, getMediaContentLength());
     }
     request.getHeaders().putAll(initiationHeaders);
-    HttpResponse response = executeCurrentRequestWithBackOffAndGZip(request);
+    HttpResponse response = executeCurrentRequest(request);
     boolean notificationCompleted = false;
 
     try {
@@ -550,7 +536,7 @@ public final class MediaHttpUploader {
    * @param request current request
    * @return HTTP response
    */
-  private HttpResponse executeCurrentRequest(HttpRequest request) throws IOException {
+  private HttpResponse executeCurrentRequestWithoutGZip(HttpRequest request) throws IOException {
     // method override for non-POST verbs
     new MethodOverride().intercept(request);
     // don't throw an exception so we can let a custom Google exception be thrown
@@ -567,18 +553,13 @@ public final class MediaHttpUploader {
    * @param request current request
    * @return HTTP response
    */
-  private HttpResponse executeCurrentRequestWithBackOffAndGZip(HttpRequest request)
-      throws IOException {
-    // use exponential backoff on server error
-    if (backOffPolicyEnabled) {
-      request.setBackOffPolicy(new ExponentialBackOffPolicy());
-    }
+  private HttpResponse executeCurrentRequest(HttpRequest request) throws IOException {
     // enable GZip encoding if necessary
     if (!disableGZipContent && !(request.getContent() instanceof EmptyContent)) {
       request.setEncoding(new GZipEncoding());
     }
     // execute request
-    HttpResponse response = executeCurrentRequest(request);
+    HttpResponse response = executeCurrentRequestWithoutGZip(request);
     return response;
   }
 
@@ -735,42 +716,6 @@ public final class MediaHttpUploader {
   /** Returns the transport to use for requests. */
   public HttpTransport getTransport() {
     return transport;
-  }
-
-  /**
-   * {@link Beta} <br/>
-   * Sets whether the back off policy is enabled or disabled. The default value is {@code false}.
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.14 the default value was {@code true}, but starting with
-   * version 1.15 the default value is {@code false}.
-   * </p>
-   *
-   * @deprecated (scheduled to be removed in 1.17). Use
-   *             {@link HttpRequest#setUnsuccessfulResponseHandler} with a new
-   *             {@link HttpBackOffUnsuccessfulResponseHandler} in {@link HttpRequestInitializer}
-   *             instead.
-   */
-  @Beta
-  @Deprecated
-  public MediaHttpUploader setBackOffPolicyEnabled(boolean backOffPolicyEnabled) {
-    this.backOffPolicyEnabled = backOffPolicyEnabled;
-    return this;
-  }
-
-  /**
-   * {@link Beta} <br/>
-   * Returns whether the back off policy is enabled or disabled.
-   *
-   * @deprecated (scheduled to be removed in 1.17). Use
-   *             {@link HttpRequest#setUnsuccessfulResponseHandler} with a new
-   *             {@link HttpBackOffUnsuccessfulResponseHandler} in {@link HttpRequestInitializer}
-   *             instead.
-   */
-  @Beta
-  @Deprecated
-  public boolean isBackOffPolicyEnabled() {
-    return backOffPolicyEnabled;
   }
 
   /**
@@ -946,7 +891,6 @@ public final class MediaHttpUploader {
    *
    * @return the number of bytes the server received so far
    */
-  @Deprecated
   public long getNumBytesUploaded() {
     return totalBytesServerReceived;
   }

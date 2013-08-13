@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- see http://mojo.codehaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
 <differences>
+  <!-- 7002 (method removed): className, method -->
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/googleapis/media/MediaHttpDownloader</className>
+    <method>boolean isBackOffPolicyEnabled()</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/googleapis/media/MediaHttpDownloader</className>
+    <method>com.google.api.client.googleapis.media.MediaHttpDownloader setBackOffPolicyEnabled(boolean)</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/googleapis/media/MediaHttpUploader</className>
+    <method>boolean isBackOffPolicyEnabled()</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/googleapis/media/MediaHttpUploader</className>
+    <method>com.google.api.client.googleapis.media.MediaHttpUploader setBackOffPolicyEnabled(boolean)</method>
+  </difference>
   <!-- 8001 (Class removed): className -->
   <difference>
     <differenceType>8001</differenceType>
