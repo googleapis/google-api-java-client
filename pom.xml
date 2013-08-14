@@ -81,6 +81,7 @@
     <module>google-api-client-jackson2</module>
     <module>google-api-client-java6</module>
     <module>google-api-client-protobuf</module>
+    <module>google-api-client-xml</module>
   </modules>
 
   <dependencyManagement>
@@ -182,6 +183,11 @@
         <version>${project.http.version}</version>
       </dependency>
       <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-xml</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.google.oauth-client</groupId>
         <artifactId>google-oauth-client</artifactId>
         <version>${project.oauth.version}</version>
@@ -250,6 +256,11 @@
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-protobuf</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api-client</groupId>
+        <artifactId>google-api-client-xml</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- mvn install:install-file \
@@ -476,11 +487,15 @@
                 </group>
                 <group>
                   <title>google-api-client-protobuf</title>
-                  <packages>com.google.api.client.googleapis.services.protobuf.*,com.google.api.client.googleapis.testing.services.protobuf.*</packages>
+                  <packages>com.google.api.client.googleapis.services.protobuf*:com.google.api.client.googleapis.testing.services.protobuf*</packages>
                 </group>
                 <group>
                   <title>google-api-client-servlet</title>
                   <packages>com.google.api.client.googleapis.extensions.servlet*</packages>
+                </group>
+                <group>
+                  <title>google-api-client-xml</title>
+                  <packages>com.google.api.client.googleapis.xml.*</packages>
                 </group>
               </groups>
               <windowtitle>google-api-java-client ${project.version}</windowtitle>

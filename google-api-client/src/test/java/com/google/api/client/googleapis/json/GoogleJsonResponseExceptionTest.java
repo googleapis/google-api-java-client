@@ -22,7 +22,6 @@ import com.google.api.client.json.Json;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.util.StringUtils;
-import com.google.api.client.xml.atom.Atom;
 
 import junit.framework.TestCase;
 
@@ -84,7 +83,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
   }
 
   public void testFrom_detailsArbitraryXmlContent() throws Exception {
-    HttpTransport transport = new ErrorTransport("<foo>", Atom.MEDIA_TYPE);
+    HttpTransport transport = new ErrorTransport("<foo>", "application/atom+xml; charset=utf-8");
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);
