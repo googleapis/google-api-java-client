@@ -6,6 +6,7 @@
 	<classpathentry kind="lib" path="libs/google-api-client-java6-${project.version}.jar" sourcepath="libs-sources/google-api-client-java6-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-api-client-protobuf-${project.version}.jar" sourcepath="libs-sources/google-api-client-protobuf-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-api-client-servlet-${project.version}.jar" sourcepath="libs-sources/google-api-client-servlet-${project.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-api-client-xml-${project.version}.jar" sourcepath="libs-sources/google-api-client-xml-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-oauth-client-${project.oauth.version}.jar" sourcepath="libs-sources/google-oauth-client-${project.oauth.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-oauth-client-appengine-${project.oauth.version}.jar" sourcepath="libs-sources/google-oauth-client-appengine-${project.oauth.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-oauth-client-java6-${project.oauth.version}.jar" sourcepath="libs-sources/google-oauth-client-java6-${project.oauth.version}-sources.jar"/>
@@ -19,6 +20,8 @@
 	<classpathentry kind="lib" path="libs/google-http-client-gson-${project.http.version}.jar" sourcepath="libs-sources/google-http-client-gson-${project.http.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-http-client-jackson-${project.http.version}.jar" sourcepath="libs-sources/google-http-client-jackson-${project.http.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-http-client-jackson2-${project.http.version}.jar" sourcepath="libs-sources/google-http-client-jackson2-${project.http.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-http-client-jdo-${project.version}.jar" sourcepath="libs-sources/google-http-client-jdo-${project.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-http-client-xml-${project.version}.jar" sourcepath="libs-sources/google-http-client-xml-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/commons-logging-${project.commons-logging.version}.jar" sourcepath="libs-sources/commons-logging-${project.commons-logging.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/gson-${project.gson.version}.jar" sourcepath="libs-sources/gson-${project.gson.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/httpclient-${project.httpclient.version}.jar" sourcepath="libs-sources/httpclient-${project.httpclient.version}-sources.jar"/>

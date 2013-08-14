@@ -55,6 +55,10 @@
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client-protobuf</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client-xml</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

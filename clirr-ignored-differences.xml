@@ -25,6 +25,10 @@
   <!-- 8001 (Class removed): className -->
   <difference>
     <differenceType>8001</differenceType>
+    <className>com/google/api/client/googleapis/xml/atom/*</className>
+  </difference>
+  <difference>
+    <differenceType>8001</differenceType>
     <className>com/google/api/client/googleapis/**/subscriptions/**</className>
   </difference>
 </differences>
