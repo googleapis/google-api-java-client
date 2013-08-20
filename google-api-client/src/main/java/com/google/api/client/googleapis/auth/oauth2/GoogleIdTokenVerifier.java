@@ -14,103 +14,50 @@
 
 package com.google.api.client.googleapis.auth.oauth2;
 
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpResponse;
+import com.google.api.client.auth.openidconnect.IdToken;
+import com.google.api.client.auth.openidconnect.IdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.JsonParser;
-import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
 import com.google.api.client.util.Preconditions;
-import com.google.api.client.util.SecurityUtils;
-import com.google.api.client.util.StringUtils;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.PublicKey;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * {@link Beta} <br/>
  * Thread-safe Google ID token verifier.
  *
  * <p>
- * The public keys are loaded from the public certificates endpoint at
- * {@link #getPublicCertsEncodedUrl} and cached in this instance. Therefore, for maximum efficiency,
- * applications should use a single globally-shared instance of the {@link GoogleIdTokenVerifier}.
- * </p>
- *
- * <p>
- * Use {@link #verify(GoogleIdToken)} to verify a Google ID token, and then
- * {@link GoogleIdToken#verifyAudience} to verify the client ID. <br/>
- * Samples usage:
+ * Call {@link #verify(IdToken)} to verify a ID token. Use the constructor
+ * {@link #GoogleIdTokenVerifier(HttpTransport, JsonFactory)} for the typical simpler case if your
+ * application has only a single instance of {@link GoogleIdTokenVerifier}. Otherwise, ideally you
+ * should use {@link #GoogleIdTokenVerifier(GooglePublicKeysManager)} with a shared global instance
+ * of the {@link GooglePublicKeysManager} since that way the Google public keys are cached. Sample
+ * usage:
  * </p>
  *
  * <pre>
-  public static GoogleIdTokenVerifier verifier;
-
-  public static void initVerifier(HttpTransport transport, JsonFactory jsonFactory) {
-    verifier = new GoogleIdTokenVerifier(transport, jsonFactory);
-  }
-
-  public static boolean verifyToken(GoogleIdToken idToken, Collection<String> trustedClientIds)
-      throws GeneralSecurityException, IOException {
-    return verifier.verify(idToken) && idToken.verifyAudience(trustedClientIds);
-  }
+    GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
+        .setAudience(Arrays.asList("myClientId"))
+        .build();
+    ...
+    if (!verifier.verify(googleIdToken)) {...}
  * </pre>
+ *
  * @since 1.7
  */
 @Beta
-public class GoogleIdTokenVerifier {
+public class GoogleIdTokenVerifier extends IdTokenVerifier {
 
-  /** Pattern for the max-age header element of Cache-Control. */
-  private static final Pattern MAX_AGE_PATTERN = Pattern.compile("\\s*max-age\\s*=\\s*(\\d+)\\s*");
-
-  /** Seconds of time skew to accept. */
-  private static final long TIME_SKEW_SECONDS = 300;
-
-  /** JSON factory. */
-  private final JsonFactory jsonFactory;
-
-  /** Public keys or {@code null} for none. */
-  private List<PublicKey> publicKeys;
+  /** Google public keys manager. */
+  private final GooglePublicKeysManager publicKeys;
 
   /**
-   * Expiration time in milliseconds to be used with {@link Clock#currentTimeMillis()} or {@code 0}
-   * for none.
-   */
-  private long expirationTimeMilliseconds;
-
-  /** HTTP transport. */
-  private final HttpTransport transport;
-
-  /** Lock on the public keys. */
-  private final Lock lock = new ReentrantLock();
-
-  /** Clock to use for expiration checks. */
-  private final Clock clock;
-
-  /** Public certificates encoded URL. */
-  private final String publicCertsEncodedUrl;
-
-  /**
-   * Constructor with required parameters.
-   *
-   * <p>
-   * Use {@link GoogleIdTokenVerifier.Builder} to specify client IDs.
-   * </p>
-   *
    * @param transport HTTP transport
    * @param jsonFactory JSON factory
    */
@@ -119,15 +66,31 @@ public class GoogleIdTokenVerifier {
   }
 
   /**
+   * @param publicKeys Google public keys manager
+   *
+   * @since 1.17
+   */
+  public GoogleIdTokenVerifier(GooglePublicKeysManager publicKeys) {
+    this(new Builder(publicKeys));
+  }
+
+  /**
    * @param builder builder
    *
    * @since 1.14
    */
   protected GoogleIdTokenVerifier(Builder builder) {
-    transport = builder.transport;
-    jsonFactory = builder.jsonFactory;
-    clock = builder.clock;
-    publicCertsEncodedUrl = builder.publicCertsEncodedUrl;
+    super(builder);
+    publicKeys = builder.publicKeys;
+  }
+
+  /**
+   * Returns the Google public keys manager.
+   *
+   * @since 1.17
+   */
+  public final GooglePublicKeysManager getPublicKeysManager() {
+    return publicKeys;
   }
 
   /**
@@ -136,34 +99,53 @@ public class GoogleIdTokenVerifier {
    * @since 1.14
    */
   public final HttpTransport getTransport() {
-    return transport;
+    return publicKeys.getTransport();
   }
 
   /** Returns the JSON factory. */
   public final JsonFactory getJsonFactory() {
-    return jsonFactory;
+    return publicKeys.getJsonFactory();
   }
 
   /**
    * Returns the public certificates encoded URL.
    *
    * @since 1.15
+   * @deprecated (scheduled to be removed in 1.18) Use {@link #getPublicKeysManager()} and
+   *             {@link GooglePublicKeysManager#getPublicCertsEncodedUrl()} instead.
    */
+  @Deprecated
   public final String getPublicCertsEncodedUrl() {
-    return publicCertsEncodedUrl;
+    return publicKeys.getPublicCertsEncodedUrl();
   }
 
-  /** Returns the public keys or {@code null} for none. */
-  public final List<PublicKey> getPublicKeys() {
-    return publicKeys;
+  /**
+   * Returns the public keys.
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.16 it may return {@code null} and not throw any exceptions,
+   * but starting with version 1.17 it cannot return {@code null} and may throw
+   * {@link GeneralSecurityException} or {@link IOException}.
+   * </p>
+   *
+   * @deprecated (scheduled to be removed in 1.18) Use {@link #getPublicKeysManager()} and
+   *             {@link GooglePublicKeysManager#getPublicCertsEncodedUrl()} instead.
+   */
+  @Deprecated
+  public final List<PublicKey> getPublicKeys() throws GeneralSecurityException, IOException {
+    return publicKeys.getPublicKeys();
   }
 
   /**
    * Returns the expiration time in milliseconds to be used with {@link Clock#currentTimeMillis()}
    * or {@code 0} for none.
+   *
+   * @deprecated (scheduled to be removed in 1.18) Use {@link #getPublicKeysManager()} and
+   *             {@link GooglePublicKeysManager#getExpirationTimeMilliseconds()} instead.
    */
+  @Deprecated
   public final long getExpirationTimeMilliseconds() {
-    return expirationTimeMilliseconds;
+    return publicKeys.getExpirationTimeMilliseconds();
   }
 
   /**
@@ -179,30 +161,19 @@ public class GoogleIdTokenVerifier {
    * <li>The issuer is {@code "accounts.google.com"}.</li>
    * </ul>
    *
-   * @param idToken Google ID token
+   * @param googleIdToken Google ID token
    * @return {@code true} if verified successfully or {@code false} if failed
    */
-  public boolean verify(GoogleIdToken idToken) throws GeneralSecurityException, IOException {
+  public boolean verify(GoogleIdToken googleIdToken) throws GeneralSecurityException, IOException {
     // check the payload
-    if (!idToken.verifyIssuer("accounts.google.com")
-        || !idToken.verifyTime(clock.currentTimeMillis(), TIME_SKEW_SECONDS)) {
+    if (!super.verify(googleIdToken)) {
       return false;
     }
     // verify signature
-    lock.lock();
-    try {
-      // load public keys; expire 5 minutes (300 seconds) before actual expiration time
-      if (publicKeys == null
-          || clock.currentTimeMillis() + TIME_SKEW_SECONDS * 1000 > expirationTimeMilliseconds) {
-        loadPublicCerts();
+    for (PublicKey publicKey : publicKeys.getPublicKeys()) {
+      if (googleIdToken.verifySignature(publicKey)) {
+        return true;
       }
-      for (PublicKey publicKey : publicKeys) {
-        if (idToken.verifySignature(publicKey)) {
-          return true;
-        }
-      }
-    } finally {
-      lock.unlock();
     }
     return false;
   }
@@ -216,7 +187,7 @@ public class GoogleIdTokenVerifier {
    * @since 1.9
    */
   public GoogleIdToken verify(String idTokenString) throws GeneralSecurityException, IOException {
-    GoogleIdToken idToken = GoogleIdToken.parse(jsonFactory, idTokenString);
+    GoogleIdToken idToken = GoogleIdToken.parse(getJsonFactory(), idTokenString);
     return verify(idToken) ? idToken : null;
   }
 
@@ -229,65 +200,14 @@ public class GoogleIdTokenVerifier {
    * expiration time is very close, so normally this doesn't need to be called. Only call this
    * method explicitly to force the public keys to be updated.
    * </p>
-   */
-  public GoogleIdTokenVerifier loadPublicCerts() throws GeneralSecurityException, IOException {
-    lock.lock();
-    try {
-      publicKeys = new ArrayList<PublicKey>();
-      // HTTP request to public endpoint
-      CertificateFactory factory = SecurityUtils.getX509CertificateFactory();
-      HttpResponse certsResponse = transport.createRequestFactory()
-          .buildGetRequest(new GenericUrl(publicCertsEncodedUrl)).execute();
-      expirationTimeMilliseconds =
-          clock.currentTimeMillis() + getCacheTimeInSec(certsResponse.getHeaders()) * 1000;
-      // parse each public key in the JSON response
-      JsonParser parser = jsonFactory.createJsonParser(certsResponse.getContent());
-      JsonToken currentToken = parser.getCurrentToken();
-      // token is null at start, so get next token
-      if (currentToken == null) {
-        currentToken = parser.nextToken();
-      }
-      Preconditions.checkArgument(currentToken == JsonToken.START_OBJECT);
-      try {
-        while (parser.nextToken() != JsonToken.END_OBJECT) {
-          parser.nextToken();
-          String certValue = parser.getText();
-          X509Certificate x509Cert = (X509Certificate) factory.generateCertificate(
-              new ByteArrayInputStream(StringUtils.getBytesUtf8(certValue)));
-          publicKeys.add(x509Cert.getPublicKey());
-        }
-        publicKeys = Collections.unmodifiableList(publicKeys);
-      } finally {
-        parser.close();
-      }
-      return this;
-    } finally {
-      lock.unlock();
-    }
-  }
-
-  /**
-   * Gets the cache time in seconds. "max-age" in "Cache-Control" header and "Age" header are
-   * considered.
    *
-   * @param httpHeaders the http header of the response
-   * @return the cache time in seconds or zero if the response should not be cached
+   * @deprecated (scheduled to be removed in 1.18) Use {@link #getPublicKeysManager()} and
+   *             {@link GooglePublicKeysManager#refresh()} instead.
    */
-  long getCacheTimeInSec(HttpHeaders httpHeaders) {
-    long cacheTimeInSec = 0;
-    if (httpHeaders.getCacheControl() != null) {
-      for (String arg : httpHeaders.getCacheControl().split(",")) {
-        Matcher m = MAX_AGE_PATTERN.matcher(arg);
-        if (m.matches()) {
-          cacheTimeInSec = Long.valueOf(m.group(1));
-          break;
-        }
-      }
-    }
-    if (httpHeaders.getAge() != null) {
-      cacheTimeInSec -= httpHeaders.getAge();
-    }
-    return Math.max(0, cacheTimeInSec);
+  @Deprecated
+  public GoogleIdTokenVerifier loadPublicCerts() throws GeneralSecurityException, IOException {
+    publicKeys.refresh();
+    return this;
   }
 
   /**
@@ -301,53 +221,64 @@ public class GoogleIdTokenVerifier {
    * @since 1.9
    */
   @Beta
-  public static class Builder {
+  public static class Builder extends IdTokenVerifier.Builder {
 
-    /** HTTP transport. */
-    final HttpTransport transport;
-
-    /** JSON factory. */
-    final JsonFactory jsonFactory;
-
-    /** Public certificates encoded URL. */
-    String publicCertsEncodedUrl = GoogleOAuthConstants.DEFAULT_PUBLIC_CERTS_ENCODED_URL;
-
-    /** Clock. */
-    Clock clock = Clock.SYSTEM;
+    /** Google public keys manager. */
+    GooglePublicKeysManager publicKeys;
 
     /**
-     * Returns an instance of a new builder.
-     *
      * @param transport HTTP transport
      * @param jsonFactory JSON factory
      */
     public Builder(HttpTransport transport, JsonFactory jsonFactory) {
-      this.transport = Preconditions.checkNotNull(transport);
-      this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
+      this(new GooglePublicKeysManager(transport, jsonFactory));
+    }
+
+    /**
+     * @param publicKeys Google public keys manager
+     *
+     * @since 1.17
+     */
+    public Builder(GooglePublicKeysManager publicKeys) {
+      this.publicKeys = Preconditions.checkNotNull(publicKeys);
+      setIssuer("accounts.google.com");
     }
 
     /** Builds a new instance of {@link GoogleIdTokenVerifier}. */
+    @Override
     public GoogleIdTokenVerifier build() {
       return new GoogleIdTokenVerifier(this);
     }
 
+    /**
+     * Returns the Google public keys manager.
+     *
+     * @since 1.17
+     */
+    public final GooglePublicKeysManager getPublicCerts() {
+      return publicKeys;
+    }
+
     /** Returns the HTTP transport. */
     public final HttpTransport getTransport() {
-      return transport;
+      return publicKeys.getTransport();
     }
 
     /** Returns the JSON factory. */
     public final JsonFactory getJsonFactory() {
-      return jsonFactory;
+      return publicKeys.getJsonFactory();
     }
 
     /**
      * Returns the public certificates encoded URL.
      *
      * @since 1.15
+     * @deprecated (scheduled to be removed in 1.18) Use {@link #getPublicCerts()} and
+     *             {@link GooglePublicKeysManager#getPublicCertsEncodedUrl()} instead.
      */
+    @Deprecated
     public final String getPublicCertsEncodedUrl() {
-      return publicCertsEncodedUrl;
+      return publicKeys.getPublicCertsEncodedUrl();
     }
 
     /**
@@ -363,34 +294,36 @@ public class GoogleIdTokenVerifier {
      * </p>
      *
      * @since 1.15
+     * @deprecated (scheduled to be removed in 1.18) Use
+     *             {@link GooglePublicKeysManager.Builder#setPublicCertsEncodedUrl(String)} instead.
      */
-    public Builder setPublicCertsEncodedUrl(String publicCertsEncodedUrl) {
-      this.publicCertsEncodedUrl = Preconditions.checkNotNull(publicCertsEncodedUrl);
+    @Deprecated
+    public Builder setPublicCertsEncodedUrl(String publicKeysEncodedUrl) {
+      // TODO(yanivi): make publicKeys field final when this method is removed
+      publicKeys = new GooglePublicKeysManager.Builder(
+          getTransport(), getJsonFactory()).setPublicCertsEncodedUrl(publicKeysEncodedUrl)
+          .setClock(publicKeys.getClock()).build();
       return this;
     }
 
-    /**
-     * Returns the clock.
-     *
-     * @since 1.14
-     */
-    public final Clock getClock() {
-      return clock;
+    @Override
+    public Builder setIssuer(String issuer) {
+      return (Builder) super.setIssuer(issuer);
     }
 
-    /**
-     * Sets the clock.
-     *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
-     *
-     * @since 1.14
-     */
+    @Override
+    public Builder setAudience(Collection<String> audience) {
+      return (Builder) super.setAudience(audience);
+    }
+
+    @Override
+    public Builder setAcceptableTimeSkewSeconds(long acceptableTimeSkewSeconds) {
+      return (Builder) super.setAcceptableTimeSkewSeconds(acceptableTimeSkewSeconds);
+    }
+
+    @Override
     public Builder setClock(Clock clock) {
-      this.clock = Preconditions.checkNotNull(clock);
-      return this;
+      return (Builder) super.setClock(clock);
     }
   }
 }
