@@ -44,7 +44,7 @@ public class GoogleIdTokenVerifierTest extends TestCase {
     Payload payload = new Payload();
     payload.setIssuer("accounts.google.com");
     payload.setAudience(clientId);
-    payload.setIssuee(clientId);
+    payload.setAuthorizedParty(clientId);
     payload.setExpirationTimeSeconds(100L);
     payload.setIssuedAtTimeSeconds(0L);
     return payload;

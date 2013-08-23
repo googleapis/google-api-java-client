@@ -26,7 +26,8 @@ import java.util.List;
 
 /**
  * {@link Beta} <br/>
- * Google ID tokens.
+ * Google ID tokens as specified in <a
+ * href="https://developers.google.com/accounts/docs/OAuth2Login">Using OAuth 2.0 for Login</a>.
  *
  * <p>
  * Google ID tokens contain useful information about the authorized end user. Google ID tokens are
@@ -86,24 +87,9 @@ public class GoogleIdToken extends IdToken {
   /**
    * {@link Beta} <br/>
    * Google ID token payload.
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.15 {@link #getAccessTokenHash()} and
-   * {@link #setAccessTokenHash(String)} accessed {@code "token_hash"}, but starting with version
-   * 1.16 they now access {@code "at_hash"}.
-   * </p>
    */
   @Beta
   public static class Payload extends IdToken.Payload {
-
-    /** Obfuscated Google user ID or {@code null} for none. */
-    @Key("id")
-    private String userId;
-
-    /** Client ID of issuee or {@code null} for none. */
-    @Key("cid")
-    private String issuee;
-
     /** Hosted domain name if asserted user is a domain managed user or {@code null} for none. */
     @Key("hd")
     private String hostedDomain;
@@ -119,26 +105,45 @@ public class GoogleIdToken extends IdToken {
     public Payload() {
     }
 
-    /** Returns the obfuscated Google user id or {@code null} for none. */
+    /**
+     * Returns the obfuscated Google user id or {@code null} for none.
+     *
+     * @deprecated (scheduled to be removed in 1.18) Use {@link #getSubject()} instead.
+     */
+    @Deprecated
     public String getUserId() {
-      return userId;
+      return getSubject();
     }
 
-    /** Sets the obfuscated Google user id or {@code null} for none. */
+    /**
+     * Sets the obfuscated Google user id or {@code null} for none.
+     *
+     * @deprecated (scheduled to be removed in 1.18) Use {@link #setSubject(String)} instead.
+     */
+    @Deprecated
     public Payload setUserId(String userId) {
-      this.userId = userId;
-      return this;
+      return setSubject(userId);
     }
 
-    /** Returns the client ID of issuee or {@code null} for none. */
+    /**
+     * Returns the client ID of issuee or {@code null} for none.
+     *
+     * @deprecated (scheduled to be removed in 1.18) Use {@link #getAuthorizedParty()} instead.
+     */
+    @Deprecated
     public String getIssuee() {
-      return issuee;
+      return getAuthorizedParty();
     }
 
-    /** Sets the client ID of issuee or {@code null} for none. */
+    /**
+     * Sets the client ID of issuee or {@code null} for none.
+     *
+     * @deprecated (scheduled to be removed in 1.18) Use {@link #setAuthorizedParty(String)}
+     *             instead.
+     */
+    @Deprecated
     public Payload setIssuee(String issuee) {
-      this.issuee = issuee;
-      return this;
+      return setAuthorizedParty(issuee);
     }
 
     /**
