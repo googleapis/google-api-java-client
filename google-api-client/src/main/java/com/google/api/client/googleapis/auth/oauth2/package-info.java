@@ -38,7 +38,7 @@
  * <li>Request an access token and possibly a refresh token using
  * {@link com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest}.</li>
  * <li>Access protected resources using
- * {@link com.google.api.client.googleapis.auth.oauth2.GoogleCredential}. Expired access tokens will
+ * {@link com.google.api.client.googleapis.auth.oauth2.GoogleCredential2}. Expired access tokens will
  * automatically be refreshed using the refresh token (if applicable).</li>
  * </ul>
  * </p>
