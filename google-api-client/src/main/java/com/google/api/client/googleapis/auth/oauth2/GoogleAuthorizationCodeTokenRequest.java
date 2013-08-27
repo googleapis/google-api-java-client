@@ -35,7 +35,7 @@ import java.util.Collection;
  * Server Applications</a>).
  *
  * <p>
- * Use {@link GoogleCredential2} to access protected resources from the resource server using the
+ * Use {@link GoogleCredential} to access protected resources from the resource server using the
  * {@link TokenResponse} returned by {@link #execute()}. On error, it will instead throw
  * {@link TokenResponseException}.
  * </p>
