@@ -98,9 +98,14 @@ public class GoogleIdToken extends IdToken {
     @Key("email")
     private String email;
 
-    /** {@code true} if the email is verified. */
-    @Key("verified_email")
-    private boolean emailVerified;
+    /**
+     * {@code true} if the email is verified.
+     * TODO(mwan): change the type of the field to Boolean and the handling in
+     * {@link #getEmailVerified()} accordingly after Google OpenID Connect endpoint fixes the
+     * type of the field in ID Token.
+     */
+    @Key("email_verified")
+    private Object emailVerified;
 
     public Payload() {
     }
@@ -198,9 +203,23 @@ public class GoogleIdToken extends IdToken {
      * </p>
      *
      * @since 1.10
+     *
+     * <p>
+     * Upgrade warning: in prior version 1.16 this method accessed {@code "verified_email"}
+     * and returns a boolean, but starting with verison 1.17, it now accesses
+     * {@code "email_verified"} and returns a Boolean. Previously, if this value was not
+     * specified, this method would return {@code false}, but now it returns {@code null}.
+     * </p>
      */
-    public boolean getEmailVerified() {
-      return emailVerified;
+    public Boolean getEmailVerified() {
+      if (emailVerified == null) {
+        return null;
+      }
+      if (emailVerified instanceof Boolean) {
+        return (Boolean) emailVerified;
+      }
+
+      return Boolean.valueOf((String) emailVerified);
     }
 
     /**
@@ -211,8 +230,14 @@ public class GoogleIdToken extends IdToken {
      * </p>
      *
      * @since 1.10
+     *
+     * <p>
+     * Upgrade warning: in prior version 1.16 this method accessed {@code "verified_email"} and
+     * required a boolean parameter, but starting with verison 1.17, it now accesses
+     * {@code "email_verified"} and requires a Boolean parameter.
+     * </p>
      */
-    public Payload setEmailVerified(boolean emailVerified) {
+    public Payload setEmailVerified(Boolean emailVerified) {
       this.emailVerified = emailVerified;
       return this;
     }
