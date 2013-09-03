@@ -95,6 +95,7 @@ public class MethodOverrideTest extends TestCase {
     new MethodOverride().intercept(request);
     assertEquals(HttpMethods.POST, request.getRequestMethod());
     assertEquals(HttpMethods.GET, request.getHeaders().get(MethodOverride.HEADER));
+    assertEquals(HttpTesting.SIMPLE_GENERIC_URL, request.getUrl());
     char[] arr2 = new char[arr.length + 2];
     Arrays.fill(arr2, 'x');
     arr2[0] = 'a';
