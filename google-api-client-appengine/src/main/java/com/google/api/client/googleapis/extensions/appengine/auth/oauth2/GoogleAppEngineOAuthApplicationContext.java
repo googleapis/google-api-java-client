@@ -25,15 +25,23 @@ import java.util.Collection;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * @author ngmiceli@google.com (Your Name Here)
+ * Thread safe OAuth 2.0 authorization appengine application context. It extends
+ * {@link AppEngineOAuthApplicationContext} and add implementation for both
+ * {@link #getClientSecrets} and {@link #getFlow}.
+ *
+ * @author Nick Miceli
+ * @author Eyal Peled
+ *
+ * @since 1.18
  *
  */
 public class GoogleAppEngineOAuthApplicationContext extends AppEngineOAuthApplicationContext {
 
   private AuthorizationCodeFlow flow;
   private GoogleClientSecrets clientSecrets;
-  private String clientSecretsPath;
-  private ReentrantLock lock = new ReentrantLock();
+
+  private final String clientSecretsPath;
+  private final ReentrantLock lock = new ReentrantLock();
 
   public GoogleAppEngineOAuthApplicationContext(String redirectUri, String clientSecretsPath,
       Collection<String> scopes, String applicationName) {
@@ -42,24 +50,29 @@ public class GoogleAppEngineOAuthApplicationContext extends AppEngineOAuthApplic
   }
 
   protected GoogleClientSecrets getClientSecrets() throws IOException {
-    if (clientSecrets == null) {
-      clientSecrets = GoogleClientSecrets.load(getJsonFactory(), new InputStreamReader(
-          GoogleAppEngineOAuthApplicationContext.class.getResourceAsStream(clientSecretsPath)));
+    lock.lock();
+    try {
+      if (clientSecrets == null) {
+        clientSecrets = GoogleClientSecrets.load(getJsonFactory(), new InputStreamReader(
+            GoogleAppEngineOAuthApplicationContext.class.getResourceAsStream(clientSecretsPath)));
+      }
+    } finally {
+      lock.unlock();
     }
     return clientSecrets;
   }
 
   @Override // TODO(NOW): Lock / thread-safety
   public AuthorizationCodeFlow getFlow() throws IOException {
-    if (flow == null) {
-      try {
-        lock.lock();
+    lock.lock();
+    try {
+      if (flow == null) {
         flow = new GoogleAuthorizationCodeFlow.Builder(getTransport(), getJsonFactory(),
             getClientSecrets(), getScopes()).setDataStoreFactory(getDataStoreFactory())
             .setAccessType("offline").build();
-      } finally {
-        lock.unlock();
       }
+    } finally {
+      lock.unlock();
     }
     return flow;
   }
