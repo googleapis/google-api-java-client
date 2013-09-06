@@ -96,7 +96,9 @@ public final class MethodOverride implements HttpExecuteInterceptor, HttpRequest
       request.getHeaders().set(HEADER, requestMethod);
       if (requestMethod.equals(HttpMethods.GET)) {
         // take the URI query part and put it into the HTTP body
-        request.setContent(new UrlEncodedContent(request.getUrl()));
+        request.setContent(new UrlEncodedContent(request.getUrl().clone()));
+        // remove query parameters from URI
+        request.getUrl().clear();
       } else if (request.getContent() == null) {
         // Google servers will fail to process a POST unless the Content-Length header is specified
         request.setContent(new EmptyContent());

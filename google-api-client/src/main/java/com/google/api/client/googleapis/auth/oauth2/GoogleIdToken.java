@@ -26,7 +26,8 @@ import java.util.List;
 
 /**
  * {@link Beta} <br/>
- * Google ID tokens.
+ * Google ID tokens as specified in <a
+ * href="https://developers.google.com/accounts/docs/OAuth2Login">Using OAuth 2.0 for Login</a>.
  *
  * <p>
  * Google ID tokens contain useful information about the authorized end user. Google ID tokens are
@@ -86,24 +87,9 @@ public class GoogleIdToken extends IdToken {
   /**
    * {@link Beta} <br/>
    * Google ID token payload.
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.15 {@link #getAccessTokenHash()} and
-   * {@link #setAccessTokenHash(String)} accessed {@code "token_hash"}, but starting with version
-   * 1.16 they now access {@code "at_hash"}.
-   * </p>
    */
   @Beta
   public static class Payload extends IdToken.Payload {
-
-    /** Obfuscated Google user ID or {@code null} for none. */
-    @Key("id")
-    private String userId;
-
-    /** Client ID of issuee or {@code null} for none. */
-    @Key("cid")
-    private String issuee;
-
     /** Hosted domain name if asserted user is a domain managed user or {@code null} for none. */
     @Key("hd")
     private String hostedDomain;
@@ -112,33 +98,57 @@ public class GoogleIdToken extends IdToken {
     @Key("email")
     private String email;
 
-    /** {@code true} if the email is verified. */
-    @Key("verified_email")
-    private boolean emailVerified;
+    /**
+     * {@code true} if the email is verified.
+     * TODO(mwan): change the type of the field to Boolean and the handling in
+     * {@link #getEmailVerified()} accordingly after Google OpenID Connect endpoint fixes the
+     * type of the field in ID Token.
+     */
+    @Key("email_verified")
+    private Object emailVerified;
 
     public Payload() {
     }
 
-    /** Returns the obfuscated Google user id or {@code null} for none. */
+    /**
+     * Returns the obfuscated Google user id or {@code null} for none.
+     *
+     * @deprecated (scheduled to be removed in 1.18) Use {@link #getSubject()} instead.
+     */
+    @Deprecated
     public String getUserId() {
-      return userId;
+      return getSubject();
     }
 
-    /** Sets the obfuscated Google user id or {@code null} for none. */
+    /**
+     * Sets the obfuscated Google user id or {@code null} for none.
+     *
+     * @deprecated (scheduled to be removed in 1.18) Use {@link #setSubject(String)} instead.
+     */
+    @Deprecated
     public Payload setUserId(String userId) {
-      this.userId = userId;
-      return this;
+      return setSubject(userId);
     }
 
-    /** Returns the client ID of issuee or {@code null} for none. */
+    /**
+     * Returns the client ID of issuee or {@code null} for none.
+     *
+     * @deprecated (scheduled to be removed in 1.18) Use {@link #getAuthorizedParty()} instead.
+     */
+    @Deprecated
     public String getIssuee() {
-      return issuee;
+      return getAuthorizedParty();
     }
 
-    /** Sets the client ID of issuee or {@code null} for none. */
+    /**
+     * Sets the client ID of issuee or {@code null} for none.
+     *
+     * @deprecated (scheduled to be removed in 1.18) Use {@link #setAuthorizedParty(String)}
+     *             instead.
+     */
+    @Deprecated
     public Payload setIssuee(String issuee) {
-      this.issuee = issuee;
-      return this;
+      return setAuthorizedParty(issuee);
     }
 
     /**
@@ -193,9 +203,23 @@ public class GoogleIdToken extends IdToken {
      * </p>
      *
      * @since 1.10
+     *
+     * <p>
+     * Upgrade warning: in prior version 1.16 this method accessed {@code "verified_email"}
+     * and returns a boolean, but starting with verison 1.17, it now accesses
+     * {@code "email_verified"} and returns a Boolean. Previously, if this value was not
+     * specified, this method would return {@code false}, but now it returns {@code null}.
+     * </p>
      */
-    public boolean getEmailVerified() {
-      return emailVerified;
+    public Boolean getEmailVerified() {
+      if (emailVerified == null) {
+        return null;
+      }
+      if (emailVerified instanceof Boolean) {
+        return (Boolean) emailVerified;
+      }
+
+      return Boolean.valueOf((String) emailVerified);
     }
 
     /**
@@ -206,8 +230,14 @@ public class GoogleIdToken extends IdToken {
      * </p>
      *
      * @since 1.10
+     *
+     * <p>
+     * Upgrade warning: in prior version 1.16 this method accessed {@code "verified_email"} and
+     * required a boolean parameter, but starting with verison 1.17, it now accesses
+     * {@code "email_verified"} and requires a Boolean parameter.
+     * </p>
      */
-    public Payload setEmailVerified(boolean emailVerified) {
+    public Payload setEmailVerified(Boolean emailVerified) {
       this.emailVerified = emailVerified;
       return this;
     }

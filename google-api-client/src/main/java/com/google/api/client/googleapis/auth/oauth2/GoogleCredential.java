@@ -65,8 +65,7 @@ import java.util.Collections;
  * </p>
  *
  * <pre>
-  public static GoogleCredential createCredentialWithAccessTokenOnly(
-      HttpTransport transport, JsonFactory jsonFactory, TokenResponse tokenResponse) {
+  public static GoogleCredential createCredentialWithAccessTokenOnly(TokenResponse tokenResponse) {
     return new GoogleCredential().setFromTokenResponse(tokenResponse);
   }
  * </pre>
