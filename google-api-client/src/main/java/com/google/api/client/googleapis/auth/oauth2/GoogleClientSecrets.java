@@ -183,10 +183,21 @@ public final class GoogleClientSecrets extends GenericJson {
   /**
    * Loads the {@code client_secrets.json} file from the given reader.
    *
+   * <p>
+   * Upgrade warning: in prior version 1.17 {@link #load} didn't throw
+   * {@link IllegalArgumentException} in case the client id or the client secret started with
+   * 'Enter', but starting with version 1.18 it will throw {@link IllegalArgumentException}.
+   * </p>
+   *
    * @since 1.15
    */
   public static GoogleClientSecrets load(JsonFactory jsonFactory, Reader reader)
       throws IOException {
-    return jsonFactory.fromReader(reader, GoogleClientSecrets.class);
+    GoogleClientSecrets clientSecrets = jsonFactory.fromReader(reader, GoogleClientSecrets.class);
+    Preconditions.checkArgument(!clientSecrets.getDetails().getClientId().startsWith("Enter ")
+        && !clientSecrets.getDetails().getClientSecret().startsWith("Enter "),
+        "Download client_secrets.json file from https://code.google.com/apis/console/"
+        + " into your resources folder.");
+    return clientSecrets;
   }
 }
