@@ -2,6 +2,7 @@
 
 <FindBugsFilter>
   <!-- http://findbugs.sourceforge.net/bugDescriptions.html -->
+  <!-- http://findbugs.sourceforge.net/manual/filter.html -->
   <LastVersion value="-1" relOp="NEQ"/>
   <!-- The following have not yet been investigated -->
 
@@ -59,5 +60,9 @@
   <And>
     <Bug pattern="BETA_METHOD_USAGE"/>
     <Class name="com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow$Builder"/>
+  </And>
+  <And>
+    <Bug pattern="NP_BOOLEAN_RETURN_NULL"/>
+    <!-- Method with Boolean return type returns explicit null -->
   </And>
 </FindBugsFilter>
