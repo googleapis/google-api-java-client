@@ -42,25 +42,29 @@ import java.util.concurrent.locks.ReentrantLock;
  * @since 1.18
  */
 public class GoogleOAuthInstalledAppContext implements OAuthApplicationContext {
+
   private AuthorizationCodeFlow flow;
   private GoogleClientSecrets clientSecrets;
-  private DataStoreFactory dataStoreFactory;
 
+  private final DataStoreFactory dataStoreFactory;
   private final String clientSecretsPath;
   private final Collection<String> scopes;
   private final String applicationName;
 
   private final ReentrantLock lock = new ReentrantLock();
 
-
+  /**
+   * Constructs a new OAuth context for installed applications.
+   *
+   * @param clientSecretsPath path to the client secrets Json file
+   * @param scopes scopes
+   * @param applicationName application name
+   */
   public GoogleOAuthInstalledAppContext(
-      String clientSecretsPath, Collection<String> scopes, String applicationName) {
-    try {
-      dataStoreFactory = new FileDataStoreFactory(
-          new java.io.File(System.getProperty("user.home"), ".store/" + applicationName));
-    } catch (IOException exception) {
-      System.exit(1);
-    }
+      String clientSecretsPath, Collection<String> scopes, String applicationName)
+      throws IOException {
+    dataStoreFactory = new FileDataStoreFactory(
+        new java.io.File(System.getProperty("user.home"), ".store/" + applicationName));
     this.clientSecretsPath = clientSecretsPath;
     this.applicationName = applicationName;
     this.scopes = scopes;
@@ -76,7 +80,7 @@ public class GoogleOAuthInstalledAppContext implements OAuthApplicationContext {
     return JacksonFactory.getDefaultInstance();
   }
 
-  @Override // TODO(NOW): Lock / thread-safety
+  @Override
   public AuthorizationCodeFlow getFlow() throws IOException {
     lock.lock();
     try {
@@ -106,6 +110,9 @@ public class GoogleOAuthInstalledAppContext implements OAuthApplicationContext {
     return scopes;
   }
 
+  /**
+   * Returns the Google client secrets which contains the client identifier and client secret
+   */
   protected GoogleClientSecrets getClientSecrets() throws IOException {
     lock.lock();
     try {
