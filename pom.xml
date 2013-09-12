@@ -465,6 +465,7 @@
                 <link>http://javadoc.google-oauth-java-client.googlecode.com/hg/${project.oauth.version}</link>
               </links>
               <doctitle>Google API Client Library for Java ${project.version}</doctitle>
+              <overview>${basedir}/overview.html</overview>
               <groups>
                 <group>
                   <title>google-api-client</title>
