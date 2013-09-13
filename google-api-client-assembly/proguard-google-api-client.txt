@@ -17,3 +17,7 @@
 # Needed by google-api-client-android when linking against an older platform version
 
 -dontwarn com.google.api.client.googleapis.extensions.android.**
+
+# Needed by google-play-services when linking against an older platform version
+
+-dontwarn com.google.android.gms.**
