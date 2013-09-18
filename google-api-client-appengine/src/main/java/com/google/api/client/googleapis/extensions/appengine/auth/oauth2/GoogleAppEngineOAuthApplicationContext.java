@@ -15,7 +15,7 @@
 package com.google.api.client.googleapis.extensions.appengine.auth.oauth2;
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
-import com.google.api.client.extensions.appengine.auth.oauth2.AppEngineOAuthApplicationContext;
+import com.google.api.client.extensions.appengine.auth.oauth2.AppEngineOAuthContext;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 
@@ -26,7 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Thread safe OAuth 2.0 authorization appengine application context. It extends
- * {@link AppEngineOAuthApplicationContext} and add implementation for both
+ * {@link AppEngineOAuthContext} and add implementation for both
  * {@link #getClientSecrets} and {@link #getFlow}.
  *
  * @author Nick Miceli
@@ -35,7 +35,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @since 1.18
  *
  */
-public class GoogleAppEngineOAuthApplicationContext extends AppEngineOAuthApplicationContext {
+public class GoogleAppEngineOAuthApplicationContext extends AppEngineOAuthContext {
 
   private AuthorizationCodeFlow flow;
   private GoogleClientSecrets clientSecrets;

@@ -15,7 +15,7 @@
 package com.google.api.client.googleapis.extensions.appengine.utils;
 
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.auth.oauth2.OAuthApplicationContext;
+import com.google.api.client.auth.oauth2.OAuthContext;
 import com.google.api.client.googleapis.services.json.AbstractGoogleJsonClient;
 import com.google.api.client.googleapis.services.json.AbstractGoogleJsonClient.Builder;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -34,7 +34,7 @@ import java.lang.reflect.InvocationTargetException;
 public class ServiceFactory {
 
   public static <T extends AbstractGoogleJsonClient> T createService(
-      Class<T> service, OAuthApplicationContext context)
+      Class<T> service, OAuthContext context)
       throws IOException {
     for (Class<?> builderClass : service.getDeclaredClasses()) {
       if (AbstractGoogleJsonClient.Builder.class.isAssignableFrom(builderClass)) {
@@ -46,7 +46,7 @@ public class ServiceFactory {
           // TODO(NOW): Do we want to allow the user to pass their own HttpRequestInitializer?
           AbstractGoogleJsonClient.Builder builder = (Builder) constructor.newInstance(
               context.getTransport(), context.getJsonFactory(), credential);
-          builder.setApplicationName(context.getApplicationName());
+          builder.setApplicationName(context.getUserAgent());
           @SuppressWarnings("unchecked")
           T t = (T) builder.build();
           return t;
