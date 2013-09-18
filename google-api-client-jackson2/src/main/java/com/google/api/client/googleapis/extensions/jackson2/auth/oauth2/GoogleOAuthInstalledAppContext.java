@@ -15,7 +15,7 @@
 package com.google.api.client.googleapis.extensions.jackson2.auth.oauth2;
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
-import com.google.api.client.auth.oauth2.OAuthApplicationContext;
+import com.google.api.client.auth.oauth2.OAuthContext;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.HttpTransport;
@@ -32,7 +32,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Thread safe OAuth 2.0 authorization context for installed application. It implements
- * {@link OAuthApplicationContext} with default values such as
+ * {@link OAuthContext} with default values such as
  * {@link NetHttpTransport#getDefaultInstance} as the HTTP transport and
  * {@link JacksonFactory#getDefaultInstance} as the JSON factory.
  *
@@ -41,7 +41,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @since 1.18
  */
-public class GoogleOAuthInstalledAppContext implements OAuthApplicationContext {
+public class GoogleOAuthInstalledAppContext implements OAuthContext {
 
   private AuthorizationCodeFlow flow;
   private GoogleClientSecrets clientSecrets;
@@ -101,7 +101,7 @@ public class GoogleOAuthInstalledAppContext implements OAuthApplicationContext {
   }
 
   @Override
-  public String getApplicationName() {
+  public String getUserAgent() {
     return applicationName;
   }
 
