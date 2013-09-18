@@ -9,38 +9,43 @@
   <files>
     <file>
       <source>LICENSE.txt</source>
+      <outputDirectory>google-api-java-client</outputDirectory>
     </file>
     <file>
       <source>classpath-include</source>
       <filtered>true</filtered>
+      <outputDirectory>google-api-java-client</outputDirectory>
     </file>
     <file>
       <source>proguard-google-api-client.txt</source>
+      <outputDirectory>google-api-java-client</outputDirectory>
     </file>
     <file>
       <source>readme.html</source>
       <filtered>true</filtered>
+      <outputDirectory>google-api-java-client</outputDirectory>
     </file>
   </files>
   <fileSets>
     <fileSet>
       <directory>dependencies</directory>
+      <outputDirectory>google-api-java-client/dependencies</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>target/libs</directory>
       <excludes>
         <exclude>*.pom</exclude>
       </excludes>
-      <outputDirectory>libs</outputDirectory>
+      <outputDirectory>google-api-java-client/libs</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>android-properties</directory>
-      <outputDirectory>libs</outputDirectory>
+      <outputDirectory>google-api-java-client/libs</outputDirectory>
       <filtered>true</filtered>
     </fileSet>
     <fileSet>
       <directory>target/libs-sources</directory>
-      <outputDirectory>libs-sources</outputDirectory>
+      <outputDirectory>google-api-java-client/libs-sources</outputDirectory>
     </fileSet>
   </fileSets>
 </assembly>
