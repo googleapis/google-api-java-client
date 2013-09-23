@@ -12,7 +12,7 @@
 
 /**
  * {@link com.google.api.client.util.Beta} <br/>
- * Test utilities for the {@code com.google.api.client.googleapis} package.
+ * Test utilities for the {@code com.google.api.client.googleapis.services} package.
  *
  * @since 1.12
  * @author Yaniv Inbar
