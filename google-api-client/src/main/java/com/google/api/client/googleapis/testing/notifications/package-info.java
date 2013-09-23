@@ -14,7 +14,7 @@
 
 /**
  * {@link com.google.api.client.util.Beta} <br/>
- * Test utilities for the notifications extension package.
+ * Test utilities for the {@code com.google.api.client.googleapis.notifications} package.
  *
  * @author Yaniv Inbar
  * @author Matthias Linder (mlinder)
