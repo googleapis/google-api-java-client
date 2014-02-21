@@ -14,6 +14,8 @@
 
 package com.google.api.client.googleapis.compute;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
+
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
@@ -38,27 +40,36 @@ public class ComputeCredentialTest extends TestCase {
 
   static final String TOKEN_TYPE = "Bearer";
 
-  public void testExecuteRefreshToken() throws Exception {
-    HttpTransport transport = new MockHttpTransport() {
+  static final String URL =
+      "http://metadata/computeMetadata/v1/instance/service-accounts/default/token";
 
+  public void testExecuteRefreshToken() throws Exception {
+    String content = "{" + "\"access_token\":\"" + ACCESS_TOKEN + "\"," + "\"expires_in\":"
+        + EXPIRES_IN_SECONDS + "," + "\"token_type\":\"" + TOKEN_TYPE + "\"" + "}";
+    final MockLowLevelHttpRequest request = new MockLowLevelHttpRequest(URL).setResponse(
+        new MockLowLevelHttpResponse().setContent(content).setContentType(Json.MEDIA_TYPE));
+
+    HttpTransport transport = new MockHttpTransport() {
       private int count = 0;
 
       @Override
       public LowLevelHttpRequest buildRequest(String method, String url) {
         assertEquals(1, ++count);
         assertEquals("GET", method);
-        assertEquals(
-            "http://metadata/computeMetadata/v1beta1/instance/service-accounts/default/token", url);
-        String content = "{" + "\"access_token\":\"" + ACCESS_TOKEN + "\"," + "\"expires_in\":"
-            + EXPIRES_IN_SECONDS + "," + "\"token_type\":\"" + TOKEN_TYPE + "\"" + "}";
-        return new MockLowLevelHttpRequest(url).setResponse(
-            new MockLowLevelHttpResponse().setContent(content).setContentType(Json.MEDIA_TYPE));
+        assertEquals(URL, url);
+
+        return request;
       }
     };
+
     ComputeCredential cred = new ComputeCredential(transport, new JacksonFactory());
     TokenResponse response = cred.executeRefreshToken();
     assertEquals(ACCESS_TOKEN, response.getAccessToken());
     assertEquals(EXPIRES_IN_SECONDS, response.getExpiresInSeconds().longValue());
     assertEquals(TOKEN_TYPE, response.getTokenType());
+
+    // Verify that the request had the metadata-request header configured properly
+    assertEquals("true", getOnlyElement(request.getHeaderValues(
+        "X-Google-Metadata-Request")));
   }
 }
