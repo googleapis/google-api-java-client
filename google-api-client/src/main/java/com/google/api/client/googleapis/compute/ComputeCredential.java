@@ -61,7 +61,7 @@ public class ComputeCredential extends Credential {
 
   /** Metadata Service Account token server encoded URL. */
   public static final String TOKEN_SERVER_ENCODED_URL =
-      "http://metadata/computeMetadata/v1beta1/instance/service-accounts/default/token";
+      "http://metadata/computeMetadata/v1/instance/service-accounts/default/token";
 
   /**
    * @param transport HTTP transport
@@ -83,6 +83,7 @@ public class ComputeCredential extends Credential {
     GenericUrl tokenUrl = new GenericUrl(getTokenServerEncodedUrl());
     HttpRequest request = getTransport().createRequestFactory().buildGetRequest(tokenUrl);
     request.setParser(new JsonObjectParser(getJsonFactory()));
+    request.getHeaders().set("X-Google-Metadata-Request", true);
     return request.execute().parseAs(TokenResponse.class);
   }
 
