@@ -38,6 +38,7 @@ public class GoogleIdTokenTest extends TestCase {
     return payload;
   }
 
+  @SuppressWarnings("deprecation")
   public void testDeprecatedMethods() {
     Payload payload = newPayload(USER_ID, CLIENT_ID);
     assertEquals(USER_ID, payload.getUserId());

@@ -60,7 +60,7 @@ public final class GoogleJsonResponseExceptionFactoryTesting {
         new MockLowLevelHttpResponse()
         .setStatusCode(httpCode)
         .setReasonPhrase(reasonPhrase);
-    MockHttpTransport otherTransport = MockHttpTransport.builder()
+    MockHttpTransport otherTransport = new MockHttpTransport.Builder()
         .setLowLevelHttpResponse(otherServiceUnavaiableLowLevelResponse)
         .build();
     HttpRequest otherRequest = otherTransport

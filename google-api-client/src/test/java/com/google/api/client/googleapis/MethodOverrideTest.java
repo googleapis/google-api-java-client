@@ -54,7 +54,7 @@ public class MethodOverrideTest extends TestCase {
     subtestIntercept(ImmutableSet.<String>of(), new MockHttpTransport(), new MethodOverride());
     subtestIntercept(OVERRIDDEN_METHODS, new MockHttpTransport(),
         new MethodOverride.Builder().setOverrideAllMethods(true).build());
-    subtestIntercept(OVERRIDDEN_METHODS, MockHttpTransport.builder()
+    subtestIntercept(OVERRIDDEN_METHODS, new MockHttpTransport.Builder()
         .setSupportedMethods(ImmutableSet.<String>of(HttpMethods.GET, HttpMethods.POST)).build(),
         new MethodOverride());
   }
