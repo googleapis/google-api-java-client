@@ -14,17 +14,14 @@
 
 package com.google.api.client.googleapis.auth.oauth2;
 
-import com.google.api.client.http.LowLevelHttpRequest;
-import com.google.api.client.json.Json;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
-import com.google.api.client.testing.http.MockHttpTransport;
-import com.google.api.client.testing.http.MockLowLevelHttpRequest;
-import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.testing.util.SecurityTestUtils;
 
 import junit.framework.TestCase;
 
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Tests {@link GoogleCredential}.
@@ -33,21 +30,47 @@ import java.util.Collections;
  */
 public class GoogleCredentialTest extends TestCase {
 
-  public void testRefreshToken_ServiceAccounts() throws Exception {
-    GoogleCredential credential = new GoogleCredential.Builder().setServiceAccountId("id")
-        .setServiceAccountScopes(Collections.singleton("scope"))
-        .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
-        .setTransport(new MockHttpTransport() {
+  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
-            @Override
-          public LowLevelHttpRequest buildRequest(String method, String url) {
-            MockLowLevelHttpResponse response = new MockLowLevelHttpResponse().setContentType(
-                Json.MEDIA_TYPE).setContent("{\"refresh_token\":\"abc\"}");
-            return new MockLowLevelHttpRequest(url).setResponse(response);
-          }
-        }).setJsonFactory(new JacksonFactory()).setClientSecrets("clientId", "clientSecret")
+  private static final Collection<String> SCOPES = Arrays.asList("scope1", "scope2");
+
+  public void testRefreshToken_ServiceAccounts() throws Exception {
+    final String SA_EMAIL= "36680232662-vrd7ji19q3ne0ah2csanun6bnr@developer.gserviceaccount.com";
+    final String ACCESS_TOKEN = "1/MkSJoj1xsli0AccessToken_NKPY2";
+
+    MockTokenServerTransport transport = new MockTokenServerTransport();
+    transport.addServiceAccount(SA_EMAIL, ACCESS_TOKEN);
+
+    GoogleCredential credential = new GoogleCredential.Builder()
+        .setServiceAccountId(SA_EMAIL)
+        .setServiceAccountScopes(SCOPES)
+        .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
+        .setTransport(transport)
+        .setJsonFactory(JSON_FACTORY)
         .build();
+
     assertTrue(credential.refreshToken());
-    assertEquals("abc", credential.getRefreshToken());
+    assertEquals(ACCESS_TOKEN, credential.getAccessToken());
+  }
+
+  public void testRefreshToken_User() throws Exception {
+    final String ACCESS_TOKEN = "1/MkSJoj1xsli0AccessToken_NKPY2";
+    final String CLIENT_SECRET = "jakuaL9YyieakhECKL2SwZcu";
+    final String CLIENT_ID = "ya29.1.AADtN_UtlxN3PuGAxrN2XQnZTVRvDyVWnYq4I6dws";
+    final String REFRESH_TOKEN = "1/Tl6awhpFjkMkSJoj1xsli0H2eL5YsMgU_NKPY2TyGWY";
+
+    MockTokenServerTransport transport = new MockTokenServerTransport();
+    transport.addClient(CLIENT_ID, CLIENT_SECRET);
+    transport.addRefreshToken(REFRESH_TOKEN, ACCESS_TOKEN);
+
+    GoogleCredential credential = new GoogleCredential.Builder()
+        .setClientSecrets(CLIENT_ID, CLIENT_SECRET)
+        .setTransport(transport)
+        .setJsonFactory(JSON_FACTORY)
+        .build();
+    credential.setRefreshToken(REFRESH_TOKEN);
+
+    assertTrue(credential.refreshToken());
+    assertEquals(ACCESS_TOKEN, credential.getAccessToken());
   }
 }
