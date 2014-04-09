@@ -14,8 +14,14 @@
 
 package com.google.api.client.googleapis.extensions.appengine.auth.oauth2;
 
+import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.testing.http.MockHttpTransport;
+
 import junit.framework.TestCase;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,5 +43,25 @@ public class AppIdentityCredentialTest extends TestCase {
     assertTrue(Arrays.deepEquals(SCOPES.toArray(), builder.getScopes().toArray()));
     AppIdentityCredential credential = builder.build();
     assertTrue(Arrays.deepEquals(SCOPES.toArray(), credential.getScopes().toArray()));
+  }
+
+  public void testUsesAppIdentityService() throws IOException {
+    final String EXPECTED_ACCESS_TOKEN = "ExpectedAccessToken";
+
+    MockAppIdentityService appIdentity = new MockAppIdentityService();
+    appIdentity.setAccessTokenText(EXPECTED_ACCESS_TOKEN);
+    AppIdentityCredential.Builder builder = new AppIdentityCredential.Builder(SCOPES);
+    builder.setAppIdentityService(appIdentity);
+    AppIdentityCredential appCredential = builder.build();
+    HttpTransport transport = new MockHttpTransport();
+    HttpRequest request = transport.createRequestFactory().buildRequest(
+        "get", null, null);
+
+    appCredential.intercept(request);
+
+    assertEquals(appIdentity.getGetAccessTokenCallCount(), 1);
+    HttpHeaders headers = request.getHeaders();
+    String authHeader = headers.getAuthorization();
+    assertTrue(authHeader.contains(EXPECTED_ACCESS_TOKEN));
   }
 }
