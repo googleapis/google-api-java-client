@@ -14,7 +14,7 @@ package com.google.api.client.googleapis.services.json;
 
 import com.google.api.client.googleapis.testing.services.json.MockGoogleJsonClient;
 import com.google.api.client.http.HttpContent;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.util.Key;
