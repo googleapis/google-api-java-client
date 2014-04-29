@@ -14,10 +14,19 @@
 
 package com.google.api.client.googleapis;
 
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+
 import junit.framework.TestCase;
 
+import java.io.IOException;
+import java.net.URLDecoder;
 import java.security.KeyStore;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Tests {@link GoogleUtils}.
@@ -37,4 +46,36 @@ public class GoogleUtilsTest extends TestCase {
     // has been added or removed
     assertEquals(70, trustStore.size());
   }
+
+  public void testGetDefaultJsonFactory() {
+    JsonFactory jsonFactory = GoogleUtils.getDefaultJsonFactory();
+    assertNotNull(jsonFactory);
+    assertTrue(jsonFactory instanceof JacksonFactory);
+    JsonFactory secondCall = GoogleUtils.getDefaultJsonFactory();
+    assertSame(jsonFactory, secondCall);
+  }
+
+  public void testGetDefaultTransport() {
+    HttpTransport transport = GoogleUtils.getDefaultTransport();
+    assertNotNull(transport);
+    assertTrue(transport instanceof NetHttpTransport);
+    HttpTransport secondCall = GoogleUtils.getDefaultTransport();
+    assertSame(transport, secondCall);
+  }
+
+  public static Map<String, String> parseQuery(String query) throws IOException {
+    Map<String, String> map = new HashMap<String, String>();
+    String[] entries = query.split("&");
+    for (String entry : entries) {
+      String[] sides = entry.split("=");
+      if (sides.length != 2) {
+        throw new IOException("Invalid Query String");
+      }
+      String key = URLDecoder.decode(sides[0], "UTF-8");
+      String value = URLDecoder.decode(sides[1], "UTF-8");
+      map.put(key, value);
+    }
+    return map;
+  }
+
 }

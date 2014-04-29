@@ -17,7 +17,7 @@ package com.google.api.client.googleapis.auth.oauth2;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.util.SecurityTestUtils;
 import com.google.api.client.util.Joiner;

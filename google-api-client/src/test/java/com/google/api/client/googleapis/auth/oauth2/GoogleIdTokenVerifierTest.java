@@ -16,7 +16,7 @@ package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.auth.openidconnect.IdTokenVerifier;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.json.webtoken.JsonWebSignature.Header;
 import com.google.api.client.testing.http.FixedClock;
 import com.google.api.client.util.Clock;

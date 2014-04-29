@@ -64,12 +64,11 @@
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-gson</artifactId>
-      <scope>test</scope>
+      <artifactId>google-http-client-jackson2</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-jackson</artifactId>
+      <artifactId>google-http-client-gson</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

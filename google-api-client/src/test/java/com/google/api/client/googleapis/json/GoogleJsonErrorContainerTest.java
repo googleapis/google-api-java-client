@@ -16,7 +16,7 @@ package com.google.api.client.googleapis.json;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 
 import junit.framework.TestCase;
 

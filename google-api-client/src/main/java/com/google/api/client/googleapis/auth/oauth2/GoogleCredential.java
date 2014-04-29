@@ -21,6 +21,7 @@ import com.google.api.client.auth.oauth2.CredentialRefreshListener;
 import com.google.api.client.auth.oauth2.DataStoreCredentialRefreshListener;
 import com.google.api.client.auth.oauth2.TokenRequest;
 import com.google.api.client.auth.oauth2.TokenResponse;
+import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets.Details;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteInterceptor;
@@ -182,6 +183,23 @@ public class GoogleCredential extends Credential {
    * environment variable GOOGLE_CREDENTIALS_DEFAULT.
    * </p>
    *
+   * @return the credential instance.
+   * @throws IOException if the credential cannot be created in the current environment.
+   */
+  @Beta
+  public static GoogleCredential getDefault() throws IOException {
+    return getDefault(GoogleUtils.getDefaultTransport(), GoogleUtils.getDefaultJsonFactory());
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Returns a default credential for the application.
+   *
+   * <p>Returns the built-in service account's credential for the application if running on
+   * Google App Engine or Google Compute Engine, or returns the credential pointed to by the
+   * environment variable GOOGLE_CREDENTIALS_DEFAULT.
+   * </p>
+   *
    * @param transport the transport for Http calls.
    * @param jsonFactory the factory for Json parsing and formatting.
    * @return the credential instance.
@@ -193,6 +211,22 @@ public class GoogleCredential extends Credential {
     Preconditions.checkNotNull(transport);
     Preconditions.checkNotNull(jsonFactory);
     return defaultCredentialProvider.getDefaultCredential(transport, jsonFactory);
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Return a credential defined by a Json file.
+   *
+   * @param credentialStream the stream with the credential definition.
+   * @return the credential defined by the credentialStream.
+   * @throws IOException if the credential cannot be created from the stream.
+   */
+  @Beta
+  public static GoogleCredential fromStream(InputStream credentialStream) throws IOException {
+     return fromStream(
+        credentialStream,
+        GoogleUtils.getDefaultTransport(),
+        GoogleUtils.getDefaultJsonFactory());
   }
 
   /**
