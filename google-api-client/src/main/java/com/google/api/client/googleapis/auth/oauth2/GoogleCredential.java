@@ -27,13 +27,16 @@ import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
+import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.webtoken.JsonWebSignature;
 import com.google.api.client.json.webtoken.JsonWebToken;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
 import com.google.api.client.util.Joiner;
 import com.google.api.client.util.PemReader;
+import com.google.api.client.util.PemReader.Section;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.store.DataStoreFactory;
@@ -42,8 +45,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.security.GeneralSecurityException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Collection;
 import java.util.Collections;
@@ -156,6 +165,71 @@ import java.util.Collections;
  * @author Yaniv Inbar
  */
 public class GoogleCredential extends Credential {
+
+  static final String USER_FILE_TYPE = "authorized_user";
+  static final String SERVICE_ACCOUNT_FILE_TYPE = "service_account";
+
+  @Beta
+  private static DefaultCredentialProvider defaultCredentialProvider =
+      new DefaultCredentialProvider();
+
+  /**
+   * {@link Beta} <br/>
+   * Returns a default credential for the application.
+   *
+   * <p>Returns the built-in service account's credential for the application if running on
+   * Google App Engine or Google Compute Engine, or returns the credential pointed to by the
+   * environment variable GOOGLE_CREDENTIALS_DEFAULT.
+   * </p>
+   *
+   * @param transport the transport for Http calls.
+   * @param jsonFactory the factory for Json parsing and formatting.
+   * @return the credential instance.
+   * @throws IOException if the credential cannot be created in the current environment.
+   */
+  @Beta
+  public static GoogleCredential getDefault(HttpTransport transport, JsonFactory jsonFactory)
+      throws IOException {
+    Preconditions.checkNotNull(transport);
+    Preconditions.checkNotNull(jsonFactory);
+    return defaultCredentialProvider.getDefaultCredential(transport, jsonFactory);
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Return a credential defined by a Json file.
+   *
+   * @param credentialStream the stream with the credential definition.
+   * @param transport the transport for Http calls.
+   * @param jsonFactory the factory for Json parsing and formatting.
+   * @return the credential defined by the credentialStream.
+   * @throws IOException if the credential cannot be created from the stream.
+   */
+  @Beta
+  public static GoogleCredential fromStream(InputStream credentialStream, HttpTransport transport,
+      JsonFactory jsonFactory) throws IOException {
+    Preconditions.checkNotNull(credentialStream);
+    Preconditions.checkNotNull(transport);
+    Preconditions.checkNotNull(jsonFactory);
+
+    JsonObjectParser parser = new JsonObjectParser(jsonFactory);
+    GenericJson fileContents = parser.parseAndClose(
+        credentialStream, OAuth2Utils.UTF_8, GenericJson.class);
+    String fileType = (String) fileContents.get("type");
+    if (fileType == null) {
+      throw new IOException("Error reading credentials from stream, 'type' field not specified.");
+    }
+    if (USER_FILE_TYPE.equals(fileType)) {
+      return fromStreamUser(fileContents, transport, jsonFactory);
+    }
+    if (SERVICE_ACCOUNT_FILE_TYPE.equals(fileType)) {
+      return fromStreamServiceAccount(fileContents, transport, jsonFactory);
+    }
+    throw new IOException(String.format(
+        "Error reading credentials from stream, 'type' value '%s' not recognized."
+            + " Expecting '%s' or '%s'.",
+        fileType, USER_FILE_TYPE, SERVICE_ACCOUNT_FILE_TYPE));
+  }
 
   /**
    * Service account ID (typically an e-mail address) or {@code null} if not using the service
@@ -323,6 +397,40 @@ public class GoogleCredential extends Credential {
   @Beta
   public final String getServiceAccountUser() {
     return serviceAccountUser;
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Indicates whether the credential requires scopes to be specified by calling createScoped
+   * before use.
+   */
+  @Beta
+  public boolean createScopedRequired() {
+    if (serviceAccountPrivateKey == null) {
+      return false;
+    }
+    return (serviceAccountScopes == null || serviceAccountScopes.isEmpty());
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * For credentials that require scopes, creates a copy of the credential with the specified
+   * scopes.
+   */
+  @Beta
+  public GoogleCredential createScoped(Collection<String> scopes) {
+    if (serviceAccountPrivateKey == null) {
+      return this;
+    }
+    return new GoogleCredential.Builder()
+        .setServiceAccountPrivateKey(serviceAccountPrivateKey)
+        .setServiceAccountId(serviceAccountId)
+        .setServiceAccountUser(serviceAccountUser)
+        .setServiceAccountScopes(scopes)
+        .setTransport(getTransport())
+        .setJsonFactory(getJsonFactory())
+        .setClock(getClock())
+        .build();
   }
 
   /**
@@ -584,5 +692,79 @@ public class GoogleCredential extends Credential {
     public Builder setClientAuthentication(HttpExecuteInterceptor clientAuthentication) {
       return (Builder) super.setClientAuthentication(clientAuthentication);
     }
+  }
+
+  @Beta
+  private static GoogleCredential fromStreamUser(GenericJson fileContents, HttpTransport transport,
+      JsonFactory jsonFactory) throws IOException {
+    String clientId = (String) fileContents.get("client_id");
+    String clientSecret = (String) fileContents.get("client_secret");
+    String refreshToken = (String) fileContents.get("refresh_token");
+    if (clientId == null || clientSecret == null || refreshToken == null) {
+      throw new IOException("Error reading user credential from stream, "
+          + " expecting 'client_id', 'client_secret' and 'refresh_token'.");
+    }
+
+    GoogleCredential credential = new GoogleCredential.Builder()
+        .setClientSecrets(clientId, clientSecret)
+        .setTransport(transport)
+        .setJsonFactory(jsonFactory)
+        .build();
+    credential.setRefreshToken(refreshToken);
+
+    // Do a refresh so we can fail early rather than return an unusable credential
+    credential.refreshToken();
+    return credential;
+  }
+
+  @Beta
+  private static GoogleCredential fromStreamServiceAccount(GenericJson fileContents,
+      HttpTransport transport, JsonFactory jsonFactory) throws IOException {
+    String clientId = (String) fileContents.get("client_id");
+    String clientEmail = (String) fileContents.get("client_email");
+    String privateKeyPem = (String) fileContents.get("private_key");
+    String privateKeyId = (String) fileContents.get("private_key_id");
+    if (clientId == null || clientEmail == null || privateKeyPem == null || privateKeyId == null) {
+      throw new IOException("Error reading service account credential from stream, "
+          + "expecting  'client_id', 'client_email', 'private_key' and 'private_key_id'.");
+    }
+
+    PrivateKey privateKey = privateKeyFromPkcs8(privateKeyPem);
+
+    Collection<String> emptyScopes = Collections.emptyList();
+
+    GoogleCredential credential = new GoogleCredential.Builder()
+        .setTransport(transport)
+        .setJsonFactory(jsonFactory)
+        .setServiceAccountId(clientEmail)
+        .setServiceAccountScopes(emptyScopes)
+        .setServiceAccountPrivateKey(privateKey)
+        .build();
+
+    // Don't do a refresh at this point, as it will always fail before the scopes are added.
+    return credential;
+  }
+
+  @Beta
+  private static PrivateKey privateKeyFromPkcs8(String privateKeyPem) throws IOException {
+    Reader reader = new StringReader(privateKeyPem);
+    Section section = PemReader.readFirstSectionAndClose(reader, "PRIVATE KEY");
+    if (section == null) {
+      throw new IOException("Invalid PKCS8 data.");
+    }
+    byte[] bytes = section.getBase64DecodedBytes();
+    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(bytes);
+    Exception unexpectedException = null;
+    try {
+      KeyFactory keyFactory = SecurityUtils.getRsaKeyFactory();
+      PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
+      return privateKey;
+    } catch (NoSuchAlgorithmException exception) {
+      unexpectedException = exception;
+    } catch (InvalidKeySpecException exception) {
+      unexpectedException = exception;
+    }
+    throw OAuth2Utils.exceptionWithCause(
+        new IOException("Unexpected exception reading PKCS data"), unexpectedException);
   }
 }

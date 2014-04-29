@@ -15,9 +15,14 @@
 package com.google.api.client.googleapis.extensions.appengine.auth.oauth2;
 
 import com.google.api.client.auth.oauth2.BearerToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.util.Beta;
+import com.google.api.client.util.Preconditions;
 import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
 
@@ -180,6 +185,77 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
      */
     public final Collection<String> getScopes() {
       return scopes;
+    }
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Credential wrapper for application identity that inherits from GoogleCredential.
+   */
+  @Beta
+  public static class AppEngineCredentialWrapper extends GoogleCredential {
+
+    private final AppIdentityCredential appIdentity;
+    private final boolean scopesRequired;
+
+    /**
+     * Constructs the wrapper using the default AppIdentityService.
+     *
+     * @param transport the transport for Http calls.
+     * @param jsonFactory the factory for Json parsing and formatting.
+     * @throws IOException if the credential cannot be created for the current environment,
+     *                     such as when the AppIndentityService is not available.
+     */
+    public AppEngineCredentialWrapper(HttpTransport transport, JsonFactory jsonFactory)
+        throws IOException {
+      // May be called via reflection to test whether running on App Engine, so fail even if
+      // the type can be loaded but the service is not available.
+      this(getCheckedAppIdentityCredential(), Preconditions.checkNotNull(transport),
+          Preconditions.checkNotNull(jsonFactory));
+    }
+
+    AppEngineCredentialWrapper(
+        AppIdentityCredential appIdentity,
+        HttpTransport transport,
+        JsonFactory jsonFactory) {
+      super(new GoogleCredential.Builder()
+          .setRequestInitializer(appIdentity)
+          .setTransport(transport)
+          .setJsonFactory(jsonFactory));
+      this.appIdentity = appIdentity;
+      Collection<String> scopes = appIdentity.getScopes();
+      scopesRequired = (scopes == null || scopes.isEmpty());
+    }
+
+    private static AppIdentityCredential getCheckedAppIdentityCredential() throws IOException {
+      Collection<String> emptyScopes = Collections.emptyList();
+      AppIdentityCredential appIdentity = new AppIdentityCredential(emptyScopes);
+      // May be called via reflection to test whether running on App Engine, so fail even if
+      // the type can be loaded but the service is not available.
+      if (appIdentity.getAppIdentityService() == null) {
+        throw new IOException("AppIdentityService not available.");
+      }
+      return appIdentity;
+    }
+
+    @Override
+    public void intercept(HttpRequest request) throws IOException {
+      appIdentity.intercept(request);
+    }
+
+    @Override
+    public boolean createScopedRequired() {
+      return scopesRequired;
+    }
+
+    @Override
+    public GoogleCredential createScoped(Collection<String> scopes) {
+      return new AppEngineCredentialWrapper(
+          new AppIdentityCredential.Builder(scopes)
+              .setAppIdentityService(appIdentity.getAppIdentityService())
+              .build(),
+          getTransport(),
+          getJsonFactory());
     }
   }
 }
