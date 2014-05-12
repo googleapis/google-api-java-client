@@ -24,7 +24,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
-import com.google.api.client.util.Joiner;
 
 import junit.framework.TestCase;
 
@@ -34,7 +33,9 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -225,6 +226,61 @@ public class DefaultCredentialProviderTest  extends TestCase  {
     if (userCredentialFile.exists()) {
       userCredentialFile.delete();
     }
+
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    // Point the default credential to the file
+    testProvider.setEnv(DefaultCredentialProvider.CREDENTIAL_ENV_VAR,
+        userCredentialFile.getAbsolutePath());
+
+    testDefaultCredentialUser(userCredentialFile, testProvider);
+  }
+
+  public void testDefaultCredentialWellKnownFileNonWindows() throws IOException {
+    // Simulate where the SDK puts the well-known file on non-Windows platforms
+    File homeDir = getTempDirectory();
+    File configDir = new File(homeDir, ".config");
+    if (!configDir.exists()) {
+      configDir.mkdir();
+    }
+    File cloudConfigDir = new File(configDir, DefaultCredentialProvider.CLOUDSDK_CONFIG_DIRECTORY);
+    if (!cloudConfigDir.exists()) {
+      cloudConfigDir.mkdir();
+    }
+    File wellKnownFile = new File(
+        cloudConfigDir, DefaultCredentialProvider.WELL_KNOWN_CREDENTIALS_FILE);
+    if (wellKnownFile.exists()) {
+      wellKnownFile.delete();
+    }
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    testProvider.addFile(wellKnownFile.getAbsolutePath());
+    testProvider.setProperty("os.name", "linux");
+    testProvider.setProperty("user.home", homeDir.getAbsolutePath());
+
+    testDefaultCredentialUser(wellKnownFile, testProvider);
+  }
+
+  public void testDefaultCredentialWellKnownFileWindows() throws IOException {
+    // Simulate where the SDK puts the well-known file on Windows
+    File appDataDir = getTempDirectory();
+    File cloudConfigDir = new File(appDataDir, DefaultCredentialProvider.CLOUDSDK_CONFIG_DIRECTORY);
+    if (!cloudConfigDir.exists()) {
+      cloudConfigDir.mkdir();
+    }
+    File wellKnownFile = new File(
+        cloudConfigDir, DefaultCredentialProvider.WELL_KNOWN_CREDENTIALS_FILE);
+    if (wellKnownFile.exists()) {
+      wellKnownFile.delete();
+    }
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    testProvider.addFile(wellKnownFile.getAbsolutePath());
+    testProvider.setProperty("os.name", "windows");
+    testProvider.setEnv("APPDATA", appDataDir.getAbsolutePath());
+
+    testDefaultCredentialUser(wellKnownFile, testProvider);
+  }
+
+  private void testDefaultCredentialUser(File userFile, TestDefaultCredentialProvider testProvider)
+      throws IOException {
     final String ACCESS_TOKEN = "1/MkSJoj1xsli0AccessToken_NKPY2";
     final String CLIENT_SECRET = "jakuaL9YyieakhECKL2SwZcu";
     final String CLIENT_ID = "ya29.1.AADtN_UtlxH8cruGAxrN2XQnZTVRvDyVWnYq4I6dws";
@@ -235,25 +291,13 @@ public class DefaultCredentialProviderTest  extends TestCase  {
     transport.addClient(CLIENT_ID, CLIENT_SECRET);
     transport.addRefreshToken(REFRESH_TOKEN, ACCESS_TOKEN);
 
-    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    String json = GoogleCredentialTest.createUserJson(CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN);
+
     try {
       // Write out user file
-      GenericJson userCredentialContents = new GenericJson();
-      userCredentialContents.setFactory(JSON_FACTORY);
-      userCredentialContents.put("client_id", CLIENT_ID);
-      userCredentialContents.put("client_secret", CLIENT_SECRET);
-      userCredentialContents.put("refresh_token", REFRESH_TOKEN);
-      String scopesAsString = Joiner.on(' ').join(SCOPES);
-      userCredentialContents.put("scopes", scopesAsString);
-      userCredentialContents.put("type", GoogleCredential.USER_FILE_TYPE);
-      PrintWriter writer = new PrintWriter(userCredentialFile);
-      String json = userCredentialContents.toPrettyString();
+      PrintWriter writer = new PrintWriter(userFile);
       writer.println(json);
       writer.close();
-
-      // Point the default credential to the file
-      testProvider.setEnv(DefaultCredentialProvider.CREDENTIAL_ENV_VAR,
-          userCredentialFile.getAbsolutePath());
 
       Credential credential = testProvider.getDefaultCredential(transport, JSON_FACTORY);
 
@@ -263,8 +307,8 @@ public class DefaultCredentialProviderTest  extends TestCase  {
       assertTrue(credential.refreshToken());
       assertEquals(ACCESS_TOKEN, credential.getAccessToken());
     } finally {
-      if (userCredentialFile.exists()) {
-        userCredentialFile.delete();
+      if (userFile.exists()) {
+        userFile.delete();
       }
     }
   }
@@ -321,9 +365,15 @@ public class DefaultCredentialProviderTest  extends TestCase  {
 
     private Map<String, Class<?>> types = new HashMap<String, Class<?>>();
     private Map<String, String> variables = new HashMap<String, String>();
+    private Map<String, String> properties = new HashMap<String, String>();
+    private Set<String> files = new HashSet<String>();
     private int forNameCallCount = 0;
 
     TestDefaultCredentialProvider() {
+    }
+
+    void addFile(String file) {
+      files.add(file);
     }
 
     void addType(String className, Class<?> type) {
@@ -337,6 +387,21 @@ public class DefaultCredentialProviderTest  extends TestCase  {
 
     void setEnv(String name, String value) {
       variables.put(name, value);
+    }
+
+    @Override
+    String getProperty(String property, String def) {
+      String value = properties.get(property);
+      return value == null ? def : value;
+    }
+
+    void setProperty(String property, String value) {
+      properties.put(property, value);
+    }
+
+    @Override
+    boolean fileExists(File file) {
+      return files.contains(file.getAbsolutePath());
     }
 
     @Override

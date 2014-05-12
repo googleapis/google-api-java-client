@@ -28,6 +28,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.security.AccessControlException;
+import java.util.Locale;
 
 /**
  * {@link Beta} <br/>
@@ -40,6 +42,10 @@ import java.lang.reflect.Constructor;
 class DefaultCredentialProvider {
 
   static final String CREDENTIAL_ENV_VAR = "GOOGLE_CREDENTIALS_DEFAULT";
+
+  static final String WELL_KNOWN_CREDENTIALS_FILE = "credentials_default.json";
+
+  static final String CLOUDSDK_CONFIG_DIRECTORY = "gcloud";
 
   static final String HELP_PERMALINK =
       "https://developers.google.com/accounts/docs/default-credential";
@@ -112,12 +118,37 @@ class DefaultCredentialProvider {
         throw OAuth2Utils.exceptionWithCause(new IOException(String.format(
             "Error reading credential file from environment variable %s, value '%s': %s",
             CREDENTIAL_ENV_VAR, credentialsPath, e.getMessage())), e);
+      } catch (AccessControlException expected) {
+        // Exception querying file system is expected on App-Engine
       }
       finally {
         if (credentialsStream != null) {
           credentialsStream.close();
         }
       }
+    }
+
+    // Then try the well-known file
+    File wellKnownFileLocation = getWellKnownCredentialsFile();
+    try {
+      if (fileExists(wellKnownFileLocation)) {
+        InputStream credentialsStream = null;
+        try {
+          credentialsStream = new FileInputStream(wellKnownFileLocation);
+          credential = GoogleCredential.fromStream(credentialsStream, transport, jsonFactory);
+        } catch (IOException e) {
+          throw new IOException(String.format(
+              "Error reading credential file from location %s: %s",
+              wellKnownFileLocation, e.getMessage()));
+        }
+        finally {
+          if (credentialsStream != null) {
+            credentialsStream.close();
+          }
+        }
+      }
+    } catch (AccessControlException expected) {
+      // Exception querying file system is expected on App-Engine
     }
 
     // Then try App Engine
@@ -132,11 +163,39 @@ class DefaultCredentialProvider {
     return credential;
   }
 
+  private final File getWellKnownCredentialsFile() {
+    File cloudConfigPath = null;
+    String os = getProperty("os.name", "").toLowerCase(Locale.US);
+    if (os.indexOf("windows") >= 0) {
+      File appDataPath = new File(getEnv("APPDATA"));
+      cloudConfigPath = new File(appDataPath, CLOUDSDK_CONFIG_DIRECTORY);
+    } else {
+      File configPath = new File(getProperty("user.home", ""), ".config");
+      cloudConfigPath = new File(configPath, CLOUDSDK_CONFIG_DIRECTORY);
+    }
+    File credentialFilePath = new File(cloudConfigPath, WELL_KNOWN_CREDENTIALS_FILE);
+    return credentialFilePath;
+  }
+
   /**
    * Override in test code to isolate from environment.
    */
   String getEnv(String name) {
     return System.getenv(name);
+  }
+
+  /**
+   * Override in test code to isolate from environment.
+   */
+  boolean fileExists(File file) {
+    return file.exists() && !file.isDirectory();
+  }
+
+  /**
+   * Override in test code to isolate from environment.
+   */
+  String getProperty(String property, String def) {
+    return System.getProperty(property, def);
   }
 
   /**
