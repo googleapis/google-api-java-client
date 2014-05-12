@@ -20,7 +20,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.util.SecurityTestUtils;
-import com.google.api.client.util.Joiner;
 
 import junit.framework.TestCase;
 
@@ -311,15 +310,7 @@ public class GoogleCredentialTest extends TestCase {
     transport.addRefreshToken(REFRESH_TOKEN, ACCESS_TOKEN);
 
     // Create user stream.
-    GenericJson userCredentialContents = new GenericJson();
-    userCredentialContents.setFactory(JSON_FACTORY);
-    userCredentialContents.put("client_id", CLIENT_ID);
-    userCredentialContents.put("client_secret", CLIENT_SECRET);
-    userCredentialContents.put("refresh_token", REFRESH_TOKEN);
-    String scopesAsString = Joiner.on(' ').join(SCOPES);
-    userCredentialContents.put("scopes", scopesAsString);
-    userCredentialContents.put("type", GoogleCredential.USER_FILE_TYPE);
-    String json = userCredentialContents.toPrettyString();
+    String json = createUserJson(CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN);
     InputStream userStream = new ByteArrayInputStream(json.getBytes());
 
     GoogleCredential defaultCredential = GoogleCredential
@@ -343,14 +334,7 @@ public class GoogleCredentialTest extends TestCase {
     transport.addRefreshToken(REFRESH_TOKEN, ACCESS_TOKEN);
 
     // Write out user file
-    GenericJson userCredentialContents = new GenericJson();
-    userCredentialContents.setFactory(JSON_FACTORY);
-    userCredentialContents.put("client_secret", CLIENT_SECRET);
-    userCredentialContents.put("refresh_token", REFRESH_TOKEN);
-    String scopesAsString = Joiner.on(' ').join(SCOPES);
-    userCredentialContents.put("scopes", scopesAsString);
-    userCredentialContents.put("type", GoogleCredential.USER_FILE_TYPE);
-    String json = userCredentialContents.toPrettyString();
+    String json = createUserJson(null, CLIENT_SECRET, REFRESH_TOKEN);
     InputStream userStream = new ByteArrayInputStream(json.getBytes());
 
     try {
@@ -372,14 +356,7 @@ public class GoogleCredentialTest extends TestCase {
     transport.addRefreshToken(REFRESH_TOKEN, ACCESS_TOKEN);
 
     // Write out user file
-    GenericJson userCredentialContents = new GenericJson();
-    userCredentialContents.setFactory(JSON_FACTORY);
-    userCredentialContents.put("client_id", CLIENT_ID);
-    userCredentialContents.put("refresh_token", REFRESH_TOKEN);
-    String scopesAsString = Joiner.on(' ').join(SCOPES);
-    userCredentialContents.put("scopes", scopesAsString);
-    userCredentialContents.put("type", GoogleCredential.USER_FILE_TYPE);
-    String json = userCredentialContents.toPrettyString();
+    String json = createUserJson(CLIENT_ID, null, REFRESH_TOKEN);
     InputStream userStream = new ByteArrayInputStream(json.getBytes());
 
     try {
@@ -401,13 +378,7 @@ public class GoogleCredentialTest extends TestCase {
     transport.addRefreshToken(REFRESH_TOKEN, ACCESS_TOKEN);
 
     // Write out user file
-    GenericJson userCredentialContents = new GenericJson();
-    userCredentialContents.setFactory(JSON_FACTORY);
-    userCredentialContents.put("client_id", CLIENT_ID);
-    String scopesAsString = Joiner.on(' ').join(SCOPES);
-    userCredentialContents.put("scopes", scopesAsString);
-    userCredentialContents.put("type", GoogleCredential.USER_FILE_TYPE);
-    String json = userCredentialContents.toPrettyString();
+    String json = createUserJson(CLIENT_ID, CLIENT_SECRET, null);
     InputStream userStream = new ByteArrayInputStream(json.getBytes());
 
     try {
@@ -416,5 +387,23 @@ public class GoogleCredentialTest extends TestCase {
     } catch (IOException expected) {
       assertTrue(expected.getMessage().contains("refresh_token"));
     }
+  }
+
+  static String createUserJson(String clientId, String clientSecret, String refreshToken)
+      throws IOException {
+    GenericJson userCredentialContents = new GenericJson();
+    userCredentialContents.setFactory(JSON_FACTORY);
+    if (clientId != null) {
+      userCredentialContents.put("client_id", clientId);
+    }
+    if (clientSecret != null) {
+      userCredentialContents.put("client_secret", clientSecret);
+    }
+    if (refreshToken != null) {
+      userCredentialContents.put("refresh_token", refreshToken);
+    }
+    userCredentialContents.put("type", GoogleCredential.USER_FILE_TYPE);
+    String json = userCredentialContents.toPrettyString();
+    return json;
   }
 }
