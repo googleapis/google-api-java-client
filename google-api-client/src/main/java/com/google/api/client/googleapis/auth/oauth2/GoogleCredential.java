@@ -272,16 +272,22 @@ public class GoogleCredential extends Credential {
   private String serviceAccountId;
 
   /**
-   * Collection of OAuth scopes to use with the the service account flow or {@code null} if not
+   * Collection of OAuth scopes to use with the service account flow or {@code null} if not
    * using the service account flow.
    */
   private Collection<String> serviceAccountScopes;
 
   /**
-   * Private key to use with the the service account flow or {@code null} if not using the service
+   * Private key to use with the service account flow or {@code null} if not using the service
    * account flow.
    */
   private PrivateKey serviceAccountPrivateKey;
+
+  /**
+   * ID of private key to use with the service account flow or {@code null} if not using the
+   * service account flow.
+   */
+  private String serviceAccountPrivateKeyId;
 
   /**
    * Email address of the user the application is trying to impersonate in the service account flow
@@ -314,6 +320,7 @@ public class GoogleCredential extends Credential {
       serviceAccountId = Preconditions.checkNotNull(builder.serviceAccountId);
       serviceAccountScopes = Collections.unmodifiableCollection(builder.serviceAccountScopes);
       serviceAccountPrivateKey = builder.serviceAccountPrivateKey;
+      serviceAccountPrivateKeyId = builder.serviceAccountPrivateKeyId;
       serviceAccountUser = builder.serviceAccountUser;
     }
   }
@@ -358,6 +365,7 @@ public class GoogleCredential extends Credential {
     JsonWebSignature.Header header = new JsonWebSignature.Header();
     header.setAlgorithm("RS256");
     header.setType("JWT");
+    header.setKeyId(serviceAccountPrivateKeyId);
     JsonWebToken.Payload payload = new JsonWebToken.Payload();
     long currentTime = getClock().currentTimeMillis();
     payload.setIssuer(serviceAccountId);
@@ -393,7 +401,7 @@ public class GoogleCredential extends Credential {
 
   /**
    * {@link Beta} <br/>
-   * Returns a collection of OAuth scopes to use with the the service account flow or {@code null}
+   * Returns a collection of OAuth scopes to use with the service account flow or {@code null}
    * if not using the service account flow.
    */
   @Beta
@@ -403,7 +411,7 @@ public class GoogleCredential extends Credential {
 
   /**
    * {@link Beta} <br/>
-   * Returns the space-separated OAuth scopes to use with the the service account flow or
+   * Returns the space-separated OAuth scopes to use with the service account flow or
    * {@code null} if not using the service account flow.
    *
    * @since 1.15
@@ -415,12 +423,22 @@ public class GoogleCredential extends Credential {
 
   /**
    * {@link Beta} <br/>
-   * Returns the private key to use with the the service account flow or {@code null} if not using
+   * Returns the private key to use with the service account flow or {@code null} if not using
    * the service account flow.
    */
   @Beta
   public final PrivateKey getServiceAccountPrivateKey() {
     return serviceAccountPrivateKey;
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Returns the ID of the private key to use with the service account flow or {@code null} if
+   * not using the service account flow.
+   */
+  @Beta
+  public final String getServiceAccountPrivateKeyId() {
+    return serviceAccountPrivateKeyId;
   }
 
   /**
@@ -458,6 +476,7 @@ public class GoogleCredential extends Credential {
     }
     return new GoogleCredential.Builder()
         .setServiceAccountPrivateKey(serviceAccountPrivateKey)
+        .setServiceAccountPrivateKeyId(serviceAccountPrivateKeyId)
         .setServiceAccountId(serviceAccountId)
         .setServiceAccountUser(serviceAccountUser)
         .setServiceAccountScopes(scopes)
@@ -480,12 +499,15 @@ public class GoogleCredential extends Credential {
     String serviceAccountId;
 
     /**
-     * Collection of OAuth scopes to use with the the service account flow or {@code null} for none.
+     * Collection of OAuth scopes to use with the service account flow or {@code null} for none.
      */
     Collection<String> serviceAccountScopes;
 
-    /** Private key to use with the the service account flow or {@code null} for none. */
+    /** Private key to use with the service account flow or {@code null} for none. */
     PrivateKey serviceAccountPrivateKey;
+
+    /** Id of the private key to use with the service account flow or {@code null} for none. */
+    String serviceAccountPrivateKeyId;
 
     /**
      * Email address of the user the application is trying to impersonate in the service account
@@ -575,7 +597,7 @@ public class GoogleCredential extends Credential {
 
     /**
      * {@link Beta} <br/>
-     * Returns a collection of OAuth scopes to use with the the service account flow or {@code null}
+     * Returns a collection of OAuth scopes to use with the service account flow or {@code null}
      * for none.
      */
     @Beta
@@ -585,7 +607,7 @@ public class GoogleCredential extends Credential {
 
     /**
      * {@link Beta} <br/>
-     * Sets the space-separated OAuth scopes to use with the the service account flow or
+     * Sets the space-separated OAuth scopes to use with the service account flow or
      * {@code null} for none.
      *
      * <p>
@@ -605,7 +627,7 @@ public class GoogleCredential extends Credential {
 
     /**
      * {@link Beta} <br/>
-     * Returns the private key to use with the the service account flow or {@code null} for none.
+     * Returns the private key to use with the service account flow or {@code null} for none.
      */
     @Beta
     public final PrivateKey getServiceAccountPrivateKey() {
@@ -614,7 +636,7 @@ public class GoogleCredential extends Credential {
 
     /**
      * {@link Beta} <br/>
-     * Sets the private key to use with the the service account flow or {@code null} for none.
+     * Sets the private key to use with the service account flow or {@code null} for none.
      *
      * <p>
      * Overriding is only supported for the purpose of calling the super implementation and changing
@@ -629,7 +651,34 @@ public class GoogleCredential extends Credential {
 
     /**
      * {@link Beta} <br/>
-     * Sets the private key to use with the the service account flow or {@code null} for none.
+     * Returns the id of the private key to use with the service account flow or {@code null}
+     * for none.
+     */
+    @Beta
+    public final String getServiceAccountPrivateKeyId() {
+      return serviceAccountPrivateKeyId;
+    }
+
+    /**
+     * {@link Beta} <br/>
+     * Sets the id of the private key to use with the service account flow or {@code null} for
+     * none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     */
+    @Beta
+    public Builder setServiceAccountPrivateKeyId(String serviceAccountPrivateKeyId) {
+      this.serviceAccountPrivateKeyId = serviceAccountPrivateKeyId;
+      return this;
+    }
+
+
+    /**
+     * {@link Beta} <br/>
+     * Sets the private key to use with the service account flow or {@code null} for none.
      *
      * <p>
      * Overriding is only supported for the purpose of calling the super implementation and changing
@@ -650,7 +699,7 @@ public class GoogleCredential extends Credential {
 
     /**
      * {@link Beta} <br/>
-     * Sets the private key to use with the the service account flow or {@code null} for none.
+     * Sets the private key to use with the service account flow or {@code null} for none.
      *
      * <p>
      * Overriding is only supported for the purpose of calling the super implementation and changing
@@ -773,6 +822,7 @@ public class GoogleCredential extends Credential {
         .setServiceAccountId(clientEmail)
         .setServiceAccountScopes(emptyScopes)
         .setServiceAccountPrivateKey(privateKey)
+        .setServiceAccountPrivateKeyId(privateKeyId)
         .build();
 
     // Don't do a refresh at this point, as it will always fail before the scopes are added.
