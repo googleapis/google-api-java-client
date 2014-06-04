@@ -120,8 +120,7 @@ class DefaultCredentialProvider {
             CREDENTIAL_ENV_VAR, credentialsPath, e.getMessage())), e);
       } catch (AccessControlException expected) {
         // Exception querying file system is expected on App-Engine
-      }
-      finally {
+      } finally {
         if (credentialsStream != null) {
           credentialsStream.close();
         }
@@ -140,8 +139,7 @@ class DefaultCredentialProvider {
           throw new IOException(String.format(
               "Error reading credential file from location %s: %s",
               wellKnownFileLocation, e.getMessage()));
-        }
-        finally {
+        } finally {
           if (credentialsStream != null) {
             credentialsStream.close();
           }
@@ -199,7 +197,7 @@ class DefaultCredentialProvider {
   }
 
   /**
-   * Override in test code to isolate from environment
+   * Override in test code to isolate from environment.
    */
   Class<?> forName(String className) throws ClassNotFoundException {
     return Class.forName(className);
