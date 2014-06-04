@@ -48,7 +48,7 @@ class DefaultCredentialProvider {
   static final String CLOUDSDK_CONFIG_DIRECTORY = "gcloud";
 
   static final String HELP_PERMALINK =
-      "https://developers.google.com/accounts/docs/default-credential";
+      "https://developers.google.com/accounts/docs/default-credentials";
 
   static final String APP_ENGINE_CREDENTIAL_CLASS =
       "com.google.api.client.googleapis.extensions.appengine.auth.oauth2"
@@ -87,8 +87,9 @@ class DefaultCredentialProvider {
     }
 
     throw new IOException(String.format(
-        "The default credential is not available. This is available if running"
-            + " in Google App Engine or Google Compute Engine. Otherwise, the environment"
+        "The Default Credentials are not available. They are available if running"
+            + " in Google App Engine or Google Compute Engine. They are also available if using"
+            + " the Google Cloud SDK and running 'gcloud auth login'. Otherwise, the environment"
             + " variable %s must be defined pointing to a file defining the credentials."
             + " See %s for details.",
         CREDENTIAL_ENV_VAR,
