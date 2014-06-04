@@ -70,4 +70,29 @@
     <Bug pattern="NP_BOOLEAN_RETURN_NULL"/>
     <!-- Method with Boolean return type returns explicit null -->
   </And>
+  <And>
+    <Bug pattern="DM_STRING_CTOR"/>
+    <!-- Method invokes inefficient new String(String) constructor -->
+    <Class name="com.google.api.client.googleapis.batch.BatchRequest"/>    
+  </And>  
+  <And>
+    <Bug pattern="DM_STRING_CTOR"/>
+    <!-- Method invokes inefficient new String(String) constructor -->
+    <Class name="com.google.api.client.googleapis.services.AbstractGoogleClient"/>    
+  </And>  
+  <And>
+    <Bug pattern="DM_STRING_CTOR"/>
+    <!-- Method invokes inefficient new String(String) constructor -->
+    <Class name="com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential"/>    
+  </And>  
+  <And>
+    <Bug pattern="DM_STRING_CTOR"/>
+    <!-- Method invokes inefficient new String(String) constructor -->
+    <Class name="com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential$RequestHandler"/>    
+  </And>  
+  <And>
+    <Bug pattern="DM_STRING_CTOR"/>
+    <!-- Method invokes inefficient new String(String) constructor -->
+    <Class name="com.google.api.client.googleapis.xml.atom.MultiKindFeedParser"/>    
+  </And>  
 </FindBugsFilter>
