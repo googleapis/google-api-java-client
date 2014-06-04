@@ -17,7 +17,7 @@ package com.google.api.client.googleapis.auth.oauth2;
 import java.nio.charset.Charset;
 
 /**
- * Utilities used by the com.google.api.client.googleapis.auth.oauth2 namespace
+ * Utilities used by the com.google.api.client.googleapis.auth.oauth2 namespace.
  *
  */
 class OAuth2Utils {
