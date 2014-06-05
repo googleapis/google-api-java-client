@@ -14,7 +14,15 @@
 
 package com.google.api.client.googleapis.auth.oauth2;
 
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpTransport;
+
+import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Collection;
 
 /**
  * Utilities used by the com.google.api.client.googleapis.auth.oauth2 namespace.
@@ -24,9 +32,39 @@ class OAuth2Utils {
 
   static final Charset UTF_8 = Charset.forName("UTF-8");
 
+  private static final String METADATA_SERVER_URL = "http://metadata.google.internal";
+
   static <T extends Throwable> T exceptionWithCause(T exception, Throwable cause) {
     exception.initCause(cause);
     return exception;
+  }
+
+  static boolean headersContainValue(HttpHeaders headers, String headerName, String value) {
+    Object values = headers.get(headerName);
+    if (values instanceof Collection) {
+      @SuppressWarnings("unchecked")
+      Collection<Object> valuesList = (Collection<Object>) values;
+      for (Object headerValue : valuesList) {
+        if (headerValue instanceof String && ((String) headerValue).equals(value)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  static boolean runningOnComputeEngine(HttpTransport transport) {
+    try {
+      GenericUrl tokenUrl = new GenericUrl(METADATA_SERVER_URL);
+      HttpRequest request = transport.createRequestFactory().buildGetRequest(tokenUrl);
+      HttpResponse response = request.execute();
+      HttpHeaders headers = response.getHeaders();
+      if (headersContainValue(headers, "Metadata-Flavor", "Google")) {
+        return true;
+      }
+    } catch (IOException exception) {
+    }
+    return false;
   }
 
   private OAuth2Utils() {

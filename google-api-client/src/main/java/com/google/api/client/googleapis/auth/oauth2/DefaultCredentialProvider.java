@@ -18,6 +18,7 @@ import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
@@ -223,25 +224,16 @@ class DefaultCredentialProvider {
     return null;
   }
 
-
   private final GoogleCredential tryGetComputeCredential(
       HttpTransport transport, JsonFactory jsonFactory) {
     // Checking compute engine requires a round-trip, so check only once
     if (checkedComputeEngine) {
       return null;
     }
+    boolean runningOnComputeEngine = OAuth2Utils.runningOnComputeEngine(transport);
     checkedComputeEngine = true;
-
-    try {
-      // To determine if we are running in compute engine, at least one call to the metadata
-      // server is required. Attempt to refresh a token which will answer whether we
-      // are on compute engine and if so, use the credential as the default.
-      GoogleCredential computeCredential = new ComputeGoogleCredential(transport, jsonFactory);
-      if (computeCredential.refreshToken()) {
-        return computeCredential;
-      }
-    } catch (IOException expected) {
-      // Exception is expected when not running on Google Compute Engine.
+    if (runningOnComputeEngine) {
+      return new ComputeGoogleCredential(transport, jsonFactory);
     }
     return null;
   }
@@ -266,14 +258,27 @@ class DefaultCredentialProvider {
       JsonObjectParser parser = new JsonObjectParser(getJsonFactory());
       request.setParser(parser);
       request.getHeaders().set("X-Google-Metadata-Request", true);
+      request.setThrowExceptionOnExecuteError(false);
       HttpResponse response = request.execute();
-      InputStream content = response.getContent();
-      if (content == null) {
-        // Throw explicitly rather than allow a later null reference as default mock
-        // transports return success codes with empty contents.
-        throw new IOException("Empty content from metadata token server request.");
+      int statusCode = response.getStatusCode();
+      if (statusCode == HttpStatusCodes.STATUS_CODE_OK) {
+        InputStream content = response.getContent();
+        if (content == null) {
+          // Throw explicitly rather than allow a later null reference as default mock
+          // transports return success codes with empty contents.
+          throw new IOException("Empty content from metadata token server request.");
+        }
+        return parser.parseAndClose(content, response.getContentCharset(), TokenResponse.class);
       }
-      return parser.parseAndClose(content, response.getContentCharset(), TokenResponse.class);
+      if (statusCode == HttpStatusCodes.STATUS_CODE_NOT_FOUND) {
+        throw new IOException(String.format("Error code %s trying to get security access token from"
+            + " Compute Engine metadata for the default service account. This may be because"
+            + " the virtual machine instance does not have permission scopes specified.",
+            statusCode));
+      }
+      throw new IOException(String.format("Unexpected Error code %s trying to get security access"
+          + " token from Compute Engine metadata for the default service account: %s", statusCode,
+          response.parseAsString()));
     }
   }
 }
