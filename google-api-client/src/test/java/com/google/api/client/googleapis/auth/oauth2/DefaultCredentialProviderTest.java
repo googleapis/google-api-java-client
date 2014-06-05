@@ -16,6 +16,7 @@ package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.compute.MockMetadataServerTransport;
+import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
@@ -62,6 +63,7 @@ public class DefaultCredentialProviderTest  extends TestCase  {
       + "gidhycxS86dxpEljnOMCw8CKoUBd5I880IUahEiUltk7OLJYS/Ts1wbn3kPOVX3wyJs8WBDtBkFrDHW2ezth2QJ"
       + "ADj3e1YhMVdjJW5jqwlD/VNddGjgzyunmiZg0uOXsHXbytYmsA545S8KRQFaJKFXYYFo2kOjqOiC1T2cAzMDjCQ"
       + "==\n-----END PRIVATE KEY-----\n";
+  private static final String ACCESS_TOKEN = "1/MkSJoj1xsli0AccessToken_NKPY2";
 
   private static final Lock lock = new ReentrantLock();
 
@@ -115,8 +117,6 @@ public class DefaultCredentialProviderTest  extends TestCase  {
   }
 
   public void testDefaultCredentialCompute() throws IOException {
-    final String ACCESS_TOKEN = "ya29.AHES6ZRN3-HlhAPya30GnW_bHSb_QtAS08i85nHq39HE3C2LTrCARA";
-
     HttpTransport transport = new MockMetadataServerTransport(ACCESS_TOKEN);
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
 
@@ -125,6 +125,42 @@ public class DefaultCredentialProviderTest  extends TestCase  {
 
     assertTrue(defaultCredential.refreshToken());
     assertEquals(ACCESS_TOKEN, defaultCredential.getAccessToken());
+  }
+
+  public void testDefaultCredentialComputeErrorNotFound() throws IOException {
+    MockMetadataServerTransport transport = new MockMetadataServerTransport(ACCESS_TOKEN);
+    transport.setTokenRequestStatusCode(HttpStatusCodes.STATUS_CODE_NOT_FOUND);
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+
+    Credential defaultCredential = testProvider.getDefaultCredential(transport, JSON_FACTORY);
+    assertNotNull(defaultCredential);
+
+    try {
+      defaultCredential.refreshToken();
+      fail("Expected error refreshing token.");
+    } catch (IOException expected) {
+      String message = expected.getMessage();
+      assertTrue(message.contains(Integer.toString(HttpStatusCodes.STATUS_CODE_NOT_FOUND)));
+      assertTrue(message.contains("scope"));
+    }
+  }
+
+  public void testDefaultCredentialComputeErrorUnexpected() throws IOException {
+    MockMetadataServerTransport transport = new MockMetadataServerTransport(ACCESS_TOKEN);
+    transport.setTokenRequestStatusCode(HttpStatusCodes.STATUS_CODE_SERVER_ERROR);
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+
+    Credential defaultCredential = testProvider.getDefaultCredential(transport, JSON_FACTORY);
+    assertNotNull(defaultCredential);
+
+    try {
+      defaultCredential.refreshToken();
+      fail("Expected error refreshing token.");
+    } catch (IOException expected) {
+      String message = expected.getMessage();
+      assertTrue(message.contains(Integer.toString(HttpStatusCodes.STATUS_CODE_SERVER_ERROR)));
+      assertTrue(message.contains("Unexpected"));
+    }
   }
 
   public void testDefaultCredentialComputeSingleAttempt() {
@@ -182,7 +218,6 @@ public class DefaultCredentialProviderTest  extends TestCase  {
     if (serviceAccountFile.exists()) {
       serviceAccountFile.delete();
     }
-    final String ACCESS_TOKEN = "1/MkSJoj1xsli0AccessToken_NKPY2";
     final String SA_ID = "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr.apps.googleusercontent.com";
     final String SA_EMAIL= "36680232662-vrd7ji19qe3nelgchdcsanun6bnr@developer.gserviceaccount.com";
 
@@ -281,7 +316,6 @@ public class DefaultCredentialProviderTest  extends TestCase  {
 
   private void testDefaultCredentialUser(File userFile, TestDefaultCredentialProvider testProvider)
       throws IOException {
-    final String ACCESS_TOKEN = "1/MkSJoj1xsli0AccessToken_NKPY2";
     final String CLIENT_SECRET = "jakuaL9YyieakhECKL2SwZcu";
     final String CLIENT_ID = "ya29.1.AADtN_UtlxH8cruGAxrN2XQnZTVRvDyVWnYq4I6dws";
     final String REFRESH_TOKEN = "1/Tl6awhpFjkMkSJoj1xsli0H2eL5YsMgU_NKPY2TyGWY";

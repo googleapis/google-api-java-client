@@ -32,24 +32,40 @@ import java.io.IOException;
  */
 public class MockMetadataServerTransport extends MockHttpTransport {
 
-  private final static String METADATA_SERVER_URL =
+  private final static String METADATA_TOKEN_SERVER_URL =
       "http://metadata/computeMetadata/v1/instance/service-accounts/default/token";
+
+  private final static String METADATA_SERVER_URL = "http://metadata.google.internal";
+
 
   static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
   String accessToken;
 
+  Integer tokenRequestStatusCode;
+
   public MockMetadataServerTransport(String accessToken) {
     this.accessToken = accessToken;
   }
 
+  public void setTokenRequestStatusCode(Integer tokenRequestStatusCode) {
+    this.tokenRequestStatusCode = tokenRequestStatusCode;
+  }
+
   @Override
   public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
-    if (url.equals(METADATA_SERVER_URL)) {
+    if (url.equals(METADATA_TOKEN_SERVER_URL)) {
 
       MockLowLevelHttpRequest request = new MockLowLevelHttpRequest(url) {
         @Override
         public LowLevelHttpResponse execute() throws IOException {
+
+          if (tokenRequestStatusCode != null) {
+            MockLowLevelHttpResponse response = new MockLowLevelHttpResponse()
+              .setStatusCode(tokenRequestStatusCode)
+              .setContent("Token Fetch Error");
+            return response;
+          }
 
           String metadataRequestHeader = getFirstHeaderValue("X-Google-Metadata-Request");
           if (!"true".equals(metadataRequestHeader)) {
@@ -69,6 +85,17 @@ public class MockMetadataServerTransport extends MockHttpTransport {
             .setContent(refreshText);
           return response;
 
+        }
+      };
+      return request;
+    }
+    else if (url.equals(METADATA_SERVER_URL)) {
+      MockLowLevelHttpRequest request = new MockLowLevelHttpRequest(url) {
+        @Override
+        public LowLevelHttpResponse execute() {
+          MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+          response.addHeader("Metadata-Flavor", "Google");
+          return response;
         }
       };
       return request;
