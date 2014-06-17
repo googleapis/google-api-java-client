@@ -15,7 +15,8 @@
 package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.googleapis.compute.MockMetadataServerTransport;
+import com.google.api.client.googleapis.testing.auth.oauth2.MockTokenServerTransport;
+import com.google.api.client.googleapis.testing.compute.MockMetadataServerTransport;
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;

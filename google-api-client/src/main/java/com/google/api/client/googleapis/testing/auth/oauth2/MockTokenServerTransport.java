@@ -12,29 +12,34 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.auth.oauth2;
+package com.google.api.client.googleapis.testing.auth.oauth2;
 
-import com.google.api.client.googleapis.TestUtils;
+import com.google.api.client.googleapis.auth.oauth2.GoogleOAuthConstants;
+import com.google.api.client.googleapis.testing.TestUtils;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.json.GenericJson;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.json.webtoken.JsonWebSignature;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
+import com.google.api.client.util.Beta;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
+ * {@link Beta} <br/>
  * A test transport that simulates Google's token server for refresh tokens and service accounts.
+ *
+ * @since 1.19
  */
-class MockTokenServerTransport extends MockHttpTransport {
+@Beta
+public class MockTokenServerTransport extends MockHttpTransport {
   static final String EXPECTED_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer";
   static final JsonFactory JSON_FACTORY = new JacksonFactory();
   Map<String, String> serviceAccounts = new HashMap<String, String>();
@@ -48,11 +53,11 @@ class MockTokenServerTransport extends MockHttpTransport {
     serviceAccounts.put(email, accessToken);
   }
 
-  void addClient(String clientId, String clientSecret) {
+  public void addClient(String clientId, String clientSecret) {
     clients.put(clientId, clientSecret);
   }
 
-  void addRefreshToken(String refreshToken, String accessTokenToReturn) {
+  public void addRefreshToken(String refreshToken, String accessTokenToReturn) {
     refreshTokens.put(refreshToken, accessTokenToReturn);
   }
 
@@ -81,7 +86,6 @@ class MockTokenServerTransport extends MockHttpTransport {
               throw new IOException("Refresh Token not found.");
             }
             accessToken = refreshTokens.get(foundRefresh);
-
           } else if (query.containsKey("grant_type")) {
             String grantType = query.get("grant_type");
             if (!EXPECTED_GRANT_TYPE.equals(grantType)) {

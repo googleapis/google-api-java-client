@@ -15,6 +15,7 @@
 package com.google.api.client.googleapis.compute;
 
 
+import com.google.api.client.googleapis.testing.compute.MockMetadataServerTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 

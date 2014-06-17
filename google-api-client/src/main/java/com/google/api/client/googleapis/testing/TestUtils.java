@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.googleapis;
+package com.google.api.client.googleapis.testing;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
