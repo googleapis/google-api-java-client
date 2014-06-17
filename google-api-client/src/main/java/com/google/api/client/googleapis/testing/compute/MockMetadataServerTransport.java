@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.compute;
+package com.google.api.client.googleapis.testing.compute;
 
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
@@ -23,19 +23,23 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
+import com.google.api.client.util.Beta;
 
 import java.io.IOException;
 
 /**
- * Transport that simulates the GCE metadata server for access tokens
+ * {@link Beta} <br/>
+ * Transport that simulates the GCE metadata server for access tokens.
  *
+ * @since 1.19
  */
+@Beta
 public class MockMetadataServerTransport extends MockHttpTransport {
 
-  private final static String METADATA_TOKEN_SERVER_URL =
+  private static final String METADATA_TOKEN_SERVER_URL =
       "http://metadata/computeMetadata/v1/instance/service-accounts/default/token";
 
-  private final static String METADATA_SERVER_URL = "http://metadata.google.internal";
+  private static final String METADATA_SERVER_URL = "http://metadata.google.internal";
 
 
   static final JsonFactory JSON_FACTORY = new JacksonFactory();
@@ -88,8 +92,7 @@ public class MockMetadataServerTransport extends MockHttpTransport {
         }
       };
       return request;
-    }
-    else if (url.equals(METADATA_SERVER_URL)) {
+    } else if (url.equals(METADATA_SERVER_URL)) {
       MockLowLevelHttpRequest request = new MockLowLevelHttpRequest(url) {
         @Override
         public LowLevelHttpResponse execute() {

@@ -85,7 +85,6 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava-jdk5</artifactId>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

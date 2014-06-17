@@ -15,6 +15,7 @@
 package com.google.api.client.googleapis.extensions.appengine.auth.oauth2;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.extensions.appengine.testing.auth.oauth2.MockAppIdentityService;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
