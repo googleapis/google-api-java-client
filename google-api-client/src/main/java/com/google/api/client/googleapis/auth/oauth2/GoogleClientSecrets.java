@@ -35,7 +35,9 @@ import java.util.List;
  * <pre>
   static GoogleClientSecrets loadClientSecretsResource(JsonFactory jsonFactory) throws IOException {
     return GoogleClientSecrets.load(
-        jsonFactory, SampleClass.class.getResourceAsStream("/client_secrets.json"));
+        jsonFactory,
+        new InputStreamReader(
+            SampleClass.class.getResourceAsStream("/client_secrets.json"), "UTF-8"));
   }
  * </pre>
  *
