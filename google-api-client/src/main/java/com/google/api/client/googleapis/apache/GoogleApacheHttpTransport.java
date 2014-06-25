@@ -14,7 +14,7 @@
 
 package com.google.api.client.googleapis.apache;
 
-import com.google.api.client.googleapis.GoogleUtils;
+import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.http.apache.ApacheHttpTransport;
 
 import java.io.IOException;
@@ -31,13 +31,13 @@ public final class GoogleApacheHttpTransport {
 
   /**
    * Returns a new instance of {@link ApacheHttpTransport} that uses
-   * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates using
+   * {@link Utils#getCertificateTrustStore()} for the trusted certificates using
    * {@link com.google.api.client.http.apache.ApacheHttpTransport.Builder#trustCertificates(KeyStore)}.
    */
   public static ApacheHttpTransport newTrustedTransport() throws GeneralSecurityException,
       IOException {
     return new ApacheHttpTransport.Builder().trustCertificates(
-        GoogleUtils.getCertificateTrustStore()).build();
+        Utils.getCertificateTrustStore()).build();
   }
 
   private GoogleApacheHttpTransport() {

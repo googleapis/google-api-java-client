@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.googleapis;
+package com.google.api.client.googleapis.util;
 
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -29,14 +29,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Tests {@link GoogleUtils}.
+ * Tests {@link Utils}.
  *
  * @author Yaniv Inbar
  */
-public class GoogleUtilsTest extends TestCase {
+public class UtilsTest extends TestCase {
 
   public void testGetCertificateTrustStore() throws Exception {
-    KeyStore trustStore = GoogleUtils.getCertificateTrustStore();
+    KeyStore trustStore = Utils.getCertificateTrustStore();
     Enumeration<String> aliases = trustStore.aliases();
     while (aliases.hasMoreElements()) {
       String alias = aliases.nextElement();
@@ -48,18 +48,18 @@ public class GoogleUtilsTest extends TestCase {
   }
 
   public void testGetDefaultJsonFactory() {
-    JsonFactory jsonFactory = GoogleUtils.getDefaultJsonFactory();
+    JsonFactory jsonFactory = Utils.getDefaultJsonFactory();
     assertNotNull(jsonFactory);
     assertTrue(jsonFactory instanceof JacksonFactory);
-    JsonFactory secondCall = GoogleUtils.getDefaultJsonFactory();
+    JsonFactory secondCall = Utils.getDefaultJsonFactory();
     assertSame(jsonFactory, secondCall);
   }
 
   public void testGetDefaultTransport() {
-    HttpTransport transport = GoogleUtils.getDefaultTransport();
+    HttpTransport transport = Utils.getDefaultTransport();
     assertNotNull(transport);
     assertTrue(transport instanceof NetHttpTransport);
-    HttpTransport secondCall = GoogleUtils.getDefaultTransport();
+    HttpTransport secondCall = Utils.getDefaultTransport();
     assertSame(transport, secondCall);
   }
 
