@@ -14,7 +14,7 @@
 
 package com.google.api.client.googleapis.javanet;
 
-import com.google.api.client.googleapis.GoogleUtils;
+import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.http.javanet.NetHttpTransport;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class GoogleNetHttpTransport {
 
   /**
    * Returns a new instance of {@link NetHttpTransport} that uses
-   * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates using
+   * {@link Utils#getCertificateTrustStore()} for the trusted certificates using
    * {@link com.google.api.client.http.javanet.NetHttpTransport.Builder#trustCertificates(KeyStore)}
    * .
    *
@@ -44,7 +44,7 @@ public class GoogleNetHttpTransport {
    * <pre>
   static HttpTransport newProxyTransport() throws GeneralSecurityException, IOException {
     NetHttpTransport.Builder builder = new NetHttpTransport.Builder();
-    builder.trustCertificates(GoogleUtils.getCertificateTrustStore());
+    builder.trustCertificates(Utils.getCertificateTrustStore());
     builder.setProxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 3128)));
     return builder.build();
   }
@@ -52,7 +52,7 @@ public class GoogleNetHttpTransport {
    */
   public static NetHttpTransport newTrustedTransport()
       throws GeneralSecurityException, IOException {
-    return new NetHttpTransport.Builder().trustCertificates(GoogleUtils.getCertificateTrustStore())
+    return new NetHttpTransport.Builder().trustCertificates(Utils.getCertificateTrustStore())
         .build();
   }
 
