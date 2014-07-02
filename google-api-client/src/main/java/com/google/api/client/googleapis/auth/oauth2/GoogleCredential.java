@@ -176,29 +176,29 @@ public class GoogleCredential extends Credential {
 
   /**
    * {@link Beta} <br/>
-   * Returns a default credential for the application.
+   * Returns the Application Default Credentials.
    *
-   * <p>Returns the built-in service account's credential for the application if running on
-   * Google App Engine or Google Compute Engine, or returns the credential pointed to by the
-   * environment variable GOOGLE_CREDENTIALS_DEFAULT.
-   * </p>
+   * <p>Returns the Application Default Credentials which are credentials that identify and
+   * authorize the whole application. This is the built-in service account if running on Google
+   * Compute Engine or the credentials file from the path in the environment variable
+   * GOOGLE_APPLICATION_CREDENTIALS.</p>
    *
    * @return the credential instance.
    * @throws IOException if the credential cannot be created in the current environment.
    */
   @Beta
-  public static GoogleCredential getDefault() throws IOException {
-    return getDefault(Utils.getDefaultTransport(), Utils.getDefaultJsonFactory());
+  public static GoogleCredential getApplicationDefault() throws IOException {
+    return getApplicationDefault(Utils.getDefaultTransport(), Utils.getDefaultJsonFactory());
   }
 
   /**
    * {@link Beta} <br/>
-   * Returns a default credential for the application.
+   * Returns the Application Default Credentials.
    *
-   * <p>Returns the built-in service account's credential for the application if running on
-   * Google App Engine or Google Compute Engine, or returns the credential pointed to by the
-   * environment variable GOOGLE_CREDENTIALS_DEFAULT.
-   * </p>
+   * <p>Returns the Application Default Credentials which are credentials that identify and
+   * authorize the whole application. This is the built-in service account if running on Google
+   * Compute Engine or the credentials file from the path in the environment variable
+   * GOOGLE_APPLICATION_CREDENTIALS.</p>
    *
    * @param transport the transport for Http calls.
    * @param jsonFactory the factory for Json parsing and formatting.
@@ -206,8 +206,8 @@ public class GoogleCredential extends Credential {
    * @throws IOException if the credential cannot be created in the current environment.
    */
   @Beta
-  public static GoogleCredential getDefault(HttpTransport transport, JsonFactory jsonFactory)
-      throws IOException {
+  public static GoogleCredential getApplicationDefault(
+      HttpTransport transport, JsonFactory jsonFactory) throws IOException {
     Preconditions.checkNotNull(transport);
     Preconditions.checkNotNull(jsonFactory);
     return defaultCredentialProvider.getDefaultCredential(transport, jsonFactory);
