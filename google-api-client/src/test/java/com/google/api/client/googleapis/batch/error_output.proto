@@ -1,0 +1,76 @@
+// Mock ProtoBuf message on the body of HTTP responses that represent errors.
+
+syntax = "proto2";
+package api.client.googleapis.batch;
+option optimize_for = LITE_RUNTIME;
+option java_package = "com.google.api.client.googleapis.batch";
+
+// These messages are the protobuf version of the
+// com.google.api.client.googleapis.json.GoogleJsonError output
+// structure, and have a 1:1 mapping with it. Said structure is:
+// {
+//   error: {
+//     code: <int>,
+//     message: <string>,
+//     errors: [
+//       {
+//         ...,
+//       },
+//       {
+//         ...,
+//       },
+//     ],
+//   }
+// }
+
+// Top-level object present in the HTTP body.
+message ErrorBody {
+  optional ErrorProto error = 1;
+}
+
+message ErrorProto {
+  // HTTP code of the response. Further specified by the first element of the
+  // "errors" field. Always present.
+  optional int32 code = 1;
+
+  // Same value as the "message" field of the first element of the "errors"
+  // field. Always present.
+  optional string message = 2;
+
+  // Non-empty list of errors found while processing the request. Not all of
+  // them must be the same type of error, in which case only the first is
+  // expected to be handled.
+  repeated IndividualError errors = 3;
+}
+
+message IndividualError {
+  // Description of this error for human consumption. Always present.
+  optional string message = 1;
+
+  // Namespace under which the "reason" field is to be interpreted. Always
+  // present.
+  optional string domain = 2;
+
+  // Alphanumeric error code, in lowerCamel case, that identifies the error
+  // with a granularity finer than the HTTP status code. Always present.
+  optional string reason = 3;
+
+  // For client errors, these two fields point at where in the HTTP request
+  // lies the problem. E.g. location_type = HEADER, location = "Authorization".
+  optional LocationType location_type = 5;
+  optional string location = 6;
+}
+
+enum LocationType {
+  // Either a query parameter or a URL path parameter.
+  PARAMETER = 0;
+
+  // An HTTP request header.
+  HEADER = 1;
+
+  // Some place in the body of the HTTP request.
+  ENTITY = 2;
+
+  // API-specific location type.
+  OTHER = 3;
+}

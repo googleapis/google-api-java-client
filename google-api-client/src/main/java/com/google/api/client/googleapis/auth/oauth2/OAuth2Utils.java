@@ -62,7 +62,7 @@ class OAuth2Utils {
       if (headersContainValue(headers, "Metadata-Flavor", "Google")) {
         return true;
       }
-    } catch (IOException exception) {
+    } catch (IOException expected) {
     }
     return false;
   }

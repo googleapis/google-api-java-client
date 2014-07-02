@@ -55,6 +55,47 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-sources</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <target>
+                <mkdir dir="target/generated-test-sources" />
+                <exec failonerror="true" executable="protoc">
+                  <arg value="--java_out=target/generated-test-sources" />
+                  <arg value="src/test/java/com/google/api/client/googleapis/batch/mock_data.proto" />
+                  <arg value="src/test/java/com/google/api/client/googleapis/batch/error_output.proto" />
+                </exec>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <id>add-test-source</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>target/generated-test-sources</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
   <dependencies>
@@ -69,6 +110,11 @@
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-gson</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-protobuf</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

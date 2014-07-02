@@ -1,0 +1,14 @@
+syntax = "proto2";
+package api.client.googleapis.batch;
+option optimize_for = LITE_RUNTIME;
+option java_package = "com.google.api.client.googleapis.batch";
+
+message Class1 {
+  optional string id = 1;
+  optional string kind = 2;
+}
+
+message Class2 {
+  optional string name = 1;
+  optional string number = 2;
+}
