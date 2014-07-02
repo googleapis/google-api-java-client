@@ -26,13 +26,13 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
-import com.google.api.client.util.StringUtils;
+import com.google.api.client.util.ByteStreams;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,8 +51,8 @@ final class BatchUnparsedResponse {
   /** List of request infos. */
   private final List<RequestInfo<?, ?>> requestInfos;
 
-  /** Buffers characters from the input stream. */
-  private final BufferedReader bufferedReader;
+  /** Input stream that contains the batch response. */
+  private final InputStream inputStream;
 
   /** Determines whether there are any responses to be parsed. */
   boolean hasNext = true;
@@ -83,9 +83,9 @@ final class BatchUnparsedResponse {
     this.boundary = boundary;
     this.requestInfos = requestInfos;
     this.retryAllowed = retryAllowed;
-    this.bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+    this.inputStream = inputStream;
     // First line in the stream will be the boundary.
-    checkForFinalBoundary(bufferedReader.readLine());
+    checkForFinalBoundary(readLine());
   }
 
   /**
@@ -100,12 +100,12 @@ final class BatchUnparsedResponse {
 
     // Extract the outer headers.
     String line;
-    while ((line = bufferedReader.readLine()) != null && !line.equals("")) {
+    while ((line = readLine()) != null && !line.equals("")) {
       // Do nothing.
     }
 
     // Extract the status code.
-    String statusLine = bufferedReader.readLine();
+    String statusLine = readLine();
     String[] statusParts = statusLine.split(" ");
     int statusCode = Integer.parseInt(statusParts[1]);
 
@@ -114,24 +114,59 @@ final class BatchUnparsedResponse {
     // http://tools.ietf.org/html/rfc2616#section-2.2
     List<String> headerNames = new ArrayList<String>();
     List<String> headerValues = new ArrayList<String>();
-    while ((line = bufferedReader.readLine()) != null && !line.equals("")) {
+    long contentLength = -1L;
+    while ((line = readLine()) != null && !line.equals("")) {
       String[] headerParts = line.split(": ", 2);
-      headerNames.add(headerParts[0]);
-      headerValues.add(headerParts[1]);
+      String headerName = headerParts[0];
+      String headerValue = headerParts[1];
+      headerNames.add(headerName);
+      headerValues.add(headerValue);
+      if ("Content-Length".equalsIgnoreCase(headerName.trim())) {
+          contentLength = Long.parseLong(headerValue);
+      }
     }
 
-    // Extract the response part content.
-    // TODO(rmistry): Investigate a way to use the stream directly. This is to reduce the chance of
-    // an OutOfMemoryError and will make parsing more efficient.
-    StringBuilder partContent = new StringBuilder();
-    while ((line = bufferedReader.readLine()) != null && !line.startsWith(boundary)) {
-      partContent.append(line);
+    InputStream body;
+    if (contentLength == -1) {
+      // This isn't very efficient, but most respectable servers should set the Content-Length
+      ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+      while ((line = readRawLine()) != null && !line.startsWith(boundary)) {
+        // Convert characters back to bytes:
+        buffer.write(line.getBytes("ISO-8859-1"));
+      }
+
+      // Remove CRLF that separates body from boundary token
+      body = trimCrlf(buffer.toByteArray());
+
+      // Remove CRLF from the boundary token (to match readLine)
+      line = trimCrlf(line);
+    } else {
+      body = new FilterInputStream(ByteStreams.limit(inputStream, contentLength)) {
+        @Override
+        public void close() {
+          // Don't allow the parser to close the underlying stream
+        }
+      };
     }
 
     HttpResponse response =
-        getFakeResponse(statusCode, partContent.toString(), headerNames, headerValues);
+        getFakeResponse(statusCode, body, headerNames, headerValues);
 
-    parseAndCallback(requestInfos.get(contentId - 1), statusCode, contentId, response);
+    parseAndCallback(requestInfos.get(contentId - 1), statusCode, response);
+
+    // Consume any bytes that were not consumed by the parser
+    while (body.skip(contentLength) > 0 || body.read() != -1) {
+    }
+
+    if (contentLength != -1) {
+      line = readLine();
+    } else {
+      // The line was already read
+    }
+    // Consume any blank lines that follow the response (not included in Content-Length)
+    while ((line != null) && (line.length() == 0)) {
+      line = readLine();
+    }
 
     checkForFinalBoundary(line);
   }
@@ -141,7 +176,7 @@ final class BatchUnparsedResponse {
    * {@link HttpResponse#parseAs(java.lang.reflect.Type)}.
    */
   private <T, E> void parseAndCallback(
-      RequestInfo<T, E> requestInfo, int statusCode, int contentID, HttpResponse response)
+      RequestInfo<T, E> requestInfo, int statusCode, HttpResponse response)
       throws IOException {
     BatchCallback<T, E> callback = requestInfo.callback;
 
@@ -158,8 +193,7 @@ final class BatchUnparsedResponse {
         // No point in parsing if there is no callback.
         return;
       }
-      T parsed = getParsedDataClass(
-          requestInfo.dataClass, response, requestInfo, responseHeaders.getContentType());
+      T parsed = getParsedDataClass(requestInfo.dataClass, response, requestInfo);
       callback.onSuccess(parsed, responseHeaders);
     } else {
       HttpContent content = requestInfo.request.getContent();
@@ -185,16 +219,14 @@ final class BatchUnparsedResponse {
           // No point in parsing if there is no callback.
           return;
         }
-        E parsed = getParsedDataClass(
-            requestInfo.errorClass, response, requestInfo, responseHeaders.getContentType());
+        E parsed = getParsedDataClass(requestInfo.errorClass, response, requestInfo);
         callback.onFailure(parsed, responseHeaders);
       }
     }
   }
 
   private <A, T, E> A getParsedDataClass(
-      Class<A> dataClass, HttpResponse response, RequestInfo<T, E> requestInfo, String contentType)
-      throws IOException {
+      Class<A> dataClass, HttpResponse response, RequestInfo<T, E> requestInfo) throws IOException {
     // TODO(yanivi): Remove the HttpResponse reference and directly parse the InputStream
     if (dataClass == Void.class) {
       return null;
@@ -204,7 +236,7 @@ final class BatchUnparsedResponse {
   }
 
   /** Create a fake HTTP response object populated with the partContent and the statusCode. */
-  private HttpResponse getFakeResponse(final int statusCode, final String partContent,
+  private HttpResponse getFakeResponse(final int statusCode, final InputStream partContent,
       List<String> headerNames, List<String> headerValues)
       throws IOException {
     HttpRequest request = new FakeResponseHttpTransport(
@@ -216,25 +248,79 @@ final class BatchUnparsedResponse {
   }
 
   /**
+   * Reads an HTTP response line (ISO-8859-1 encoding).
+   *
+   * @return The line that was read, including CRLF.
+   */
+  private String readRawLine() throws IOException {
+    int b = inputStream.read();
+    if (b == -1) {
+      return null;
+    } else {
+      StringBuilder buffer = new StringBuilder();
+      for (; b != -1; b = inputStream.read()) {
+        buffer.append((char) b);
+        if (b == '\n') {
+          break;
+        }
+      }
+      return buffer.toString();
+    }
+  }
+
+  /**
+   * Reads an HTTP response line (ISO-8859-1 encoding)
+   * <p>
+   * This method is similar to {@link java.io.BufferedReader#readLine()}, but handles newlines in a
+   * way that is consistent with the HTTP RFC 2616.
+   *
+   * @return The line that was read, excluding CRLF.
+   */
+  private String readLine() throws IOException {
+    return trimCrlf(readRawLine());
+  }
+
+  private static String trimCrlf(String input) {
+    if (input.endsWith("\r\n")) {
+      return input.substring(0, input.length() - 2);
+    } else if (input.endsWith("\n")) {
+      return input.substring(0, input.length() - 1);
+    } else {
+      return input;
+    }
+  }
+
+  private static InputStream trimCrlf(byte[] bytes) {
+    int length = bytes.length;
+    if (length > 0 && bytes[length - 1] == '\n') {
+      length--;
+    }
+    if (length > 0 && bytes[length - 1] == '\r') {
+      length--;
+    }
+    return new ByteArrayInputStream(bytes, 0, length);
+  }
+
+  /**
    * If the boundary line consists of the boundary and "--" then there are no more individual
    * responses left to be parsed and the input stream is closed.
    */
   private void checkForFinalBoundary(String boundaryLine) throws IOException {
     if (boundaryLine.equals(boundary + "--")) {
       hasNext = false;
-      bufferedReader.close();
+      inputStream.close();
     }
   }
 
   private static class FakeResponseHttpTransport extends HttpTransport {
 
     private int statusCode;
-    private String partContent;
+    private InputStream partContent;
     private List<String> headerNames;
     private List<String> headerValues;
 
-    FakeResponseHttpTransport(
-        int statusCode, String partContent, List<String> headerNames, List<String> headerValues) {
+    FakeResponseHttpTransport(int statusCode, InputStream partContent, List<String> headerNames,
+        List<String> headerValues) {
       super();
       this.statusCode = statusCode;
       this.partContent = partContent;
@@ -250,14 +336,13 @@ final class BatchUnparsedResponse {
 
   private static class FakeLowLevelHttpRequest extends LowLevelHttpRequest {
 
-    // TODO(rmistry): Read in partContent as bytes instead of String for efficiency.
-    private String partContent;
+    private InputStream partContent;
     private int statusCode;
     private List<String> headerNames;
     private List<String> headerValues;
 
-    FakeLowLevelHttpRequest(
-        String partContent, int statusCode, List<String> headerNames, List<String> headerValues) {
+    FakeLowLevelHttpRequest(InputStream partContent, int statusCode, List<String> headerNames,
+        List<String> headerValues) {
       this.partContent = partContent;
       this.statusCode = statusCode;
       this.headerNames = headerNames;
@@ -270,8 +355,8 @@ final class BatchUnparsedResponse {
 
     @Override
     public LowLevelHttpResponse execute() {
-      FakeLowLevelHttpResponse response = new FakeLowLevelHttpResponse(new ByteArrayInputStream(
-          StringUtils.getBytesUtf8(partContent)), statusCode, headerNames, headerValues);
+      FakeLowLevelHttpResponse response = new FakeLowLevelHttpResponse(
+          partContent, statusCode, headerNames, headerValues);
       return response;
     }
   }

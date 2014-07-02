@@ -74,7 +74,7 @@ class DefaultCredentialProvider {
    * @param transport the transport for Http calls.
    * @param jsonFactory the factory for Json parsing and formatting.
    * @return the credential instance.
-   * @throws IOException if the credential cannot be created in the current environment.   *
+   * @throws IOException if the credential cannot be created in the current environment.
    */
   final GoogleCredential getDefaultCredential(HttpTransport transport, JsonFactory jsonFactory)
       throws IOException {

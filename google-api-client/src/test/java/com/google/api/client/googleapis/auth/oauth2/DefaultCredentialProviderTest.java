@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -49,7 +50,8 @@ public class DefaultCredentialProviderTest  extends TestCase  {
 
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
-  private static final Collection<String> SCOPES = Arrays.asList("scope1", "scope2");
+  private static final Collection<String> SCOPES =
+      Collections.unmodifiableCollection(Arrays.asList("scope1", "scope2"));
 
   private static final String SA_KEY_ID = "key_id";
   private static final String SA_KEY_TEXT = "-----BEGIN PRIVATE KEY-----\n"
@@ -219,19 +221,21 @@ public class DefaultCredentialProviderTest  extends TestCase  {
     if (serviceAccountFile.exists()) {
       serviceAccountFile.delete();
     }
-    final String SA_ID = "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr.apps.googleusercontent.com";
-    final String SA_EMAIL= "36680232662-vrd7ji19qe3nelgchdcsanun6bnr@developer.gserviceaccount.com";
+    final String serviceAccountId =
+        "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr.apps.googleusercontent.com";
+    final String serviceAccountEmail =
+        "36680232662-vrd7ji19qe3nelgchdcsanun6bnr@developer.gserviceaccount.com";
 
     MockTokenServerTransport transport = new MockTokenServerTransport();
-    transport.addServiceAccount(SA_EMAIL, ACCESS_TOKEN);
+    transport.addServiceAccount(serviceAccountEmail, ACCESS_TOKEN);
 
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
     try {
       // Write out service account file
       GenericJson serviceAccountContents = new GenericJson();
       serviceAccountContents.setFactory(JSON_FACTORY);
-      serviceAccountContents.put("client_id", SA_ID);
-      serviceAccountContents.put("client_email", SA_EMAIL);
+      serviceAccountContents.put("client_id", serviceAccountId);
+      serviceAccountContents.put("client_email", serviceAccountEmail);
       serviceAccountContents.put("private_key", SA_KEY_TEXT);
       serviceAccountContents.put("private_key_id", SA_KEY_ID);
       serviceAccountContents.put("type", GoogleCredential.SERVICE_ACCOUNT_FILE_TYPE);
@@ -317,16 +321,16 @@ public class DefaultCredentialProviderTest  extends TestCase  {
 
   private void testDefaultCredentialUser(File userFile, TestDefaultCredentialProvider testProvider)
       throws IOException {
-    final String CLIENT_SECRET = "jakuaL9YyieakhECKL2SwZcu";
-    final String CLIENT_ID = "ya29.1.AADtN_UtlxH8cruGAxrN2XQnZTVRvDyVWnYq4I6dws";
-    final String REFRESH_TOKEN = "1/Tl6awhpFjkMkSJoj1xsli0H2eL5YsMgU_NKPY2TyGWY";
+    final String clientSecret = "jakuaL9YyieakhECKL2SwZcu";
+    final String clientId = "ya29.1.AADtN_UtlxH8cruGAxrN2XQnZTVRvDyVWnYq4I6dws";
+    final String refreshToken = "1/Tl6awhpFjkMkSJoj1xsli0H2eL5YsMgU_NKPY2TyGWY";
 
     // Define a transport that can simulate refreshing tokens
     MockTokenServerTransport transport = new MockTokenServerTransport();
-    transport.addClient(CLIENT_ID, CLIENT_SECRET);
-    transport.addRefreshToken(REFRESH_TOKEN, ACCESS_TOKEN);
+    transport.addClient(clientId, clientSecret);
+    transport.addRefreshToken(refreshToken, ACCESS_TOKEN);
 
-    String json = GoogleCredentialTest.createUserJson(CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN);
+    String json = GoogleCredentialTest.createUserJson(clientId, clientSecret, refreshToken);
 
     try {
       // Write out user file
@@ -337,7 +341,7 @@ public class DefaultCredentialProviderTest  extends TestCase  {
       Credential credential = testProvider.getDefaultCredential(transport, JSON_FACTORY);
 
       assertNotNull(credential);
-      assertEquals(REFRESH_TOKEN, credential.getRefreshToken());
+      assertEquals(refreshToken, credential.getRefreshToken());
 
       assertTrue(credential.refreshToken());
       assertEquals(ACCESS_TOKEN, credential.getAccessToken());

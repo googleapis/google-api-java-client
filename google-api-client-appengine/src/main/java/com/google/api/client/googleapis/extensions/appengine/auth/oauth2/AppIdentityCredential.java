@@ -243,12 +243,10 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
       appIdentity.intercept(request);
     }
 
-    @Override
     public boolean createScopedRequired() {
       return scopesRequired;
     }
 
-    @Override
     public GoogleCredential createScoped(Collection<String> scopes) {
       return new AppEngineCredentialWrapper(
           new AppIdentityCredential.Builder(scopes)

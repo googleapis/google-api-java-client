@@ -50,10 +50,10 @@ public class AppIdentityCredentialTest extends TestCase {
   }
 
   public void testUsesAppIdentityService() throws IOException {
-    final String EXPECTED_ACCESS_TOKEN = "ExpectedAccessToken";
+    final String expectedAccessToken = "ExpectedAccessToken";
 
     MockAppIdentityService appIdentity = new MockAppIdentityService();
-    appIdentity.setAccessTokenText(EXPECTED_ACCESS_TOKEN);
+    appIdentity.setAccessTokenText(expectedAccessToken);
     AppIdentityCredential.Builder builder = new AppIdentityCredential.Builder(SCOPES);
     builder.setAppIdentityService(appIdentity);
     AppIdentityCredential appCredential = builder.build();
@@ -66,21 +66,21 @@ public class AppIdentityCredentialTest extends TestCase {
     assertEquals(appIdentity.getGetAccessTokenCallCount(), 1);
     HttpHeaders headers = request.getHeaders();
     String authHeader = headers.getAuthorization();
-    Boolean headerContainsToken = authHeader.contains(EXPECTED_ACCESS_TOKEN);
+    Boolean headerContainsToken = authHeader.contains(expectedAccessToken);
     assertTrue(headerContainsToken);
   }
 
   public void testAppEngineCredentialWrapper() throws IOException {
-    final String EXPECTED_ACCESS_TOKEN = "ExpectedAccessToken";
-    final Collection<String> EMPTY_SCOPES = Collections.emptyList();
+    final String expectedAccessToken = "ExpectedAccessToken";
+    final Collection<String> emptyScopes = Collections.emptyList();
 
     HttpTransport transport = new MockHttpTransport();
     JsonFactory jsonFactory = new JacksonFactory();
 
     MockAppIdentityService appIdentity = new MockAppIdentityService();
-    appIdentity.setAccessTokenText(EXPECTED_ACCESS_TOKEN);
+    appIdentity.setAccessTokenText(expectedAccessToken);
 
-    AppIdentityCredential.Builder builder = new AppIdentityCredential.Builder(EMPTY_SCOPES);
+    AppIdentityCredential.Builder builder = new AppIdentityCredential.Builder(emptyScopes);
     builder.setAppIdentityService(appIdentity);
     AppIdentityCredential appCredential = builder.build();
 
@@ -93,8 +93,7 @@ public class AppIdentityCredentialTest extends TestCase {
     try {
       wrapper.intercept(request);
       fail("Should not be able to use credential without scopes.");
-    }
-    catch (Exception expected) {
+    } catch (Exception expected) {
     }
     assertEquals(appIdentity.getGetAccessTokenCallCount(), 1);
 
@@ -105,7 +104,7 @@ public class AppIdentityCredentialTest extends TestCase {
     assertEquals(appIdentity.getGetAccessTokenCallCount(), 2);
     HttpHeaders headers = request.getHeaders();
     String authHeader = headers.getAuthorization();
-    assertTrue(authHeader.contains(EXPECTED_ACCESS_TOKEN));
+    assertTrue(authHeader.contains(expectedAccessToken));
   }
 
   public void testAppEngineCredentialWrapperNullTransportThrows() throws IOException {
@@ -113,8 +112,7 @@ public class AppIdentityCredentialTest extends TestCase {
     try {
       new AppIdentityCredential.AppEngineCredentialWrapper(null, jsonFactory);
       fail();
-    }
-    catch (NullPointerException expected) {
+    } catch (NullPointerException expected) {
     }
   }
 
@@ -123,8 +121,7 @@ public class AppIdentityCredentialTest extends TestCase {
     try {
       new AppIdentityCredential.AppEngineCredentialWrapper(transport, null);
       fail();
-    }
-    catch (NullPointerException expected) {
+    } catch (NullPointerException expected) {
     }
   }
 }
