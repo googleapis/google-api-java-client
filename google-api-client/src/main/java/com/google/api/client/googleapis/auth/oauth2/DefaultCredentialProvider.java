@@ -42,14 +42,14 @@ import java.util.Locale;
 @Beta
 class DefaultCredentialProvider {
 
-  static final String CREDENTIAL_ENV_VAR = "GOOGLE_CREDENTIALS_DEFAULT";
+  static final String CREDENTIAL_ENV_VAR = "GOOGLE_APPLICATION_CREDENTIALS";
 
-  static final String WELL_KNOWN_CREDENTIALS_FILE = "credentials_default.json";
+  static final String WELL_KNOWN_CREDENTIALS_FILE = "application_default_credentials.json";
 
   static final String CLOUDSDK_CONFIG_DIRECTORY = "gcloud";
 
   static final String HELP_PERMALINK =
-      "https://developers.google.com/accounts/docs/default-credentials";
+      "https://developers.google.com/accounts/docs/application-default-credentials";
 
   static final String APP_ENGINE_CREDENTIAL_CLASS =
       "com.google.api.client.googleapis.extensions.appengine.auth.oauth2"
@@ -64,12 +64,12 @@ class DefaultCredentialProvider {
 
   /**
    * {@link Beta} <br/>
-   * Returns a default credential for the application.
+   * Returns the Application Default Credentials.
    *
-   * <p>Returns the built-in service account's credential for the application if running on
-   * Google App Engine or Google Compute Engine, or returns the credential pointed to by the
-   * environment variable GOOGLE_CREDENTIALS_DEFAULT.
-   * </p>
+   * <p>Returns the Application Default Credentials which are credentials that identify and
+   * authorize the whole application. This is the built-in service account if running on Google
+   * Compute Engine or the credentials file from the path in the environment variable
+   * GOOGLE_APPLICATION_CREDENTIALS.</p>
    *
    * @param transport the transport for Http calls.
    * @param jsonFactory the factory for Json parsing and formatting.
@@ -88,11 +88,9 @@ class DefaultCredentialProvider {
     }
 
     throw new IOException(String.format(
-        "The Default Credentials are not available. They are available if running"
-            + " in Google App Engine or Google Compute Engine. They are also available if using"
-            + " the Google Cloud SDK and running 'gcloud auth login'. Otherwise, the environment"
-            + " variable %s must be defined pointing to a file defining the credentials."
-            + " See %s for details.",
+        "The Application Default Credentials are not available. They are available if running"
+            + " in Google Compute Engine. Otherwise, the environment variable %s must be defined"
+            + " pointing to a file defining the credentials. See %s for more information.",
         CREDENTIAL_ENV_VAR,
         HELP_PERMALINK));
   }

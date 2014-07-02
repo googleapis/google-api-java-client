@@ -135,18 +135,18 @@ public class GoogleCredentialTest extends TestCase {
         scopedCredential.getServiceAccountPrivateKey());
   }
 
-  public void testGetDefaultNullTransportThrows() throws IOException {
+  public void testGetApplicationDefaultNullTransportThrows() throws IOException {
     try {
-      GoogleCredential.getDefault(null, JSON_FACTORY);
+      GoogleCredential.getApplicationDefault(null, JSON_FACTORY);
       fail();
     } catch (NullPointerException expected) {
     }
   }
 
-  public void testGetDefaultNullJsonFactoryThrows() throws IOException {
+  public void testGetApplicationDefaultNullJsonFactoryThrows() throws IOException {
     HttpTransport transport = new MockHttpTransport();
     try {
-      GoogleCredential.getDefault(transport, null);
+      GoogleCredential.getApplicationDefault(transport, null);
       fail();
     } catch (NullPointerException expected) {
     }
