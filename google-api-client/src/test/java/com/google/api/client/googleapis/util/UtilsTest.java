@@ -23,8 +23,6 @@ import junit.framework.TestCase;
 
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.security.KeyStore;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,18 +32,6 @@ import java.util.Map;
  * @author Yaniv Inbar
  */
 public class UtilsTest extends TestCase {
-
-  public void testGetCertificateTrustStore() throws Exception {
-    KeyStore trustStore = Utils.getCertificateTrustStore();
-    Enumeration<String> aliases = trustStore.aliases();
-    while (aliases.hasMoreElements()) {
-      String alias = aliases.nextElement();
-      assertTrue(trustStore.isCertificateEntry(alias));
-    }
-    // intentionally check the count of certificates, so it can help us detect if a new certificate
-    // has been added or removed
-    assertEquals(70, trustStore.size());
-  }
 
   public void testGetDefaultJsonFactory() {
     JsonFactory jsonFactory = Utils.getDefaultJsonFactory();
@@ -77,5 +63,4 @@ public class UtilsTest extends TestCase {
     }
     return map;
   }
-
 }
