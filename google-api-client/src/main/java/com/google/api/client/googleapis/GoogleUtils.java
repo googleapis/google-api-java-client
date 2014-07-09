@@ -14,10 +14,6 @@
 
 package com.google.api.client.googleapis;
 
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.SecurityUtils;
 
 import java.io.IOException;
@@ -59,6 +55,28 @@ public final class GoogleUtils {
   // NOTE: toString() so compiler thinks it isn't a constant, so it won't inline it
   public static final String VERSION = (MAJOR_VERSION + "." + MINOR_VERSION + "." + BUGFIX_VERSION
       + "-rc-SNAPSHOT").toString();
+
+  /** Cached value for {@link #getCertificateTrustStore()}. */
+  static KeyStore certTrustStore;
+
+  /**
+   * Returns the key store for trusted root certificates to use for Google APIs.
+   *
+   * <p>
+   * Value is cached, so subsequent access is fast.
+   * </p>
+   *
+   * @since 1.14
+   */
+  public static synchronized KeyStore getCertificateTrustStore()
+      throws IOException, GeneralSecurityException {
+    if (certTrustStore == null) {
+      certTrustStore = SecurityUtils.getJavaKeyStore();
+      InputStream keyStoreStream = GoogleUtils.class.getResourceAsStream("google.jks");
+      SecurityUtils.loadKeyStore(certTrustStore, keyStoreStream, "notasecret");
+    }
+    return certTrustStore;
+  }
 
   private GoogleUtils() {
   }

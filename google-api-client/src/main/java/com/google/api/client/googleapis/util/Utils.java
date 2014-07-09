@@ -16,55 +16,26 @@ package com.google.api.client.googleapis.util;
 
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Beta;
-import com.google.api.client.util.SecurityUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.GeneralSecurityException;
-import java.security.KeyStore;
 
 /**
+ * {@link Beta} <br/>
  * Utility class for the Google API Client Library.
  *
  * @since 1.19
  */
+@Beta
 public final class Utils {
 
-  /** Cached value for {@link #getCertificateTrustStore()}. */
-  static KeyStore certTrustStore;
-
   /**
-   * Returns the key store for trusted root certificates to use for Google APIs.
-   *
-   * <p>
-   * Value is cached, so subsequent access is fast.
-   * </p>
-   *
-   * @since 1.19, since 1.14 in com.google.api.client.googleapis.GoogleUtils
-   */
-  public static synchronized KeyStore getCertificateTrustStore()
-      throws IOException, GeneralSecurityException {
-    if (certTrustStore == null) {
-      certTrustStore = SecurityUtils.getJavaKeyStore();
-      InputStream keyStoreStream = Utils.class.getResourceAsStream("google.jks");
-      SecurityUtils.loadKeyStore(certTrustStore, keyStoreStream, "notasecret");
-    }
-    return certTrustStore;
-  }
-
-  /**
-   * {@link Beta} <br/>
    * Returns a cached default implementation of the JsonFactory interface.
    */
-  @Beta
   public static JsonFactory getDefaultJsonFactory() {
     return JsonFactoryInstanceHolder.INSTANCE;
   }
 
-  @Beta
   private static class JsonFactoryInstanceHolder {
     // The jackson2.JacksonFactory was introduced as a product dependency in 1.19 to enable
     // other APIs to not require one of these for input. This was the most commonly used
@@ -74,15 +45,12 @@ public final class Utils {
   }
 
   /**
-   * {@link Beta} <br/>
    * Returns a cached default implementation of the HttpTransport interface.
    */
-  @Beta
   public static HttpTransport getDefaultTransport() {
     return TransportInstanceHolder.INSTANCE;
   }
 
-  @Beta
   private static class TransportInstanceHolder {
     static final HttpTransport INSTANCE = new NetHttpTransport();
   }
