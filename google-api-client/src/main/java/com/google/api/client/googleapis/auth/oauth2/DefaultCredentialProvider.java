@@ -128,25 +128,27 @@ class DefaultCredentialProvider {
     }
 
     // Then try the well-known file
-    File wellKnownFileLocation = getWellKnownCredentialsFile();
-    try {
-      if (fileExists(wellKnownFileLocation)) {
-        InputStream credentialsStream = null;
-        try {
-          credentialsStream = new FileInputStream(wellKnownFileLocation);
-          credential = GoogleCredential.fromStream(credentialsStream, transport, jsonFactory);
-        } catch (IOException e) {
-          throw new IOException(String.format(
-              "Error reading credential file from location %s: %s",
-              wellKnownFileLocation, e.getMessage()));
-        } finally {
-          if (credentialsStream != null) {
-            credentialsStream.close();
+    if (credential == null) {
+      File wellKnownFileLocation = getWellKnownCredentialsFile();
+      try {
+        if (fileExists(wellKnownFileLocation)) {
+          InputStream credentialsStream = null;
+          try {
+            credentialsStream = new FileInputStream(wellKnownFileLocation);
+            credential = GoogleCredential.fromStream(credentialsStream, transport, jsonFactory);
+          } catch (IOException e) {
+            throw new IOException(String.format(
+                "Error reading credential file from location %s: %s",
+                wellKnownFileLocation, e.getMessage()));
+          } finally {
+            if (credentialsStream != null) {
+              credentialsStream.close();
+            }
           }
         }
+      } catch (AccessControlException expected) {
+        // Exception querying file system is expected on App-Engine
       }
-    } catch (AccessControlException expected) {
-      // Exception querying file system is expected on App-Engine
     }
 
     // Then try App Engine
