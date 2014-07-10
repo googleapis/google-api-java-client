@@ -319,6 +319,77 @@ public class DefaultCredentialProviderTest  extends TestCase  {
     testDefaultCredentialUser(wellKnownFile, testProvider);
   }
 
+  public void testDefaultCredentialEnvironmentVariableWinsOverWellKnownFile() throws IOException {
+    final String clientSecret = "jakuaL9YyieakhECKL2SwZcu";
+    final String clientId = "ya29.1.AADtN_UtlxH8cruGAxrN2XQnZTVRvDyVWnYq4I6dws";
+    final String refreshTokenEnv = "2/Tl6awhpFjkMkSJoj1xsli0H2eL5YsMgU_NKPY2TyGWY";
+    final String accessTokenEnv = "2/MkSJoj1xsli0AccessToken_NKPY2";
+    final String refreshTokenWkf = "3/Tl6awhpFjkMkSJoj1xsli0H2eL5YsMgU_NKPY2TyGWY";
+    final String accessTokenWkf = "3/MkSJoj1xsli0AccessToken_NKPY2";
+
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+
+    // Set up an environment variable file
+    File environmentVariableFile = new java.io.File(getTempDirectory(), "EnvVarUser.json");
+    if (environmentVariableFile.exists()) {
+      environmentVariableFile.delete();
+    }
+    testProvider.setEnv(DefaultCredentialProvider.CREDENTIAL_ENV_VAR,
+        environmentVariableFile.getAbsolutePath());
+
+    // Also set up a well-known-location file
+    File homeDir = getTempDirectory();
+    File configDir = new File(homeDir, ".config");
+    if (!configDir.exists()) {
+      configDir.mkdir();
+    }
+    File cloudConfigDir = new File(configDir, DefaultCredentialProvider.CLOUDSDK_CONFIG_DIRECTORY);
+    if (!cloudConfigDir.exists()) {
+      cloudConfigDir.mkdir();
+    }
+    File wellKnownFile = new File(
+        cloudConfigDir, DefaultCredentialProvider.WELL_KNOWN_CREDENTIALS_FILE);
+    if (wellKnownFile.exists()) {
+      wellKnownFile.delete();
+    }
+    testProvider.addFile(wellKnownFile.getAbsolutePath());
+    testProvider.setProperty("os.name", "linux");
+    testProvider.setProperty("user.home", homeDir.getAbsolutePath());
+
+    // Define a transport that can simulate refreshing tokens
+    MockTokenServerTransport transport = new MockTokenServerTransport();
+    transport.addClient(clientId, clientSecret);
+    transport.addRefreshToken(refreshTokenEnv, accessTokenEnv);
+    transport.addRefreshToken(refreshTokenWkf, accessTokenWkf);
+
+    String jsonEnv = GoogleCredentialTest.createUserJson(clientId, clientSecret, refreshTokenEnv);
+    String jsonWkf = GoogleCredentialTest.createUserJson(clientId, clientSecret, refreshTokenWkf);
+
+    try {
+      // Write out user files
+      PrintWriter writer = new PrintWriter(environmentVariableFile);
+      writer.println(jsonEnv);
+      writer.close();
+      writer = new PrintWriter(wellKnownFile);
+      writer.println(jsonWkf);
+      writer.close();
+
+      Credential credential = testProvider.getDefaultCredential(transport, JSON_FACTORY);
+
+      assertNotNull(credential);
+      assertEquals(refreshTokenEnv, credential.getRefreshToken());
+      assertTrue(credential.refreshToken());
+      assertEquals(accessTokenEnv, credential.getAccessToken());
+    } finally {
+      if (wellKnownFile.exists()) {
+        wellKnownFile.delete();
+      }
+      if (environmentVariableFile.exists()) {
+        environmentVariableFile.delete();
+      }
+    }
+  }
+
   private void testDefaultCredentialUser(File userFile, TestDefaultCredentialProvider testProvider)
       throws IOException {
     final String clientSecret = "jakuaL9YyieakhECKL2SwZcu";
