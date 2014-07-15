@@ -14,10 +14,10 @@
 
 package com.google.api.client.googleapis.extensions.appengine.testing.auth.oauth2;
 
+import com.google.api.client.util.Beta;
 import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.appidentity.AppIdentityServiceFailureException;
 import com.google.appengine.api.appidentity.PublicCertificate;
-import com.google.api.client.util.Beta;
 
 import java.util.Collection;
 

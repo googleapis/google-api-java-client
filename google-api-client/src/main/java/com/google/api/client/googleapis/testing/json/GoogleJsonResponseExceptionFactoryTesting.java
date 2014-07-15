@@ -26,7 +26,7 @@ import com.google.api.client.util.Beta;
 import java.io.IOException;
 
 /**
- * {@link Beta} </br>
+ * {@link Beta} <br/>
  * Factory class that builds {@link GoogleJsonResponseException} instances for
  * testing.
  *
