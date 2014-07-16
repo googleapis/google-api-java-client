@@ -29,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.security.AccessControlException;
 import java.util.Locale;
 
@@ -218,8 +219,12 @@ class DefaultCredentialProvider {
       Constructor<?> constructor = credentialClass
           .getConstructor(HttpTransport.class, JsonFactory.class);
       return (GoogleCredential) constructor.newInstance(transport, jsonFactory);
-    } catch (ReflectiveOperationException expected) {
-      // Expected when not running on App Engine
+      // Reflection expected to fail when not on App Engine
+    } catch (ClassNotFoundException expected) {
+    } catch (NoSuchMethodException expected) {
+    } catch (InstantiationException expected) {
+    } catch (IllegalAccessException expected) {
+    } catch (InvocationTargetException expected) {
     }
     return null;
   }
