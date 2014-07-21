@@ -299,6 +299,19 @@
             <arguments>-Psonatype-oss-release ${arguments}</arguments>
           </configuration>
         </plugin>
+        <!--This plugin configuration is present to override the configuration specified in the
+          parent's pom.xml.
+          This is a workaround for known bug: https://issues.sonatype.org/browse/CENTRALSRV-35 -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.1</version>
+          <configuration>
+            <mavenExecutorId>forked-path</mavenExecutorId>
+            <useReleaseProfile>true</useReleaseProfile>
+            <arguments>-Psonatype-oss-release ${arguments}</arguments>
+          </configuration>
+        </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
           <version>2.2</version>
