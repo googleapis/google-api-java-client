@@ -68,15 +68,18 @@ public class DefaultCredentialProviderTest  extends TestCase  {
       + "==\n-----END PRIVATE KEY-----\n";
   private static final String ACCESS_TOKEN = "1/MkSJoj1xsli0AccessToken_NKPY2";
 
+  private static final String GAE_SIGNAL_CLASS = "com.google.appengine.api.utils.SystemProperty";
+
   private static final Lock lock = new ReentrantLock();
 
   private static File tempDirectory = null;
 
-  public void testDefaultCredentialAppEngine() throws IOException  {
+  public void testDefaultCredentialAppEngineDeployed() throws IOException  {
     HttpTransport transport = new MockHttpTransport();
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
     testProvider.addType(DefaultCredentialProvider.APP_ENGINE_CREDENTIAL_CLASS,
         MockAppEngineCredential.class);
+    testProvider.addType(GAE_SIGNAL_CLASS, MockAppEngineSystemProperty.class);
 
     Credential defaultCredential = testProvider.getDefaultCredential(transport, JSON_FACTORY);
 
@@ -86,7 +89,38 @@ public class DefaultCredentialProviderTest  extends TestCase  {
     assertSame(JSON_FACTORY, defaultCredential.getJsonFactory());
   }
 
-  public void testDefaultCredentialAppEngineSingleAttempt() {
+  public void testDefaultCredentialAppEngineComponentOffAppEngineGivesNotFoundError() {
+    HttpTransport transport = new MockHttpTransport();
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    testProvider.addType(DefaultCredentialProvider.APP_ENGINE_CREDENTIAL_CLASS,
+        MockAppEngineCredential.class);
+    testProvider.addType(GAE_SIGNAL_CLASS, MockOffAppEngineSystemProperty.class);
+
+    try {
+      testProvider.getDefaultCredential(transport, JSON_FACTORY);
+      fail("No credential expected when not on App Engine.");
+    } catch (IOException e) {
+      String message = e.getMessage();
+      assertTrue(message.contains(DefaultCredentialProvider.HELP_PERMALINK));
+    }
+  }
+
+  public void testDefaultCredentialAppEngineWithoutDependencyThrowsHelpfulLoadError() {
+    HttpTransport transport = new MockHttpTransport();
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    testProvider.addType(GAE_SIGNAL_CLASS, MockAppEngineSystemProperty.class);
+
+    try {
+      testProvider.getDefaultCredential(transport, JSON_FACTORY);
+      fail("Credential expected to fail to load if credential class not present.");
+    } catch (IOException e) {
+      String message = e.getMessage();
+      assertFalse(message.contains(DefaultCredentialProvider.HELP_PERMALINK));
+      assertTrue(message.contains(DefaultCredentialProvider.APP_ENGINE_CREDENTIAL_CLASS));
+    }
+  }
+
+  public void testDefaultCredentialAppEngineSingleClassLoadAttempt() {
     HttpTransport transport = new MockHttpTransport();
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
     try {
@@ -109,6 +143,7 @@ public class DefaultCredentialProviderTest  extends TestCase  {
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
     testProvider.addType(DefaultCredentialProvider.APP_ENGINE_CREDENTIAL_CLASS,
         MockAppEngineCredential.class);
+    testProvider.addType(GAE_SIGNAL_CLASS, MockAppEngineSystemProperty.class);
 
     Credential firstCall = testProvider.getDefaultCredential(transport, JSON_FACTORY);
 
@@ -447,6 +482,46 @@ public class DefaultCredentialProviderTest  extends TestCase  {
       super(new GoogleCredential.Builder().setTransport(transport).setJsonFactory(jsonFactory));
     }
   }
+
+  /*
+   * App Engine is detected by calling SystemProperty.environment.value() via Reflection.
+   * The following mock types simulate the shape and behavior of that call sequence.
+   */
+
+  private static class MockAppEngineSystemProperty {
+
+    @SuppressWarnings("unused")
+    public static final MockEnvironment environment =
+      new MockEnvironment(MockEnvironmentEnum.Production);
+  }
+
+  private static class MockOffAppEngineSystemProperty {
+
+    @SuppressWarnings("unused")
+    public static final MockEnvironment environment = new MockEnvironment(null);
+  }
+
+  private enum MockEnvironmentEnum {
+    Production,
+    Development;
+  }
+
+  public static class MockEnvironment {
+
+    private MockEnvironmentEnum innerValue;
+
+    MockEnvironment(MockEnvironmentEnum value) {
+      this.innerValue = value;
+    }
+
+    public MockEnvironmentEnum value() {
+      return innerValue;
+    }
+  }
+
+  /*
+   * End of types simulating SystemProperty.environment.value()
+   */
 
   private static class MockRequestCountingTransport extends MockHttpTransport {
     int requestCount = 0;
