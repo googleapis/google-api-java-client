@@ -29,7 +29,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.AccessControlException;
 import java.util.Locale;
 
@@ -206,27 +208,74 @@ class DefaultCredentialProvider {
     return Class.forName(className);
   }
 
+  private boolean runningOnAppEngine() {
+    Class<?> systemPropertyClass = null;
+    try {
+      systemPropertyClass = forName("com.google.appengine.api.utils.SystemProperty");
+    } catch (ClassNotFoundException expected) {
+      // SystemProperty will always be present on App Engine.
+      return false;
+    }
+    Exception cause = null;
+    Field environmentField;
+    try {
+      environmentField = systemPropertyClass.getField("environment");
+      Object environmentValue = environmentField.get(null);
+      Class<?> environmentType = environmentField.getType();
+      Method valueMethod = environmentType.getMethod("value");
+      Object environmentValueValue = valueMethod.invoke(environmentValue);
+      return (environmentValueValue != null);
+    } catch (NoSuchFieldException exception) {
+      cause = exception;
+    } catch (SecurityException exception) {
+      cause = exception;
+    } catch (IllegalArgumentException exception) {
+      cause = exception;
+    } catch (IllegalAccessException exception) {
+      cause = exception;
+    } catch (NoSuchMethodException exception) {
+      cause = exception;
+    } catch (InvocationTargetException exception) {
+      cause = exception;
+    }
+    throw OAuth2Utils.exceptionWithCause(new RuntimeException(String.format(
+        "Unexpcted error trying to determine if runnning on Google App Engine: %s",
+        cause.getMessage())), cause);
+  }
+
   private final GoogleCredential tryGetAppEngineCredential(
-      HttpTransport transport, JsonFactory jsonFactory) {
+      HttpTransport transport, JsonFactory jsonFactory) throws IOException {
     // Checking for App Engine requires a class load, so check only once
     if (checkedAppEngine) {
       return null;
     }
+    boolean onAppEngine = runningOnAppEngine();
     checkedAppEngine = true;
-
+    if (!onAppEngine) {
+      return null;
+    }
+    Exception innerException = null;
     try {
       Class<?> credentialClass = forName(APP_ENGINE_CREDENTIAL_CLASS);
       Constructor<?> constructor = credentialClass
           .getConstructor(HttpTransport.class, JsonFactory.class);
       return (GoogleCredential) constructor.newInstance(transport, jsonFactory);
-      // Reflection expected to fail when not on App Engine
-    } catch (ClassNotFoundException expected) {
-    } catch (NoSuchMethodException expected) {
-    } catch (InstantiationException expected) {
-    } catch (IllegalAccessException expected) {
-    } catch (InvocationTargetException expected) {
+    } catch (ClassNotFoundException e) {
+      innerException = e;
+    } catch (NoSuchMethodException e) {
+      innerException = e;
+    } catch (InstantiationException e) {
+      innerException = e;
+    } catch (IllegalAccessException e) {
+      innerException = e;
+    } catch (InvocationTargetException e) {
+      innerException = e;
     }
-    return null;
+    throw OAuth2Utils.exceptionWithCause(new IOException(String.format(
+        "Application Default Credentials failed to create the Google App Engine service account"
+            + " credentials class %s. Check that the component 'google-api-client-appengine' is"
+            + " deployed.",
+        APP_ENGINE_CREDENTIAL_CLASS)), innerException);
   }
 
   private final GoogleCredential tryGetComputeCredential(
