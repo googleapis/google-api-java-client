@@ -782,7 +782,8 @@ public final class MediaHttpUploader {
    * </p>
    */
   public MediaHttpUploader setChunkSize(int chunkSize) {
-    Preconditions.checkArgument(chunkSize > 0 && chunkSize % MINIMUM_CHUNK_SIZE == 0);
+    Preconditions.checkArgument(chunkSize > 0 && chunkSize % MINIMUM_CHUNK_SIZE == 0, "chunkSize"
+        + " must be a positive multiple of " + MINIMUM_CHUNK_SIZE + ".");
     this.chunkSize = chunkSize;
     return this;
   }
