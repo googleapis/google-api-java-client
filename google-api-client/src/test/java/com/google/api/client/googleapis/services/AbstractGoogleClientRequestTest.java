@@ -33,6 +33,7 @@ import com.google.api.client.util.StringUtils;
 
 import junit.framework.TestCase;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -172,5 +173,45 @@ public class AbstractGoogleClientRequestTest extends TestCase {
         new MockGoogleClientRequest<Void>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
     Void v = request.execute();
     assertNull(v);
+  }
+
+  public void testUserAgentSuffix() throws Exception {
+    AssertUserAgentTransport transport = new AssertUserAgentTransport();
+
+    // Specify an Application Name.
+    String applicationName = "Test Application";
+    transport.expectedUserAgent = applicationName + " "
+        + AbstractGoogleClientRequest.USER_AGENT_SUFFIX + " "
+        + HttpRequest.USER_AGENT_SUFFIX;
+    MockGoogleClient client = new MockGoogleClient.Builder(
+        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).setApplicationName(
+            applicationName).build();
+    MockGoogleClientRequest<Void> request =
+        new MockGoogleClientRequest<Void>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
+    request.executeUnparsed();
+
+    // Don't specify an Application Name.
+    transport.expectedUserAgent = AbstractGoogleClientRequest.USER_AGENT_SUFFIX + " "
+        + HttpRequest.USER_AGENT_SUFFIX;
+    client = new MockGoogleClient.Builder(
+        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
+    request =
+        new MockGoogleClientRequest<Void>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
+    request.executeUnparsed();
+  }
+
+  private class AssertUserAgentTransport extends MockHttpTransport {
+    String expectedUserAgent;
+
+    @Override
+    public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+      return new MockLowLevelHttpRequest() {
+        @Override
+        public LowLevelHttpResponse execute() throws IOException {
+          assertEquals(expectedUserAgent, getFirstHeaderValue("User-Agent"));
+          return new MockLowLevelHttpResponse();
+        }
+      };
+    }
   }
 }

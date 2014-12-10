@@ -52,6 +52,13 @@ import java.io.OutputStream;
  */
 public abstract class AbstractGoogleClientRequest<T> extends GenericData {
 
+  /**
+   * User agent suffix for all requests.
+   *
+   * @since 1.20
+   */
+  public static final String USER_AGENT_SUFFIX = "Google-API-Java-Client";
+
   /** Google client. */
   private final AbstractGoogleClient abstractGoogleClient;
 
@@ -108,7 +115,9 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     // application name
     String applicationName = abstractGoogleClient.getApplicationName();
     if (applicationName != null) {
-      requestHeaders.setUserAgent(applicationName);
+      requestHeaders.setUserAgent(applicationName + " " + USER_AGENT_SUFFIX);
+    } else {
+      requestHeaders.setUserAgent(USER_AGENT_SUFFIX);
     }
   }
 
