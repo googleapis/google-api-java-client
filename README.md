@@ -3,7 +3,7 @@
 - [Overview](#Overview)
 - [Highlighted Features](#Highlighted_Features)
 - [Dependencies](#Dependencies)
-- [Important Warnings](#Important_Warnings)
+- [Important Warnings](#Beta)
   - [@Beta](#Beta)
   - [Deprecations](#Deprecations)
 - [Documentation](#Documentation)
@@ -151,7 +151,7 @@ This library is built on top of two common libraries, also built by Google, and 
  * [Google HTTP Client Library for Java](https://github.com/google/google-http-java-client)
  * [Google OAuth Client Library for Java](https://github.com/google/google-oauth-java-client)
 
-## <a name='Import_Warnings'>Important Warnings<a/>
+## <a name='Warnings'>Important Warnings<a/>
 
 ### <a name='Beta'>@Beta<a/>
 
