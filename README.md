@@ -1,15 +1,15 @@
 # Google APIs Client Library for Java
 
 - [Overview](#Overview )
-- [Highlighted Features](##Highlighted Features)
+- [Highlighted Features](##Highlighted_Features)
 - [Dependencies](#Dependencies)
-- [Important Warnings](#Important Warnings)
-  - [@Beta](#@Beta)
+- [Important Warnings](#Important_Warnings)
+  - [@Beta](#Beta)
   - [Deprecations](#Deprecations)
 - [Documentation](#Documentation)
 - [Links](#Links)
 
-## Overview
+## <a name='Overview'>Overview<a/>
 
 The Google APIs Client Library for Java is a flexible, efficient, and powerful Java client library for accessing any HTTP-based API on the web, not just Google APIs. 
 
@@ -44,7 +44,7 @@ In addition to Android 1.5 or higher, the Google APIs Client Library for Java su
 
 Not supported: Google Web Toolkit (GWT), Java mobile (ME), and Java 1.4 (or earlier).
 
-## Highlighted Features
+## <a name='Highlighted_Features'>Highlighted Features<a/>
 - **The library makes it simple to call Google APIs.**
 
  You can call Google APIs using Google service-specific generated libraries with the Google APIs Client Library for Java. Here's an example that makes a call to the [Google Calendar API](https://developers.google.com/google-apps/calendar/): 
@@ -120,7 +120,7 @@ Not supported: Google Web Toolkit (GWT), Java mobile (ME), and Java 1.4 (or earl
 
 - **The library is easy to install.**
 
- The Google APIs Client Library for Java is easy to install, and you can download the binary directly from the [Downloads Downloads page], or you can use Maven or Gradle. 
+ The Google APIs Client Library for Java is easy to install, and you can download the binary directly from the [Downloads page](https://code.google.com/p/google-api-java-client/wiki/Downloads), or you can use Maven or Gradle. 
  To use Maven, add the following lines to your pom.xml file:
 
     ```maven
@@ -146,28 +146,28 @@ Not supported: Google Web Toolkit (GWT), Java mobile (ME), and Java 1.4 (or earl
   }
   ```
 
-## Dependencies
+## <a name='Dependencies'>Dependencies<a/>
 This library is built on top of two common libraries, also built by Google, and also designed to work with any HTTP service on the web: 
  * [Google HTTP Client Library for Java](https://github.com/google/google-http-java-client)
  * [Google OAuth Client Library for Java](https://github.com/google/google-oauth-java-client)
 
-## Important Warnings
+## <a name='Import Warnings'>Important Warnings<a/>
 
-### @Beta
+### <a name='Beta'>@Beta<a/>
 
 Features marked with the @Beta annotation at the class or method level are subject to change. They might be modified in any way, or even removed, in any major release. You should not use beta features if your code is a library itself (that is, if your code is used on the CLASSPATH of users outside your own control).
 
-### Deprecations
+### <a name='Deprecations'>Deprecations<a/>
 
 Deprecated non-beta features will be removed eighteen months after the release in which they are first deprecated. You must fix your usages before this time. If you don't, any type of breakage might result, and you are not guaranteed a compilation error.
 
-## Documentation
+## <a name='Documentation'>Documentation<a/>
 - [Developer's Guide](https://code.google.com/p/google-api-java-client/wiki/DeveloperGuide)
 - [Libraries and Samples](https://developers.google.com/api-client-library/java/apis/)
 - [JavaDoc](http://javadoc.google-api-java-client.googlecode.com/hg/index.html)
 - [Get Help](https://code.google.com/p/google-api-java-client/wiki/Support)
 
-## Links
+## <a name='Links'>Links<a/>
 - Blogs
   - [Announcements](http://google-api-java-client.blogspot.com/)
   - [Announcements](http://googledevelopers.blogspot.com/)
