@@ -14,7 +14,7 @@
 The Google APIs Client Library for Java is a flexible, efficient, and powerful Java client library for accessing any HTTP-based API on the web, not just Google APIs. 
 
 The library has the following features:
- - A powerful [OAuth 2.0](http://code.google.com/p/google-api-java-client/wiki/OAuth2) library with a consistent interface.  
+ - A powerful [OAuth 2.0](https://developers.google.com/api-client-library/java/google-api-java-client/oauth2) library with a consistent interface.  
  - Lightweight, efficient XML and JSON data models that support any data schema.
  - Support for [protocol buffers](https://github.com/google/protobuf/).
  - A set of [generated libraries for Google APIs](https://developers.google.com/api-client-library/java/apis/). 
@@ -34,13 +34,13 @@ If you are using the old GData library, you need to [migrate](http://code.google
 
 If you are developing for Android and the Google API you want to use is included in the [Google Play Services library](https://developer.android.com/google/play-services/index.html), you should use that library for the best performance and experience. 
 
-To access other Google APIs, you can use the Google APIs Client Library for Java, which supports [Android 1.5 (or higher)](https://code.google.com/p/google-api-java-client/wiki/Android).
+To access other Google APIs, you can use the Google APIs Client Library for Java, which supports [Android 1.5 (or higher)](https://developers.google.com/api-client-library/java/google-api-java-client/android).
 
 ### Other Java environments
 
 In addition to Android 1.5 or higher, the Google APIs Client Library for Java supports the following Java environments:
   - Java 5 (or higher), standard (SE) and enterprise (EE)
-  - [Google App Engine](https://code.google.com/p/google-api-java-client/wiki/GoogleAppEngine)
+  - [Google App Engine](https://developers.google.com/api-client-library/java/google-api-java-client/app-engine)
 
 Not supported: Google Web Toolkit (GWT), Java mobile (ME), and Java 1.4 (or earlier).
 
@@ -58,7 +58,7 @@ Not supported: Google Web Toolkit (GWT), Java mobile (ME), and Java 1.4 (or earl
 
 - **The library makes authentication easier.**
 
- The authentication library can reduce the amount of code needed to handle [OAuth 2.0](https://code.google.com/p/google-api-java-client/wiki/OAuth2), and sometimes a few lines is all you need. For example:
+ The authentication library can reduce the amount of code needed to handle [OAuth 2.0](https://developers.google.com/api-client-library/java/google-api-java-client/oauth2), and sometimes a few lines is all you need. For example:
 
   ```java
   /** Authorizes the installed application to access user's protected data. */
@@ -77,11 +77,11 @@ Not supported: Google Web Toolkit (GWT), Java mobile (ME), and Java 1.4 (or earl
   ```
 - **The library makes batching and media upload/download easier.**
 
- The library offers helper classes for [batching](https://code.google.com/p/google-api-java-client/wiki/Batch), [media upload](https://code.google.com/p/google-api-java-client/wiki/MediaUpload), and [media download](https://code.google.com/p/google-api-java-client/wiki/MediaDownload).
+ The library offers helper classes for [batching](https://developers.google.com/api-client-library/java/google-api-java-client/batch), [media upload](https://developers.google.com/api-client-library/java/google-api-java-client/media-upload), and [media download](https://developers.google.com/api-client-library/java/google-api-java-client/media-download).
 
 - **The library runs on Google App Engine.**
 
- [App Engine-specific helpers](https://code.google.com/p/google-api-java-client/wiki/GoogleAppEngine) make quick work of authenticated calls to APIs, and you do not need to worry about exchanging code for tokens. For example:
+ [App Engine-specific helpers](https://developers.google.com/api-client-library/java/google-api-java-client/app-engine) make quick work of authenticated calls to APIs, and you do not need to worry about exchanging code for tokens. For example:
 
   ```java
   @Override
@@ -120,7 +120,7 @@ Not supported: Google Web Toolkit (GWT), Java mobile (ME), and Java 1.4 (or earl
 
 - **The library is easy to install.**
 
- The Google APIs Client Library for Java is easy to install, and you can download the binary directly from the [Downloads page](https://code.google.com/p/google-api-java-client/wiki/Downloads), or you can use Maven or Gradle. 
+ The Google APIs Client Library for Java is easy to install, and you can download the binary directly from the [Downloads page](https://developers.google.com/api-client-library/java/google-api-java-client/download), or you can use Maven or Gradle.
  To use Maven, add the following lines to your pom.xml file:
 
     ```maven
@@ -162,10 +162,10 @@ Features marked with the @Beta annotation at the class or method level are subje
 Deprecated non-beta features will be removed eighteen months after the release in which they are first deprecated. You must fix your usages before this time. If you don't, any type of breakage might result, and you are not guaranteed a compilation error.
 
 ## <a name='Documentation'>Documentation<a/>
-- [Developer's Guide](https://code.google.com/p/google-api-java-client/wiki/DeveloperGuide)
+- [Developer's Guide](https://developers.google.com/api-client-library/java/google-api-java-client/dev-guide)
 - [Libraries and Samples](https://developers.google.com/api-client-library/java/apis/)
 - [JavaDoc](http://javadoc.google-api-java-client.googlecode.com/hg/index.html)
-- [Get Help](https://code.google.com/p/google-api-java-client/wiki/Support)
+- [Get Help](https://developers.google.com/api-client-library/java/google-api-java-client/support)
 
 ## <a name='Links'>Links<a/>
 - Blogs
