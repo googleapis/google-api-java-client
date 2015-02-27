@@ -37,6 +37,7 @@ import com.google.api.client.util.Preconditions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Random;
 
 /**
  * Abstract Google client request for a {@link AbstractGoogleClient}.
@@ -94,6 +95,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
 
   /** Media HTTP downloader or {@code null} for none. */
   private MediaHttpDownloader downloader;
+  
+  private Random rand = new Random();
 
   /**
    * @param abstractGoogleClient Google client
@@ -467,6 +470,33 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    */
   public T execute() throws IOException {
     return executeUnparsed().parseAs(responseClass);
+  }
+
+  public T execute(int max_retries) throws IOException{
+    T response = null;
+    double i = 0;
+    while(true){ 
+      try{
+        response = execute();
+        if(getLastStatusCode() < 500){
+          return response;
+        }
+      } catch (IOException e){
+        if(i > max_retries){
+          throw e;
+        }
+      }
+      if(i > max_retries){
+        return response;
+      } else {
+        try {
+          Thread.sleep((long)((rand.nextFloat() + Math.pow(2.0, i)) * 1000));
+        } catch (InterruptedException e1) {
+          return response;
+        }
+        i++;
+      }
+    }
   }
 
   /**
