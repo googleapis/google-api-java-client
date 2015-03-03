@@ -328,6 +328,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     return httpRequest;
   }
 
+
   /**
    * Sends the metadata request to the server and returns the raw metadata {@link HttpResponse}.
    *
@@ -411,15 +412,23 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     return response;
   }
 
+  private HttpResponse executeUnparsed(boolean usingHead) throws IOException {
+    return executeUnparsed(usingHead, 10);
+  }
+
+  public HttpResponse executeUnparsed(int retries) throws IOException {
+    return executeUnparsed(false, retries);
+  }
+
   /**
    * Sends the metadata request using the given request method to the server and returns the raw
    * metadata {@link HttpResponse}.
    */
-  private HttpResponse executeUnparsed(boolean usingHead) throws IOException {
+  private HttpResponse executeUnparsed(boolean usingHead, int retries) throws IOException {
     HttpResponse response;
     if (uploader == null) {
       // normal request (not upload)
-      response = buildHttpRequest(usingHead).execute();
+      response = buildHttpRequest(usingHead).setNumberOfRetries(retries).execute();
     } else {
       // upload request
       GenericUrl httpRequestUrl = buildHttpRequestUrl();
@@ -471,33 +480,12 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   public T execute() throws IOException {
     return executeUnparsed().parseAs(responseClass);
   }
-
-  public T execute(int max_retries) throws IOException{
-    T response = null;
-    double i = 0;
-    while(true){ 
-      try{
-        response = execute();
-        if(getLastStatusCode() < 500){
-          return response;
-        }
-      } catch (IOException e){
-        if(i > max_retries){
-          throw e;
-        }
-      }
-      if(i > max_retries){
-        return response;
-      } else {
-        try {
-          Thread.sleep((long)((rand.nextFloat() + Math.pow(2.0, i)) * 1000));
-        } catch (InterruptedException e1) {
-          return response;
-        }
-        i++;
-      }
-    }
+  
+  public T execute(int retries) throws IOException {
+    return executeUnparsed(retries).parseAs(responseClass);
   }
+
+
 
   /**
    * Sends the metadata request to the server and returns the metadata content input stream of
