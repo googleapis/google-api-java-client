@@ -37,7 +37,6 @@ import com.google.api.client.util.Preconditions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Random;
 
 /**
  * Abstract Google client request for a {@link AbstractGoogleClient}.
@@ -96,8 +95,6 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /** Media HTTP downloader or {@code null} for none. */
   private MediaHttpDownloader downloader;
   
-  private Random rand = new Random();
-
   /**
    * @param abstractGoogleClient Google client
    * @param requestMethod HTTP Method
