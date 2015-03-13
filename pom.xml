@@ -13,11 +13,11 @@
   <packaging>pom</packaging>
   <name>Parent for the Google API Client Library for Java</name>
 
-  <url>http://code.google.com/p/google-api-java-client/</url>
+  <url>https://github.com/google/google-api-java-client</url>
 
   <issueManagement>
-    <system>code.google.com</system>
-    <url>http://code.google.com/p/google-api-java-client/issues/list</url>
+    <system>GitHub</system>
+    <url>https://github.com/google/google-api-java-client/issues</url>
   </issueManagement>
 
   <inceptionYear>2010</inceptionYear>
@@ -27,9 +27,9 @@
   </prerequisites>
 
   <scm>
-    <connection>scm:hg:https://code.google.com/p/google-api-java-client/</connection>
-    <developerConnection>scm:hg:https://code.google.com/p/google-api-java-client/</developerConnection>
-    <url>http://code.google.com/p/google-api-java-client/source/browse/</url>
+    <connection>scm:git:https://github.com/google/google-api-java-client.git</connection>
+    <developerConnection>scm:git:ssh:git@github.com:google/google-api-java-client.git</developerConnection>
+    <url>https://github.com/google/google-api-java-client</url>
   </scm>
 
   <organization>
@@ -460,7 +460,7 @@
             <configuration>
               <links>
                 <link>http://download.oracle.com/javase/6/docs/api/</link>
-                <link>http://code.google.com/appengine/docs/java/javadoc</link>
+                <link>http://cloud.google.com/appengine/docs/java/javadoc</link>
                 <link>http://javadoc.google-http-java-client.googlecode.com/hg/${project.http.version}</link>
                 <link>http://javadoc.google-oauth-java-client.googlecode.com/hg/${project.oauth.version}</link>
               </links>
