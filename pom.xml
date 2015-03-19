@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-parent</artifactId>
-  <version>1.20.0-SNAPSHOT</version>
+  <version>1.20.0</version>
   <packaging>pom</packaging>
   <name>Parent for the Google API Client Library for Java</name>
 
@@ -461,8 +461,8 @@
               <links>
                 <link>http://download.oracle.com/javase/6/docs/api/</link>
                 <link>http://cloud.google.com/appengine/docs/java/javadoc</link>
-                <link>http://javadoc.google-http-java-client.googlecode.com/hg/${project.http.version}</link>
-                <link>http://javadoc.google-oauth-java-client.googlecode.com/hg/${project.oauth.version}</link>
+                <link>https://developers.google.com/api-client-library/java/google-http-java-client/reference/${project.http.version}</link>
+                <link>https://developers.google.com/api-client-library/java/google-http-java-client/reference/${project.oauth.version}</link>
               </links>
               <doctitle>Google API Client Library for Java ${project.version}</doctitle>
               <overview>${basedir}/overview.html</overview>
@@ -576,8 +576,8 @@
   </build>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>1.20.0-SNAPSHOT</project.http.version>
-    <project.oauth.version>1.20.0-SNAPSHOT</project.oauth.version>
+    <project.http.version>1.20.0</project.http.version>
+    <project.oauth.version>1.20.0</project.oauth.version>
     <project.jsr305.version>1.3.9</project.jsr305.version>
     <project.gson.version>2.1</project.gson.version>
     <project.jackson-core-asl.version>1.9.11</project.jackson-core-asl.version>
