@@ -94,7 +94,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
 
   /** Media HTTP downloader or {@code null} for none. */
   private MediaHttpDownloader downloader;
-
+  
   /**
    * @param abstractGoogleClient Google client
    * @param requestMethod HTTP Method
@@ -325,6 +325,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     return httpRequest;
   }
 
+
   /**
    * Sends the metadata request to the server and returns the raw metadata {@link HttpResponse}.
    *
@@ -408,15 +409,23 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     return response;
   }
 
+  private HttpResponse executeUnparsed(boolean usingHead) throws IOException {
+    return executeUnparsed(usingHead, 10);
+  }
+
+  public HttpResponse executeUnparsed(int retries) throws IOException {
+    return executeUnparsed(false, retries);
+  }
+
   /**
    * Sends the metadata request using the given request method to the server and returns the raw
    * metadata {@link HttpResponse}.
    */
-  private HttpResponse executeUnparsed(boolean usingHead) throws IOException {
+  private HttpResponse executeUnparsed(boolean usingHead, int retries) throws IOException {
     HttpResponse response;
     if (uploader == null) {
       // normal request (not upload)
-      response = buildHttpRequest(usingHead).execute();
+      response = buildHttpRequest(usingHead).setNumberOfRetries(retries).execute();
     } else {
       // upload request
       GenericUrl httpRequestUrl = buildHttpRequestUrl();
@@ -468,6 +477,12 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   public T execute() throws IOException {
     return executeUnparsed().parseAs(responseClass);
   }
+  
+  public T execute(int retries) throws IOException {
+    return executeUnparsed(retries).parseAs(responseClass);
+  }
+
+
 
   /**
    * Sends the metadata request to the server and returns the metadata content input stream of
