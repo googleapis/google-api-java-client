@@ -42,7 +42,7 @@ public final class GoogleUtils {
    *
    * @since 1.14
    */
-  public static final Integer MINOR_VERSION = 20;
+  public static final Integer MINOR_VERSION = 21;
 
   /**
    * Bug fix part of the current release version.
@@ -54,7 +54,7 @@ public final class GoogleUtils {
   /** Current release version. */
   // NOTE: toString() so compiler thinks it isn't a constant, so it won't inline it
   public static final String VERSION = (MAJOR_VERSION + "." + MINOR_VERSION + "." + BUGFIX_VERSION
-      + "").toString();
+      + "-SNAPSHOT").toString();
 
   /** Cached value for {@link #getCertificateTrustStore()}. */
   static KeyStore certTrustStore;
