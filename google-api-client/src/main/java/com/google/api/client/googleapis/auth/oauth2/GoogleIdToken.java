@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * {@link Beta} <br/>
  * Google ID tokens as specified in <a
- * href="https://developers.google.com/accounts/docs/OAuth2Login">Using OAuth 2.0 for Login</a>.
+ * href="https://developers.google.com/identity/protocols/OpenIDConnect">OpenID Connect</a>.
  *
  * <p>
  * Google ID tokens contain useful information about the authorized end user. Google ID tokens are
