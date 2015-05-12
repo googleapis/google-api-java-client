@@ -28,7 +28,8 @@ To use Google's Java client libraries to call any Google API, you need two libra
 
 To find the generated library for a Google API, visit [Google APIs Client Library for Java](https://developers.google.com/api-client-library/java/apis/). The API-specific Java packages include both the core google-api-java-client and the client-specific libraries. 
 
-If you are using the old GData library, you need to [migrate](http://code.google.com/p/gdata-java-client/wiki/MigratingToGoogleApiJavaClient).
+If you are using the old GData library, you need to
+[migrate](https://github.com/google/gdata-java-client/blob/wiki/MigratingToGoogleApiJavaClient.md).
 
 ### Developing for Android
 
