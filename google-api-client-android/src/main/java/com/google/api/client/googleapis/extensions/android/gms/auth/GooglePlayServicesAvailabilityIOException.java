@@ -52,7 +52,8 @@ public class GooglePlayServicesAvailabilityIOException extends UserRecoverableAu
 
   private static final long serialVersionUID = 1L;
 
-  GooglePlayServicesAvailabilityIOException(GooglePlayServicesAvailabilityException wrapped) {
+  public GooglePlayServicesAvailabilityIOException(
+      GooglePlayServicesAvailabilityException wrapped) {
     super(wrapped);
   }
 
