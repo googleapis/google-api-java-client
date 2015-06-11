@@ -169,7 +169,7 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
     if (!super.verify(googleIdToken)) {
       return false;
     }
-    // verify signature
+    // verify signature, try all public keys in turn.
     for (PublicKey publicKey : publicKeys.getPublicKeys()) {
       if (googleIdToken.verifySignature(publicKey)) {
         return true;
