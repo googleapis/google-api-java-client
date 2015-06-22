@@ -64,10 +64,11 @@ class HttpRequestContent extends AbstractHttpContent {
       }
     }
     HttpHeaders.serializeHeadersForMultipartRequests(headers, null, null, writer);
+    // HTTP headers are always terminated with an empty line; RFC 7230 §3
+    writer.write(NEWLINE);
+    writer.flush();
     // write content
     if (content != null) {
-      writer.write(NEWLINE);
-      writer.flush();
       content.writeTo(out);
     }
   }

@@ -714,12 +714,13 @@ public class BatchRequestTest extends TestCase {
     expectedOutput.append("\r\n");
     expectedOutput.append(request1Content + "\r\n");
     expectedOutput.append("--__END_OF_PART__\r\n");
-    expectedOutput.append("Content-Length: 28\r\n");
+    expectedOutput.append("Content-Length: 30\r\n");
     expectedOutput.append("Content-Type: application/http\r\n");
     expectedOutput.append("content-id: 2\r\n");
     expectedOutput.append("content-transfer-encoding: binary\r\n");
     expectedOutput.append("\r\n");
     expectedOutput.append("GET http://test/dummy/url2\r\n");
+    expectedOutput.append("\r\n");
     expectedOutput.append("\r\n");
     expectedOutput.append("--__END_OF_PART__--\r\n");
     MockHttpTransport transport = new MockHttpTransport();
