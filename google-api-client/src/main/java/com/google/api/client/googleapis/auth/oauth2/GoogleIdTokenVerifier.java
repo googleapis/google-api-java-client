@@ -25,6 +25,7 @@ import com.google.api.client.util.Preconditions;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.PublicKey;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -158,7 +159,7 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
    * the public certificate endpoint.</li>
    * <li>The current time against the issued at and expiration time (allowing for a 5 minute clock
    * skew).</li>
-   * <li>The issuer is {@code "accounts.google.com"}.</li>
+   * <li>The issuer is {@code "accounts.google.com"} or {@code "https://accounts.google.com"}.</li>
    * </ul>
    *
    * @param googleIdToken Google ID token
@@ -241,7 +242,7 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
      */
     public Builder(GooglePublicKeysManager publicKeys) {
       this.publicKeys = Preconditions.checkNotNull(publicKeys);
-      setIssuer("accounts.google.com");
+      setIssuers(Arrays.asList("accounts.google.com", "https://accounts.google.com"));
     }
 
     /** Builds a new instance of {@link GoogleIdTokenVerifier}. */
@@ -309,6 +310,11 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
     @Override
     public Builder setIssuer(String issuer) {
       return (Builder) super.setIssuer(issuer);
+    }
+
+    @Override
+    public Builder setIssuers(Collection<String> issuers) {
+      return (Builder) super.setIssuers(issuers);
     }
 
     @Override
