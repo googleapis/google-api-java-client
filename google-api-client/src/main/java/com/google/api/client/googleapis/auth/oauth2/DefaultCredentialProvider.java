@@ -58,6 +58,8 @@ class DefaultCredentialProvider {
       "com.google.api.client.googleapis.extensions.appengine.auth.oauth2"
       + ".AppIdentityCredential$AppEngineCredentialWrapper";
 
+  static final String CLOUD_SHELL_ENV_VAR = "DEVSHELL_CLIENT_PORT";
+  
   // These variables should only be accessed inside a synchronized block
   private GoogleCredential cachedCredential = null;
   private boolean checkedAppEngine = false;
@@ -159,6 +161,12 @@ class DefaultCredentialProvider {
       credential = tryGetAppEngineCredential(transport, jsonFactory);
     }
 
+    // Then try Cloud Shell.  This must be done BEFORE checking
+    // Compute Engine, as Cloud Shell runs on GCE VMs.
+    if (credential == null) {
+      credential = tryGetCloudShellCredential();
+    }
+    
     // Then try Compute Engine
     if (credential == null) {
       credential = tryGetComputeCredential(transport, jsonFactory);
@@ -278,6 +286,15 @@ class DefaultCredentialProvider {
         APP_ENGINE_CREDENTIAL_CLASS)), innerException);
   }
 
+  private GoogleCredential tryGetCloudShellCredential() {
+    String port = getEnv(CLOUD_SHELL_ENV_VAR);
+    if (port != null) {
+      return new CloudShellCredential(Integer.parseInt(port));
+    } else {
+      return null;
+    }
+  }
+  
   private final GoogleCredential tryGetComputeCredential(
       HttpTransport transport, JsonFactory jsonFactory) {
     // Checking compute engine requires a round-trip, so check only once

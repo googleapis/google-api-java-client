@@ -24,11 +24,12 @@ The library has the following features:
 To use Google's Java client libraries to call any Google API, you need two libraries:
 
  - The core Google APIs Client Library for Java (google-api-java-client), which is the generic runtime library described here. This library provides functionality common to all APIs, for example HTTP transport, error handling, authentication, JSON parsing, media download/upload, and batching. 
- - An auto-generated Java library for the API you are accessing, for example the [generated Java library for the BigQuery API](https://code.google.com/p/google-api-java-client/source/browse/bigquery-appengine-sample/?repo=samples#bigquery-appengine-sample%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgoogle%2Fapi%2Fclient%2Fsample%2Fbigquery%2Fappengine%2Fdashboard%253Fstate%253Dclosed). These generated libraries include API-specific information such as the root URL, and classes that represent entities in the context of the API. These classes are useful for making conversions between JSON objects and Java objects.
+ - An auto-generated Java library for the API you are accessing, for example the [generated Java library for the BigQuery API](https://github.com/google/google-api-java-client-samples/tree/master/bigquery-appengine-sample/src/main/java/com/google/api/client/sample/bigquery/appengine/dashboard). These generated libraries include API-specific information such as the root URL, and classes that represent entities in the context of the API. These classes are useful for making conversions between JSON objects and Java objects.
 
 To find the generated library for a Google API, visit [Google APIs Client Library for Java](https://developers.google.com/api-client-library/java/apis/). The API-specific Java packages include both the core google-api-java-client and the client-specific libraries. 
 
-If you are using the old GData library, you need to [migrate](http://code.google.com/p/gdata-java-client/wiki/MigratingToGoogleApiJavaClient).
+If you are using the old GData library, you need to
+[migrate](https://github.com/google/gdata-java-client/blob/wiki/MigratingToGoogleApiJavaClient.md).
 
 ### Developing for Android
 
@@ -129,7 +130,7 @@ Not supported: Google Web Toolkit (GWT), Java mobile (ME), and Java 1.4 (or earl
         <dependency>
           <groupId>com.google.api-client</groupId>
           <artifactId>google-api-client</artifactId>
-          <version>1.18.0-rc</version>
+          <version>1.20.0</version>
         </dependency>
       </dependencies>
     </project> 
@@ -142,7 +143,7 @@ Not supported: Google Web Toolkit (GWT), Java mobile (ME), and Java 1.4 (or earl
       mavenCentral()
   }
   dependencies {
-      compile 'com.google.api-client:google-api-client:1.18.0-rc'
+      compile 'com.google.api-client:google-api-client:1.20.0'
   }
   ```
 
@@ -164,16 +165,12 @@ Deprecated non-beta features will be removed eighteen months after the release i
 ## <a name='Documentation'>Documentation<a/>
 - [Developer's Guide](https://developers.google.com/api-client-library/java/google-api-java-client/dev-guide)
 - [Libraries and Samples](https://developers.google.com/api-client-library/java/apis/)
-- [JavaDoc](http://javadoc.google-api-java-client.googlecode.com/hg/index.html)
+- [JavaDoc](https://developers.google.com/api-client-library/java/google-api-java-client/reference/index)
 - [Get Help](https://developers.google.com/api-client-library/java/google-api-java-client/support)
 
 ## <a name='Links'>Links<a/>
 - Blogs
   - [Announcements](http://google-api-java-client.blogspot.com/)
   - [Announcements](http://googledevelopers.blogspot.com/)
-- External Links
-  - [Project updates feed](http://code.google.com/feeds/p/google-api-java-client/updates/basic)
-  - [Samples updates feed](http://code.google.com/feeds/p/google-api-java-client/hgchanges/basic?repo=samples)
-  - [Library updates feed](http://code.google.com/feeds/p/google-api-java-client/hgchanges/basic?repo=default)
 - Groups
-  - [Discuss]()
+  - [Discuss](https://groups.google.com/forum/#!forum/google-api-java-client)
