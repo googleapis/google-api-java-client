@@ -154,6 +154,28 @@ public class DefaultCredentialProviderTest  extends TestCase  {
     assertSame(firstCall, secondCall);
   }
 
+  public void testGetDefaultCredentials_cloudshell() throws IOException {
+    HttpTransport transport = new MockHttpTransport();
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    testProvider.setEnv(DefaultCredentialProvider.CLOUD_SHELL_ENV_VAR, "4");
+
+    GoogleCredential defaultCredential = testProvider.getDefaultCredential(transport, JSON_FACTORY);
+
+    assertTrue(defaultCredential instanceof CloudShellCredential);
+    assertEquals(((CloudShellCredential) defaultCredential).getAuthPort(), 4);
+  }
+
+  public void testGetDefaultCredentials_cloudshell_withComputCredentialsPresent() throws IOException {
+    MockMetadataServerTransport transport = new MockMetadataServerTransport(ACCESS_TOKEN);
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    testProvider.setEnv(DefaultCredentialProvider.CLOUD_SHELL_ENV_VAR, "4");
+
+    GoogleCredential defaultCredential = testProvider.getDefaultCredential(transport, JSON_FACTORY);
+
+    assertTrue(defaultCredential instanceof CloudShellCredential);
+    assertEquals(((CloudShellCredential) defaultCredential).getAuthPort(), 4);
+  }
+  
   public void testDefaultCredentialCompute() throws IOException {
     HttpTransport transport = new MockMetadataServerTransport(ACCESS_TOKEN);
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
