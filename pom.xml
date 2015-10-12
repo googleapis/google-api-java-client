@@ -185,7 +185,7 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-xml</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.oauth-client</groupId>
