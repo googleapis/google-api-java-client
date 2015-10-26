@@ -3,6 +3,8 @@ language: android
 android:
   components:
     - extra-google-google_play_services
+notifications:
+  email: false
 env:
   global:
   - PROTO_VERSION=2.4.1
