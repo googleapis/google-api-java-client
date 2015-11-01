@@ -158,7 +158,7 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
    * the public certificate endpoint.</li>
    * <li>The current time against the issued at and expiration time (allowing for a 5 minute clock
    * skew).</li>
-   * <li>The issuer is {@code "accounts.google.com"}.</li>
+   * <li>The issuer is {@code "https://accounts.google.com"}.</li>
    * </ul>
    *
    * @param googleIdToken Google ID token
@@ -241,7 +241,7 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
      */
     public Builder(GooglePublicKeysManager publicKeys) {
       this.publicKeys = Preconditions.checkNotNull(publicKeys);
-      setIssuer("accounts.google.com");
+      setIssuer("https://accounts.google.com");
     }
 
     /** Builds a new instance of {@link GoogleIdTokenVerifier}. */
