@@ -583,7 +583,7 @@
     <project.jackson-core-asl.version>1.9.11</project.jackson-core-asl.version>
     <project.jackson-core2.version>2.1.3</project.jackson-core2.version>
     <project.protobuf-java.version>2.4.1</project.protobuf-java.version>
-    <project.guava.version>13.0</project.guava.version>
+    <project.guava.version>17.0</project.guava.version>
     <project.appengine.version>1.7.7</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.commons-logging.version>1.1.1</project.commons-logging.version>
