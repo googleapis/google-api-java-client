@@ -33,20 +33,18 @@ package com.google.api.client.googleapis.auth.oauth2;
 
 import static org.junit.Assert.assertEquals;
 
+import com.google.api.client.json.gson.GsonFactory;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.lang.Runnable;
-import java.lang.Thread;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import com.google.api.client.json.gson.GsonFactory;
 
 /**
  * Unit tests for CloudShellCredential
@@ -61,24 +59,24 @@ public class CloudShellCredentialTest {
       @Override
       public void run() {
         try {
-	  Socket clientSocket = authSocket.accept();
+          Socket clientSocket = authSocket.accept();
           BufferedReader input =
-	    new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-	  String lines = input.readLine();
-	  lines += '\n' + input.readLine();
+            new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+          String lines = input.readLine();
+          lines += '\n' + input.readLine();
           assertEquals(lines, CloudShellCredential.GET_AUTH_TOKEN_REQUEST);
 
-	  PrintWriter out =
-	      new PrintWriter(clientSocket.getOutputStream(), true);
-	  out.println("32\n[\"email\", \"project-id\", \"token\", 1234]");
-	} catch (Exception reThrown) {
-	  throw new RuntimeException(reThrown);
-	}
+          PrintWriter out =
+              new PrintWriter(clientSocket.getOutputStream(), true);
+          out.println("32\n[\"email\", \"project-id\", \"token\", 1234]");
+        } catch (Exception reThrown) {
+          throw new RuntimeException(reThrown);
+        }
       }
     };
     Thread serverThread = new Thread(serverTask);
     serverThread.start();
-    
+
     GoogleCredential creds = new CloudShellCredential(
         authSocket.getLocalPort(), GsonFactory.getDefaultInstance());
     assertEquals("token", creds.executeRefreshToken().getAccessToken());

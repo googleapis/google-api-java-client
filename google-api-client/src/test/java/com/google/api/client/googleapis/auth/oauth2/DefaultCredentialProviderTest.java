@@ -165,7 +165,8 @@ public class DefaultCredentialProviderTest  extends TestCase  {
     assertEquals(((CloudShellCredential) defaultCredential).getAuthPort(), 4);
   }
 
-  public void testGetDefaultCredentials_cloudshell_withComputCredentialsPresent() throws IOException {
+  public void testGetDefaultCredentials_cloudshell_withComputCredentialsPresent()
+      throws IOException {
     MockMetadataServerTransport transport = new MockMetadataServerTransport(ACCESS_TOKEN);
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
     testProvider.setEnv(DefaultCredentialProvider.CLOUD_SHELL_ENV_VAR, "4");
@@ -175,7 +176,7 @@ public class DefaultCredentialProviderTest  extends TestCase  {
     assertTrue(defaultCredential instanceof CloudShellCredential);
     assertEquals(((CloudShellCredential) defaultCredential).getAuthPort(), 4);
   }
-  
+
   public void testDefaultCredentialCompute() throws IOException {
     HttpTransport transport = new MockMetadataServerTransport(ACCESS_TOKEN);
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();

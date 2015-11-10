@@ -63,7 +63,7 @@ public class CloudShellCredential extends GoogleCredential {
 
   private final int authPort;
   private final JsonFactory jsonFactory;
-  
+
   public CloudShellCredential(int authPort, JsonFactory jsonFactory) {
     this.authPort = authPort;
     this.jsonFactory = jsonFactory;
@@ -79,14 +79,16 @@ public class CloudShellCredential extends GoogleCredential {
     Socket socket = new Socket("localhost", this.getAuthPort());
     socket.setSoTimeout(READ_TIMEOUT_MS);
     TokenResponse token = new TokenResponse();
-    try {    
+    try {
       PrintWriter out =
         new PrintWriter(socket.getOutputStream(), true);
       out.println(GET_AUTH_TOKEN_REQUEST);
 
       BufferedReader input =
           new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      String ignoredSizeLine = input.readLine();
+      // Ignore the size line
+      input.readLine();
+
       Collection<Object> messageArray = jsonFactory.createJsonParser(input)
         .parseArray(LinkedList.class, Object.class);
       String accessToken = ((List<Object>) messageArray).get(ACCESS_TOKEN_INDEX).toString();
