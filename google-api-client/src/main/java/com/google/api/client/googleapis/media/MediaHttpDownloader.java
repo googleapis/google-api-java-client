@@ -304,7 +304,7 @@ public final class MediaHttpDownloader {
    * @param lastBytePos The last byte position in the content range string.
    * @since 1.13
    */
-  public MediaHttpDownloader setContentRange(long firstBytePos, int lastBytePos) {
+  public MediaHttpDownloader setContentRange(long firstBytePos, long lastBytePos) {
     Preconditions.checkArgument(lastBytePos >= firstBytePos);
     setBytesDownloaded(firstBytePos);
     this.lastBytePos = lastBytePos;
