@@ -870,7 +870,8 @@ public final class MediaHttpUploader {
    */
   public MediaHttpUploader setInitiationRequestMethod(String initiationRequestMethod) {
     Preconditions.checkArgument(initiationRequestMethod.equals(HttpMethods.POST)
-        || initiationRequestMethod.equals(HttpMethods.PUT));
+        || initiationRequestMethod.equals(HttpMethods.PUT)
+        || initiationRequestMethod.equals(HttpMethods.PATCH));
     this.initiationRequestMethod = initiationRequestMethod;
     return this;
   }

@@ -21,6 +21,7 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpBackOffIOExceptionHandler;
 import com.google.api.client.http.HttpBackOffUnsuccessfulResponseHandler;
 import com.google.api.client.http.HttpExecuteInterceptor;
+import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
@@ -101,6 +102,7 @@ public class MediaHttpUploaderTest extends TestCase {
     boolean contentLengthNotSpecified;
     boolean assertTestHeaders;
     boolean testIOException;
+    boolean testMethodOverride;
     int maxByteIndexUploadedOnError = MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1;
 
     /**
@@ -121,7 +123,14 @@ public class MediaHttpUploaderTest extends TestCase {
     }
 
     @Override
-    public LowLevelHttpRequest buildRequest(String name, String url) {
+    public boolean supportsMethod(String method) throws IOException {
+      return method.equals(HttpMethods.POST)
+        || method.equals(HttpMethods.PUT)
+        || method.equals(HttpMethods.GET);
+    }
+
+    @Override
+    public LowLevelHttpRequest buildRequest(final String name, String url) {
       if (name.equals("POST")) {
         if (directUploadEnabled) {
           if (directUploadWithMetadata) {
@@ -147,6 +156,9 @@ public class MediaHttpUploaderTest extends TestCase {
             }
             if (assertTestHeaders) {
               assertEquals("test-header-value", getFirstHeaderValue("test-header-name"));
+            }
+            if (testMethodOverride) {
+              assertEquals("PATCH", getFirstHeaderValue("X-HTTP-Method-Override"));
             }
             // This is the initiation call.
             MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
@@ -408,6 +420,21 @@ public class MediaHttpUploaderTest extends TestCase {
     assertEquals(2, fakeTransport.lowLevelExecCalls);
   }
 
+  public void testUploadOneCall_WithPatch() throws Exception {
+    int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE;
+    MediaTransport fakeTransport = new MediaTransport(contentLength);
+    fakeTransport.testMethodOverride = true;
+    InputStream is = new ByteArrayInputStream(new byte[contentLength]);
+    InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
+    mediaContent.setLength(contentLength);
+    MediaHttpUploader uploader = new MediaHttpUploader(mediaContent, fakeTransport, null);
+    uploader.setInitiationRequestMethod(HttpMethods.PATCH);
+    uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
+
+    // There should be 2 calls made. 1 initiation request and 1 upload request.
+    assertEquals(2, fakeTransport.lowLevelExecCalls);
+  }
+
   public void testUploadOneCall_WithGZipDisabled() throws Exception {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE;
     MediaTransport fakeTransport = new MediaTransport(contentLength);
@@ -489,6 +516,21 @@ public class MediaHttpUploaderTest extends TestCase {
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
     mediaContent.setLength(contentLength);
     MediaHttpUploader uploader = new MediaHttpUploader(mediaContent, fakeTransport, null);
+    uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
+
+    // There should be 6 calls made. 1 initiation request and 5 upload requests.
+    assertEquals(6, fakeTransport.lowLevelExecCalls);
+  }
+
+  public void testUploadMultipleCalls_WithPatch() throws Exception {
+    int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE * 5;
+    MediaTransport fakeTransport = new MediaTransport(contentLength);
+    fakeTransport.testMethodOverride = true;
+    InputStream is = new ByteArrayInputStream(new byte[contentLength]);
+    InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
+    mediaContent.setLength(contentLength);
+    MediaHttpUploader uploader = new MediaHttpUploader(mediaContent, fakeTransport, null);
+    uploader.setInitiationRequestMethod(HttpMethods.PATCH);
     uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
 
     // There should be 6 calls made. 1 initiation request and 5 upload requests.
