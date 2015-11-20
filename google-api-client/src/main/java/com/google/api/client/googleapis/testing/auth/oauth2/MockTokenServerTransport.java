@@ -42,11 +42,17 @@ import java.util.Map;
 public class MockTokenServerTransport extends MockHttpTransport {
   static final String EXPECTED_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer";
   static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  final String tokenServerUrl;
   Map<String, String> serviceAccounts = new HashMap<String, String>();
   Map<String, String> clients = new HashMap<String, String>();
   Map<String, String> refreshTokens = new HashMap<String, String>();
 
   public MockTokenServerTransport() {
+    this(GoogleOAuthConstants.TOKEN_SERVER_URL);
+  }
+
+  public MockTokenServerTransport(String tokenServerUrl) {
+    this.tokenServerUrl = tokenServerUrl;
   }
 
   public void addServiceAccount(String email, String accessToken) {
@@ -63,7 +69,7 @@ public class MockTokenServerTransport extends MockHttpTransport {
 
   @Override
   public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
-    if (url.equals(GoogleOAuthConstants.TOKEN_SERVER_URL)) {
+    if (url.equals(tokenServerUrl)) {
       MockLowLevelHttpRequest request = new MockLowLevelHttpRequest(url) {
         @Override
         public LowLevelHttpResponse execute() throws IOException {
@@ -103,7 +109,7 @@ public class MockTokenServerTransport extends MockHttpTransport {
               throw new IOException("Scopes not found.");
             }
           } else {
-            throw new IOException("Uknown token type.");
+            throw new IOException("Unknown token type.");
           }
 
           // Create the JSon response

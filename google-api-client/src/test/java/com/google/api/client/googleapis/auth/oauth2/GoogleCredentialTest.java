@@ -210,6 +210,40 @@ public class GoogleCredentialTest extends TestCase {
     assertEquals(accessToken, defaultCredential.getAccessToken());
   }
 
+  public void testFromStreamServiceAccountAlternateTokenUri() throws IOException {
+    final String accessToken = "1/MkSJoj1xsli0AccessToken_NKPY2";
+    final String serviceAccountId =
+        "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr.apps.googleusercontent.com";
+    final String serviceAccountEmail =
+        "36680232662-vrd7ji19qgchd0ah2csanun6bnr@developer.gserviceaccount.com";
+
+    final String tokenServerUrl = "http://another.auth.com/token";
+    MockTokenServerTransport transport = new MockTokenServerTransport(tokenServerUrl);
+    transport.addServiceAccount(serviceAccountEmail, accessToken);
+
+    // Write out user file
+    GenericJson serviceAccountContents = new GenericJson();
+    serviceAccountContents.setFactory(JSON_FACTORY);
+    serviceAccountContents.put("client_id", serviceAccountId);
+    serviceAccountContents.put("client_email", serviceAccountEmail);
+    serviceAccountContents.put("private_key", SA_KEY_TEXT);
+    serviceAccountContents.put("private_key_id", SA_KEY_ID);
+    serviceAccountContents.put("type", GoogleCredential.SERVICE_ACCOUNT_FILE_TYPE);
+    serviceAccountContents.put("token_uri", tokenServerUrl);
+    String json = serviceAccountContents.toPrettyString();
+    InputStream serviceAccountStream = new ByteArrayInputStream(json.getBytes());
+
+    GoogleCredential defaultCredential = GoogleCredential
+        .fromStream(serviceAccountStream, transport, JSON_FACTORY);
+    assertNotNull(defaultCredential);
+    assertEquals(tokenServerUrl, defaultCredential.getTokenServerEncodedUrl());
+    defaultCredential = defaultCredential.createScoped(SCOPES);
+    assertEquals(tokenServerUrl, defaultCredential.getTokenServerEncodedUrl());
+
+    assertTrue(defaultCredential.refreshToken());
+    assertEquals(accessToken, defaultCredential.getAccessToken());
+  }
+
   public void testFromStreamServiceAccountMissingClientIdThrows() throws IOException {
     final String serviceAccountEmail =
         "36680232662-vrd7ji19qgchd0ah2csanun6bnr@developer.gserviceaccount.com";

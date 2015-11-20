@@ -470,6 +470,7 @@ public class GoogleCredential extends Credential {
         .setServiceAccountId(serviceAccountId)
         .setServiceAccountUser(serviceAccountUser)
         .setServiceAccountScopes(scopes)
+        .setTokenServerEncodedUrl(getTokenServerEncodedUrl())
         .setTransport(getTransport())
         .setJsonFactory(getJsonFactory())
         .setClock(getClock())
@@ -788,17 +789,19 @@ public class GoogleCredential extends Credential {
 
     Collection<String> emptyScopes = Collections.emptyList();
 
-    GoogleCredential credential = new GoogleCredential.Builder()
+    Builder credentialBuilder = new GoogleCredential.Builder()
         .setTransport(transport)
         .setJsonFactory(jsonFactory)
         .setServiceAccountId(clientEmail)
         .setServiceAccountScopes(emptyScopes)
         .setServiceAccountPrivateKey(privateKey)
-        .setServiceAccountPrivateKeyId(privateKeyId)
-        .build();
-
+        .setServiceAccountPrivateKeyId(privateKeyId);
+    String tokenUri = (String) fileContents.get("token_uri");
+    if (tokenUri != null) {
+      credentialBuilder.setTokenServerEncodedUrl(tokenUri);
+    }
     // Don't do a refresh at this point, as it will always fail before the scopes are added.
-    return credential;
+    return credentialBuilder.build();
   }
 
   @Beta
