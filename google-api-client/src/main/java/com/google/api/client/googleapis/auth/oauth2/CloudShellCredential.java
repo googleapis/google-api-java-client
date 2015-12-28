@@ -85,9 +85,9 @@ public class CloudShellCredential extends GoogleCredential {
       BufferedReader input =
           new BufferedReader(new InputStreamReader(socket.getInputStream()));
       String ignoredSizeLine = input.readLine();
-      Collection<String> messageArray = jsonFactory.createJsonParser(input)
-        .parseArray(LinkedList.class, String.class);
-      String accessToken = ((List<String>) messageArray).get(ACCESS_TOKEN_INDEX);
+      Collection<Object> messageArray = jsonFactory.createJsonParser(input)
+        .parseArray(LinkedList.class, Object.class);
+      String accessToken = ((List<Object>) messageArray).get(ACCESS_TOKEN_INDEX).toString();
       token.setAccessToken(accessToken);
     } finally {
       socket.close();
