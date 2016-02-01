@@ -14,6 +14,7 @@
 
 package com.google.api.client.googleapis.testing.compute;
 
+import com.google.api.client.googleapis.auth.oauth2.OAuth2Utils;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.json.GenericJson;
@@ -36,11 +37,10 @@ import java.io.IOException;
 @Beta
 public class MockMetadataServerTransport extends MockHttpTransport {
 
+  private static final String METADATA_SERVER_URL = OAuth2Utils.getMetadataServerUrl();
+
   private static final String METADATA_TOKEN_SERVER_URL =
-      "http://metadata/computeMetadata/v1/instance/service-accounts/default/token";
-
-  private static final String METADATA_SERVER_URL = "http://metadata.google.internal";
-
+      METADATA_SERVER_URL + "/computeMetadata/v1/instance/service-accounts/default/token";
 
   static final JsonFactory JSON_FACTORY = new JacksonFactory();
 

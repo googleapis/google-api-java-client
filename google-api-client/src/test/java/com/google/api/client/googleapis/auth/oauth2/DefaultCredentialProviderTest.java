@@ -32,11 +32,13 @@ import junit.framework.TestCase;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
@@ -46,7 +48,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * Tests {@link DefaultCredentialProvider}.
  *
  */
-public class DefaultCredentialProviderTest  extends TestCase  {
+public class DefaultCredentialProviderTest extends TestCase {
 
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
@@ -224,22 +226,51 @@ public class DefaultCredentialProviderTest  extends TestCase  {
     }
   }
 
-  public void testDefaultCredentialComputeSingleAttempt() {
-    MockRequestCountingTransport transport = new MockRequestCountingTransport();
+  public void testDefaultCredentialComputeCachesFailureAfterFixedNumberOfRetries() {
+    MockRequestUrlRecordingTransport transport = new MockRequestUrlRecordingTransport();
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+
+    // First attempt to get credentials we retry.
+    try {
+      testProvider.getDefaultCredential(transport, JSON_FACTORY);
+      fail("No credential expected for default test provider.");
+    } catch (IOException expected) {
+    }
+    assertEquals(3, transport.getRequestCount());
+
+    // Second attempt we get back the cached result.
+    try {
+      testProvider.getDefaultCredential(transport, JSON_FACTORY);
+      fail("No credential expected for default test provider.");
+    } catch (IOException expected) {
+    }
+    assertEquals(3, transport.getRequestCount());
+  }
+
+  public void testDefaultCredentialNoGceCheck() throws IOException {
+    MockRequestUrlRecordingTransport transport = new MockRequestUrlRecordingTransport();
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    testProvider.setEnv("NO_GCE_CHECK", "True");
 
     try {
       testProvider.getDefaultCredential(transport, JSON_FACTORY);
       fail("No credential expected for default test provider.");
     } catch (IOException expected) {
     }
-    assertEquals(1, transport.getRequestCount());
+    assertEquals(0, transport.getRequestCount());
+  }
+
+  public void testDefaultCredentialWithCustomMetadataServerAddress() throws IOException {
+    MockRequestUrlRecordingTransport transport = new MockRequestUrlRecordingTransport();
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    testProvider.setEnv("GCE_METADATA_HOST", "test.metadata.server.address");
+
     try {
       testProvider.getDefaultCredential(transport, JSON_FACTORY);
       fail("No credential expected for default test provider.");
     } catch (IOException expected) {
     }
-    assertEquals(1, transport.getRequestCount());
+    assertTrue(transport.urlWasRequested("http://test.metadata.server.address"));
   }
 
   public void testDefaultCredentialNonExistentFileThrows() throws Exception {
@@ -546,14 +577,18 @@ public class DefaultCredentialProviderTest  extends TestCase  {
    * End of types simulating SystemProperty.environment.value()
    */
 
-  private static class MockRequestCountingTransport extends MockHttpTransport {
-    int requestCount = 0;
+  private static class MockRequestUrlRecordingTransport extends MockHttpTransport {
+    List<String> requestUrls = new ArrayList<>();
 
-    MockRequestCountingTransport() {
+    MockRequestUrlRecordingTransport() {
     }
 
     int getRequestCount() {
-      return requestCount;
+      return requestUrls.size();
+    }
+
+    boolean urlWasRequested(String url) {
+      return requestUrls.contains(url);
     }
 
     @Override
@@ -561,7 +596,7 @@ public class DefaultCredentialProviderTest  extends TestCase  {
       MockLowLevelHttpRequest request = new MockLowLevelHttpRequest(url) {
         @Override
         public LowLevelHttpResponse execute() throws IOException {
-          requestCount++;
+          requestUrls.add(getUrl());
           throw new IOException("MockRequestCountingTransport request failed.");
         }
       };
