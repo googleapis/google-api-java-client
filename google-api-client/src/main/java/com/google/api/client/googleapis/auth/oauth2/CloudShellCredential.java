@@ -44,6 +44,8 @@ import java.util.List;
 
 /**
  * OAuth2 credentials representing the built-in service account for Google Cloud Shell.
+ *
+ * @since 1.21.0
  */
 public class CloudShellCredential extends GoogleCredential {
 
