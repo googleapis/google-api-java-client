@@ -71,8 +71,8 @@ public class MockMetadataServerTransport extends MockHttpTransport {
             return response;
           }
 
-          String metadataRequestHeader = getFirstHeaderValue("X-Google-Metadata-Request");
-          if (!"true".equals(metadataRequestHeader)) {
+          String metadataRequestHeader = getFirstHeaderValue("Metadata-Flavor");
+          if (!"Google".equals(metadataRequestHeader)) {
             throw new IOException("Metadata request header not found.");
           }
 

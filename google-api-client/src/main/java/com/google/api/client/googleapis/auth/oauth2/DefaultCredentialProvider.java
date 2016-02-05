@@ -354,7 +354,7 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
       HttpRequest request = getTransport().createRequestFactory().buildGetRequest(tokenUrl);
       JsonObjectParser parser = new JsonObjectParser(getJsonFactory());
       request.setParser(parser);
-      request.getHeaders().set("X-Google-Metadata-Request", true);
+      request.getHeaders().set("Metadata-Flavor", "Google");
       request.setThrowExceptionOnExecuteError(false);
       HttpResponse response = request.execute();
       int statusCode = response.getStatusCode();

@@ -84,7 +84,7 @@ public class ComputeCredential extends Credential {
     GenericUrl tokenUrl = new GenericUrl(getTokenServerEncodedUrl());
     HttpRequest request = getTransport().createRequestFactory().buildGetRequest(tokenUrl);
     request.setParser(new JsonObjectParser(getJsonFactory()));
-    request.getHeaders().set("X-Google-Metadata-Request", true);
+    request.getHeaders().set("Metadata-Flavor", "Google");
     return request.execute().parseAs(TokenResponse.class);
   }
 
