@@ -11,7 +11,6 @@ env:
   - PATH="/tmp/proto$PROTO_VERSION/bin:$PATH"
 jdk:
   - oraclejdk8
-  - oraclejdk7
   - openjdk7
   - openjdk6
 before_install:
