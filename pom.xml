@@ -84,6 +84,24 @@
     <module>google-api-client-xml</module>
   </modules>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>protoc-plugin</id>
+      <url>https://dl.bintray.com/sergei-ivanov/maven/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -282,10 +300,6 @@
     <!-- This is the parent, so only define pluginManagement, not plugins. -->
     <pluginManagement>
       <plugins>
-        <plugin>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.6</version>
-        </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
           <version>2.2</version>
@@ -582,7 +596,7 @@
     <project.gson.version>2.1</project.gson.version>
     <project.jackson-core-asl.version>1.9.11</project.jackson-core-asl.version>
     <project.jackson-core2.version>2.1.3</project.jackson-core2.version>
-    <project.protobuf-java.version>2.4.1</project.protobuf-java.version>
+    <project.protobuf-java.version>2.6.1</project.protobuf-java.version>
     <project.guava.version>17.0</project.guava.version>
     <project.appengine.version>1.7.7</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
