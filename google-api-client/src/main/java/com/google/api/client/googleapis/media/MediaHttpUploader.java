@@ -654,8 +654,10 @@ public final class MediaHttpUploader {
     currentChunkLength = actualBlockSize;
     currentRequest.setContent(contentChunk);
     if (actualBlockSize == 0) {
-      // special case of zero content media being uploaded
-      currentRequest.getHeaders().setContentRange("bytes */0");
+      // No bytes to upload. Either zero content media being uploaded, or a server failure on the
+      // last write, even though the write actually succeeded. Either way,
+      // mediaContentLengthStr will contain the actual media length.
+      currentRequest.getHeaders().setContentRange("bytes */" + mediaContentLengthStr);
     } else {
       currentRequest.getHeaders().setContentRange("bytes " + totalBytesServerReceived + "-"
           + (totalBytesServerReceived + actualBlockSize - 1) + "/" + mediaContentLengthStr);
@@ -678,8 +680,7 @@ public final class MediaHttpUploader {
 
     // Query the current status of the upload by issuing an empty PUT request on the upload URI.
     currentRequest.setContent(new EmptyContent());
-    currentRequest.getHeaders()
-        .setContentRange("bytes */" + (isMediaLengthKnown() ? getMediaContentLength() : "*"));
+    currentRequest.getHeaders().setContentRange("bytes */" + mediaContentLengthStr);
   }
 
   /**
