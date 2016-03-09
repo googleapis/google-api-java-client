@@ -36,6 +36,7 @@ public class GoogleAuthIOException extends IOException {
 
   /**
    * @param wrapped wrapped {@link GoogleAuthException}
+   * @since 1.21.0
    */
   public GoogleAuthIOException(GoogleAuthException wrapped) {
     initCause(Preconditions.checkNotNull(wrapped));

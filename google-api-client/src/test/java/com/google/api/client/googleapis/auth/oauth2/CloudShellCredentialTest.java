@@ -70,7 +70,7 @@ public class CloudShellCredentialTest {
 
 	  PrintWriter out =
 	      new PrintWriter(clientSocket.getOutputStream(), true);
-	  out.println("32\n[\"email\", \"project-id\", \"token\"]");
+	  out.println("32\n[\"email\", \"project-id\", \"token\", 1234]");
 	} catch (Exception reThrown) {
 	  throw new RuntimeException(reThrown);
 	}

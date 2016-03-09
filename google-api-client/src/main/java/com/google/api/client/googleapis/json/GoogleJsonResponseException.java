@@ -62,6 +62,7 @@ public class GoogleJsonResponseException extends HttpResponseException {
   /**
    * @param builder builder
    * @param details Google JSON error details
+   * @since 1.21.0
    */
   public GoogleJsonResponseException(Builder builder, GoogleJsonError details) {
     super(builder);

@@ -4,12 +4,19 @@
   <parent>
     <groupId>com.google.api-client</groupId>
     <artifactId>google-api-client-parent</artifactId>
-    <version>1.21.0-SNAPSHOT</version>
+    <version>1.22.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-api-client</artifactId>
   <name>Google APIs Client Library for Java</name>
   <build>
+    <extensions>
+      <extension>
+        <groupId>kr.motd.maven</groupId>
+        <artifactId>os-maven-plugin</artifactId>
+        <version>1.4.0.Final</version>
+      </extension>
+    </extensions>
     <plugins>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
@@ -56,43 +63,17 @@
         </executions>
       </plugin>
       <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
+        <groupId>com.google.protobuf.tools</groupId>
+        <artifactId>maven-protoc-plugin</artifactId>
+        <version>0.4.2</version>
+        <configuration>
+          <protocArtifact>com.google.protobuf:protoc:${project.protobuf-java.version}-build2:exe:${os.detected.classifier}</protocArtifact>
+        </configuration>
         <executions>
           <execution>
-            <id>generate-sources</id>
-            <phase>generate-sources</phase>
-            <configuration>
-              <target>
-                <mkdir dir="target/generated-test-sources" />
-                <exec failonerror="true" executable="protoc">
-                  <arg value="--java_out=target/generated-test-sources" />
-                  <arg value="src/test/java/com/google/api/client/googleapis/batch/mock_data.proto" />
-                  <arg value="src/test/java/com/google/api/client/googleapis/batch/error_output.proto" />
-                </exec>
-              </target>
-            </configuration>
             <goals>
-              <goal>run</goal>
+              <goal>test-compile</goal>
             </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.5</version>
-        <executions>
-          <execution>
-            <id>add-test-source</id>
-            <phase>generate-test-sources</phase>
-            <goals>
-              <goal>add-test-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>target/generated-test-sources</source>
-              </sources>
-            </configuration>
           </execution>
         </executions>
       </plugin>

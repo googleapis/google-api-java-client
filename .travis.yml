@@ -1,0 +1,20 @@
+sudo: false
+language: android
+android:
+  components:
+    - extra-google-google_play_services
+notifications:
+  email: false
+jdk:
+  - oraclejdk8
+  - openjdk7
+  - openjdk6
+before_install:
+  - mvn install:install-file
+     -Dfile=$ANDROID_HOME/extras/google/google_play_services/libproject/google-play-services_lib/libs/google-play-services.jar
+     -DgroupId=com.google.android.google-play-services -DartifactId=google-play-services
+     -Dversion=1 -Dpackaging=jar
+install:
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+script:
+  - mvn test -B
