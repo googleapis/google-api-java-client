@@ -118,6 +118,12 @@ public final class MediaHttpUploader {
     /** Set after the initiation request completes. */
     INITIATION_COMPLETE,
 
+    /** Set before the initiation request is sent. */
+    RESUME_INITIATION_STARTED,
+
+    /** Set after the initiation request completes. */
+    RESUME_INITIATION_COMPLETE,
+
     /** Set after a media file chunk is uploaded. */
     MEDIA_IN_PROGRESS,
 
@@ -263,6 +269,9 @@ public final class MediaHttpUploader {
   /** Sleeper. **/
   Sleeper sleeper = Sleeper.DEFAULT;
 
+
+  private String resumableUploadUrl;
+
   /**
    * Construct the {@link MediaHttpUploader}.
    *
@@ -333,7 +342,7 @@ public final class MediaHttpUploader {
     if (directUploadEnabled) {
       return directUpload(initiationRequestUrl);
     }
-    return resumableUpload(initiationRequestUrl);
+    return startResumableUpload(initiationRequestUrl);
   }
 
   /**
@@ -379,20 +388,94 @@ public final class MediaHttpUploader {
    * @param initiationRequestUrl The request URL where the initiation request will be sent
    * @return HTTP response
    */
-  private HttpResponse resumableUpload(GenericUrl initiationRequestUrl) throws IOException {
+  private HttpResponse startResumableUpload(GenericUrl initiationRequestUrl) throws IOException {
     // Make initial request to get the unique upload URL.
     HttpResponse initialResponse = executeUploadInitiation(initiationRequestUrl);
     if (!initialResponse.isSuccessStatusCode()) {
       // If the initiation request is not successful return it immediately.
       return initialResponse;
     }
-    GenericUrl uploadUrl;
+
     try {
-      uploadUrl = new GenericUrl(initialResponse.getHeaders().getLocation());
+      resumableUploadUrl = initialResponse.getHeaders().getLocation();
+
     } finally {
       initialResponse.disconnect();
     }
 
+    return doResumableUpload(resumableUploadUrl);
+  }
+
+  /**
+   * Initialise a resumable upload.
+   * @param resumableRequestUrl the URL to request a resumable upload.
+   * @return the response
+   * @throws IOException if there is a communication error
+   */
+  private HttpResponse resumableUploadInitiation(GenericUrl resumableRequestUrl)
+      throws IOException {
+    updateStateAndNotifyListener(UploadState.RESUME_INITIATION_STARTED);
+    HttpRequest request =
+        requestFactory.buildRequest(HttpMethods.PUT, resumableRequestUrl, new EmptyContent());
+
+    initiationHeaders.setContentLength(Long.valueOf(0L));
+    if (isMediaLengthKnown()) {
+      initiationHeaders.setContentRange("bytes */" + getMediaContentLength());
+    }
+    request.getHeaders().putAll(initiationHeaders);
+    HttpResponse response = executeCurrentRequest(request);
+
+    boolean notificationCompleted = false;
+    try {
+      updateStateAndNotifyListener(UploadState.RESUME_INITIATION_COMPLETE);
+      notificationCompleted = true;
+    } finally {
+      if (!notificationCompleted) {
+        response.disconnect();
+      }
+    }
+
+    return response;
+  }
+
+  /**
+   * Continues a previously started upload for the given URL.
+   * @param resumableUploadUrl the ULR
+   * @return the response
+   * @throws IOException if there is a communication error
+   */
+  public HttpResponse continueResumableUpload(String resumableUploadUrl) throws IOException {
+    HttpResponse initialResponse = resumableUploadInitiation(new GenericUrl(resumableUploadUrl));
+    if (initialResponse.getStatusCode() != 308) {// Resume incomplete
+      return initialResponse;
+    }
+
+    boolean returningResponse = false;
+    try {
+      String range = initialResponse.getHeaders().getRange();
+      int pos = range.indexOf("-");
+      String uploadedBytes = range.substring(pos + 1);
+      long uploaded = Long.parseLong(uploadedBytes);
+      this.totalBytesServerReceived = uploaded;
+
+      return doResumableUpload(resumableUploadUrl);
+
+    } finally {
+      if (!returningResponse) {
+        initialResponse.disconnect();
+      }
+    }
+  }
+
+  /**
+   * Perform an upload to a resumable URL.
+   * @param resumableUploadUrl the URL
+   * @return the response
+   * @throws IOException if there is a communication error
+   */
+  private HttpResponse doResumableUpload(String resumableUploadUrl) throws IOException {
+    this.resumableUploadUrl = resumableUploadUrl;
+    GenericUrl uploadUrl = new GenericUrl(this.resumableUploadUrl);
     // Convert media content into a byte stream to upload in chunks.
     contentInputStream = mediaContent.getInputStream();
     if (!contentInputStream.markSupported() && isMediaLengthKnown()) {
@@ -401,6 +484,9 @@ public final class MediaHttpUploader {
       // handling server errors.
       contentInputStream = new BufferedInputStream(contentInputStream);
     }
+
+    // jump to resume point in the data
+    contentInputStream.skip(totalBytesServerReceived);
 
     HttpResponse response;
     // Upload the media content in chunks.
@@ -438,7 +524,8 @@ public final class MediaHttpUploader {
         // Check to see if the upload URL has changed on the server.
         String updatedUploadUrl = response.getHeaders().getLocation();
         if (updatedUploadUrl != null) {
-          uploadUrl = new GenericUrl(updatedUploadUrl);
+          this.resumableUploadUrl = updatedUploadUrl;
+          uploadUrl = new GenericUrl(this.resumableUploadUrl);
         }
 
         // we check the amount of bytes the server received so far, because the server may process
@@ -513,7 +600,7 @@ public final class MediaHttpUploader {
         requestFactory.buildRequest(initiationRequestMethod, initiationRequestUrl, content);
     initiationHeaders.set(CONTENT_TYPE_HEADER, mediaContent.getType());
     if (isMediaLengthKnown()) {
-      initiationHeaders.set(CONTENT_LENGTH_HEADER, getMediaContentLength());
+      initiationHeaders.set(CONTENT_LENGTH_HEADER, Long.valueOf(getMediaContentLength()));
     }
     request.getHeaders().putAll(initiationHeaders);
     HttpResponse response = executeCurrentRequest(request);
@@ -602,7 +689,7 @@ public final class MediaHttpUploader {
         bytesAllowedToRead = cachedByte == null ? blockSize + 1 : blockSize;
         currentRequestContentBuffer = new byte[blockSize + 1];
         if (cachedByte != null) {
-          currentRequestContentBuffer[0] = cachedByte;
+          currentRequestContentBuffer[0] = cachedByte.byteValue();
         }
       } else {
         // currentRequestContentBuffer is not null that means one of the following:
@@ -620,7 +707,7 @@ public final class MediaHttpUploader {
             currentRequestContentBuffer, 0, copyBytes);
         if (cachedByte != null) {
           // add the last cached byte to the buffer
-          currentRequestContentBuffer[copyBytes] = cachedByte;
+          currentRequestContentBuffer[copyBytes] = cachedByte.byteValue();
         }
 
         bytesAllowedToRead = blockSize - copyBytes;
@@ -643,7 +730,7 @@ public final class MediaHttpUploader {
           mediaContentLengthStr = String.valueOf(totalBytesServerReceived + actualBlockSize);
         }
       } else {
-        cachedByte = currentRequestContentBuffer[blockSize];
+        cachedByte = Byte.valueOf(currentRequestContentBuffer[blockSize]);
       }
 
       contentChunk = new ByteArrayContent(
@@ -678,8 +765,8 @@ public final class MediaHttpUploader {
 
     // Query the current status of the upload by issuing an empty PUT request on the upload URI.
     currentRequest.setContent(new EmptyContent());
-    currentRequest.getHeaders()
-        .setContentRange("bytes */" + (isMediaLengthKnown() ? getMediaContentLength() : "*"));
+    currentRequest.getHeaders().setContentRange(
+        "bytes */" + (isMediaLengthKnown() ? Long.toString(getMediaContentLength()) : "*"));
   }
 
   /**
@@ -937,5 +1024,9 @@ public final class MediaHttpUploader {
         + " getNumBytesUploaded() to denote progress instead.");
     return getMediaContentLength() == 0 ? 0 : (double) totalBytesServerReceived
         / getMediaContentLength();
+  }
+
+  public String getResumableUploadUrl() {
+    return resumableUploadUrl;
   }
 }
