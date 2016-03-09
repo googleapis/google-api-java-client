@@ -412,7 +412,8 @@ public final class MediaHttpUploader {
    * @return the response
    * @throws IOException if there is a communication error
    */
-  private HttpResponse resumableUploadInitiation(GenericUrl resumableRequestUrl) throws IOException {
+  private HttpResponse resumableUploadInitiation(GenericUrl resumableRequestUrl)
+      throws IOException {
     updateStateAndNotifyListener(UploadState.RESUME_INITIATION_STARTED);
     HttpRequest request =
         requestFactory.buildRequest(HttpMethods.PUT, resumableRequestUrl, new EmptyContent());
@@ -764,8 +765,8 @@ public final class MediaHttpUploader {
 
     // Query the current status of the upload by issuing an empty PUT request on the upload URI.
     currentRequest.setContent(new EmptyContent());
-    currentRequest.getHeaders()
-        .setContentRange("bytes */" + (isMediaLengthKnown() ? Long.toString(getMediaContentLength()) : "*"));
+    currentRequest.getHeaders().setContentRange(
+        "bytes */" + (isMediaLengthKnown() ? Long.toString(getMediaContentLength()) : "*"));
   }
 
   /**
