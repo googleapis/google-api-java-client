@@ -140,6 +140,20 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
     return this;
   }
 
+  /**
+   * Sets the selected Google {@link Account} or {@code null} for none.
+   *
+   * <p>
+   * Caller must ensure the given Google account exists.
+   * </p>
+   */
+  public final GoogleAccountCredential setSelectedAccount(Account selectedAccount) {
+    this.selectedAccount = selectedAccount;
+    this.accountName = selectedAccount == null ? null : selectedAccount.name;
+    return this;
+  }
+
+  @Override
   public void initialize(HttpRequest request) {
     RequestHandler handler = new RequestHandler();
     request.setInterceptor(handler);
@@ -274,6 +288,7 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
     boolean received401;
     String token;
 
+    @Override
     public void intercept(HttpRequest request) throws IOException {
       try {
         token = getToken();
@@ -287,6 +302,7 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
       }
     }
 
+    @Override
     public boolean handleResponse(
         HttpRequest request, HttpResponse response, boolean supportsRetry) {
       if (response.getStatusCode() == 401 && !received401) {
