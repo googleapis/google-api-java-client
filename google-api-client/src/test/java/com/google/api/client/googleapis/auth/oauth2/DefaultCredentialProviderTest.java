@@ -578,7 +578,7 @@ public class DefaultCredentialProviderTest extends TestCase {
    */
 
   private static class MockRequestUrlRecordingTransport extends MockHttpTransport {
-    List<String> requestUrls = new ArrayList<>();
+    List<String> requestUrls = new ArrayList<String>();
 
     MockRequestUrlRecordingTransport() {
     }
