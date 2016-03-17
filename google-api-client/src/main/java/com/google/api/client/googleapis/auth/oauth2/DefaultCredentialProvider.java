@@ -242,7 +242,6 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
 
   private GoogleCredential getCredentialUsingWellKnownFile(
       HttpTransport transport, JsonFactory jsonFactory) throws IOException {
-    // Then try the well-known file
     File wellKnownFileLocation = getWellKnownCredentialsFile();
     InputStream credentialsStream = null;
     try {
