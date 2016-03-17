@@ -19,6 +19,7 @@ import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.util.Beta;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -30,6 +31,7 @@ import java.util.logging.Logger;
 /**
  * Utilities used by the com.google.api.client.googleapis.auth.oauth2 namespace.
  */
+@Beta
 public class OAuth2Utils {
 
   static final Charset UTF_8 = Charset.forName("UTF-8");
