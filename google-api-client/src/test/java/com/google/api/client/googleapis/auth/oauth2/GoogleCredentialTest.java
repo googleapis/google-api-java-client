@@ -186,7 +186,6 @@ public class GoogleCredentialTest extends TestCase {
         "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr.apps.googleusercontent.com";
     final String serviceAccountEmail =
         "36680232662-vrd7ji19qgchd0ah2csanun6bnr@developer.gserviceaccount.com";
-    final String projectId = "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr";
 
     MockTokenServerTransport transport = new MockTokenServerTransport();
     transport.addServiceAccount(serviceAccountEmail, accessToken);
@@ -198,7 +197,6 @@ public class GoogleCredentialTest extends TestCase {
     serviceAccountContents.put("client_email", serviceAccountEmail);
     serviceAccountContents.put("private_key", SA_KEY_TEXT);
     serviceAccountContents.put("private_key_id", SA_KEY_ID);
-    serviceAccountContents.put("project_id", projectId);
     serviceAccountContents.put("type", GoogleCredential.SERVICE_ACCOUNT_FILE_TYPE);
     String json = serviceAccountContents.toPrettyString();
     InputStream serviceAccountStream = new ByteArrayInputStream(json.getBytes());
@@ -218,7 +216,6 @@ public class GoogleCredentialTest extends TestCase {
         "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr.apps.googleusercontent.com";
     final String serviceAccountEmail =
         "36680232662-vrd7ji19qgchd0ah2csanun6bnr@developer.gserviceaccount.com";
-    final String projectId = "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr";
 
     final String tokenServerUrl = "http://another.auth.com/token";
     MockTokenServerTransport transport = new MockTokenServerTransport(tokenServerUrl);
@@ -231,7 +228,6 @@ public class GoogleCredentialTest extends TestCase {
     serviceAccountContents.put("client_email", serviceAccountEmail);
     serviceAccountContents.put("private_key", SA_KEY_TEXT);
     serviceAccountContents.put("private_key_id", SA_KEY_ID);
-    serviceAccountContents.put("project_id", projectId);
     serviceAccountContents.put("type", GoogleCredential.SERVICE_ACCOUNT_FILE_TYPE);
     serviceAccountContents.put("token_uri", tokenServerUrl);
     String json = serviceAccountContents.toPrettyString();
@@ -251,7 +247,6 @@ public class GoogleCredentialTest extends TestCase {
   public void testFromStreamServiceAccountMissingClientIdThrows() throws IOException {
     final String serviceAccountEmail =
         "36680232662-vrd7ji19qgchd0ah2csanun6bnr@developer.gserviceaccount.com";
-    final String projectId = "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr";
 
     MockHttpTransport transport = new MockTokenServerTransport();
 
@@ -261,7 +256,6 @@ public class GoogleCredentialTest extends TestCase {
     serviceAccountContents.put("client_email", serviceAccountEmail);
     serviceAccountContents.put("private_key", SA_KEY_TEXT);
     serviceAccountContents.put("private_key_id", SA_KEY_ID);
-    serviceAccountContents.put("project_id", projectId);
     serviceAccountContents.put("type", GoogleCredential.SERVICE_ACCOUNT_FILE_TYPE);
     String json = serviceAccountContents.toPrettyString();
     InputStream serviceAccountStream = new ByteArrayInputStream(json.getBytes());
@@ -277,7 +271,6 @@ public class GoogleCredentialTest extends TestCase {
   public void testFromStreamServiceAccountMissingClientEmailThrows() throws IOException {
     final String serviceAccountId =
         "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr.apps.googleusercontent.com";
-    final String projectId = "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr";
 
     MockHttpTransport transport = new MockTokenServerTransport();
 
@@ -287,7 +280,6 @@ public class GoogleCredentialTest extends TestCase {
     serviceAccountContents.put("client_id", serviceAccountId);
     serviceAccountContents.put("private_key", SA_KEY_TEXT);
     serviceAccountContents.put("private_key_id", SA_KEY_ID);
-    serviceAccountContents.put("project_id", projectId);
     serviceAccountContents.put("type", GoogleCredential.SERVICE_ACCOUNT_FILE_TYPE);
     String json = serviceAccountContents.toPrettyString();
     InputStream serviceAccountStream = new ByteArrayInputStream(json.getBytes());
@@ -305,7 +297,6 @@ public class GoogleCredentialTest extends TestCase {
         "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr.apps.googleusercontent.com";
     final String serviceAccountEmail =
         "36680232662-vrd7ji19qgchd0ah2csanun6bnr@developer.gserviceaccount.com";
-    final String projectId = "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr";
 
     MockHttpTransport transport = new MockTokenServerTransport();
 
@@ -315,7 +306,6 @@ public class GoogleCredentialTest extends TestCase {
     serviceAccountContents.put("client_id", serviceAccountId);
     serviceAccountContents.put("client_email", serviceAccountEmail);
     serviceAccountContents.put("private_key_id", SA_KEY_ID);
-    serviceAccountContents.put("project_id", projectId);
     serviceAccountContents.put("type", GoogleCredential.SERVICE_ACCOUNT_FILE_TYPE);
     String json = serviceAccountContents.toPrettyString();
     InputStream serviceAccountStream = new ByteArrayInputStream(json.getBytes());
@@ -333,7 +323,6 @@ public class GoogleCredentialTest extends TestCase {
         "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr.apps.googleusercontent.com";
     final String serviceAccountEmail =
         "36680232662-vrd7ji19qgchd0ah2csanun6bnr@developer.gserviceaccount.com";
-    final String projectId = "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr";
 
     MockHttpTransport transport = new MockTokenServerTransport();
 
@@ -343,7 +332,6 @@ public class GoogleCredentialTest extends TestCase {
     serviceAccountContents.put("client_id", serviceAccountId);
     serviceAccountContents.put("client_email", serviceAccountEmail);
     serviceAccountContents.put("private_key", SA_KEY_TEXT);
-    serviceAccountContents.put("project_id", projectId);
     serviceAccountContents.put("type", GoogleCredential.SERVICE_ACCOUNT_FILE_TYPE);
     String json = serviceAccountContents.toPrettyString();
     InputStream serviceAccountStream = new ByteArrayInputStream(json.getBytes());
@@ -353,33 +341,6 @@ public class GoogleCredentialTest extends TestCase {
       fail();
     } catch (IOException expected) {
       assertTrue(expected.getMessage().contains("private_key_id"));
-    }
-  }
-
-  public void testFromStreamServiceAccountMissingProjectIdThrows() throws IOException {
-    final String serviceAccountId =
-        "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr.apps.googleusercontent.com";
-    final String serviceAccountEmail =
-        "36680232662-vrd7ji19qgchd0ah2csanun6bnr@developer.gserviceaccount.com";
-
-    MockHttpTransport transport = new MockTokenServerTransport();
-
-    // Write out user file
-    GenericJson serviceAccountContents = new GenericJson();
-    serviceAccountContents.setFactory(JSON_FACTORY);
-    serviceAccountContents.put("client_id", serviceAccountId);
-    serviceAccountContents.put("client_email", serviceAccountEmail);
-    serviceAccountContents.put("private_key", SA_KEY_TEXT);
-    serviceAccountContents.put("private_key_id", SA_KEY_ID);
-    serviceAccountContents.put("type", GoogleCredential.SERVICE_ACCOUNT_FILE_TYPE);
-    String json = serviceAccountContents.toPrettyString();
-    InputStream serviceAccountStream = new ByteArrayInputStream(json.getBytes());
-
-    try {
-      GoogleCredential.fromStream(serviceAccountStream, transport, JSON_FACTORY);
-      fail();
-    } catch (IOException expected) {
-      assertTrue(expected.getMessage().contains("project_id"));
     }
   }
 
