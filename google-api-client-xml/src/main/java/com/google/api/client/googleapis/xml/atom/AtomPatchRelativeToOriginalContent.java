@@ -20,11 +20,9 @@ import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.api.client.xml.atom.Atom;
-
-import org.xmlpull.v1.XmlSerializer;
-
 import java.io.IOException;
 import java.util.Map;
+import org.xmlpull.v1.XmlSerializer;
 
 /**
  * {@link Beta} <br/>
