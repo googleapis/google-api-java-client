@@ -14,12 +14,11 @@
 
 package com.google.api.client.googleapis.extensions.android.accounts;
 
-import com.google.api.client.util.Beta;
-import com.google.api.client.util.Preconditions;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
+import com.google.api.client.util.Beta;
+import com.google.api.client.util.Preconditions;
 
 /**
  * {@link Beta} <br/>

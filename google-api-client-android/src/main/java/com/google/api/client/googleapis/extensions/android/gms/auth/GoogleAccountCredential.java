@@ -12,6 +12,9 @@
 
 package com.google.api.client.googleapis.extensions.android.gms.auth;
 
+import android.accounts.Account;
+import android.content.Context;
+import android.content.Intent;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
@@ -30,11 +33,6 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.client.util.Joiner;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Sleeper;
-
-import android.accounts.Account;
-import android.content.Context;
-import android.content.Intent;
-
 import java.io.IOException;
 import java.util.Collection;
 

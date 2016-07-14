@@ -12,12 +12,10 @@
 
 package com.google.api.client.googleapis.extensions.android.gms.auth;
 
-import com.google.android.gms.auth.UserRecoverableAuthException;
-import com.google.api.client.util.Beta;
-
 import android.app.Activity;
 import android.content.Intent;
-
+import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.api.client.util.Beta;
 import java.io.IOException;
 
 /**
