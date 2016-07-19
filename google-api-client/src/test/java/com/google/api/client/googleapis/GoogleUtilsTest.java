@@ -14,10 +14,9 @@
 
 package com.google.api.client.googleapis;
 
-import junit.framework.TestCase;
-
 import java.security.KeyStore;
 import java.util.Enumeration;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link GoogleUtils}.

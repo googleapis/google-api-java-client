@@ -22,13 +22,11 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
-
-import junit.framework.TestCase;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link AppIdentityCredential}.

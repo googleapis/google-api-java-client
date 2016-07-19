@@ -34,17 +34,15 @@ package com.google.api.client.googleapis.auth.oauth2;
 import static org.junit.Assert.assertEquals;
 
 import com.google.api.client.json.gson.GsonFactory;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Unit tests for CloudShellCredential

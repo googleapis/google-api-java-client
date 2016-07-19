@@ -17,10 +17,8 @@ package com.google.api.client.googleapis.testing.json;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-
-import junit.framework.TestCase;
-
 import java.io.IOException;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link GoogleJsonResponseExceptionFactoryTesting}
