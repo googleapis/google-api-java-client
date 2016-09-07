@@ -135,6 +135,24 @@ public class GoogleCredentialTest extends TestCase {
         scopedCredential.getServiceAccountPrivateKey());
   }
 
+  public void testCreateScopesNotSet() throws Exception {
+    final String serviceAccountEmail =
+        "36680232662-vrd7ji19q3ne0ah2csanun6bnr@developer.gserviceaccount.com";
+    final String accessToken = "1/MkSJoj1xsli0AccessToken_NKPY2";
+    MockTokenServerTransport transport = new MockTokenServerTransport();
+    transport.addServiceAccount(serviceAccountEmail, accessToken);
+
+    GoogleCredential credential = new GoogleCredential.Builder()
+        .setServiceAccountId(serviceAccountEmail)
+        .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
+        .setTransport(transport)
+        .setJsonFactory(JSON_FACTORY)
+        .build();
+    // Note that setServiceAccountScopes() is not called, so it is uninitialized (i.e. null) on the
+    // builder.
+    assertTrue(credential.getServiceAccountScopes().isEmpty());
+  }
+
   public void testGetApplicationDefaultNullTransportThrows() throws IOException {
     try {
       GoogleCredential.getApplicationDefault(null, JSON_FACTORY);
