@@ -325,7 +325,10 @@ public class GoogleCredential extends Credential {
     } else {
       serviceAccountId = Preconditions.checkNotNull(builder.serviceAccountId);
       serviceAccountProjectId = builder.serviceAccountProjectId;
-      serviceAccountScopes = Collections.unmodifiableCollection(builder.serviceAccountScopes);
+      serviceAccountScopes =
+          (builder.serviceAccountScopes == null)
+              ? Collections.<String>emptyList()
+              : Collections.unmodifiableCollection(builder.serviceAccountScopes);
       serviceAccountPrivateKey = builder.serviceAccountPrivateKey;
       serviceAccountPrivateKeyId = builder.serviceAccountPrivateKeyId;
       serviceAccountUser = builder.serviceAccountUser;
