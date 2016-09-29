@@ -172,8 +172,12 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
     }
     // verify signature, try all public keys in turn.
     for (PublicKey publicKey : publicKeys.getPublicKeys()) {
-      if (googleIdToken.verifySignature(publicKey)) {
-        return true;
+      try {
+        if (googleIdToken.verifySignature(publicKey)) {
+          return true;
+        }
+      } catch (Exception e) {
+        System.err.println("Verify Token:" + e);
       }
     }
     return false;
