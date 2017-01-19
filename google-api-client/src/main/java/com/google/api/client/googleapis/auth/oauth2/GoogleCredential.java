@@ -487,6 +487,7 @@ public class GoogleCredential extends Credential {
         .setServiceAccountPrivateKey(serviceAccountPrivateKey)
         .setServiceAccountPrivateKeyId(serviceAccountPrivateKeyId)
         .setServiceAccountId(serviceAccountId)
+        .setServiceAccountProjectId(serviceAccountProjectId)
         .setServiceAccountUser(serviceAccountUser)
         .setServiceAccountScopes(scopes)
         .setTokenServerEncodedUrl(getTokenServerEncodedUrl())
