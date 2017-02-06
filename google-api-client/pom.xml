@@ -41,15 +41,6 @@
              <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
           </archive>
         </configuration>
-        <executions>
-          <execution>
-            <id>jar</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>   
         <groupId>org.apache.felix</groupId>
@@ -77,7 +68,6 @@
         <executions>
           <execution>
             <id>source-jar</id>
-            <phase>compile</phase>
             <goals>
               <goal>jar</goal>
             </goals>
