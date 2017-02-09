@@ -341,6 +341,8 @@ public class MediaHttpUploaderTest extends TestCase {
             assertEquals(1.0, uploader.getProgress());
           }
           break;
+        default:
+          // TODO(b/18683919): go/enum-switch-lsc
       }
     }
   }
@@ -385,6 +387,8 @@ public class MediaHttpUploaderTest extends TestCase {
             assertEquals(1.0, uploader.getProgress());
           }
           break;
+        default:
+          // TODO(b/18683919): go/enum-switch-lsc
       }
     }
   }

@@ -135,6 +135,8 @@ public class MediaHttpDownloaderTest extends TestCase {
           assertEquals(2, progressListenerCalls);
           assertEquals(1.0, downloader.getProgress());
           break;
+        default:
+          // TODO(b/18683919): go/enum-switch-lsc
       }
     }
   }
