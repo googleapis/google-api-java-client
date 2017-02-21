@@ -20,7 +20,6 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Strings;
-
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -63,10 +62,10 @@ public abstract class AbstractGoogleClient {
   private final ObjectParser objectParser;
 
   /** Whether discovery pattern checks should be suppressed on required parameters. */
-  private boolean suppressPatternChecks;
+  private final boolean suppressPatternChecks;
 
   /** Whether discovery required parameter checks should be suppressed. */
-  private boolean suppressRequiredParameterChecks;
+  private final boolean suppressRequiredParameterChecks;
 
   /**
    * @param builder builder
