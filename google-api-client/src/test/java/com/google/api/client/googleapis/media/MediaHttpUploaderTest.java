@@ -234,6 +234,7 @@ public class MediaHttpUploaderTest extends TestCase {
                   response.addHeader("Range", "bytes=0-" + contentLength);
                   return response;
                 }
+                break;
               default:
                 break;
             }
