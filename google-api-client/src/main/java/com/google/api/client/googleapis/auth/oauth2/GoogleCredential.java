@@ -226,7 +226,26 @@ public class GoogleCredential extends Credential {
      return fromStream(
         credentialStream,
         Utils.getDefaultTransport(),
-        Utils.getDefaultJsonFactory());
+        Utils.getDefaultJsonFactory(),
+	null);
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Return a credential defined by a Json file and impersonation user.
+   *
+   * @param credentialStream the stream with the credential definitnion.
+   * @param impersonationUser the user to impersonate.
+   * @return the credential defined by the credentialStream and impersonation user.
+   * @throws IOException if the credential cannot be created from the stream.
+   */
+  @Beta
+  public static GoogleCredential fromStream(InputStream credentialStream, String impersonationUser) throws IOException {
+    return fromStream(
+	credentialStream,
+	Utils.getDefaultTransport(),
+	Utils.getDefaultJsonFactory(),
+	impersonationUser);
   }
 
   /**
@@ -242,6 +261,27 @@ public class GoogleCredential extends Credential {
   @Beta
   public static GoogleCredential fromStream(InputStream credentialStream, HttpTransport transport,
       JsonFactory jsonFactory) throws IOException {
+     return fromStream(
+        credentialStream,
+        transport,
+        jsonFactory,
+	null);
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Return a credential defined by a Json file.
+   *
+   * @param credentialStream the stream with the credential definition.
+   * @param transport the transport for Http calls.
+   * @param jsonFactory the factory for Json parsing and formatting.
+   * @param impersonationUser the user to impersonate.
+   * @return the credential defined by the credentialStream.
+   * @throws IOException if the credential cannot be created from the stream.
+   */
+  @Beta
+  public static GoogleCredential fromStream(InputStream credentialStream, HttpTransport transport,
+      JsonFactory jsonFactory, String impersonationUser) throws IOException {
     Preconditions.checkNotNull(credentialStream);
     Preconditions.checkNotNull(transport);
     Preconditions.checkNotNull(jsonFactory);
@@ -254,10 +294,12 @@ public class GoogleCredential extends Credential {
       throw new IOException("Error reading credentials from stream, 'type' field not specified.");
     }
     if (USER_FILE_TYPE.equals(fileType)) {
+      //could check to see if impersonation user is not null and raise error for irrelevant use of it as
+      //its only for service accounts. I'm ignoring instead right now.
       return fromStreamUser(fileContents, transport, jsonFactory);
     }
     if (SERVICE_ACCOUNT_FILE_TYPE.equals(fileType)) {
-      return fromStreamServiceAccount(fileContents, transport, jsonFactory);
+      return fromStreamServiceAccount(fileContents, transport, jsonFactory, impersonationUser);
     }
     throw new IOException(String.format(
         "Error reading credentials from stream, 'type' value '%s' not recognized."
@@ -775,7 +817,7 @@ public class GoogleCredential extends Credential {
 
   @Beta
   private static GoogleCredential fromStreamServiceAccount(GenericJson fileContents,
-      HttpTransport transport, JsonFactory jsonFactory) throws IOException {
+      HttpTransport transport, JsonFactory jsonFactory, String impersonationUser) throws IOException {
     String clientId = (String) fileContents.get("client_id");
     String clientEmail = (String) fileContents.get("client_email");
     String privateKeyPem = (String) fileContents.get("private_key");
@@ -792,13 +834,17 @@ public class GoogleCredential extends Credential {
     Builder credentialBuilder = new GoogleCredential.Builder()
         .setTransport(transport)
         .setJsonFactory(jsonFactory)
-        .setServiceAccountId(clientEmail)
         .setServiceAccountScopes(emptyScopes)
         .setServiceAccountPrivateKey(privateKey)
         .setServiceAccountPrivateKeyId(privateKeyId);
     String tokenUri = (String) fileContents.get("token_uri");
     if (tokenUri != null) {
       credentialBuilder.setTokenServerEncodedUrl(tokenUri);
+    }
+    if (impersonationUser == null) {
+      credentialBuilder.setServiceAccountId(clientEmail);
+    } else {
+      credentialBuilder.setServiceAccountId(impersonationUser);
     }
     // Don't do a refresh at this point, as it will always fail before the scopes are added.
     return credentialBuilder.build();
