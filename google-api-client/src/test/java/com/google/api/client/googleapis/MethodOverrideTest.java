@@ -27,7 +27,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import junit.framework.TestCase;
 
 /**
@@ -37,12 +36,21 @@ import junit.framework.TestCase;
  */
 public class MethodOverrideTest extends TestCase {
 
-  private static final List<String> OVERRIDDEN_METHODS = ImmutableList.of(
-      "FOO", HttpMethods.DELETE, HttpMethods.HEAD, HttpMethods.OPTIONS, HttpMethods.PATCH,
-      HttpMethods.PUT, HttpMethods.TRACE);
+  private static final ImmutableList<String> OVERRIDDEN_METHODS =
+      ImmutableList.of(
+          "FOO",
+          HttpMethods.DELETE,
+          HttpMethods.HEAD,
+          HttpMethods.OPTIONS,
+          HttpMethods.PATCH,
+          HttpMethods.PUT,
+          HttpMethods.TRACE);
 
-  private static final List<String> SUPPORTED_METHODS = ImmutableList.<String>builder()
-      .addAll(OVERRIDDEN_METHODS).add(HttpMethods.GET, HttpMethods.POST).build();
+  private static final ImmutableList<String> SUPPORTED_METHODS =
+      ImmutableList.<String>builder()
+          .addAll(OVERRIDDEN_METHODS)
+          .add(HttpMethods.GET, HttpMethods.POST)
+          .build();
 
   public MethodOverrideTest(String name) {
     super(name);
