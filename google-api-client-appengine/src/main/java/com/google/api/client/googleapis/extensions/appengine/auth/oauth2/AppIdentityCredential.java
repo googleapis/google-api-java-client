@@ -15,6 +15,7 @@
 package com.google.api.client.googleapis.extensions.appengine.auth.oauth2;
 
 import com.google.api.client.auth.oauth2.BearerToken;
+import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
@@ -24,6 +25,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.appengine.api.appidentity.AppIdentityService;
+import com.google.appengine.api.appidentity.AppIdentityService.GetAccessTokenResult;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
 
 import java.io.IOException;
@@ -254,6 +256,18 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
               .build(),
           getTransport(),
           getJsonFactory());
+    }
+
+    @Override
+    protected TokenResponse executeRefreshToken() throws IOException {
+      GetAccessTokenResult tokenResult = appIdentity.getAppIdentityService()
+          .getAccessToken(appIdentity.getScopes());
+      TokenResponse response = new TokenResponse();
+      response.setAccessToken(tokenResult.getAccessToken());
+      long expiresInSeconds =
+          (tokenResult.getExpirationTime().getTime() - System.currentTimeMillis()) / 1000;
+      response.setExpiresInSeconds(expiresInSeconds);
+      return response;
     }
   }
 }
