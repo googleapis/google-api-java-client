@@ -105,9 +105,8 @@ public class AppIdentityCredentialTest extends TestCase {
     assertTrue(authHeader.contains(expectedAccessToken));
   }
 
-  public void testAppEngineCredentialWrapperGetAccessToken() {
+  public void testAppEngineCredentialWrapperGetAccessToken() throws IOException {
     final String expectedAccessToken = "ExpectedAccessToken";
-    final Collection<String> emptyScopes = Collections.emptyList();
 
     HttpTransport transport = new MockHttpTransport();
     JsonFactory jsonFactory = new JacksonFactory();
@@ -115,12 +114,13 @@ public class AppIdentityCredentialTest extends TestCase {
     MockAppIdentityService appIdentity = new MockAppIdentityService();
     appIdentity.setAccessTokenText(expectedAccessToken);
 
-    AppIdentityCredential.Builder builder = new AppIdentityCredential.Builder(emptyScopes);
+    AppIdentityCredential.Builder builder = new AppIdentityCredential.Builder(SCOPES);
     builder.setAppIdentityService(appIdentity);
     AppIdentityCredential appCredential = builder.build();
 
     GoogleCredential wrapper = new
         AppIdentityCredential.AppEngineCredentialWrapper(appCredential, transport, jsonFactory);
+    assertTrue(wrapper.refreshToken());
     assertEquals(expectedAccessToken, wrapper.getAccessToken());
   }
 
