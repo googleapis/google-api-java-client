@@ -61,7 +61,7 @@ public class AppIdentityCredentialTest extends TestCase {
 
     appCredential.intercept(request);
 
-    assertEquals(appIdentity.getGetAccessTokenCallCount(), 1);
+    assertEquals(1, appIdentity.getGetAccessTokenCallCount());
     HttpHeaders headers = request.getHeaders();
     String authHeader = headers.getAuthorization();
     Boolean headerContainsToken = authHeader.contains(expectedAccessToken);
@@ -93,13 +93,13 @@ public class AppIdentityCredentialTest extends TestCase {
       fail("Should not be able to use credential without scopes.");
     } catch (Exception expected) {
     }
-    assertEquals(appIdentity.getGetAccessTokenCallCount(), 1);
+    assertEquals(1, appIdentity.getGetAccessTokenCallCount());
 
     GoogleCredential scopedWrapper = wrapper.createScoped(SCOPES);
     assertNotSame(wrapper, scopedWrapper);
     scopedWrapper.intercept(request);
 
-    assertEquals(appIdentity.getGetAccessTokenCallCount(), 2);
+    assertEquals(2, appIdentity.getGetAccessTokenCallCount());
     HttpHeaders headers = request.getHeaders();
     String authHeader = headers.getAuthorization();
     assertTrue(authHeader.contains(expectedAccessToken));

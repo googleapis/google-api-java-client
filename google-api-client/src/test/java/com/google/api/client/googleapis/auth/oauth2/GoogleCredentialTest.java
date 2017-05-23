@@ -379,7 +379,7 @@ public class GoogleCredentialTest extends TestCase {
         .fromStream(userStream, transport, JSON_FACTORY);
 
     assertNotNull(defaultCredential);
-    assertEquals(defaultCredential.getRefreshToken(), refreshToken);
+    assertEquals(refreshToken, defaultCredential.getRefreshToken());
 
     assertTrue(defaultCredential.refreshToken());
     assertEquals(accessToken, defaultCredential.getAccessToken());
