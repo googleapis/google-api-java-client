@@ -66,7 +66,7 @@ public class CloudShellCredentialTest {
               assertEquals(CloudShellCredential.GET_AUTH_TOKEN_REQUEST, lines);
 
               PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-              out.println("32\n[\"email\", \"project-id\", \"token\"]");
+              out.println("32\n[\"email\", \"project-id\", \"token\", 1234]");
             } catch (Exception reThrown) {
               throw new RuntimeException(reThrown);
             }
