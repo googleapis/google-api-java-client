@@ -2,6 +2,8 @@
 
 package com.google.api.client.googleapis.batch;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.google.api.client.googleapis.batch.BatchRequest.RequestInfo;
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
@@ -701,30 +703,34 @@ public class BatchRequestTest extends TestCase {
 
     final StringBuilder expectedOutput = new StringBuilder();
     expectedOutput.append("--__END_OF_PART__\r\n");
-    expectedOutput.append("Content-Length: 109\r\n");
+    expectedOutput.append("Content-Length: 118\r\n");
     expectedOutput.append("Content-Type: application/http\r\n");
     expectedOutput.append("content-id: 1\r\n");
     expectedOutput.append("content-transfer-encoding: binary\r\n");
     expectedOutput.append("\r\n");
-    expectedOutput.append("POST http://test/dummy/url1\r\n");
+    expectedOutput.append("POST http://test/dummy/url1 HTTP/1.1\r\n");
     expectedOutput.append("Content-Length: 26\r\n");
     expectedOutput.append("Content-Type: " + request1ContentType + "\r\n");
     expectedOutput.append("\r\n");
     expectedOutput.append(request1Content + "\r\n");
     expectedOutput.append("--__END_OF_PART__\r\n");
-    expectedOutput.append("Content-Length: 30\r\n");
+    expectedOutput.append("Content-Length: 39\r\n");
     expectedOutput.append("Content-Type: application/http\r\n");
     expectedOutput.append("content-id: 2\r\n");
     expectedOutput.append("content-transfer-encoding: binary\r\n");
     expectedOutput.append("\r\n");
-    expectedOutput.append("GET http://test/dummy/url2\r\n");
+    expectedOutput.append("GET http://test/dummy/url2 HTTP/1.1\r\n");
     expectedOutput.append("\r\n");
     expectedOutput.append("\r\n");
     expectedOutput.append("--__END_OF_PART__--\r\n");
     MockHttpTransport transport = new MockHttpTransport();
-    HttpRequest request1 = transport.createRequestFactory().buildRequest(
-        request1Method, new GenericUrl(request1Url),
-        new ByteArrayContent(request1ContentType, request1Content.getBytes()));
+    HttpRequest request1 =
+        transport
+            .createRequestFactory()
+            .buildRequest(
+                request1Method,
+                new GenericUrl(request1Url),
+                new ByteArrayContent(request1ContentType, request1Content.getBytes(UTF_8)));
     HttpRequest request2 = transport.createRequestFactory()
         .buildRequest(request2Method, new GenericUrl(request2Url), null);
     subtestExecute_checkWriteTo(expectedOutput.toString(), request1, request2);
@@ -806,9 +812,9 @@ public class BatchRequestTest extends TestCase {
           }
         });
     subtestExecute_checkWriteTo(new StringBuilder().append("--__END_OF_PART__\r\n")
-        .append("Content-Length: 27\r\n").append("Content-Type: application/http\r\n")
+        .append("Content-Length: 36\r\n").append("Content-Type: application/http\r\n")
         .append("content-id: 1\r\n").append("content-transfer-encoding: binary\r\n").append("\r\n")
-        .append("POST http://google.com/\r\n").append("\r\n").append("\r\n")
+        .append("POST http://google.com/ HTTP/1.1\r\n").append("\r\n").append("\r\n")
         .append("--__END_OF_PART__--\r\n").toString(), request1);
   }
 
