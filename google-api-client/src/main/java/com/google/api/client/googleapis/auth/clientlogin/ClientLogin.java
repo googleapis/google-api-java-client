@@ -18,14 +18,9 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Key;
-import com.google.api.client.util.StringUtils;
-import com.google.api.client.util.Strings;
 
 import java.io.IOException;
 
@@ -172,38 +167,3 @@ public final class ClientLogin {
    */
   public Response authenticate() throws IOException {
     GenericUrl url = serverUrl.clone();
-    url.appendRawPath("/accounts/ClientLogin");
-    HttpRequest request =
-        transport.createRequestFactory().buildPostRequest(url, new UrlEncodedContent(this));
-    request.setParser(AuthKeyValueParser.INSTANCE);
-    request.setContentLoggingLimit(0);
-    request.setThrowExceptionOnExecuteError(false);
-    HttpResponse response = request.execute();
-    // check for an HTTP success response (2xx)
-    if (response.isSuccessStatusCode()) {
-      return response.parseAs(Response.class);
-    }
-    HttpResponseException.Builder builder = new HttpResponseException.Builder(
-        response.getStatusCode(), response.getStatusMessage(), response.getHeaders());
-    // On error, throw a ClientLoginResponseException with the parsed error details
-    ErrorInfo details = response.parseAs(ErrorInfo.class);
-    String detailString = details.toString();
-    StringBuilder message = HttpResponseException.computeMessageBuffer(response);
-    if (!Strings.isNullOrEmpty(detailString)) {
-      message.append(StringUtils.LINE_SEPARATOR).append(detailString);
-      builder.setContent(detailString);
-    }
-    builder.setMessage(message.toString());
-    throw new ClientLoginResponseException(builder, details);
-  }
-
-  /**
-   * Returns Google Login {@code "Authorization"} header value based on the given authentication
-   * token.
-   *
-   * @since 1.13
-   */
-  public static String getAuthorizationHeaderValue(String authToken) {
-    return "GoogleLogin auth=" + authToken;
-  }
-}

@@ -100,8 +100,8 @@ public class MediaHttpUploaderTest extends TestCase {
     boolean contentLengthNotSpecified;
     boolean assertTestHeaders;
     boolean testIOException;
-    boolean force308OnRangeQueryResponse;
     boolean testMethodOverride;
+    boolean force308OnRangeQueryResponse;
     int maxByteIndexUploadedOnError = MediaHttpUploader.DEFAULT_CHUNK_SIZE - 1;
 
     /**
