@@ -14,6 +14,10 @@
 
 This client library is supported but in maintenance mode only. We are fixing necessary bugs and adding essential features to ensure this library continues to meet your needs for accessing Google APIs. Non-critical issues will be closed. Any issue may be reopened if it is causing ongoing problems.
 
+If you're working with **Google Cloud Platform** APIs such as Datastore or Pub/Sub, consider using the [Cloud Client Libraries for Java](https://github.com/GoogleCloudPlatform/google-cloud-java) instead. These are the new and idiomatic Java libraries targeted specifically at Google Cloud Platform Services.
+
+[Google API Extensions for Java (GAX Java)](https://github.com/googleapis/gax-java) is a new library which aids in the development of client libraries for server APIs, based on GRPC and Google API conventions.
+
 ## <a name='Overview'>Overview<a/>
 
 The Google APIs Client Library for Java is a flexible, efficient, and powerful Java client library for accessing any HTTP-based API on the web, not just Google APIs. 
