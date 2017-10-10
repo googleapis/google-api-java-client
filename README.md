@@ -137,7 +137,7 @@ Not supported: Google Web Toolkit (GWT), Java mobile (ME), and Java 1.4 (or earl
         <dependency>
           <groupId>com.google.api-client</groupId>
           <artifactId>google-api-client</artifactId>
-          <version>1.20.0</version>
+          <version>1.22.0</version>
         </dependency>
       </dependencies>
     </project> 
@@ -150,7 +150,7 @@ Not supported: Google Web Toolkit (GWT), Java mobile (ME), and Java 1.4 (or earl
       mavenCentral()
   }
   dependencies {
-      compile 'com.google.api-client:google-api-client:1.20.0'
+      compile 'com.google.api-client:google-api-client:1.22.0'
   }
   ```
 
