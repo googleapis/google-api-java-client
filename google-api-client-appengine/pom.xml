@@ -135,7 +135,7 @@
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
-      <artifactId>guava-jdk5</artifactId>
+      <artifactId>guava</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
