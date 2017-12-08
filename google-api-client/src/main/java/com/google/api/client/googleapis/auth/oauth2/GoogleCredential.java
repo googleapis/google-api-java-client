@@ -483,18 +483,47 @@ public class GoogleCredential extends Credential {
     if (serviceAccountPrivateKey == null) {
       return this;
     }
-    return new GoogleCredential.Builder()
+    return toBuilder()
+        .setServiceAccountScopes(scopes)
+        .build();
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * For service accounts that need to delegate to a specific user, create a
+   * copy of the credential with the specified user
+   */
+  @Beta
+  public GoogleCredential createDelegated(String user) {
+    if (serviceAccountPrivateKey == null) {
+      return this;
+    }
+    return toBuilder()
+        .setServiceAccountUser(user)
+        .build();
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Create a builder from this credential.
+   */
+  @Beta
+  public Builder toBuilder() {
+    Builder builder = new GoogleCredential.Builder()
         .setServiceAccountPrivateKey(serviceAccountPrivateKey)
         .setServiceAccountPrivateKeyId(serviceAccountPrivateKeyId)
         .setServiceAccountId(serviceAccountId)
         .setServiceAccountProjectId(serviceAccountProjectId)
         .setServiceAccountUser(serviceAccountUser)
-        .setServiceAccountScopes(scopes)
+        .setServiceAccountScopes(serviceAccountScopes)
         .setTokenServerEncodedUrl(getTokenServerEncodedUrl())
         .setTransport(getTransport())
         .setJsonFactory(getJsonFactory())
-        .setClock(getClock())
-        .build();
+        .setClock(getClock());
+
+    builder.setClientAuthentication(getClientAuthentication());
+
+    return builder;
   }
 
   /**
