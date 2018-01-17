@@ -29,9 +29,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.security.AccessControlException;
 import java.util.Locale;
 
@@ -259,38 +257,12 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
   }
 
   private boolean runningOnAppEngine() {
-    Class<?> systemPropertyClass = null;
-    try {
-      systemPropertyClass = forName("com.google.appengine.api.utils.SystemProperty");
-    } catch (ClassNotFoundException expected) {
-      // SystemProperty will always be present on App Engine.
-      return false;
+    for (String envName : System.getenv().keySet()) {
+      if (envName.startsWith("GAE_")) {
+        return true;
+      }
     }
-    Exception cause = null;
-    Field environmentField;
-    try {
-      environmentField = systemPropertyClass.getField("environment");
-      Object environmentValue = environmentField.get(null);
-      Class<?> environmentType = environmentField.getType();
-      Method valueMethod = environmentType.getMethod("value");
-      Object environmentValueValue = valueMethod.invoke(environmentValue);
-      return (environmentValueValue != null);
-    } catch (NoSuchFieldException exception) {
-      cause = exception;
-    } catch (SecurityException exception) {
-      cause = exception;
-    } catch (IllegalArgumentException exception) {
-      cause = exception;
-    } catch (IllegalAccessException exception) {
-      cause = exception;
-    } catch (NoSuchMethodException exception) {
-      cause = exception;
-    } catch (InvocationTargetException exception) {
-      cause = exception;
-    }
-    throw OAuth2Utils.exceptionWithCause(new RuntimeException(String.format(
-        "Unexpcted error trying to determine if runnning on Google App Engine: %s",
-        cause.getMessage())), cause);
+    return false;
   }
 
   private final GoogleCredential getAppEngineCredential(
