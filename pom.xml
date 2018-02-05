@@ -22,10 +22,6 @@
 
   <inceptionYear>2010</inceptionYear>
 
-  <prerequisites>
-    <maven>2.0.9</maven>
-  </prerequisites>
-
   <scm>
     <connection>scm:git:https://github.com/google/google-api-java-client.git</connection>
     <developerConnection>scm:git:ssh:git@github.com:google/google-api-java-client.git</developerConnection>
@@ -74,7 +70,6 @@
   <modules>
     <module>google-api-client</module>
     <module>google-api-client-servlet</module>
-    <module>google-api-client-android</module>
     <module>google-api-client-appengine</module>
     <module>google-api-client-assembly</module>
     <module>google-api-client-gson</module>
