@@ -32,6 +32,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.security.AccessControlException;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * {@link Beta} <br/>
@@ -257,10 +258,16 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
   }
 
   private boolean runningOnAppEngine() {
-    for (String envName : System.getenv().keySet()) {
-      if (envName.startsWith("GAE_")) {
-        return true;
-      }
+    Map<String, String> env = System.getenv();
+    if (env.containsKey("GAE_ENV") && env.get("GAE_VM").equals("standard")) {
+      return true;
+    }
+    if (env.containsKey("GAE_RUNTIME") &&
+        (env.get("GAE_RUNTIME").equals("java7") || env.get("GAE_RUNTIME").equals("java8"))) {
+      return true;
+    }
+    if (env.containsKey("GAE_VM") && env.get("GAE_VM") == "true") {
+      return true;
     }
     return false;
   }
