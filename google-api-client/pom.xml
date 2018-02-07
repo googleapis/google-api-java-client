@@ -36,9 +36,9 @@
         <configuration>
           <archive>
             <manifest>
-<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
-             <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
           </archive>
         </configuration>
       </plugin>
@@ -50,9 +50,9 @@
           <execution>
             <id>bundle-manifest</id>
             <phase>process-classes</phase>
-            <goals>    
+            <goals>
               <goal>manifest</goal>
-            </goals>   
+            </goals>
           </execution>
         </executions>
         <configuration>
