@@ -1,9 +1,4 @@
-sudo: false
-group: deprecated-2017Q4
-language: android
-android:
-  components:
-    - extra-google-google_play_services
+language: java
 notifications:
   email: false
 jdk:
@@ -12,7 +7,3 @@ jdk:
 before_install:
   - sed -i 's/<module>google-api-client-android<\/module>//'  pom.xml
   - sed -i 's/<module>google-api-client-assembly<\/module>//' pom.xml
-install:
-  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-script:
-  - mvn test -B
