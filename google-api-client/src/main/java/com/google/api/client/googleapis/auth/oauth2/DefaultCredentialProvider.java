@@ -259,7 +259,7 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
 
   private boolean runningOnAppEngine() {
     Map<String, String> env = System.getenv();
-    if (env.containsKey("GAE_ENV") && env.get("GAE_VM").equals("standard")) {
+    if (env.containsKey("GAE_ENV") && env.get("GAE_ENV").equals("standard")) {
       return true;
     }
     if (env.containsKey("GAE_RUNTIME") &&
