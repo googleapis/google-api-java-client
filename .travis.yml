@@ -10,7 +10,8 @@ jdk:
   - oraclejdk8
   - openjdk7
 before_install:
-  - mv .travis.pom.xml pom.xml
+  - sed -i 's/<module>google-api-client-android<\/module>/'  pom.xml
+  - sed -i 's/<module>google-api-client-assembly<\/module>/' pom.xml
 install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:
