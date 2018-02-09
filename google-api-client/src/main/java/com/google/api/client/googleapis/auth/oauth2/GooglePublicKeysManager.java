@@ -23,6 +23,7 @@ import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
+import com.google.api.client.util.Lists;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.StringUtils;
@@ -33,7 +34,6 @@ import java.security.GeneralSecurityException;
 import java.security.PublicKey;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
@@ -138,7 +138,14 @@ public class GooglePublicKeysManager {
     try {
       if (publicKeys == null
           || clock.currentTimeMillis() + REFRESH_SKEW_MILLIS > expirationTimeMilliseconds) {
-        refresh();
+        try {
+          refresh();
+        } catch (IOException ex) {
+          //In case of error, we can still use previous keys if they are not expired
+          if (publicKeys == null || clock.currentTimeMillis() > expirationTimeMilliseconds) {
+            throw ex;
+          }
+        }
       }
       return publicKeys;
     } finally {
@@ -166,7 +173,6 @@ public class GooglePublicKeysManager {
   public GooglePublicKeysManager refresh() throws GeneralSecurityException, IOException {
     lock.lock();
     try {
-      publicKeys = new ArrayList<PublicKey>();
       // HTTP request to public endpoint
       CertificateFactory factory = SecurityUtils.getX509CertificateFactory();
       HttpResponse certsResponse = transport.createRequestFactory()
@@ -182,14 +188,15 @@ public class GooglePublicKeysManager {
       }
       Preconditions.checkArgument(currentToken == JsonToken.START_OBJECT);
       try {
+        List<PublicKey> newPublicKeys = Lists.newArrayList();
         while (parser.nextToken() != JsonToken.END_OBJECT) {
           parser.nextToken();
           String certValue = parser.getText();
           X509Certificate x509Cert = (X509Certificate) factory.generateCertificate(
               new ByteArrayInputStream(StringUtils.getBytesUtf8(certValue)));
-          publicKeys.add(x509Cert.getPublicKey());
+          newPublicKeys.add(x509Cert.getPublicKey());
         }
-        publicKeys = Collections.unmodifiableList(publicKeys);
+        publicKeys = Collections.unmodifiableList(newPublicKeys);
       } finally {
         parser.close();
       }
