@@ -234,7 +234,7 @@ public abstract class AbstractGoogleClient {
   public final BatchRequest batch(HttpRequestInitializer httpRequestInitializer) {
     BatchRequest batch =
         new BatchRequest(getRequestFactory().getTransport(), httpRequestInitializer);
-    if (batchPath.length() == 0) {
+    if (Strings.isNullOrEmpty(batchPath)) {
       batch.setBatchUrl(new GenericUrl(getRootUrl() + "batch"));
     } else {
       batch.setBatchUrl(new GenericUrl(getRootUrl() + batchPath));
