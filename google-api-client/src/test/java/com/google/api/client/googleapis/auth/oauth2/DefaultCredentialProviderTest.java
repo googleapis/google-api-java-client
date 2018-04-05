@@ -80,6 +80,7 @@ public class DefaultCredentialProviderTest extends TestCase {
     testProvider.addType(DefaultCredentialProvider.APP_ENGINE_CREDENTIAL_CLASS,
         MockAppEngineCredential.class);
     testProvider.addType(GAE_SIGNAL_CLASS, MockAppEngineSystemProperty.class);
+    testProvider.setEnv("GAE_ENV", "standard");
 
     Credential defaultCredential = testProvider.getDefaultCredential(transport, JSON_FACTORY);
 
@@ -108,7 +109,9 @@ public class DefaultCredentialProviderTest extends TestCase {
   public void testDefaultCredentialAppEngineWithoutDependencyThrowsHelpfulLoadError() {
     HttpTransport transport = new MockHttpTransport();
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+
     testProvider.addType(GAE_SIGNAL_CLASS, MockAppEngineSystemProperty.class);
+    testProvider.setEnv("GAE_ENV", "standard");
 
     try {
       testProvider.getDefaultCredential(transport, JSON_FACTORY);
@@ -120,30 +123,13 @@ public class DefaultCredentialProviderTest extends TestCase {
     }
   }
 
-  public void testDefaultCredentialAppEngineSingleClassLoadAttempt() {
-    HttpTransport transport = new MockHttpTransport();
-    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
-    try {
-      testProvider.getDefaultCredential(transport, JSON_FACTORY);
-      fail("No credential expected for default test provider.");
-    } catch (IOException expected) {
-    }
-    assertEquals(1, testProvider.getForNameCallCount());
-    // Try a second time.
-    try {
-      testProvider.getDefaultCredential(transport, JSON_FACTORY);
-      fail("No credential expected for default test provider.");
-    } catch (IOException expected) {
-    }
-    assertEquals(1, testProvider.getForNameCallCount());
-  }
-
   public void testDefaultCredentialCaches() throws IOException  {
     HttpTransport transport = new MockHttpTransport();
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
     testProvider.addType(DefaultCredentialProvider.APP_ENGINE_CREDENTIAL_CLASS,
         MockAppEngineCredential.class);
     testProvider.addType(GAE_SIGNAL_CLASS, MockAppEngineSystemProperty.class);
+    testProvider.setEnv("GAE_ENV", "standard");
 
     Credential firstCall = testProvider.getDefaultCredential(transport, JSON_FACTORY);
 
@@ -624,6 +610,11 @@ public class DefaultCredentialProviderTest extends TestCase {
     @Override
     String getEnv(String name) {
       return variables.get(name);
+    }
+
+    @Override
+    boolean getEnvEquals(String name, String value) {
+      return variables.containsKey(name) && variables.get(name).equals(value);
     }
 
     void setEnv(String name, String value) {

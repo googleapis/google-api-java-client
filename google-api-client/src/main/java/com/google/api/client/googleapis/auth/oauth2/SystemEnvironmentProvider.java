@@ -25,5 +25,11 @@ class SystemEnvironmentProvider {
   String getEnv(String name) {
     return System.getenv(name);
   }
-}
 
+  /**
+   * Override in test code to isolate from environment.
+   */
+  boolean getEnvEquals(String name, String value) {
+    return System.getenv().containsKey(name) && System.getenv(name).equals(value);
+  }
+}
