@@ -312,6 +312,14 @@ public final class MediaHttpDownloader {
   }
 
   /**
+   * @deprecated Use {@link #setContentRange(long, long)} instead.
+   */
+  @Deprecated
+  public MediaHttpDownloader setContentRange(long firstBytePos, int lastBytePos) {
+    return setContentRange(firstBytePos, (long) lastBytePos);
+  }
+
+  /**
    * Sets the media content length from the HTTP Content-Range header (E.g a header of
    * "Content-Range: 0-55/1000" would cause 1000 to be set. <code>null</code> headers do not set
    * anything.
