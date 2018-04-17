@@ -25,7 +25,6 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Preconditions;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -291,18 +290,14 @@ public final class MediaHttpDownloader {
   /**
    * Sets the content range of the next download request. Eg: bytes=firstBytePos-lastBytePos.
    *
-   * <p>
-   * If a download was aborted mid-way due to a connection failure then users can resume the
+   * <p>If a download was aborted mid-way due to a connection failure then users can resume the
    * download from the point where it left off.
-   * </p>
    *
-   * <p>
-   * Use {@link #setBytesDownloaded} if you only need to specify the first byte position.
-   * </p>
+   * <p>Use {@link #setBytesDownloaded} if you only need to specify the first byte position.
    *
    * @param firstBytePos The first byte position in the content range string
    * @param lastBytePos The last byte position in the content range string.
-   * @since 1.13
+   * @since 1.24
    */
   public MediaHttpDownloader setContentRange(long firstBytePos, long lastBytePos) {
     Preconditions.checkArgument(lastBytePos >= firstBytePos);
