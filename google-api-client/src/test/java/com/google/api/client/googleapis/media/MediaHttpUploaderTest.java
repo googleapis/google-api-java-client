@@ -325,7 +325,7 @@ public class MediaHttpUploaderTest extends TestCase {
               // Expected.
             }
           } else {
-            assertEquals(0.5, uploader.getProgress());
+            assertEquals(0.5, uploader.getProgress(), 0.0);
           }
           break;
         case MEDIA_COMPLETE:
@@ -339,7 +339,7 @@ public class MediaHttpUploaderTest extends TestCase {
               // Expected.
             }
           } else {
-            assertEquals(1.0, uploader.getProgress());
+            assertEquals(1.0, uploader.getProgress(), 0.0);
           }
           break;
         default:
@@ -371,7 +371,7 @@ public class MediaHttpUploaderTest extends TestCase {
               // Expected.
             }
           } else {
-            assertEquals(0.0, uploader.getProgress());
+            assertEquals(0.0, uploader.getProgress(), 0.0);
           }
           break;
         case MEDIA_COMPLETE:
@@ -385,7 +385,7 @@ public class MediaHttpUploaderTest extends TestCase {
               // Expected.
             }
           } else {
-            assertEquals(1.0, uploader.getProgress());
+            assertEquals(1.0, uploader.getProgress(), 0.0);
           }
           break;
         default:
