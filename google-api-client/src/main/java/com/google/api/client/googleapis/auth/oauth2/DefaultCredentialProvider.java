@@ -29,7 +29,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.AccessControlException;
 import java.util.Locale;
 
@@ -169,7 +171,7 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
       return Environment.WELL_KNOWN_FILE;
 
     // Try App Engine
-    } else if (runningOnAppEngine()) {
+    } else if (useGAEStandardAPI()) {
       return Environment.APP_ENGINE;
 
     // Then try Cloud Shell.  This must be done BEFORE checking
@@ -256,19 +258,45 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
     }
   }
 
+  private boolean useGAEStandardAPI() {
+    if (getEnvEquals("GAE_ENV", "standard") && getEnvEquals("GAE_RUNTIME", "java7")) {
+      return true;
+    }
 
-  private boolean runningOnAppEngine() {
-    if (getEnvEquals("GAE_ENV", "standard")) {
-      return true;
+    Class<?> systemPropertyClass;
+    try {
+      systemPropertyClass = forName("com.google.appengine.api.utils.SystemProperty");
+    } catch (ClassNotFoundException expected) {
+      // SystemProperty will always be present on App Engine.
+      return false;
     }
-    if (getEnvEquals("GAE_RUNTIME", "java7")) {
-      return true;
+    Exception cause = null;
+    Field environmentField;
+    try {
+      environmentField = systemPropertyClass.getField("environment");
+      Object environmentValue = environmentField.get(null);
+      Class<?> environmentType = environmentField.getType();
+      Method valueMethod = environmentType.getMethod("value");
+      Object environmentValueValue = valueMethod.invoke(environmentValue);
+      return (environmentValueValue != null);
+    } catch (NoSuchFieldException ignored) {
+      // If the field does not exist then we treat it as false.
+    } catch (SecurityException exception) {
+      cause = exception;
+    } catch (IllegalArgumentException exception) {
+      cause = exception;
+    } catch (IllegalAccessException exception) {
+      cause = exception;
+    } catch (NoSuchMethodException exception) {
+      cause = exception;
+    } catch (InvocationTargetException exception) {
+      cause = exception;
     }
-    if (getEnvEquals("GAE_RUNTIME", "java8")) {
-      return true;
-    }
-    if (getEnvEquals("GAE_VM", "true")) {
-      return true;
+
+    if (cause != null) {
+      throw OAuth2Utils.exceptionWithCause(new RuntimeException(String.format(
+          "Unexpcted error trying to determine if runnning on Google App Engine: %s",
+          cause.getMessage())), cause);
     }
 
     return false;
