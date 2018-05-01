@@ -259,25 +259,36 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
   }
 
   private boolean useGAEStandardAPI() {
-    if (getEnvEquals("GAE_ENV", "standard") && getEnvEquals("GAE_RUNTIME", "java7")) {
-      return true;
+    // We should specifically return false in some cases in order to shortcircuit checking for
+    // appengine classpath resources. This lets us flow into metadata server logic rather than
+    // continuing to rely on jars on the classpath.
+    if (getEnvEquals("GAE_ENV", "standard")) {
+      return getEnvEquals("GAE_RUNTIME", "java7");
+    }
+    if (getEnvEquals("GAE_VM", "true")) {
+      return false;
     }
 
+    // Check the classpath for the existence of classes.
     Class<?> systemPropertyClass;
     try {
       systemPropertyClass = forName("com.google.appengine.api.utils.SystemProperty");
     } catch (ClassNotFoundException expected) {
-      // SystemProperty will always be present on App Engine.
+      // We didn't find the class - move on.
       return false;
     }
+
     Exception cause = null;
     Field environmentField;
     try {
+      // Use reflection to call com.google.appengine.api.utils.SystemProperty::environment.value().
       environmentField = systemPropertyClass.getField("environment");
       Object environmentValue = environmentField.get(null);
       Class<?> environmentType = environmentField.getType();
       Method valueMethod = environmentType.getMethod("value");
       Object environmentValueValue = valueMethod.invoke(environmentValue);
+
+      // Any value will be treated as "running on app engine standard".
       return (environmentValueValue != null);
     } catch (NoSuchFieldException ignored) {
       // If the field does not exist then we treat it as false.
@@ -294,9 +305,9 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
     }
 
     if (cause != null) {
-      throw OAuth2Utils.exceptionWithCause(new RuntimeException(String.format(
-          "Unexpcted error trying to determine if runnning on Google App Engine: %s",
-          cause.getMessage())), cause);
+      throw new RuntimeException(String.format(
+          "Unexpected error trying to determine if runnning on Google App Engine: %s",
+          cause.getMessage()), cause);
     }
 
     return false;
