@@ -80,7 +80,6 @@ public class DefaultCredentialProviderTest extends TestCase {
     testProvider.addType(DefaultCredentialProvider.APP_ENGINE_CREDENTIAL_CLASS,
         MockAppEngineCredential.class);
     testProvider.addType(GAE_SIGNAL_CLASS, MockAppEngineSystemProperty.class);
-    testProvider.setEnv("GAE_ENV", "standard");
 
     Credential defaultCredential = testProvider.getDefaultCredential(transport, JSON_FACTORY);
 
@@ -111,7 +110,6 @@ public class DefaultCredentialProviderTest extends TestCase {
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
 
     testProvider.addType(GAE_SIGNAL_CLASS, MockAppEngineSystemProperty.class);
-    testProvider.setEnv("GAE_ENV", "standard");
 
     try {
       testProvider.getDefaultCredential(transport, JSON_FACTORY);
@@ -129,7 +127,6 @@ public class DefaultCredentialProviderTest extends TestCase {
     testProvider.addType(DefaultCredentialProvider.APP_ENGINE_CREDENTIAL_CLASS,
         MockAppEngineCredential.class);
     testProvider.addType(GAE_SIGNAL_CLASS, MockAppEngineSystemProperty.class);
-    testProvider.setEnv("GAE_ENV", "standard");
 
     Credential firstCall = testProvider.getDefaultCredential(transport, JSON_FACTORY);
 
