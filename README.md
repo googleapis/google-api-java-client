@@ -27,7 +27,7 @@ Platform Services.
 
 ```
 mkdir /tmp/foo && cd /tmp/foo
-wget --no-check-certificate https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar
+wget https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar
 unzip play-services-basement-8.3.0.aar
 mvn install:install-file \
   -Dfile=classes.jar \
