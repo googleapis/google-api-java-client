@@ -286,13 +286,8 @@
         <artifactId>google-api-client-xml</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <!-- mvn install:install-file \
-           -Dfile=$ANDROID_HOME/extras/google/google_play_services/libs/google-play-services.jar \
-           -DgroupId=com.google.android.google-play-services \
-           -DartifactId=google-play-services \
-           -Dversion=1 \
-           -Dpackaging=jar
-           -->
+
+      <!-- See README.md about installing this jar -->
       <dependency>
         <groupId>com.google.android.google-play-services</groupId>
         <artifactId>google-play-services</artifactId>
