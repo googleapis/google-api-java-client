@@ -26,6 +26,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
+import junit.framework.TestCase;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,7 +41,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import junit.framework.TestCase;
 
 /**
  * Tests {@link DefaultCredentialProvider}.
@@ -73,6 +73,11 @@ public class DefaultCredentialProviderTest extends TestCase {
   private static final Lock lock = new ReentrantLock();
 
   private static File tempDirectory = null;
+
+  private static final String SERVICE_ACCOUNT_ID =
+          "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr.apps.googleusercontent.com";
+  private static final String SERVICE_ACCOUNT_EMAIL =
+          "36680232662-vrd7ji19qe3nelgchdcsanun6bnr@developer.gserviceaccount.com";
 
   public void testDefaultCredentialAppEngineDeployed() throws IOException  {
     HttpTransport transport = new MockHttpTransport();
@@ -288,31 +293,14 @@ public class DefaultCredentialProviderTest extends TestCase {
   public void testDefaultCredentialServiceAccount() throws IOException {
     File serviceAccountFile = new java.io.File(getTempDirectory(),
         "DefaultCredentialServiceAccount.json");
-    if (serviceAccountFile.exists()) {
-      serviceAccountFile.delete();
-    }
-    final String serviceAccountId =
-        "36680232662-vrd7ji19qe3nelgchd0ah2csanun6bnr.apps.googleusercontent.com";
-    final String serviceAccountEmail =
-        "36680232662-vrd7ji19qe3nelgchdcsanun6bnr@developer.gserviceaccount.com";
+    deleteFile(serviceAccountFile);
 
     MockTokenServerTransport transport = new MockTokenServerTransport();
-    transport.addServiceAccount(serviceAccountEmail, ACCESS_TOKEN);
+    transport.addServiceAccount(SERVICE_ACCOUNT_EMAIL, ACCESS_TOKEN);
 
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
     try {
-      // Write out service account file
-      GenericJson serviceAccountContents = new GenericJson();
-      serviceAccountContents.setFactory(JSON_FACTORY);
-      serviceAccountContents.put("client_id", serviceAccountId);
-      serviceAccountContents.put("client_email", serviceAccountEmail);
-      serviceAccountContents.put("private_key", SA_KEY_TEXT);
-      serviceAccountContents.put("private_key_id", SA_KEY_ID);
-      serviceAccountContents.put("type", GoogleCredential.SERVICE_ACCOUNT_FILE_TYPE);
-      PrintWriter writer = new PrintWriter(serviceAccountFile);
-      String json = serviceAccountContents.toPrettyString();
-      writer.println(json);
-      writer.close();
+      writeOutServiceAccountFile(serviceAccountFile);
 
       // Point the default credential to the file
       testProvider.setEnv(DefaultCredentialProvider.CREDENTIAL_ENV_VAR,
@@ -325,17 +313,40 @@ public class DefaultCredentialProviderTest extends TestCase {
       assertTrue(credential.refreshToken());
       assertEquals(ACCESS_TOKEN, credential.getAccessToken());
     } finally {
-      if (serviceAccountFile.exists()) {
-        serviceAccountFile.delete();
-      }
+      deleteFile(serviceAccountFile);
+    }
+  }
+
+  public void testDefaultCredentialServiceAccountWithCustomServiceAccountUser() throws IOException {
+    File serviceAccountFile = new java.io.File(getTempDirectory(),
+            "DefaultCredentialServiceAccount.json");
+    deleteFile(serviceAccountFile);
+
+    MockTokenServerTransport transport = new MockTokenServerTransport();
+    transport.addServiceAccount(SERVICE_ACCOUNT_EMAIL, ACCESS_TOKEN);
+
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    try {
+      writeOutServiceAccountFile(serviceAccountFile);
+
+      // Point the default credential to the file
+      testProvider.setEnv(DefaultCredentialProvider.CREDENTIAL_ENV_VAR,
+              serviceAccountFile.getAbsolutePath());
+
+      GoogleCredential credential = testProvider.getDefaultCredential(transport, JSON_FACTORY);
+      assertNotNull(credential);
+      credential = credential.createScoped(SCOPES, "google@google.com");
+
+      assertTrue(credential.refreshToken());
+      assertEquals(ACCESS_TOKEN, credential.getAccessToken());
+    } finally {
+      deleteFile(serviceAccountFile);
     }
   }
 
   public void testDefaultCredentialUser() throws IOException {
     File userCredentialFile = new java.io.File(getTempDirectory(), "DefaultCredentialUser.json");
-    if (userCredentialFile.exists()) {
-      userCredentialFile.delete();
-    }
+    deleteFile(userCredentialFile);
 
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
     // Point the default credential to the file
@@ -349,18 +360,15 @@ public class DefaultCredentialProviderTest extends TestCase {
     // Simulate where the SDK puts the well-known file on non-Windows platforms
     File homeDir = getTempDirectory();
     File configDir = new File(homeDir, ".config");
-    if (!configDir.exists()) {
-      configDir.mkdir();
-    }
+    mkdir(configDir);
+
     File cloudConfigDir = new File(configDir, DefaultCredentialProvider.CLOUDSDK_CONFIG_DIRECTORY);
-    if (!cloudConfigDir.exists()) {
-      cloudConfigDir.mkdir();
-    }
+    mkdir(cloudConfigDir);
+
     File wellKnownFile = new File(
         cloudConfigDir, DefaultCredentialProvider.WELL_KNOWN_CREDENTIALS_FILE);
-    if (wellKnownFile.exists()) {
-      wellKnownFile.delete();
-    }
+    deleteFile(wellKnownFile);
+
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
     testProvider.addFile(wellKnownFile.getAbsolutePath());
     testProvider.setProperty("os.name", "linux");
@@ -373,14 +381,12 @@ public class DefaultCredentialProviderTest extends TestCase {
     // Simulate where the SDK puts the well-known file on Windows
     File appDataDir = getTempDirectory();
     File cloudConfigDir = new File(appDataDir, DefaultCredentialProvider.CLOUDSDK_CONFIG_DIRECTORY);
-    if (!cloudConfigDir.exists()) {
-      cloudConfigDir.mkdir();
-    }
+    mkdir(cloudConfigDir);
+
     File wellKnownFile = new File(
         cloudConfigDir, DefaultCredentialProvider.WELL_KNOWN_CREDENTIALS_FILE);
-    if (wellKnownFile.exists()) {
-      wellKnownFile.delete();
-    }
+    deleteFile(wellKnownFile);
+
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
     testProvider.addFile(wellKnownFile.getAbsolutePath());
     testProvider.setProperty("os.name", "windows");
@@ -401,27 +407,23 @@ public class DefaultCredentialProviderTest extends TestCase {
 
     // Set up an environment variable file
     File environmentVariableFile = new java.io.File(getTempDirectory(), "EnvVarUser.json");
-    if (environmentVariableFile.exists()) {
-      environmentVariableFile.delete();
-    }
+    deleteFile(environmentVariableFile);
+
     testProvider.setEnv(DefaultCredentialProvider.CREDENTIAL_ENV_VAR,
         environmentVariableFile.getAbsolutePath());
 
     // Also set up a well-known-location file
     File homeDir = getTempDirectory();
     File configDir = new File(homeDir, ".config");
-    if (!configDir.exists()) {
-      configDir.mkdir();
-    }
+    mkdir(configDir);
+
     File cloudConfigDir = new File(configDir, DefaultCredentialProvider.CLOUDSDK_CONFIG_DIRECTORY);
-    if (!cloudConfigDir.exists()) {
-      cloudConfigDir.mkdir();
-    }
+    mkdir(cloudConfigDir);
+
     File wellKnownFile = new File(
         cloudConfigDir, DefaultCredentialProvider.WELL_KNOWN_CREDENTIALS_FILE);
-    if (wellKnownFile.exists()) {
-      wellKnownFile.delete();
-    }
+    deleteFile(wellKnownFile);
+
     testProvider.addFile(wellKnownFile.getAbsolutePath());
     testProvider.setProperty("os.name", "linux");
     testProvider.setProperty("user.home", homeDir.getAbsolutePath());
@@ -451,12 +453,8 @@ public class DefaultCredentialProviderTest extends TestCase {
       assertTrue(credential.refreshToken());
       assertEquals(accessTokenEnv, credential.getAccessToken());
     } finally {
-      if (wellKnownFile.exists()) {
-        wellKnownFile.delete();
-      }
-      if (environmentVariableFile.exists()) {
-        environmentVariableFile.delete();
-      }
+      deleteFile(wellKnownFile);
+      deleteFile(environmentVariableFile);
     }
   }
 
@@ -487,9 +485,7 @@ public class DefaultCredentialProviderTest extends TestCase {
       assertTrue(credential.refreshToken());
       assertEquals(ACCESS_TOKEN, credential.getAccessToken());
     } finally {
-      if (userFile.exists()) {
-        userFile.delete();
-      }
+      deleteFile(userFile);
     }
   }
 
@@ -510,6 +506,32 @@ public class DefaultCredentialProviderTest extends TestCase {
       lock.unlock();
     }
     return tempDirectory;
+  }
+
+  private void writeOutServiceAccountFile(File serviceAccountFile) throws IOException {
+    GenericJson serviceAccountContents = new GenericJson();
+    serviceAccountContents.setFactory(JSON_FACTORY);
+    serviceAccountContents.put("client_id", SERVICE_ACCOUNT_ID);
+    serviceAccountContents.put("client_email", SERVICE_ACCOUNT_EMAIL);
+    serviceAccountContents.put("private_key", SA_KEY_TEXT);
+    serviceAccountContents.put("private_key_id", SA_KEY_ID);
+    serviceAccountContents.put("type", GoogleCredential.SERVICE_ACCOUNT_FILE_TYPE);
+    PrintWriter writer = new PrintWriter(serviceAccountFile);
+    String json = serviceAccountContents.toPrettyString();
+    writer.println(json);
+    writer.close();
+  }
+
+  private void deleteFile(File file) {
+    if (file.exists()) {
+      file.delete();
+    }
+  }
+
+  private void mkdir(File dir) {
+    if (!dir.exists()) {
+      dir.mkdir();
+    }
   }
 
   public static class MockAppEngineCredential extends GoogleCredential {
