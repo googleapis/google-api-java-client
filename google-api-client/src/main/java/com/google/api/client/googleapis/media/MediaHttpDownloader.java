@@ -156,7 +156,7 @@ public final class MediaHttpDownloader {
   }
 
   /**
-   * Executes a direct media download or a resumable media download.
+   * Executes a media download.
    *
    * <p>
    * This method does not close the given output stream.
@@ -178,21 +178,57 @@ public final class MediaHttpDownloader {
     requestUrl.put("alt", "media");
 
     if (directDownloadEnabled) {
-      updateStateAndNotifyListener(DownloadState.MEDIA_IN_PROGRESS);
-      HttpResponse response =
-          executeCurrentRequest(lastBytePos, requestUrl, requestHeaders, outputStream);
-      // All required bytes have been downloaded from the server.
-      mediaContentLength = response.getHeaders().getContentLength();
-      bytesDownloaded = mediaContentLength;
-      updateStateAndNotifyListener(DownloadState.MEDIA_COMPLETE);
+      directDownload(requestUrl, requestHeaders, outputStream);
       return;
     }
 
-    // Download the media content in chunks.
+    resumableDownload(requestUrl, requestHeaders, outputStream);
+  }
+
+  /**
+   * Executes a direct media download.
+   *
+   * <p>
+   * This method does not close the given output stream.
+   * </p>
+   *
+   * @param requestUrl request URL where the download requests will be sent
+   * @param requestHeaders request headers or {@code null} to ignore
+   * @param outputStream destination output stream
+   */
+  private void directDownload(GenericUrl requestUrl, HttpHeaders requestHeaders, OutputStream outputStream)
+          throws IOException {
+
+    updateStateAndNotifyListener(DownloadState.MEDIA_IN_PROGRESS);
+    HttpResponse response = executeCurrentRequest(lastBytePos, requestUrl, requestHeaders, outputStream);
+
+    Long contentLength = response.getHeaders().getContentLength();
+    if (contentLength != null) {
+      bytesDownloaded = contentLength;
+      mediaContentLength = contentLength;
+    }
+
+    updateStateAndNotifyListener(DownloadState.MEDIA_COMPLETE);
+  }
+
+  /**
+   * Executes a resumable media download.
+   *
+   * <p>
+   * This method does not close the given output stream.
+   * </p>
+   *
+   * @param requestUrl request URL where the download requests will be sent
+   * @param requestHeaders request headers or {@code null} to ignore
+   * @param outputStream destination output stream
+   * */
+  private void resumableDownload(GenericUrl requestUrl, HttpHeaders requestHeaders, OutputStream outputStream)
+          throws IOException {
+
     while (true) {
       long currentRequestLastBytePos = bytesDownloaded + chunkSize - 1;
       if (lastBytePos != -1) {
-        // If last byte position has been specified use it iff it is smaller than the chunksize.
+        // If last byte position has been specified use it if it is smaller than the chunk size.
         currentRequestLastBytePos = Math.min(lastBytePos, currentRequestLastBytePos);
       }
       HttpResponse response = executeCurrentRequest(
