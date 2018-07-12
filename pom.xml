@@ -546,7 +546,7 @@
     <project.jackson-core-asl.version>1.9.11</project.jackson-core-asl.version>
     <project.jackson-core2.version>2.9.2</project.jackson-core2.version>
     <project.protobuf-java.version>2.6.1</project.protobuf-java.version>
-    <project.guava.version>19.0</project.guava.version>
+    <project.guava.version>20.0</project.guava.version>
     <project.appengine.version>1.7.7</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.commons-logging.version>1.1.1</project.commons-logging.version>
