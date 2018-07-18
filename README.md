@@ -254,8 +254,15 @@ might result, and you are not guaranteed a compilation error.
 
 ## Links
 
-- Blogs
-  - [Announcements](http://google-api-java-client.blogspot.com/)
-  - [Announcements](http://googledevelopers.blogspot.com/)
-- Groups
-  - [Discuss](https://groups.google.com/forum/#!forum/google-api-java-client)
+- [Clients Announcements](http://google-api-java-client.blogspot.com/)
+- [API Announcements](http://googledevelopers.blogspot.com/)
+- [Discuss](https://groups.google.com/forum/#!forum/google-api-java-client)
+
+## Notice: Ending Java 5 Support
+
+Please note: since Java 5 is no longer supported by Oracle or in Android, we will begin ending
+Java 5 support in release 1.24.0. Users may stay still use these libraries in Java 5 projects for
+some time, but going forward we will not ensure that these libraries work in such an environment.
+After 1.24.0, our supported versions will include Java 6 and onward.
+
+For questions or concerns, please file an issue.
