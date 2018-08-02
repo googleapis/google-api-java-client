@@ -45,21 +45,6 @@
     </license>
   </licenses>
 
-  <developers>
-    <developer>
-      <id>yanivi</id>
-      <name>Yaniv Inbar</name>
-      <email>yanivi@google.com</email>
-      <organization>Google</organization>
-      <organizationUrl>http://www.google.com</organizationUrl>
-      <roles>
-        <role>owner</role>
-        <role>developer</role>
-      </roles>
-      <timezone>-5</timezone>
-    </developer>
-  </developers>
-
   <!--
     If you add a new module, make sure to also add it in the following places:
     * below in the dependencyManagement and maven-javadoc-plugin sections
@@ -413,6 +398,9 @@
     <plugins>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <additionalparam>-Xdoclint:none</additionalparam>
+        </configuration>
         <executions>
           <execution>
             <id>aggregate</id>
