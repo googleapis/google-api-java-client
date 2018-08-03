@@ -113,7 +113,11 @@ public class GoogleJsonResponseException extends HttpResponseException {
           if (currentToken != null) {
             // make sure there is an "error" key
             parser.skipToKey("error");
-            if (parser.getCurrentToken() != JsonToken.END_OBJECT) {
+            // in some cases (i.e. oauth), "error" can be a string, in most cases it's a
+            // GoogleJsonError object
+            if (parser.getCurrentToken() == JsonToken.VALUE_STRING) {
+              detailString = parser.getText();
+            } else if (parser.getCurrentToken() == JsonToken.START_OBJECT) {
               details = parser.parseAndClose(GoogleJsonError.class);
               detailString = details.toPrettyString();
             }
