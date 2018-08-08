@@ -200,7 +200,7 @@ public class AbstractGoogleClientRequestTest extends TestCase {
   }
 
   public void testSetsApiClientHeader() throws Exception {
-    HttpTransport transport = new AssertHeaderTransport("X-Goog-Api-Client", "gl-java/\\d+\\.\\d+\\.\\d+.*");
+    HttpTransport transport = new AssertHeaderTransport("X-Goog-Api-Client", "java/\\d+\\.\\d+\\.\\d+.*");
     MockGoogleClient client = new MockGoogleClient.Builder(
         transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
     MockGoogleClientRequest<Void> request =
