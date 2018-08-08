@@ -28,7 +28,7 @@ public class GoogleOAuthConstants {
   public static final String AUTHORIZATION_SERVER_URL = "https://accounts.google.com/o/oauth2/auth";
 
   /** Encoded URL of Google's token server. */
-  public static final String TOKEN_SERVER_URL = "https://accounts.google.com/o/oauth2/token";
+  public static final String TOKEN_SERVER_URL = "https://oauth2.googleapis.com/token";
 
   /**
    * {@link Beta} <br/>
