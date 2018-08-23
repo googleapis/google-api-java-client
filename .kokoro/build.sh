@@ -21,5 +21,9 @@ cd github/google-api-java-client/
 java -version
 echo $JOB_TYPE
 
+// Skip android and assembly tests? Imported from Travis config
+sed -i 's/<module>google-api-client-android<\/module>//'  pom.xml
+sed -i 's/<module>google-api-client-assembly<\/module>//' pom.xml
+
 mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 mvn test -B
