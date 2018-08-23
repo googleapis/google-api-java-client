@@ -90,7 +90,7 @@ If you are developing for Android and the Google API you want to use is included
 should use that library for the best performance and experience. 
 
 To access other Google APIs, you can use the Google APIs Client Library for Java, which supports 
-[Android 1.5 (or higher)](https://developers.google.com/api-client-library/java/google-api-java-client/android).
+[Android 4.0 (Ice Cream Sandwich) (or higher)](https://developers.google.com/api-client-library/java/google-api-java-client/android).
 
 ### Other Java environments
 
