@@ -222,7 +222,6 @@ public class AbstractGoogleClientRequestTest extends TestCase {
       return new MockLowLevelHttpRequest() {
         @Override
         public LowLevelHttpResponse execute() throws IOException {
-          System.out.println(getFirstHeaderValue(expectedHeader));
           String firstHeader = getFirstHeaderValue(expectedHeader);
           assertTrue(
               String.format(
