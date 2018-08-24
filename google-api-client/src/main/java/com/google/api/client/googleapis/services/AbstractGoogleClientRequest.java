@@ -136,7 +136,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    *
    */
   private static class ApiClientVersion {
-    private static final String JAVA_VERSION = formatSemver(System.getProperty("java.version"));
+    private static final String JAVA_VERSION = getJavaVersion();
     private static final String OS_NAME = formatName(System.getProperty("os.name"));
     private static final String OS_VERSION = formatSemver(System.getProperty("os.version"));
 
@@ -150,6 +150,16 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
           OS_NAME,
           OS_VERSION
       );
+    }
+
+    private static String getJavaVersion() {
+      String version = System.getProperty("java.version");
+      // Java 9 doesn't report a semver here: instead it's something like 9-Debian+0-x-y
+      if (version.startsWith("9")) {
+        return "9.0.0";
+      } else {
+        return formatSemver(version);
+      }
     }
 
     private static String formatName(String name) {
