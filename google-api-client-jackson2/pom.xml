@@ -41,6 +41,27 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>   
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>2.5.4</version>
+        <executions>
+          <execution>
+            <id>bundle-manifest</id>
+            <phase>process-classes</phase>
+            <goals>    
+              <goal>manifest</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <instructions>
+            <Bundle-DocURL>https://developers.google.com/api-client-library/java/google-http-java-client/reference/1.20.0/jdiff/Google_HTTP_Client_Library_for_Java_1.19.0/com/google/api/client/json/jackson2/package-summary</Bundle-DocURL>
+            <Bundle-Description>Low-level implementation of the JSON parser library based on the Jackson 2 JSON library.</Bundle-Description>
+            <Bundle-SymbolicName>com.google.api.client.jackson2</Bundle-SymbolicName>
+          </instructions>
+        </configuration>
+      </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
         <executions>
