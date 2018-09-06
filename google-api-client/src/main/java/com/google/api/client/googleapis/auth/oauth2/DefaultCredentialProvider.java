@@ -171,7 +171,7 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
       return Environment.WELL_KNOWN_FILE;
 
     // Try App Engine
-    } else if (runningOnAppEngine()) {
+    } else if (useGAEStandardAPI()) {
       return Environment.APP_ENGINE;
 
     // Then try Cloud Shell.  This must be done BEFORE checking
@@ -258,7 +258,7 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
     }
   }
 
-  private boolean runningOnAppEngine() {
+  private boolean useGAEStandardAPI() {
     Class<?> systemPropertyClass = null;
     try {
       systemPropertyClass = forName("com.google.appengine.api.utils.SystemProperty");

@@ -272,6 +272,12 @@ public class GoogleCredential extends Credential {
   private String serviceAccountId;
 
   /**
+   * Service account Project ID or {@code null} if not present, either because this is not using the
+   * service account flow, or is using an older version of the service account configuration.
+   */
+  private String serviceAccountProjectId;
+
+  /**
    * Collection of OAuth scopes to use with the service account flow or {@code null} if not
    * using the service account flow.
    */
@@ -318,7 +324,11 @@ public class GoogleCredential extends Credential {
           && builder.serviceAccountScopes == null && builder.serviceAccountUser == null);
     } else {
       serviceAccountId = Preconditions.checkNotNull(builder.serviceAccountId);
-      serviceAccountScopes = Collections.unmodifiableCollection(builder.serviceAccountScopes);
+      serviceAccountProjectId = builder.serviceAccountProjectId;
+      serviceAccountScopes =
+          (builder.serviceAccountScopes == null)
+              ? Collections.<String>emptyList()
+              : Collections.unmodifiableCollection(builder.serviceAccountScopes);
       serviceAccountPrivateKey = builder.serviceAccountPrivateKey;
       serviceAccountPrivateKeyId = builder.serviceAccountPrivateKeyId;
       serviceAccountUser = builder.serviceAccountUser;
@@ -398,6 +408,15 @@ public class GoogleCredential extends Credential {
   }
 
   /**
+   * Returns the service account Project ID or {@code null} if not present, either because this is
+   * not using the service account flow, or is using an older version of the service account
+   * configuration.
+   */
+  public final String getServiceAccountProjectId() {
+    return serviceAccountProjectId;
+  }
+
+  /**
    * Returns a collection of OAuth scopes to use with the service account flow or {@code null}
    * if not using the service account flow.
    */
@@ -468,6 +487,7 @@ public class GoogleCredential extends Credential {
         .setServiceAccountPrivateKey(serviceAccountPrivateKey)
         .setServiceAccountPrivateKeyId(serviceAccountPrivateKeyId)
         .setServiceAccountId(serviceAccountId)
+        .setServiceAccountProjectId(serviceAccountProjectId)
         .setServiceAccountUser(serviceAccountUser)
         .setServiceAccountScopes(scopes)
         .setTokenServerEncodedUrl(getTokenServerEncodedUrl())
@@ -499,6 +519,9 @@ public class GoogleCredential extends Credential {
 
     /** Id of the private key to use with the service account flow or {@code null} for none. */
     String serviceAccountPrivateKeyId;
+
+    /** Project Id associated with the Service Account */
+    String serviceAccountProjectId;
 
     /**
      * Email address of the user the application is trying to impersonate in the service account
@@ -579,6 +602,26 @@ public class GoogleCredential extends Credential {
      */
     public Builder setServiceAccountId(String serviceAccountId) {
       this.serviceAccountId = serviceAccountId;
+      return this;
+    }
+
+    /**
+     * Returns the service account Project ID or {@code null} for none.
+     */
+    public final String getServiceAccountProjectId() {
+      return serviceAccountProjectId;
+    }
+
+    /**
+     * Sets the service account Project ID or {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     */
+    public Builder setServiceAccountProjectId(String serviceAccountProjectId) {
+      this.serviceAccountProjectId = serviceAccountProjectId;
       return this;
     }
 
@@ -780,7 +823,8 @@ public class GoogleCredential extends Credential {
     String clientEmail = (String) fileContents.get("client_email");
     String privateKeyPem = (String) fileContents.get("private_key");
     String privateKeyId = (String) fileContents.get("private_key_id");
-    if (clientId == null || clientEmail == null || privateKeyPem == null || privateKeyId == null) {
+    if (clientId == null || clientEmail == null || privateKeyPem == null
+        || privateKeyId == null) {
       throw new IOException("Error reading service account credential from stream, "
           + "expecting  'client_id', 'client_email', 'private_key' and 'private_key_id'.");
     }
@@ -800,6 +844,11 @@ public class GoogleCredential extends Credential {
     if (tokenUri != null) {
       credentialBuilder.setTokenServerEncodedUrl(tokenUri);
     }
+    String projectId = (String) fileContents.get("project_id");
+    if (projectId != null) {
+      credentialBuilder.setServiceAccountProjectId(projectId);
+    }
+
     // Don't do a refresh at this point, as it will always fail before the scopes are added.
     return credentialBuilder.build();
   }

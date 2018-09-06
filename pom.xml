@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-parent</artifactId>
-  <version>1.23.0-SNAPSHOT</version>
+  <version>1.26.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Parent for the Google API Client Library for Java</name>
 
@@ -44,21 +44,6 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-
-  <developers>
-    <developer>
-      <id>yanivi</id>
-      <name>Yaniv Inbar</name>
-      <email>yanivi@google.com</email>
-      <organization>Google</organization>
-      <organizationUrl>http://www.google.com</organizationUrl>
-      <roles>
-        <role>owner</role>
-        <role>developer</role>
-      </roles>
-      <timezone>-5</timezone>
-    </developer>
-  </developers>
 
   <!--
     If you add a new module, make sure to also add it in the following places:
@@ -116,6 +101,11 @@
       </dependency>
       <dependency>
         <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-tools-sdk</artifactId>
+        <version>${project.appengine.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.appengine</groupId>
         <artifactId>appengine-testing</artifactId>
         <version>${project.appengine.version}</version>
       </dependency>
@@ -141,7 +131,7 @@
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
-        <artifactId>guava-jdk5</artifactId>
+        <artifactId>guava</artifactId>
         <version>${project.guava.version}</version>
       </dependency>
       <dependency>
@@ -281,13 +271,8 @@
         <artifactId>google-api-client-xml</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <!-- mvn install:install-file \
-           -Dfile=$ANDROID_HOME/extras/google/google_play_services/libs/google-play-services.jar \
-           -DgroupId=com.google.android.google-play-services \
-           -DartifactId=google-play-services \
-           -Dversion=1 \
-           -Dpackaging=jar
-           -->
+
+      <!-- See README.md about installing this jar -->
       <dependency>
         <groupId>com.google.android.google-play-services</groupId>
         <artifactId>google-play-services</artifactId>
@@ -312,8 +297,8 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>2.3.2</version>
           <configuration>
-            <source>1.5</source>
-            <target>1.5</target>
+            <source>1.6</source>
+            <target>1.6</target>
           </configuration>
         </plugin>
         <plugin>
@@ -408,62 +393,14 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>2.7</version>
         </plugin>
-        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-        <plugin>
-          <groupId>org.eclipse.m2e</groupId>
-          <artifactId>lifecycle-mapping</artifactId>
-          <version>1.0.0</version>
-          <configuration>
-            <lifecycleMappingMetadata>
-              <pluginExecutions>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <versionRange>[2.3.1,)</versionRange>
-                    <goals>
-                      <goal>jar</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore></ignore>
-                  </action>
-                </pluginExecution>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>maven-datanucleus-plugin</artifactId>
-                    <versionRange>[2.2.1,)</versionRange>
-                    <goals>
-                      <goal>enhance</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore></ignore>
-                  </action>
-                </pluginExecution>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-enforcer-plugin</artifactId>
-                    <versionRange>[1.0,)</versionRange>
-                    <goals>
-                      <goal>enforce</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore></ignore>
-                  </action>
-                </pluginExecution>
-              </pluginExecutions>
-            </lifecycleMappingMetadata>
-          </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <additionalparam>-Xdoclint:none</additionalparam>
+        </configuration>
         <executions>
           <execution>
             <id>aggregate</id>
@@ -589,20 +526,29 @@
     </plugins>
   </build>
   <properties>
+    <!--
+      NOTE: if you make a change to these versions, you MUST make the same change to:
+      - google-api-client-assembly/android-properties (make the filenames match the version here)
+      - google-oauth-java-client/pom.xml (versions must match)
+      - google-oauth-java-client/google-oauth-client-assembly/android-properties (make the filenames match the version here)
+      - google-http-java-client/pom.xml (versions must match)
+      - google-http-java-client/google-http-client-assembly/android-properties (make the filenames match the version here)
+      - Internally, update the default features.json file
+    -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>1.23.0-SNAPSHOT</project.http.version>
-    <project.oauth.version>1.23.0-SNAPSHOT</project.oauth.version>
-    <project.jsr305.version>1.3.9</project.jsr305.version>
+    <project.http.version>1.26.0-SNAPSHOT</project.http.version>
+    <project.oauth.version>1.26.0-SNAPSHOT</project.oauth.version>
+    <project.jsr305.version>3.0.2</project.jsr305.version>
     <project.gson.version>2.1</project.gson.version>
-    <project.jackson-core-asl.version>1.9.11</project.jackson-core-asl.version>
-    <project.jackson-core2.version>2.1.3</project.jackson-core2.version>
+    <project.jackson-core-asl.version>1.9.13</project.jackson-core-asl.version>
+    <project.jackson-core2.version>2.9.6</project.jackson-core2.version>
     <project.protobuf-java.version>2.6.1</project.protobuf-java.version>
-    <project.guava.version>17.0</project.guava.version>
+    <project.guava.version>20.0</project.guava.version>
     <project.appengine.version>1.7.7</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.commons-logging.version>1.1.1</project.commons-logging.version>
-    <project.httpclient.version>4.0.1</project.httpclient.version>
-    <project.httpcore.version>4.0.1</project.httpcore.version>
+    <project.httpclient.version>4.5.5</project.httpclient.version>
+    <project.httpcore.version>4.4.10</project.httpcore.version>
     <project.jdo2-api.version>2.3-eb</project.jdo2-api.version>
     <project.transaction-api.version>1.1</project.transaction-api.version>
   </properties>

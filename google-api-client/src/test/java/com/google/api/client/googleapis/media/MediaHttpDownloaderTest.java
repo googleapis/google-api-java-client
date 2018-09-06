@@ -21,11 +21,9 @@ import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
-
-import junit.framework.TestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link MediaHttpDownloader}.
@@ -137,6 +135,8 @@ public class MediaHttpDownloaderTest extends TestCase {
           assertEquals(2, progressListenerCalls);
           assertEquals(1.0, downloader.getProgress());
           break;
+        default:
+          // TODO(b/18683919): go/enum-switch-lsc
       }
     }
   }

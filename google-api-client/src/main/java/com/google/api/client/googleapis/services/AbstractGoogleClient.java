@@ -20,7 +20,6 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Strings;
-
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -32,7 +31,7 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractGoogleClient {
 
-  static final Logger LOGGER = Logger.getLogger(AbstractGoogleClient.class.getName());
+  static final Logger logger = Logger.getLogger(AbstractGoogleClient.class.getName());
 
   /** The request factory for connections to the server. */
   private final HttpRequestFactory requestFactory;
@@ -55,6 +54,11 @@ public abstract class AbstractGoogleClient {
   private final String servicePath;
 
   /**
+   * Batch path, for example {@code "batch/tasks"}.  Must be URL-encoded.
+   */
+  private final String batchPath;
+
+  /**
    * Application name to be sent in the User-Agent header of each request or {@code null} for none.
    */
   private final String applicationName;
@@ -63,10 +67,10 @@ public abstract class AbstractGoogleClient {
   private final ObjectParser objectParser;
 
   /** Whether discovery pattern checks should be suppressed on required parameters. */
-  private boolean suppressPatternChecks;
+  private final boolean suppressPatternChecks;
 
   /** Whether discovery required parameter checks should be suppressed. */
-  private boolean suppressRequiredParameterChecks;
+  private final boolean suppressRequiredParameterChecks;
 
   /**
    * @param builder builder
@@ -77,8 +81,9 @@ public abstract class AbstractGoogleClient {
     googleClientRequestInitializer = builder.googleClientRequestInitializer;
     rootUrl = normalizeRootUrl(builder.rootUrl);
     servicePath = normalizeServicePath(builder.servicePath);
+    batchPath = builder.batchPath;
     if (Strings.isNullOrEmpty(builder.applicationName)) {
-      LOGGER.warning("Application name is not set. Call Builder#setApplicationName.");
+      logger.warning("Application name is not set. Call Builder#setApplicationName.");
     }
     applicationName = builder.applicationName;
     requestFactory = builder.httpRequestInitializer == null
@@ -229,7 +234,11 @@ public abstract class AbstractGoogleClient {
   public final BatchRequest batch(HttpRequestInitializer httpRequestInitializer) {
     BatchRequest batch =
         new BatchRequest(getRequestFactory().getTransport(), httpRequestInitializer);
-    batch.setBatchUrl(new GenericUrl(getRootUrl() + "batch"));
+    if (Strings.isNullOrEmpty(batchPath)) {
+      batch.setBatchUrl(new GenericUrl(getRootUrl() + "batch"));
+    } else {
+      batch.setBatchUrl(new GenericUrl(getRootUrl() + batchPath));
+    }
     return batch;
   }
 
@@ -306,6 +315,9 @@ public abstract class AbstractGoogleClient {
 
     /** The service path of the service, for example {@code "tasks/v1/"}. */
     String servicePath;
+
+    /** The batch path of the service, for example {@code "batch/tasks"}. */
+    String batchPath;
 
     /**
      * Application name to be sent in the User-Agent header of each request or {@code null} for
@@ -419,6 +431,14 @@ public abstract class AbstractGoogleClient {
      */
     public Builder setServicePath(String servicePath) {
       this.servicePath = normalizeServicePath(servicePath);
+      return this;
+    }
+
+    /**
+     * Sets the URL-encoded batch path of the service, for example {@code "batch/tasks"}.
+     */
+    public Builder setBatchPath(String batchPath) {
+      this.batchPath = batchPath;
       return this;
     }
 

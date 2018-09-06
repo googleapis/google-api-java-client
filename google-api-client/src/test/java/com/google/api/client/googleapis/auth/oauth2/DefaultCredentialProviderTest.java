@@ -26,9 +26,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
-
-import junit.framework.TestCase;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -43,6 +40,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link DefaultCredentialProvider}.
@@ -110,6 +108,7 @@ public class DefaultCredentialProviderTest extends TestCase {
   public void testDefaultCredentialAppEngineWithoutDependencyThrowsHelpfulLoadError() {
     HttpTransport transport = new MockHttpTransport();
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+
     testProvider.addType(GAE_SIGNAL_CLASS, MockAppEngineSystemProperty.class);
 
     try {
@@ -120,24 +119,6 @@ public class DefaultCredentialProviderTest extends TestCase {
       assertFalse(message.contains(DefaultCredentialProvider.HELP_PERMALINK));
       assertTrue(message.contains(DefaultCredentialProvider.APP_ENGINE_CREDENTIAL_CLASS));
     }
-  }
-
-  public void testDefaultCredentialAppEngineSingleClassLoadAttempt() {
-    HttpTransport transport = new MockHttpTransport();
-    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
-    try {
-      testProvider.getDefaultCredential(transport, JSON_FACTORY);
-      fail("No credential expected for default test provider.");
-    } catch (IOException expected) {
-    }
-    assertEquals(1, testProvider.getForNameCallCount());
-    // Try a second time.
-    try {
-      testProvider.getDefaultCredential(transport, JSON_FACTORY);
-      fail("No credential expected for default test provider.");
-    } catch (IOException expected) {
-    }
-    assertEquals(1, testProvider.getForNameCallCount());
   }
 
   public void testDefaultCredentialCaches() throws IOException  {
@@ -626,6 +607,11 @@ public class DefaultCredentialProviderTest extends TestCase {
     @Override
     String getEnv(String name) {
       return variables.get(name);
+    }
+
+    @Override
+    boolean getEnvEquals(String name, String value) {
+      return variables.containsKey(name) && variables.get(name).equals(value);
     }
 
     void setEnv(String name, String value) {

@@ -16,10 +16,8 @@ package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets.Details;
 import com.google.api.client.json.gson.GsonFactory;
-
-import junit.framework.TestCase;
-
 import java.io.StringReader;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link GoogleClientSecrets}.

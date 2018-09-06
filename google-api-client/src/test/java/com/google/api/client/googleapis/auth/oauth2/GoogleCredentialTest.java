@@ -21,15 +21,13 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.util.SecurityTestUtils;
-
-import junit.framework.TestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link GoogleCredential}.
@@ -133,6 +131,24 @@ public class GoogleCredentialTest extends TestCase {
     assertSame(credential.getServiceAccountUser(), scopedCredential.getServiceAccountUser());
     assertSame(credential.getServiceAccountPrivateKey(),
         scopedCredential.getServiceAccountPrivateKey());
+  }
+
+  public void testCreateScopesNotSet() throws Exception {
+    final String serviceAccountEmail =
+        "36680232662-vrd7ji19q3ne0ah2csanun6bnr@developer.gserviceaccount.com";
+    final String accessToken = "1/MkSJoj1xsli0AccessToken_NKPY2";
+    MockTokenServerTransport transport = new MockTokenServerTransport();
+    transport.addServiceAccount(serviceAccountEmail, accessToken);
+
+    GoogleCredential credential = new GoogleCredential.Builder()
+        .setServiceAccountId(serviceAccountEmail)
+        .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
+        .setTransport(transport)
+        .setJsonFactory(JSON_FACTORY)
+        .build();
+    // Note that setServiceAccountScopes() is not called, so it is uninitialized (i.e. null) on the
+    // builder.
+    assertTrue(credential.getServiceAccountScopes().isEmpty());
   }
 
   public void testGetApplicationDefaultNullTransportThrows() throws IOException {
@@ -363,7 +379,7 @@ public class GoogleCredentialTest extends TestCase {
         .fromStream(userStream, transport, JSON_FACTORY);
 
     assertNotNull(defaultCredential);
-    assertEquals(defaultCredential.getRefreshToken(), refreshToken);
+    assertEquals(refreshToken, defaultCredential.getRefreshToken());
 
     assertTrue(defaultCredential.refreshToken());
     assertEquals(accessToken, defaultCredential.getAccessToken());

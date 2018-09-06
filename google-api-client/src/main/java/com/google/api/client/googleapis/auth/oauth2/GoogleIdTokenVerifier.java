@@ -130,7 +130,7 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
    * </p>
    *
    * @deprecated (scheduled to be removed in 1.18) Use {@link #getPublicKeysManager()} and
-   *             {@link GooglePublicKeysManager#getPublicCertsEncodedUrl()} instead.
+   *             {@link GooglePublicKeysManager#getPublicKeys()} instead.
    */
   @Deprecated
   public final List<PublicKey> getPublicKeys() throws GeneralSecurityException, IOException {

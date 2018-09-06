@@ -34,9 +34,6 @@ import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.testing.util.TestableByteArrayInputStream;
 import com.google.api.client.util.BackOff;
-
-import junit.framework.TestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -46,6 +43,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link MediaHttpUploader}.
@@ -236,6 +234,7 @@ public class MediaHttpUploaderTest extends TestCase {
                   response.addHeader("Range", "bytes=0-" + contentLength);
                   return response;
                 }
+                break;
               default:
                 break;
             }
@@ -326,7 +325,7 @@ public class MediaHttpUploaderTest extends TestCase {
               // Expected.
             }
           } else {
-            assertEquals(0.5, uploader.getProgress());
+            assertEquals(0.5, uploader.getProgress(), 0.0);
           }
           break;
         case MEDIA_COMPLETE:
@@ -340,9 +339,11 @@ public class MediaHttpUploaderTest extends TestCase {
               // Expected.
             }
           } else {
-            assertEquals(1.0, uploader.getProgress());
+            assertEquals(1.0, uploader.getProgress(), 0.0);
           }
           break;
+        default:
+          // TODO(b/18683919): go/enum-switch-lsc
       }
     }
   }
@@ -370,7 +371,7 @@ public class MediaHttpUploaderTest extends TestCase {
               // Expected.
             }
           } else {
-            assertEquals(0.0, uploader.getProgress());
+            assertEquals(0.0, uploader.getProgress(), 0.0);
           }
           break;
         case MEDIA_COMPLETE:
@@ -384,9 +385,11 @@ public class MediaHttpUploaderTest extends TestCase {
               // Expected.
             }
           } else {
-            assertEquals(1.0, uploader.getProgress());
+            assertEquals(1.0, uploader.getProgress(), 0.0);
           }
           break;
+        default:
+          // TODO(b/18683919): go/enum-switch-lsc
       }
     }
   }

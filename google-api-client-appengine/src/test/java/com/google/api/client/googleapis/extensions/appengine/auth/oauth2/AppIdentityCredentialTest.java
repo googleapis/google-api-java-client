@@ -22,13 +22,11 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
-
-import junit.framework.TestCase;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link AppIdentityCredential}.
@@ -63,7 +61,7 @@ public class AppIdentityCredentialTest extends TestCase {
 
     appCredential.intercept(request);
 
-    assertEquals(appIdentity.getGetAccessTokenCallCount(), 1);
+    assertEquals(1, appIdentity.getGetAccessTokenCallCount());
     HttpHeaders headers = request.getHeaders();
     String authHeader = headers.getAuthorization();
     Boolean headerContainsToken = authHeader.contains(expectedAccessToken);
@@ -95,16 +93,35 @@ public class AppIdentityCredentialTest extends TestCase {
       fail("Should not be able to use credential without scopes.");
     } catch (Exception expected) {
     }
-    assertEquals(appIdentity.getGetAccessTokenCallCount(), 1);
+    assertEquals(1, appIdentity.getGetAccessTokenCallCount());
 
     GoogleCredential scopedWrapper = wrapper.createScoped(SCOPES);
     assertNotSame(wrapper, scopedWrapper);
     scopedWrapper.intercept(request);
 
-    assertEquals(appIdentity.getGetAccessTokenCallCount(), 2);
+    assertEquals(2, appIdentity.getGetAccessTokenCallCount());
     HttpHeaders headers = request.getHeaders();
     String authHeader = headers.getAuthorization();
     assertTrue(authHeader.contains(expectedAccessToken));
+  }
+
+  public void testAppEngineCredentialWrapperGetAccessToken() throws IOException {
+    final String expectedAccessToken = "ExpectedAccessToken";
+
+    HttpTransport transport = new MockHttpTransport();
+    JsonFactory jsonFactory = new JacksonFactory();
+
+    MockAppIdentityService appIdentity = new MockAppIdentityService();
+    appIdentity.setAccessTokenText(expectedAccessToken);
+
+    AppIdentityCredential.Builder builder = new AppIdentityCredential.Builder(SCOPES);
+    builder.setAppIdentityService(appIdentity);
+    AppIdentityCredential appCredential = builder.build();
+
+    GoogleCredential wrapper = new
+        AppIdentityCredential.AppEngineCredentialWrapper(appCredential, transport, jsonFactory);
+    assertTrue(wrapper.refreshToken());
+    assertEquals(expectedAccessToken, wrapper.getAccessToken());
   }
 
   public void testAppEngineCredentialWrapperNullTransportThrows() throws IOException {

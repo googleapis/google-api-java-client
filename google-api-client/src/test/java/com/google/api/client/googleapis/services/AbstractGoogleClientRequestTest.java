@@ -30,11 +30,9 @@ import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.StringUtils;
-
-import junit.framework.TestCase;
-
 import java.io.IOException;
 import java.util.Arrays;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link AbstractGoogleClientRequest}.
@@ -177,7 +175,6 @@ public class AbstractGoogleClientRequestTest extends TestCase {
 
   public void testUserAgentSuffix() throws Exception {
     AssertUserAgentTransport transport = new AssertUserAgentTransport();
-
     // Specify an Application Name.
     String applicationName = "Test Application";
     transport.expectedUserAgent = applicationName + " "
@@ -189,15 +186,55 @@ public class AbstractGoogleClientRequestTest extends TestCase {
     MockGoogleClientRequest<Void> request =
         new MockGoogleClientRequest<Void>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
     request.executeUnparsed();
+  }
 
+  public void testUserAgent() throws Exception {
+    AssertUserAgentTransport transport = new AssertUserAgentTransport();
+    transport.expectedUserAgent = AbstractGoogleClientRequest.USER_AGENT_SUFFIX + " " + HttpRequest.USER_AGENT_SUFFIX;
     // Don't specify an Application Name.
-    transport.expectedUserAgent = AbstractGoogleClientRequest.USER_AGENT_SUFFIX + " "
-        + HttpRequest.USER_AGENT_SUFFIX;
-    client = new MockGoogleClient.Builder(
+    MockGoogleClient client = new MockGoogleClient.Builder(
         transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
-    request =
+    MockGoogleClientRequest<Void> request =
         new MockGoogleClientRequest<Void>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
     request.executeUnparsed();
+  }
+
+  public void testSetsApiClientHeader() throws Exception {
+    HttpTransport transport = new AssertHeaderTransport("X-Goog-Api-Client", "java/\\d+\\.\\d+\\.\\d+.*");
+    MockGoogleClient client = new MockGoogleClient.Builder(
+        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
+    MockGoogleClientRequest<Void> request =
+        new MockGoogleClientRequest<Void>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
+    request.executeUnparsed();
+  }
+
+  private class AssertHeaderTransport extends MockHttpTransport {
+    String expectedHeader;
+    String expectedHeaderValue;
+
+    AssertHeaderTransport(String header, String value) {
+      expectedHeader = header;
+      expectedHeaderValue = value;
+    }
+
+    @Override
+    public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+      return new MockLowLevelHttpRequest() {
+        @Override
+        public LowLevelHttpResponse execute() throws IOException {
+          String firstHeader = getFirstHeaderValue(expectedHeader);
+          assertTrue(
+              String.format(
+                  "Expected header value to match %s, instead got %s.",
+                  expectedHeaderValue,
+                  firstHeader
+              ),
+              firstHeader.matches(expectedHeaderValue)
+          );
+          return new MockLowLevelHttpResponse();
+        }
+      };
+    }
   }
 
   private class AssertUserAgentTransport extends MockHttpTransport {

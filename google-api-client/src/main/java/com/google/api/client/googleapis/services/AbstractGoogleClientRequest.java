@@ -12,6 +12,7 @@
 
 package com.google.api.client.googleapis.services;
 
+import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.googleapis.batch.BatchCallback;
 import com.google.api.client.googleapis.batch.BatchRequest;
@@ -37,6 +38,8 @@ import com.google.api.client.util.Preconditions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Abstract Google client request for a {@link AbstractGoogleClient}.
@@ -58,6 +61,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * @since 1.20
    */
   public static final String USER_AGENT_SUFFIX = "Google-API-Java-Client";
+
+  private static final String API_VERSION_HEADER = "X-Goog-Api-Client";
 
   /** Google client. */
   private final AbstractGoogleClient abstractGoogleClient;
@@ -118,6 +123,58 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       requestHeaders.setUserAgent(applicationName + " " + USER_AGENT_SUFFIX);
     } else {
       requestHeaders.setUserAgent(USER_AGENT_SUFFIX);
+    }
+    // Set the header for the Api Client version (Java and OS version)
+    requestHeaders.set(API_VERSION_HEADER, ApiClientVersion.build(abstractGoogleClient));
+  }
+
+  /**
+   * Internal class to help build the X-Goog-Api-Client header. This header identifies the
+   * API Client version and environment.
+   *
+   * See <a href="https://cloud.google.com/apis/docs/system-parameters"></a>
+   *
+   */
+  private static class ApiClientVersion {
+    private static final String JAVA_VERSION = getJavaVersion();
+    private static final String OS_NAME = formatName(System.getProperty("os.name"));
+    private static final String OS_VERSION = formatSemver(System.getProperty("os.version"));
+
+    private static String build(AbstractGoogleClient client) {
+      // TODO(chingor): add the API version from the generated client
+      return String.format(
+          "java/%s http-google-%s/%s %s/%s",
+          JAVA_VERSION,
+          formatName(client.getClass().getSimpleName()),
+          formatSemver(GoogleUtils.VERSION),
+          OS_NAME,
+          OS_VERSION
+      );
+    }
+
+    private static String getJavaVersion() {
+      String version = System.getProperty("java.version");
+      // Java 9 doesn't report a semver here: instead it's something like 9-Debian+0-x-y
+      if (version.startsWith("9")) {
+        return "9.0.0";
+      } else {
+        return formatSemver(version);
+      }
+    }
+
+    private static String formatName(String name) {
+      // Only lowercase letters, digits, and "-" are allowed
+      return name.toLowerCase().replaceAll("[^\\w\\d\\-]", "-");
+    }
+
+    private static String formatSemver(String version) {
+      // Take only the semver version: x.y.z-a_b_c -> x.y.z
+      Matcher m = Pattern.compile("(\\d+\\.\\d+\\.\\d+).*").matcher(version);
+      if (m.find()) {
+        return m.group(1);
+      } else {
+        return version;
+      }
     }
   }
 

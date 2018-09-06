@@ -20,6 +20,7 @@ import com.google.appengine.api.appidentity.AppIdentityServiceFailureException;
 import com.google.appengine.api.appidentity.PublicCertificate;
 
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * {@link Beta} <br/>
@@ -70,7 +71,8 @@ public class MockAppIdentityService implements AppIdentityService {
     if (scopeCount == 0) {
       throw new AppIdentityServiceFailureException("No scopes specified.");
     }
-    return new GetAccessTokenResult(accessTokenText, null);
+    return new GetAccessTokenResult(accessTokenText,
+        new Date(System.currentTimeMillis() + 3600000));
   }
 
   @Override
