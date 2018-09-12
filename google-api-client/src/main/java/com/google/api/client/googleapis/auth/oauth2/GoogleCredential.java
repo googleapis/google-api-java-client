@@ -498,6 +498,17 @@ public class GoogleCredential extends Credential {
   }
 
   /**
+   * {@link Beta} <br/>
+   * For credentials that require scopes, creates a copy of the credential with the specified
+   * scopes for specified user.
+   */
+  @Beta
+  public GoogleCredential createScoped(Collection<String> scopes, String serviceAccountUser) {
+    this.serviceAccountUser = serviceAccountUser;
+    return createScoped(scopes);
+  }
+
+  /**
    * Google credential builder.
    *
    * <p>
@@ -862,11 +873,10 @@ public class GoogleCredential extends Credential {
     }
     byte[] bytes = section.getBase64DecodedBytes();
     PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(bytes);
-    Exception unexpectedException = null;
+    Exception unexpectedException;
     try {
       KeyFactory keyFactory = SecurityUtils.getRsaKeyFactory();
-      PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
-      return privateKey;
+      return keyFactory.generatePrivate(keySpec);
     } catch (NoSuchAlgorithmException exception) {
       unexpectedException = exception;
     } catch (InvalidKeySpecException exception) {
