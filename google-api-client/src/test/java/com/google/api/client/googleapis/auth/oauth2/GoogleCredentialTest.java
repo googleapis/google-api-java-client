@@ -451,6 +451,119 @@ public class GoogleCredentialTest extends TestCase {
     }
   }
 
+  public void testCreateDelegated() throws Exception {
+    final String serviceAccountEmail =
+        "36680232662-vrd7ji19q3ne0ah2csanun6bnr@developer.gserviceaccount.com";
+    final String accessToken = "1/MkSJoj1xsli0AccessToken_NKPY2";
+    final String delegateUser = "user@domain.com";
+
+    MockTokenServerTransport transport = new MockTokenServerTransport();
+    transport.addServiceAccount(serviceAccountEmail, accessToken);
+    GoogleCredential credential = new GoogleCredential.Builder()
+        .setServiceAccountId(serviceAccountEmail)
+        .setServiceAccountScopes(SCOPES)
+        .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
+        .setTransport(transport)
+        .setJsonFactory(JSON_FACTORY)
+        .build();
+
+    assertNotSame(delegateUser, credential.getServiceAccountUser());
+
+    GoogleCredential delegatedCredential = credential.createDelegated(delegateUser);
+    assertNotSame(credential, delegatedCredential);
+
+    assertTrue(delegatedCredential.refreshToken());
+    assertEquals(accessToken, delegatedCredential.getAccessToken());
+
+    assertNotSame(credential.getServiceAccountUser(), delegatedCredential.getServiceAccountUser());
+
+    assertSame(credential.getTransport(), delegatedCredential.getTransport());
+    assertSame(credential.getJsonFactory(), delegatedCredential.getJsonFactory());
+    assertSame(credential.getServiceAccountId(), delegatedCredential.getServiceAccountId());
+    assertSame(credential.getServiceAccountPrivateKey(),
+        delegatedCredential.getServiceAccountPrivateKey());
+  }
+
+  public void testBuilderUserAccount() throws Exception {
+    final String accessToken = "1/MkSJoj1xsli0AccessToken_NKPY2";
+    final String clientSecret = "jakuaL9YyieakhECKL2SwZcu";
+    final String clientId = "ya29.1.AADtN_UtlxN3PuGAxrN2XQnZTVRvDyVWnYq4I6dws";
+    final String refreshToken = "1/Tl6awhpFjkMkSJoj1xsli0H2eL5YsMgU_NKPY2TyGWY";
+
+    MockTokenServerTransport transport = new MockTokenServerTransport();
+    transport.addClient(clientId, clientSecret);
+    transport.addRefreshToken(refreshToken, accessToken);
+
+    GoogleCredential credential = new GoogleCredential.Builder()
+        .setClientSecrets(clientId, clientSecret)
+        .setTransport(transport)
+        .setJsonFactory(JSON_FACTORY)
+        .build();
+    credential.setRefreshToken(refreshToken);
+
+    assertTrue(credential.refreshToken());
+    assertEquals(accessToken, credential.getAccessToken());
+
+    GoogleCredential newCredential = credential.toBuilder().build();
+
+    assertNotSame(credential, newCredential);
+
+    assertSame(credential.getClientAuthentication(), newCredential.getClientAuthentication());
+
+    assertEquals(credential.getTransport(), newCredential.getTransport());
+    assertEquals(credential.getJsonFactory(), newCredential.getJsonFactory());
+  }
+
+  public void testBuilderServiceAccount() throws Exception {
+    final String serviceAccountEmail =
+        "36680232662-vrd7ji19q3ne0ah2csanun6bnr@developer.gserviceaccount.com";
+    final String accessToken = "1/MkSJoj1xsli0AccessToken_NKPY2";
+    final String refreshToken = "1/Tl6awhpFjkMkSJoj1xsli0H2eL5YsMgU_NKPY2TyGWY";
+    final String delegateUser = "user@domain.com";
+
+    MockTokenServerTransport transport = new MockTokenServerTransport();
+    transport.addServiceAccount(serviceAccountEmail, accessToken);
+    GoogleCredential credential = new GoogleCredential.Builder()
+        .setServiceAccountId(serviceAccountEmail)
+        .setServiceAccountScopes(SCOPES)
+        .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
+        .setServiceAccountUser(delegateUser)
+        .setTransport(transport)
+        .setJsonFactory(JSON_FACTORY)
+        .build();
+    assertTrue(credential.refreshToken());
+
+    GoogleCredential newCredential = credential.toBuilder().build();
+
+    assertNotSame(credential, newCredential);
+
+    assertEquals(credential.getServiceAccountId(),
+        newCredential.getServiceAccountId());
+
+    assertEquals(credential.getServiceAccountProjectId(),
+        newCredential.getServiceAccountProjectId());
+
+    org.junit.Assert.assertArrayEquals(
+        credential.getServiceAccountScopes().toArray(),
+        newCredential.getServiceAccountScopes().toArray());
+
+    assertEquals(credential.getServiceAccountPrivateKey(),
+        newCredential.getServiceAccountPrivateKey());
+
+    assertEquals(credential.getServiceAccountPrivateKeyId(),
+        newCredential.getServiceAccountPrivateKeyId());
+
+    assertEquals(credential.getServiceAccountUser(),
+       newCredential.getServiceAccountUser());
+
+    assertTrue(newCredential.refreshToken());
+    assertEquals(credential.getAccessToken(), newCredential.getAccessToken());
+
+    assertEquals(credential.getTransport(), newCredential.getTransport());
+    assertEquals(credential.getJsonFactory(), newCredential.getJsonFactory());
+  }
+
+
   static String createUserJson(String clientId, String clientSecret, String refreshToken)
       throws IOException {
     GenericJson userCredentialContents = new GenericJson();
