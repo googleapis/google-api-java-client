@@ -735,15 +735,31 @@ public class GoogleCredential extends Credential {
      * the return type, but nothing else.
      * </p>
      *
-     * @param p12File input stream to the p12 file (closed at the end of this method in a finally
-     *        block)
+     * @param p12File p12 file object
      */
     public Builder setServiceAccountPrivateKeyFromP12File(File p12File)
         throws GeneralSecurityException, IOException {
-      serviceAccountPrivateKey = SecurityUtils.loadPrivateKeyFromKeyStore(
-          SecurityUtils.getPkcs12KeyStore(), new FileInputStream(p12File), "notasecret",
-          "privatekey", "notasecret");
+      setServiceAccountPrivateKeyFromP12File(new FileInputStream(p12File));
       return this;
+    }
+
+    /**
+     * Sets the private key to use with the service account flow or {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     *
+     * @param p12FileInputStream input stream to the p12 file (closed at the end of this method in a finally
+     *        block)
+     */
+    public Builder setServiceAccountPrivateKeyFromP12File(InputStream p12FileInputStream)
+            throws GeneralSecurityException, IOException {
+        serviceAccountPrivateKey = SecurityUtils.loadPrivateKeyFromKeyStore(
+                SecurityUtils.getPkcs12KeyStore(), p12FileInputStream, "notasecret",
+                "privatekey", "notasecret");
+        return this;
     }
 
     /**
