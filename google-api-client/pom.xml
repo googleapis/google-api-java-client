@@ -22,10 +22,10 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <links>
-            <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
-            <link>http://code.google.com/appengine/docs/java/javadoc</link>
-            <link>http://javadoc.google-http-java-client.googlecode.com/hg/${project.http.version}</link>
-            <link>http://javadoc.google-oauth-java-client.googlecode.com/hg/${project.oauth.version}</link>
+            <link>https://docs.oracle.com/javase/6/docs/api/</link>
+            <link>https://cloud.google.com/appengine/docs/standard/java/javadoc/</link>
+            <link>https://developers.google.com/api-client-library/java/google-http-java-client/reference/1.20.0/</link>
+            <link>https://developers.google.com/api-client-library/java/google-oauth-java-client/reference/1.20.0/</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
