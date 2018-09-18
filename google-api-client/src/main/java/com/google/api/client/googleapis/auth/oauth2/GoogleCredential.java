@@ -483,18 +483,47 @@ public class GoogleCredential extends Credential {
     if (serviceAccountPrivateKey == null) {
       return this;
     }
-    return new GoogleCredential.Builder()
+    return toBuilder()
+        .setServiceAccountScopes(scopes)
+        .build();
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * For service accounts that need to delegate to a specific user, create a
+   * copy of the credential with the specified user
+   */
+  @Beta
+  public GoogleCredential createDelegated(String user) {
+    if (serviceAccountPrivateKey == null) {
+      return this;
+    }
+    return toBuilder()
+        .setServiceAccountUser(user)
+        .build();
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Create a builder from this credential.
+   */
+  @Beta
+  public Builder toBuilder() {
+    Builder builder = new GoogleCredential.Builder()
         .setServiceAccountPrivateKey(serviceAccountPrivateKey)
         .setServiceAccountPrivateKeyId(serviceAccountPrivateKeyId)
         .setServiceAccountId(serviceAccountId)
         .setServiceAccountProjectId(serviceAccountProjectId)
         .setServiceAccountUser(serviceAccountUser)
-        .setServiceAccountScopes(scopes)
+        .setServiceAccountScopes(serviceAccountScopes)
         .setTokenServerEncodedUrl(getTokenServerEncodedUrl())
         .setTransport(getTransport())
         .setJsonFactory(getJsonFactory())
-        .setClock(getClock())
-        .build();
+        .setClock(getClock());
+
+    builder.setClientAuthentication(getClientAuthentication());
+
+    return builder;
   }
 
   /**
@@ -706,15 +735,31 @@ public class GoogleCredential extends Credential {
      * the return type, but nothing else.
      * </p>
      *
-     * @param p12File input stream to the p12 file (closed at the end of this method in a finally
-     *        block)
+     * @param p12File p12 file object
      */
     public Builder setServiceAccountPrivateKeyFromP12File(File p12File)
         throws GeneralSecurityException, IOException {
-      serviceAccountPrivateKey = SecurityUtils.loadPrivateKeyFromKeyStore(
-          SecurityUtils.getPkcs12KeyStore(), new FileInputStream(p12File), "notasecret",
-          "privatekey", "notasecret");
+      setServiceAccountPrivateKeyFromP12File(new FileInputStream(p12File));
       return this;
+    }
+
+    /**
+     * Sets the private key to use with the service account flow or {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     *
+     * @param p12FileInputStream input stream to the p12 file (closed at the end of this method in a finally
+     *        block)
+     */
+    public Builder setServiceAccountPrivateKeyFromP12File(InputStream p12FileInputStream)
+            throws GeneralSecurityException, IOException {
+        serviceAccountPrivateKey = SecurityUtils.loadPrivateKeyFromKeyStore(
+                SecurityUtils.getPkcs12KeyStore(), p12FileInputStream, "notasecret",
+                "privatekey", "notasecret");
+        return this;
     }
 
     /**
