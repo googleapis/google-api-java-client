@@ -214,6 +214,14 @@ dependencies {
 }
 ```
 
+## CI Status
+
+Java Version | Status
+------------ | ------
+Java 7 | [![Kokoro CI](http://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java7.svg)](http://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java7.html)
+Java 8 | [![Kokoro CI](http://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java8.svg)](http://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java8.html)
+Java 10 | [![Kokoro CI](http://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java10.svg)](http://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java10.html)
+
 ## Dependencies
 This library is built on top of two common libraries, also built by Google, and also designed to
 work with any HTTP service on the web:
