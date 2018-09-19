@@ -31,7 +31,7 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractGoogleClient {
 
-  static final Logger logger = Logger.getLogger(AbstractGoogleClient.class.getName());
+  private static final Logger logger = Logger.getLogger(AbstractGoogleClient.class.getName());
 
   /** The request factory for connections to the server. */
   private final HttpRequestFactory requestFactory;

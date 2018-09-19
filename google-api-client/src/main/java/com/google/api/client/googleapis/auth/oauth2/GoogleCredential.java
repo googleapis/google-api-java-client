@@ -491,7 +491,7 @@ public class GoogleCredential extends Credential {
   /**
    * {@link Beta} <br/>
    * For service accounts that need to delegate to a specific user, create a
-   * copy of the credential with the specified user
+   * copy of the credential with the specified user.
    */
   @Beta
   public GoogleCredential createDelegated(String user) {
@@ -549,7 +549,7 @@ public class GoogleCredential extends Credential {
     /** Id of the private key to use with the service account flow or {@code null} for none. */
     String serviceAccountPrivateKeyId;
 
-    /** Project Id associated with the Service Account */
+    /** Project ID associated with the Service Account. */
     String serviceAccountProjectId;
 
     /**
@@ -751,8 +751,8 @@ public class GoogleCredential extends Credential {
      * the return type, but nothing else.
      * </p>
      *
-     * @param p12FileInputStream input stream to the p12 file (closed at the end of this method in a finally
-     *        block)
+     * @param p12FileInputStream input stream to the p12 file. This file is closed at the end of
+     *         this method in a finally block.
      */
     public Builder setServiceAccountPrivateKeyFromP12File(InputStream p12FileInputStream)
             throws GeneralSecurityException, IOException {
