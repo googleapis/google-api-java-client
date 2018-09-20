@@ -2,7 +2,7 @@ Indiana University Extreme! Lab Software License
 
 Version 1.1.1
 
-Copyright (c) 2002 Extreme! Lab, Indiana University. All rights reserved.
+Copyright 2002 Extreme! Lab, Indiana University. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
