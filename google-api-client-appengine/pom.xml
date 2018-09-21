@@ -55,22 +55,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.datanucleus</groupId>
-        <artifactId>maven-datanucleus-plugin</artifactId>
-        <version>2.2.1</version>
-        <configuration>
-          <verbose>true</verbose>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>enhance</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
       <!--App Engine uses Java 6 and above-->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
