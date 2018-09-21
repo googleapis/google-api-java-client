@@ -245,6 +245,5 @@ might result, and you are not guaranteed a compilation error.
 
 ## Links
 
-- [Clients Announcements](http://google-api-java-client.blogspot.com/)
 - [API Announcements](http://googledevelopers.blogspot.com/)
 - [Discuss](https://groups.google.com/forum/#!forum/google-api-java-client)
