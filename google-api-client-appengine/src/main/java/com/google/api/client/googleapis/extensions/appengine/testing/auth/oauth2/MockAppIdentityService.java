@@ -89,4 +89,7 @@ public class MockAppIdentityService implements AppIdentityService {
   public ParsedAppId parseFullAppId(String fullAppId) {
     return null;
   }
+
+  @Override
+  public String getDefaultGcsBucketName() { return null; }
 }
