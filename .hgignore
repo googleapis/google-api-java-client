@@ -1,6 +1,0 @@
-
-syntax: regexp
-^(.*/)?target$
-
-syntax: regexp
-^(.*/)?bin$
