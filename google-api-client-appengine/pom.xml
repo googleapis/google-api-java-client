@@ -71,7 +71,7 @@
           </execution>
         </executions>
       </plugin>
-      <!--App Engine uses Java 7 and above-->
+      <!--App Engine uses Java 7 or Java 8 -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>animal-sniffer-maven-plugin</artifactId>
