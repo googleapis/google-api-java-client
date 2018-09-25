@@ -23,7 +23,7 @@
   <inceptionYear>2010</inceptionYear>
 
   <prerequisites>
-    <maven>2.0.9</maven>
+    <maven>3.3.9</maven>
   </prerequisites>
 
   <scm>
@@ -544,7 +544,7 @@
     <project.jackson-core2.version>2.9.6</project.jackson-core2.version>
     <project.protobuf-java.version>2.6.1</project.protobuf-java.version>
     <project.guava.version>20.0</project.guava.version>
-    <project.appengine.version>1.7.7</project.appengine.version>
+    <project.appengine.version>1.9.64</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.commons-logging.version>1.1.1</project.commons-logging.version>
     <project.httpclient.version>4.5.5</project.httpclient.version>

@@ -214,6 +214,14 @@ dependencies {
 }
 ```
 
+## CI Status
+
+Java Version | Status
+------------ | ------
+Java 7 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java7.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java7.html)
+Java 8 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java8.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java8.html)
+Java 10 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java10.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java10.html)
+
 ## Dependencies
 This library is built on top of two common libraries, also built by Google, and also designed to
 work with any HTTP service on the web:
@@ -245,6 +253,5 @@ might result, and you are not guaranteed a compilation error.
 
 ## Links
 
-- [Clients Announcements](http://google-api-java-client.blogspot.com/)
 - [API Announcements](http://googledevelopers.blogspot.com/)
 - [Discuss](https://groups.google.com/forum/#!forum/google-api-java-client)

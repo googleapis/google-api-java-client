@@ -16,7 +16,7 @@
         <configuration>
           <links>
             <link>http://download.oracle.com/javase/6/docs/api/</link>
-            <link>http://code.google.com/appengine/docs/java/javadoc</link>
+            <link>https://cloud.google.com/appengine/docs/standard/java/javadoc/</link>
             <link>http://javadoc.google-http-java-client.googlecode.com/hg/${project.http.version}</link>
             <link>http://javadoc.google-oauth-java-client.googlecode.com/hg/${project.oauth.version}</link>
           </links>
@@ -62,7 +62,7 @@
         <configuration>
           <signature>
             <groupId>org.codehaus.mojo.signature</groupId>
-            <artifactId>java16</artifactId>
+            <artifactId>java17</artifactId>
             <version>1.0</version>
           </signature>
         </configuration>
