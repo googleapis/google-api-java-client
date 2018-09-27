@@ -22,11 +22,9 @@ pushd $(dirname "$0")/../../
 setup_environment_secrets
 create_settings_xml_file "settings.xml"
 
-# Install the appengine-api
-mvn dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9.65
-
 mvn clean install deploy \
   --settings settings.xml \
+  -DskipTests=true \
   -DperformRelease=true \
   -Dgpg.executable=gpg \
   -Dgpg.passphrase=${GPG_PASSPHRASE} \
