@@ -16,28 +16,12 @@
 set -eo pipefail
 
 source $(dirname "$0")/common.sh
+source $(dirname "$0")/../install_dependencies.sh
 
 pushd $(dirname "$0")/../../
 
 setup_environment_secrets
 create_settings_xml_file "settings.xml"
-
-# Install the android SDK
-mvn dependency:get -Dartifact=com.google.android:android:4.1.1.4
-
-# Install the appengine SDK
-mvn dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9.65
-
-# Install play services
-mvn dependency:get -Dartifact=com.google.android.google-play-services:google-play-services:1 -o -DremoteRepositories=file:~/.m2 || \
-  (wget https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar && \
-   unzip play-services-basement-8.3.0.aar && \
-   mvn install:install-file \
-      -Dfile=classes.jar \
-      -DgroupId=com.google.android.google-play-services \
-      -DartifactId=google-play-services \
-      -Dversion=1 \
-   -Dpackaging=jar)
 
 mvn clean install deploy \
   --settings settings.xml \
