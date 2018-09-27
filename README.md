@@ -255,3 +255,15 @@ might result, and you are not guaranteed a compilation error.
 
 - [API Announcements](http://googledevelopers.blogspot.com/)
 - [Discuss](https://groups.google.com/forum/#!forum/google-api-java-client)
+
+## Notice: Ending Java 6 Support
+
+Please note: since Java 6 extended support is being ended this December by Oracle, we will begin
+ending Java 6 support in early 2019, with release 1.28.0 as a tentative goal. Users may stay still
+use these libraries in Java 6 projects for some time, but going forward we will not ensure that
+these libraries work in such an environment. After 1.28.0, our supported versions will include Java
+7 and onward.
+
+For Android users, we will continue our 4.0 support.
+
+For questions or concerns, please file an issue in the GitHub repository.
