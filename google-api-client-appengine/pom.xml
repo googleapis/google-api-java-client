@@ -17,8 +17,8 @@
           <links>
             <link>http://download.oracle.com/javase/6/docs/api/</link>
             <link>https://cloud.google.com/appengine/docs/standard/java/javadoc/</link>
-            <link>http://javadoc.google-http-java-client.googlecode.com/hg/${project.http.version}</link>
-            <link>http://javadoc.google-oauth-java-client.googlecode.com/hg/${project.oauth.version}</link>
+            <link>https://googleapis.github.io/google-http-java-client/releases/${project.http.version}/javadoc/</link>
+            <link>https://googleapis.github.io/google-oauth-java-client/releases/${project.oauth.version}/javadoc/</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
@@ -33,15 +33,6 @@
             </manifest>
           </archive>
         </configuration>
-        <executions>
-          <execution>
-            <id>jar</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
