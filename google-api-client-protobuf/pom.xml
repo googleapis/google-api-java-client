@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.google.api-client</groupId>
     <artifactId>google-api-client-parent</artifactId>
-    <version>1.26.0-SNAPSHOT</version>
+    <version>1.26.0-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-api-client-protobuf</artifactId>
