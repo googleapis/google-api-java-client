@@ -1,6 +1,6 @@
 # Format:
 # module:released-version:current-version
 
-google-api-client:1.25.0:1.26.0-SNAPSHOT
-google-http-client:1.25.0:1.26.0-SNAPSHOT
-google-oauth-client:1.25.0:1.26.0-SNAPSHOT
+google-api-client:1.26.0:1.26.0
+google-http-client:1.26.0:1.26.0
+google-oauth-client:1.26.0:1.26.0
