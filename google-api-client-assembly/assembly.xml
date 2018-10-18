@@ -30,6 +30,7 @@
     <fileSet>
       <directory>dependencies</directory>
       <outputDirectory>google-api-java-client/dependencies</outputDirectory>
+      <filtered>true</filtered>
     </fileSet>
     <fileSet>
       <directory>target/libs</directory>
