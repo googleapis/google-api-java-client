@@ -62,6 +62,19 @@
   </dependencies>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <configuration>
+            <descriptors>
+              <descriptor>assembly.xml</descriptor>
+            </descriptors>
+            <finalName>google-api-java-client</finalName>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -102,12 +115,6 @@
             <goals>
               <goal>single</goal>
             </goals>
-            <configuration>
-              <descriptors>
-                <descriptor>assembly.xml</descriptor>
-              </descriptors>
-              <finalName>google-api-java-client</finalName>
-            </configuration>
           </execution>
         </executions>
       </plugin>
