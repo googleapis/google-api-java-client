@@ -139,16 +139,14 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     private static final String JAVA_VERSION = getJavaVersion();
     private static final String OS_NAME = formatName(System.getProperty("os.name"));
     private static final String OS_VERSION = formatSemver(System.getProperty("os.version"));
+    private static final String HEADER_TEMPLATE = buildHeaderTemplate();
 
     private static String build(AbstractGoogleClient client) {
       // TODO(chingor): add the API version from the generated client
       return String.format(
-          "java/%s http-google-%s/%s %s/%s",
-          JAVA_VERSION,
+          HEADER_TEMPLATE,
           formatName(client.getClass().getSimpleName()),
-          formatSemver(GoogleUtils.VERSION),
-          OS_NAME,
-          OS_VERSION
+          formatSemver(GoogleUtils.VERSION)
       );
     }
 
@@ -168,6 +166,10 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     }
 
     private static String formatSemver(String version) {
+      if (version == null) {
+        return null;
+      }
+
       // Take only the semver version: x.y.z-a_b_c -> x.y.z
       Matcher m = Pattern.compile("(\\d+\\.\\d+\\.\\d+).*").matcher(version);
       if (m.find()) {
@@ -175,6 +177,19 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       } else {
         return version;
       }
+    }
+
+    private static String buildHeaderTemplate() {
+      StringBuilder sb = new StringBuilder("java/");
+      sb.append(JAVA_VERSION);
+      sb.append(" http-google-%s/%s");
+      if (OS_NAME != null && OS_VERSION != null) {
+        sb.append(" ");
+        sb.append(OS_NAME);
+        sb.append("/");
+        sb.append(OS_VERSION);
+      }
+      return sb.toString();
     }
   }
 
