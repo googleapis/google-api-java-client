@@ -35,6 +35,7 @@ import com.google.api.client.http.UriTemplate;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Preconditions;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -135,13 +136,14 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * See <a href="https://cloud.google.com/apis/docs/system-parameters"></a>
    *
    */
-  private static class ApiClientVersion {
+  static class ApiClientVersion {
     private static final String JAVA_VERSION = getJavaVersion();
     private static final String OS_NAME = formatName(System.getProperty("os.name"));
     private static final String OS_VERSION = formatSemver(System.getProperty("os.version"));
     private static final String HEADER_TEMPLATE = buildHeaderTemplate();
 
-    private static String build(AbstractGoogleClient client) {
+    @VisibleForTesting
+    static String build(AbstractGoogleClient client) {
       // TODO(chingor): add the API version from the generated client
       return String.format(
           HEADER_TEMPLATE,

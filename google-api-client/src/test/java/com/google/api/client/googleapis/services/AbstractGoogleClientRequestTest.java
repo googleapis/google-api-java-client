@@ -12,6 +12,7 @@
 
 package com.google.api.client.googleapis.services;
 
+import com.google.api.client.googleapis.services.AbstractGoogleClientRequest.ApiClientVersion;
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest;
 import com.google.api.client.http.EmptyContent;
@@ -229,24 +230,26 @@ public class AbstractGoogleClientRequestTest extends TestCase {
   public void testSetsApiClientHeaderWithOsVersion() throws Exception {
     System.setProperty("os.name", "My OS");
     System.setProperty("os.version", "1.2.3");
-    HttpTransport transport = new AssertHeaderTransport("X-Goog-Api-Client", ".* my-os/1.2.3");
+
+    HttpTransport transport = new MockHttpTransport();
     MockGoogleClient client = new MockGoogleClient.Builder(
         transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
-    MockGoogleClientRequest<Void> request =
-        new MockGoogleClientRequest<Void>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
-    request.executeUnparsed();
+
+    String version = ApiClientVersion.build(client);
+    assertTrue("Api version should contain the os version", version.matches(".* my-os/1.2.3"));
   }
 
   public void testSetsApiClientHeaderWithoutOsVersion() throws Exception {
     System.setProperty("os.name", "My OS");
     System.clearProperty("os.version");
+    assertNull(System.getProperty("os.version"));
 
-    HttpTransport transport = new AssertHeaderTransport("X-Goog-Api-Client", ".*my-os.*", false);
+    HttpTransport transport = new MockHttpTransport();
     MockGoogleClient client = new MockGoogleClient.Builder(
         transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
-    MockGoogleClientRequest<Void> request =
-        new MockGoogleClientRequest<Void>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
-    request.executeUnparsed();
+
+    String version = ApiClientVersion.build(client);
+    assertFalse("Api version should not contain the os version", version.matches(".*my-os.*"));
   }
 
   private class AssertHeaderTransport extends MockHttpTransport {
