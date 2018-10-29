@@ -32,6 +32,7 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.StringUtils;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Properties;
 import junit.framework.TestCase;
 
 /**
@@ -50,6 +51,23 @@ public class AbstractGoogleClientRequestTest extends TestCase {
       "{\"error\":{\"code\":401,\"errors\":[{\"domain\":\"global\","
       + "\"location\":\"Authorization\",\"locationType\":\"header\","
       + "\"message\":\"me\",\"reason\":\"authError\"}],\"message\":\"me\"}}";
+  private Properties originalProperties;
+
+  @Override
+  protected void setUp() throws Exception {
+    super.setUp();
+
+    // save the original system properties so we can mock them out
+    this.originalProperties = System.getProperties();
+  }
+
+  @Override
+  protected void tearDown() throws Exception {
+    // restore the original system properties
+    System.setProperties(originalProperties);
+
+    super.tearDown();
+  }
 
   public void testExecuteUnparsed_error() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
@@ -208,13 +226,42 @@ public class AbstractGoogleClientRequestTest extends TestCase {
     request.executeUnparsed();
   }
 
+  public void testSetsApiClientHeaderWithOsVersion() throws Exception {
+    System.setProperty("os.name", "My OS");
+    System.setProperty("os.version", "1.2.3");
+    HttpTransport transport = new AssertHeaderTransport("X-Goog-Api-Client", ".* my-os/1.2.3");
+    MockGoogleClient client = new MockGoogleClient.Builder(
+        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
+    MockGoogleClientRequest<Void> request =
+        new MockGoogleClientRequest<Void>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
+    request.executeUnparsed();
+  }
+
+  public void testSetsApiClientHeaderWithoutOsVersion() throws Exception {
+    System.setProperty("os.name", "My OS");
+    System.clearProperty("os.version");
+
+    HttpTransport transport = new AssertHeaderTransport("X-Goog-Api-Client", ".*my-os.*", false);
+    MockGoogleClient client = new MockGoogleClient.Builder(
+        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
+    MockGoogleClientRequest<Void> request =
+        new MockGoogleClientRequest<Void>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
+    request.executeUnparsed();
+  }
+
   private class AssertHeaderTransport extends MockHttpTransport {
     String expectedHeader;
     String expectedHeaderValue;
+    boolean expected;
 
     AssertHeaderTransport(String header, String value) {
+      this(header, value, true);
+    }
+
+    AssertHeaderTransport(String header, String value, boolean match) {
       expectedHeader = header;
       expectedHeaderValue = value;
+      expected = match;
     }
 
     @Override
@@ -223,12 +270,13 @@ public class AbstractGoogleClientRequestTest extends TestCase {
         @Override
         public LowLevelHttpResponse execute() throws IOException {
           String firstHeader = getFirstHeaderValue(expectedHeader);
-          assertTrue(
+          assertEquals(
               String.format(
                   "Expected header value to match %s, instead got %s.",
                   expectedHeaderValue,
                   firstHeader
               ),
+              expected,
               firstHeader.matches(expectedHeaderValue)
           );
           return new MockLowLevelHttpResponse();
