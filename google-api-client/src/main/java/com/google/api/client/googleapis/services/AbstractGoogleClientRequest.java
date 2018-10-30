@@ -35,7 +35,6 @@ import com.google.api.client.http.UriTemplate;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Preconditions;
 
-import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -166,8 +165,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       this.headerTemplate = sb.toString();
     }
 
-    public String build(String clientName) {
-      // TODO(chingor): add the API version from the generated client
+    String build(String clientName) {
       return String.format(headerTemplate, formatName(clientName));
     }
 

@@ -52,20 +52,23 @@ public class AbstractGoogleClientRequestTest extends TestCase {
       "{\"error\":{\"code\":401,\"errors\":[{\"domain\":\"global\","
       + "\"location\":\"Authorization\",\"locationType\":\"header\","
       + "\"message\":\"me\",\"reason\":\"authError\"}],\"message\":\"me\"}}";
-  private Properties originalProperties;
+  private String originalOsName;
+  private String originalOsVersion;
 
   @Override
   protected void setUp() throws Exception {
     super.setUp();
 
     // save the original system properties so we can mock them out
-    this.originalProperties = System.getProperties();
+    this.originalOsName = System.getProperty("os.name");
+    this.originalOsVersion = System.getProperty("os.version");
   }
 
   @Override
   protected void tearDown() throws Exception {
     // restore the original system properties
-    System.setProperties(originalProperties);
+    System.setProperty("os.name", originalOsName);
+    System.setProperty("os.version", originalOsVersion);
 
     super.tearDown();
   }
