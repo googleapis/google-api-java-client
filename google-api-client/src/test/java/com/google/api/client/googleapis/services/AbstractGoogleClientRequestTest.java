@@ -249,16 +249,10 @@ public class AbstractGoogleClientRequestTest extends TestCase {
   private class AssertHeaderTransport extends MockHttpTransport {
     String expectedHeader;
     String expectedHeaderValue;
-    boolean expected;
 
     AssertHeaderTransport(String header, String value) {
-      this(header, value, true);
-    }
-
-    AssertHeaderTransport(String header, String value, boolean match) {
       expectedHeader = header;
       expectedHeaderValue = value;
-      expected = match;
     }
 
     @Override
@@ -267,13 +261,12 @@ public class AbstractGoogleClientRequestTest extends TestCase {
         @Override
         public LowLevelHttpResponse execute() throws IOException {
           String firstHeader = getFirstHeaderValue(expectedHeader);
-          assertEquals(
+          assertTrue(
               String.format(
                   "Expected header value to match %s, instead got %s.",
                   expectedHeaderValue,
                   firstHeader
               ),
-              expected,
               firstHeader.matches(expectedHeaderValue)
           );
           return new MockLowLevelHttpResponse();
