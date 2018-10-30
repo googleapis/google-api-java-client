@@ -45,43 +45,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.datanucleus</groupId>
-        <artifactId>datanucleus-maven-plugin</artifactId>
-        <version>${project.datanucleus-maven-plugin.version}</version>
-        <configuration>
-          <api>JDO</api>
-          <verbose>true</verbose>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.datanucleus</groupId>
-            <artifactId>datanucleus-core</artifactId>
-            <version>${project.datanucleus-core.version}</version>
-            <scope>runtime</scope>
-          </dependency>
-          <dependency>
-            <groupId>org.datanucleus</groupId>
-            <artifactId>datanucleus-api-jdo</artifactId>
-            <version>${project.datanucleus-api-jdo.version}</version>
-            <scope>runtime</scope>
-          </dependency>
-          <dependency>
-            <groupId>javax.jdo</groupId>
-            <artifactId>jdo2-api</artifactId>
-            <version>${project.jdo2-api.version}</version>
-            <scope>runtime</scope>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>enhance</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
   <dependencies>
