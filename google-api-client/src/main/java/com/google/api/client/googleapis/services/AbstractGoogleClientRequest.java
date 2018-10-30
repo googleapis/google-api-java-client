@@ -126,7 +126,10 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       requestHeaders.setUserAgent(USER_AGENT_SUFFIX);
     }
     // Set the header for the Api Client version (Java and OS version)
-    requestHeaders.set(API_VERSION_HEADER, ApiClientVersion.build(abstractGoogleClient));
+    requestHeaders.set(
+      API_VERSION_HEADER,
+      ApiClientVersion.getDefault().build(abstractGoogleClient.getClass().getSimpleName())
+    );
   }
 
   /**
@@ -137,19 +140,39 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    *
    */
   static class ApiClientVersion {
-    private static final String JAVA_VERSION = getJavaVersion();
-    private static final String OS_NAME = formatName(System.getProperty("os.name"));
-    private static final String OS_VERSION = formatSemver(System.getProperty("os.version"));
-    private static final String HEADER_TEMPLATE = buildHeaderTemplate();
+    private static final ApiClientVersion DEFAULT_VERSION = new ApiClientVersion();
+    private String headerTemplate;
 
-    @VisibleForTesting
-    static String build(AbstractGoogleClient client) {
-      // TODO(chingor): add the API version from the generated client
-      return String.format(
-          HEADER_TEMPLATE,
-          formatName(client.getClass().getSimpleName()),
-          formatSemver(GoogleUtils.VERSION)
+    ApiClientVersion() {
+      this(
+        getJavaVersion(),
+        System.getProperty("os.name"),
+        System.getProperty("os.version"),
+        GoogleUtils.VERSION
       );
+    }
+
+    ApiClientVersion(String javaVersion, String osName, String osVersion, String clientVersion) {
+      StringBuilder sb = new StringBuilder("java/");
+      sb.append(formatSemver(javaVersion));
+      sb.append(" http-google-%s/");
+      sb.append(formatSemver(clientVersion));
+      if (osName != null && osVersion != null) {
+        sb.append(" ");
+        sb.append(formatName(osName));
+        sb.append("/");
+        sb.append(formatSemver(osVersion));
+      }
+      this.headerTemplate = sb.toString();
+    }
+
+    public String build(String clientName) {
+      // TODO(chingor): add the API version from the generated client
+      return String.format(headerTemplate, formatName(clientName));
+    }
+
+    private static ApiClientVersion getDefault() {
+      return DEFAULT_VERSION;
     }
 
     private static String getJavaVersion() {
@@ -179,19 +202,6 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       } else {
         return version;
       }
-    }
-
-    private static String buildHeaderTemplate() {
-      StringBuilder sb = new StringBuilder("java/");
-      sb.append(JAVA_VERSION);
-      sb.append(" http-google-%s/%s");
-      if (OS_NAME != null && OS_VERSION != null) {
-        sb.append(" ");
-        sb.append(OS_NAME);
-        sb.append("/");
-        sb.append(OS_VERSION);
-      }
-      return sb.toString();
     }
   }
 

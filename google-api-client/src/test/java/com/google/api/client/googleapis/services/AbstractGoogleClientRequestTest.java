@@ -231,11 +231,7 @@ public class AbstractGoogleClientRequestTest extends TestCase {
     System.setProperty("os.name", "My OS");
     System.setProperty("os.version", "1.2.3");
 
-    HttpTransport transport = new MockHttpTransport();
-    MockGoogleClient client = new MockGoogleClient.Builder(
-        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
-
-    String version = ApiClientVersion.build(client);
+    String version = new ApiClientVersion().build("My Client");
     assertTrue("Api version should contain the os version", version.matches(".* my-os/1.2.3"));
   }
 
@@ -244,11 +240,7 @@ public class AbstractGoogleClientRequestTest extends TestCase {
     System.clearProperty("os.version");
     assertNull(System.getProperty("os.version"));
 
-    HttpTransport transport = new MockHttpTransport();
-    MockGoogleClient client = new MockGoogleClient.Builder(
-        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
-
-    String version = ApiClientVersion.build(client);
+    String version = new ApiClientVersion().build("My Client");
     assertFalse("Api version should not contain the os version", version.matches(".*my-os.*"));
   }
 
