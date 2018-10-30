@@ -33,7 +33,6 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.StringUtils;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Properties;
 import junit.framework.TestCase;
 
 /**
