@@ -39,6 +39,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.logging.Level;
@@ -1102,5 +1104,69 @@ public class MediaHttpUploaderTest extends TestCase {
     MediaHttpUploader uploader = new MediaHttpUploader(mediaContent, fakeTransport, null);
     uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
     assertFalse(inputStream.isClosed());
+  }
+
+  class SlowWriter implements Runnable {
+    final private OutputStream outputStream;
+    final private int contentLength;
+
+    SlowWriter(OutputStream outputStream, int contentLength) {
+      this.outputStream = outputStream;
+      this.contentLength = contentLength;
+    }
+
+    @Override
+    public void run() {
+      try {
+        for (int i = 0; i < contentLength; i++) {
+          outputStream.write(i);
+          Thread.sleep(1000);
+        }
+        outputStream.close();
+      } catch (IOException e) {
+        // ignore
+      } catch (InterruptedException e) {
+        // ignore
+      }
+    }
+  }
+
+  class TimeoutRequestInitializer implements HttpRequestInitializer {
+    class TimingInterceptor implements HttpExecuteInterceptor {
+      private long initTime;
+
+      TimingInterceptor() {
+        initTime = System.currentTimeMillis();
+      }
+
+      @Override
+      public void intercept(HttpRequest request) {
+        assertTrue(
+                "Request initialization to execute should be fast",
+                System.currentTimeMillis() - initTime < 100L
+                );
+      }
+    }
+
+    @Override
+    public void initialize(HttpRequest request) {
+      request.setInterceptor(new TimingInterceptor());
+    }
+  }
+
+  public void testResumableSlowUpload() throws Exception {
+    int contentLength = 3;
+    MediaTransport fakeTransport = new MediaTransport(contentLength);
+    fakeTransport.contentLengthNotSpecified = true;
+    PipedOutputStream outputStream = new PipedOutputStream();
+    InputStream inputStream = new PipedInputStream(outputStream);
+
+    Thread thread = new Thread(new SlowWriter(outputStream, contentLength));
+    thread.start();
+
+    InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, inputStream);
+    MediaHttpUploader uploader = new MediaHttpUploader(mediaContent, fakeTransport, new TimeoutRequestInitializer());
+    uploader.setDirectUploadEnabled(false);
+    uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
   }
 }
