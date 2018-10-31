@@ -246,7 +246,7 @@ public final class MediaHttpUploader {
   /**
    * The content buffer of the current request or {@code null} for none. It is used for resumable
    * media upload when the media content length is not specified. It is instantiated for every
-   * request in {@link #setContentAndHeadersOnCurrentRequest} and is set to {@code null} when the
+   * request in {@link #buildContentChunk()} and is set to {@code null} when the
    * request is completed in {@link #upload}.
    */
   private byte currentRequestContentBuffer[];
