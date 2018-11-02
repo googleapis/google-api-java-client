@@ -669,7 +669,7 @@ public final class MediaHttpUploader {
     return new ContentChunk(contentChunk, contentRange);
   }
 
-  private class ContentChunk {
+  private static class ContentChunk {
     private AbstractInputStreamContent content;
     private String contentRange;
 
