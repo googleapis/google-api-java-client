@@ -12,6 +12,9 @@
 
 package com.google.api.client.googleapis.services;
 
+import static com.google.common.base.StandardSystemProperty.OS_NAME;
+import static com.google.common.base.StandardSystemProperty.OS_VERSION;
+
 import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.googleapis.batch.BatchCallback;
@@ -140,15 +143,10 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    */
   static class ApiClientVersion {
     private static final ApiClientVersion DEFAULT_VERSION = new ApiClientVersion();
-    private String headerTemplate;
+    private final String headerTemplate;
 
     ApiClientVersion() {
-      this(
-        getJavaVersion(),
-        System.getProperty("os.name"),
-        System.getProperty("os.version"),
-        GoogleUtils.VERSION
-      );
+      this(getJavaVersion(), OS_NAME.value(), OS_VERSION.value(), GoogleUtils.VERSION);
     }
 
     ApiClientVersion(String javaVersion, String osName, String osVersion, String clientVersion) {
