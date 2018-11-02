@@ -12,6 +12,7 @@
 
 package com.google.api.client.googleapis.services;
 
+import com.google.api.client.googleapis.services.AbstractGoogleClientRequest.ApiClientVersion;
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest;
 import com.google.api.client.http.EmptyContent;
@@ -50,6 +51,26 @@ public class AbstractGoogleClientRequestTest extends TestCase {
       "{\"error\":{\"code\":401,\"errors\":[{\"domain\":\"global\","
       + "\"location\":\"Authorization\",\"locationType\":\"header\","
       + "\"message\":\"me\",\"reason\":\"authError\"}],\"message\":\"me\"}}";
+  private String originalOsName;
+  private String originalOsVersion;
+
+  @Override
+  protected void setUp() throws Exception {
+    super.setUp();
+
+    // save the original system properties so we can mock them out
+    this.originalOsName = System.getProperty("os.name");
+    this.originalOsVersion = System.getProperty("os.version");
+  }
+
+  @Override
+  protected void tearDown() throws Exception {
+    // restore the original system properties
+    System.setProperty("os.name", originalOsName);
+    System.setProperty("os.version", originalOsVersion);
+
+    super.tearDown();
+  }
 
   public void testExecuteUnparsed_error() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
@@ -206,6 +227,23 @@ public class AbstractGoogleClientRequestTest extends TestCase {
     MockGoogleClientRequest<Void> request =
         new MockGoogleClientRequest<Void>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
     request.executeUnparsed();
+  }
+
+  public void testSetsApiClientHeaderWithOsVersion() throws Exception {
+    System.setProperty("os.name", "My OS");
+    System.setProperty("os.version", "1.2.3");
+
+    String version = new ApiClientVersion().build("My Client");
+    assertTrue("Api version should contain the os version", version.matches(".* my-os/1.2.3"));
+  }
+
+  public void testSetsApiClientHeaderWithoutOsVersion() throws Exception {
+    System.setProperty("os.name", "My OS");
+    System.clearProperty("os.version");
+    assertNull(System.getProperty("os.version"));
+
+    String version = new ApiClientVersion().build("My Client");
+    assertFalse("Api version should not contain the os version", version.matches(".*my-os.*"));
   }
 
   private class AssertHeaderTransport extends MockHttpTransport {

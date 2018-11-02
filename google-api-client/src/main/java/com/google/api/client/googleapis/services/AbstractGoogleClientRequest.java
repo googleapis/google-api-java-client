@@ -12,6 +12,9 @@
 
 package com.google.api.client.googleapis.services;
 
+import static com.google.common.base.StandardSystemProperty.OS_NAME;
+import static com.google.common.base.StandardSystemProperty.OS_VERSION;
+
 import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.googleapis.batch.BatchCallback;
@@ -125,7 +128,10 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       requestHeaders.setUserAgent(USER_AGENT_SUFFIX);
     }
     // Set the header for the Api Client version (Java and OS version)
-    requestHeaders.set(API_VERSION_HEADER, ApiClientVersion.build(abstractGoogleClient));
+    requestHeaders.set(
+      API_VERSION_HEADER,
+      ApiClientVersion.getDefault().build(abstractGoogleClient.getClass().getSimpleName())
+    );
   }
 
   /**
@@ -135,21 +141,34 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * See <a href="https://cloud.google.com/apis/docs/system-parameters"></a>
    *
    */
-  private static class ApiClientVersion {
-    private static final String JAVA_VERSION = getJavaVersion();
-    private static final String OS_NAME = formatName(System.getProperty("os.name"));
-    private static final String OS_VERSION = formatSemver(System.getProperty("os.version"));
+  static class ApiClientVersion {
+    private static final ApiClientVersion DEFAULT_VERSION = new ApiClientVersion();
+    private final String headerTemplate;
 
-    private static String build(AbstractGoogleClient client) {
-      // TODO(chingor): add the API version from the generated client
-      return String.format(
-          "java/%s http-google-%s/%s %s/%s",
-          JAVA_VERSION,
-          formatName(client.getClass().getSimpleName()),
-          formatSemver(GoogleUtils.VERSION),
-          OS_NAME,
-          OS_VERSION
-      );
+    ApiClientVersion() {
+      this(getJavaVersion(), OS_NAME.value(), OS_VERSION.value(), GoogleUtils.VERSION);
+    }
+
+    ApiClientVersion(String javaVersion, String osName, String osVersion, String clientVersion) {
+      StringBuilder sb = new StringBuilder("java/");
+      sb.append(formatSemver(javaVersion));
+      sb.append(" http-google-%s/");
+      sb.append(formatSemver(clientVersion));
+      if (osName != null && osVersion != null) {
+        sb.append(" ");
+        sb.append(formatName(osName));
+        sb.append("/");
+        sb.append(formatSemver(osVersion));
+      }
+      this.headerTemplate = sb.toString();
+    }
+
+    String build(String clientName) {
+      return String.format(headerTemplate, formatName(clientName));
+    }
+
+    private static ApiClientVersion getDefault() {
+      return DEFAULT_VERSION;
     }
 
     private static String getJavaVersion() {
@@ -168,6 +187,10 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     }
 
     private static String formatSemver(String version) {
+      if (version == null) {
+        return null;
+      }
+
       // Take only the semver version: x.y.z-a_b_c -> x.y.z
       Matcher m = Pattern.compile("(\\d+\\.\\d+\\.\\d+).*").matcher(version);
       if (m.find()) {
