@@ -670,8 +670,8 @@ public final class MediaHttpUploader {
   }
 
   private static class ContentChunk {
-    private AbstractInputStreamContent content;
-    private String contentRange;
+    private final AbstractInputStreamContent content;
+    private final String contentRange;
 
     ContentChunk(AbstractInputStreamContent content, String contentRange) {
       this.content = content;
