@@ -62,6 +62,7 @@
     <module>google-api-client-android</module>
     <module>google-api-client-appengine</module>
     <module>google-api-client-assembly</module>
+    <module>google-api-client-bom</module>
     <module>google-api-client-gson</module>
     <module>google-api-client-jackson2</module>
     <module>google-api-client-java6</module>
