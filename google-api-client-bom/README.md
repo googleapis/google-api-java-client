@@ -1,7 +1,7 @@
 # Google API Client Library Bill of Materials
 
-The `google-api-client-bom` modules is a pom that can be used to import consistent 
-versions of `google-api-client` components plus its dependencies.
+The `google-api-client-bom` module is a pom that can be used to import consistent 
+versions of `google-api-client` components.
 
 To use it in Maven, add the following to your `pom.xml`:
 
