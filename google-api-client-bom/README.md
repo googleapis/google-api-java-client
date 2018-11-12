@@ -5,14 +5,14 @@ versions of `google-api-client` components.
 
 To use it in Maven, add the following to your `pom.xml`:
 
-[//]: # ({x-version-update-start:google-api-client-bom:released})
+[//]: # ({x-version-update-start:google-api-client:released})
 ```xml
 <dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client-bom</artifactId>
-      <version>1.26.0</version>
+      <version>1.27.0</version>
       <type>pom</type>
       <scope>import</scope>
     </dependency>
