@@ -260,6 +260,15 @@ public final class MediaHttpUploader {
    */
   private boolean disableGZipContent;
 
+  /**
+   * Content offset for this uploader.
+   *
+   * <p>
+   * The default value is {@code -1}.
+   * </p>
+   */
+  private long contentOffset = -1;
+
   /** Sleeper. **/
   Sleeper sleeper = Sleeper.DEFAULT;
 
@@ -351,6 +360,7 @@ public final class MediaHttpUploader {
       initiationRequestUrl.put("uploadType", "multipart");
     } else {
       initiationRequestUrl.put("uploadType", "media");
+      initiationRequestUrl.put("contentOffset", String.valueOf(contentOffset));
     }
     HttpRequest request =
         requestFactory.buildRequest(initiationRequestMethod, initiationRequestUrl, content);
@@ -847,6 +857,25 @@ public final class MediaHttpUploader {
    */
   public MediaHttpUploader setDisableGZipContent(boolean disableGZipContent) {
     this.disableGZipContent = disableGZipContent;
+    return this;
+  }
+
+  /**
+   * Returns content Offset for the uploader.
+   *
+   * @since 1.27
+   */
+  public long getContentOffset() {
+    return contentOffset;
+  }
+
+  /**
+   * Set content Offset for the uploader.
+   *
+   * @since 1.27
+   */
+  public MediaHttpUploader setContentOffset(long contentOffset) {
+    this.contentOffset = contentOffset;
     return this;
   }
 

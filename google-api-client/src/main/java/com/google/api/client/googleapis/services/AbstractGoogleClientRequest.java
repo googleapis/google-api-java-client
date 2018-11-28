@@ -94,6 +94,9 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /** Whether to disable GZip compression of HTTP content. */
   private boolean disableGZipContent;
 
+  /** Content offset long the request for media uploader. */
+  private long contentOffset = -1;
+
   /** Response class to parse into. */
   private Class<T> responseClass;
 
@@ -220,6 +223,17 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    */
   public AbstractGoogleClientRequest<T> setDisableGZipContent(boolean disableGZipContent) {
     this.disableGZipContent = disableGZipContent;
+    return this;
+  }
+
+  /** Gets content offset. */
+  public long getContentOffset() {
+    return contentOffset;
+  }
+
+  /** Sets content offset. */
+  public AbstractGoogleClientRequest<T> setContentOffset(long contentOffset) {
+    this.contentOffset = contentOffset;
     return this;
   }
 
@@ -505,7 +519,9 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       boolean throwExceptionOnExecuteError = httpRequest.getThrowExceptionOnExecuteError();
 
       response = uploader.setInitiationHeaders(requestHeaders)
-          .setDisableGZipContent(disableGZipContent).upload(httpRequestUrl);
+          .setDisableGZipContent(disableGZipContent)
+          .setContentOffset(contentOffset)
+          .upload(httpRequestUrl);
       response.getRequest().setParser(getAbstractGoogleClient().getObjectParser());
       // process any error
       if (throwExceptionOnExecuteError && !response.isSuccessStatusCode()) {
