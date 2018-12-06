@@ -360,7 +360,9 @@ public final class MediaHttpUploader {
       initiationRequestUrl.put("uploadType", "multipart");
     } else {
       initiationRequestUrl.put("uploadType", "media");
-      initiationRequestUrl.put("contentOffset", String.valueOf(contentOffset));
+      if (contentOffset != -1) {
+        initiationRequestUrl.put("contentOffset", String.valueOf(contentOffset));
+      }
     }
     HttpRequest request =
         requestFactory.buildRequest(initiationRequestMethod, initiationRequestUrl, content);
