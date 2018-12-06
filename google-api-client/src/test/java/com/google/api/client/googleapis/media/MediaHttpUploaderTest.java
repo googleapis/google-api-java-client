@@ -57,7 +57,7 @@ public class MediaHttpUploaderTest extends TestCase {
   private static final String TEST_RESUMABLE_REQUEST_URL =
       "http://www.test.com/request/url?uploadType=resumable";
   private static final String TEST_DIRECT_REQUEST_URL =
-      "http://www.test.com/request/url?uploadType=media&contentOffset=-1";
+      "http://www.test.com/request/url?uploadType=media";
   private static final String TEST_MULTIPART_REQUEST_URL =
       "http://www.test.com/request/url?uploadType=multipart";
   private static final String TEST_UPLOAD_URL = "http://www.test.com/media/upload/location";
