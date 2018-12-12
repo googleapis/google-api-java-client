@@ -15,7 +15,7 @@
 /**
  * {@link com.google.api.client.util.Beta} <br/>
  * Google's legacy ClientLogin authentication method as described in <a
- * href="http://code.google.com/apis/accounts/docs/AuthForInstalledApps.html">ClientLogin for
+ * href="https://developers.google.com/identity/protocols/AuthForInstalledApps">ClientLogin for
  * Installed Applications</a>.
  *
  * @since 1.0

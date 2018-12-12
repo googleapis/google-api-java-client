@@ -30,7 +30,7 @@
  *
  * <p>
  * Let's take a look at a typical partial JSON-C video feed from the YouTube Data API (as specified
- * in <a href="http://code.google.com/apis/youtube/2.0/developers_guide_jsonc.html">YouTube
+ * in <a href="https://developers.google.com/youtube/v3/code_samples/?csw=1">YouTube
  * Developer's Guide: JSON-C / JavaScript</a>)
  * </p>
  *
