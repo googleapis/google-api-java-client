@@ -173,12 +173,24 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
 
     private static String getJavaVersion() {
       String version = System.getProperty("java.version");
-      // Java 9 doesn't report a semver here: instead it's something like 9-Debian+0-x-y
-      if (version.startsWith("9")) {
-        return "9.0.0";
-      } else {
-        return formatSemver(version);
+      if (version == null) {
+        return null;
       }
+
+      // Try parsing the full semver
+      String formatted = formatSemver(version, null);
+      if (formatted != null) {
+        return formatted;
+      }
+
+      // Some java versions start with the version number and may contain extra info
+      // e.g. Java 9 reports something like 9-Debian+0-x-y while Java 11 reports "11"
+      Matcher m = Pattern.compile("^(\\d+)[^\\d]?").matcher(version);
+      if (m.find()) {
+        return m.group(1) + ".0.0";
+      }
+
+      return null;
     }
 
     private static String formatName(String name) {
@@ -187,6 +199,10 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     }
 
     private static String formatSemver(String version) {
+      return formatSemver(version, version);
+    }
+
+    private static String formatSemver(String version, String defaultValue) {
       if (version == null) {
         return null;
       }
@@ -196,7 +212,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       if (m.find()) {
         return m.group(1);
       } else {
-        return version;
+        return defaultValue;
       }
     }
   }
