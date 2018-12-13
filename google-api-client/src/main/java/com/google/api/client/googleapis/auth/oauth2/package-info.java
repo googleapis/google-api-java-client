@@ -19,7 +19,7 @@
  *
  * <p>
  * Before using this library, you must register your application at the <a
- * href=" https://cloud.google.com/compute/docs/console">APIs Console</a>. The result of this
+ * href="https://cloud.google.com/compute/docs/console">APIs Console</a>. The result of this
  * registration process is a set of values that are known to both Google and your application, such
  * as the "Client ID", "Client Secret", and "Redirect URIs".
  * </p>
