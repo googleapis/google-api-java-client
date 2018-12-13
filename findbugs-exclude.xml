@@ -6,23 +6,18 @@
   <LastVersion value="-1" relOp="NEQ"/>
   <!-- The following have not yet been investigated -->
 
-  <!-- The following are known to be bugs and should be fixed -->
-  <And>
-    <Package name="com.google.api.client.googleapis.auth.clientlogin"/>
-  </And>
-
   <!-- The following are known to NOT be bugs and should not be fixed -->
   <And>
-    <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/> 
-    <!-- Class doesn't override equals in superclass -->   
+    <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
+    <!-- Class doesn't override equals in superclass -->
     <Class name="com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl"/>
   </And>
   <And>
-    <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>    
+    <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
     <Class name="com.google.api.client.googleapis.auth.oauth2.GoogleBrowserClientRequestUrl"/>
   </And>
   <And>
-    <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>    
+    <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
     <Class name="com.google.api.client.googleapis.GoogleUrl"/>
   </And>
   <And>
@@ -88,26 +83,26 @@
   <And>
     <Bug pattern="DM_STRING_CTOR"/>
     <!-- Method invokes inefficient new String(String) constructor -->
-    <Class name="com.google.api.client.googleapis.batch.BatchRequest"/>    
-  </And>  
+    <Class name="com.google.api.client.googleapis.batch.BatchRequest"/>
+  </And>
   <And>
     <Bug pattern="DM_STRING_CTOR"/>
     <!-- Method invokes inefficient new String(String) constructor -->
-    <Class name="com.google.api.client.googleapis.services.AbstractGoogleClient"/>    
-  </And>  
+    <Class name="com.google.api.client.googleapis.services.AbstractGoogleClient"/>
+  </And>
   <And>
     <Bug pattern="DM_STRING_CTOR"/>
     <!-- Method invokes inefficient new String(String) constructor -->
-    <Class name="com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential"/>    
-  </And>  
+    <Class name="com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential"/>
+  </And>
   <And>
     <Bug pattern="DM_STRING_CTOR"/>
     <!-- Method invokes inefficient new String(String) constructor -->
-    <Class name="com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential$RequestHandler"/>    
-  </And>  
+    <Class name="com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential$RequestHandler"/>
+  </And>
   <And>
     <Bug pattern="DM_STRING_CTOR"/>
     <!-- Method invokes inefficient new String(String) constructor -->
-    <Class name="com.google.api.client.googleapis.xml.atom.MultiKindFeedParser"/>    
-  </And>  
+    <Class name="com.google.api.client.googleapis.xml.atom.MultiKindFeedParser"/>
+  </And>
 </FindBugsFilter>
