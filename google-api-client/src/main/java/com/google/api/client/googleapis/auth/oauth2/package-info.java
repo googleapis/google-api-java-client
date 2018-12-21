@@ -14,7 +14,7 @@
 
 /**
  * Google's additions to OAuth 2.0 authorization as specified in <a
- * href="https://developers.google.com/identity/protocols/OAuth2?csw=1">Using OAuth 2.0 to Access Google
+ * href="https://developers.google.com/identity/protocols/OAuth2">Using OAuth 2.0 to Access Google
  * APIs</a>.
  *
  * <p>
@@ -45,7 +45,7 @@
  *
  * <p>
  * These are the typical steps of the the browser-based client flow specified in <a
- * href="https://developers.google.com/identity/protocols/OAuth2UserAgent?csw=1">Using OAuth 2.0 for
+ * href="https://developers.google.com/identity/protocols/OAuth2UserAgent">Using OAuth 2.0 for
  * Client-side Applications</a>:
  * <ul>
  * <li>Redirect the end user in the browser to the authorization page using
