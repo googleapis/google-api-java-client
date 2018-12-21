@@ -42,7 +42,7 @@ public class GoogleOAuthConstants {
 
   /**
    * Redirect URI to use for an installed application as specified in <a
-   * href="https://developers.google.com/identity/protocols/OAuth2InstalledApp?csw=1">Using OAuth 2.0 for
+   * href="https://developers.google.com/identity/protocols/OAuth2InstalledApp">Using OAuth 2.0 for
    * Mobile & Desktop Apps</a>.
    */
   public static final String OOB_REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
