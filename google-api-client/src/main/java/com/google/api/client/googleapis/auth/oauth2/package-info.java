@@ -26,7 +26,7 @@
  *
  * <p>
  * These are the typical steps of the web server flow based on an authorization code, as specified
- * in <a href="https://developers.google.com/identity/protocols/OAuth2WebServer?csw=1">Using OAuth 2.0 for
+ * in <a href="https://developers.google.com/identity/protocols/OAuth2WebServer">Using OAuth 2.0 for
  * Web Server Applications</a>:
  * <ul>
  * <li>Redirect the end user in the browser to the authorization page using
