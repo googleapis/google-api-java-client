@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * OAuth 2.0 client secrets JSON model as specified in <a
- * href="http://code.google.com/p/google-api-python-client/wiki/ClientSecrets">client_secrets.json
+ * href="https://developers.google.com/api-client-library/python/guide/aaa_client_secrets">client_secrets.json
  * file format</a>.
  *
  * <p>

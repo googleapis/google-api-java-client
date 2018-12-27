@@ -32,7 +32,7 @@ import java.io.IOException;
 /**
  * {@link Beta} <br/>
  * Client Login authentication method as described in <a
- * href="http://code.google.com/apis/accounts/docs/AuthForInstalledApps.html" >ClientLogin for
+ * href="https://developers.google.com/identity/protocols/AuthForInstalledApps" >ClientLogin for
  * Installed Applications</a>.
  *
  * @since 1.0

@@ -28,7 +28,7 @@ import java.util.List;
 
 /**
  * Data class representing the Google JSON error response content, as documented for example in <a
- * href="https://code.google.com/apis/urlshortener/v1/getting_started.html#errors">Error
+ * href="https://developers.google.com/url-shortener/v1/getting_started#errors">Error
  * responses</a>.
  *
  * @since 1.4
@@ -55,7 +55,7 @@ public class GoogleJsonError extends GenericJson {
 
   static {
     // hack to force ProGuard to consider ErrorInfo used, since otherwise it would be stripped out
-    // see http://code.google.com/p/google-api-java-client/issues/detail?id=527
+    // see https://github.com/googleapis/google-api-java-client/issues/527
     Data.nullOf(ErrorInfo.class);
   }
 

@@ -31,7 +31,7 @@ import java.io.OutputStream;
 /**
  * Media HTTP Downloader, with support for both direct and resumable media downloads. Documentation
  * is available <a
- * href='http://code.google.com/p/google-api-java-client/wiki/MediaDownload'>here</a>.
+ * href='https://developers.google.com/api-client-library/java/google-api-java-client/media-download'>here</a>.
  *
  * <p>
  * Implementation is not thread-safe.
