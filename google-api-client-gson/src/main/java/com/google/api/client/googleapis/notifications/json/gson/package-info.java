@@ -15,7 +15,7 @@
 /**
  * {@link com.google.api.client.util.Beta} <br/>
  * Notification channel handling based on the <a
- * href="http://code.google.com/p/google-gson/">GSON</a> JSON library.
+ * href="https://github.com/google/gson/">GSON</a> JSON library.
  *
  * @author Yaniv Inbar
  * @since 1.16

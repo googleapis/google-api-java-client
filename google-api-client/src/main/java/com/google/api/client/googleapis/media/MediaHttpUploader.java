@@ -291,7 +291,7 @@ public final class MediaHttpUploader {
 
   /**
    * Executes a direct media upload or resumable media upload conforming to the specifications
-   * listed <a href='http://code.google.com/apis/gdata/docs/resumable_upload.html'>here.</a>
+   * listed <a href='https://developers.google.com/api-client-library/java/google-api-java-client/media-upload'>here.</a>
    *
    * <p>
    * This method is not reentrant. A new instance of {@link MediaHttpUploader} must be instantiated
@@ -416,7 +416,7 @@ public final class MediaHttpUploader {
 
       if (isMediaLengthKnown()) {
         // TODO(rmistry): Support gzipping content for the case where media content length is
-        // known (https://code.google.com/p/google-api-java-client/issues/detail?id=691).
+        // known (https://github.com/googleapis/google-api-java-client/issues/691).
         response = executeCurrentRequestWithoutGZip(currentRequest);
       } else {
         response = executeCurrentRequest(currentRequest);

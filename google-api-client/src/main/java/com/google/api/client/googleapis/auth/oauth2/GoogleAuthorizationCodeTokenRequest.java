@@ -31,7 +31,7 @@ import java.util.Collection;
 /**
  * Google-specific implementation of the OAuth 2.0 request for an access token based on an
  * authorization code (as specified in <a
- * href="http://code.google.com/apis/accounts/docs/OAuth2WebServer.html">Using OAuth 2.0 for Web
+ * href="https://developers.google.com/identity/protocols/OAuth2WebServer">Using OAuth 2.0 for Web
  * Server Applications</a>).
  *
  * <p>

@@ -30,7 +30,7 @@ import java.io.IOException;
 /**
  * Exception thrown when an error status code is detected in an HTTP response to a Google API that
  * uses the JSON format, using the format specified in <a
- * href="http://code.google.com/apis/urlshortener/v1/getting_started.html#errors">Error
+ * href="https://developers.google.com/url-shortener/v1/getting_started?csw=1#errors">Error
  * Responses</a>.
  *
  * <p>

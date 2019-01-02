@@ -104,7 +104,7 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
 
   /**
    * @param clientSecrets OAuth 2.0 client secrets JSON model as specified in <a
-   *        href="http://code.google.com/p/google-api-python-client/wiki/ClientSecrets">
+   *        href="https://developers.google.com/api-client-library/python/guide/aaa_client_secrets">
    *        client_secrets.json file format</a>
    * @param redirectUri URI that the authorization server directs the resource owner's user-agent
    *        back to the client after a successful authorization grant

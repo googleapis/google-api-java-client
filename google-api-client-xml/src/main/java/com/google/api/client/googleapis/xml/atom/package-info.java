@@ -32,7 +32,7 @@
  *a
  * </code>, and an XML text content has an XPath name of <code>text()</code>. These are named based
  * on their usage with the <a
- * href="http://code.google.com/apis/gdata/docs/2.0/reference.html#PartialResponse">partial
+ * href="https://developers.google.com/gdata/docs/2.0/reference?csw=1#PartialUpdate">partial
  * response/update syntax</a> for Google API's. If the @{@link com.google.api.client.util.Key}
  * annotation is missing, the default is to use the Atom XML namespace and the Java field's name as
  * the local XML name. By default, the field name is used as the JSON key. Any unrecognized XML is
