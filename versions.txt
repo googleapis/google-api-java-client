@@ -3,4 +3,5 @@
 
 google-api-client:1.28.0:1.28.0
 google-http-client:1.28.0:1.28.0
+google-http-client-apache:2.0.0:2.0.0
 google-oauth-client:1.28.0:1.28.0
