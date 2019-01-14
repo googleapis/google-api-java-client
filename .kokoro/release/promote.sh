@@ -15,6 +15,12 @@
 
 set -eo pipefail
 
+# STAGING_REPOSITORY_ID must be set
+if [ -z "${STAGING_REPOSITORY_ID}" ]; then
+  echo "Missing STAGING_REPOSITORY_ID environment variable"
+  exit 1
+fi
+
 source $(dirname "$0")/common.sh
 
 pushd $(dirname "$0")/../../
@@ -22,4 +28,7 @@ pushd $(dirname "$0")/../../
 setup_environment_secrets
 create_settings_xml_file "settings.xml"
 
-mvn nexus-staging:release -DperformRelease=true --settings=settings.xml
+mvn nexus-staging:release -B \
+  -DperformRelease=true \
+  --settings=settings.xml \
+  -DstagingRepositoryId=${STAGING_REPOSITORY_ID}
