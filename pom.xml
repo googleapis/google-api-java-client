@@ -22,10 +22,6 @@
 
   <inceptionYear>2010</inceptionYear>
 
-  <prerequisites>
-    <maven>3.3.9</maven>
-  </prerequisites>
-
   <scm>
     <connection>scm:git:https://github.com/googleapis/google-api-java-client.git</connection>
     <developerConnection>scm:git:ssh:git@github.com:googleapis/google-api-java-client.git</developerConnection>
@@ -383,6 +379,25 @@
       </plugins>
     </pluginManagement>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M2</version><executions>
+        <execution>
+          <id>enforce-maven</id>
+          <goals>
+            <goal>enforce</goal>
+          </goals>
+          <configuration>
+            <rules>
+              <requireMavenVersion>
+                <version>[3.5.4,4.0.0)</version>
+              </requireMavenVersion>
+            </rules>
+          </configuration>
+        </execution>
+      </executions>
+      </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>

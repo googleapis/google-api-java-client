@@ -133,7 +133,7 @@ public class MockTokenServerTransport extends MockHttpTransport {
         GenericJson refreshContents = new GenericJson();
         refreshContents.setFactory(JSON_FACTORY);
         refreshContents.put("access_token", accessToken);
-        refreshContents.put("expires_in", 3600000);
+        refreshContents.put("expires_in", 3600);
         refreshContents.put("token_type", "Bearer");
         String refreshText  = refreshContents.toPrettyString();
 
