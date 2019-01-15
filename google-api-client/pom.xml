@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.google.api-client</groupId>
     <artifactId>google-api-client-parent</artifactId>
-    <version>1.27.1-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+    <version>1.28.0</version><!-- {x-version-update:google-api-client:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-api-client</artifactId>
@@ -99,6 +99,10 @@
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-jackson2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-apache</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
