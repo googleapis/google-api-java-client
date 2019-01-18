@@ -31,6 +31,9 @@
             <manifest>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
+            <manifestEntries>
+              <Automatic-Module-Name>google.api.client.appengine</Automatic-Module-Name>
+            </manifestEntries>
           </archive>
         </configuration>
       </plugin>
