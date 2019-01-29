@@ -23,8 +23,8 @@ import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Preconditions;
+import com.google.common.io.ByteStreams;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -243,7 +243,7 @@ public final class MediaHttpDownloader {
     // execute the request and copy into the output stream
     HttpResponse response = request.execute();
     try {
-      IOUtils.copy(response.getContent(), outputStream);
+      ByteStreams.copy(response.getContent(), outputStream);
     } finally {
       response.disconnect();
     }
