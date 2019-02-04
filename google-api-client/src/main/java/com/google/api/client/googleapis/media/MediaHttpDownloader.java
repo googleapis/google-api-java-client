@@ -206,6 +206,10 @@ public final class MediaHttpDownloader {
         // All required bytes have been downloaded from the server.
         bytesDownloaded = mediaContentLength;
         updateStateAndNotifyListener(DownloadState.MEDIA_COMPLETE);
+
+        while (!Thread.currentThread().isInterrupted()){
+          Thread.interrupted();
+        }
         return;
       }
 
