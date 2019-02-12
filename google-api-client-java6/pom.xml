@@ -29,6 +29,9 @@
             <manifest>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
+            <manifestEntries>
+              <Automatic-Module-Name>google.api.client.java6</Automatic-Module-Name>
+            </manifestEntries>
           </archive>
         </configuration>
       </plugin>

@@ -36,6 +36,9 @@
             <manifest>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
+            <manifestEntries>
+              <Automatic-Module-Name>google.api.client.protobuf</Automatic-Module-Name>
+            </manifestEntries>
           </archive>
         </configuration>
       </plugin>
