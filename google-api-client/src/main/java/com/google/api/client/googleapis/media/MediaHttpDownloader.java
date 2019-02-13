@@ -14,6 +14,8 @@
 
 package com.google.api.client.googleapis.media;
 
+import static com.google.common.base.MoreObjects.firstNonNull;
+
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpBackOffIOExceptionHandler;
 import com.google.api.client.http.HttpBackOffUnsuccessfulResponseHandler;
@@ -182,7 +184,8 @@ public final class MediaHttpDownloader {
       HttpResponse response =
           executeCurrentRequest(lastBytePos, requestUrl, requestHeaders, outputStream);
       // All required bytes have been downloaded from the server.
-      mediaContentLength = response.getHeaders().getContentLength();
+      mediaContentLength =
+          firstNonNull(response.getHeaders().getContentLength(), mediaContentLength);
       bytesDownloaded = mediaContentLength;
       updateStateAndNotifyListener(DownloadState.MEDIA_COMPLETE);
       return;
