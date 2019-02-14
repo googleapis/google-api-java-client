@@ -195,7 +195,7 @@ public final class MediaHttpDownloader {
     while (true) {
       long currentRequestLastBytePos = bytesDownloaded + chunkSize - 1;
       if (lastBytePos != -1) {
-        // If last byte position has been specified use it iff it is smaller than the chunksize.
+        // If last byte position has been specified use it if it is smaller than the chunk size.
         currentRequestLastBytePos = Math.min(lastBytePos, currentRequestLastBytePos);
       }
       HttpResponse response = executeCurrentRequest(
@@ -204,6 +204,13 @@ public final class MediaHttpDownloader {
       String contentRange = response.getHeaders().getContentRange();
       long nextByteIndex = getNextByteIndex(contentRange);
       setMediaContentLength(contentRange);
+      // If last byte position specified then complete when less than nextByteIndex.
+      if (lastBytePos != -1 && lastBytePos < nextByteIndex) {
+        // All required bytes from the range have been downloaded from the server.
+        bytesDownloaded = nextByteIndex - 1;
+        updateStateAndNotifyListener(DownloadState.MEDIA_COMPLETE);
+        return;
+      }
 
       if (mediaContentLength <= nextByteIndex) {
         // All required bytes have been downloaded from the server.
