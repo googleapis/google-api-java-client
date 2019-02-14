@@ -109,7 +109,12 @@ public class MediaHttpDownloaderTest extends TestCase {
           }
 
           response.setStatusCode(206);
-          int upper = Math.min(bytesDownloaded + TEST_CHUNK_SIZE, contentLength) - 1;
+          int upper;
+          if (lastBytePos != -1) {
+            upper = Math.min(lastBytePos, contentLength) - 1;
+          } else {
+            upper = Math.min(bytesDownloaded + TEST_CHUNK_SIZE, contentLength) - 1;
+          }
           response.addHeader(
               "Content-Range", "bytes " + bytesDownloaded + "-" + upper + "/" + contentLength);
           int bytesDownloadedCur = upper - bytesDownloaded + 1;
@@ -372,6 +377,40 @@ public class MediaHttpDownloaderTest extends TestCase {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
     assertEquals(10000, outputStream.size());
+
+    // There should be 1 download call made.
+    assertEquals(1, fakeTransport.lowLevelExecCalls);
+  }
+
+  public void testSetContentRangeFromStartWithResumableDownload() throws Exception {
+    MediaTransport fakeTransport = new MediaTransport(MediaHttpDownloader.MAXIMUM_CHUNK_SIZE);
+    fakeTransport.bytesDownloaded = 0;
+    fakeTransport.lastBytePos = 1024;
+
+    MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
+    downloader.setContentRange(0, 1024);
+
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
+    assertEquals(1024, downloader.getLastBytePosition());
+    assertEquals(1024, outputStream.size());
+
+    // There should be 1 download call made.
+    assertEquals(1, fakeTransport.lowLevelExecCalls);
+  }
+
+  public void testSetContentRangeFromMiddletWithResumableDownload() throws Exception {
+    MediaTransport fakeTransport = new MediaTransport(MediaHttpDownloader.MAXIMUM_CHUNK_SIZE);
+    fakeTransport.bytesDownloaded = 512;
+    fakeTransport.lastBytePos = 1024;
+
+    MediaHttpDownloader downloader = new MediaHttpDownloader(fakeTransport, null);
+    downloader.setContentRange(512, 1024);
+
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    downloader.download(new GenericUrl(TEST_REQUEST_URL), outputStream);
+    assertEquals(1024, downloader.getLastBytePosition());
+    assertEquals(512, outputStream.size());
 
     // There should be 1 download call made.
     assertEquals(1, fakeTransport.lowLevelExecCalls);

@@ -205,9 +205,9 @@ public final class MediaHttpDownloader {
       long nextByteIndex = getNextByteIndex(contentRange);
       setMediaContentLength(contentRange);
       // If last byte position specified then complete when less than nextByteIndex.
-      if (lastBytePos != -1 && lastBytePos < nextByteIndex) {
+      if (lastBytePos != -1 && lastBytePos <= nextByteIndex) {
         // All required bytes from the range have been downloaded from the server.
-        bytesDownloaded = nextByteIndex - 1;
+        bytesDownloaded = lastBytePos;
         updateStateAndNotifyListener(DownloadState.MEDIA_COMPLETE);
         return;
       }
