@@ -301,8 +301,8 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
     }
 
     @Override
-    public boolean handleResponse(
-        HttpRequest request, HttpResponse response, boolean supportsRetry) {
+    public boolean handleResponse(HttpRequest request, HttpResponse response, boolean supportsRetry)
+        throws IOException {
       try {
         if (response.getStatusCode() == 401 && !received401) {
           received401 = true;
@@ -310,9 +310,7 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
           return true;
         }
       } catch (GoogleAuthException e) {
-        e.printStackTrace();
-      } catch (IOException e) {
-        e.printStackTrace();
+        throw new GoogleAuthIOException(e);
       }
       return false;
     }
