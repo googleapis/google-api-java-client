@@ -303,10 +303,16 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
     @Override
     public boolean handleResponse(
         HttpRequest request, HttpResponse response, boolean supportsRetry) {
-      if (response.getStatusCode() == 401 && !received401) {
-        received401 = true;
-        GoogleAuthUtil.invalidateToken(context, token);
-        return true;
+      try {
+        if (response.getStatusCode() == 401 && !received401) {
+          received401 = true;
+          GoogleAuthUtil.clearToken(context, token);
+          return true;
+        }
+      } catch (GoogleAuthException e) {
+        e.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
       }
       return false;
     }
