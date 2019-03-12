@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Google Inc.
+ * Copyright 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -15,7 +15,6 @@
 package com.google.api.client.googleapis.batch;
 
 import com.google.api.client.googleapis.batch.BatchRequest.RequestInfo;
-import com.google.api.client.http.BackOffPolicy;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
@@ -42,7 +41,6 @@ import java.util.List;
  *
  * @author rmistry@google.com (Ravi Mistry)
  */
-@SuppressWarnings("deprecation")
 final class BatchUnparsedResponse {
 
   /** The boundary used in the batch response to separate individual responses. */
@@ -59,9 +57,6 @@ final class BatchUnparsedResponse {
 
   /** List of unsuccessful HTTP requests that can be retried. */
   List<RequestInfo<?, ?>> unsuccessfulRequestInfos = new ArrayList<RequestInfo<?, ?>>();
-
-  /** Indicates if back off is required before the next retry. */
-  boolean backOffRequired;
 
   /** The content Id the response is currently at. */
   private int contentId = 0;
@@ -183,10 +178,6 @@ final class BatchUnparsedResponse {
     HttpHeaders responseHeaders = response.getHeaders();
     HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler =
         requestInfo.request.getUnsuccessfulResponseHandler();
-    BackOffPolicy backOffPolicy = requestInfo.request.getBackOffPolicy();
-
-    // Reset backOff flag.
-    backOffRequired = false;
 
     if (HttpStatusCodes.isSuccess(statusCode)) {
       if (callback == null) {
@@ -207,12 +198,9 @@ final class BatchUnparsedResponse {
       if (!errorHandled) {
         if (requestInfo.request.handleRedirect(response.getStatusCode(), response.getHeaders())) {
           redirectRequest = true;
-        } else if (retrySupported && backOffPolicy != null
-            && backOffPolicy.isBackOffRequired(response.getStatusCode())) {
-          backOffRequired = true;
         }
       }
-      if (retrySupported && (errorHandled || backOffRequired || redirectRequest)) {
+      if (retrySupported && (errorHandled || redirectRequest)) {
         unsuccessfulRequestInfos.add(requestInfo);
       } else {
         if (callback == null) {

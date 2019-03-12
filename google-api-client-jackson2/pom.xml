@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.google.api-client</groupId>
     <artifactId>google-api-client-parent</artifactId>
-    <version>1.26.0-SNAPSHOT</version>
+    <version>1.28.1-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-api-client-jackson2</artifactId>
@@ -15,8 +15,8 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <links>
-            <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
-            <link>http://javadoc.google-http-java-client.googlecode.com/hg/${project.http.version}</link>
+            <link>http://download.oracle.com/javase/7/docs/api/</link>
+            <link>https://googleapis.github.io/google-http-java-client/releases/${project.http.version}/javadoc/</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
@@ -29,17 +29,11 @@
             <manifest>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
+            <manifestEntries>
+              <Automatic-Module-Name>google.api.client.jackson2</Automatic-Module-Name>
+            </manifestEntries>
           </archive>
         </configuration>
-        <executions>
-          <execution>
-            <id>jar</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>   
         <groupId>org.apache.felix</groupId>
@@ -56,7 +50,7 @@
         </executions>
         <configuration>
           <instructions>
-            <Bundle-DocURL>https://developers.google.com/api-client-library/java/google-http-java-client/reference/1.20.0/jdiff/Google_HTTP_Client_Library_for_Java_1.19.0/com/google/api/client/json/jackson2/package-summary</Bundle-DocURL>
+            <Bundle-DocURL>https://developers.google.com/api-client-library/java/google-http-java-client/reference/1.26.0-android/jdiff/Google_HTTP_Client_Library_for_Java_1.19.0/com/google/api/client/json/jackson2/package-summary</Bundle-DocURL>
             <Bundle-Description>Low-level implementation of the JSON parser library based on the Jackson 2 JSON library.</Bundle-Description>
             <Bundle-SymbolicName>com.google.api.client.jackson2</Bundle-SymbolicName>
           </instructions>

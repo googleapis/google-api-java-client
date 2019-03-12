@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Google Inc.
+ * Copyright 2011 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -246,7 +246,7 @@ public final class MediaHttpUploader {
   /**
    * The content buffer of the current request or {@code null} for none. It is used for resumable
    * media upload when the media content length is not specified. It is instantiated for every
-   * request in {@link #setContentAndHeadersOnCurrentRequest} and is set to {@code null} when the
+   * request in {@link #buildContentChunk()} and is set to {@code null} when the
    * request is completed in {@link #upload}.
    */
   private byte currentRequestContentBuffer[];
@@ -291,7 +291,7 @@ public final class MediaHttpUploader {
 
   /**
    * Executes a direct media upload or resumable media upload conforming to the specifications
-   * listed <a href='http://code.google.com/apis/gdata/docs/resumable_upload.html'>here.</a>
+   * listed <a href='https://developers.google.com/api-client-library/java/google-api-java-client/media-upload'>here.</a>
    *
    * <p>
    * This method is not reentrant. A new instance of {@link MediaHttpUploader} must be instantiated
@@ -405,15 +405,18 @@ public final class MediaHttpUploader {
     HttpResponse response;
     // Upload the media content in chunks.
     while (true) {
+      ContentChunk contentChunk = buildContentChunk();
       currentRequest = requestFactory.buildPutRequest(uploadUrl, null);
-      setContentAndHeadersOnCurrentRequest();
+      currentRequest.setContent(contentChunk.getContent());
+      currentRequest.getHeaders().setContentRange(contentChunk.getContentRange());
+
       // set mediaErrorHandler as I/O exception handler and as unsuccessful response handler for
       // calling to serverErrorCallback on an I/O exception or an abnormal HTTP response
       new MediaUploadErrorHandler(this, currentRequest);
 
       if (isMediaLengthKnown()) {
         // TODO(rmistry): Support gzipping content for the case where media content length is
-        // known (https://code.google.com/p/google-api-java-client/issues/detail?id=691).
+        // known (https://github.com/googleapis/google-api-java-client/issues/691).
         response = executeCurrentRequestWithoutGZip(currentRequest);
       } else {
         response = executeCurrentRequest(currentRequest);
@@ -567,7 +570,7 @@ public final class MediaHttpUploader {
    * Sets the HTTP media content chunk and the required headers that should be used in the upload
    * request.
    */
-  private void setContentAndHeadersOnCurrentRequest() throws IOException {
+  private ContentChunk buildContentChunk() throws IOException {
     int blockSize;
     if (isMediaLengthKnown()) {
       // We know exactly what the blockSize will be because we know the media content length.
@@ -652,15 +655,35 @@ public final class MediaHttpUploader {
     }
 
     currentChunkLength = actualBlockSize;
-    currentRequest.setContent(contentChunk);
+
+    String contentRange;
     if (actualBlockSize == 0) {
       // No bytes to upload. Either zero content media being uploaded, or a server failure on the
       // last write, even though the write actually succeeded. Either way,
       // mediaContentLengthStr will contain the actual media length.
-      currentRequest.getHeaders().setContentRange("bytes */" + mediaContentLengthStr);
+      contentRange = "bytes */" + mediaContentLengthStr;
     } else {
-      currentRequest.getHeaders().setContentRange("bytes " + totalBytesServerReceived + "-"
-          + (totalBytesServerReceived + actualBlockSize - 1) + "/" + mediaContentLengthStr);
+      contentRange = "bytes " + totalBytesServerReceived + "-"
+              + (totalBytesServerReceived + actualBlockSize - 1) + "/" + mediaContentLengthStr;
+    }
+    return new ContentChunk(contentChunk, contentRange);
+  }
+
+  private static class ContentChunk {
+    private final AbstractInputStreamContent content;
+    private final String contentRange;
+
+    ContentChunk(AbstractInputStreamContent content, String contentRange) {
+      this.content = content;
+      this.contentRange = contentRange;
+    }
+
+    AbstractInputStreamContent getContent() {
+      return content;
+    }
+
+    String getContentRange() {
+      return contentRange;
     }
   }
 

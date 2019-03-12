@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Google Inc.
+ * Copyright 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,6 +14,8 @@
 
 package com.google.api.client.googleapis.media;
 
+import static com.google.common.base.MoreObjects.firstNonNull;
+
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpBackOffIOExceptionHandler;
 import com.google.api.client.http.HttpBackOffUnsuccessfulResponseHandler;
@@ -23,15 +25,15 @@ import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Preconditions;
+import com.google.common.io.ByteStreams;
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
  * Media HTTP Downloader, with support for both direct and resumable media downloads. Documentation
  * is available <a
- * href='http://code.google.com/p/google-api-java-client/wiki/MediaDownload'>here</a>.
+ * href='https://developers.google.com/api-client-library/java/google-api-java-client/media-download'>here</a>.
  *
  * <p>
  * Implementation is not thread-safe.
@@ -182,7 +184,8 @@ public final class MediaHttpDownloader {
       HttpResponse response =
           executeCurrentRequest(lastBytePos, requestUrl, requestHeaders, outputStream);
       // All required bytes have been downloaded from the server.
-      mediaContentLength = response.getHeaders().getContentLength();
+      mediaContentLength =
+          firstNonNull(response.getHeaders().getContentLength(), mediaContentLength);
       bytesDownloaded = mediaContentLength;
       updateStateAndNotifyListener(DownloadState.MEDIA_COMPLETE);
       return;
@@ -192,7 +195,7 @@ public final class MediaHttpDownloader {
     while (true) {
       long currentRequestLastBytePos = bytesDownloaded + chunkSize - 1;
       if (lastBytePos != -1) {
-        // If last byte position has been specified use it iff it is smaller than the chunksize.
+        // If last byte position has been specified, use it iff it is smaller than the chunk size.
         currentRequestLastBytePos = Math.min(lastBytePos, currentRequestLastBytePos);
       }
       HttpResponse response = executeCurrentRequest(
@@ -201,6 +204,14 @@ public final class MediaHttpDownloader {
       String contentRange = response.getHeaders().getContentRange();
       long nextByteIndex = getNextByteIndex(contentRange);
       setMediaContentLength(contentRange);
+      // If the last byte position is specified, complete the download when it is less than
+      // nextByteIndex.
+      if (lastBytePos != -1 && lastBytePos <= nextByteIndex) {
+        // All required bytes from the range have been downloaded from the server.
+        bytesDownloaded = lastBytePos;
+        updateStateAndNotifyListener(DownloadState.MEDIA_COMPLETE);
+        return;
+      }
 
       if (mediaContentLength <= nextByteIndex) {
         // All required bytes have been downloaded from the server.
@@ -243,7 +254,7 @@ public final class MediaHttpDownloader {
     // execute the request and copy into the output stream
     HttpResponse response = request.execute();
     try {
-      IOUtils.copy(response.getContent(), outputStream);
+      ByteStreams.copy(response.getContent(), outputStream);
     } finally {
       response.disconnect();
     }

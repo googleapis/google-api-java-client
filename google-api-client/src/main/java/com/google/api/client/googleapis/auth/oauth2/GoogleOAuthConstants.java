@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Google Inc.
+ * Copyright 2011 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -42,8 +42,8 @@ public class GoogleOAuthConstants {
 
   /**
    * Redirect URI to use for an installed application as specified in <a
-   * href="http://code.google.com/apis/accounts/docs/OAuth2InstalledApp.html">Using OAuth 2.0 for
-   * Installed Applications</a>.
+   * href="https://developers.google.com/identity/protocols/OAuth2InstalledApp">Using OAuth 2.0 for
+   * Mobile & Desktop Apps</a>.
    */
   public static final String OOB_REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
 

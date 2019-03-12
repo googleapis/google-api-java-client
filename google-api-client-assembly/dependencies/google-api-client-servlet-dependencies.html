@@ -25,7 +25,7 @@
         
                 <div class="xleft">
         <span id="publishDate">Last Published: 2018-08-20</span>
-                  &nbsp;| <span id="projectVersion">Version: 1.26.0-SNAPSHOT</span>
+                  &nbsp;| <span id="projectVersion">Version: ${project.version}</span>
                       </div>
             <div class="xright">        
         
@@ -63,13 +63,13 @@
 <tr class="b">
 <td>com.google.api-client</td>
 <td><a class="externalLink" href="https://github.com/google/google-api-java-client/google-api-client">google-api-client</a></td>
-<td>1.26.0-SNAPSHOT</td>
+<td>${project.version}</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
 <tr class="a">
 <td>com.google.oauth-client</td>
 <td><a class="externalLink" href="https://github.com/google/google-oauth-java-client/google-oauth-client-servlet">google-oauth-client-servlet</a></td>
-<td>1.26.0-SNAPSHOT</td>
+<td>${project.oauth.version}</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
 <tr class="b">
@@ -128,25 +128,25 @@
 <tr class="b">
 <td>com.google.guava</td>
 <td><a class="externalLink" href="https://github.com/google/guava/guava">guava</a></td>
-<td>20.0</td>
+<td>26.0-android</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
 <tr class="a">
 <td>com.google.http-client</td>
 <td><a class="externalLink" href="https://github.com/google/google-http-java-client/google-http-client">google-http-client</a></td>
-<td>1.26.0-SNAPSHOT</td>
+<td>${project.http.version}</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
 <tr class="b">
 <td>com.google.http-client</td>
 <td><a class="externalLink" href="https://github.com/google/google-http-java-client/google-http-client-jackson2">google-http-client-jackson2</a></td>
-<td>1.26.0-SNAPSHOT</td>
+<td>${project.http.version}</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
 <tr class="a">
 <td>com.google.http-client</td>
 <td><a class="externalLink" href="https://github.com/google/google-http-java-client/google-http-client-jdo">google-http-client-jdo</a></td>
-<td>1.26.0-SNAPSHOT</td>
+<td>${project.http.version}</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
 <tr class="b">
@@ -158,7 +158,7 @@
 <tr class="a">
 <td>com.google.oauth-client</td>
 <td><a class="externalLink" href="https://github.com/google/google-oauth-java-client/google-oauth-client">google-oauth-client</a></td>
-<td>1.26.0-SNAPSHOT</td>
+<td>${project.oauth.version}</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
 <tr class="b">
@@ -213,7 +213,7 @@
 <div class="section">
 <h3>Dependency Tree<a name="Dependency_Tree"></a></h3>
 <ul>
-<li>com.google.api-client:google-api-client-servlet:jar:1.26.0-SNAPSHOT <img id="_img1" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep0', '_img1' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep0" style="display:none">
+<li>com.google.api-client:google-api-client-servlet:jar:${project.version} <img id="_img1" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep0', '_img1' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep0" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>Servlet and JDO extensions to the Google API Client Library for Java.</th></tr>
@@ -223,7 +223,7 @@
 <p><b>URL: </b><a class="externalLink" href="https://github.com/google/google-api-java-client/google-api-client-servlet">https://github.com/google/google-api-java-client/google-api-client-servlet</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div>
 <ul>
-<li>com.google.oauth-client:google-oauth-client-servlet:jar:1.26.0-SNAPSHOT (compile) <img id="_img3" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep2', '_img3' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep2" style="display:none">
+<li>com.google.oauth-client:google-oauth-client-servlet:jar:${project.oauth.version} (compile) <img id="_img3" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep2', '_img3' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep2" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>Servlet and JDO extensions to the Google OAuth Client Library for Java.</th></tr>
@@ -233,7 +233,7 @@
 <p><b>URL: </b><a class="externalLink" href="https://github.com/google/google-oauth-java-client/google-oauth-client-servlet">https://github.com/google/google-oauth-java-client/google-oauth-client-servlet</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div>
 <ul>
-<li>com.google.oauth-client:google-oauth-client:jar:1.26.0-SNAPSHOT (compile) <img id="_img5" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep4', '_img5' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep4" style="display:none">
+<li>com.google.oauth-client:google-oauth-client:jar:${project.oauth.version} (compile) <img id="_img5" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep4', '_img5' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep4" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>Google OAuth Client Library for Java</th></tr>
@@ -244,7 +244,7 @@
 <p><b>URL: </b><a class="externalLink" href="https://github.com/google/google-oauth-java-client/google-oauth-client">https://github.com/google/google-oauth-java-client/google-oauth-client</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div>
 <ul>
-<li>com.google.http-client:google-http-client:jar:1.26.0-SNAPSHOT (compile) <img id="_img7" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep6', '_img7' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep6" style="display:none">
+<li>com.google.http-client:google-http-client:jar:${project.http.version} (compile) <img id="_img7" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep6', '_img7' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep6" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>Google HTTP Client Library for Java</th></tr>
@@ -315,7 +315,7 @@
 <p><b>Description: </b>JSR305 Annotations for Findbugs</p>
 <p><b>URL: </b><a class="externalLink" href="http://findbugs.sourceforge.net/">http://findbugs.sourceforge.net/</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div></li></ul></li>
-<li>com.google.http-client:google-http-client-jdo:jar:1.26.0-SNAPSHOT (compile) <img id="_img21" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep20', '_img21' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep20" style="display:none">
+<li>com.google.http-client:google-http-client-jdo:jar:${project.http.version} (compile) <img id="_img21" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep20', '_img21' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep20" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>JDO extensions to the Google HTTP Client Library for Java.</th></tr>
@@ -324,7 +324,7 @@
 <p><b>Description: </b>Sonatype helps open source projects to set up Maven repositories on https://oss.sonatype.org/</p>
 <p><b>URL: </b><a class="externalLink" href="https://github.com/google/google-http-java-client/google-http-client-jdo">https://github.com/google/google-http-java-client/google-http-client-jdo</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div></li></ul></li>
-<li>com.google.api-client:google-api-client:jar:1.26.0-SNAPSHOT (compile) <img id="_img23" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep22', '_img23' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep22" style="display:none">
+<li>com.google.api-client:google-api-client:jar:${project.version} (compile) <img id="_img23" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep22', '_img23' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep22" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>Google APIs Client Library for Java</th></tr>
@@ -334,7 +334,7 @@
 <p><b>URL: </b><a class="externalLink" href="https://github.com/google/google-api-java-client/google-api-client">https://github.com/google/google-api-java-client/google-api-client</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div>
 <ul>
-<li>com.google.http-client:google-http-client-jackson2:jar:1.26.0-SNAPSHOT (compile) <img id="_img25" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep24', '_img25' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep24" style="display:none">
+<li>com.google.http-client:google-http-client-jackson2:jar:${project.http.version} (compile) <img id="_img25" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep24', '_img25' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep24" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>Jackson 2 extensions to the Google HTTP Client Library for Java.</th></tr>
@@ -353,7 +353,7 @@
 <p><b>Description: </b>Core Jackson processing abstractions (aka Streaming API), implementation for JSON</p>
 <p><b>URL: </b><a class="externalLink" href="https://github.com/FasterXML/jackson-core">https://github.com/FasterXML/jackson-core</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div></li></ul></li>
-<li>com.google.guava:guava:jar:20.0 (compile) <img id="_img29" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep28', '_img29' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep28" style="display:none">
+<li>com.google.guava:guava:jar:26.0-android (compile) <img id="_img29" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep28', '_img29' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep28" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>Guava: Google Core Libraries for Java</th></tr>
@@ -429,7 +429,7 @@
 <td>1.6</td>
 <td>debug</td></tr>
 <tr class="a">
-<td>google-api-client-1.26.0-SNAPSHOT.jar</td>
+<td>google-api-client-${project.version}.jar</td>
 <td>199.67 kB</td>
 <td>141</td>
 <td>110</td>
@@ -445,7 +445,7 @@
 <td>1.5</td>
 <td>debug</td></tr>
 <tr class="a">
-<td>guava-20.0.jar</td>
+<td>guava-26.0-android.jar</td>
 <td>2.33 MB</td>
 <td>1,844</td>
 <td>1,814</td>
@@ -453,7 +453,7 @@
 <td>1.6</td>
 <td>debug</td></tr>
 <tr class="b">
-<td>google-http-client-1.26.0-SNAPSHOT.jar</td>
+<td>google-http-client-${project.http.version}.jar</td>
 <td>261.81 kB</td>
 <td>223</td>
 <td>200</td>
@@ -461,7 +461,7 @@
 <td>1.6</td>
 <td>debug</td></tr>
 <tr class="a">
-<td>google-http-client-jackson2-1.26.0-SNAPSHOT.jar</td>
+<td>google-http-client-jackson2-${project.http.version}.jar</td>
 <td>6.58 kB</td>
 <td>13</td>
 <td>5</td>
@@ -469,7 +469,7 @@
 <td>1.6</td>
 <td>debug</td></tr>
 <tr class="b">
-<td>google-http-client-jdo-1.26.0-SNAPSHOT.jar</td>
+<td>google-http-client-jdo-${project.http.version}.jar</td>
 <td>8.08 kB</td>
 <td>13</td>
 <td>5</td>
@@ -485,7 +485,7 @@
 <td>1.5</td>
 <td>debug</td></tr>
 <tr class="b">
-<td>google-oauth-client-1.26.0-SNAPSHOT.jar</td>
+<td>google-oauth-client-${project.oauth.version}.jar</td>
 <td>61.64 kB</td>
 <td>57</td>
 <td>47</td>
@@ -493,7 +493,7 @@
 <td>1.6</td>
 <td>debug</td></tr>
 <tr class="a">
-<td>google-oauth-client-servlet-1.26.0-SNAPSHOT.jar</td>
+<td>google-oauth-client-servlet-${project.oauth.version}.jar</td>
 <td>22.92 kB</td>
 <td>24</td>
 <td>11</td>
@@ -632,7 +632,7 @@
 <td>-</td>
 <td>-</td></tr>
 <tr class="a">
-<td>com.google.api-client:google-api-client:jar:1.26.0-SNAPSHOT</td>
+<td>com.google.api-client:google-api-client:jar:${project.version}</td>
 <td>-</td>
 <td>-</td>
 <td>-</td></tr>
@@ -642,22 +642,22 @@
 <td>-</td>
 <td>-</td></tr>
 <tr class="a">
-<td>com.google.guava:guava:jar:20.0</td>
+<td>com.google.guava:guava:jar:26.0-android</td>
 <td>-</td>
 <td>-</td>
 <td>-</td></tr>
 <tr class="b">
-<td>com.google.http-client:google-http-client:jar:1.26.0-SNAPSHOT</td>
+<td>com.google.http-client:google-http-client:jar:${project.http.version}</td>
 <td>-</td>
 <td>-</td>
 <td>-</td></tr>
 <tr class="a">
-<td>com.google.http-client:google-http-client-jackson2:jar:1.26.0-SNAPSHOT</td>
+<td>com.google.http-client:google-http-client-jackson2:jar:${project.http.version}</td>
 <td>-</td>
 <td>-</td>
 <td>-</td></tr>
 <tr class="b">
-<td>com.google.http-client:google-http-client-jdo:jar:1.26.0-SNAPSHOT</td>
+<td>com.google.http-client:google-http-client-jdo:jar:${project.http.version}</td>
 <td>-</td>
 <td>-</td>
 <td>-</td></tr>
@@ -667,12 +667,12 @@
 <td>-</td>
 <td>-</td></tr>
 <tr class="b">
-<td>com.google.oauth-client:google-oauth-client:jar:1.26.0-SNAPSHOT</td>
+<td>com.google.oauth-client:google-oauth-client:jar:${project.oauth.version}</td>
 <td>-</td>
 <td>-</td>
 <td>-</td></tr>
 <tr class="a">
-<td>com.google.oauth-client:google-oauth-client-servlet:jar:1.26.0-SNAPSHOT</td>
+<td>com.google.oauth-client:google-oauth-client-servlet:jar:${project.oauth.version}</td>
 <td>-</td>
 <td>-</td>
 <td>-</td></tr>

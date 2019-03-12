@@ -1,6 +1,6 @@
 # Google APIs Client Library for Java
 
-- [Library maintenance](#maintenance)
+- [Library Maintenance](#maintenance)
 - [Overview](#Overview)
 - [Highlighted Features](#Highlighted_Features)
 - [Dependencies](#Dependencies)
@@ -10,8 +10,8 @@
 - [Documentation](#Documentation)
 - [Links](#Links)
 
-## Library maintenance
-These client libraries are official supported by Google. However, these libraries are considered complete and are in maintenance mode. This means that we will address critical bugs and security issues but will not add any new features. If you're working with **Google Cloud Platform** APIs such as Datastore, Pub/Sub and many others,
+## Library Maintenance
+These client libraries are officially supported by Google. However, these libraries are considered complete and are in maintenance mode. This means that we will address critical bugs and security issues, but will not add any new features. If you're working with **Google Cloud Platform** APIs such as Datastore, Pub/Sub and many others,
 consider using the [Cloud Client Libraries for Java](https://github.com/GoogleCloudPlatform/google-cloud-java)
 instead. These are the new and idiomatic Java libraries targeted specifically at Google Cloud
 Platform Services.
@@ -81,10 +81,9 @@ If you are using the old GData library, you need to
 ### Developing for Android
 
 If you are developing for Android and the Google API you want to use is included in the
-[Google Play Services library](https://developer.android.com/google/play-services/index.html), you
-should use that library for the best performance and experience.
+[Google Play Services library](https://developer.android.com/google/play-services/index.html), use that library for the best performance and experience.
 
-To access other Google APIs, you can use the Google APIs Client Library for Java, which supports
+To access other Google APIs, use the Google APIs Client Library for Java, which supports
 [Android 4.0 (Ice Cream Sandwich) (or higher)](https://developers.google.com/api-client-library/java/google-api-java-client/android).
 
 ### Other Java environments
@@ -160,10 +159,10 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IO
 
 If you are developing for Android and the Google API you want to use is included in the
 [Google Play Services library](https://developer.android.com/google/play-services/index.html),
-you should use that library for the best performance and experience.
+use that library for the best performance and experience.
 
-To access other Google APIs, you can use the Google Client Library for Java's Android-specific
-helper classes, which are are well-integrated with
+To access other Google APIs, use the Google Client Library for Java's Android-specific
+helper classes, which are well-integrated with
 [Android AccountManager](http://developer.android.com/reference/android/accounts/AccountManager.html).
 For example:
 
@@ -190,6 +189,7 @@ directly from the [Downloads page](https://developers.google.com/api-client-libr
 or you can use Maven or Gradle.
 
 To use Maven, add the following lines to your pom.xml file:
+[//]: # ({x-version-update-start:google-api-client:released})
 
   ```maven
   <project>
@@ -197,7 +197,7 @@ To use Maven, add the following lines to your pom.xml file:
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client</artifactId>
-        <version>1.25.0</version>
+        <version>1.28.0</version>
       </dependency>
     </dependencies>
   </project>
@@ -210,9 +210,18 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile 'com.google.api-client:google-api-client:1.25.0'
+    compile 'com.google.api-client:google-api-client:1.28.0'
 }
 ```
+[//]: # ({x-version-update-end})
+
+## CI Status
+
+Java Version | Status
+------------ | ------
+Java 7 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java7.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java7.html)
+Java 8 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java8.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java8.html)
+Java 11 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java11.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java11.html)
 
 ## Dependencies
 This library is built on top of two common libraries, also built by Google, and also designed to
@@ -245,6 +254,17 @@ might result, and you are not guaranteed a compilation error.
 
 ## Links
 
-- [Clients Announcements](http://google-api-java-client.blogspot.com/)
 - [API Announcements](http://googledevelopers.blogspot.com/)
 - [Discuss](https://groups.google.com/forum/#!forum/google-api-java-client)
+
+## Notice: Ending Java 6 Support
+
+Please note: since Java 6 extended support is being ended this December by Oracle, we will begin
+ending Java 6 support in early 2019, with release 1.28.0 as a tentative goal. Users may still
+use these libraries in Java 6 projects for some time, but going forward we will not ensure that
+these libraries work in such an environment. After 1.28.0, our supported versions will include Java
+7 and onward.
+
+For Android users, we will continue our 4.0 support.
+
+For questions or concerns, please file an issue in the GitHub repository.

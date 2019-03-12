@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright 2010 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -32,7 +32,7 @@
  *a
  * </code>, and an XML text content has an XPath name of <code>text()</code>. These are named based
  * on their usage with the <a
- * href="http://code.google.com/apis/gdata/docs/2.0/reference.html#PartialResponse">partial
+ * href="https://developers.google.com/gdata/docs/2.0/reference?csw=1#PartialUpdate">partial
  * response/update syntax</a> for Google API's. If the @{@link com.google.api.client.util.Key}
  * annotation is missing, the default is to use the Atom XML namespace and the Java field's name as
  * the local XML name. By default, the field name is used as the JSON key. Any unrecognized XML is

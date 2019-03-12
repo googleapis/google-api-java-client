@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Google Inc.
+ * Copyright 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,7 +14,6 @@
 
 package com.google.api.client.googleapis.batch;
 
-import com.google.api.client.http.BackOffPolicy;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpBackOffUnsuccessfulResponseHandler;
 import com.google.api.client.http.HttpExecuteInterceptor;
@@ -93,7 +92,6 @@ import java.util.List;
  * @since 1.9
  * @author rmistry@google.com (Ravi Mistry)
  */
-@SuppressWarnings("deprecation")
 public final class BatchRequest {
 
   /** The URL where batch requests are sent. */
@@ -220,12 +218,6 @@ public final class BatchRequest {
     HttpExecuteInterceptor originalInterceptor = batchRequest.getInterceptor();
     batchRequest.setInterceptor(new BatchInterceptor(originalInterceptor));
     int retriesRemaining = batchRequest.getNumberOfRetries();
-    BackOffPolicy backOffPolicy = batchRequest.getBackOffPolicy();
-
-    if (backOffPolicy != null) {
-      // Reset the BackOffPolicy at the start of each execute.
-      backOffPolicy.reset();
-    }
 
     do {
       retryAllowed = retriesRemaining > 0;
@@ -259,17 +251,6 @@ public final class BatchRequest {
       List<RequestInfo<?, ?>> unsuccessfulRequestInfos = batchResponse.unsuccessfulRequestInfos;
       if (!unsuccessfulRequestInfos.isEmpty()) {
         requestInfos = unsuccessfulRequestInfos;
-        // backOff if required.
-        if (batchResponse.backOffRequired && backOffPolicy != null) {
-          long backOffTime = backOffPolicy.getNextBackOffMillis();
-          if (backOffTime != BackOffPolicy.STOP) {
-            try {
-              sleeper.sleep(backOffTime);
-            } catch (InterruptedException exception) {
-              // ignore
-            }
-          }
-        }
       } else {
         break;
       }

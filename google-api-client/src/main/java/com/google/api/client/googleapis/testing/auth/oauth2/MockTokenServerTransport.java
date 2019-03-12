@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -31,6 +31,7 @@ import com.google.api.client.util.Beta;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * {@link Beta} <br/>
@@ -40,6 +41,12 @@ import java.util.Map;
  */
 @Beta
 public class MockTokenServerTransport extends MockHttpTransport {
+  /** Old URL of Google's token server (for backwards compatibility) */
+  private static final String LEGACY_TOKEN_SERVER_URL =
+      "https://accounts.google.com/o/oauth2/token";
+
+  private static final Logger LOGGER = Logger.getLogger(MockTokenServerTransport.class.getName());
+
   static final String EXPECTED_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer";
   static final JsonFactory JSON_FACTORY = new JacksonFactory();
   final String tokenServerUrl;
@@ -70,64 +77,71 @@ public class MockTokenServerTransport extends MockHttpTransport {
   @Override
   public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
     if (url.equals(tokenServerUrl)) {
-      MockLowLevelHttpRequest request = new MockLowLevelHttpRequest(url) {
-        @Override
-        public LowLevelHttpResponse execute() throws IOException {
-          String content = this.getContentAsString();
-          Map<String, String> query = TestUtils.parseQuery(content);
-          String accessToken = null;
-
-          String foundId = query.get("client_id");
-          if (foundId != null) {
-            if (!clients.containsKey(foundId)) {
-              throw new IOException("Client ID not found.");
-            }
-            String foundSecret = query.get("client_secret");
-            String expectedSecret = clients.get(foundId);
-            if (foundSecret == null || !foundSecret.equals(expectedSecret)) {
-              throw new IOException("Client secret not found.");
-            }
-            String foundRefresh = query.get("refresh_token");
-            if (!refreshTokens.containsKey(foundRefresh)) {
-              throw new IOException("Refresh Token not found.");
-            }
-            accessToken = refreshTokens.get(foundRefresh);
-          } else if (query.containsKey("grant_type")) {
-            String grantType = query.get("grant_type");
-            if (!EXPECTED_GRANT_TYPE.equals(grantType)) {
-              throw new IOException("Unexpected Grant Type.");
-            }
-            String assertion = query.get("assertion");
-            JsonWebSignature signature = JsonWebSignature.parse(JSON_FACTORY, assertion);
-            String foundEmail = signature.getPayload().getIssuer();
-            if (!serviceAccounts.containsKey(foundEmail)) {
-              throw new IOException("Service Account Email not found as issuer.");
-            }
-            accessToken = serviceAccounts.get(foundEmail);
-            String foundScopes = (String) signature.getPayload().get("scope");
-            if (foundScopes == null || foundScopes.length() == 0) {
-              throw new IOException("Scopes not found.");
-            }
-          } else {
-            throw new IOException("Unknown token type.");
-          }
-
-          // Create the JSon response
-          GenericJson refreshContents = new GenericJson();
-          refreshContents.setFactory(JSON_FACTORY);
-          refreshContents.put("access_token", accessToken);
-          refreshContents.put("expires_in", 3600000);
-          refreshContents.put("token_type", "Bearer");
-          String refreshText  = refreshContents.toPrettyString();
-
-          MockLowLevelHttpResponse response = new MockLowLevelHttpResponse()
-            .setContentType(Json.MEDIA_TYPE)
-            .setContent(refreshText);
-          return response;
-        }
-      };
-      return request;
+      return buildTokenRequest(url);
+    } else if (url.equals(LEGACY_TOKEN_SERVER_URL)) {
+      LOGGER.warning("Your configured token_uri is using a legacy endpoint. You may want to "
+          + "redownload your credentials.");
+      return buildTokenRequest(url);
     }
     return super.buildRequest(method, url);
+  }
+
+  private MockLowLevelHttpRequest buildTokenRequest(String url) {
+    return new MockLowLevelHttpRequest(url) {
+      @Override
+      public LowLevelHttpResponse execute() throws IOException {
+        String content = this.getContentAsString();
+        Map<String, String> query = TestUtils.parseQuery(content);
+        String accessToken = null;
+
+        String foundId = query.get("client_id");
+        if (foundId != null) {
+          if (!clients.containsKey(foundId)) {
+            throw new IOException("Client ID not found.");
+          }
+          String foundSecret = query.get("client_secret");
+          String expectedSecret = clients.get(foundId);
+          if (foundSecret == null || !foundSecret.equals(expectedSecret)) {
+            throw new IOException("Client secret not found.");
+          }
+          String foundRefresh = query.get("refresh_token");
+          if (!refreshTokens.containsKey(foundRefresh)) {
+            throw new IOException("Refresh Token not found.");
+          }
+          accessToken = refreshTokens.get(foundRefresh);
+        } else if (query.containsKey("grant_type")) {
+          String grantType = query.get("grant_type");
+          if (!EXPECTED_GRANT_TYPE.equals(grantType)) {
+            throw new IOException("Unexpected Grant Type.");
+          }
+          String assertion = query.get("assertion");
+          JsonWebSignature signature = JsonWebSignature.parse(JSON_FACTORY, assertion);
+          String foundEmail = signature.getPayload().getIssuer();
+          if (!serviceAccounts.containsKey(foundEmail)) {
+            throw new IOException("Service Account Email not found as issuer.");
+          }
+          accessToken = serviceAccounts.get(foundEmail);
+          String foundScopes = (String) signature.getPayload().get("scope");
+          if (foundScopes == null || foundScopes.length() == 0) {
+            throw new IOException("Scopes not found.");
+          }
+        } else {
+          throw new IOException("Unknown token type.");
+        }
+
+        // Create the JSon response
+        GenericJson refreshContents = new GenericJson();
+        refreshContents.setFactory(JSON_FACTORY);
+        refreshContents.put("access_token", accessToken);
+        refreshContents.put("expires_in", 3600);
+        refreshContents.put("token_type", "Bearer");
+        String refreshText  = refreshContents.toPrettyString();
+
+        MockLowLevelHttpResponse response = new MockLowLevelHttpResponse()
+            .setContentType(Json.MEDIA_TYPE)
+            .setContent(refreshText);
+        return response;
+      }
+    };
   }
 }
