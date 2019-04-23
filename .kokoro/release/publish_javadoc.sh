@@ -38,9 +38,8 @@ VERSION=$(grep ${NAME}: versions.txt | cut -d: -f3)
 
 # build the docs
 mvn site
-mvn site:stage -DtopSiteURL=https://googleapis.dev/java/${NAME}/${VERSION}
 
-pushd target/staging/site/${NAME}/apidocs
+pushd target/site/apidocs
 
 # create metadata
 python3 -m docuploader create-metadata \
