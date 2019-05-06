@@ -1,0 +1,22 @@
+{
+  "name": "google-api-java-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/googleapis/google-api-java-client.git"
+  },
+  "author": "Google Inc.",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/googleapis/google-api-java-client/issues"
+  },
+  "homepage": "https://github.com/googleapis/google-api-java-client#readme",
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}
