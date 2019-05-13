@@ -31,7 +31,7 @@
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
             <manifestEntries>
-              <Automatic-Module-Name>google.api.client.jackson2</Automatic-Module-Name>
+              <Automatic-Module-Name>google.api.client.gson</Automatic-Module-Name>
             </manifestEntries>
           </archive>
         </configuration>
