@@ -88,7 +88,7 @@ To access other Google APIs, use the Google APIs Client Library for Java, which 
 
 ### Other Java environments
 
-- Java 6 (or higher)
+- Java 7 (or higher)
 - Android 1.6 (or higher)
 - [Google App Engine](https://developers.google.com/api-client-library/java/google-api-java-client/app-engine)
 
