@@ -164,7 +164,11 @@ import java.util.Collections;
  *
  * @since 1.7
  * @author Yaniv Inbar
+ * @deprecated Please use <a href="https://github.com/googleapis/google-auth-library-java">
+ *   google-auth-library</a> for handling Application Default Credentials and other non-OAuth2
+ *   based authentication.
  */
+@Deprecated
 public class GoogleCredential extends Credential {
 
   static final String USER_FILE_TYPE = "authorized_user";

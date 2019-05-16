@@ -46,7 +46,10 @@ import java.util.List;
  * OAuth2 credentials representing the built-in service account for Google Cloud Shell.
  *
  * @since 1.21.0
+ * @deprecated Please use <a href="https://github.com/googleapis/google-auth-library-java">
+ *   google-auth-library</a> for handling authentication and authorization from Cloud Shell.
  */
+@Deprecated
 public class CloudShellCredential extends GoogleCredential {
 
   private static final int ACCESS_TOKEN_INDEX = 2;
