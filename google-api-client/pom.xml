@@ -14,7 +14,7 @@
       <extension>
         <groupId>kr.motd.maven</groupId>
         <artifactId>os-maven-plugin</artifactId>
-        <version>1.4.0.Final</version>
+        <version>1.6.1</version>
       </extension>
     </extensions>
     <plugins>
@@ -25,7 +25,7 @@
             <link>https://docs.oracle.com/javase/7/docs/api/</link>
             <link>https://cloud.google.com/appengine/docs/standard/java/javadoc/</link>
             <link>https://googleapis.dev/java/google-http-client/${project.http.version}</link>
-            <link>https://googleapis.dev/java/google-oauth-client/${project.http.version}</link>
+            <link>https://googleapis.dev/java/google-oauth-client/${project.oauth.version}</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
@@ -82,7 +82,7 @@
         <artifactId>maven-protoc-plugin</artifactId>
         <version>0.4.2</version>
         <configuration>
-          <protocArtifact>com.google.protobuf:protoc:${project.protobuf-java.version}-build2:exe:${os.detected.classifier}</protocArtifact>
+          <protocArtifact>com.google.protobuf:protoc:${project.protobuf-java.version}:exe:${os.detected.classifier}</protocArtifact>
         </configuration>
         <executions>
           <execution>
@@ -102,10 +102,6 @@
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-jackson2</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-apache</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
