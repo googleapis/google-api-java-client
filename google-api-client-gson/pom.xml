@@ -16,7 +16,7 @@
         <configuration>
           <links>
             <link>http://download.oracle.com/javase/7/docs/api/</link>
-            <link>https://googleapis.github.io/google-http-java-client/releases/${project.http.version}/javadoc/</link>
+            <link>https://googleapis.dev/java/google-http-client/${project.http.version}/</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
