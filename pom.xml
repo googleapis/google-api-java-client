@@ -164,11 +164,6 @@
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-apache</artifactId>
-        <version>${project.http-apache.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-appengine</artifactId>
         <version>${project.http.version}</version>
       </dependency>
