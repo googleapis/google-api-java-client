@@ -12,7 +12,7 @@
 
 ## Library Maintenance
 These client libraries are officially supported by Google. However, these libraries are considered complete and are in maintenance mode. This means that we will address critical bugs and security issues, but will not add any new features. If you're working with **Google Cloud Platform** APIs such as Datastore, Pub/Sub and many others,
-consider using the [Cloud Client Libraries for Java](https://github.com/GoogleCloudPlatform/google-cloud-java)
+consider using the [Cloud Client Libraries for Java](https://github.com/googleapis/google-cloud-java)
 instead. These are the new and idiomatic Java libraries targeted specifically at Google Cloud
 Platform Services.
 
@@ -88,7 +88,7 @@ To access other Google APIs, use the Google APIs Client Library for Java, which 
 
 ### Other Java environments
 
-- Java 6 (or higher)
+- Java 7 (or higher)
 - Android 1.6 (or higher)
 - [Google App Engine](https://developers.google.com/api-client-library/java/google-api-java-client/app-engine)
 
@@ -227,8 +227,8 @@ Java 11 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/
 This library is built on top of two common libraries, also built by Google, and also designed to
 work with any HTTP service on the web:
 
-- [Google HTTP Client Library for Java](https://github.com/google/google-http-java-client)
-- [Google OAuth Client Library for Java](https://github.com/google/google-oauth-java-client)
+- [Google HTTP Client Library for Java](https://github.com/googleapis/google-http-java-client)
+- [Google OAuth Client Library for Java](https://github.com/googleapis/google-oauth-java-client)
 
 ## Important Warnings
 
@@ -249,22 +249,11 @@ might result, and you are not guaranteed a compilation error.
 
 - [Developer's Guide](https://developers.google.com/api-client-library/java/google-api-java-client/dev-guide)
 - [Libraries and Samples](https://developers.google.com/api-client-library/java/apis/)
-- [JavaDoc](https://developers.google.com/api-client-library/java/google-api-java-client/reference/index)
+- [JavaDoc](https://googleapis.dev/java/google-api-client/latest/)
 - [Get Help](https://developers.google.com/api-client-library/java/google-api-java-client/support)
 
 ## Links
 
-- [API Announcements](http://googledevelopers.blogspot.com/)
 - [Discuss](https://groups.google.com/forum/#!forum/google-api-java-client)
-
-## Notice: Ending Java 6 Support
-
-Please note: since Java 6 extended support is being ended this December by Oracle, we will begin
-ending Java 6 support in early 2019, with release 1.28.0 as a tentative goal. Users may still
-use these libraries in Java 6 projects for some time, but going forward we will not ensure that
-these libraries work in such an environment. After 1.28.0, our supported versions will include Java
-7 and onward.
-
-For Android users, we will continue our 4.0 support.
 
 For questions or concerns, please file an issue in the GitHub repository.
