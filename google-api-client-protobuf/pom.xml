@@ -58,7 +58,7 @@
         </executions>
         <configuration>
           <instructions>
-            <Bundle-DocURL>https://googleapis.dev/java/google-api-client/1.28.0/index.html</Bundle-DocURL>
+            <Bundle-DocURL>https://googleapis.dev/java/google-api-client/${project.version}/index.html</Bundle-DocURL>
             <Bundle-Description>Protobuf extensions to the Google APIs Client Library for Java</Bundle-Description>
             <Bundle-SymbolicName>com.google.api.client.protobuf</Bundle-SymbolicName>
           </instructions>
@@ -106,6 +106,11 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 </project>

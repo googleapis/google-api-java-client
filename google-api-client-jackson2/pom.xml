@@ -51,7 +51,7 @@
         </executions>
         <configuration>
           <instructions>
-            <Bundle-DocURL>https://googleapis.dev/java/google-api-client/1.28.0/index.html</Bundle-DocURL>
+            <Bundle-DocURL>https://googleapis.dev/java/google-api-client/${project.version}/index.html</Bundle-DocURL>
             <Bundle-Description>Low-level implementation of the JSON parser library based on the Jackson 2 JSON library.</Bundle-Description>
             <Bundle-SymbolicName>com.google.api.client.jackson2</Bundle-SymbolicName>
           </instructions>
