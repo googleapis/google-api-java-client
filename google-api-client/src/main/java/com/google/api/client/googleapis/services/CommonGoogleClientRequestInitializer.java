@@ -133,7 +133,7 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
   }
 
   /**
-   * Returns new builder
+   * Returns new builder.
    */
   public static Builder newBuilder() {
     return new Builder();
@@ -191,7 +191,7 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
     private String requestReason;
 
     /**
-     * Set the API Key for outgoing requests
+     * Set the API Key for outgoing requests.
      *
      * @param key the API key
      * @return the builder
@@ -202,7 +202,7 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
     }
 
     /**
-     * Returns the API Key
+     * Returns the API key.
      *
      * @return the API key
      */
@@ -211,9 +211,9 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
     }
 
     /**
-     * Set the IP address of the end user for whom the API call is being made
+     * Set the IP address of the end user for whom the API call is being made.
      *
-     * @param userIp the user's IP
+     * @param userIp the user's IP address
      * @return the builder
      */
     public Builder setUserIp(String userIp) {
@@ -222,7 +222,7 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
     }
 
     /**
-     * Returns the configured userIp
+     * Returns the configured userIp.
      *
      * @return the userIp
      */
@@ -231,7 +231,7 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
     }
 
     /**
-     * Set the user agent
+     * Set the user agent.
      *
      * @param userAgent the user agent
      * @return the builder
@@ -242,7 +242,7 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
     }
 
     /**
-     * Returns the configured user agent
+     * Returns the configured user agent.
      *
      * @return the user agent
      */
@@ -252,7 +252,7 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
 
     /**
      * Set the reason for making the request, which is intended to be recorded in audit logging. An
-     * example reason would be a support-case ticket number
+     * example reason would be a support-case ticket number.
      *
      * @param requestReason the reason for making the request
      * @return the builder
@@ -263,7 +263,7 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
     }
 
     /**
-     * Get the configured request reason
+     * Get the configured request reason.
      *
      * @return the request reason
      */
@@ -272,7 +272,7 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
     }
 
     /**
-     * Returns the constructed CommonGoogleClientRequestInitializer instance
+     * Returns the constructed CommonGoogleClientRequestInitializer instance.
      *
      * @return the constructed CommonGoogleClientRequestInitializer instance
      */

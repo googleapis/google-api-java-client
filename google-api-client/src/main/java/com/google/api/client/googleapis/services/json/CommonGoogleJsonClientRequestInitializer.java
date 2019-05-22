@@ -136,7 +136,7 @@ public class CommonGoogleJsonClientRequestInitializer extends CommonGoogleClient
   }
 
   /**
-   * Builder for {@code CommonGoogleJsonClientRequestInitializer}
+   * Builder for {@code CommonGoogleJsonClientRequestInitializer}.
    */
   public static class Builder extends CommonGoogleClientRequestInitializer.Builder {
     @Override
