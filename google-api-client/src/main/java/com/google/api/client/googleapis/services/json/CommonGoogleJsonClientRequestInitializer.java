@@ -28,7 +28,9 @@ import java.io.IOException;
  *
  * <pre>
   public static final GoogleClientRequestInitializer KEY_INITIALIZER =
-      new CommonGoogleJsonClientRequestInitializer(KEY);
+      CommonGoogleJsonClientRequestInitializer.newBuilder()
+          .setKey(KEY)
+          .build();
  * </pre>
  *
  * <p>
@@ -37,7 +39,10 @@ import java.io.IOException;
  *
  * <pre>
   public static final GoogleClientRequestInitializer INITIALIZER =
-      new CommonGoogleJsonClientRequestInitializer(KEY, USER_IP);
+      CommonGoogleJsonClientRequestInitializer.newBuilder()
+          .setKey(KEY)
+          .setUserIp(USER_IP)
+          .build();
  * </pre>
  *
  * <p>
@@ -83,13 +88,19 @@ import java.io.IOException;
  */
 public class CommonGoogleJsonClientRequestInitializer extends CommonGoogleClientRequestInitializer {
 
+  /**
+   * @deprecated Please use the builder interface
+   */
+  @Deprecated
   public CommonGoogleJsonClientRequestInitializer() {
     super();
   }
 
   /**
    * @param key API key or {@code null} to leave it unchanged
+   * @deprecated Please use the builder interface
    */
+  @Deprecated
   public CommonGoogleJsonClientRequestInitializer(String key) {
     super(key);
   }
@@ -97,7 +108,9 @@ public class CommonGoogleJsonClientRequestInitializer extends CommonGoogleClient
   /**
    * @param key API key or {@code null} to leave it unchanged
    * @param userIp user IP or {@code null} to leave it unchanged
+   * @deprecated Please use the builder interface
    */
+  @Deprecated
   public CommonGoogleJsonClientRequestInitializer(String key, String userIp) {
     super(key, userIp);
   }
@@ -120,5 +133,15 @@ public class CommonGoogleJsonClientRequestInitializer extends CommonGoogleClient
    */
   protected void initializeJsonRequest(AbstractGoogleJsonClientRequest<?> request)
       throws IOException {
+  }
+
+  /**
+   * Builder for {@code CommonGoogleJsonClientRequestInitializer}
+   */
+  public static class Builder extends CommonGoogleClientRequestInitializer.Builder {
+    @Override
+    protected Builder self() {
+      return this;
+    }
   }
 }

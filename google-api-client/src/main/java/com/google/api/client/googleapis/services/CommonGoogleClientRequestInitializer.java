@@ -25,7 +25,9 @@ import java.io.IOException;
  *
  * <pre>
   public static final GoogleClientRequestInitializer KEY_INITIALIZER =
-      new CommonGoogleClientRequestInitializer(KEY);
+      CommonGoogleClientRequestInitializer.newBuilder()
+          .setKey(KEY)
+          .build();
  * </pre>
  *
  * <p>
@@ -34,7 +36,10 @@ import java.io.IOException;
  *
  * <pre>
   public static final GoogleClientRequestInitializer INITIALIZER =
-      new CommonGoogleClientRequestInitializer(KEY, USER_IP);
+      CommonGoogleClientRequestInitializer.newBuilder()
+          .setKey(KEY)
+          .setUserIp(USER_IP)
+          .build();
  * </pre>
  *
  * <p>
@@ -87,13 +92,25 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
   /** User IP or {@code null} to leave it unchanged. */
   private final String userIp;
 
+  /** User Agent or {@code null} to leave it unchanged. */
+  private final String userAgent;
+
+  /** Reason for request or {@code null} to leave it unchanged. */
+  private final String requestReason;
+
+  /**
+   * @deprecated Please use the builder interface
+   */
+  @Deprecated
   public CommonGoogleClientRequestInitializer() {
-    this(null);
+    this(newBuilder());
   }
 
   /**
    * @param key API key or {@code null} to leave it unchanged
+   * @deprecated Please use the builder interface
    */
+  @Deprecated
   public CommonGoogleClientRequestInitializer(String key) {
     this(key, null);
   }
@@ -101,10 +118,25 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
   /**
    * @param key API key or {@code null} to leave it unchanged
    * @param userIp user IP or {@code null} to leave it unchanged
+   * @deprecated Please use the builder interface
    */
+  @Deprecated
   public CommonGoogleClientRequestInitializer(String key, String userIp) {
-    this.key = key;
-    this.userIp = userIp;
+    this(newBuilder().setKey(key).setUserIp(userIp));
+  }
+
+  protected CommonGoogleClientRequestInitializer(Builder builder) {
+    this.key = builder.getKey();
+    this.userIp = builder.getUserIp();
+    this.userAgent = builder.getUserAgent();
+    this.requestReason = builder.getRequestReason();
+  }
+
+  /**
+   * Returns new builder
+   */
+  public static Builder newBuilder() {
+    return new Builder();
   }
 
   /**
@@ -119,6 +151,14 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
     if (userIp != null) {
       request.put("userIp", userIp);
     }
+    if (userAgent != null) {
+      // FIXME(chingor): set the correct header
+      request.put("userAgent", userAgent);
+    }
+    if (requestReason != null) {
+      // FIXME(chingor): set the correct header
+      request.put("requestReason", requestReason);
+    }
   }
 
   /** Returns the API key or {@code null} to leave it unchanged. */
@@ -129,5 +169,121 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
   /** Returns the user IP or {@code null} to leave it unchanged. */
   public final String getUserIp() {
     return userIp;
+  }
+
+  /** Returns the user agent or {@code null} to leave it unchanged. */
+  public final String getUserAgent() {
+    return userAgent;
+  }
+
+  /** Returns the request reason or {@code null} to leave it unchanged. */
+  public final String getRequestReason() {
+    return requestReason;
+  }
+
+  /**
+   * Builder for {@code CommonGoogleClientRequestInitializer}.
+   */
+  public static class Builder {
+    private String key;
+    private String userIp;
+    private String userAgent;
+    private String requestReason;
+
+    /**
+     * Set the API Key for outgoing requests
+     *
+     * @param key the API key
+     * @return the builder
+     */
+    public Builder setKey(String key) {
+      this.key = key;
+      return self();
+    }
+
+    /**
+     * Returns the API Key
+     *
+     * @return the API key
+     */
+    public String getKey() {
+      return key;
+    }
+
+    /**
+     * Set the IP address of the end user for whom the API call is being made
+     *
+     * @param userIp the user's IP
+     * @return the builder
+     */
+    public Builder setUserIp(String userIp) {
+      this.userIp = userIp;
+      return self();
+    }
+
+    /**
+     * Returns the configured userIp
+     *
+     * @return the userIp
+     */
+    public String getUserIp() {
+      return userIp;
+    }
+
+    /**
+     * Set the user agent
+     *
+     * @param userAgent the user agent
+     * @return the builder
+     */
+    public Builder setUserAgent(String userAgent) {
+      this.userAgent = userAgent;
+      return self();
+    }
+
+    /**
+     * Returns the configured user agent
+     *
+     * @return the user agent
+     */
+    public String getUserAgent() {
+      return userAgent;
+    }
+
+    /**
+     * Set the reason for making the request, which is intended to be recorded in audit logging. An example reason would
+     * be a support-case ticket number
+     *
+     * @param requestReason the reason for making the request
+     * @return the builder
+     */
+    public Builder setRequestReason(String requestReason) {
+      this.requestReason = requestReason;
+      return self();
+    }
+
+    /**
+     * Get the configured request reason
+     *
+     * @return the request reason
+     */
+    public String getRequestReason() {
+      return requestReason;
+    }
+
+    /**
+     * Returns the constructed CommonGoogleClientRequestInitializer instance
+     *
+     * @return the constructed CommonGoogleClientRequestInitializer instance
+     */
+    public CommonGoogleClientRequestInitializer build() {
+      return new CommonGoogleClientRequestInitializer(this);
+    }
+
+    protected Builder self() {
+      return this;
+    }
+
+    protected Builder() {}
   }
 }
