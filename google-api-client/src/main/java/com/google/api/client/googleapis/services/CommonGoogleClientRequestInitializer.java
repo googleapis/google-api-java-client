@@ -152,11 +152,11 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
       request.put("userIp", userIp);
     }
     if (userAgent != null) {
-      // FIXME(chingor): set the correct header
+      // TODO(chingor): set the correct header
       request.put("userAgent", userAgent);
     }
     if (requestReason != null) {
-      // FIXME(chingor): set the correct header
+      // TODO(chingor): set the correct header
       request.put("requestReason", requestReason);
     }
   }
