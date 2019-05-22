@@ -251,8 +251,8 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
     }
 
     /**
-     * Set the reason for making the request, which is intended to be recorded in audit logging. An example reason would
-     * be a support-case ticket number
+     * Set the reason for making the request, which is intended to be recorded in audit logging. An
+     * example reason would be a support-case ticket number
      *
      * @param requestReason the reason for making the request
      * @return the builder
