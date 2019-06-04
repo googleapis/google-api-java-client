@@ -103,7 +103,7 @@
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-servlet</artifactId>
-        <version>1.29.1-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.29.2</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
