@@ -108,7 +108,7 @@
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-xml</artifactId>
-        <version>1.29.1-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.29.2</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
     </dependencies>
   </dependencyManagement>
