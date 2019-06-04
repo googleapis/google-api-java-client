@@ -148,80 +148,17 @@
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client</artifactId>
-        <version>${project.http.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-assembly</artifactId>
+        <artifactId>google-http-client-bom</artifactId>
         <version>${project.http.version}</version>
         <type>pom</type>
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-android</artifactId>
-        <version>${project.http.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-appengine</artifactId>
-        <version>${project.http.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-gson</artifactId>
-        <version>${project.http.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-jackson2</artifactId>
-        <version>${project.http.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-protobuf</artifactId>
-        <version>${project.http.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-jackson</artifactId>
-        <version>${project.http.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-xml</artifactId>
-        <version>${project.http.version}</version>
+        <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.google.oauth-client</groupId>
-        <artifactId>google-oauth-client</artifactId>
-        <version>${project.oauth.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.oauth-client</groupId>
-        <artifactId>google-oauth-client-assembly</artifactId>
+        <artifactId>google-oauth-client-bom</artifactId>
         <version>${project.oauth.version}</version>
         <type>pom</type>
-      </dependency>
-      <dependency>
-        <groupId>com.google.oauth-client</groupId>
-        <artifactId>google-oauth-client-appengine</artifactId>
-        <version>${project.oauth.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.oauth-client</groupId>
-        <artifactId>google-oauth-client-java6</artifactId>
-        <version>${project.oauth.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.oauth-client</groupId>
-        <artifactId>google-oauth-client-java7</artifactId>
-        <version>${project.oauth.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.oauth-client</groupId>
-        <artifactId>google-oauth-client-servlet</artifactId>
-        <version>${project.oauth.version}</version>
+        <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
