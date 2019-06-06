@@ -234,7 +234,7 @@
           <configuration>
             <serverId>ossrh</serverId>
             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-            <autoReleaseAfterClose>false</autoReleaseAfterClose>
+            <autoReleaseAfterClose>${deploy.autorelease}</autoReleaseAfterClose>
           </configuration>
         </plugin>
         <plugin>
@@ -512,6 +512,7 @@
     <project.datanucleus-maven-plugin.version>4.0.3</project.datanucleus-maven-plugin.version>
     <project.servlet-api.version>2.5</project.servlet-api.version>
     <project.transaction-api.version>1.1</project.transaction-api.version>
+    <deploy.autorelease>false</deploy.autorelease>
   </properties>
 
   <profiles>
