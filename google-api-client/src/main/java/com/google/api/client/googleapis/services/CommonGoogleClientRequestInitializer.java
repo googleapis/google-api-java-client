@@ -86,6 +86,18 @@ import java.io.IOException;
  */
 public class CommonGoogleClientRequestInitializer implements GoogleClientRequestInitializer {
 
+  /**
+   * Contains a reason for making the request, which is intended to be recorded in audit logging.
+   * An example reason would be a support-case ticket number.
+   */
+  private static final String REQUEST_REASON_HEADER_NAME = "X-Goog-Request-Reason";
+
+  /**
+   * A caller-specified project for quota and billing purposes. The caller must have
+   * serviceusage.services.use permission on the project.
+   */
+  private static final String USER_PROJECT_HEADER_NAME = "X-Goog-User-Project";
+
   /** API key or {@code null} to leave it unchanged. */
   private final String key;
 
@@ -97,6 +109,9 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
 
   /** Reason for request or {@code null} to leave it unchanged. */
   private final String requestReason;
+
+  /** Project for quota and billing purposes of {@code null} to leave it unchanged. */
+  private final String userProject;
 
   /**
    * @deprecated Please use the builder interface
@@ -130,6 +145,7 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
     this.userIp = builder.getUserIp();
     this.userAgent = builder.getUserAgent();
     this.requestReason = builder.getRequestReason();
+    this.userProject = builder.getUserProject();
   }
 
   /**
@@ -152,12 +168,13 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
       request.put("userIp", userIp);
     }
     if (userAgent != null) {
-      // TODO(chingor): set the correct header
-      request.put("userAgent", userAgent);
+      request.getRequestHeaders().setUserAgent(userAgent);
     }
     if (requestReason != null) {
-      // TODO(chingor): set the correct header
-      request.put("requestReason", requestReason);
+      request.getRequestHeaders().set(REQUEST_REASON_HEADER_NAME, requestReason);
+    }
+    if (userProject != null) {
+      request.getRequestHeaders().set(USER_PROJECT_HEADER_NAME, userProject);
     }
   }
 
@@ -181,6 +198,11 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
     return requestReason;
   }
 
+  /** Returns the user project of {@code null} */
+  public final String getUserProject() {
+    return userProject;
+  }
+
   /**
    * Builder for {@code CommonGoogleClientRequestInitializer}.
    */
@@ -189,6 +211,7 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
     private String userIp;
     private String userAgent;
     private String requestReason;
+    private String userProject;
 
     /**
      * Set the API Key for outgoing requests.
@@ -269,6 +292,27 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
      */
     public String getRequestReason() {
       return requestReason;
+    }
+
+    /**
+     * Set the user project for the request. This is a caller-specified project for quota and
+     * billing purposes. The caller must have serviceusage.services.use permission on the project.
+     *
+     * @param userProject the user project
+     * @return the builder
+     */
+    public Builder setUserProject(String userProject) {
+      this.userProject = userProject;
+      return self();
+    }
+
+    /**
+     * Get the configured user project.
+     *
+     * @return the user project
+     */
+    public String getUserProject() {
+      return userProject;
     }
 
     /**
