@@ -255,9 +255,10 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * </p>
    *
    * <p>
-   * Normally response stream is wrapped GZipInputStream when it contains content-encoding header to gzip
-   * This doesnt work when we download large compressed file in chunks, setting this to true will make
-   * response return raw input stream even if header contains content-encoding as gzip.
+   * Normally response stream is wrapped GZipInputStream when it contains content-encoding header
+   * to gzip. This doesnt work when we download large compressed file in chunks, setting this to
+   * true will make response return raw input stream even if header contains content-encoding as
+   * gzip.
    * </p>
    */
   public AbstractGoogleClientRequest<T> setReturnRawInputStream(boolean returnRawInputStream) {
