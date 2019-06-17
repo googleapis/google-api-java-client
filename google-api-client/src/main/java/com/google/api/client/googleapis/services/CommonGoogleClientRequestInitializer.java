@@ -98,27 +98,14 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
    */
   private static final String USER_PROJECT_HEADER_NAME = "X-Goog-User-Project";
 
-  /** API key or {@code null} to leave it unchanged. */
-  private final String key;
-
-  /** User IP or {@code null} to leave it unchanged. */
-  private final String userIp;
-
-  /** User Agent or {@code null} to leave it unchanged. */
-  private final String userAgent;
-
-  /** Reason for request or {@code null} to leave it unchanged. */
-  private final String requestReason;
-
-  /** Project for quota and billing purposes of {@code null} to leave it unchanged. */
-  private final String userProject;
+  private final CommonGoogleOptions options;
 
   /**
    * @deprecated Please use the builder interface
    */
   @Deprecated
   public CommonGoogleClientRequestInitializer() {
-    this(newBuilder());
+    this(CommonGoogleOptions.newBuilder().build());
   }
 
   /**
@@ -137,22 +124,15 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
    */
   @Deprecated
   public CommonGoogleClientRequestInitializer(String key, String userIp) {
-    this(newBuilder().setKey(key).setUserIp(userIp));
-  }
-
-  protected CommonGoogleClientRequestInitializer(Builder builder) {
-    this.key = builder.getKey();
-    this.userIp = builder.getUserIp();
-    this.userAgent = builder.getUserAgent();
-    this.requestReason = builder.getRequestReason();
-    this.userProject = builder.getUserProject();
+    this(CommonGoogleOptions.newBuilder().setKey(key).setUserIp(userIp).build());
   }
 
   /**
-   * Returns new builder.
+   *
+   * @param options
    */
-  public static Builder newBuilder() {
-    return new Builder();
+  public CommonGoogleClientRequestInitializer(CommonGoogleOptions options) {
+    this.options = options;
   }
 
   /**
@@ -161,173 +141,46 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
    * @throws IOException I/O exception
    */
   public void initialize(AbstractGoogleClientRequest<?> request) throws IOException {
-    if (key != null) {
-      request.put("key", key);
+    if (getKey() != null) {
+      request.put("key", getKey());
     }
-    if (userIp != null) {
-      request.put("userIp", userIp);
+    if (getUserIp() != null) {
+      request.put("userIp", getUserIp());
     }
-    if (userAgent != null) {
-      request.getRequestHeaders().setUserAgent(userAgent);
+    if (getUserAgent() != null) {
+      request.getRequestHeaders().setUserAgent(getUserAgent());
     }
-    if (requestReason != null) {
-      request.getRequestHeaders().set(REQUEST_REASON_HEADER_NAME, requestReason);
+    if (getRequestReason() != null) {
+      request.getRequestHeaders().set(REQUEST_REASON_HEADER_NAME, getRequestReason());
     }
-    if (userProject != null) {
-      request.getRequestHeaders().set(USER_PROJECT_HEADER_NAME, userProject);
+    if (getUserProject() != null) {
+      request.getRequestHeaders().set(USER_PROJECT_HEADER_NAME, getUserProject());
     }
   }
 
   /** Returns the API key or {@code null} to leave it unchanged. */
   public final String getKey() {
-    return key;
+    return options.getKey();
   }
 
   /** Returns the user IP or {@code null} to leave it unchanged. */
   public final String getUserIp() {
-    return userIp;
+    return options.getUserIp();
   }
 
   /** Returns the user agent or {@code null} to leave it unchanged. */
   public final String getUserAgent() {
-    return userAgent;
+    return options.getUserAgent();
   }
 
   /** Returns the request reason or {@code null} to leave it unchanged. */
   public final String getRequestReason() {
-    return requestReason;
+    return options.getRequestReason();
   }
 
-  /** Returns the user project of {@code null} */
+  /** Returns the user project or {@code null} to leave it unchanged. */
   public final String getUserProject() {
-    return userProject;
+    return options.getUserProject();
   }
 
-  /**
-   * Builder for {@code CommonGoogleClientRequestInitializer}.
-   */
-  public static class Builder {
-    private String key;
-    private String userIp;
-    private String userAgent;
-    private String requestReason;
-    private String userProject;
-
-    /**
-     * Set the API Key for outgoing requests.
-     *
-     * @param key the API key
-     * @return the builder
-     */
-    public Builder setKey(String key) {
-      this.key = key;
-      return self();
-    }
-
-    /**
-     * Returns the API key.
-     *
-     * @return the API key
-     */
-    public String getKey() {
-      return key;
-    }
-
-    /**
-     * Set the IP address of the end user for whom the API call is being made.
-     *
-     * @param userIp the user's IP address
-     * @return the builder
-     */
-    public Builder setUserIp(String userIp) {
-      this.userIp = userIp;
-      return self();
-    }
-
-    /**
-     * Returns the configured userIp.
-     *
-     * @return the userIp
-     */
-    public String getUserIp() {
-      return userIp;
-    }
-
-    /**
-     * Set the user agent.
-     *
-     * @param userAgent the user agent
-     * @return the builder
-     */
-    public Builder setUserAgent(String userAgent) {
-      this.userAgent = userAgent;
-      return self();
-    }
-
-    /**
-     * Returns the configured user agent.
-     *
-     * @return the user agent
-     */
-    public String getUserAgent() {
-      return userAgent;
-    }
-
-    /**
-     * Set the reason for making the request, which is intended to be recorded in audit logging. An
-     * example reason would be a support-case ticket number.
-     *
-     * @param requestReason the reason for making the request
-     * @return the builder
-     */
-    public Builder setRequestReason(String requestReason) {
-      this.requestReason = requestReason;
-      return self();
-    }
-
-    /**
-     * Get the configured request reason.
-     *
-     * @return the request reason
-     */
-    public String getRequestReason() {
-      return requestReason;
-    }
-
-    /**
-     * Set the user project for the request. This is a caller-specified project for quota and
-     * billing purposes. The caller must have serviceusage.services.use permission on the project.
-     *
-     * @param userProject the user project
-     * @return the builder
-     */
-    public Builder setUserProject(String userProject) {
-      this.userProject = userProject;
-      return self();
-    }
-
-    /**
-     * Get the configured user project.
-     *
-     * @return the user project
-     */
-    public String getUserProject() {
-      return userProject;
-    }
-
-    /**
-     * Returns the constructed CommonGoogleClientRequestInitializer instance.
-     *
-     * @return the constructed CommonGoogleClientRequestInitializer instance
-     */
-    public CommonGoogleClientRequestInitializer build() {
-      return new CommonGoogleClientRequestInitializer(this);
-    }
-
-    protected Builder self() {
-      return this;
-    }
-
-    protected Builder() {}
-  }
 }

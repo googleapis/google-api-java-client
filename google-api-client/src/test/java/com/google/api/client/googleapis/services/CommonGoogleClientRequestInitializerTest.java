@@ -50,9 +50,11 @@ public class CommonGoogleClientRequestInitializerTest extends TestCase {
   }
 
   public void testInitializeSetsUserAgent() throws IOException {
-    GoogleClientRequestInitializer requestInitializer = CommonGoogleClientRequestInitializer.newBuilder()
-        .setUserAgent("test user agent")
-        .build();
+    GoogleClientRequestInitializer requestInitializer = new CommonGoogleClientRequestInitializer(
+        CommonGoogleOptions.newBuilder()
+            .setUserAgent("test user agent")
+            .build()
+    );
     MockGoogleClient client = new MockGoogleClient.Builder(new MockHttpTransport(), HttpTesting.SIMPLE_URL, "test/", null, null)
         .setGoogleClientRequestInitializer(requestInitializer)
         .setApplicationName("My Application")
@@ -64,9 +66,11 @@ public class CommonGoogleClientRequestInitializerTest extends TestCase {
   }
 
   public void testInitializeSetsUserProject() throws IOException {
-    GoogleClientRequestInitializer requestInitializer = CommonGoogleClientRequestInitializer.newBuilder()
-        .setUserProject("my quota project")
-        .build();
+    GoogleClientRequestInitializer requestInitializer = new CommonGoogleClientRequestInitializer(
+        CommonGoogleOptions.newBuilder()
+            .setUserProject("my quota project")
+            .build()
+    );
     MockGoogleClient client = new MockGoogleClient.Builder(new MockHttpTransport(), HttpTesting.SIMPLE_URL, "test/", null, null)
         .setGoogleClientRequestInitializer(requestInitializer)
         .setApplicationName("My Application")
@@ -78,9 +82,11 @@ public class CommonGoogleClientRequestInitializerTest extends TestCase {
   }
 
   public void testInitializeSetsRequestReason() throws IOException {
-    GoogleClientRequestInitializer requestInitializer = CommonGoogleClientRequestInitializer.newBuilder()
-        .setRequestReason("some request reason")
-        .build();
+    GoogleClientRequestInitializer requestInitializer = new CommonGoogleClientRequestInitializer(
+        CommonGoogleOptions.newBuilder()
+            .setRequestReason("some request reason")
+            .build()
+    );
     MockGoogleClient client = new MockGoogleClient.Builder(new MockHttpTransport(), HttpTesting.SIMPLE_URL, "test/", null, null)
         .setGoogleClientRequestInitializer(requestInitializer)
         .setApplicationName("My Application")

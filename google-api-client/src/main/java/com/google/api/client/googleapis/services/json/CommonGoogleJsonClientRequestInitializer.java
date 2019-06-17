@@ -134,14 +134,4 @@ public class CommonGoogleJsonClientRequestInitializer extends CommonGoogleClient
   protected void initializeJsonRequest(AbstractGoogleJsonClientRequest<?> request)
       throws IOException {
   }
-
-  /**
-   * Builder for {@code CommonGoogleJsonClientRequestInitializer}.
-   */
-  public static class Builder extends CommonGoogleClientRequestInitializer.Builder {
-    @Override
-    protected Builder self() {
-      return this;
-    }
-  }
 }
