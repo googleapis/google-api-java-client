@@ -1,5 +1,11 @@
 {
   "extends": [
     "config:base"
+  ],
+  "packageRules": [
+    {
+      "packagePatterns": ["^com.google.appengine:appengine-"],
+      "groupName": "AppEngine packages"
+    }
   ]
 }

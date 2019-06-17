@@ -15,6 +15,10 @@
 
 set -eo pipefail
 
+# Start the releasetool reporter
+python3 -m pip install gcp-releasetool
+python3 -m releasetool publish-reporter-script > /tmp/publisher-script; source /tmp/publisher-script
+
 source $(dirname "$0")/common.sh
 source $(dirname "$0")/../install_dependencies.sh
 
@@ -23,11 +27,18 @@ pushd $(dirname "$0")/../../
 setup_environment_secrets
 create_settings_xml_file "settings.xml"
 
-mvn clean install deploy \
+AUTORELEASE="false"
+if [[ -n "${AUTORELEASE_PR}" ]]
+then
+  AUTORELEASE="true"
+fi
+
+mvn clean install deploy -B \
   --settings settings.xml \
   -DperformRelease=true \
   -Dgpg.executable=gpg \
   -Dgpg.passphrase=${GPG_PASSPHRASE} \
-  -Dgpg.homedir=${GPG_HOMEDIR}
+  -Dgpg.homedir=${GPG_HOMEDIR} \
+  -Ddeploy.autorelease=${AUTORELEASE}
 
 

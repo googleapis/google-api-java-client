@@ -234,7 +234,7 @@
           <configuration>
             <serverId>ossrh</serverId>
             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-            <autoReleaseAfterClose>false</autoReleaseAfterClose>
+            <autoReleaseAfterClose>${deploy.autorelease}</autoReleaseAfterClose>
           </configuration>
         </plugin>
         <plugin>
@@ -504,7 +504,7 @@
     <project.appengine.version>1.9.64</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.commons-logging.version>1.1.1</project.commons-logging.version>
-    <project.httpclient.version>4.5.8</project.httpclient.version>
+    <project.httpclient.version>4.5.9</project.httpclient.version>
     <project.httpcore.version>4.4.10</project.httpcore.version>
     <project.jdo2-api.version>2.3-eb</project.jdo2-api.version>
     <project.datanucleus-core.version>3.2.2</project.datanucleus-core.version>
@@ -512,6 +512,7 @@
     <project.datanucleus-maven-plugin.version>4.0.3</project.datanucleus-maven-plugin.version>
     <project.servlet-api.version>2.5</project.servlet-api.version>
     <project.transaction-api.version>1.1</project.transaction-api.version>
+    <deploy.autorelease>false</deploy.autorelease>
   </properties>
 
   <profiles>
