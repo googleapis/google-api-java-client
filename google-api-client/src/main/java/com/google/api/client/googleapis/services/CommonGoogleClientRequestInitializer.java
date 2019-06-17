@@ -25,9 +25,9 @@ import java.io.IOException;
  *
  * <pre>
   public static final GoogleClientRequestInitializer KEY_INITIALIZER =
-      CommonGoogleClientRequestInitializer.newBuilder()
+      new CommonGoogleClientRequestInitializer(CommonGoogleOptions.newBuilder()
           .setKey(KEY)
-          .build();
+          .build());
  * </pre>
  *
  * <p>
@@ -36,10 +36,10 @@ import java.io.IOException;
  *
  * <pre>
   public static final GoogleClientRequestInitializer INITIALIZER =
-      CommonGoogleClientRequestInitializer.newBuilder()
+      new CommonGoogleClientRequestInitializer(CommonGoogleOptions.newBuilder()
           .setKey(KEY)
           .setUserIp(USER_IP)
-          .build();
+          .build());
  * </pre>
  *
  * <p>
