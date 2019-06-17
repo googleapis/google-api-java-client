@@ -512,7 +512,7 @@
     <project.datanucleus-maven-plugin.version>4.0.3</project.datanucleus-maven-plugin.version>
     <project.servlet-api.version>2.5</project.servlet-api.version>
     <project.transaction-api.version>1.1</project.transaction-api.version>
-    <project.auto-value.version>1.6.5</project.auto-value.version>
+    <project.auto-value.version>1.4</project.auto-value.version>
     <deploy.autorelease>false</deploy.autorelease>
   </properties>
 
