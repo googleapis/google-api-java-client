@@ -94,7 +94,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /** Whether to disable GZip compression of HTTP content. */
   private boolean disableGZipContent;
 
-  /** whether to return raw input stream in {@link HttpResponse#getContent()}. */
+  /** Whether to return raw input stream in {@link HttpResponse#getContent()}. */
   private boolean returnRawInputStream;
 
   /** Response class to parse into. */
@@ -251,14 +251,14 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * Sets whether the response should return raw input stream or not.
    *
    * <p>
-   * By default ti is {@code false}.
+   * By default it is {@code false}.
    * </p>
    *
    * <p>
-   * Normally response stream is wrapped GZipInputStream when it contains content-encoding header
-   * to gzip. This doesnt work when we download large compressed file in chunks, setting this to
-   * true will make response return raw input stream even if header contains content-encoding as
-   * gzip.
+   * When the response contains a known content-encoding header, the response stream is wrapped
+   * with an InputStream that decodes the content. This fails when we download large files in
+   * chunks (see <a href="https://github.com/googleapis/google-api-java-client/issues/1009">#1009
+   * </a>). Setting this to true will make the response return the raw input stream.
    * </p>
    */
   public AbstractGoogleClientRequest<T> setReturnRawInputStream(boolean returnRawInputStream) {
