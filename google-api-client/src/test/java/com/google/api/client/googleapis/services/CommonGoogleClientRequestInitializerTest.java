@@ -14,10 +14,12 @@ package com.google.api.client.googleapis.services;
 
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.http.HttpContent;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.util.Key;
 
+import java.io.IOException;
 import junit.framework.TestCase;
 
 /**
@@ -45,5 +47,47 @@ public class CommonGoogleClientRequestInitializerTest extends TestCase {
     assertNull(request.key);
     key.initialize(request);
     assertEquals("foo", request.key);
+  }
+
+  public void testInitializeSetsUserAgent() throws IOException {
+    GoogleClientRequestInitializer requestInitializer = CommonGoogleClientRequestInitializer.newBuilder()
+        .setUserAgent("test user agent")
+        .build();
+    MockGoogleClient client = new MockGoogleClient.Builder(new MockHttpTransport(), HttpTesting.SIMPLE_URL, "test/", null, null)
+        .setGoogleClientRequestInitializer(requestInitializer)
+        .setApplicationName("My Application")
+        .build();
+    MyRequest request = new MyRequest(client, "GET", "", null, String.class);
+    requestInitializer.initialize(request);
+    HttpHeaders headers = request.getRequestHeaders();
+    assertEquals("test user agent", headers.getUserAgent());
+  }
+
+  public void testInitializeSetsUserProject() throws IOException {
+    GoogleClientRequestInitializer requestInitializer = CommonGoogleClientRequestInitializer.newBuilder()
+        .setUserProject("my quota project")
+        .build();
+    MockGoogleClient client = new MockGoogleClient.Builder(new MockHttpTransport(), HttpTesting.SIMPLE_URL, "test/", null, null)
+        .setGoogleClientRequestInitializer(requestInitializer)
+        .setApplicationName("My Application")
+        .build();
+    MyRequest request = new MyRequest(client, "GET", "", null, String.class);
+    requestInitializer.initialize(request);
+    HttpHeaders headers = request.getRequestHeaders();
+    assertEquals("my quota project", headers.get("X-Goog-User-Project"));
+  }
+
+  public void testInitializeSetsRequestReason() throws IOException {
+    GoogleClientRequestInitializer requestInitializer = CommonGoogleClientRequestInitializer.newBuilder()
+        .setRequestReason("some request reason")
+        .build();
+    MockGoogleClient client = new MockGoogleClient.Builder(new MockHttpTransport(), HttpTesting.SIMPLE_URL, "test/", null, null)
+        .setGoogleClientRequestInitializer(requestInitializer)
+        .setApplicationName("My Application")
+        .build();
+    MyRequest request = new MyRequest(client, "GET", "", null, String.class);
+    requestInitializer.initialize(request);
+    HttpHeaders headers = request.getRequestHeaders();
+    assertEquals("some request reason", headers.get("X-Goog-Request-Reason"));
   }
 }
