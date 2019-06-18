@@ -94,6 +94,9 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /** Whether to disable GZip compression of HTTP content. */
   private boolean disableGZipContent;
 
+  /** Whether to return raw input stream in {@link HttpResponse#getContent()}. */
+  private boolean returnRawInputStream;
+
   /** Response class to parse into. */
   private Class<T> responseClass;
 
@@ -222,6 +225,11 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     return disableGZipContent;
   }
 
+  /** Returns whether response should return raw input stream. */
+  public final boolean getReturnRawInputSteam() {
+    return returnRawInputStream;
+  }
+
   /**
    * Sets whether to disable GZip compression of HTTP content.
    *
@@ -236,6 +244,25 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    */
   public AbstractGoogleClientRequest<T> setDisableGZipContent(boolean disableGZipContent) {
     this.disableGZipContent = disableGZipContent;
+    return this;
+  }
+
+  /**
+   * Sets whether the response should return raw input stream or not.
+   *
+   * <p>
+   * By default it is {@code false}.
+   * </p>
+   *
+   * <p>
+   * When the response contains a known content-encoding header, the response stream is wrapped
+   * with an InputStream that decodes the content. This fails when we download large files in
+   * chunks (see <a href="https://github.com/googleapis/google-api-java-client/issues/1009">#1009
+   * </a>). Setting this to true will make the response return the raw input stream.
+   * </p>
+   */
+  public AbstractGoogleClientRequest<T> setReturnRawInputStream(boolean returnRawInputStream) {
+    this.returnRawInputStream = returnRawInputStream;
     return this;
   }
 
@@ -406,6 +433,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     if (!disableGZipContent) {
       httpRequest.setEncoding(new GZipEncoding());
     }
+    httpRequest.setResponseReturnRawInputStream(returnRawInputStream);
     final HttpResponseInterceptor responseInterceptor = httpRequest.getResponseInterceptor();
     httpRequest.setResponseInterceptor(new HttpResponseInterceptor() {
 
