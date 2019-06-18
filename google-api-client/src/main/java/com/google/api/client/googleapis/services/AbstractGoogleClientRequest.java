@@ -225,7 +225,11 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     return disableGZipContent;
   }
 
-  /** Returns whether response should return raw input stream. */
+  /**
+   * Returns whether response should return raw input stream.
+   *
+   * @since 1.30
+   * */
   public final boolean getReturnRawInputSteam() {
     return returnRawInputStream;
   }
@@ -260,6 +264,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * chunks (see <a href="https://github.com/googleapis/google-api-java-client/issues/1009">#1009
    * </a>). Setting this to true will make the response return the raw input stream.
    * </p>
+   *
+   * @since 1.30
    */
   public AbstractGoogleClientRequest<T> setReturnRawInputStream(boolean returnRawInputStream) {
     this.returnRawInputStream = returnRawInputStream;

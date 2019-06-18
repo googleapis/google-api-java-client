@@ -150,6 +150,8 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
 
   /**
    * Returns new builder.
+   *
+   * @since 1.30
    */
   public static Builder newBuilder() {
     return new Builder();
@@ -198,13 +200,15 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
     return requestReason;
   }
 
-  /** Returns the user project of {@code null} */
+  /** Returns the user project or {@code null}. */
   public final String getUserProject() {
     return userProject;
   }
 
   /**
    * Builder for {@code CommonGoogleClientRequestInitializer}.
+   *
+   * @since 1.30
    */
   public static class Builder {
     private String key;
