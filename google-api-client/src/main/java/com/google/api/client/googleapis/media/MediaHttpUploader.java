@@ -434,6 +434,9 @@ public final class MediaHttpUploader {
         }
 
         if (response.getStatusCode() != 308) {
+          if (mediaContent.getCloseInputStream()) {
+            contentInputStream.close();
+          }
           returningResponse = true;
           return response;
         }
