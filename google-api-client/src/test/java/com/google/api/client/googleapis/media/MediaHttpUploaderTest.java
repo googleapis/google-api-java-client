@@ -763,7 +763,7 @@ public class MediaHttpUploaderTest extends TestCase {
     fakeTransport.force308OnRangeQueryResponse = force308OnRangeQueryResponse;
     byte[] testedData = new byte[contentLength];
     new Random().nextBytes(testedData);
-    InputStream is = new ByteArrayInputStream(testedData);
+    TestingInputStream is = new TestingInputStream(testedData);
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
     if (contentLengthKnown) {
       mediaContent.setLength(contentLength);
@@ -782,6 +782,7 @@ public class MediaHttpUploaderTest extends TestCase {
     assertEquals(calls, fakeTransport.lowLevelExecCalls);
 
     assertTrue(Arrays.equals(testedData, fakeTransport.bytesReceived));
+    assertTrue(is.isClosed);
   }
 
   public void testUploadIOException_WithoutIOExceptionHandler() throws Exception {
@@ -1168,5 +1169,81 @@ public class MediaHttpUploaderTest extends TestCase {
     MediaHttpUploader uploader = new MediaHttpUploader(mediaContent, fakeTransport, new TimeoutRequestInitializer());
     uploader.setDirectUploadEnabled(false);
     uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
+  }
+
+
+  static class ResumableErrorMediaTransport extends MockHttpTransport {
+
+    ResumableErrorMediaTransport() {}
+
+    @Override
+    public boolean supportsMethod(String method) throws IOException {
+      return true;
+    }
+
+    @Override
+    public LowLevelHttpRequest buildRequest(final String method, String url) {
+      // First request should be to the resumable request url
+      if (method.equals("POST")) {
+        assertEquals(TEST_RESUMABLE_REQUEST_URL, url);
+
+        return new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() {
+            assertEquals(TEST_CONTENT_TYPE, getFirstHeaderValue("x-upload-content-type"));
+
+            // This is the initiation call.
+            MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+            // Return 200 with the upload URI.
+            response.setStatusCode(200);
+            response.addHeader("Location", TEST_UPLOAD_URL);
+            return response;
+          }
+        };
+      }
+
+      // Fake an error when uploading chunks
+      return new MockLowLevelHttpRequest() {
+        @Override
+        public LowLevelHttpResponse execute() throws IOException {
+          MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+          response.setStatusCode(500);
+          return response;
+        }
+      };
+    }
+  }
+
+  class TestingInputStream extends ByteArrayInputStream {
+    boolean isClosed;
+
+    TestingInputStream(byte[] testData) {
+      super(testData);
+    }
+
+    @Override
+    public void close() throws IOException {
+      isClosed = true;
+      super.close();
+    }
+  }
+
+  public void testResumable_BadResponse() throws IOException {
+    int contentLength = 3;
+    ResumableErrorMediaTransport fakeTransport = new ResumableErrorMediaTransport();
+    byte[] testedData = new byte[contentLength];
+    new Random().nextBytes(testedData);
+    TestingInputStream is = new TestingInputStream(testedData);
+    InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
+    mediaContent.setLength(contentLength);
+    MediaHttpUploader uploader =
+        new MediaHttpUploader(mediaContent, fakeTransport, new ZeroBackOffRequestInitializer());
+
+    // disable GZip - so we would be able to test byte received by server.
+    uploader.setDisableGZipContent(true);
+    HttpResponse response = uploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
+    assertEquals(500, response.getStatusCode());
+
+    assertTrue("input stream should be closed", is.isClosed);
   }
 }
