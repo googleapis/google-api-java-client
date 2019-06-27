@@ -233,7 +233,7 @@ public final class BatchRequest {
 
     // Log a warning if the user is using the global batch endpoint. In the future, we can turn this
     // into a preconditions check.
-    if (this.batchUrl.toString() == GLOBAL_BATCH_ENDPOINT) {
+    if (this.batchUrl.toString().equals(GLOBAL_BATCH_ENDPOINT)) {
       LOGGER.log(Level.WARNING, GLOBAL_BATCH_ENDPOINT_WARNING);
     }
 
