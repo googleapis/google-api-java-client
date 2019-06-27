@@ -128,7 +128,10 @@ public final class BatchRequest {
    * @param transport The transport to use for requests
    * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
    *        {@code null} for none
+   * @deprecated Please use AbstractGoogleClient#batch(HttpRequestInitializer) to instantiate your
+   *        batch request.
    */
+  @Deprecated
   public BatchRequest(HttpTransport transport, HttpRequestInitializer httpRequestInitializer) {
     this.requestFactory = httpRequestInitializer == null
         ? transport.createRequestFactory() : transport.createRequestFactory(httpRequestInitializer);
