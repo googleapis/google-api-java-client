@@ -41,7 +41,8 @@ import java.util.List;
  * </p>
  *
  * <pre>
-   BatchRequest batch = new BatchRequest(transport, httpRequestInitializer);
+   // client is a AbstractGoogleClient (e.g. com.google.api.services.books.Books)
+   BatchRequest batch = client.batch(httpRequestInitializer);
    batch.queue(volumesList, Volumes.class, GoogleJsonErrorContainer.class,
        new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
 
