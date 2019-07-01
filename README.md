@@ -456,7 +456,7 @@ For questions or concerns, please file an issue in the GitHub repository.
 [media-http-progress-listener]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/media/MediaHttpUploaderProgressListener.html
 [input-stream-content]: https://googleapis.dev/java/google-http-client/latest/com/google/api/client/http/InputStreamContent.html
 [media-upload]: https://developers.google.com/discovery/v1/using#discovery-doc-methods-mediaupload
-[resumable-media-upload-protocol-diagram]: ./Resumable-Media-Upload-Sequence-Diagram.png]
+[resumable-media-upload-protocol-diagram]: ./Resumable-Media-Upload-Sequence-Diagram.png
 [media-http-downloader]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/media/MediaHttpDownloader.html
 [media-http-downloader-progress-listener]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/media/MediaHttpDownloaderProgressListener.html
 [output-stream]: https://docs.oracle.com/javase/7/docs/api/java/io/OutputStream.html
