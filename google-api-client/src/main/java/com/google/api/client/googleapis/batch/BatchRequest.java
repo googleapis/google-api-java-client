@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * An instance of this class represents a single batch of requests.
@@ -41,7 +43,8 @@ import java.util.List;
  * </p>
  *
  * <pre>
-   BatchRequest batch = new BatchRequest(transport, httpRequestInitializer);
+   // client is a AbstractGoogleClient (e.g. com.google.api.services.books.Books)
+   BatchRequest batch = client.batch(httpRequestInitializer);
    batch.queue(volumesList, Volumes.class, GoogleJsonErrorContainer.class,
        new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
 
@@ -94,8 +97,20 @@ import java.util.List;
  */
 public final class BatchRequest {
 
+  /**
+   * The deprecated global batch endpoint. Users should actually use the per-service batch endpoint
+   * declared by the service configuration.
+   */
+  private static final String GLOBAL_BATCH_ENDPOINT = "https://www.googleapis.com/batch";
+  private static final String GLOBAL_BATCH_ENDPOINT_WARNING = "You are using the global batch "
+      + "endpoint which will soon be shut down. Please instantiate your BatchRequest via your "
+      + "service client's `batch(HttpRequestInitializer)` method. For an example, please see "
+      + "https://github.com/googleapis/google-api-java-client#batching.";
+
+  private static final Logger LOGGER = Logger.getLogger(BatchRequest.class.getName());
+
   /** The URL where batch requests are sent. */
-  private GenericUrl batchUrl = new GenericUrl("https://www.googleapis.com/batch");
+  private GenericUrl batchUrl = new GenericUrl(GLOBAL_BATCH_ENDPOINT);
 
   /** The request factory for connections to the server. */
   private final HttpRequestFactory requestFactory;
@@ -128,7 +143,10 @@ public final class BatchRequest {
    * @param transport The transport to use for requests
    * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
    *        {@code null} for none
+   * @deprecated Please use AbstractGoogleClient#batch(HttpRequestInitializer) to instantiate your
+   *        batch request.
    */
+  @Deprecated
   public BatchRequest(HttpTransport transport, HttpRequestInitializer httpRequestInitializer) {
     this.requestFactory = httpRequestInitializer == null
         ? transport.createRequestFactory() : transport.createRequestFactory(httpRequestInitializer);
@@ -213,6 +231,13 @@ public final class BatchRequest {
   public void execute() throws IOException {
     boolean retryAllowed;
     Preconditions.checkState(!requestInfos.isEmpty());
+
+    // Log a warning if the user is using the global batch endpoint. In the future, we can turn this
+    // into a preconditions check.
+    if (GLOBAL_BATCH_ENDPOINT.equals(this.batchUrl.toString())) {
+      LOGGER.log(Level.WARNING, GLOBAL_BATCH_ENDPOINT_WARNING);
+    }
+
     HttpRequest batchRequest = requestFactory.buildPostRequest(this.batchUrl, null);
     // NOTE: batch does not support gzip encoding
     HttpExecuteInterceptor originalInterceptor = batchRequest.getInterceptor();
