@@ -232,6 +232,7 @@ public abstract class AbstractGoogleClient {
    * @return newly created Batch request
    */
   public final BatchRequest batch(HttpRequestInitializer httpRequestInitializer) {
+    @SuppressWarnings("deprecated")
     BatchRequest batch =
         new BatchRequest(getRequestFactory().getTransport(), httpRequestInitializer);
     batch.setBatchUrl(new GenericUrl(getRootUrl() + batchPath));
