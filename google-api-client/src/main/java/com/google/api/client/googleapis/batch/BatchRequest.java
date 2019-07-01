@@ -104,7 +104,8 @@ public final class BatchRequest {
   private static final String GLOBAL_BATCH_ENDPOINT = "https://www.googleapis.com/batch";
   private static final String GLOBAL_BATCH_ENDPOINT_WARNING = "You are using the global batch "
       + "endpoint which will soon be shut down. Please instantiate your BatchRequest via your "
-      + "service client's `batch(HttpRequestInitializer)` method.";
+      + "service client's `batch(HttpRequestInitializer)` method. For an example, please see "
+      + "https://github.com/googleapis/google-api-java-client#batching.";
 
   private static final Logger LOGGER = Logger.getLogger(BatchRequest.class.getName());
 
