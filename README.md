@@ -94,7 +94,7 @@ To access other Google APIs, use the Google APIs Client Library for Java, which 
 
 ## Highlighted Features
 
-- **The library makes it simple to call Google APIs.**
+### Simple to call Google APIs
 
 You can call Google APIs using Google service-specific generated libraries with the Google APIs
 Client Library for Java. Here's an example that makes a call to the
@@ -107,7 +107,7 @@ CalendarList feed = client.calendarList().list().execute();
 View.display(feed);
 ```
 
-- **The library makes authentication easier.**
+### Authentication
 
 The authentication library can reduce the amount of code needed to handle
 [OAuth 2.0](https://developers.google.com/api-client-library/java/google-api-java-client/oauth2),
@@ -129,14 +129,205 @@ private static Credential authorize() throws Exception {
 }
 ```
 
-- **The library makes batching and media upload/download easier.**
+### Batching
 
-The library offers helper classes for
-[batching](https://developers.google.com/api-client-library/java/google-api-java-client/batch),
-[media upload](https://developers.google.com/api-client-library/java/google-api-java-client/media-upload),
-and [media download](https://developers.google.com/api-client-library/java/google-api-java-client/media-download).
+Each HTTP connection that your client makes results in overhead. To reduce overhead, you can batch multiple API calls
+together into a single HTTP request.
 
-- **The library runs on Google App Engine.**
+The main classes of interest are [BatchRequest][batch-request] and [JsonBatchCallback][json-batch-callback]. The
+following example shows how to use these classes with service-specific generated libraries:
+
+```java
+JsonBatchCallback<Calendar> callback = new JsonBatchCallback<Calendar>() {
+
+  public void onSuccess(Calendar calendar, HttpHeaders responseHeaders) {
+    printCalendar(calendar);
+    addedCalendarsUsingBatch.add(calendar);
+  }
+
+  public void onFailure(GoogleJsonError e, HttpHeaders responseHeaders) {
+    System.out.println("Error Message: " + e.getMessage());
+  }
+};
+
+...
+
+Calendar client = Calendar.builder(transport, jsonFactory, credential)
+  .setApplicationName("BatchExample/1.0").build();
+BatchRequest batch = client.batch();
+
+Calendar entry1 = new Calendar().setSummary("Calendar for Testing 1");
+client.calendars().insert(entry1).queue(batch, callback);
+
+Calendar entry2 = new Calendar().setSummary("Calendar for Testing 2");
+client.calendars().insert(entry2).queue(batch, callback);
+
+batch.execute();
+```
+
+### Media upload
+
+#### Resumable media upload
+
+When you upload a large media file to a server, use resumable media upload to send the file chunk by chunk. The Google 
+API generated libraries contain convenience methods for interacting with resumable media upload, which was introduced in 
+the 1.7.0-beta version of the Google API Client Library for Java.
+
+The resumable media upload protocol is similar to the resumable media upload protocol described in the [Google Drive 
+API documentation][google-drive-documentation].
+
+#### Protocol design
+
+The following sequence diagram shows how the resumable media upload protocol works:
+![Resumable Media Upload Protocol Diagram][resumable-media-upload-protocol-diagram]
+
+#### Implementation details
+
+The main classes of interest are [MediaHttpUploader][media-http-uploader] and 
+[MediaHttpProgressListener][media-http-progress-listener].
+
+If methods in the service-specific generated libraries contain the `mediaUpload` parameter in the Discovery document, 
+then a convenience method is created for these methods that takes an [InputStreamContent][input-stream-content] as a 
+parameter. (For more about using media upload with the Google APIs Discovery Service, see [Media upload][media-upload].)
+
+For example, the `insert` method of the Drive API supports `mediaUpload`, and you can use the following code to upload a 
+file:
+
+```java
+class CustomProgressListener implements MediaHttpUploaderProgressListener {
+  public void progressChanged(MediaHttpUploader uploader) throws IOException {
+    switch (uploader.getUploadState()) {
+      case INITIATION_STARTED:
+        System.out.println("Initiation has started!");
+        break;
+      case INITIATION_COMPLETE:
+        System.out.println("Initiation is complete!");
+        break;
+      case MEDIA_IN_PROGRESS:
+        System.out.println(uploader.getProgress());
+        break;
+      case MEDIA_COMPLETE:
+        System.out.println("Upload is complete!");
+    }
+  }
+}
+
+File mediaFile = new File("/tmp/driveFile.jpg");
+InputStreamContent mediaContent =
+    new InputStreamContent("image/jpeg",
+        new BufferedInputStream(new FileInputStream(mediaFile)));
+mediaContent.setLength(mediaFile.length());
+
+Drive.Files.Insert request = drive.files().insert(fileMetadata, mediaContent);
+request.getMediaHttpUploader().setProgressListener(new CustomProgressListener());
+request.execute();
+```
+
+You can also use the resumable media upload feature without the service-specific generated libraries. Here is an 
+example:
+
+```java
+File mediaFile = new File("/tmp/Test.jpg");
+InputStreamContent mediaContent =
+    new InputStreamContent("image/jpeg",
+        new BufferedInputStream(new FileInputStream(mediaFile)));
+mediaContent.setLength(mediaFile.length());
+
+
+MediaHttpUploader uploader = new MediaHttpUploader(mediaContent, transport, httpRequestInitializer);
+uploader.setProgressListener(new CustomProgressListener());
+HttpResponse response = uploader.upload(requestUrl);
+if (!response.isSuccessStatusCode()) {
+  throw GoogleJsonResponseException(jsonFactory, response);
+}
+```
+
+#### Direct media upload
+Resumable media upload is enabled by default, but you can disable it and use direct media upload instead, for example if 
+you are uploading a small file. Direct media upload was introduced in the 1.9.0-beta version of the Google API Client 
+Library for Java.
+
+Direct media upload uploads the whole file in one HTTP request, as opposed to the resumable media upload protocol, which
+uploads the file in multiple requests. Doing a direct upload reduces the number of HTTP requests but increases the 
+chance of failures (such as connection failures) that can happen with large uploads.
+
+The usage for direct media upload is the same as what is described above for resumable media upload, plus the following 
+call that tells [MediaHttpUploader][media-http-uploader] to only do direct uploads:
+
+```java
+mediaHttpUploader.setDirectUploadEnabled(true);
+```
+
+### Media download
+
+#### Resumable media downloads
+
+When you download a large media file from a server, use resumable media download to download the file chunk by chunk. 
+The Google API generated libraries contain convenience methods for interacting with resumable media download, which was
+introduced in the 1.9.0-beta version of the Google API Client Library for Java.
+    
+The resumable media download protocol is similar to the resumable media upload protocol, which is described in the 
+[Google Drive API documentation][google-drive-documentation].
+
+#### Implementation details
+The main classes of interest are [MediaHttpDownloader][media-http-downloader] and 
+[MediaHttpDownloaderProgressListener][media-http-downloader-progress-listener]. Media content is downloaded in chunks, 
+and chunk size is configurable. If a server error is encountered in a request, then the request is retried.
+
+If methods in the service-specific generated libraries support download in the Discovery document, then a convenient 
+download method is created for these methods that takes in an [OutputStream][output-stream]. (For more about using media
+download with the Google APIs Discovery Service, see [Media download][media-download].)
+
+For example:
+
+```java
+class CustomProgressListener implements MediaHttpDownloaderProgressListener {
+  public void progressChanged(MediaHttpDownloader downloader) {
+    switch (downloader.getDownloadState()) {
+      case MEDIA_IN_PROGRESS:
+        System.out.println(downloader.getProgress());
+        break;
+      case MEDIA_COMPLETE:
+        System.out.println("Download is complete!");
+    }
+  }
+}
+
+OutputStream out = new FileOutputStream("/tmp/driveFile.jpg");
+
+DriveFiles.Get request = drive.files().get(fileId);
+request.getMediaHttpDownloader().setProgressListener(new CustomProgressListener());
+request.executeMediaAndDownloadTo(out);
+```
+
+You can also use this feature without service-specific generated libraries. Here is an example:
+
+```java
+OutputStream out = new FileOutputStream("/tmp/Test.jpg");
+
+MediaHttpDownloader downloader = new MediaHttpDownloader(transport, httpRequestInitializer);
+downloader.setProgressListener(new CustomProgressListener());
+downloader.download(requestUrl, out);
+```
+
+#### Direct media download
+
+Resumable media download is enabled by default, but you can disable it and use direct media download instead, for 
+example if you are downloading a small file. Direct media download was introduced in the 1.9.0-beta version of the 
+Google API Client Library for Java.
+
+Direct media download downloads the whole media content in one HTTP request, as opposed to the resumable media download 
+protocol, which can download in multiple requests. Doing a direct download reduces the number of HTTP requests but 
+increases the chance of failures (such as connection failures) that can happen with large downloads.
+
+The usage is the same as what is described above, plus the following call that tells 
+[MediaHttpDownloader][media-http-downloader] to do direct downloads:
+
+```java
+mediaHttpDownloader.setDirectDownloadEnabled(true);
+```
+
+### Running on Google App Engine
 
 [App Engine-specific helpers](https://developers.google.com/api-client-library/java/google-api-java-client/app-engine)
 make quick work of authenticated calls to APIs, and you do not need to worry about exchanging code for tokens.
@@ -155,7 +346,7 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IO
 }
 ```
 
-- **The library runs on [Android (@Beta)](#@Beta).**
+### Running on [Android (@Beta)](#@Beta)
 
 If you are developing for Android and the Google API you want to use is included in the
 [Google Play Services library](https://developer.android.com/google/play-services/index.html),
@@ -182,7 +373,7 @@ public void onCreate(Bundle savedInstanceState) {
 }
 ```
 
-- **The library is easy to install.**
+### Installation
 
 The Google APIs Client Library for Java is easy to install, and you can download the binary
 directly from the [Downloads page](https://developers.google.com/api-client-library/java/google-api-java-client/download),
@@ -257,3 +448,16 @@ might result, and you are not guaranteed a compilation error.
 - [Discuss](https://groups.google.com/forum/#!forum/google-api-java-client)
 
 For questions or concerns, please file an issue in the GitHub repository.
+
+[batch-request]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/batch/BatchRequest.html
+[json-batch-callback]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/batch/json/JsonBatchCallback.html
+[google-drive-documentation]: https://developers.google.com/drive/web/manage-uploads#resumable
+[media-http-uploader]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/media/MediaHttpUploader.html
+[media-http-progress-listener]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/media/MediaHttpUploaderProgressListener.html
+[input-stream-content]: https://googleapis.dev/java/google-http-client/latest/com/google/api/client/http/InputStreamContent.html
+[media-upload]: https://developers.google.com/discovery/v1/using#discovery-doc-methods-mediaupload
+[resumable-media-upload-protocol-diagram]: ./Resumable-Media-Upload-Sequence-Diagram.png]
+[media-http-downloader]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/media/MediaHttpDownloader.html
+[media-http-downloader-progress-listener]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/media/MediaHttpDownloaderProgressListener.html
+[output-stream]: https://docs.oracle.com/javase/7/docs/api/java/io/OutputStream.html
+[media-download]: https://developers.google.com/discovery/v1/using#discovery-doc-methods-mediadownload
