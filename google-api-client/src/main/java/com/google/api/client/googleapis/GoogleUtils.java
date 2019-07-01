@@ -42,14 +42,14 @@ public final class GoogleUtils {
    *
    * @since 1.14
    */
-  public static final Integer MINOR_VERSION = 26;
+  public static final Integer MINOR_VERSION = 29;
 
   /**
    * Bug fix part of the current release version.
    *
    * @since 1.14
    */
-  public static final Integer BUGFIX_VERSION = 0;
+  public static final Integer BUGFIX_VERSION = 3;
 
   /** Current release version. */
   // NOTE: toString() so compiler thinks it isn't a constant, so it won't inline it
