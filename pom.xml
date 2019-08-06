@@ -499,7 +499,7 @@
     <project.gson.version>2.1</project.gson.version>
     <project.jackson-core-asl.version>1.9.13</project.jackson-core-asl.version>
     <project.jackson-core2.version>2.9.8</project.jackson-core2.version>
-    <project.protobuf-java.version>2.6.1</project.protobuf-java.version>
+    <project.protobuf-java.version>3.9.1</project.protobuf-java.version>
     <project.guava.version>26.0-android</project.guava.version>
     <project.appengine.version>1.9.64</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
