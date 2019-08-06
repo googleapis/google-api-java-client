@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright 2018 Google Inc.
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,15 +15,40 @@
 
 set -eo pipefail
 
-cd github/google-api-java-client/
+## Get the directory of the build script
+scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
+## cd to the parent directory, i.e. the root of the git repo
+cd ${scriptDir}/..
 
-# Print out Java
+# Print out Java version
 java -version
-echo $JOB_TYPE
+echo ${JOB_TYPE}
 
-# Skip android and assembly tests? Imported from Travis config
-sed -i 's/<module>google-api-client-android<\/module>//'  pom.xml
-sed -i 's/<module>google-api-client-assembly<\/module>//' pom.xml
+mvn install -B -V \
+  -DskipTests=true \
+  -Dmaven.javadoc.skip=true \
+  -Dgcloud.download.skip=true \
+  -T 1C
 
-mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-mvn test -B
+# if GOOGLE_APPLICATION_CREDIENTIALS is specified as a relative path prepend Kokoro root directory onto it
+if [[ ! -z "${GOOGLE_APPLICATION_CREDENTIALS}" && "${GOOGLE_APPLICATION_CREDENTIALS}" != /* ]]; then
+    export GOOGLE_APPLICATION_CREDENTIALS=$(realpath ${KOKORO_ROOT}/src/${GOOGLE_APPLICATION_CREDENTIALS})
+fi
+
+case ${JOB_TYPE} in
+test)
+    mvn test -B
+    bash ${KOKORO_GFILE_DIR}/codecov.sh
+    ;;
+lint)
+    mvn com.coveo:fmt-maven-plugin:check
+    ;;
+javadoc)
+    mvn javadoc:javadoc javadoc:test-javadoc
+    ;;
+integration)
+    mvn -B ${INTEGRATION_TEST_ARGS} -DtrimStackTrace=false -fae verify
+    ;;
+*)
+    ;;
+esac
