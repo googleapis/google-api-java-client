@@ -380,8 +380,8 @@ directly from the [Downloads page](https://developers.google.com/api-client-libr
 or you can use Maven or Gradle.
 
 To use Maven, add the following lines to your pom.xml file:
-[//]: # ({x-version-update-start:google-api-client:released})
 
+[//]: # ({x-version-update-start:google-api-client:released})
   ```maven
   <project>
     <dependencies>
