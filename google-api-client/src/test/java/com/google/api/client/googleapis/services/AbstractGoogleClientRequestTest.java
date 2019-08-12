@@ -214,41 +214,50 @@ public class AbstractGoogleClientRequestTest extends TestCase {
     request.executeUnparsed();
   }
 
-  public void testUserAgent() throws Exception {
+  public void testUserAgent() throws IOException {
     AssertUserAgentTransport transport = new AssertUserAgentTransport();
     transport.expectedUserAgent = AbstractGoogleClientRequest.USER_AGENT_SUFFIX + " " + HttpRequest.USER_AGENT_SUFFIX;
     // Don't specify an Application Name.
     MockGoogleClient client = new MockGoogleClient.Builder(
         transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
     MockGoogleClientRequest<Void> request =
-        new MockGoogleClientRequest<Void>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
+        new MockGoogleClientRequest<>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
     request.executeUnparsed();
   }
 
-  public void testSetsApiClientHeader() throws Exception {
-    HttpTransport transport = new AssertHeaderTransport("X-Goog-Api-Client", "java/\\d+\\.\\d+\\.\\d+.*");
+  public void testSetsApiClientHeader() throws IOException {
+    HttpTransport transport = new AssertHeaderTransport("X-Goog-Api-Client", "gl-java/\\d+\\.\\d+\\.\\d+.*");
     MockGoogleClient client = new MockGoogleClient.Builder(
         transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
     MockGoogleClientRequest<Void> request =
-        new MockGoogleClientRequest<Void>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
+        new MockGoogleClientRequest<>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
     request.executeUnparsed();
   }
 
-  public void testSetsApiClientHeaderWithOsVersion() throws Exception {
+  public void testSetsApiClientHeaderWithOsVersion() {
     System.setProperty("os.name", "My OS");
     System.setProperty("os.version", "1.2.3");
 
-    String version = new ApiClientVersion().build("My Client");
+    String version = new ApiClientVersion().toString();
     assertTrue("Api version should contain the os version", version.matches(".* my-os/1.2.3"));
   }
 
-  public void testSetsApiClientHeaderWithoutOsVersion() throws Exception {
+  public void testSetsApiClientHeaderWithoutOsVersion() {
     System.setProperty("os.name", "My OS");
     System.clearProperty("os.version");
     assertNull(System.getProperty("os.version"));
 
-    String version = new ApiClientVersion().build("My Client");
+    String version = new ApiClientVersion().toString();
     assertFalse("Api version should not contain the os version", version.matches(".*my-os.*"));
+  }
+
+  public void testSetsApiClientHeaderDiscoveryVersion() throws IOException {
+    HttpTransport transport = new AssertHeaderTransport("X-Goog-Api-Client", ".*gdcl/\\d+\\.\\d+\\.\\d+.*");
+    MockGoogleClient client = new MockGoogleClient.Builder(
+            transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
+    MockGoogleClientRequest<Void> request =
+            new MockGoogleClientRequest<>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
+    request.executeUnparsed();
   }
 
   public void testReturnRawInputStream_defaultFalse() throws Exception {

@@ -131,31 +131,27 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       requestHeaders.setUserAgent(USER_AGENT_SUFFIX);
     }
     // Set the header for the Api Client version (Java and OS version)
-    requestHeaders.set(
-      API_VERSION_HEADER,
-      ApiClientVersion.getDefault().build(abstractGoogleClient.getClass().getSimpleName())
-    );
+    requestHeaders.set(API_VERSION_HEADER, ApiClientVersion.getDefault().toString());
   }
 
   /**
-   * Internal class to help build the X-Goog-Api-Client header. This header identifies the
-   * API Client version and environment.
+   * Internal class to help build the X-Goog-Api-Client header. This header identifies the API
+   * Client version and environment.
    *
-   * See <a href="https://cloud.google.com/apis/docs/system-parameters"></a>
-   *
+   * <p>See <a href="https://cloud.google.com/apis/docs/system-parameters"></a>
    */
   static class ApiClientVersion {
     private static final ApiClientVersion DEFAULT_VERSION = new ApiClientVersion();
-    private final String headerTemplate;
+    private final String versionString;
 
     ApiClientVersion() {
       this(getJavaVersion(), OS_NAME.value(), OS_VERSION.value(), GoogleUtils.VERSION);
     }
 
     ApiClientVersion(String javaVersion, String osName, String osVersion, String clientVersion) {
-      StringBuilder sb = new StringBuilder("java/");
+      StringBuilder sb = new StringBuilder("gl-java/");
       sb.append(formatSemver(javaVersion));
-      sb.append(" http-google-%s/");
+      sb.append(" gdcl/");
       sb.append(formatSemver(clientVersion));
       if (osName != null && osVersion != null) {
         sb.append(" ");
@@ -163,11 +159,11 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
         sb.append("/");
         sb.append(formatSemver(osVersion));
       }
-      this.headerTemplate = sb.toString();
+      this.versionString = sb.toString();
     }
 
-    String build(String clientName) {
-      return String.format(headerTemplate, formatName(clientName));
+    public String toString() {
+      return versionString;
     }
 
     private static ApiClientVersion getDefault() {
