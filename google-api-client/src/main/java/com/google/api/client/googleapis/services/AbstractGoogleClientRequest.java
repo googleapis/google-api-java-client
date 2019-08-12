@@ -131,7 +131,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       requestHeaders.setUserAgent(USER_AGENT_SUFFIX);
     }
     // Set the header for the Api Client version (Java and OS version)
-    requestHeaders.set(API_VERSION_HEADER, ApiClientVersion.getDefault().toString());
+    requestHeaders.set(API_VERSION_HEADER, ApiClientVersion.DEFAULT_VERSION);
   }
 
   /**
@@ -141,7 +141,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * <p>See <a href="https://cloud.google.com/apis/docs/system-parameters"></a>
    */
   static class ApiClientVersion {
-    private static final ApiClientVersion DEFAULT_VERSION = new ApiClientVersion();
+    static final String DEFAULT_VERSION = new ApiClientVersion().toString();
     private final String versionString;
 
     ApiClientVersion() {
@@ -164,10 +164,6 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
 
     public String toString() {
       return versionString;
-    }
-
-    private static ApiClientVersion getDefault() {
-      return DEFAULT_VERSION;
     }
 
     private static String getJavaVersion() {
