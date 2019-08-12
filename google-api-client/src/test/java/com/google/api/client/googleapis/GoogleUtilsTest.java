@@ -16,6 +16,8 @@ package com.google.api.client.googleapis;
 
 import java.security.KeyStore;
 import java.util.Enumeration;
+import java.util.regex.Matcher;
+
 import junit.framework.TestCase;
 
 /**
@@ -35,5 +37,23 @@ public class GoogleUtilsTest extends TestCase {
     // intentionally check the count of certificates, so it can help us detect if a new certificate
     // has been added or removed
     assertEquals(70, trustStore.size());
+  }
+
+  public void testVersionMatcher() {
+    String version = "1.30.3";
+    Matcher matcher = GoogleUtils.VERSION_PATTERN.matcher(version);
+    assertTrue(matcher.find());
+    assertEquals(1, Integer.parseInt(matcher.group(1)));
+    assertEquals(30, Integer.parseInt(matcher.group(2)));
+    assertEquals(3, Integer.parseInt(matcher.group(3)));
+  }
+
+  public void testVersionMatcherSnapshot() {
+    String version = "1.30.3-SNAPSHOT";
+    Matcher matcher = GoogleUtils.VERSION_PATTERN.matcher(version);
+    assertTrue(matcher.find());
+    assertEquals(1, Integer.parseInt(matcher.group(1)));
+    assertEquals(30, Integer.parseInt(matcher.group(2)));
+    assertEquals(3, Integer.parseInt(matcher.group(3)));
   }
 }
