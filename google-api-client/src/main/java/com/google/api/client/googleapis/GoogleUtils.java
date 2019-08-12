@@ -15,11 +15,12 @@
 package com.google.api.client.googleapis;
 
 import com.google.api.client.util.SecurityUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Utility class for the Google API Client Library.
@@ -29,32 +30,42 @@ import java.security.KeyStore;
  */
 public final class GoogleUtils {
 
+  // NOTE: toString() so compiler thinks it isn't a constant, so it won't inline it
+  // {x-version-update-start:google-api-client:current}
+  /** Current release version. */
+  public static final String VERSION = "1.30.3-SNAPSHOT".toString();
+  // {x-version-update-end:google-api-client:current}
+
   // NOTE: Integer instead of int so compiler thinks it isn't a constant, so it won't inline it
   /**
    * Major part of the current release version.
    *
    * @since 1.14
    */
-  public static final Integer MAJOR_VERSION = 1;
+  public static final Integer MAJOR_VERSION;
 
   /**
    * Minor part of the current release version.
    *
    * @since 1.14
    */
-  public static final Integer MINOR_VERSION = 26;
+  public static final Integer MINOR_VERSION;
 
   /**
    * Bug fix part of the current release version.
    *
    * @since 1.14
    */
-  public static final Integer BUGFIX_VERSION = 0;
+  public static final Integer BUGFIX_VERSION;
 
-  /** Current release version. */
-  // NOTE: toString() so compiler thinks it isn't a constant, so it won't inline it
-  public static final String VERSION = (MAJOR_VERSION + "." + MINOR_VERSION + "." + BUGFIX_VERSION
-      + "-SNAPSHOT").toString();
+  static {
+    Matcher versionMatcher =
+        Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)(-SNAPSHOT)?").matcher(VERSION);
+    versionMatcher.find();
+    MAJOR_VERSION = Integer.parseInt(versionMatcher.group(1));
+    MINOR_VERSION = Integer.parseInt(versionMatcher.group(2));
+    BUGFIX_VERSION = Integer.parseInt(versionMatcher.group(3));
+  }
 
   /** Cached value for {@link #getCertificateTrustStore()}. */
   static KeyStore certTrustStore;
@@ -62,9 +73,7 @@ public final class GoogleUtils {
   /**
    * Returns the key store for trusted root certificates to use for Google APIs.
    *
-   * <p>
-   * Value is cached, so subsequent access is fast.
-   * </p>
+   * <p>Value is cached, so subsequent access is fast.
    *
    * @since 1.14
    */
@@ -78,6 +87,5 @@ public final class GoogleUtils {
     return certTrustStore;
   }
 
-  private GoogleUtils() {
-  }
+  private GoogleUtils() {}
 }
