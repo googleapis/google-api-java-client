@@ -15,6 +15,8 @@
 package com.google.api.client.googleapis;
 
 import com.google.api.client.util.SecurityUtils;
+import com.google.common.annotations.VisibleForTesting;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
@@ -58,9 +60,11 @@ public final class GoogleUtils {
    */
   public static final Integer BUGFIX_VERSION;
 
+  @VisibleForTesting
+  static final Pattern VERSION_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)(-SNAPSHOT)?");
+
   static {
-    Matcher versionMatcher =
-        Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)(-SNAPSHOT)?").matcher(VERSION);
+    Matcher versionMatcher = VERSION_PATTERN.matcher(VERSION);
     versionMatcher.find();
     MAJOR_VERSION = Integer.parseInt(versionMatcher.group(1));
     MINOR_VERSION = Integer.parseInt(versionMatcher.group(2));
