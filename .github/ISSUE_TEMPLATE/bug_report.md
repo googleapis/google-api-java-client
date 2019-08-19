@@ -13,11 +13,11 @@ Please run down the following list and make sure you've tried the usual "quick f
   - Search the issues already opened: https://github.com/googleapis/google-api-client/issues
   - Check for answers on StackOverflow: http://stackoverflow.com/questions/tagged/google-cloud-platform
 
-If you are still having issues, please be sure to include as much information as possible:
+If you are still having issues, please include as much information as possible:
 
 #### Environment details
 
-1. Specify the API at the beginning of the title (for example, "BigQuery: ...")
+1. Specify the API at the beginning of the title. For example, "BigQuery: ...").
    General, Core, and Other are also allowed as types
 2. OS type and version:
 3. Java version:
@@ -39,7 +39,7 @@ If you are still having issues, please be sure to include as much information as
 Any relevant stacktrace here.
 ```
 
-#### External references such as API reference guides used
+#### External references such as API reference guides
 
 - ?
 
