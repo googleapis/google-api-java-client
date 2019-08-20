@@ -37,7 +37,7 @@ NAME=google-api-client
 VERSION=$(grep ${NAME}: versions.txt | cut -d: -f3)
 
 # build the docs
-mvn site
+mvn site -B
 
 pushd target/site/apidocs
 

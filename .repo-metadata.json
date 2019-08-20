@@ -1,0 +1,10 @@
+{
+  "name": "google-api-client",
+  "name_pretty": "Google API Java Client",
+  "client_documentation": "https://googleapis.dev/java/google-api-client/latest/",
+  "release_level": "ga",
+  "language": "java",
+  "repo": "googleapis/google-api-java-client",
+  "repo_short": "google-api-java-client",
+  "distribution_name": "google-api-java-client"
+}
