@@ -505,7 +505,7 @@
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.httpclient.version>4.5.9</project.httpclient.version>
     <project.httpcore.version>4.4.11</project.httpcore.version>
-    <project.jdo2-api.version>2.3-eb</project.jdo2-api.version>
+    <project.jdo2-api.version>2.3-20090302111651</project.jdo2-api.version>
     <project.datanucleus-core.version>3.2.2</project.datanucleus-core.version>
     <project.datanucleus-api-jdo.version>3.2.1</project.datanucleus-api-jdo.version>
     <project.datanucleus-maven-plugin.version>4.0.3</project.datanucleus-maven-plugin.version>
