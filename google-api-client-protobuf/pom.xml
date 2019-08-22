@@ -81,7 +81,7 @@
         <artifactId>maven-protoc-plugin</artifactId>
         <version>0.4.2</version>
         <configuration>
-          <protocArtifact>com.google.protobuf:protoc:${project.protobuf-java.version}-build2:exe:${os.detected.classifier}</protocArtifact>
+          <protocArtifact>com.google.protobuf:protoc:${project.protobuf-java.version}:exe:${os.detected.classifier}</protocArtifact>
         </configuration>
         <executions>
           <execution>
