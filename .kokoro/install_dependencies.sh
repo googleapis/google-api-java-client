@@ -19,7 +19,7 @@ set -eo pipefail
 mvn dependency:get -Dartifact=com.google.android:android:4.1.1.4
 
 # Install the appengine SDK
-mvn dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9.76
+mvn dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9.65
 
 # Install play services
 mvn dependency:get -Dartifact=com.google.android.google-play-services:google-play-services:1 -o -DremoteRepositories=file:~/.m2 || \
