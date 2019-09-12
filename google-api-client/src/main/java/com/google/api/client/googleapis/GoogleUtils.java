@@ -35,7 +35,7 @@ public final class GoogleUtils {
   // NOTE: toString() so compiler thinks it isn't a constant, so it won't inline it
   // {x-version-update-start:google-api-client:current}
   /** Current release version. */
-  public static final String VERSION = "1.30.3-SNAPSHOT".toString();
+  public static final String VERSION = "1.30.3".toString();
   // {x-version-update-end:google-api-client:current}
 
   // NOTE: Integer instead of int so compiler thinks it isn't a constant, so it won't inline it

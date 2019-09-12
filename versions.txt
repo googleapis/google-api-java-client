@@ -1,4 +1,4 @@
 # Format:
 # module:released-version:current-version
 
-google-api-client:1.30.2:1.30.3-SNAPSHOT
+google-api-client:1.30.3:1.30.3
