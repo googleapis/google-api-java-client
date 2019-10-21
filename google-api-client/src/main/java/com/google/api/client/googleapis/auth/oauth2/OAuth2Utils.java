@@ -83,6 +83,7 @@ public class OAuth2Utils {
       try {
         HttpRequest request = transport.createRequestFactory().buildGetRequest(tokenUrl);
         request.setConnectTimeout(COMPUTE_PING_CONNECTION_TIMEOUT_MS);
+        request.getHeaders().set("Metadata-Flavor", "Google");
         HttpResponse response = request.execute();
         try {
           HttpHeaders headers = response.getHeaders();
