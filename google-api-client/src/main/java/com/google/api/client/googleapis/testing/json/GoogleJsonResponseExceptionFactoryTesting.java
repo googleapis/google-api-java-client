@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.testing.json;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
@@ -59,7 +60,10 @@ public final class GoogleJsonResponseExceptionFactoryTesting {
     MockLowLevelHttpResponse otherServiceUnavaiableLowLevelResponse =
         new MockLowLevelHttpResponse()
         .setStatusCode(httpCode)
-        .setReasonPhrase(reasonPhrase);
+        .setReasonPhrase(reasonPhrase)
+        .setContentType(Json.MEDIA_TYPE)
+        .setContent("{ \"error\": { \"errors\": [ { \"reason\": \"" + reasonPhrase + "\" } ], " +
+                                    "\"code\": " + httpCode + " } }");
     MockHttpTransport otherTransport = new MockHttpTransport.Builder()
         .setLowLevelHttpResponse(otherServiceUnavaiableLowLevelResponse)
         .build();
