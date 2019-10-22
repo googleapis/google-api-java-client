@@ -25,8 +25,6 @@ nosetests.xml
 .DS_Store
 .classpath
 
-# Built documentation
-docs/
 
 # Python utilities
 *.pyc
