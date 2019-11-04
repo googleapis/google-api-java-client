@@ -12,6 +12,7 @@
 
 package com.google.api.client.googleapis.services;
 
+import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest.ApiClientVersion;
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest;
@@ -203,7 +204,7 @@ public class AbstractGoogleClientRequestTest extends TestCase {
     AssertUserAgentTransport transport = new AssertUserAgentTransport();
     // Specify an Application Name.
     String applicationName = "Test Application";
-    transport.expectedUserAgent = applicationName + " "
+    transport.expectedUserAgent = applicationName + GoogleUtils.VERSION + " "
         + AbstractGoogleClientRequest.USER_AGENT_SUFFIX + " "
         + HttpRequest.USER_AGENT_SUFFIX;
     MockGoogleClient client = new MockGoogleClient.Builder(
