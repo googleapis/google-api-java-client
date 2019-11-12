@@ -26,7 +26,6 @@
 	<classpathentry kind="lib" path="libs/gson-${project.gson.version}.jar" sourcepath="libs-sources/gson-${project.gson.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/httpclient-${project.httpclient.version}.jar" sourcepath="libs-sources/httpclient-${project.httpclient.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/httpcore-${project.httpcore.version}.jar" sourcepath="libs-sources/httpcore-${project.httpcore.version}-sources.jar"/>
-	<classpathentry kind="lib" path="libs/jackson-core-asl-${project.jackson-core-asl.version}.jar" sourcepath="libs-sources/jackson-core-asl-${project.jackson-core-asl.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/jackson-core-${project.jackson-core2.version}.jar" sourcepath="libs-sources/jackson-core-${project.jackson-core2.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/jdo2-api-${project.jdo2-api.version}.jar" sourcepath="libs-sources/jdo2-api-${project.jdo2-api.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/jsr305-${project.jsr305.version}.jar"/>
