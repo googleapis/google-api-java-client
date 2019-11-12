@@ -18,7 +18,6 @@ import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest
 import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.http.HttpTransport;
@@ -290,9 +289,12 @@ public class AbstractGoogleClientRequestTest extends TestCase {
         return new MockLowLevelHttpRequest() {
           @Override
           public LowLevelHttpResponse execute() {
-            return new MockLowLevelHttpResponse().setContentEncoding("gzip").setContent(new ByteArrayInputStream(
-                BaseEncoding.base64()
-                    .decode("H4sIAAAAAAAAAPNIzcnJV3DPz0/PSVVwzskvTVEILskvSkxPVQQA/LySchsAAAA=")));
+            byte[] data = BaseEncoding.base64().decode(
+                "H4sIAAAAAAAAAPNIzcnJV3DPz0/PSVVwzskvTVEILskvSkxPVQQA/LySchsAAAA=");
+            ByteArrayInputStream content = new ByteArrayInputStream(data);
+            return new MockLowLevelHttpResponse()
+                .setContentEncoding("gzip")
+                .setContent(content);
           }
         };
       }
