@@ -56,4 +56,12 @@ public class GoogleUtilsTest extends TestCase {
     assertEquals(30, Integer.parseInt(matcher.group(2)));
     assertEquals(3, Integer.parseInt(matcher.group(3)));
   }
+
+  public void testVersion() {
+    Matcher matcher = GoogleUtils.VERSION_PATTERN.matcher(GoogleUtils.VERSION);
+    assertTrue(matcher.find());
+    assertNotNull(GoogleUtils.MAJOR_VERSION);
+    assertNotNull(GoogleUtils.MINOR_VERSION);
+    assertNotNull(GoogleUtils.BUGFIX_VERSION);
+  }
 }
