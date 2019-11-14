@@ -16,11 +16,11 @@ package com.google.api.client.googleapis;
 
 import com.google.api.client.util.SecurityUtils;
 import com.google.common.annotations.VisibleForTesting;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,11 +32,8 @@ import java.util.regex.Pattern;
  */
 public final class GoogleUtils {
 
-  // NOTE: toString() so compiler thinks it isn't a constant, so it won't inline it
-  // {x-version-update-start:google-api-client:current}
   /** Current release version. */
-  public static final String VERSION = "1.30.5".toString();
-  // {x-version-update-end:google-api-client:current}
+  public static final String VERSION = getVersion();
 
   // NOTE: Integer instead of int so compiler thinks it isn't a constant, so it won't inline it
   /**
@@ -89,6 +86,25 @@ public final class GoogleUtils {
       SecurityUtils.loadKeyStore(certTrustStore, keyStoreStream, "notasecret");
     }
     return certTrustStore;
+  }
+
+  private static String getVersion() {
+    String version = GoogleUtils.class.getPackage().getImplementationVersion();
+    // in a non-packaged environment (local), there's no implementation version to read
+    if (version == null) {
+      // fall back to reading from a properties file - note this value is expected to be cached
+      try (InputStream inputStream =
+          GoogleUtils.class.getResourceAsStream("google-api-client.properties")) {
+        if (inputStream != null) {
+          Properties properties = new Properties();
+          properties.load(inputStream);
+          version = properties.getProperty("google-api-client.version");
+        }
+      } catch (IOException e) {
+        // ignore
+      }
+    }
+    return version;
   }
 
   private GoogleUtils() {}
