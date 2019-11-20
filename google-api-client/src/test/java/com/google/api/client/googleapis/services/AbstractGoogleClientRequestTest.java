@@ -12,6 +12,7 @@
 
 package com.google.api.client.googleapis.services;
 
+import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest.ApiClientVersion;
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest;
@@ -203,7 +204,7 @@ public class AbstractGoogleClientRequestTest extends TestCase {
     // Specify an Application Name.
     String applicationName = "Test Application";
     transport.expectedUserAgent = applicationName + " "
-        + AbstractGoogleClientRequest.USER_AGENT_SUFFIX + " "
+        + AbstractGoogleClientRequest.USER_AGENT_SUFFIX + "/" + GoogleUtils.VERSION + " "
         + HttpRequest.USER_AGENT_SUFFIX;
     MockGoogleClient client = new MockGoogleClient.Builder(
         transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).setApplicationName(
@@ -215,7 +216,8 @@ public class AbstractGoogleClientRequestTest extends TestCase {
 
   public void testUserAgent() throws IOException {
     AssertUserAgentTransport transport = new AssertUserAgentTransport();
-    transport.expectedUserAgent = AbstractGoogleClientRequest.USER_AGENT_SUFFIX + " " + HttpRequest.USER_AGENT_SUFFIX;
+    transport.expectedUserAgent = AbstractGoogleClientRequest.USER_AGENT_SUFFIX + "/"
+            + GoogleUtils.VERSION + " " + HttpRequest.USER_AGENT_SUFFIX;
     // Don't specify an Application Name.
     MockGoogleClient client = new MockGoogleClient.Builder(
         transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
