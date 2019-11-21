@@ -126,9 +126,10 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     // application name
     String applicationName = abstractGoogleClient.getApplicationName();
     if (applicationName != null) {
-      requestHeaders.setUserAgent(applicationName + " " + USER_AGENT_SUFFIX);
+      requestHeaders.setUserAgent(applicationName + " " + USER_AGENT_SUFFIX + "/"
+              + GoogleUtils.VERSION);
     } else {
-      requestHeaders.setUserAgent(USER_AGENT_SUFFIX);
+      requestHeaders.setUserAgent(USER_AGENT_SUFFIX + "/" + GoogleUtils.VERSION);
     }
     // Set the header for the Api Client version (Java and OS version)
     requestHeaders.set(API_VERSION_HEADER, ApiClientVersion.DEFAULT_VERSION);
