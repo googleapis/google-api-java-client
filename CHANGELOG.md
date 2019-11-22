@@ -1,5 +1,19 @@
 # Changelog
 
+### [1.30.6](https://www.github.com/googleapis/google-api-java-client/compare/v1.30.5...v1.30.6) (2019-11-22)
+
+
+### Bug Fixes
+
+* grab version from package metadata ([#1419](https://www.github.com/googleapis/google-api-java-client/issues/1419)) ([a6c6dec](https://www.github.com/googleapis/google-api-java-client/commit/a6c6decbd4a162ff4030e2c3f74c72eb6ac9eddb))
+* user-agent should use identifier/version ([#1425](https://www.github.com/googleapis/google-api-java-client/issues/1425)) ([bfb4d9c](https://www.github.com/googleapis/google-api-java-client/commit/bfb4d9cacdadd8065be07b1bf0c22ea7aeb94d97))
+
+
+### Dependencies
+
+* remove jackson-core-asl ([#1414](https://www.github.com/googleapis/google-api-java-client/issues/1414)) ([8e08249](https://www.github.com/googleapis/google-api-java-client/commit/8e082496d41ed271523b78df80e678a338f22a8a))
+* update guava to 28.1-android ([#1410](https://www.github.com/googleapis/google-api-java-client/issues/1410)) ([1d37f32](https://www.github.com/googleapis/google-api-java-client/commit/1d37f325d3c0cf808cd7c006ba9414e4dd65e5b6))
+
 ### [1.30.5](https://www.github.com/googleapis/google-api-java-client/compare/v1.30.4...v1.30.5) (2019-10-24)
 
 
