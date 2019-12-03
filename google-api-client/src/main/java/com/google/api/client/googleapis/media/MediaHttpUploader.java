@@ -44,7 +44,7 @@ import java.util.Arrays;
 
 /**
  * Media HTTP Uploader, with support for both direct and resumable media uploads. Documentation is
- * available <a href='http://code.google.com/p/google-api-java-client/wiki/MediaUpload'>here</a>.
+ * available <a href='https://googleapis.github.io/google-api-java-client/media-upload.html'>here</a>.
  *
  * <p>
  * For resumable uploads, when the media content length is known, if the provided
