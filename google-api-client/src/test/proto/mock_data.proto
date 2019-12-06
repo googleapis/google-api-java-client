@@ -1,6 +1,5 @@
 syntax = "proto2";
 package api.client.googleapis.batch;
-option optimize_for = LITE_RUNTIME;
 option java_package = "com.google.api.client.googleapis.batch";
 
 message Class1 {

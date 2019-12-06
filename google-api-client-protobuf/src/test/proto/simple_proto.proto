@@ -13,7 +13,6 @@
  */
  
 syntax = "proto2";
-option optimize_for = LITE_RUNTIME;
 option java_package = "com.google.api.client.googleapis.services.protobuf";
 
 message TestMessage {
