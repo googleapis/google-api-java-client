@@ -91,18 +91,18 @@ public final class GoogleUtils {
   private static String getVersion() {
     // attempt to read the library's version from a properties file generated during the build
     // this value should be read and cached for later use
-    String version = "unknown-version";
+    String version = null;
     try (InputStream inputStream =
         GoogleUtils.class.getResourceAsStream("google-api-client.properties")) {
       if (inputStream != null) {
-        final Properties properties = new Properties();
+        Properties properties = new Properties();
         properties.load(inputStream);
         version = properties.getProperty("google-api-client.version");
       }
     } catch (IOException e) {
       // ignore
     }
-    return version;
+    return version == null ? "unknown-version" : version;
   }
 
   private GoogleUtils() {}
