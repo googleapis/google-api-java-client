@@ -1,5 +1,17 @@
 # Changelog
 
+### [1.30.7](https://www.github.com/googleapis/google-api-java-client/compare/v1.30.6...v1.30.7) (2019-12-17)
+
+
+### Bug Fixes
+
+* update GoogleUtils#getVersion() to use stable logic ([#1452](https://www.github.com/googleapis/google-api-java-client/issues/1452)) ([744839f](https://www.github.com/googleapis/google-api-java-client/commit/744839f51a01301390297b4a5cb037547eefc4c0))
+
+
+### Dependencies
+
+* update dependency com.google.oauth-client:google-oauth-client-bom to v1.30.5 ([#1453](https://www.github.com/googleapis/google-api-java-client/issues/1453)) ([b32a7d9](https://www.github.com/googleapis/google-api-java-client/commit/b32a7d95801e1e2e5617818a4f11853eca272c72))
+
 ### [1.30.6](https://www.github.com/googleapis/google-api-java-client/compare/v1.30.5...v1.30.6) (2019-12-03)
 
 
