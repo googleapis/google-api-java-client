@@ -93,11 +93,11 @@ public final class GoogleUtils {
     // this value should be read and cached for later use
     String version = "unknown-version";
     try (InputStream inputStream =
-        GoogleUtils.class.getResourceAsStream("/google-api-client.properties")) {
+        GoogleUtils.class.getResourceAsStream("google-api-client.properties")) {
       if (inputStream != null) {
         final Properties properties = new Properties();
         properties.load(inputStream);
-        version = properties.getProperty("google-http-client.version");
+        version = properties.getProperty("google-api-client.version");
       }
     } catch (IOException e) {
       // ignore
