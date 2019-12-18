@@ -306,7 +306,7 @@ public class AbstractGoogleClientRequestTest extends TestCase {
         client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
     request.setReturnRawInputStream(true);
     InputStream inputStream = request.executeAsInputStream();
-    // The response will not be wrapped do to setReturnRawInputStream(true)
+    // The response will not be wrapped due to setReturnRawInputStream(true)
     assertTrue(inputStream instanceof ByteArrayInputStream);
   }
 
