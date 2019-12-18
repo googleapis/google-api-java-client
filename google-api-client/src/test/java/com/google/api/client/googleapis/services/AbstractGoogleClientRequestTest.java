@@ -281,7 +281,8 @@ public class AbstractGoogleClientRequestTest extends TestCase {
     MockGoogleClientRequest<String> request = new MockGoogleClientRequest<String>(
         client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
     InputStream inputStream = request.executeAsInputStream();
-    assertTrue(inputStream instanceof GZIPInputStream);
+    // The response will be wrapped because of gzip encoding
+    assertFalse(inputStream instanceof ByteArrayInputStream);
   }
 
   public void testReturnRawInputStream_True() throws Exception {
@@ -291,12 +292,9 @@ public class AbstractGoogleClientRequestTest extends TestCase {
         return new MockLowLevelHttpRequest() {
           @Override
           public LowLevelHttpResponse execute() {
-            byte[] data = BaseEncoding.base64().decode(
-                "H4sIAAAAAAAAAPNIzcnJV3DPz0/PSVVwzskvTVEILskvSkxPVQQA/LySchsAAAA=");
-            ByteArrayInputStream content = new ByteArrayInputStream(data);
-            return new MockLowLevelHttpResponse()
-                .setContentEncoding("gzip")
-                .setContent(content);
+            return new MockLowLevelHttpResponse().setContentEncoding("gzip").setContent(new ByteArrayInputStream(
+                BaseEncoding.base64()
+                    .decode("H4sIAAAAAAAAAPNIzcnJV3DPz0/PSVVwzskvTVEILskvSkxPVQQA/LySchsAAAA=")));
           }
         };
       }
@@ -308,7 +306,8 @@ public class AbstractGoogleClientRequestTest extends TestCase {
         client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
     request.setReturnRawInputStream(true);
     InputStream inputStream = request.executeAsInputStream();
-    assertFalse(inputStream instanceof GZIPInputStream);
+    // The response will not be wrapped due to setReturnRawInputStream(true)
+    assertTrue(inputStream instanceof ByteArrayInputStream);
   }
 
   private class AssertHeaderTransport extends MockHttpTransport {
