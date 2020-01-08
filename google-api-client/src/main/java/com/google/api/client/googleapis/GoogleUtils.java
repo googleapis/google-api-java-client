@@ -14,6 +14,7 @@
 
 package com.google.api.client.googleapis;
 
+import androidx.annotation.Keep;
 import com.google.api.client.util.SecurityUtils;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
@@ -30,6 +31,7 @@ import java.util.regex.Pattern;
  * @since 1.12
  * @author rmistry@google.com (Ravi Mistry)
  */
+@Keep
 public final class GoogleUtils {
 
   /** Current release version. */
