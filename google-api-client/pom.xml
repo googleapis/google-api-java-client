@@ -145,11 +145,11 @@
       <artifactId>commons-codec</artifactId>
       <scope>provided</scope>
       <version>1.14</version>
-   </dependency>
-   <dependency>
-     <groupId>com.google.guava</groupId>
-     <artifactId>guava</artifactId>
-   </dependency>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
     <dependency>
       <groupId>androidx.annotation</groupId>
       <artifactId>annotation</artifactId>
