@@ -145,10 +145,23 @@
       <artifactId>commons-codec</artifactId>
       <scope>provided</scope>
       <version>1.14</version>
-   </dependency>
+    </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
+    <dependency>
+      <groupId>androidx.annotation</groupId>
+      <artifactId>annotation</artifactId>
+      <version>1.1.0</version>
+    </dependency>
   </dependencies>
+  
+  <repositories>  
+    <repository>
+      <id>google</id>
+      <name>Google Maven Repository</name>
+      <url>https://maven.google.com/</url>
+    </repository>
+  </repositories>
 </project>
