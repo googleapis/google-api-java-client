@@ -662,31 +662,32 @@ public class BatchRequestTest extends TestCase {
     String request2Method = HttpMethods.GET;
     String request2Url = "http://test/dummy/url2";
     
-    StringBuilder builder = new StringBuilder();
-    builder.append("Content-Length: 118\r\n");
-    builder.append("Content-Type: application/http\r\n");
-    builder.append("content-id: 1\r\n");
-    builder.append("content-transfer-encoding: binary\r\n");
-    builder.append("\r\n");
-    builder.append("POST http://test/dummy/url1 HTTP/1.1\r\n");
-    builder.append("Content-Length: 26\r\n");
-    builder.append("Content-Type: " + request1ContentType + "\r\n");
-    builder.append("\r\n");
-    builder.append(request1Content + "\r\n");
-    builder.append("--__END_OF_PART__");
-    String expected1 = builder.toString();
+    // MIME content boundaries are not reproducible.
+    StringBuilder part1 = new StringBuilder();
+    part1.append("Content-Length: 118\r\n");
+    part1.append("Content-Type: application/http\r\n");
+    part1.append("content-id: 1\r\n");
+    part1.append("content-transfer-encoding: binary\r\n");
+    part1.append("\r\n");
+    part1.append("POST http://test/dummy/url1 HTTP/1.1\r\n");
+    part1.append("Content-Length: 26\r\n");
+    part1.append("Content-Type: " + request1ContentType + "\r\n");
+    part1.append("\r\n");
+    part1.append(request1Content + "\r\n");
+    part1.append("--__END_OF_PART__");
+    String expected1 = part1.toString();
     
-    builder = new StringBuilder();
-    builder.append("Content-Length: 39\r\n");
-    builder.append("Content-Type: application/http\r\n");
-    builder.append("content-id: 2\r\n");
-    builder.append("content-transfer-encoding: binary\r\n");
-    builder.append("\r\n");
-    builder.append("GET http://test/dummy/url2 HTTP/1.1\r\n");
-    builder.append("\r\n");
-    builder.append("\r\n");
-    builder.append("--__END_OF_PART__");
-    String expected2 = builder.toString();
+    StringBuilder part2 = new StringBuilder();
+    part2.append("Content-Length: 39\r\n");
+    part2.append("Content-Type: application/http\r\n");
+    part2.append("content-id: 2\r\n");
+    part2.append("content-transfer-encoding: binary\r\n");
+    part2.append("\r\n");
+    part2.append("GET http://test/dummy/url2 HTTP/1.1\r\n");
+    part2.append("\r\n");
+    part2.append("\r\n");
+    part2.append("--__END_OF_PART__");
+    String expected2 = part2.toString();
     
     MockHttpTransport transport = new MockHttpTransport();
     HttpRequest request1 =
@@ -786,7 +787,7 @@ public class BatchRequestTest extends TestCase {
     subtestExecute_checkWriteTo(expected, expected, request);
   }
 
-  public void testProtoExecute() throws Exception {
+  public void testProtoExecute() throws IOException {
     BatchRequest batchRequest =
         getBatchPopulatedWithRequests(false, false, false, false, true, false);
     batchRequest.execute();
@@ -798,7 +799,7 @@ public class BatchRequestTest extends TestCase {
     assertTrue(batchRequest.requestInfos.isEmpty());
   }
 
-  public void testProtoExecuteWithError() throws Exception {
+  public void testProtoExecuteWithError() throws IOException {
     BatchRequest batchRequest =
         getBatchPopulatedWithRequests(true, false, false, false, true, false);
     batchRequest.execute();
@@ -812,7 +813,7 @@ public class BatchRequestTest extends TestCase {
     assertEquals(1, transport.actualCalls);
   }
 
-  public void testProtoExecuteWithoutLength() throws Exception {
+  public void testProtoExecuteWithoutLength() throws IOException {
     BatchRequest batchRequest =
         getBatchPopulatedWithRequests(false, false, false, false, true, true);
     batchRequest.execute();
