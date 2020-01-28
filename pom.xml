@@ -480,10 +480,9 @@
       - google-oauth-java-client/google-oauth-client-assembly/android-properties (make the filenames match the version here)
       - google-http-java-client/pom.xml (versions must match)
       - google-http-java-client/google-http-client-assembly/android-properties (make the filenames match the version here)
-      - Internally, update the default features.json file
     -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>1.34.0</project.http.version>
+    <project.http.version>1.34.1</project.http.version>
     <project.oauth.version>1.30.5</project.oauth.version>
     <project.jsr305.version>3.0.2</project.jsr305.version>
     <project.gson.version>2.8.6</project.gson.version>
@@ -491,8 +490,8 @@
     <project.guava.version>28.2-android</project.guava.version>
     <project.appengine.version>1.9.77</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
-    <project.httpclient.version>4.5.10</project.httpclient.version>
-    <project.httpcore.version>4.4.12</project.httpcore.version>
+    <project.httpclient.version>4.5.11</project.httpclient.version>
+    <project.httpcore.version>4.4.13</project.httpcore.version>
     <project.jdo2-api.version>2.3-eb</project.jdo2-api.version>
     <project.datanucleus-core.version>3.2.2</project.datanucleus-core.version>
     <project.datanucleus-api-jdo.version>3.2.1</project.datanucleus-api-jdo.version>

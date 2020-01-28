@@ -480,7 +480,7 @@ public class BatchRequestTest extends TestCase {
       boolean returnSuccessAuthenticatedContent,
       boolean testRedirect,
       boolean testBinary,
-      boolean testMissingLength) throws Exception {
+      boolean testMissingLength) throws IOException {
     transport = new MockTransport(testServerError,
         testAuthenticationError,
         testRedirect,
@@ -540,7 +540,7 @@ public class BatchRequestTest extends TestCase {
     assertEquals(METHOD2, requestInfos.get(1).request.getRequestMethod());
   }
 
-  public void testExecute() throws Exception {
+  public void testExecute() throws IOException {
     BatchRequest batchRequest =
         getBatchPopulatedWithRequests(false, false, false, false, false, false);
     batchRequest.execute();
@@ -552,7 +552,7 @@ public class BatchRequestTest extends TestCase {
     assertTrue(batchRequest.requestInfos.isEmpty());
   }
 
-  public void testExecuteWithError() throws Exception {
+  public void testExecuteWithError() throws IOException {
     BatchRequest batchRequest =
         getBatchPopulatedWithRequests(true, false, false, false, false, false);
     batchRequest.execute();
@@ -582,7 +582,7 @@ public class BatchRequestTest extends TestCase {
     assertEquals(1, callback3.failureCalls);
   }
 
-  public void subTestExecuteWithVoidCallback(boolean testServerError) throws Exception {
+  public void subTestExecuteWithVoidCallback(boolean testServerError) throws IOException {
     MockTransport transport = new MockTransport(testServerError, false,false, false, false);
     MockGoogleClient client = new MockGoogleClient.Builder(
         transport, ROOT_URL, SERVICE_PATH, null, null).setApplicationName("Test Application")
@@ -661,29 +661,33 @@ public class BatchRequestTest extends TestCase {
 
     String request2Method = HttpMethods.GET;
     String request2Url = "http://test/dummy/url2";
-
-    final StringBuilder expectedOutput = new StringBuilder();
-    expectedOutput.append("--__END_OF_PART__\r\n");
-    expectedOutput.append("Content-Length: 118\r\n");
-    expectedOutput.append("Content-Type: application/http\r\n");
-    expectedOutput.append("content-id: 1\r\n");
-    expectedOutput.append("content-transfer-encoding: binary\r\n");
-    expectedOutput.append("\r\n");
-    expectedOutput.append("POST http://test/dummy/url1 HTTP/1.1\r\n");
-    expectedOutput.append("Content-Length: 26\r\n");
-    expectedOutput.append("Content-Type: " + request1ContentType + "\r\n");
-    expectedOutput.append("\r\n");
-    expectedOutput.append(request1Content + "\r\n");
-    expectedOutput.append("--__END_OF_PART__\r\n");
-    expectedOutput.append("Content-Length: 39\r\n");
-    expectedOutput.append("Content-Type: application/http\r\n");
-    expectedOutput.append("content-id: 2\r\n");
-    expectedOutput.append("content-transfer-encoding: binary\r\n");
-    expectedOutput.append("\r\n");
-    expectedOutput.append("GET http://test/dummy/url2 HTTP/1.1\r\n");
-    expectedOutput.append("\r\n");
-    expectedOutput.append("\r\n");
-    expectedOutput.append("--__END_OF_PART__--\r\n");
+    
+    StringBuilder builder = new StringBuilder();
+    builder.append("Content-Length: 118\r\n");
+    builder.append("Content-Type: application/http\r\n");
+    builder.append("content-id: 1\r\n");
+    builder.append("content-transfer-encoding: binary\r\n");
+    builder.append("\r\n");
+    builder.append("POST http://test/dummy/url1 HTTP/1.1\r\n");
+    builder.append("Content-Length: 26\r\n");
+    builder.append("Content-Type: " + request1ContentType + "\r\n");
+    builder.append("\r\n");
+    builder.append(request1Content + "\r\n");
+    builder.append("--__END_OF_PART__");
+    String expected1 = builder.toString();
+    
+    builder = new StringBuilder();
+    builder.append("Content-Length: 39\r\n");
+    builder.append("Content-Type: application/http\r\n");
+    builder.append("content-id: 2\r\n");
+    builder.append("content-transfer-encoding: binary\r\n");
+    builder.append("\r\n");
+    builder.append("GET http://test/dummy/url2 HTTP/1.1\r\n");
+    builder.append("\r\n");
+    builder.append("\r\n");
+    builder.append("--__END_OF_PART__");
+    String expected2 = builder.toString();
+    
     MockHttpTransport transport = new MockHttpTransport();
     HttpRequest request1 =
         transport
@@ -694,11 +698,11 @@ public class BatchRequestTest extends TestCase {
                 new ByteArrayContent(request1ContentType, request1Content.getBytes(UTF_8)));
     HttpRequest request2 = transport.createRequestFactory()
         .buildRequest(request2Method, new GenericUrl(request2Url), null);
-    subtestExecute_checkWriteTo(expectedOutput.toString(), request1, request2);
+    subtestExecute_checkWriteTo(expected1, expected2, request1, request2);
   }
 
-  private void subtestExecute_checkWriteTo(final String expectedOutput, HttpRequest... requests)
-      throws IOException {
+  private void subtestExecute_checkWriteTo(
+      final String part1, final String part2, HttpRequest... requests) throws IOException {
 
     MockHttpTransport transport = new MockHttpTransport() {
 
@@ -708,10 +712,12 @@ public class BatchRequestTest extends TestCase {
 
           @Override
           public LowLevelHttpResponse execute() throws IOException {
-            assertEquals("multipart/mixed; boundary=__END_OF_PART__", getContentType());
+            assertTrue(getContentType().startsWith("multipart/mixed; boundary=__END_OF_PART__"));
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             getStreamingContent().writeTo(out);
-            assertEquals(expectedOutput, out.toString("UTF-8"));
+            String actual = out.toString("UTF-8");
+            assertTrue(actual + "\n does not contain \n" + part1, actual.contains(part1));
+            assertTrue(actual.contains(part2));
             MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
             response.setStatusCode(200);
             response.addHeader("Content-Type", "multipart/mixed; boundary=" + RESPONSE_BOUNDARY);
@@ -748,9 +754,9 @@ public class BatchRequestTest extends TestCase {
     batchRequest.execute();
   }
 
-  public void testExecute_checkWriteToNoHeaders() throws Exception {
+  public void testExecute_checkWriteToNoHeaders() throws IOException {
     MockHttpTransport transport = new MockHttpTransport();
-    HttpRequest request1 = transport.createRequestFactory()
+    HttpRequest request = transport.createRequestFactory()
         .buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL, new HttpContent() {
 
           @Override
@@ -772,11 +778,12 @@ public class BatchRequestTest extends TestCase {
             return true;
           }
         });
-    subtestExecute_checkWriteTo(new StringBuilder().append("--__END_OF_PART__\r\n")
-        .append("Content-Length: 36\r\n").append("Content-Type: application/http\r\n")
-        .append("content-id: 1\r\n").append("content-transfer-encoding: binary\r\n").append("\r\n")
-        .append("POST http://google.com/ HTTP/1.1\r\n").append("\r\n").append("\r\n")
-        .append("--__END_OF_PART__--\r\n").toString(), request1);
+    String expected = new StringBuilder()
+      .append("Content-Length: 36\r\n").append("Content-Type: application/http\r\n")
+      .append("content-id: 1\r\n").append("content-transfer-encoding: binary\r\n").append("\r\n")
+      .append("POST http://google.com/ HTTP/1.1\r\n").append("\r\n").append("\r\n")
+      .append("--__END_OF_PART__").toString();
+    subtestExecute_checkWriteTo(expected, expected, request);
   }
 
   public void testProtoExecute() throws Exception {
