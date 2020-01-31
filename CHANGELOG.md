@@ -1,5 +1,19 @@
 # Changelog
 
+### [1.30.8](https://www.github.com/googleapis/google-api-java-client/compare/v1.30.7...v1.30.8) (2020-01-31)
+
+
+### Bug Fixes
+
+* future test breakage ([#1457](https://www.github.com/googleapis/google-api-java-client/issues/1457)) ([e7d5c83](https://www.github.com/googleapis/google-api-java-client/commit/e7d5c831a9d5c72206af6322142c338585698a78))
+
+
+### Dependencies
+
+* update dependency commons-codec:commons-codec to v1.14 ([#1463](https://www.github.com/googleapis/google-api-java-client/issues/1463)) ([97de688](https://www.github.com/googleapis/google-api-java-client/commit/97de688da9a0748e78f314f686a771852ed78459))
+* update guava to 28.2-android ([#1473](https://www.github.com/googleapis/google-api-java-client/issues/1473)) ([69a8d6f](https://www.github.com/googleapis/google-api-java-client/commit/69a8d6fb4146e85e8100c9e5fc220835f8ce12d9))
+* update http client ([#1482](https://www.github.com/googleapis/google-api-java-client/issues/1482)) ([232785a](https://www.github.com/googleapis/google-api-java-client/commit/232785a9aa8a4441129d74a08066bcb848153df3))
+
 ### [1.30.7](https://www.github.com/googleapis/google-api-java-client/compare/v1.30.6...v1.30.7) (2019-12-17)
 
 
