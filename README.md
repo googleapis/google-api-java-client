@@ -45,6 +45,7 @@ To use Gradle, add the following lines to your build.gradle file:
 ```gradle
 repositories {
     mavenCentral()
+    google()
 }
 dependencies {
     compile 'com.google.api-client:google-api-client:1.30.8'
