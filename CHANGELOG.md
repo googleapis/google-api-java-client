@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.30.9](https://www.github.com/googleapis/google-api-java-client/compare/v1.30.8...v1.30.9) (2020-02-18)
+
+
+### Bug Fixes
+
+* use embedded Proguard configuration instead of compile-time annotation ([#1491](https://www.github.com/googleapis/google-api-java-client/issues/1491)) ([8a59ed0](https://www.github.com/googleapis/google-api-java-client/commit/8a59ed071f19d9b78d284cdc75181ee102ca9c61)), closes [#1467](https://www.github.com/googleapis/google-api-java-client/issues/1467) [#1489](https://www.github.com/googleapis/google-api-java-client/issues/1489)
+
 ### [1.30.8](https://www.github.com/googleapis/google-api-java-client/compare/v1.30.7...v1.30.8) (2020-01-31)
 
 
