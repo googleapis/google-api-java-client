@@ -97,21 +97,6 @@
         <version>${project.appengine.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.google.appengine</groupId>
-        <artifactId>appengine-tools-sdk</artifactId>
-        <version>${project.appengine.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.appengine</groupId>
-        <artifactId>appengine-testing</artifactId>
-        <version>${project.appengine.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.appengine</groupId>
-        <artifactId>appengine-api-stubs</artifactId>
-        <version>${project.appengine.version}</version>
-      </dependency>
-      <dependency>
         <groupId>xpp3</groupId>
         <artifactId>xpp3</artifactId>
         <version>${project.xpp3.version}</version>
