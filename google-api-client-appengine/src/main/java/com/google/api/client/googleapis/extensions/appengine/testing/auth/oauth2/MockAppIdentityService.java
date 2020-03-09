@@ -91,5 +91,7 @@ public class MockAppIdentityService implements AppIdentityService {
   }
 
   @Override
-  public String getDefaultGcsBucketName() { return null; }
+  public String getDefaultGcsBucketName() {
+    return null;
+  }
 }

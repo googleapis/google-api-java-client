@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  */
 @Beta
 public class MockTokenServerTransport extends MockHttpTransport {
-  /** Old URL of Google's token server (for backwards compatibility) */
+  /** Old URL of Google's token server (for backwards compatibility). */
   private static final String LEGACY_TOKEN_SERVER_URL =
       "https://accounts.google.com/o/oauth2/token";
 
