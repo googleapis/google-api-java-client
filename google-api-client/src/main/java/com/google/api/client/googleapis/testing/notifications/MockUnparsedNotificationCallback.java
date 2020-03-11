@@ -18,7 +18,6 @@ import com.google.api.client.googleapis.notifications.StoredChannel;
 import com.google.api.client.googleapis.notifications.UnparsedNotification;
 import com.google.api.client.googleapis.notifications.UnparsedNotificationCallback;
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 
 /**

@@ -17,7 +17,6 @@ package com.google.api.client.googleapis.services.protobuf;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.CommonGoogleClientRequestInitializer;
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 
 /**

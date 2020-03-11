@@ -27,7 +27,6 @@ import com.google.api.client.util.Preconditions;
 import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.appidentity.AppIdentityService.GetAccessTokenResult;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;

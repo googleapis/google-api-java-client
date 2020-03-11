@@ -16,7 +16,6 @@ package com.google.api.client.googleapis.services.json;
 
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.CommonGoogleClientRequestInitializer;
-
 import java.io.IOException;
 
 /**

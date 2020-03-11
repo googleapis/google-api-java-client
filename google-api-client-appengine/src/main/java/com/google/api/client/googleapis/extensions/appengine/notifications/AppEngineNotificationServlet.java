@@ -18,9 +18,7 @@ import com.google.api.client.extensions.appengine.datastore.AppEngineDataStoreFa
 import com.google.api.client.googleapis.extensions.servlet.notifications.WebhookUtils;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.store.DataStoreFactory;
-
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

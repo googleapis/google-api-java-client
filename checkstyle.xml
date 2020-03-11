@@ -52,6 +52,15 @@ page at http://checkstyle.sourceforge.net/config.html -->
       <property name="severity" value="error"/>
     </module>
 
+    <module name="ImportOrder">
+      <property name="severity" value="warning"/>
+      <!-- This ensures that static imports go first. -->
+      <property name="option" value="top"/>
+      <property name="separatedStaticGroups" value="true"/>
+      <property name="caseSensitive" value="true"/>
+      <property name="tokens" value="STATIC_IMPORT, IMPORT"/>
+    </module>
+
     <!--
 
     JAVADOC CHECKS

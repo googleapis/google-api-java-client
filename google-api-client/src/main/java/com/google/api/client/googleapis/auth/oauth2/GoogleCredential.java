@@ -41,7 +41,6 @@ import com.google.api.client.util.PemReader.Section;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.store.DataStoreFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;

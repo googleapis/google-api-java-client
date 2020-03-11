@@ -23,7 +23,6 @@ import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.UriTemplate;
 import com.google.api.client.http.json.JsonHttpContent;
-
 import java.io.IOException;
 
 /**

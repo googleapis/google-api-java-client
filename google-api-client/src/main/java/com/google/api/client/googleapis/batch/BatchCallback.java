@@ -15,7 +15,6 @@
 package com.google.api.client.googleapis.batch;
 
 import com.google.api.client.http.HttpHeaders;
-
 import java.io.IOException;
 
 /**

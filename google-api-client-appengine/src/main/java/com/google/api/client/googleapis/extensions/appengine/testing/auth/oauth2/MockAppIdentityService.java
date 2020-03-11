@@ -18,7 +18,6 @@ import com.google.api.client.util.Beta;
 import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.appidentity.AppIdentityServiceFailureException;
 import com.google.appengine.api.appidentity.PublicCertificate;
-
 import java.util.Collection;
 import java.util.Date;
 

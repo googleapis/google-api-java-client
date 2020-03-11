@@ -19,7 +19,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Preconditions;
-
 import java.io.IOException;
 
 /**

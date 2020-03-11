@@ -24,7 +24,6 @@ import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
-
 import java.io.IOException;
 
 /**

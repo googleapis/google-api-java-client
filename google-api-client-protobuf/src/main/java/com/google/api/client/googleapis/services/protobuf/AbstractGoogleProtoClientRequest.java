@@ -22,7 +22,6 @@ import com.google.api.client.http.UriTemplate;
 import com.google.api.client.http.protobuf.ProtoHttpContent;
 import com.google.api.client.util.Beta;
 import com.google.protobuf.MessageLite;
-
 import java.io.IOException;
 
 /**

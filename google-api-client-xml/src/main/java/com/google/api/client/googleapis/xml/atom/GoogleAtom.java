@@ -21,7 +21,6 @@ import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Types;
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeSet;
