@@ -141,7 +141,7 @@ public class GoogleJsonResponseException extends HttpResponseException {
     // message
     StringBuilder message = HttpResponseException.computeMessageBuffer(response);
     if (message.length() > 0) {
-      message.append(StringUtils.LINE_SEPARATOR);
+      message.append("\n");
     }
     message.append("Request URL: ").append(response.getRequest().getUrl());
     if (!com.google.api.client.util.Strings.isNullOrEmpty(detailString)) {

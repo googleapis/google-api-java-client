@@ -171,6 +171,6 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
   }
 
   private static String getRequestUrl(GenericUrl requestUrl) {
-    return StringUtils.LINE_SEPARATOR + "Request URL: " + requestUrl;
+    return "\nRequest URL: " + requestUrl;
   }
 }
