@@ -12,7 +12,6 @@ import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
-
 import java.io.IOException;
 
 /**

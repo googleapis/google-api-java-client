@@ -16,7 +16,6 @@ package com.google.api.client.googleapis.apache;
 
 import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.http.apache.ApacheHttpTransport;
-
 import com.google.api.client.util.SslUtils;
 import java.io.IOException;
 import java.net.ProxySelector;

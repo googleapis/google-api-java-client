@@ -20,7 +20,6 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
-
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

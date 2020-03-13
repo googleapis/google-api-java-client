@@ -29,7 +29,6 @@ import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
 import com.google.api.client.util.Preconditions;
-
 import java.io.IOException;
 import java.util.Collection;
 

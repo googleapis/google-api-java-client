@@ -18,7 +18,6 @@ import com.google.api.client.googleapis.notifications.TypedNotificationCallback;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 
 /**

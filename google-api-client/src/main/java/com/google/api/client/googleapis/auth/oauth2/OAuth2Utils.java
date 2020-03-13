@@ -20,7 +20,6 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
