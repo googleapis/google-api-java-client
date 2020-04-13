@@ -454,7 +454,7 @@
     <project.jsr305.version>3.0.2</project.jsr305.version>
     <project.gson.version>2.8.6</project.gson.version>
     <project.protobuf-java.version>3.11.4</project.protobuf-java.version>
-    <project.guava.version>28.2-android</project.guava.version>
+    <project.guava.version>29.0-jre</project.guava.version>
     <project.appengine.version>1.9.78</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.jdo2-api.version>2.3-eb</project.jdo2-api.version>
