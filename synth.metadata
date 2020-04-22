@@ -9,13 +9,6 @@
       }
     },
     {
-      "git": {
-        "name": "synthtool",
-        "remote": "rpc://devrel/cloud/libraries/tools/autosynth",
-        "sha": "706a38c26db42299845396cdae55db635c38794a"
-      }
-    },
-    {
       "template": {
         "name": "java_library",
         "origin": "synthtool.gcp",
