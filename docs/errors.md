@@ -33,14 +33,12 @@ When an error status code is detected in an HTTP response to a Google API that
 uses the JSON format, the generated libraries throw a 
 [`GoogleJsonResponseException`][google-json-response-exception].
 
-The errors use the format specified in [Error responses][error-responses].
-
 The following example shows one way that you can handle these exceptions:
 
 ```java
-Plus.Activities.List listActivities = plus.activities().list("me", "public");
+Drive.Files.List listFiles = drive.files.list();
 try {
-  ActivityFeed feed = listActivities.execute();
+  FileList response = listFiles.execute();
   ...
 } catch (GoogleJsonResponseException e) {
   System.err.println(e.getDetails());
@@ -49,4 +47,3 @@ try {
 
 [google-analytics-api]: https://developers.google.com/analytics/
 [google-json-response-exception]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/json/GoogleJsonResponseException.html
-[error-responses]: https://developers.google.com/url-shortener/v1/getting_started?csw=1#errors
