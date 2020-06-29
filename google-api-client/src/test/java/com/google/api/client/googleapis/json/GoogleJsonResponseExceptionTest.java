@@ -42,7 +42,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
-    assertEquals("200", ge.getMessage());
+    assertTrue(ge.getMessage().startsWith("200"));
   }
 
   public void testFrom_withDetails() throws Exception {
@@ -54,8 +54,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertEquals(GoogleJsonErrorTest.ERROR, GoogleJsonErrorTest.FACTORY.toString(ge.getDetails()));
-    assertTrue(
-        ge.getMessage(), ge.getMessage().startsWith("403" + StringUtils.LINE_SEPARATOR + "{"));
+    assertTrue(ge.getMessage().startsWith("403"));
   }
 
   public void testFrom_detailsMissingContent() throws Exception {
@@ -67,7 +66,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
-    assertEquals("403", ge.getMessage());
+    assertTrue(ge.getMessage().startsWith("403"));
   }
 
   public void testFrom_detailsArbitraryJsonContent() throws Exception {
@@ -79,7 +78,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
-    assertEquals("403", ge.getMessage());
+    assertTrue(ge.getMessage().startsWith("403"));
   }
 
   public void testFrom_detailsArbitraryXmlContent() throws Exception {
@@ -91,8 +90,8 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
-    assertTrue(
-        ge.getMessage(), ge.getMessage().startsWith("403" + StringUtils.LINE_SEPARATOR + "<"));
+    assertTrue(ge.getMessage().startsWith("403"));
+    assertTrue(ge.getMessage().contains("<foo>"));
   }
 
   public void testFrom_errorNoContentButWithJsonContentType() throws Exception {
@@ -104,7 +103,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
-    assertEquals("403", ge.getMessage());
+    assertTrue(ge.getMessage().startsWith("403"));
   }
 
   public void testFrom_errorEmptyContentButWithJsonContentType() throws Exception {
@@ -116,7 +115,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
-    assertEquals("403", ge.getMessage());
+    assertTrue(ge.getMessage().startsWith("403"));
   }
 
   public void testFrom_detailsErrorObject() throws Exception {
@@ -154,6 +153,6 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
-    assertEquals("403", ge.getMessage());
+    assertTrue(ge.getMessage().startsWith("403"));
   }
 }
