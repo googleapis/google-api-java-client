@@ -8,7 +8,7 @@ If you are developing for Android and the Google API you want to use is included
 in the [Google Play Services library][play-services], use that library for the
 best performance and experience.
 
-To access other Google APIs, use the Google Client Library for Java's 
+To access other Google APIs, use the Google APIs Client Library for Java's 
 Android-specific helper classes, which are well-integrated with
 [Android AccountManager][account-manager].
 
@@ -51,19 +51,29 @@ fields are returned to you in the HTTP response. This can significantly reduce
 the size of the response, thereby reducing network usage, parsing response time,
 and memory usage. It works with both JSON and XML.
 
-The following snippet of code drawn from the Google+ Sample demonstrates how to
-use the partial-response protocol:
-
+The following snippet of code drawn from the [Google Drive API Quickstart][quickstart] 
+demonstrates how to use the partial-response protocol. The `setFields` method
+identifies the fields you want returned:
 
 ```java
-Plus.Activities.List listActivities = plus.activities().list("me", "public");
-listActivities.setMaxResults(5L);
-// Pro tip: Use partial responses to improve response time considerably
-listActivities.setFields("nextPageToken,items(id,URL,object/content)");
-ActivityFeed feed = listActivities.execute();
+// Print the names and IDs for up to 10 files.
+FileList result = service.files().list()
+        .setPageSize(10)
+        .setFields("nextPageToken, files(id, name)")
+        .execute();
+List<File> files = result.getFiles();
+if (files == null || files.isEmpty()) {
+    System.out.println("No files found.");
+} else {
+    System.out.println("Files:");
+    for (File file : files) {
+        System.out.printf("%s (%s)\n", file.getName(), file.getId());
+    }
+}
 ```
 
 [play-services]: https://developer.android.com/google/play-services/index.html
 [account-manager]: http://developer.android.com/reference/android/accounts/AccountManager.html
 [http-client-android]: https://github.com/googleapis/google-http-java-client/wiki/Android
 [oauth2-android]: https://github.com/googleapis/google-api-java-client#oauth2-android
+[quickstart]: https://developers.google.com/drive/api/v3/quickstart/java
