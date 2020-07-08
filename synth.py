@@ -13,18 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """This script is used to synthesize generated parts of this library."""
-import synthtool as s
-import synthtool.gcp as gcp
-import logging
 
-logging.basicConfig(level=logging.DEBUG)
-common_templates = gcp.CommonTemplates()
-templates = common_templates.java_library()
-s.copy(templates, excludes=[
+import synthtool.languages.java as java
+
+java.common_templates(excludes=[
     "README.md",
     "java.header",
     "checkstyle.xml",
     "renovate.json",
     "license-checks.xml",
-    "CODE_OF_CONDUCT.md",
 ])
