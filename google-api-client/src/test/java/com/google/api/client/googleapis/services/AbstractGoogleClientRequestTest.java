@@ -31,13 +31,11 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
-import com.google.api.client.util.StringUtils;
 import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.zip.GZIPInputStream;
 import junit.framework.TestCase;
 
 /**
@@ -106,7 +104,7 @@ public class AbstractGoogleClientRequestTest extends TestCase {
       fail("expected " + HttpResponseException.class);
     } catch (HttpResponseException e) {
       // expected
-      assertEquals("401" + StringUtils.LINE_SEPARATOR + ERROR_CONTENT, e.getMessage());
+      assertTrue(e.getMessage().startsWith("401"));
     }
   }
 

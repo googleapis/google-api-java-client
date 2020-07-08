@@ -1,18 +1,17 @@
 {
-  "updateTime": "2020-02-21T22:34:05.194714Z",
   "sources": [
     {
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/google-api-java-client.git",
-        "sha": "bbc9c7a41f6c324e71d27f848dd553e289908bb7"
+        "sha": "ebab80d1fec30bde241a5cb7a3146c89aca5359c"
       }
     },
     {
-      "template": {
-        "name": "java_library",
-        "origin": "synthtool.gcp",
-        "version": "2020.2.4"
+      "git": {
+        "name": "synthtool",
+        "remote": "https://github.com/googleapis/synthtool.git",
+        "sha": "303271797a360f8a439203413f13a160f2f5b3b4"
       }
     }
   ]
