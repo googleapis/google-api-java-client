@@ -11,7 +11,7 @@
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "f8823dec98277a9516f2fb6fae9f58b3a59a23e1"
+        "sha": "c3caf0704f25a0c365f1c315e804a30b87c62a75"
       }
     }
   ],
@@ -24,6 +24,7 @@
     ".github/release-please.yml",
     ".github/trusted-contribution.yml",
     ".github/workflows/ci.yaml",
+    ".github/workflows/samples.yaml",
     ".kokoro/build.bat",
     ".kokoro/build.sh",
     ".kokoro/coerce_logs.sh",
