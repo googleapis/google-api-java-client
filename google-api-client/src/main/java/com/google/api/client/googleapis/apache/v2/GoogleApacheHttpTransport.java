@@ -35,7 +35,6 @@ import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
  * Utilities for Google APIs based on {@link ApacheHttpTransport}.
  *
  * @since 1.31
- * @author Yaniv Inbar
  */
 public final class GoogleApacheHttpTransport {
 
