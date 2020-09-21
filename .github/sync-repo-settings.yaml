@@ -32,6 +32,7 @@ branchProtectionRules:
     - "Kokoro - Test: Java 11"
     - "Kokoro - Test: Java 7"
     - "Kokoro - Test: Java 8"
+    - "Kokoro - Test: Linkage Monitor"
     - "cla/google"
 
 # List of explicit permissions to add (additive only)
