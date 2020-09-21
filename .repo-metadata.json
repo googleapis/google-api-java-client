@@ -6,6 +6,5 @@
   "language": "java",
   "repo": "googleapis/google-api-java-client",
   "repo_short": "google-api-java-client",
-  "codeowner_team": "@googleapis/yoshi-java",
   "distribution_name": "com.google.api-client:google-api-client"
 }
