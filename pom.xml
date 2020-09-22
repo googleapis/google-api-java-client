@@ -457,7 +457,7 @@
     <project.guava.version>29.0-android</project.guava.version>
     <project.appengine.version>1.9.82</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
-    <project.jdo2-api.version>2.3-eb</project.jdo2-api.version>
+    <project.jdo2-api.version>2.3-20090302111651</project.jdo2-api.version>
     <project.datanucleus-core.version>3.2.2</project.datanucleus-core.version>
     <project.datanucleus-api-jdo.version>3.2.1</project.datanucleus-api-jdo.version>
     <project.datanucleus-maven-plugin.version>4.0.3</project.datanucleus-maven-plugin.version>
