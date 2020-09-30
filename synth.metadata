@@ -4,14 +4,14 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/google-api-java-client.git",
-        "sha": "966f403adec2ea73b882450f1981ef1c939f2f18"
+        "sha": "eb9f3f66329ee6b5c15da5e602867b5ce9c20f6e"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "95dbe1bee3c7f7e52ddb24a54c37080620e0d1a2"
+        "sha": "e6168630be3e31eede633ba2c6f1cd64248dec1c"
       }
     }
   ],
@@ -21,6 +21,7 @@
     ".github/ISSUE_TEMPLATE/feature_request.md",
     ".github/ISSUE_TEMPLATE/support_request.md",
     ".github/PULL_REQUEST_TEMPLATE.md",
+    ".github/readme/synth.py",
     ".github/release-please.yml",
     ".github/trusted-contribution.yml",
     ".github/workflows/auto-release.yaml",
@@ -33,6 +34,7 @@
     ".kokoro/common.sh",
     ".kokoro/continuous/common.cfg",
     ".kokoro/continuous/java8.cfg",
+    ".kokoro/continuous/readme.cfg",
     ".kokoro/dependencies.sh",
     ".kokoro/linkage-monitor.sh",
     ".kokoro/nightly/common.cfg",
@@ -56,6 +58,7 @@
     ".kokoro/presubmit/linkage-monitor.cfg",
     ".kokoro/presubmit/lint.cfg",
     ".kokoro/presubmit/samples.cfg",
+    ".kokoro/readme.sh",
     ".kokoro/release/bump_snapshot.cfg",
     ".kokoro/release/common.cfg",
     ".kokoro/release/common.sh",
