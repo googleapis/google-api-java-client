@@ -1,5 +1,16 @@
 # Changelog
 
+### [1.30.11](https://www.github.com/googleapis/google-api-java-client/compare/v1.30.10...v1.30.11) (2020-10-13)
+
+
+### Dependencies
+
+* update dependency com.google.appengine:appengine-api-1.0-sdk to v1.9.82 ([#1518](https://www.github.com/googleapis/google-api-java-client/issues/1518)) ([d77e5fa](https://www.github.com/googleapis/google-api-java-client/commit/d77e5fad9db5bf0e4bc73e42299e86ea6d72709d))
+* update dependency com.google.oauth-client:google-oauth-client-bom to v1.31.1 ([#1599](https://www.github.com/googleapis/google-api-java-client/issues/1599)) ([73f3a6d](https://www.github.com/googleapis/google-api-java-client/commit/73f3a6d2de662179d08d11cc48e843499758cb94))
+* update dependency com.google.protobuf:protobuf-java to v3.13.0 ([#1558](https://www.github.com/googleapis/google-api-java-client/issues/1558)) ([27b0359](https://www.github.com/googleapis/google-api-java-client/commit/27b0359568f780c65b8ffe9e893d40f6f748cff2))
+* update dependency commons-codec:commons-codec to v1.15 ([#1574](https://www.github.com/googleapis/google-api-java-client/issues/1574)) ([e453cdb](https://www.github.com/googleapis/google-api-java-client/commit/e453cdb272738196a561ee4395a567719594f656))
+* update google-http-client to v1.37.0 ([#1598](https://www.github.com/googleapis/google-api-java-client/issues/1598)) ([6504e79](https://www.github.com/googleapis/google-api-java-client/commit/6504e791d68c73ec1ca4d43f9ff9369b52f8c64f))
+
 ### [1.30.10](https://www.github.com/googleapis/google-api-java-client/compare/v1.30.9...v1.30.10) (2020-07-08)
 
 
