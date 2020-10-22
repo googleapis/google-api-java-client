@@ -36,7 +36,7 @@ import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
  *
  * @since 1.14
  * @author Yaniv Inbar
- * @deprecated Please use com.google.api.client.googleapis.apache.v2.GoogleApacheHttpTransport
+ * @deprecated Use com.google.api.client.googleapis.apache.v2.GoogleApacheHttpTransport
  */
 @Deprecated
 public final class GoogleApacheHttpTransport {

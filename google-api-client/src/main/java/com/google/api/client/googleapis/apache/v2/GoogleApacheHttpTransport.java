@@ -44,13 +44,6 @@ public final class GoogleApacheHttpTransport {
    */
   public static ApacheHttpTransport newTrustedTransport() throws GeneralSecurityException,
       IOException {
-    // Set socket buffer sizes to 8192
-    SocketConfig socketConfig =
-        SocketConfig.custom()
-            .setRcvBufSize(8192)
-            .setSndBufSize(8192)
-            .build();
-
     PoolingHttpClientConnectionManager connectionManager =
         new PoolingHttpClientConnectionManager(-1, TimeUnit.MILLISECONDS);
 
@@ -66,7 +59,6 @@ public final class GoogleApacheHttpTransport {
     HttpClient client = HttpClientBuilder.create()
         .useSystemProperties()
         .setSSLSocketFactory(socketFactory)
-        .setDefaultSocketConfig(socketConfig)
         .setMaxConnTotal(200)
         .setMaxConnPerRoute(20)
         .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
