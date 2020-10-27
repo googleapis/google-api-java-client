@@ -13,7 +13,7 @@
  */
 
 /**
- * Google API's support based on the Apache HTTP Client.
+ * Google APIs support based on the Apache HTTP Client.
  *
  * @since 1.31
  */

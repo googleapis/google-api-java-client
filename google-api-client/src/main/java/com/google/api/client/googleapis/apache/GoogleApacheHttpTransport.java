@@ -44,7 +44,7 @@ public final class GoogleApacheHttpTransport {
   /**
    * Returns a new instance of {@link ApacheHttpTransport} that uses
    * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates.
-   * @deprecated Please use com.google.api.client.googleapis.apache.v2.GoogleApacheHttpTransport.newTrustedTransport()
+   * @deprecated Use com.google.api.client.googleapis.apache.v2.GoogleApacheHttpTransport.newTrustedTransport()
    */
   public static ApacheHttpTransport newTrustedTransport() throws GeneralSecurityException,
       IOException {
