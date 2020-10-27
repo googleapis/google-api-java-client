@@ -19,6 +19,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,5 +61,13 @@ public class UtilsTest extends TestCase {
       map.put(key, value);
     }
     return map;
+  }
+
+  public void testHasDefaultCertSource() {
+    assertTrue("has default cert source", Utils.hasDefaultCertSource());
+  }
+
+  public void testLoadDefaultCert() throws Exception {
+    InputStream certAndKey = Utils.loadDefaultCert();
   }
 }

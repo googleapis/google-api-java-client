@@ -14,11 +14,21 @@
 
 package com.google.api.client.googleapis.util;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.Beta;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedTreeMap;
 
 /**
  * {@link Beta} <br/>
@@ -28,6 +38,7 @@ import com.google.api.client.util.Beta;
  */
 @Beta
 public final class Utils {
+  private static final String CONTEXT_AWARE_METADATA_PATH = System.getProperty("user.home") + "/.secureConnect/context_aware_metadata.json";
 
   /**
    * Returns a cached default implementation of the JsonFactory interface.
@@ -53,6 +64,25 @@ public final class Utils {
 
   private static class TransportInstanceHolder {
     static final HttpTransport INSTANCE = new NetHttpTransport();
+  }
+
+  public static boolean hasDefaultCertSource() {
+    File file = new File(CONTEXT_AWARE_METADATA_PATH);
+    return file.exists();
+  }
+
+  @SuppressWarnings("unchecked")
+  public static InputStream loadDefaultCert() throws IOException, InterruptedException, GeneralSecurityException {
+    String json = new String(Files.readAllBytes(Paths.get(CONTEXT_AWARE_METADATA_PATH)));
+    GsonBuilder builder = new GsonBuilder();
+    LinkedTreeMap<String, Object> map = (LinkedTreeMap<String, Object>)builder.create().fromJson(json, Object.class);
+    ArrayList<String> commands = (ArrayList<String>)map.get("cert_provider_command");
+    Process process = new ProcessBuilder(commands).start();
+    int exitCode = process.waitFor();
+    if (exitCode != 0) {
+      throw new GeneralSecurityException("Failed to execute cert provider command");
+    }
+    return process.getInputStream();
   }
 
   private Utils() {
