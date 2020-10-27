@@ -29,7 +29,7 @@
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
-      <version>1.30.10</version>
+      <version>1.30.11</version>
     </dependency>
     <!-- [END google-api-client_install_without_bom] -->
 
