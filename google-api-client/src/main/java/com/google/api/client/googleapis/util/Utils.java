@@ -41,7 +41,7 @@ import com.google.gson.internal.LinkedTreeMap;
 @Beta
 public final class Utils {
   private static final String CONTEXT_AWARE_METADATA_PATH = System.getProperty("user.home") + "/.secureConnect/context_aware_metadata.json";
-  public static final String GOOGLE_API_USE_CLIENT_CERTIFICATE = "GOOGLE_API_USE_CLIENT_CERTIFICATE";
+  private static final String GOOGLE_API_USE_CLIENT_CERTIFICATE = "GOOGLE_API_USE_CLIENT_CERTIFICATE";
 
   /**
    * Returns a cached default implementation of the JsonFactory interface.
@@ -70,21 +70,20 @@ public final class Utils {
   }
 
   @SuppressWarnings("unchecked")
-  public static InputStream loadDefaultCertificate() throws IOException, InterruptedException, GeneralSecurityException {
-    File file = new File(CONTEXT_AWARE_METADATA_PATH);
-    if (!file.exists()) {
-      return null;
-    }
-
-    // Load the cert provider command from the json file.
-    String json = new String(Files.readAllBytes(Paths.get(CONTEXT_AWARE_METADATA_PATH)));
+  public static ArrayList<String> extractCertificateProviderCommand(String contextAwareMetadataJson) {
     GsonBuilder builder = new GsonBuilder();
-    LinkedTreeMap<String, Object> map = (LinkedTreeMap<String, Object>)builder.create().fromJson(json, Object.class);
-    ArrayList<String> commands = (ArrayList<String>)map.get("cert_provider_command");
-    
-    // Call the command.
-    Process process = new ProcessBuilder(commands).start();
-    int exitCode = process.waitFor();
+    LinkedTreeMap<String, Object> map = (LinkedTreeMap<String, Object>)builder.create().fromJson(contextAwareMetadataJson, Object.class);
+    return (ArrayList<String>)map.get("cert_provider_command");
+  }
+
+  public static InputStream runCertificateProviderCommand(ArrayList<String> command) throws IOException, GeneralSecurityException {
+    Process process = new ProcessBuilder(command).start();
+    int exitCode = 0;
+    try {
+      exitCode = process.waitFor();
+    } catch (InterruptedException exception) {
+      throw new GeneralSecurityException("Failed to execute cert provider command", exception);
+    }
     if (exitCode != 0) {
       throw new GeneralSecurityException("Failed to execute cert provider command");
     }
@@ -92,7 +91,21 @@ public final class Utils {
     return process.getInputStream();
   }
 
-  public static KeyStore loadMtlsKeyStore(InputStream clientCertificateSource) throws IOException, InterruptedException, GeneralSecurityException {
+  public static InputStream loadDefaultCertificate() throws IOException, GeneralSecurityException {
+    File file = new File(CONTEXT_AWARE_METADATA_PATH);
+    if (!file.exists()) {
+      return null;
+    }
+
+    // Load the cert provider command from the json file.
+    String json = new String(Files.readAllBytes(Paths.get(CONTEXT_AWARE_METADATA_PATH)));
+    ArrayList<String> command = extractCertificateProviderCommand(json);
+    
+    // Call the command.
+    return runCertificateProviderCommand(command);
+  }
+
+  public static KeyStore loadMtlsKeyStore(InputStream clientCertificateSource) throws IOException, GeneralSecurityException {
     String environValue = System.getenv(GOOGLE_API_USE_CLIENT_CERTIFICATE);
     if ("true".equals(environValue)) {
       InputStream certificateToUse = null;
