@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,10 +12,10 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.apache;
+package com.google.api.client.googleapis.apache.v2;
 
 import com.google.api.client.googleapis.GoogleUtils;
-import com.google.api.client.http.apache.ApacheHttpTransport;
+import com.google.api.client.http.apache.v2.ApacheHttpTransport;
 import com.google.api.client.util.SslUtils;
 import java.io.IOException;
 import java.net.ProxySelector;
@@ -34,27 +34,16 @@ import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 /**
  * Utilities for Google APIs based on {@link ApacheHttpTransport}.
  *
- * @since 1.14
- * @author Yaniv Inbar
- * @deprecated Use com.google.api.client.googleapis.apache.v2.GoogleApacheHttpTransport
+ * @since 1.31
  */
-@Deprecated
 public final class GoogleApacheHttpTransport {
 
   /**
    * Returns a new instance of {@link ApacheHttpTransport} that uses
    * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates.
-   * @deprecated Use com.google.api.client.googleapis.apache.v2.GoogleApacheHttpTransport.newTrustedTransport()
    */
   public static ApacheHttpTransport newTrustedTransport() throws GeneralSecurityException,
       IOException {
-    // Set socket buffer sizes to 8192
-    SocketConfig socketConfig =
-        SocketConfig.custom()
-            .setRcvBufSize(8192)
-            .setSndBufSize(8192)
-            .build();
-
     PoolingHttpClientConnectionManager connectionManager =
         new PoolingHttpClientConnectionManager(-1, TimeUnit.MILLISECONDS);
 
@@ -70,7 +59,6 @@ public final class GoogleApacheHttpTransport {
     HttpClient client = HttpClientBuilder.create()
         .useSystemProperties()
         .setSSLSocketFactory(socketFactory)
-        .setDefaultSocketConfig(socketConfig)
         .setMaxConnTotal(200)
         .setMaxConnPerRoute(20)
         .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
