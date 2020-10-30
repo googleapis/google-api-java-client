@@ -15,9 +15,11 @@
 package com.google.api.client.googleapis.apache.v2;
 
 import com.google.api.client.googleapis.GoogleUtils;
+import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.http.apache.v2.ApacheHttpTransport;
 import com.google.api.client.util.SslUtils;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ProxySelector;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
@@ -44,6 +46,28 @@ public final class GoogleApacheHttpTransport {
    */
   public static ApacheHttpTransport newTrustedTransport() throws GeneralSecurityException,
       IOException {
+    return newTrustedTransport(null);
+  }
+
+  public static ApacheHttpTransport newTrustedTransport(InputStream clientCertificateSource) throws GeneralSecurityException,
+      IOException {
+    InputStream certificateToUse = null;
+    KeyStore mtlsKeyStore = null;
+    if (Utils.useMtlsClientCertificate()) { 
+      if (clientCertificateSource != null) {
+        certificateToUse = clientCertificateSource;
+      } else {
+        certificateToUse = Utils.loadDefaultCertificate();
+      }
+    }
+    if (certificateToUse != null) {
+      mtlsKeyStore = SecurityUtils.createMtlsKeyStore(certificateToUse);
+    }
+    return newTrustedTransport(mtlsKeyStore);
+  }
+
+  private static ApacheHttpTransport newTrustedTransport(KeyStore mtlsKeyStore) throws GeneralSecurityException,
+      IOException {
     PoolingHttpClientConnectionManager connectionManager =
         new PoolingHttpClientConnectionManager(-1, TimeUnit.MILLISECONDS);
 
@@ -53,7 +77,11 @@ public final class GoogleApacheHttpTransport {
     // Use the included trust store
     KeyStore trustStore = GoogleUtils.getCertificateTrustStore();
     SSLContext sslContext = SslUtils.getTlsSslContext();
-    SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory());
+    if (mtlsKeyStore != null) {
+      SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory(), mtlsKeyStore, SslUtils.getDefaultKeyManagerFactory());
+    } else {
+      SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory());
+    }
     LayeredConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext);
 
     HttpClient client = HttpClientBuilder.create()
