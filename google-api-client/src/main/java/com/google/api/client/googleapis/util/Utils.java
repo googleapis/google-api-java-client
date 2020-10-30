@@ -39,6 +39,7 @@ import com.google.gson.internal.LinkedTreeMap;
 @Beta
 public final class Utils {
   private static final String CONTEXT_AWARE_METADATA_PATH = System.getProperty("user.home") + "/.secureConnect/context_aware_metadata.json";
+  public static final String GOOGLE_API_USE_CLIENT_CERTIFICATE = "GOOGLE_API_USE_CLIENT_CERTIFICATE";
 
   /**
    * Returns a cached default implementation of the JsonFactory interface.
@@ -66,23 +67,32 @@ public final class Utils {
     static final HttpTransport INSTANCE = new NetHttpTransport();
   }
 
-  public static boolean hasDefaultCertSource() {
-    File file = new File(CONTEXT_AWARE_METADATA_PATH);
-    return file.exists();
-  }
-
   @SuppressWarnings("unchecked")
-  public static InputStream loadDefaultCert() throws IOException, InterruptedException, GeneralSecurityException {
+  public static InputStream loadDefaultCertificate() throws IOException, InterruptedException, GeneralSecurityException {
+    File file = new File(CONTEXT_AWARE_METADATA_PATH);
+    if (!file.exists()) {
+      return null;
+    }
+
+    // Load the cert provider command from the json file.
     String json = new String(Files.readAllBytes(Paths.get(CONTEXT_AWARE_METADATA_PATH)));
     GsonBuilder builder = new GsonBuilder();
     LinkedTreeMap<String, Object> map = (LinkedTreeMap<String, Object>)builder.create().fromJson(json, Object.class);
     ArrayList<String> commands = (ArrayList<String>)map.get("cert_provider_command");
+    
+    // Call the command.
     Process process = new ProcessBuilder(commands).start();
     int exitCode = process.waitFor();
     if (exitCode != 0) {
       throw new GeneralSecurityException("Failed to execute cert provider command");
     }
+
     return process.getInputStream();
+  }
+
+  public static boolean useMtlsClientCertificate() {
+    String env = System.getenv(GOOGLE_API_USE_CLIENT_CERTIFICATE);
+    return "true".equals(env);
   }
 
   private Utils() {
