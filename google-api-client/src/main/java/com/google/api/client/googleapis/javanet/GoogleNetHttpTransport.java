@@ -74,7 +74,7 @@ public class GoogleNetHttpTransport {
       }
 
       if (certificateToUse != null) {
-        KeyStroe mtlsKeyStore = SecurityUtils.createMtlsKeyStore(certificateToUse);
+        KeyStore mtlsKeyStore = SecurityUtils.createMtlsKeyStore(certificateToUse);
         return new NetHttpTransport.Builder()
             .trustCertificates(GoogleUtils.getCertificateTrustStore(), mtlsKeyStore, "");
       }

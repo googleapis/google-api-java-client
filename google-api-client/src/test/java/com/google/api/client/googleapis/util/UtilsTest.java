@@ -63,11 +63,7 @@ public class UtilsTest extends TestCase {
     return map;
   }
 
-  public void testHasDefaultCertSource() {
-    assertTrue("has default cert source", Utils.hasDefaultCertSource());
-  }
-
   public void testLoadDefaultCert() throws Exception {
-    InputStream certAndKey = Utils.loadDefaultCert();
+    InputStream certAndKey = Utils.loadDefaultCertificate();
   }
 }
