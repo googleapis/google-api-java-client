@@ -50,23 +50,6 @@ public final class GoogleApacheHttpTransport {
 
   public static ApacheHttpTransport newTrustedTransport(InputStream clientCertificateSource)
       throws GeneralSecurityException, IOException {
-    InputStream certificateToUse = null;
-    KeyStore mtlsKeyStore = null;
-    if (Utils.useMtlsClientCertificate()) {
-      if (clientCertificateSource != null) {
-        certificateToUse = clientCertificateSource;
-      } else {
-        certificateToUse = Utils.loadDefaultCertificate();
-      }
-    }
-    if (certificateToUse != null) {
-      mtlsKeyStore = SecurityUtils.createMtlsKeyStore(certificateToUse);
-    }
-    return newTrustedTransport(mtlsKeyStore);
-  }
-
-  private static ApacheHttpTransport newTrustedTransport(KeyStore mtlsKeyStore)
-      throws GeneralSecurityException, IOException {
     PoolingHttpClientConnectionManager connectionManager =
         new PoolingHttpClientConnectionManager(-1, TimeUnit.MILLISECONDS);
 
@@ -76,12 +59,14 @@ public final class GoogleApacheHttpTransport {
     // Use the included trust store
     KeyStore trustStore = GoogleUtils.getCertificateTrustStore();
     SSLContext sslContext = SslUtils.getTlsSslContext();
+    KeyStore mtlsKeyStore = Utils.loadMtlsKeyStore(clientCertificateSource);
     if (mtlsKeyStore != null) {
       SslUtils.initSslContext(
           sslContext,
           trustStore,
           SslUtils.getPkixTrustManagerFactory(),
           mtlsKeyStore,
+          "",
           SslUtils.getDefaultKeyManagerFactory());
     } else {
       SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory());

@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
+import java.security.KeyStore;
 import java.util.ArrayList;
 
 import com.google.api.client.http.HttpTransport;
@@ -27,6 +28,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.Beta;
+import com.google.api.client.util.SecurityUtils;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -90,9 +92,21 @@ public final class Utils {
     return process.getInputStream();
   }
 
-  public static boolean useMtlsClientCertificate() {
-    String env = System.getenv(GOOGLE_API_USE_CLIENT_CERTIFICATE);
-    return "true".equals(env);
+  public static KeyStore loadMtlsKeyStore(InputStream clientCertificateSource) throws IOException, InterruptedException, GeneralSecurityException {
+    String environValue = System.getenv(GOOGLE_API_USE_CLIENT_CERTIFICATE);
+    if ("true".equals(environValue)) {
+      InputStream certificateToUse = null;
+      if (clientCertificateSource != null) {
+        certificateToUse = clientCertificateSource;
+      } else {
+        certificateToUse = loadDefaultCertificate();
+      }
+
+      if (certificateToUse != null) {
+        return SecurityUtils.createMtlsKeyStore(certificateToUse);
+      }
+    }
+    return null;
   }
 
   private Utils() {
