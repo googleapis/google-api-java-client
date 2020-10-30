@@ -18,7 +18,6 @@ import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.util.SecurityUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
@@ -63,7 +62,8 @@ public class GoogleNetHttpTransport {
     return newTrustedTransportBuilder(clientCertificateSource).build();
   }
 
-  public static NetHttpTransport.Builder newTrustedTransportBuilder(InputStream clientCertificateSource)
+  public static NetHttpTransport.Builder newTrustedTransportBuilder(
+      InputStream clientCertificateSource)
       throws GeneralSecurityException, IOException, InterruptedException {
     if (Utils.useMtlsClientCertificate()) {
       InputStream certificateToUse = null;
@@ -75,12 +75,12 @@ public class GoogleNetHttpTransport {
 
       if (certificateToUse != null) {
         KeyStroe mtlsKeyStore = SecurityUtils.createMtlsKeyStore(certificateToUse);
-        return new NetHttpTransport.Builder().trustCertificates(GoogleUtils.getCertificateTrustStore(), mtlsKeyStore, "");
+        return new NetHttpTransport.Builder()
+            .trustCertificates(GoogleUtils.getCertificateTrustStore(), mtlsKeyStore, "");
       }
-    }  
+    }
     return new NetHttpTransport.Builder().trustCertificates(GoogleUtils.getCertificateTrustStore());
   }
 
-  private GoogleNetHttpTransport() {
-  }
+  private GoogleNetHttpTransport() {}
 }

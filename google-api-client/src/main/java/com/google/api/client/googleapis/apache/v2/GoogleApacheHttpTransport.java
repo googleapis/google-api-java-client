@@ -26,7 +26,6 @@ import java.security.KeyStore;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
 import org.apache.http.client.HttpClient;
-import org.apache.http.config.SocketConfig;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -44,16 +43,16 @@ public final class GoogleApacheHttpTransport {
    * Returns a new instance of {@link ApacheHttpTransport} that uses
    * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates.
    */
-  public static ApacheHttpTransport newTrustedTransport() throws GeneralSecurityException,
-      IOException {
+  public static ApacheHttpTransport newTrustedTransport()
+      throws GeneralSecurityException, IOException {
     return newTrustedTransport(null);
   }
 
-  public static ApacheHttpTransport newTrustedTransport(InputStream clientCertificateSource) throws GeneralSecurityException,
-      IOException {
+  public static ApacheHttpTransport newTrustedTransport(InputStream clientCertificateSource)
+      throws GeneralSecurityException, IOException {
     InputStream certificateToUse = null;
     KeyStore mtlsKeyStore = null;
-    if (Utils.useMtlsClientCertificate()) { 
+    if (Utils.useMtlsClientCertificate()) {
       if (clientCertificateSource != null) {
         certificateToUse = clientCertificateSource;
       } else {
@@ -66,8 +65,8 @@ public final class GoogleApacheHttpTransport {
     return newTrustedTransport(mtlsKeyStore);
   }
 
-  private static ApacheHttpTransport newTrustedTransport(KeyStore mtlsKeyStore) throws GeneralSecurityException,
-      IOException {
+  private static ApacheHttpTransport newTrustedTransport(KeyStore mtlsKeyStore)
+      throws GeneralSecurityException, IOException {
     PoolingHttpClientConnectionManager connectionManager =
         new PoolingHttpClientConnectionManager(-1, TimeUnit.MILLISECONDS);
 
@@ -78,25 +77,30 @@ public final class GoogleApacheHttpTransport {
     KeyStore trustStore = GoogleUtils.getCertificateTrustStore();
     SSLContext sslContext = SslUtils.getTlsSslContext();
     if (mtlsKeyStore != null) {
-      SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory(), mtlsKeyStore, SslUtils.getDefaultKeyManagerFactory());
+      SslUtils.initSslContext(
+          sslContext,
+          trustStore,
+          SslUtils.getPkixTrustManagerFactory(),
+          mtlsKeyStore,
+          SslUtils.getDefaultKeyManagerFactory());
     } else {
       SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory());
     }
     LayeredConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext);
 
-    HttpClient client = HttpClientBuilder.create()
-        .useSystemProperties()
-        .setSSLSocketFactory(socketFactory)
-        .setMaxConnTotal(200)
-        .setMaxConnPerRoute(20)
-        .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
-        .setConnectionManager(connectionManager)
-        .disableRedirectHandling()
-        .disableAutomaticRetries()
-        .build();
+    HttpClient client =
+        HttpClientBuilder.create()
+            .useSystemProperties()
+            .setSSLSocketFactory(socketFactory)
+            .setMaxConnTotal(200)
+            .setMaxConnPerRoute(20)
+            .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
+            .setConnectionManager(connectionManager)
+            .disableRedirectHandling()
+            .disableAutomaticRetries()
+            .build();
     return new ApacheHttpTransport(client);
   }
 
-  private GoogleApacheHttpTransport() {
-  }
+  private GoogleApacheHttpTransport() {}
 }
