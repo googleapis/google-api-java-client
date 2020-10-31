@@ -7,10 +7,19 @@ import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.http.apache.v2.ApacheHttpTransport;
 import com.google.api.client.util.SecurityUtils;
 
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-public class GoogleApacheHttpTransportTest {
+import junit.framework.TestCase;
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({Utils.class, GoogleApacheHttpTransport.class})
+@PowerMockIgnore({"jdk.internal.reflect.*", "javax.net.ssl.*"})
+public class GoogleApacheHttpTransportTest extends TestCase {
   public InputStream getCertAndKey() throws Exception {
     return getClass()
       .getClassLoader()
