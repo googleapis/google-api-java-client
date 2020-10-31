@@ -60,7 +60,8 @@ public final class GoogleApacheHttpTransport {
     KeyStore trustStore = GoogleUtils.getCertificateTrustStore();
     SSLContext sslContext = SslUtils.getTlsSslContext();
     KeyStore mtlsKeyStore = Utils.loadMtlsKeyStore(clientCertificateSource);
-    if (mtlsKeyStore != null) {
+    boolean isMtls = (mtlsKeyStore != null) && (mtlsKeyStore.size() > 0);
+    if (isMtls) {
       SslUtils.initSslContext(
           sslContext,
           trustStore,
@@ -84,7 +85,7 @@ public final class GoogleApacheHttpTransport {
             .disableRedirectHandling()
             .disableAutomaticRetries()
             .build();
-    return new ApacheHttpTransport(client);
+    return new ApacheHttpTransport(client, isMtls);
   }
 
   private GoogleApacheHttpTransport() {}

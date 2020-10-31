@@ -1,25 +1,16 @@
-package com.google.api.client.googleapis.javanet;
+package com.google.api.client.googleapis.apache.v2;
 
 import java.io.InputStream;
 import java.security.KeyStore;
 
 import com.google.api.client.googleapis.util.Utils;
-import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.http.apache.v2.ApacheHttpTransport;
 import com.google.api.client.util.SecurityUtils;
 
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-import junit.framework.TestCase;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Utils.class, GoogleNetHttpTransport.class})
-@PowerMockIgnore({"jdk.internal.reflect.*", "javax.net.ssl.*"})
-public class GoogleNetHttpTransportTest extends TestCase {
+public class GoogleApacheHttpTransportTest {
   public InputStream getCertAndKey() throws Exception {
     return getClass()
       .getClassLoader()
@@ -31,7 +22,7 @@ public class GoogleNetHttpTransportTest extends TestCase {
     KeyStore mtlsKeyStore = SecurityUtils.createMtlsKeyStore(getCertAndKey());
     PowerMockito.mockStatic(Utils.class);
     PowerMockito.when(Utils.loadMtlsKeyStore(Mockito.any(InputStream.class))).thenReturn(mtlsKeyStore);
-    NetHttpTransport transport = GoogleNetHttpTransport.newTrustedTransportBuilder(getCertAndKey()).build();
+    ApacheHttpTransport transport = GoogleApacheHttpTransport.newTrustedTransport(getCertAndKey());
     assertTrue(transport.isMtls());
   }
   
@@ -39,7 +30,7 @@ public class GoogleNetHttpTransportTest extends TestCase {
   public void testWithoutMtlsKeyStore() throws Exception {
     PowerMockito.mockStatic(Utils.class);
     PowerMockito.when(Utils.loadMtlsKeyStore(Mockito.any(InputStream.class))).thenReturn(null);
-    NetHttpTransport transport = GoogleNetHttpTransport.newTrustedTransportBuilder(getCertAndKey()).build();
+    ApacheHttpTransport transport = GoogleApacheHttpTransport.newTrustedTransport(getCertAndKey());
     assertFalse(transport.isMtls());
   }
 }
