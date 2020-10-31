@@ -41,7 +41,7 @@ import com.google.gson.internal.LinkedTreeMap;
 @Beta
 public final class Utils {
   private static final String CONTEXT_AWARE_METADATA_PATH = System.getProperty("user.home") + "/.secureConnect/context_aware_metadata.json";
-  private static final String GOOGLE_API_USE_CLIENT_CERTIFICATE = "GOOGLE_API_USE_CLIENT_CERTIFICATE";
+  public static final String GOOGLE_API_USE_CLIENT_CERTIFICATE = "GOOGLE_API_USE_CLIENT_CERTIFICATE";
 
   /**
    * Returns a cached default implementation of the JsonFactory interface.
@@ -76,7 +76,17 @@ public final class Utils {
     return (ArrayList<String>)map.get("cert_provider_command");
   }
 
-  public static InputStream runCertificateProviderCommand(ArrayList<String> command) throws IOException, GeneralSecurityException {
+  public static InputStream loadDefaultCertificate() throws IOException, GeneralSecurityException {
+    File file = new File(CONTEXT_AWARE_METADATA_PATH);
+    if (!file.exists()) {
+      return null;
+    }
+
+    // Load the cert provider command from the json file.
+    String json = new String(Files.readAllBytes(Paths.get(CONTEXT_AWARE_METADATA_PATH)));
+    ArrayList<String> command = extractCertificateProviderCommand(json);
+    
+    // Call the command.
     Process process = new ProcessBuilder(command).start();
     int exitCode = 0;
     try {
@@ -91,23 +101,9 @@ public final class Utils {
     return process.getInputStream();
   }
 
-  public static InputStream loadDefaultCertificate() throws IOException, GeneralSecurityException {
-    File file = new File(CONTEXT_AWARE_METADATA_PATH);
-    if (!file.exists()) {
-      return null;
-    }
-
-    // Load the cert provider command from the json file.
-    String json = new String(Files.readAllBytes(Paths.get(CONTEXT_AWARE_METADATA_PATH)));
-    ArrayList<String> command = extractCertificateProviderCommand(json);
-    
-    // Call the command.
-    return runCertificateProviderCommand(command);
-  }
-
   public static KeyStore loadMtlsKeyStore(InputStream clientCertificateSource) throws IOException, GeneralSecurityException {
-    String environValue = System.getenv(GOOGLE_API_USE_CLIENT_CERTIFICATE);
-    if ("true".equals(environValue)) {
+    String useClientCertificate = System.getenv(GOOGLE_API_USE_CLIENT_CERTIFICATE);
+    if ("true".equals(useClientCertificate)) {
       InputStream certificateToUse = null;
       if (clientCertificateSource != null) {
         certificateToUse = clientCertificateSource;
