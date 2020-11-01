@@ -41,6 +41,8 @@ import com.google.gson.internal.LinkedTreeMap;
 @Beta
 public final class Utils {
   private static final String CONTEXT_AWARE_METADATA_PATH = System.getProperty("user.home") + "/.secureConnect/context_aware_metadata.json";
+  
+  /** GOOGLE_API_USE_CLIENT_CERTIFICATE environment variable */
   public static final String GOOGLE_API_USE_CLIENT_CERTIFICATE = "GOOGLE_API_USE_CLIENT_CERTIFICATE";
 
   /**
@@ -69,6 +71,13 @@ public final class Utils {
     static final HttpTransport INSTANCE = new NetHttpTransport();
   }
 
+  /**
+   * Returns the `cert_provider_command` field in context_aware_metadata.json file.
+   * 
+   * @param contextAwareMetadataJson ~/.secureConnect/context_aware_metadata.json file content.
+   * @return `cert_provider_command` field
+   * @since 1.31
+   */
   @SuppressWarnings("unchecked")
   public static ArrayList<String> extractCertificateProviderCommand(String contextAwareMetadataJson) {
     GsonBuilder builder = new GsonBuilder();
@@ -76,6 +85,13 @@ public final class Utils {
     return (ArrayList<String>)map.get("cert_provider_command");
   }
 
+  /**
+   * Returns the default client certificate by running the cert_provider_command commands
+   * from ~/.secureConnect/context_aware_metadata.json file.
+   * 
+   * @return The default client certificate input stream
+   * @since 1.31
+   */
   public static InputStream loadDefaultCertificate() throws IOException, GeneralSecurityException {
     File file = new File(CONTEXT_AWARE_METADATA_PATH);
     if (!file.exists()) {
@@ -101,6 +117,19 @@ public final class Utils {
     return process.getInputStream();
   }
 
+  /**
+   * Returns the KeyStore for mutual TLS.
+   * 
+   * If `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to "true", and
+   * either the client certificate is provided via clientCertificateSource, or the default
+   * client certificate exists via {@link Utils#loadDefaultCertificate()}, a KeyStore object
+   * will be created using the client certificate (clientCertificateSource takes precedence).
+   * Otherwise, this function return null.
+   *  
+   * @param clientCertificateSource InputStream for mutual TLS client certificate and private key
+   * @return KeyStore for mutual TLS.
+   * @since 1.31
+   */
   public static KeyStore loadMtlsKeyStore(InputStream clientCertificateSource) throws IOException, GeneralSecurityException {
     String useClientCertificate = System.getenv(GOOGLE_API_USE_CLIENT_CERTIFICATE);
     if ("true".equals(useClientCertificate)) {

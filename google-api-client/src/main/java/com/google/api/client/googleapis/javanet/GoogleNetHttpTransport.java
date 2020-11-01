@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.javanet;
 import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.SecurityUtils;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +36,10 @@ public class GoogleNetHttpTransport {
    * Returns a new instance of {@link NetHttpTransport} that uses
    * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates using
    * {@link com.google.api.client.http.javanet.NetHttpTransport.Builder#trustCertificates(KeyStore)}
-   * .
+   * . If `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to "true",
+   * and the default client certificate from {@link Utils#loadDefaultCertificate()}
+   * is not null, then the transport uses the default client certificate and
+   * is mutual TLS. 
    *
    * <p>
    * This helper method doesn't provide for customization of the {@link NetHttpTransport}, such as
@@ -53,18 +57,47 @@ public class GoogleNetHttpTransport {
    * </pre>
    */
   public static NetHttpTransport newTrustedTransport()
-      throws GeneralSecurityException, IOException, InterruptedException {
+      throws GeneralSecurityException, IOException {
     return newTrustedTransport(null);
   }
 
+  /**
+   * {@link Beta} <br>
+   * Returns a new instance of {@link NetHttpTransport} that uses
+   * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates using
+   * {@link com.google.api.client.http.javanet.NetHttpTransport.Builder#trustCertificates(KeyStore)}
+   * . If `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to "true",
+   * the function looks for user provided client certificate first from 
+   * clientCertificateSource InputStream, if not exists, then the default from
+   * {@link Utils#loadDefaultCertificate()}. If client certificate exists,
+   * the transport uses it and is mutual TLS.
+   * 
+   * @param clientCertificateSource InputStream for mutual TLS client certificate and private key   
+   */
+  @Beta
   public static NetHttpTransport newTrustedTransport(InputStream clientCertificateSource)
-      throws GeneralSecurityException, IOException, InterruptedException {
+      throws GeneralSecurityException, IOException {
     return newTrustedTransportBuilder(clientCertificateSource).build();
   }
 
+  /**
+   * {@link Beta} <br>
+   * Returns a new instance of {@link NetHttpTransport.Builder} that uses
+   * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates using
+   * {@link com.google.api.client.http.javanet.NetHttpTransport.Builder#trustCertificates(KeyStore)}
+   * . If `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to "true",
+   * the function looks for user provided client certificate first from 
+   * clientCertificateSource InputStream, if not exists, then the default from
+   * {@link Utils#loadDefaultCertificate()}. If client certificate exists,
+   * the transport uses it and is mutual TLS. Note that mutual TLS may not work properly
+   * if you specify a proxy with the Builder instance.
+   * 
+   * @param clientCertificateSource InputStream for mutual TLS client certificate and private key   
+   */
+  @Beta
   public static NetHttpTransport.Builder newTrustedTransportBuilder(
       InputStream clientCertificateSource)
-      throws GeneralSecurityException, IOException, InterruptedException {
+      throws GeneralSecurityException, IOException {
     KeyStore mtlsKeyStore = Utils.loadMtlsKeyStore(clientCertificateSource);
 
     if (mtlsKeyStore != null) {

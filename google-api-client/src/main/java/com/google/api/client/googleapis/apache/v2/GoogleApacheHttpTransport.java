@@ -17,6 +17,7 @@ package com.google.api.client.googleapis.apache.v2;
 import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.http.apache.v2.ApacheHttpTransport;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.SslUtils;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,12 +43,29 @@ public final class GoogleApacheHttpTransport {
   /**
    * Returns a new instance of {@link ApacheHttpTransport} that uses
    * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates.
+   * If `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to "true",
+   * and the default client certificate from {@link Utils#loadDefaultCertificate()}
+   * is not null, then the transport uses the default client certificate and
+   * is mutual TLS.   
    */
   public static ApacheHttpTransport newTrustedTransport()
       throws GeneralSecurityException, IOException {
     return newTrustedTransport(null);
   }
 
+  /**
+   * {@link Beta} <br>
+   * Returns a new instance of {@link ApacheHttpTransport} that uses
+   * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates.
+   * If `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to "true",
+   * the function looks for user provided client certificate first from 
+   * clientCertificateSource InputStream, if not exists, then the default from
+   * {@link Utils#loadDefaultCertificate()}. If client certificate exists,
+   * the transport uses it and is mutual TLS.
+   * 
+   * @param clientCertificateSource InputStream for mutual TLS client certificate and private key   
+   */
+  @Beta
   public static ApacheHttpTransport newTrustedTransport(InputStream clientCertificateSource)
       throws GeneralSecurityException, IOException {
     PoolingHttpClientConnectionManager connectionManager =
@@ -74,17 +92,16 @@ public final class GoogleApacheHttpTransport {
     }
     LayeredConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext);
 
-    HttpClient client =
-        HttpClientBuilder.create()
-            .useSystemProperties()
-            .setSSLSocketFactory(socketFactory)
-            .setMaxConnTotal(200)
-            .setMaxConnPerRoute(20)
-            .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
-            .setConnectionManager(connectionManager)
-            .disableRedirectHandling()
-            .disableAutomaticRetries()
-            .build();
+    HttpClient client = HttpClientBuilder.create()
+        .useSystemProperties()
+        .setSSLSocketFactory(socketFactory)
+        .setMaxConnTotal(200)
+        .setMaxConnPerRoute(20)
+        .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
+        .setConnectionManager(connectionManager)
+        .disableRedirectHandling()
+        .disableAutomaticRetries()
+        .build();
     return new ApacheHttpTransport(client, isMtls);
   }
 
