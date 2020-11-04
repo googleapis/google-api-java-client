@@ -8,7 +8,6 @@ import com.google.api.client.http.apache.v2.ApacheHttpTransport;
 import com.google.api.client.util.SecurityUtils;
 
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -20,26 +19,53 @@ import junit.framework.TestCase;
 @PrepareForTest({Utils.class, GoogleApacheHttpTransport.class})
 @PowerMockIgnore({"jdk.internal.reflect.*", "javax.net.ssl.*"})
 public class GoogleApacheHttpTransportTest extends TestCase {
-  public InputStream getCertAndKey() throws Exception {
-    return getClass()
+  public KeyStore createTestMtlsKeyStore() throws Exception {
+    InputStream certAndKey = getClass()
       .getClassLoader()
       .getResourceAsStream("com/google/api/client/googleapis/util/mtlsCertAndKey.pem");
+    return SecurityUtils.createMtlsKeyStore(certAndKey);
   }
 
-  // mTLS key store is provided, so mTLS transport is created
-  public void testWithMtlsKeyStore() throws Exception {
-    KeyStore mtlsKeyStore = SecurityUtils.createMtlsKeyStore(getCertAndKey());
-    PowerMockito.mockStatic(Utils.class);
-    PowerMockito.when(Utils.loadMtlsKeyStore(Mockito.any(InputStream.class))).thenReturn(mtlsKeyStore);
-    ApacheHttpTransport transport = GoogleApacheHttpTransport.newTrustedTransport(getCertAndKey());
+  // If client certificate shouldn't be used, then neither the provided mtlsKeyStore
+  // nor the default mtls key store should be used.
+  public void testNotUseCertificate() throws Exception {
+    KeyStore mtlsKeyStore = createTestMtlsKeyStore();
+    PowerMockito.spy(Utils.class);
+    PowerMockito.when(Utils.useMtlsClientCertificate()).thenReturn(false);
+    PowerMockito.when(Utils.loadDefaultMtlsKeyStore()).thenReturn(mtlsKeyStore);
+    ApacheHttpTransport transport = GoogleApacheHttpTransport.newTrustedTransport(mtlsKeyStore, "");
+    assertFalse(transport.isMtls());
+  }
+
+  // If client certificate should be used, and mtlsKeyStore is provided, then the
+  // provided key store should be used.
+  public void testUseProvidedCertificate() throws Exception {
+    KeyStore mtlsKeyStore = createTestMtlsKeyStore();
+    PowerMockito.spy(Utils.class);
+    PowerMockito.when(Utils.useMtlsClientCertificate()).thenReturn(true);
+    PowerMockito.when(Utils.loadDefaultMtlsKeyStore()).thenReturn(null);
+    ApacheHttpTransport transport = GoogleApacheHttpTransport.newTrustedTransport(mtlsKeyStore, "");
     assertTrue(transport.isMtls());
   }
-  
-  // mTLS key store doesn't exist, so transport is not mTLS
-  public void testWithoutMtlsKeyStore() throws Exception {
-    PowerMockito.mockStatic(Utils.class);
-    PowerMockito.when(Utils.loadMtlsKeyStore(Mockito.any(InputStream.class))).thenReturn(null);
-    ApacheHttpTransport transport = GoogleApacheHttpTransport.newTrustedTransport(getCertAndKey());
+
+  // If client certificate should be used, and mtlsKeyStore is provided, then the
+  // provided key store should be used.
+  public void testUseDefaultCertificate() throws Exception {
+    KeyStore mtlsKeyStore = createTestMtlsKeyStore();
+    PowerMockito.spy(Utils.class);
+    PowerMockito.when(Utils.useMtlsClientCertificate()).thenReturn(true);
+    PowerMockito.when(Utils.loadDefaultMtlsKeyStore()).thenReturn(mtlsKeyStore);
+    ApacheHttpTransport transport = GoogleApacheHttpTransport.newTrustedTransport(null, "");
+    assertTrue(transport.isMtls());
+  }
+
+  // If client certificate should be used, but no mtls key store is available, then
+  // the transport created is not mtls.
+  public void testNoCertificate() throws Exception {
+    PowerMockito.spy(Utils.class);
+    PowerMockito.when(Utils.useMtlsClientCertificate()).thenReturn(true);
+    PowerMockito.when(Utils.loadDefaultMtlsKeyStore()).thenReturn(null);
+    ApacheHttpTransport transport = GoogleApacheHttpTransport.newTrustedTransport(null, "");
     assertFalse(transport.isMtls());
   }
 }

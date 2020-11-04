@@ -19,18 +19,11 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URLDecoder;
-import java.security.KeyStore;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import junit.framework.TestCase;
 
@@ -39,9 +32,6 @@ import junit.framework.TestCase;
  *
  * @author Yaniv Inbar
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({System.class, Utils.class})
-@PowerMockIgnore({"jdk.internal.reflect.*", "javax.net.ssl.*"})
 public class UtilsTest extends TestCase {
 
   public void testGetDefaultJsonFactory() {
@@ -75,97 +65,12 @@ public class UtilsTest extends TestCase {
     return map;
   }
 
-  public void testExtractCertificateProviderCommand() {
+  public void testExtractCertificateProviderCommand() throws IOException {
     String json = "{\"cert_provider_command\":[\"/opt/google/endpoint-verification/bin/apihelper\",\"--print_certificate\"],\"device_resource_ids\":[\"123\"]}";
-    ArrayList<String> command = Utils.extractCertificateProviderCommand(json);
+    ByteArrayInputStream stream = new ByteArrayInputStream(json.getBytes());
+    List<String> command = Utils.extractCertificateProviderCommand(stream);
     assertEquals(2, command.size());
     assertEquals("/opt/google/endpoint-verification/bin/apihelper", command.get(0));
     assertEquals("--print_certificate", command.get(1));
-  }
-
-  public InputStream getMtlsCertificateAndKey() {
-    return getClass()
-    .getClassLoader()
-    .getResourceAsStream("com/google/api/client/googleapis/util/mtlsCertAndKey.pem");
-  }
-
-  // Test the case for Utils.loadMtlsKeyStore where:
-  // - GOOGLE_API_USE_CLIENT_CERTIFICATE = "true"
-  // - User provided client cert to Utils.loadMtlsKeyStore
-  // In this case the provided client cert will be used to create a key store.
-  public void testUseCertWithProvidedCert() throws Exception {
-    PowerMockito.spy(System.class);
-    PowerMockito.when(System.getenv(Utils.GOOGLE_API_USE_CLIENT_CERTIFICATE)).thenReturn("true");
-
-    KeyStore mtlsKeyStore = Utils.loadMtlsKeyStore(getMtlsCertificateAndKey());
-    assertNotNull(mtlsKeyStore);    
-  }
-
-  // Test the case for Utils.loadMtlsKeyStore where:
-  // - GOOGLE_API_USE_CLIENT_CERTIFICATE = "true"
-  // - default client cert exists
-  // In this case the default client cert will be used to create a key store.
-  public void testUseCertWithDefaultCert() throws Exception {
-    PowerMockito.spy(System.class);
-    PowerMockito.when(System.getenv(Utils.GOOGLE_API_USE_CLIENT_CERTIFICATE)).thenReturn("true");
-    PowerMockito.spy(Utils.class);
-    PowerMockito.when(Utils.loadDefaultCertificate()).thenReturn(getMtlsCertificateAndKey());
-    
-    KeyStore mtlsKeyStore = Utils.loadMtlsKeyStore(null);
-    assertNotNull(mtlsKeyStore);    
-  }
-
-  // Test the case for Utils.loadMtlsKeyStore where:
-  // - GOOGLE_API_USE_CLIENT_CERTIFICATE = "true"
-  // - no client cert is provided or exists
-  // In this case key store is null because there is no client cert.
-  public void testUseCertWithNoCert() throws Exception {
-    PowerMockito.spy(System.class);
-    PowerMockito.when(System.getenv(Utils.GOOGLE_API_USE_CLIENT_CERTIFICATE)).thenReturn("true");
-    PowerMockito.spy(Utils.class);
-    PowerMockito.when(Utils.loadDefaultCertificate()).thenReturn(null);
-    
-    KeyStore mtlsKeyStore = Utils.loadMtlsKeyStore(null);
-    assertNull(mtlsKeyStore);    
-  }
-
-  // Test the case for Utils.loadMtlsKeyStore where:
-  // - GOOGLE_API_USE_CLIENT_CERTIFICATE = "false"
-  // - User provided client cert to Utils.loadMtlsKeyStore
-  // In this case client cert is not used, so no key store is created.
-  public void testNotUseCertWithProvidedCert() throws Exception {
-    PowerMockito.spy(System.class);
-    PowerMockito.when(System.getenv(Utils.GOOGLE_API_USE_CLIENT_CERTIFICATE)).thenReturn("false");
-
-    KeyStore mtlsKeyStore = Utils.loadMtlsKeyStore(getMtlsCertificateAndKey());
-    assertNull(mtlsKeyStore);    
-  }
-
-  // Test the case for Utils.loadMtlsKeyStore where:
-  // - GOOGLE_API_USE_CLIENT_CERTIFICATE = "false"
-  // - default client cert exists
-  // In this case client cert is not used, so no key store is created.
-  public void testNotUseCertWithDefaultCert() throws Exception {
-    PowerMockito.spy(System.class);
-    PowerMockito.when(System.getenv(Utils.GOOGLE_API_USE_CLIENT_CERTIFICATE)).thenReturn("false");
-    PowerMockito.spy(Utils.class);
-    PowerMockito.when(Utils.loadDefaultCertificate()).thenReturn(getMtlsCertificateAndKey());
-    
-    KeyStore mtlsKeyStore = Utils.loadMtlsKeyStore(null);
-    assertNull(mtlsKeyStore);    
-  }
-
-  // Test the case for Utils.loadMtlsKeyStore where:
-  // - GOOGLE_API_USE_CLIENT_CERTIFICATE = "false"
-  // - no client cert is provided or exists
-  // In this case client cert is not used, so no key store is created.
-  public void testNotUseCertNoCert() throws Exception {
-    PowerMockito.spy(System.class);
-    PowerMockito.when(System.getenv(Utils.GOOGLE_API_USE_CLIENT_CERTIFICATE)).thenReturn("false");
-    PowerMockito.spy(Utils.class);
-    PowerMockito.when(Utils.loadDefaultCertificate()).thenReturn(null);
-    
-    KeyStore mtlsKeyStore = Utils.loadMtlsKeyStore(null);
-    assertNull(mtlsKeyStore);    
   }
 }

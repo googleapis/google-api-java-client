@@ -20,7 +20,6 @@ import com.google.api.client.http.apache.v2.ApacheHttpTransport;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.SslUtils;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.ProxySelector;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
@@ -44,13 +43,13 @@ public final class GoogleApacheHttpTransport {
    * Returns a new instance of {@link ApacheHttpTransport} that uses
    * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates.
    * If `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to "true",
-   * and the default client certificate from {@link Utils#loadDefaultCertificate()}
+   * and the default client certificate key store from {@link Utils#loadDefaultMtlsKeyStore()}
    * is not null, then the transport uses the default client certificate and
    * is mutual TLS.   
    */
   public static ApacheHttpTransport newTrustedTransport()
       throws GeneralSecurityException, IOException {
-    return newTrustedTransport(null);
+    return newTrustedTransport(null, "");
   }
 
   /**
@@ -58,15 +57,16 @@ public final class GoogleApacheHttpTransport {
    * Returns a new instance of {@link ApacheHttpTransport} that uses
    * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates.
    * If `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to "true",
-   * the function looks for user provided client certificate first from 
-   * clientCertificateSource InputStream, if not exists, then the default from
-   * {@link Utils#loadDefaultCertificate()}. If client certificate exists,
-   * the transport uses it and is mutual TLS.
+   * the function uses the provided mtlsKeyStore or the default key store from
+   * {@link Utils#loadDefaultMtlsKeyStore()} to create the transport. If either key
+   * store exists, then the created transport is mutual TLS. The provided key store
+   * takes precedence over the default one. 
    * 
-   * @param clientCertificateSource InputStream for mutual TLS client certificate and private key   
+   * @param mtlsKeyStore KeyStore for mutual TLS client certificate and private key
+   * @param mtlsKeyStorePassword KeyStore password   
    */
   @Beta
-  public static ApacheHttpTransport newTrustedTransport(InputStream clientCertificateSource)
+  public static ApacheHttpTransport newTrustedTransport(KeyStore mtlsKeyStore, String mtlsKeyStorePassword)
       throws GeneralSecurityException, IOException {
     PoolingHttpClientConnectionManager connectionManager =
         new PoolingHttpClientConnectionManager(-1, TimeUnit.MILLISECONDS);
@@ -77,15 +77,25 @@ public final class GoogleApacheHttpTransport {
     // Use the included trust store
     KeyStore trustStore = GoogleUtils.getCertificateTrustStore();
     SSLContext sslContext = SslUtils.getTlsSslContext();
-    KeyStore mtlsKeyStore = Utils.loadMtlsKeyStore(clientCertificateSource);
-    boolean isMtls = (mtlsKeyStore != null) && (mtlsKeyStore.size() > 0);
+
+    // Figure out if mTLS is needed and what key store to use.
+    Boolean useMtls = Utils.useMtlsClientCertificate();
+    KeyStore mtlsKeyStoreToUse = mtlsKeyStore;
+    String mtlsKeyStorePasswordToUse = mtlsKeyStorePassword;
+    if (useMtls && mtlsKeyStoreToUse == null) {
+      // Use the default mTLS key store if not provided.
+      mtlsKeyStoreToUse = Utils.loadDefaultMtlsKeyStore();
+      mtlsKeyStorePasswordToUse = "";
+    }
+
+    Boolean isMtls = useMtls && mtlsKeyStoreToUse != null && mtlsKeyStoreToUse.size() > 0;
     if (isMtls) {
       SslUtils.initSslContext(
           sslContext,
           trustStore,
           SslUtils.getPkixTrustManagerFactory(),
-          mtlsKeyStore,
-          "",
+          mtlsKeyStoreToUse,
+          mtlsKeyStorePasswordToUse,
           SslUtils.getDefaultKeyManagerFactory());
     } else {
       SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory());
