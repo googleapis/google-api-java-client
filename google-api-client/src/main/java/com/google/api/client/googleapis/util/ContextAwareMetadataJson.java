@@ -14,16 +14,15 @@
 
 package com.google.api.client.googleapis.util;
 
-import java.util.List;
-
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Key;
+import java.util.List;
 
 /**
  * {@link Beta} <br/>
  * Data class representing context_aware_metadata.json file.
- * 
+ *
  * @since 1.31
  */
 @Beta
@@ -34,7 +33,7 @@ public class ContextAwareMetadataJson extends GenericJson {
 
   /**
    * Returns the cert provider command.
-   * 
+   *
    * @since 1.31
    */
   public final List<String> getCommands() {

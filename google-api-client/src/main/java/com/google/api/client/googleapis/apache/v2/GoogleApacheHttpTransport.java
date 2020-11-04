@@ -40,12 +40,11 @@ import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 public final class GoogleApacheHttpTransport {
 
   /**
-   * Returns a new instance of {@link ApacheHttpTransport} that uses
-   * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates.
-   * If `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to "true",
-   * and the default client certificate key store from {@link Utils#loadDefaultMtlsKeyStore()}
-   * is not null, then the transport uses the default client certificate and
-   * is mutual TLS.   
+   * Returns a new instance of {@link ApacheHttpTransport} that uses {@link
+   * GoogleUtils#getCertificateTrustStore()} for the trusted certificates. If
+   * `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to "true", and the default
+   * client certificate key store from {@link Utils#loadDefaultMtlsKeyStore()} is not null, then the
+   * transport uses the default client certificate and is mutual TLS.
    */
   public static ApacheHttpTransport newTrustedTransport()
       throws GeneralSecurityException, IOException {
@@ -53,20 +52,20 @@ public final class GoogleApacheHttpTransport {
   }
 
   /**
-   * {@link Beta} <br>
-   * Returns a new instance of {@link ApacheHttpTransport} that uses
-   * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates.
-   * If `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to "true",
-   * the function uses the provided mtlsKeyStore or the default key store from
-   * {@link Utils#loadDefaultMtlsKeyStore()} to create the transport. If either key
-   * store exists, then the created transport is mutual TLS. The provided key store
-   * takes precedence over the default one. 
-   * 
+   * {@link Beta} <br/>
+   * Returns a new instance of {@link ApacheHttpTransport} that uses {@link
+   * GoogleUtils#getCertificateTrustStore()} for the trusted certificates. If
+   * `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to "true", the function uses
+   * the provided mtlsKeyStore or the default key store from {@link Utils#loadDefaultMtlsKeyStore()}
+   * to create the transport. If either key store exists, then the created transport is mutual TLS.
+   * The provided key store takes precedence over the default one.
+   *
    * @param mtlsKeyStore KeyStore for mutual TLS client certificate and private key
-   * @param mtlsKeyStorePassword KeyStore password   
+   * @param mtlsKeyStorePassword KeyStore password
    */
   @Beta
-  public static ApacheHttpTransport newTrustedTransport(KeyStore mtlsKeyStore, String mtlsKeyStorePassword)
+  public static ApacheHttpTransport newTrustedTransport(
+      KeyStore mtlsKeyStore, String mtlsKeyStorePassword)
       throws GeneralSecurityException, IOException {
     PoolingHttpClientConnectionManager connectionManager =
         new PoolingHttpClientConnectionManager(-1, TimeUnit.MILLISECONDS);
@@ -102,16 +101,17 @@ public final class GoogleApacheHttpTransport {
     }
     LayeredConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext);
 
-    HttpClient client = HttpClientBuilder.create()
-        .useSystemProperties()
-        .setSSLSocketFactory(socketFactory)
-        .setMaxConnTotal(200)
-        .setMaxConnPerRoute(20)
-        .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
-        .setConnectionManager(connectionManager)
-        .disableRedirectHandling()
-        .disableAutomaticRetries()
-        .build();
+    HttpClient client =
+        HttpClientBuilder.create()
+            .useSystemProperties()
+            .setSSLSocketFactory(socketFactory)
+            .setMaxConnTotal(200)
+            .setMaxConnPerRoute(20)
+            .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
+            .setConnectionManager(connectionManager)
+            .disableRedirectHandling()
+            .disableAutomaticRetries()
+            .build();
     return new ApacheHttpTransport(client, isMtls);
   }
 
