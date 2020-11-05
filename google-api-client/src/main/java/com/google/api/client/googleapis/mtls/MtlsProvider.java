@@ -32,5 +32,5 @@ public interface MtlsProvider {
 
   String getKeyStorePassword();
 
-  KeyStore loadDefaultKeyStore() throws IOException, GeneralSecurityException;
+  KeyStore getKeyStore() throws IOException, GeneralSecurityException;
 }

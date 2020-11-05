@@ -54,7 +54,7 @@ public abstract class MtlsTransportBaseTest  {
     }
 
     @Override
-    public KeyStore loadDefaultKeyStore() throws IOException, GeneralSecurityException {
+    public KeyStore getKeyStore() throws IOException, GeneralSecurityException {
       return keyStore;
     }
   }

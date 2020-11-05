@@ -62,7 +62,7 @@ public class GoogleNetHttpTransport {
     KeyStore mtlsKeyStore = null;
     String mtlsKeyStorePassword = null;
     if (mtlsProvider.useMtlsClientCertificate()) {
-      mtlsKeyStore = mtlsProvider.loadDefaultKeyStore();
+      mtlsKeyStore = mtlsProvider.getKeyStore();
       mtlsKeyStorePassword = mtlsProvider.getKeyStorePassword();
     }
 

@@ -15,10 +15,8 @@
 package com.google.api.client.googleapis.mtls;
 
 import com.google.api.client.googleapis.util.Utils;
-import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.util.Beta;
-import com.google.api.client.util.Key;
 import com.google.api.client.util.SecurityUtils;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.FileInputStream;
@@ -29,6 +27,13 @@ import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.util.List;
 
+/**
+ * {@link Beta} <br>
+ * Utilities for mutual TLS.
+ *
+ * @since 1.31
+ */
+@Beta
 public class MtlsUtils {
   @VisibleForTesting
   static class DefaultMtlsProvider implements MtlsProvider {
@@ -75,7 +80,7 @@ public class MtlsUtils {
     }
 
     @Override
-    public KeyStore loadDefaultKeyStore() throws IOException, GeneralSecurityException {
+    public KeyStore getKeyStore() throws IOException, GeneralSecurityException {
       // Load the cert provider command from the json file.
       InputStream stream;
       try {
@@ -115,6 +120,11 @@ public class MtlsUtils {
 
   private static final MtlsProvider MTLS_PROVIDER = new DefaultMtlsProvider();
 
+  /**
+   * Returns the default MtlsProvider instance.
+   * 
+   * @return The default MtlsProvider instance.
+   */
   public static MtlsProvider getDefaultMtlsProvider() {
     return MTLS_PROVIDER;
   }

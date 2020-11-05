@@ -72,7 +72,7 @@ public class MtlsUtilsTest {
     MtlsProvider mtlsProvider =
         new MtlsUtils.DefaultMtlsProvider(
             new TestEnvironmentProvider("true"), "/path/to/missing/file");
-    KeyStore keyStore = mtlsProvider.loadDefaultKeyStore();
+    KeyStore keyStore = mtlsProvider.getKeyStore();
     assertNull(keyStore);
   }
 
@@ -83,7 +83,7 @@ public class MtlsUtilsTest {
         new MtlsUtils.DefaultMtlsProvider(
             new TestEnvironmentProvider("true"),
             "src/test/resources/com/google/api/client/googleapis/util/mtls_context_aware_metadata.json");
-    KeyStore keyStore = mtlsProvider.loadDefaultKeyStore();
+    KeyStore keyStore = mtlsProvider.getKeyStore();
     assertNotNull(keyStore);
   }
 
@@ -95,7 +95,7 @@ public class MtlsUtilsTest {
             new TestEnvironmentProvider("true"),
             "src/test/resources/com/google/api/client/googleapis/util/mtls_context_aware_metadata_bad_command.json");
     try {
-      KeyStore keyStore = mtlsProvider.loadDefaultKeyStore();
+      mtlsProvider.getKeyStore();
       fail("should throw and exception");
     } catch (IllegalArgumentException e) {
       assertTrue(
