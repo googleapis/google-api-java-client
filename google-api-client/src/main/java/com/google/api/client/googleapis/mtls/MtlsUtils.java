@@ -12,8 +12,9 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.util;
+package com.google.api.client.googleapis.mtls;
 
+import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.util.Beta;
@@ -29,36 +30,6 @@ import java.security.KeyStore;
 import java.util.List;
 
 public class MtlsUtils {
-  public interface MtlsProvider {
-    boolean useMtlsClientCertificate();
-
-    String getKeyStorePassword();
-
-    KeyStore loadDefaultKeyStore() throws IOException, GeneralSecurityException;
-  }
-
-  /**
-   * {@link Beta} <br>
-   * Data class representing context_aware_metadata.json file.
-   *
-   * @since 1.31
-   */
-  @Beta
-  public static class ContextAwareMetadataJson extends GenericJson {
-    /** Cert provider command */
-    @Key("cert_provider_command")
-    private List<String> commands;
-
-    /**
-     * Returns the cert provider command.
-     *
-     * @since 1.31
-     */
-    public final List<String> getCommands() {
-      return commands;
-    }
-  }
-
   @VisibleForTesting
   static class DefaultMtlsProvider implements MtlsProvider {
     private static final String DEFAULT_CONTEXT_AWARE_METADATA_PATH =

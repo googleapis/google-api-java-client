@@ -19,12 +19,6 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import junit.framework.TestCase;
 
 /**

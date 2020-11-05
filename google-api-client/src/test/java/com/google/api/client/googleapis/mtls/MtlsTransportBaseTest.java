@@ -12,9 +12,8 @@
  * the License.
  */
 
-package com.google.api.client.googleapis;
+package com.google.api.client.googleapis.mtls;
 
-import com.google.api.client.googleapis.util.MtlsUtils;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.SecurityUtils;
 import org.junit.Test;
@@ -35,7 +34,7 @@ public abstract class MtlsTransportBaseTest  {
     return SecurityUtils.createMtlsKeyStore(certAndKey);
   }
 
-  protected static class TestMtlsProvider implements MtlsUtils.MtlsProvider {
+  protected static class TestMtlsProvider implements MtlsProvider {
     private boolean useClientCertificate;
     private KeyStore keyStore;
     private String keyStorePassword;
@@ -60,13 +59,13 @@ public abstract class MtlsTransportBaseTest  {
     }
   }
 
-  abstract protected HttpTransport buildTrustedTransport(MtlsUtils.MtlsProvider mtlsProvider) throws IOException, GeneralSecurityException;
+  abstract protected HttpTransport buildTrustedTransport(MtlsProvider mtlsProvider) throws IOException, GeneralSecurityException;
 
   // If client certificate shouldn't be used, then neither the provided mtlsKeyStore
   // nor the default mtls key store should be used.
   @Test
   public void testNotUseCertificate() throws Exception {
-    MtlsUtils.MtlsProvider mtlsProvider = new TestMtlsProvider(false, createTestMtlsKeyStore(), "");
+    MtlsProvider mtlsProvider = new TestMtlsProvider(false, createTestMtlsKeyStore(), "");
     HttpTransport transport = buildTrustedTransport(mtlsProvider);
     assertFalse(transport.isMtls());
   }
@@ -75,7 +74,7 @@ public abstract class MtlsTransportBaseTest  {
   // provided key store should be used.
   @Test
   public void testUseProvidedCertificate() throws Exception {
-    MtlsUtils.MtlsProvider mtlsProvider = new TestMtlsProvider(true, createTestMtlsKeyStore(), "");
+    MtlsProvider mtlsProvider = new TestMtlsProvider(true, createTestMtlsKeyStore(), "");
     HttpTransport transport = buildTrustedTransport(mtlsProvider);
     assertTrue(transport.isMtls());
   }
@@ -84,7 +83,7 @@ public abstract class MtlsTransportBaseTest  {
   // the transport created is not mtls.
   @Test
   public void testNoCertificate() throws Exception {
-    MtlsUtils.MtlsProvider mtlsProvider = new TestMtlsProvider(true, null, "");
+    MtlsProvider mtlsProvider = new TestMtlsProvider(true, null, "");
     HttpTransport transport = buildTrustedTransport(mtlsProvider);
     assertFalse(transport.isMtls());
   }

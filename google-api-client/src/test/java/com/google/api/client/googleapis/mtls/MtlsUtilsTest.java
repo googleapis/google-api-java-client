@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.util;
+package com.google.api.client.googleapis.mtls;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -45,14 +45,14 @@ public class MtlsUtilsTest {
 
   @Test
   public void testUseMtlsClientCertificateEmpty() {
-    MtlsUtils.MtlsProvider mtlsProvider =
+    MtlsProvider mtlsProvider =
         new MtlsUtils.DefaultMtlsProvider(new TestEnvironmentProvider(""), "/path/to/missing/file");
     assertFalse(mtlsProvider.useMtlsClientCertificate());
   }
 
   @Test
   public void testUseMtlsClientCertificateNull() {
-    MtlsUtils.MtlsProvider mtlsProvider =
+    MtlsProvider mtlsProvider =
         new MtlsUtils.DefaultMtlsProvider(
             new TestEnvironmentProvider(null), "/path/to/missing/file");
     assertFalse(mtlsProvider.useMtlsClientCertificate());
@@ -60,7 +60,7 @@ public class MtlsUtilsTest {
 
   @Test
   public void testUseMtlsClientCertificateTrue() {
-    MtlsUtils.MtlsProvider mtlsProvider =
+    MtlsProvider mtlsProvider =
         new MtlsUtils.DefaultMtlsProvider(
             new TestEnvironmentProvider("true"), "/path/to/missing/file");
     assertTrue(mtlsProvider.useMtlsClientCertificate());
@@ -69,7 +69,7 @@ public class MtlsUtilsTest {
   @Test
   public void testLoadDefaultKeyStoreMissingFile()
       throws InterruptedException, GeneralSecurityException, IOException {
-    MtlsUtils.MtlsProvider mtlsProvider =
+    MtlsProvider mtlsProvider =
         new MtlsUtils.DefaultMtlsProvider(
             new TestEnvironmentProvider("true"), "/path/to/missing/file");
     KeyStore keyStore = mtlsProvider.loadDefaultKeyStore();
@@ -79,7 +79,7 @@ public class MtlsUtilsTest {
   @Test
   public void testLoadDefaultKeyStore()
       throws InterruptedException, GeneralSecurityException, IOException {
-    MtlsUtils.MtlsProvider mtlsProvider =
+    MtlsProvider mtlsProvider =
         new MtlsUtils.DefaultMtlsProvider(
             new TestEnvironmentProvider("true"),
             "src/test/resources/com/google/api/client/googleapis/util/mtls_context_aware_metadata.json");
@@ -90,7 +90,7 @@ public class MtlsUtilsTest {
   @Test
   public void testLoadDefaultKeyStoreBadCertificate()
       throws InterruptedException, GeneralSecurityException, IOException {
-    MtlsUtils.MtlsProvider mtlsProvider =
+    MtlsProvider mtlsProvider =
         new MtlsUtils.DefaultMtlsProvider(
             new TestEnvironmentProvider("true"),
             "src/test/resources/com/google/api/client/googleapis/util/mtls_context_aware_metadata_bad_command.json");
@@ -107,7 +107,7 @@ public class MtlsUtilsTest {
   @Test
   public void testExtractCertificateProviderCommand() throws IOException {
     InputStream inputStream =
-        this.getClass().getResourceAsStream("mtls_context_aware_metadata.json");
+        this.getClass().getClassLoader().getResourceAsStream("com/google/api/client/googleapis/util/mtls_context_aware_metadata.json");
     List<String> command =
         MtlsUtils.DefaultMtlsProvider.extractCertificateProviderCommand(inputStream);
     assertEquals(2, command.size());

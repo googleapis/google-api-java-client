@@ -15,7 +15,8 @@
 package com.google.api.client.googleapis.javanet;
 
 import com.google.api.client.googleapis.GoogleUtils;
-import com.google.api.client.googleapis.util.MtlsUtils;
+import com.google.api.client.googleapis.mtls.MtlsProvider;
+import com.google.api.client.googleapis.mtls.MtlsUtils;
 import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import java.io.IOException;
@@ -56,7 +57,7 @@ public class GoogleNetHttpTransport {
     return newTrustedTransport(MtlsUtils.getDefaultMtlsProvider());
   }
 
-  static NetHttpTransport newTrustedTransport(MtlsUtils.MtlsProvider mtlsProvider)
+  static NetHttpTransport newTrustedTransport(MtlsProvider mtlsProvider)
       throws GeneralSecurityException, IOException {
     KeyStore mtlsKeyStore = null;
     String mtlsKeyStorePassword = null;

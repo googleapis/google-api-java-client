@@ -17,18 +17,8 @@ package com.google.api.client.googleapis.util;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.Beta;
-import com.google.api.client.util.SecurityUtils;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.AccessControlException;
-import java.security.GeneralSecurityException;
-import java.security.KeyStore;
-import java.util.List;
 
 /**
  * {@link Beta} <br/>
