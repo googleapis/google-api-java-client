@@ -15,9 +15,9 @@
 package com.google.api.client.googleapis.apache.v2;
 
 import com.google.api.client.googleapis.GoogleUtils;
+import com.google.api.client.googleapis.util.MtlsUtils;
 import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.http.apache.v2.ApacheHttpTransport;
-import com.google.api.client.util.Beta;
 import com.google.api.client.util.SslUtils;
 import java.io.IOException;
 import java.net.ProxySelector;
@@ -48,25 +48,18 @@ public final class GoogleApacheHttpTransport {
    */
   public static ApacheHttpTransport newTrustedTransport()
       throws GeneralSecurityException, IOException {
-    return newTrustedTransport(null, "");
+    return newTrustedTransport(MtlsUtils.getDefaultMtlsProvider());
   }
 
-  /**
-   * {@link Beta} <br/>
-   * Returns a new instance of {@link ApacheHttpTransport} that uses {@link
-   * GoogleUtils#getCertificateTrustStore()} for the trusted certificates. If
-   * `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to "true", the function uses
-   * the provided mtlsKeyStore or the default key store from {@link Utils#loadDefaultMtlsKeyStore()}
-   * to create the transport. If either key store exists, then the created transport is mutual TLS.
-   * The provided key store takes precedence over the default one.
-   *
-   * @param mtlsKeyStore KeyStore for mutual TLS client certificate and private key
-   * @param mtlsKeyStorePassword KeyStore password
-   */
-  @Beta
-  public static ApacheHttpTransport newTrustedTransport(
-      KeyStore mtlsKeyStore, String mtlsKeyStorePassword)
+  static ApacheHttpTransport newTrustedTransport(MtlsUtils.MtlsProvider mtlsProvider)
       throws GeneralSecurityException, IOException {
+    KeyStore mtlsKeyStore = null;
+    String mtlsKeyStorePassword = null;
+    if (mtlsProvider.useMtlsClientCertificate()) {
+      mtlsKeyStore = mtlsProvider.loadDefaultKeyStore();
+      mtlsKeyStorePassword = mtlsProvider.getKeyStorePassword();
+    }
+
     PoolingHttpClientConnectionManager connectionManager =
         new PoolingHttpClientConnectionManager(-1, TimeUnit.MILLISECONDS);
 
@@ -77,24 +70,15 @@ public final class GoogleApacheHttpTransport {
     KeyStore trustStore = GoogleUtils.getCertificateTrustStore();
     SSLContext sslContext = SslUtils.getTlsSslContext();
 
-    // Figure out if mTLS is needed and what key store to use.
-    Boolean useMtls = Utils.useMtlsClientCertificate();
-    KeyStore mtlsKeyStoreToUse = mtlsKeyStore;
-    String mtlsKeyStorePasswordToUse = mtlsKeyStorePassword;
-    if (useMtls && mtlsKeyStoreToUse == null) {
-      // Use the default mTLS key store if not provided.
-      mtlsKeyStoreToUse = Utils.loadDefaultMtlsKeyStore();
-      mtlsKeyStorePasswordToUse = "";
-    }
-
-    Boolean isMtls = useMtls && mtlsKeyStoreToUse != null && mtlsKeyStoreToUse.size() > 0;
-    if (isMtls) {
+    boolean isMtls = false;
+    if (mtlsKeyStore != null && mtlsKeyStorePassword != null) {
+      isMtls = true;
       SslUtils.initSslContext(
           sslContext,
           trustStore,
           SslUtils.getPkixTrustManagerFactory(),
-          mtlsKeyStoreToUse,
-          mtlsKeyStorePasswordToUse,
+          mtlsKeyStore,
+          mtlsKeyStorePassword,
           SslUtils.getDefaultKeyManagerFactory());
     } else {
       SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory());

@@ -49,28 +49,4 @@ public class UtilsTest extends TestCase {
     HttpTransport secondCall = Utils.getDefaultTransport();
     assertSame(transport, secondCall);
   }
-
-  public static Map<String, String> parseQuery(String query) throws IOException {
-    Map<String, String> map = new HashMap<String, String>();
-    String[] entries = query.split("&");
-    for (String entry : entries) {
-      String[] sides = entry.split("=");
-      if (sides.length != 2) {
-        throw new IOException("Invalid Query String");
-      }
-      String key = URLDecoder.decode(sides[0], "UTF-8");
-      String value = URLDecoder.decode(sides[1], "UTF-8");
-      map.put(key, value);
-    }
-    return map;
-  }
-
-  public void testExtractCertificateProviderCommand() throws IOException {
-    String json = "{\"cert_provider_command\":[\"/opt/google/endpoint-verification/bin/apihelper\",\"--print_certificate\"],\"device_resource_ids\":[\"123\"]}";
-    ByteArrayInputStream stream = new ByteArrayInputStream(json.getBytes());
-    List<String> command = Utils.extractCertificateProviderCommand(stream);
-    assertEquals(2, command.size());
-    assertEquals("/opt/google/endpoint-verification/bin/apihelper", command.get(0));
-    assertEquals("--print_certificate", command.get(1));
-  }
 }

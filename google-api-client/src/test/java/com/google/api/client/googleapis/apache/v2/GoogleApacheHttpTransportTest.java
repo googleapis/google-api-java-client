@@ -1,71 +1,29 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.google.api.client.googleapis.apache.v2;
 
-import java.io.InputStream;
-import java.security.KeyStore;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
-import com.google.api.client.googleapis.util.Utils;
-import com.google.api.client.http.apache.v2.ApacheHttpTransport;
-import com.google.api.client.util.SecurityUtils;
+import com.google.api.client.googleapis.MtlsTransportBaseTest;
+import com.google.api.client.googleapis.util.MtlsUtils;
+import com.google.api.client.http.HttpTransport;
 
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import junit.framework.TestCase;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Utils.class, GoogleApacheHttpTransport.class})
-@PowerMockIgnore({"jdk.internal.reflect.*", "javax.net.ssl.*"})
-public class GoogleApacheHttpTransportTest extends TestCase {
-  public KeyStore createTestMtlsKeyStore() throws Exception {
-    InputStream certAndKey = getClass()
-      .getClassLoader()
-      .getResourceAsStream("com/google/api/client/googleapis/util/mtlsCertAndKey.pem");
-    return SecurityUtils.createMtlsKeyStore(certAndKey);
-  }
-
-  // If client certificate shouldn't be used, then neither the provided mtlsKeyStore
-  // nor the default mtls key store should be used.
-  public void testNotUseCertificate() throws Exception {
-    KeyStore mtlsKeyStore = createTestMtlsKeyStore();
-    PowerMockito.spy(Utils.class);
-    PowerMockito.when(Utils.useMtlsClientCertificate()).thenReturn(false);
-    PowerMockito.when(Utils.loadDefaultMtlsKeyStore()).thenReturn(mtlsKeyStore);
-    ApacheHttpTransport transport = GoogleApacheHttpTransport.newTrustedTransport(mtlsKeyStore, "");
-    assertFalse(transport.isMtls());
-  }
-
-  // If client certificate should be used, and mtlsKeyStore is provided, then the
-  // provided key store should be used.
-  public void testUseProvidedCertificate() throws Exception {
-    KeyStore mtlsKeyStore = createTestMtlsKeyStore();
-    PowerMockito.spy(Utils.class);
-    PowerMockito.when(Utils.useMtlsClientCertificate()).thenReturn(true);
-    PowerMockito.when(Utils.loadDefaultMtlsKeyStore()).thenReturn(null);
-    ApacheHttpTransport transport = GoogleApacheHttpTransport.newTrustedTransport(mtlsKeyStore, "");
-    assertTrue(transport.isMtls());
-  }
-
-  // If client certificate should be used, and mtlsKeyStore is provided, then the
-  // provided key store should be used.
-  public void testUseDefaultCertificate() throws Exception {
-    KeyStore mtlsKeyStore = createTestMtlsKeyStore();
-    PowerMockito.spy(Utils.class);
-    PowerMockito.when(Utils.useMtlsClientCertificate()).thenReturn(true);
-    PowerMockito.when(Utils.loadDefaultMtlsKeyStore()).thenReturn(mtlsKeyStore);
-    ApacheHttpTransport transport = GoogleApacheHttpTransport.newTrustedTransport(null, "");
-    assertTrue(transport.isMtls());
-  }
-
-  // If client certificate should be used, but no mtls key store is available, then
-  // the transport created is not mtls.
-  public void testNoCertificate() throws Exception {
-    PowerMockito.spy(Utils.class);
-    PowerMockito.when(Utils.useMtlsClientCertificate()).thenReturn(true);
-    PowerMockito.when(Utils.loadDefaultMtlsKeyStore()).thenReturn(null);
-    ApacheHttpTransport transport = GoogleApacheHttpTransport.newTrustedTransport(null, "");
-    assertFalse(transport.isMtls());
+public class GoogleApacheHttpTransportTest extends MtlsTransportBaseTest {
+  @Override
+  protected HttpTransport buildTrustedTransport(MtlsUtils.MtlsProvider mtlsProvider) throws GeneralSecurityException, IOException {
+    return GoogleApacheHttpTransport.newTrustedTransport(mtlsProvider);
   }
 }

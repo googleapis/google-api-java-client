@@ -1,0 +1,9 @@
+{
+  "cert_provider_command": [
+    "cat",
+    "src/test/resources/com/google/api/client/googleapis/util/mtlsCertAndKey.pem"
+  ],
+  "device_resource_ids": [
+    "123"
+  ]
+}
