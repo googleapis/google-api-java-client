@@ -27,7 +27,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public abstract class MtlsTransportBaseTest  {
-  protected KeyStore createTestMtlsKeyStore() throws Exception {
+  protected KeyStore createTestMtlsKeyStore() throws IOException, GeneralSecurityException {
     InputStream certAndKey = getClass()
         .getClassLoader()
         .getResourceAsStream("com/google/api/client/googleapis/util/mtlsCertAndKey.pem");
@@ -64,7 +64,7 @@ public abstract class MtlsTransportBaseTest  {
   // If client certificate shouldn't be used, then neither the provided mtlsKeyStore
   // nor the default mtls key store should be used.
   @Test
-  public void testNotUseCertificate() throws Exception {
+  public void testNotUseCertificate() throws IOException, GeneralSecurityException {
     MtlsProvider mtlsProvider = new TestMtlsProvider(false, createTestMtlsKeyStore(), "");
     HttpTransport transport = buildTrustedTransport(mtlsProvider);
     assertFalse(transport.isMtls());
@@ -73,7 +73,7 @@ public abstract class MtlsTransportBaseTest  {
   // If client certificate should be used, and mtlsKeyStore is provided, then the
   // provided key store should be used.
   @Test
-  public void testUseProvidedCertificate() throws Exception {
+  public void testUseProvidedCertificate() throws IOException, GeneralSecurityException {
     MtlsProvider mtlsProvider = new TestMtlsProvider(true, createTestMtlsKeyStore(), "");
     HttpTransport transport = buildTrustedTransport(mtlsProvider);
     assertTrue(transport.isMtls());
@@ -82,7 +82,7 @@ public abstract class MtlsTransportBaseTest  {
   // If client certificate should be used, but no mtls key store is available, then
   // the transport created is not mtls.
   @Test
-  public void testNoCertificate() throws Exception {
+  public void testNoCertificate() throws IOException, GeneralSecurityException {
     MtlsProvider mtlsProvider = new TestMtlsProvider(true, null, "");
     HttpTransport transport = buildTrustedTransport(mtlsProvider);
     assertFalse(transport.isMtls());
