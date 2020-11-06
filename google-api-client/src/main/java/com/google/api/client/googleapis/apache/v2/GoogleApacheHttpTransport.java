@@ -62,7 +62,7 @@ public final class GoogleApacheHttpTransport {
    * @param mtlsProvider MtlsProvider to configure mutual TLS for the transport
    */
   @Beta
-  static ApacheHttpTransport newTrustedTransport(MtlsProvider mtlsProvider)
+  public static ApacheHttpTransport newTrustedTransport(MtlsProvider mtlsProvider)
       throws GeneralSecurityException, IOException {
     KeyStore mtlsKeyStore = null;
     String mtlsKeyStorePassword = null;
