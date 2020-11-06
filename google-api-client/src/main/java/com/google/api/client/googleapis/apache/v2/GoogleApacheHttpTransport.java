@@ -19,6 +19,7 @@ import com.google.api.client.googleapis.mtls.MtlsProvider;
 import com.google.api.client.googleapis.mtls.MtlsUtils;
 import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.http.apache.v2.ApacheHttpTransport;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.SslUtils;
 import java.io.IOException;
 import java.net.ProxySelector;
@@ -52,6 +53,15 @@ public final class GoogleApacheHttpTransport {
     return newTrustedTransport(MtlsUtils.getDefaultMtlsProvider());
   }
 
+  /**
+   * {@link Beta} <br>
+   * Returns a new instance of {@link ApacheHttpTransport} that uses {@link
+   * GoogleUtils#getCertificateTrustStore()} for the trusted certificates.
+   * mtlsProvider can be used to configure mutual TLS for the transport.
+   * 
+   * @param mtlsProvider MtlsProvider to configure mutual TLS for the transport
+   */
+  @Beta
   static ApacheHttpTransport newTrustedTransport(MtlsProvider mtlsProvider)
       throws GeneralSecurityException, IOException {
     KeyStore mtlsKeyStore = null;

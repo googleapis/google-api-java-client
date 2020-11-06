@@ -21,15 +21,25 @@ import java.security.KeyStore;
 
 /**
  * {@link Beta} <br>
- * Provider interface for mutual TLS.
+ * Provider interface for mutual TLS. It is used in
+ * {@link GoogleApacheHttpTransport#newTrustedTransport(MtlsProvider)} and 
+ * {@link GoogleNetHttpTransport#newTrustedTransport(MtlsProvider)} to configure the mutual TLS
+ * in the transport.
  *
  * @since 1.31
  */
 @Beta
 public interface MtlsProvider {
+  /** 
+   * Returns if mutual TLS client certificate should be used. If the value is true, the key store
+   * from {@link #getKeyStore()} and key store password from {@link #getKeyStorePassword()} will
+   * be used to configure mutual TLS transport.
+   */
   boolean useMtlsClientCertificate();
 
+  /** The key store to use for mutual TLS. */
   String getKeyStorePassword();
 
+  /** The password for mutual TLS key store. */
   KeyStore getKeyStore() throws IOException, GeneralSecurityException;
 }

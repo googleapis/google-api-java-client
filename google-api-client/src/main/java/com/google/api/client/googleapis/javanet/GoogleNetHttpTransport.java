@@ -19,6 +19,8 @@ import com.google.api.client.googleapis.mtls.MtlsProvider;
 import com.google.api.client.googleapis.mtls.MtlsUtils;
 import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.util.Beta;
+
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
@@ -45,10 +47,10 @@ public class GoogleNetHttpTransport {
    *
    * <pre>
    * static HttpTransport newProxyTransport() throws GeneralSecurityException, IOException {
-   * NetHttpTransport.Builder builder = new NetHttpTransport.Builder();
-   * builder.trustCertificates(GoogleUtils.getCertificateTrustStore());
-   * builder.setProxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 3128)));
-   * return builder.build();
+   *   NetHttpTransport.Builder builder = new NetHttpTransport.Builder();
+   *   builder.trustCertificates(GoogleUtils.getCertificateTrustStore());
+   *   builder.setProxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 3128)));
+   *   return builder.build();
    * }
    * </pre>
    */
@@ -57,7 +59,17 @@ public class GoogleNetHttpTransport {
     return newTrustedTransport(MtlsUtils.getDefaultMtlsProvider());
   }
 
-  static NetHttpTransport newTrustedTransport(MtlsProvider mtlsProvider)
+  /**
+   * {@link Beta} <br>
+   * Returns a new instance of {@link NetHttpTransport} that uses {@link
+   * GoogleUtils#getCertificateTrustStore()} for the trusted certificates using {@link
+   * com.google.api.client.http.javanet.NetHttpTransport.Builder#trustCertificates(KeyStore)}.
+   * mtlsProvider can be used to configure mutual TLS for the transport.
+   * 
+   * @param mtlsProvider MtlsProvider to configure mutual TLS for the transport
+   */
+  @Beta
+  public static NetHttpTransport newTrustedTransport(MtlsProvider mtlsProvider)
       throws GeneralSecurityException, IOException {
     KeyStore mtlsKeyStore = null;
     String mtlsKeyStorePassword = null;
