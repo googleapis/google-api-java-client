@@ -17,13 +17,13 @@ package com.google.api.client.googleapis.apache.v2;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-import com.google.api.client.googleapis.MtlsTransportBaseTest;
-import com.google.api.client.googleapis.util.MtlsUtils;
+import com.google.api.client.googleapis.mtls.MtlsTransportBaseTest;
+import com.google.api.client.googleapis.mtls.MtlsProvider;
 import com.google.api.client.http.HttpTransport;
 
 public class GoogleApacheHttpTransportTest extends MtlsTransportBaseTest {
   @Override
-  protected HttpTransport buildTrustedTransport(MtlsUtils.MtlsProvider mtlsProvider) throws GeneralSecurityException, IOException {
+  protected HttpTransport buildTrustedTransport(MtlsProvider mtlsProvider) throws GeneralSecurityException, IOException {
     return GoogleApacheHttpTransport.newTrustedTransport(mtlsProvider);
   }
 }

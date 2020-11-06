@@ -12,18 +12,25 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.javanet;
+package com.google.api.client.googleapis.mtls;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.security.KeyStore;
 
-import com.google.api.client.googleapis.mtls.MtlsTransportBaseTest;
-import com.google.api.client.googleapis.mtls.MtlsProvider;
-import com.google.api.client.http.HttpTransport;
+import com.google.api.client.util.Beta;
 
-public class GoogleNetHttpTransportTest extends MtlsTransportBaseTest {
-  @Override
-  protected HttpTransport buildTrustedTransport(MtlsProvider mtlsProvider) throws GeneralSecurityException, IOException {
-    return GoogleNetHttpTransport.newTrustedTransport(mtlsProvider);
-  }
+/**
+ * {@link Beta} <br>
+ * Provider interface for mutual TLS.
+ *
+ * @since 1.31
+ */
+@Beta
+public interface MtlsProvider {
+  boolean useMtlsClientCertificate();
+
+  String getKeyStorePassword();
+
+  KeyStore getKeyStore() throws IOException, GeneralSecurityException;
 }

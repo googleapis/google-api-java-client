@@ -15,7 +15,8 @@
 package com.google.api.client.googleapis.apache.v2;
 
 import com.google.api.client.googleapis.GoogleUtils;
-import com.google.api.client.googleapis.util.MtlsUtils;
+import com.google.api.client.googleapis.mtls.MtlsProvider;
+import com.google.api.client.googleapis.mtls.MtlsUtils;
 import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.http.apache.v2.ApacheHttpTransport;
 import com.google.api.client.util.SslUtils;
@@ -51,12 +52,12 @@ public final class GoogleApacheHttpTransport {
     return newTrustedTransport(MtlsUtils.getDefaultMtlsProvider());
   }
 
-  static ApacheHttpTransport newTrustedTransport(MtlsUtils.MtlsProvider mtlsProvider)
+  static ApacheHttpTransport newTrustedTransport(MtlsProvider mtlsProvider)
       throws GeneralSecurityException, IOException {
     KeyStore mtlsKeyStore = null;
     String mtlsKeyStorePassword = null;
     if (mtlsProvider.useMtlsClientCertificate()) {
-      mtlsKeyStore = mtlsProvider.loadDefaultKeyStore();
+      mtlsKeyStore = mtlsProvider.getKeyStore();
       mtlsKeyStorePassword = mtlsProvider.getKeyStorePassword();
     }
 

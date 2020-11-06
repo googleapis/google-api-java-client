@@ -12,12 +12,11 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.util;
+package com.google.api.client.googleapis.mtls;
 
-import com.google.api.client.json.GenericJson;
+import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.util.Beta;
-import com.google.api.client.util.Key;
 import com.google.api.client.util.SecurityUtils;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.FileInputStream;
@@ -28,37 +27,14 @@ import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.util.List;
 
+/**
+ * {@link Beta} <br>
+ * Utilities for mutual TLS.
+ *
+ * @since 1.31
+ */
+@Beta
 public class MtlsUtils {
-  public interface MtlsProvider {
-    boolean useMtlsClientCertificate();
-
-    String getKeyStorePassword();
-
-    KeyStore loadDefaultKeyStore() throws IOException, GeneralSecurityException;
-  }
-
-  /**
-   * {@link Beta} <br>
-   * Data class representing context_aware_metadata.json file.
-   *
-   * @since 1.31
-   */
-  @Beta
-  public static class ContextAwareMetadataJson extends GenericJson {
-    /** Cert provider command */
-    @Key("cert_provider_command")
-    private List<String> commands;
-
-    /**
-     * Returns the cert provider command.
-     *
-     * @since 1.31
-     */
-    public final List<String> getCommands() {
-      return commands;
-    }
-  }
-
   @VisibleForTesting
   static class DefaultMtlsProvider implements MtlsProvider {
     private static final String DEFAULT_CONTEXT_AWARE_METADATA_PATH =
@@ -104,7 +80,7 @@ public class MtlsUtils {
     }
 
     @Override
-    public KeyStore loadDefaultKeyStore() throws IOException, GeneralSecurityException {
+    public KeyStore getKeyStore() throws IOException, GeneralSecurityException {
       // Load the cert provider command from the json file.
       InputStream stream;
       try {
@@ -120,7 +96,8 @@ public class MtlsUtils {
       Process process = new ProcessBuilder(command).start();
       int exitCode = -1;
       try {
-        exitCode = process.waitFor();
+        // Run the command and timeout after 1000 milliseconds. 
+        exitCode = runCertificateProviderCommand(process, 1000);
       } catch (InterruptedException e) {
         throw new IOException("Interrupted executing certificate provider command", e);
       }
@@ -140,10 +117,44 @@ public class MtlsUtils {
       ContextAwareMetadataJson json = parser.parse(ContextAwareMetadataJson.class);
       return json.getCommands();
     }
+  
+    @VisibleForTesting
+    static int runCertificateProviderCommand(Process commandProcess, long timeoutMilliseconds) throws IOException, InterruptedException {
+      long startTime = System.currentTimeMillis();
+      long remainTime = timeoutMilliseconds;
+      boolean terminated = false;
+  
+      do {
+          try {
+            // Check if process is terminated by pooling the exitValue, which throws
+            // IllegalThreadStateException if not terminated.
+            commandProcess.exitValue();
+            terminated = true;
+            break;
+          } catch(IllegalThreadStateException ex) {
+            if (remainTime > 0) {
+              Thread.sleep(Math.min(remainTime + 1, 100));
+            }
+          }
+          remainTime = remainTime - (System.currentTimeMillis() - startTime);
+      } while (remainTime > 0);
+  
+      if (!terminated) {
+        commandProcess.destroy();
+        throw new IOException("cert provider command timed out");
+      }
+      
+      return commandProcess.exitValue();
+    } 
   }
 
   private static final MtlsProvider MTLS_PROVIDER = new DefaultMtlsProvider();
 
+  /**
+   * Returns the default MtlsProvider instance.
+   * 
+   * @return The default MtlsProvider instance.
+   */
   public static MtlsProvider getDefaultMtlsProvider() {
     return MTLS_PROVIDER;
   }

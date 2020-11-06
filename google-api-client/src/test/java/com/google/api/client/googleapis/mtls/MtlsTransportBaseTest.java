@@ -12,9 +12,8 @@
  * the License.
  */
 
-package com.google.api.client.googleapis;
+package com.google.api.client.googleapis.mtls;
 
-import com.google.api.client.googleapis.util.MtlsUtils;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.SecurityUtils;
 import org.junit.Test;
@@ -28,14 +27,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public abstract class MtlsTransportBaseTest  {
-  protected KeyStore createTestMtlsKeyStore() throws Exception {
+  protected KeyStore createTestMtlsKeyStore() throws IOException, GeneralSecurityException {
     InputStream certAndKey = getClass()
         .getClassLoader()
         .getResourceAsStream("com/google/api/client/googleapis/util/mtlsCertAndKey.pem");
     return SecurityUtils.createMtlsKeyStore(certAndKey);
   }
 
-  protected static class TestMtlsProvider implements MtlsUtils.MtlsProvider {
+  protected static class TestMtlsProvider implements MtlsProvider {
     private boolean useClientCertificate;
     private KeyStore keyStore;
     private String keyStorePassword;
@@ -55,18 +54,18 @@ public abstract class MtlsTransportBaseTest  {
     }
 
     @Override
-    public KeyStore loadDefaultKeyStore() throws IOException, GeneralSecurityException {
+    public KeyStore getKeyStore() throws IOException, GeneralSecurityException {
       return keyStore;
     }
   }
 
-  abstract protected HttpTransport buildTrustedTransport(MtlsUtils.MtlsProvider mtlsProvider) throws IOException, GeneralSecurityException;
+  abstract protected HttpTransport buildTrustedTransport(MtlsProvider mtlsProvider) throws IOException, GeneralSecurityException;
 
   // If client certificate shouldn't be used, then neither the provided mtlsKeyStore
   // nor the default mtls key store should be used.
   @Test
-  public void testNotUseCertificate() throws Exception {
-    MtlsUtils.MtlsProvider mtlsProvider = new TestMtlsProvider(false, createTestMtlsKeyStore(), "");
+  public void testNotUseCertificate() throws IOException, GeneralSecurityException {
+    MtlsProvider mtlsProvider = new TestMtlsProvider(false, createTestMtlsKeyStore(), "");
     HttpTransport transport = buildTrustedTransport(mtlsProvider);
     assertFalse(transport.isMtls());
   }
@@ -74,8 +73,8 @@ public abstract class MtlsTransportBaseTest  {
   // If client certificate should be used, and mtlsKeyStore is provided, then the
   // provided key store should be used.
   @Test
-  public void testUseProvidedCertificate() throws Exception {
-    MtlsUtils.MtlsProvider mtlsProvider = new TestMtlsProvider(true, createTestMtlsKeyStore(), "");
+  public void testUseProvidedCertificate() throws IOException, GeneralSecurityException {
+    MtlsProvider mtlsProvider = new TestMtlsProvider(true, createTestMtlsKeyStore(), "");
     HttpTransport transport = buildTrustedTransport(mtlsProvider);
     assertTrue(transport.isMtls());
   }
@@ -83,8 +82,8 @@ public abstract class MtlsTransportBaseTest  {
   // If client certificate should be used, but no mtls key store is available, then
   // the transport created is not mtls.
   @Test
-  public void testNoCertificate() throws Exception {
-    MtlsUtils.MtlsProvider mtlsProvider = new TestMtlsProvider(true, null, "");
+  public void testNoCertificate() throws IOException, GeneralSecurityException {
+    MtlsProvider mtlsProvider = new TestMtlsProvider(true, null, "");
     HttpTransport transport = buildTrustedTransport(mtlsProvider);
     assertFalse(transport.isMtls());
   }
