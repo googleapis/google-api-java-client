@@ -23,6 +23,7 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.util.List;
@@ -115,5 +116,67 @@ public class MtlsUtilsTest {
     assertEquals(
         "src/test/resources/com/google/api/client/googleapis/util/mtlsCertAndKey.pem",
         command.get(1));
+  }
+
+  static class TestCertProviderCommandProcess extends Process {
+    private boolean runForever;
+    private int exitValue;
+
+    public TestCertProviderCommandProcess(int exitValue, boolean runForever) {
+      this.runForever = runForever;
+      this.exitValue = exitValue;
+    }
+
+    @Override
+    public OutputStream getOutputStream() {
+      return null;
+    }
+
+    @Override
+    public InputStream getInputStream() {
+      return null;
+    }
+
+    @Override
+    public InputStream getErrorStream() {
+      return null;
+    }
+
+    @Override
+    public int waitFor() throws InterruptedException {
+      return 0;
+    }
+
+    @Override
+    public int exitValue() {
+      if (runForever) {
+        throw new IllegalThreadStateException();
+      }
+      return exitValue;
+    }
+
+    @Override
+    public void destroy() {}
+  }
+
+  @Test
+  public void testRunCertificateProviderCommandSuccess() throws IOException, InterruptedException {
+    Process certCommandProcess = new TestCertProviderCommandProcess(0, false);
+    int exitValue = 
+      MtlsUtils.DefaultMtlsProvider.runCertificateProviderCommand(certCommandProcess, 100);
+    assertEquals(0, exitValue);
+  }
+
+  @Test
+  public void testRunCertificateProviderCommandTimeout() throws InterruptedException {
+    Process certCommandProcess = new TestCertProviderCommandProcess(0, true);
+    try {
+      MtlsUtils.DefaultMtlsProvider.runCertificateProviderCommand(certCommandProcess, 100);
+      fail("should throw and exception");
+    } catch (IOException e) {
+      assertTrue(
+          "expected to fail with timeout",
+          e.getMessage().contains("cert provider command timed out"));
+    }
   }
 }
