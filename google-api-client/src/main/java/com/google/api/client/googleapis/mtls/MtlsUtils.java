@@ -96,7 +96,7 @@ public class MtlsUtils {
       Process process = new ProcessBuilder(command).start();
       int exitCode = -1;
       try {
-        // Run the command and timeout after 1000 milliseconds. 
+        // Run the command and timeout after 1000 milliseconds.
         exitCode = runCertificateProviderCommand(process, 1000);
       } catch (InterruptedException e) {
         throw new IOException("Interrupted executing certificate provider command", e);
@@ -117,42 +117,43 @@ public class MtlsUtils {
       ContextAwareMetadataJson json = parser.parse(ContextAwareMetadataJson.class);
       return json.getCommands();
     }
-  
+
     @VisibleForTesting
-    static int runCertificateProviderCommand(Process commandProcess, long timeoutMilliseconds) throws IOException, InterruptedException {
+    static int runCertificateProviderCommand(Process commandProcess, long timeoutMilliseconds)
+        throws IOException, InterruptedException {
       long startTime = System.currentTimeMillis();
       long remainTime = timeoutMilliseconds;
       boolean terminated = false;
-  
+
       do {
-          try {
-            // Check if process is terminated by pooling the exitValue, which throws
-            // IllegalThreadStateException if not terminated.
-            commandProcess.exitValue();
-            terminated = true;
-            break;
-          } catch(IllegalThreadStateException ex) {
-            if (remainTime > 0) {
-              Thread.sleep(Math.min(remainTime + 1, 100));
-            }
+        try {
+          // Check if process is terminated by pooling the exitValue, which throws
+          // IllegalThreadStateException if not terminated.
+          commandProcess.exitValue();
+          terminated = true;
+          break;
+        } catch (IllegalThreadStateException ex) {
+          if (remainTime > 0) {
+            Thread.sleep(Math.min(remainTime + 1, 100));
           }
-          remainTime = remainTime - (System.currentTimeMillis() - startTime);
+        }
+        remainTime = remainTime - (System.currentTimeMillis() - startTime);
       } while (remainTime > 0);
-  
+
       if (!terminated) {
         commandProcess.destroy();
         throw new IOException("cert provider command timed out");
       }
-      
+
       return commandProcess.exitValue();
-    } 
+    }
   }
 
   private static final MtlsProvider MTLS_PROVIDER = new DefaultMtlsProvider();
 
   /**
    * Returns the default MtlsProvider instance.
-   * 
+   *
    * @return The default MtlsProvider instance.
    */
   public static MtlsProvider getDefaultMtlsProvider() {
