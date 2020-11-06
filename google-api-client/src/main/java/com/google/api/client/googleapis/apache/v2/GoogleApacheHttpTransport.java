@@ -56,9 +56,9 @@ public final class GoogleApacheHttpTransport {
   /**
    * {@link Beta} <br>
    * Returns a new instance of {@link ApacheHttpTransport} that uses {@link
-   * GoogleUtils#getCertificateTrustStore()} for the trusted certificates.
-   * mtlsProvider can be used to configure mutual TLS for the transport.
-   * 
+   * GoogleUtils#getCertificateTrustStore()} for the trusted certificates. mtlsProvider can be used
+   * to configure mutual TLS for the transport.
+   *
    * @param mtlsProvider MtlsProvider to configure mutual TLS for the transport
    */
   @Beta

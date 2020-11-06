@@ -20,7 +20,6 @@ import com.google.api.client.googleapis.mtls.MtlsUtils;
 import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
@@ -65,7 +64,7 @@ public class GoogleNetHttpTransport {
    * GoogleUtils#getCertificateTrustStore()} for the trusted certificates using {@link
    * com.google.api.client.http.javanet.NetHttpTransport.Builder#trustCertificates(KeyStore)}.
    * mtlsProvider can be used to configure mutual TLS for the transport.
-   * 
+   *
    * @param mtlsProvider MtlsProvider to configure mutual TLS for the transport
    */
   @Beta
