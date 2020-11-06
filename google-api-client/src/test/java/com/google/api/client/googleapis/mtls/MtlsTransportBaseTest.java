@@ -25,6 +25,7 @@ import java.security.KeyStore;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public abstract class MtlsTransportBaseTest  {
   protected KeyStore createTestMtlsKeyStore() throws IOException, GeneralSecurityException {
@@ -38,11 +39,15 @@ public abstract class MtlsTransportBaseTest  {
     private boolean useClientCertificate;
     private KeyStore keyStore;
     private String keyStorePassword;
-    TestMtlsProvider(boolean useClientCertificate, KeyStore keystore, String keyStorePassword) {
+    private boolean throwExceptionForGetKeyStore;
+
+    TestMtlsProvider(boolean useClientCertificate, KeyStore keystore, String keyStorePassword, boolean throwExceptionForGetKeyStore) {
       this.useClientCertificate = useClientCertificate;
       this.keyStore = keystore;
       this.keyStorePassword = keyStorePassword;
+      this.throwExceptionForGetKeyStore = throwExceptionForGetKeyStore;
     }
+
     @Override
     public boolean useMtlsClientCertificate() {
       return useClientCertificate;
@@ -55,6 +60,9 @@ public abstract class MtlsTransportBaseTest  {
 
     @Override
     public KeyStore getKeyStore() throws IOException, GeneralSecurityException {
+      if (throwExceptionForGetKeyStore) {
+        throw new IOException("getKeyStore throws exception");
+      }
       return keyStore;
     }
   }
@@ -65,7 +73,7 @@ public abstract class MtlsTransportBaseTest  {
   // nor the default mtls key store should be used.
   @Test
   public void testNotUseCertificate() throws IOException, GeneralSecurityException {
-    MtlsProvider mtlsProvider = new TestMtlsProvider(false, createTestMtlsKeyStore(), "");
+    MtlsProvider mtlsProvider = new TestMtlsProvider(false, createTestMtlsKeyStore(), "", false);
     HttpTransport transport = buildTrustedTransport(mtlsProvider);
     assertFalse(transport.isMtls());
   }
@@ -74,7 +82,7 @@ public abstract class MtlsTransportBaseTest  {
   // provided key store should be used.
   @Test
   public void testUseProvidedCertificate() throws IOException, GeneralSecurityException {
-    MtlsProvider mtlsProvider = new TestMtlsProvider(true, createTestMtlsKeyStore(), "");
+    MtlsProvider mtlsProvider = new TestMtlsProvider(true, createTestMtlsKeyStore(), "", false);
     HttpTransport transport = buildTrustedTransport(mtlsProvider);
     assertTrue(transport.isMtls());
   }
@@ -83,8 +91,22 @@ public abstract class MtlsTransportBaseTest  {
   // the transport created is not mtls.
   @Test
   public void testNoCertificate() throws IOException, GeneralSecurityException {
-    MtlsProvider mtlsProvider = new TestMtlsProvider(true, null, "");
+    MtlsProvider mtlsProvider = new TestMtlsProvider(true, null, "", false);
     HttpTransport transport = buildTrustedTransport(mtlsProvider);
     assertFalse(transport.isMtls());
+  }
+
+  // Test the case where mtlsProvider.getKeyStore() throws.
+  @Test
+  public void testGetKeyStoreThrows() throws GeneralSecurityException {
+    MtlsProvider mtlsProvider = new TestMtlsProvider(true, null, "", true);
+    try {
+      buildTrustedTransport(mtlsProvider);
+      fail("should throw and exception");
+    } catch (IOException e) {
+      assertTrue(
+          "expected to fail with exception",
+          e.getMessage().contains("getKeyStore throws exception"));
+    }
   }
 }
