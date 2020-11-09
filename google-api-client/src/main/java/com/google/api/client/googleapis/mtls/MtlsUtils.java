@@ -127,7 +127,7 @@ public class MtlsUtils {
 
       do {
         try {
-          // Check if process is terminated by pooling the exitValue, which throws
+          // Check if process is terminated by polling the exitValue, which throws
           // IllegalThreadStateException if not terminated.
           commandProcess.exitValue();
           terminated = true;
@@ -154,7 +154,7 @@ public class MtlsUtils {
   /**
    * Returns the default MtlsProvider instance.
    *
-   * @return The default MtlsProvider instance.
+   * @return The default MtlsProvider instance
    */
   public static MtlsProvider getDefaultMtlsProvider() {
     return MTLS_PROVIDER;
