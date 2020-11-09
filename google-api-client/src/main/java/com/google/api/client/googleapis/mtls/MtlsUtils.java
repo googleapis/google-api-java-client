@@ -81,33 +81,26 @@ public class MtlsUtils {
 
     @Override
     public KeyStore getKeyStore() throws IOException, GeneralSecurityException {
-      // Load the cert provider command from the json file.
-      InputStream stream;
       try {
-        stream = new FileInputStream(metadataPath);
+        // Load the cert provider command from the json file.
+        InputStream stream = new FileInputStream(metadataPath);
+        List<String> command = extractCertificateProviderCommand(stream);
+
+        // Run the command and timeout after 1000 milliseconds.
+        Process process = new ProcessBuilder(command).start();
+        int exitCode = runCertificateProviderCommand(process, 1000);
+        if (exitCode != 0) {
+          throw new IOException(String.format("Failed to execute cert provider command with exit code: %d", exitCode));
+        }
+
+        // Create mTLS key store with the input certificates from shell command.
+        return SecurityUtils.createMtlsKeyStore(process.getInputStream());
       } catch (FileNotFoundException ignored) {
         // file doesn't exist
         return null;
-      }
-
-      List<String> command = extractCertificateProviderCommand(stream);
-
-      // Call the command.
-      Process process = new ProcessBuilder(command).start();
-      int exitCode = -1;
-      try {
-        // Run the command and timeout after 1000 milliseconds.
-        exitCode = runCertificateProviderCommand(process, 1000);
       } catch (InterruptedException e) {
         throw new IOException("Interrupted executing certificate provider command", e);
       }
-      if (exitCode != 0) {
-        throw new IOException(
-            String.format("Failed to execute cert provider command with exit code: %d", exitCode));
-      }
-
-      // Parse input certificates from shell command
-      return SecurityUtils.createMtlsKeyStore(process.getInputStream());
     }
 
     @VisibleForTesting
