@@ -19,27 +19,24 @@ import com.google.api.client.util.Beta;
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Wraps a {@link GooglePlayServicesAvailabilityException} into an {@link IOException} so it can be
  * caught directly.
  *
- * <p>
- * Use {@link #getConnectionStatusCode()} to display the error dialog. Alternatively, use
- * {@link #getCause()} to get the wrapped {@link GooglePlayServicesAvailabilityException}. Example
- * usage:
- * </p>
+ * <p>Use {@link #getConnectionStatusCode()} to display the error dialog. Alternatively, use {@link
+ * #getCause()} to get the wrapped {@link GooglePlayServicesAvailabilityException}. Example usage:
  *
  * <pre>
-    } catch (final GooglePlayServicesAvailabilityIOException availabilityException) {
-      myActivity.runOnUiThread(new Runnable() {
-        public void run() {
-          Dialog dialog = GooglePlayServicesUtil.getErrorDialog(
-              availabilityException.getConnectionStatusCode(),
-              myActivity,
-              MyActivity.REQUEST_GOOGLE_PLAY_SERVICES);
-          dialog.show();
-        }
-      });
+ * } catch (final GooglePlayServicesAvailabilityIOException availabilityException) {
+ * myActivity.runOnUiThread(new Runnable() {
+ * public void run() {
+ * Dialog dialog = GooglePlayServicesUtil.getErrorDialog(
+ * availabilityException.getConnectionStatusCode(),
+ * myActivity,
+ * MyActivity.REQUEST_GOOGLE_PLAY_SERVICES);
+ * dialog.show();
+ * }
+ * });
  * </pre>
  *
  * @since 1.12
@@ -50,9 +47,7 @@ public class GooglePlayServicesAvailabilityIOException extends UserRecoverableAu
 
   private static final long serialVersionUID = 1L;
 
-  /**
-   * @since 1.21.0
-   */
+  /** @since 1.21.0 */
   public GooglePlayServicesAvailabilityIOException(
       GooglePlayServicesAvailabilityException wrapped) {
     super(wrapped);
@@ -64,8 +59,8 @@ public class GooglePlayServicesAvailabilityIOException extends UserRecoverableAu
   }
 
   /**
-   * Returns the error code to use with
-   * {@link GooglePlayServicesUtil#getErrorDialog(int, Activity, int)}.
+   * Returns the error code to use with {@link GooglePlayServicesUtil#getErrorDialog(int, Activity,
+   * int)}.
    */
   public final int getConnectionStatusCode() {
     return getCause().getConnectionStatusCode();

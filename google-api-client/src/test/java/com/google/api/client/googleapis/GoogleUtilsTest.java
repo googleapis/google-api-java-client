@@ -17,7 +17,6 @@ package com.google.api.client.googleapis;
 import java.security.KeyStore;
 import java.util.Enumeration;
 import java.util.regex.Matcher;
-
 import junit.framework.TestCase;
 
 /**

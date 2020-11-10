@@ -35,32 +35,23 @@ import java.io.OutputStream;
  * is available <a
  * href='https://developers.google.com/api-client-library/java/google-api-java-client/media-download'>here</a>.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
- * <p>
- * Back-off is disabled by default. To enable it for an abnormal HTTP response and an I/O exception
- * you should call {@link HttpRequest#setUnsuccessfulResponseHandler} with a new
- * {@link HttpBackOffUnsuccessfulResponseHandler} instance and
- * {@link HttpRequest#setIOExceptionHandler} with {@link HttpBackOffIOExceptionHandler}.
- * </p>
+ * <p>Back-off is disabled by default. To enable it for an abnormal HTTP response and an I/O
+ * exception you should call {@link HttpRequest#setUnsuccessfulResponseHandler} with a new {@link
+ * HttpBackOffUnsuccessfulResponseHandler} instance and {@link HttpRequest#setIOExceptionHandler}
+ * with {@link HttpBackOffIOExceptionHandler}.
  *
- * <p>
- * Upgrade warning: in prior version 1.14 exponential back-off was enabled by default for an
+ * <p>Upgrade warning: in prior version 1.14 exponential back-off was enabled by default for an
  * abnormal HTTP response. Starting with version 1.15 it's disabled by default.
- * </p>
  *
  * @since 1.9
- *
  * @author rmistry@google.com (Ravi Mistry)
  */
 @SuppressWarnings("deprecation")
 public final class MediaHttpDownloader {
 
-  /**
-   * Download state associated with the Media HTTP downloader.
-   */
+  /** Download state associated with the Media HTTP downloader. */
   public enum DownloadState {
     /** The download process has not started yet. */
     NOT_STARTED,
@@ -85,16 +76,14 @@ public final class MediaHttpDownloader {
   private final HttpTransport transport;
 
   /**
-   * Determines whether direct media download is enabled or disabled. If value is set to
-   * {@code true} then a direct download will be done where the whole media content is downloaded in
-   * a single request. If value is set to {@code false} then the download uses the resumable media
+   * Determines whether direct media download is enabled or disabled. If value is set to {@code
+   * true} then a direct download will be done where the whole media content is downloaded in a
+   * single request. If value is set to {@code false} then the download uses the resumable media
    * download protocol to download in data chunks. Defaults to {@code false}.
    */
   private boolean directDownloadEnabled = false;
 
-  /**
-   * Progress listener to send progress notifications to or {@code null} for none.
-   */
+  /** Progress listener to send progress notifications to or {@code null} for none. */
   private MediaHttpDownloaderProgressListener progressListener;
 
   /**
@@ -104,8 +93,8 @@ public final class MediaHttpDownloader {
   private int chunkSize = MAXIMUM_CHUNK_SIZE;
 
   /**
-   * The length of the HTTP media content or {@code 0} before it is initialized in
-   * {@link #setMediaContentLength}.
+   * The length of the HTTP media content or {@code 0} before it is initialized in {@link
+   * #setMediaContentLength}.
    */
   private long mediaContentLength;
 
@@ -118,9 +107,7 @@ public final class MediaHttpDownloader {
   /**
    * The last byte position of the media file we want to download, default value is {@code -1}.
    *
-   * <p>
-   * If its value is {@code -1} it means there is no upper limit on the byte position.
-   * </p>
+   * <p>If its value is {@code -1} it means there is no upper limit on the byte position.
    */
   private long lastBytePos = -1;
 
@@ -129,26 +116,24 @@ public final class MediaHttpDownloader {
    *
    * @param transport The transport to use for requests
    * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
-   *        {@code null} for none
+   *     {@code null} for none
    */
   public MediaHttpDownloader(
       HttpTransport transport, HttpRequestInitializer httpRequestInitializer) {
     this.transport = Preconditions.checkNotNull(transport);
-    this.requestFactory = httpRequestInitializer == null
-        ? transport.createRequestFactory() : transport.createRequestFactory(httpRequestInitializer);
+    this.requestFactory =
+        httpRequestInitializer == null
+            ? transport.createRequestFactory()
+            : transport.createRequestFactory(httpRequestInitializer);
   }
 
   /**
    * Executes a direct media download or a resumable media download.
    *
-   * <p>
-   * This method does not close the given output stream.
-   * </p>
+   * <p>This method does not close the given output stream.
    *
-   * <p>
-   * This method is not reentrant. A new instance of {@link MediaHttpDownloader} must be
+   * <p>This method is not reentrant. A new instance of {@link MediaHttpDownloader} must be
    * instantiated before download called be called again.
-   * </p>
    *
    * @param requestUrl The request URL where the download requests will be sent
    * @param outputStream destination output stream
@@ -160,14 +145,10 @@ public final class MediaHttpDownloader {
   /**
    * Executes a direct media download or a resumable media download.
    *
-   * <p>
-   * This method does not close the given output stream.
-   * </p>
+   * <p>This method does not close the given output stream.
    *
-   * <p>
-   * This method is not reentrant. A new instance of {@link MediaHttpDownloader} must be
+   * <p>This method is not reentrant. A new instance of {@link MediaHttpDownloader} must be
    * instantiated before download called be called again.
-   * </p>
    *
    * @param requestUrl request URL where the download requests will be sent
    * @param requestHeaders request headers or {@code null} to ignore
@@ -198,8 +179,9 @@ public final class MediaHttpDownloader {
         // If last byte position has been specified, use it iff it is smaller than the chunk size.
         currentRequestLastBytePos = Math.min(lastBytePos, currentRequestLastBytePos);
       }
-      HttpResponse response = executeCurrentRequest(
-          currentRequestLastBytePos, requestUrl, requestHeaders, outputStream);
+      HttpResponse response =
+          executeCurrentRequest(
+              currentRequestLastBytePos, requestUrl, requestHeaders, outputStream);
 
       String contentRange = response.getHeaders().getContentRange();
       long nextByteIndex = getNextByteIndex(contentRange);
@@ -234,8 +216,12 @@ public final class MediaHttpDownloader {
    * @param outputStream destination output stream
    * @return HTTP response
    */
-  private HttpResponse executeCurrentRequest(long currentRequestLastBytePos, GenericUrl requestUrl,
-      HttpHeaders requestHeaders, OutputStream outputStream) throws IOException {
+  private HttpResponse executeCurrentRequest(
+      long currentRequestLastBytePos,
+      GenericUrl requestUrl,
+      HttpHeaders requestHeaders,
+      OutputStream outputStream)
+      throws IOException {
     // prepare the GET request
     HttpRequest request = requestFactory.buildGetRequest(requestUrl);
     // add request headers
@@ -274,21 +260,18 @@ public final class MediaHttpDownloader {
       return 0L;
     }
     return Long.parseLong(
-        rangeHeader.substring(rangeHeader.indexOf('-') + 1, rangeHeader.indexOf('/'))) + 1;
+            rangeHeader.substring(rangeHeader.indexOf('-') + 1, rangeHeader.indexOf('/')))
+        + 1;
   }
 
   /**
    * Sets the total number of bytes that have been downloaded of the media resource.
    *
-   * <p>
-   * If a download was aborted mid-way due to a connection failure then users can resume the
+   * <p>If a download was aborted mid-way due to a connection failure then users can resume the
    * download from the point where it left off.
-   * </p>
    *
-   * <p>
-   * Use {@link #setContentRange} if you need to specify both the bytes downloaded and the last byte
-   * position.
-   * </p>
+   * <p>Use {@link #setContentRange} if you need to specify both the bytes downloaded and the last
+   * byte position.
    *
    * @param bytesDownloaded The total number of bytes downloaded
    */
@@ -317,9 +300,7 @@ public final class MediaHttpDownloader {
     return this;
   }
 
-  /**
-   * @deprecated Use {@link #setContentRange(long, long)} instead.
-   */
+  /** @deprecated Use {@link #setContentRange(long, long)} instead. */
   @Deprecated
   public MediaHttpDownloader setContentRange(long firstBytePos, int lastBytePos) {
     return setContentRange(firstBytePos, (long) lastBytePos);
@@ -362,18 +343,14 @@ public final class MediaHttpDownloader {
     return this;
   }
 
-  /**
-   * Sets the progress listener to send progress notifications to or {@code null} for none.
-   */
+  /** Sets the progress listener to send progress notifications to or {@code null} for none. */
   public MediaHttpDownloader setProgressListener(
       MediaHttpDownloaderProgressListener progressListener) {
     this.progressListener = progressListener;
     return this;
   }
 
-  /**
-   * Returns the progress listener to send progress notifications to or {@code null} for none.
-   */
+  /** Returns the progress listener to send progress notifications to or {@code null} for none. */
   public MediaHttpDownloaderProgressListener getProgressListener() {
     return progressListener;
   }
@@ -387,9 +364,7 @@ public final class MediaHttpDownloader {
    * Sets the maximum size of individual chunks that will get downloaded by single HTTP requests.
    * The default value is {@link #MAXIMUM_CHUNK_SIZE}.
    *
-   * <p>
-   * The maximum allowable value is {@link #MAXIMUM_CHUNK_SIZE}.
-   * </p>
+   * <p>The maximum allowable value is {@link #MAXIMUM_CHUNK_SIZE}.
    */
   public MediaHttpDownloader setChunkSize(int chunkSize) {
     Preconditions.checkArgument(chunkSize > 0 && chunkSize <= MAXIMUM_CHUNK_SIZE);

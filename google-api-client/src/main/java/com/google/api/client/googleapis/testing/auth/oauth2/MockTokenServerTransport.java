@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * A test transport that simulates Google's token server for refresh tokens and service accounts.
  *
  * @since 1.19
@@ -78,8 +78,9 @@ public class MockTokenServerTransport extends MockHttpTransport {
     if (url.equals(tokenServerUrl)) {
       return buildTokenRequest(url);
     } else if (url.equals(LEGACY_TOKEN_SERVER_URL)) {
-      LOGGER.warning("Your configured token_uri is using a legacy endpoint. You may want to "
-          + "redownload your credentials.");
+      LOGGER.warning(
+          "Your configured token_uri is using a legacy endpoint. You may want to "
+              + "redownload your credentials.");
       return buildTokenRequest(url);
     }
     return super.buildRequest(method, url);
@@ -134,11 +135,10 @@ public class MockTokenServerTransport extends MockHttpTransport {
         refreshContents.put("access_token", accessToken);
         refreshContents.put("expires_in", 3600);
         refreshContents.put("token_type", "Bearer");
-        String refreshText  = refreshContents.toPrettyString();
+        String refreshText = refreshContents.toPrettyString();
 
-        MockLowLevelHttpResponse response = new MockLowLevelHttpResponse()
-            .setContentType(Json.MEDIA_TYPE)
-            .setContent(refreshText);
+        MockLowLevelHttpResponse response =
+            new MockLowLevelHttpResponse().setContentType(Json.MEDIA_TYPE).setContent(refreshText);
         return response;
       }
     };

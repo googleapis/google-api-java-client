@@ -29,24 +29,22 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Thread-safe Google ID token verifier.
  *
- * <p>
- * Call {@link #verify(IdToken)} to verify a ID token. Use the constructor
- * {@link #GoogleIdTokenVerifier(HttpTransport, JsonFactory)} for the typical simpler case if your
+ * <p>Call {@link #verify(IdToken)} to verify a ID token. Use the constructor {@link
+ * #GoogleIdTokenVerifier(HttpTransport, JsonFactory)} for the typical simpler case if your
  * application has only a single instance of {@link GoogleIdTokenVerifier}. Otherwise, ideally you
  * should use {@link #GoogleIdTokenVerifier(GooglePublicKeysManager)} with a shared global instance
  * of the {@link GooglePublicKeysManager} since that way the Google public keys are cached. Sample
  * usage:
- * </p>
  *
  * <pre>
-    GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-        .setAudience(Arrays.asList("myClientId"))
-        .build();
-    ...
-    if (!verifier.verify(googleIdToken)) {...}
+ * GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
+ * .setAudience(Arrays.asList("myClientId"))
+ * .build();
+ * ...
+ * if (!verifier.verify(googleIdToken)) {...}
  * </pre>
  *
  * @since 1.7
@@ -67,7 +65,6 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
 
   /**
    * @param publicKeys Google public keys manager
-   *
    * @since 1.17
    */
   public GoogleIdTokenVerifier(GooglePublicKeysManager publicKeys) {
@@ -76,7 +73,6 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
 
   /**
    * @param builder builder
-   *
    * @since 1.14
    */
   protected GoogleIdTokenVerifier(Builder builder) {
@@ -111,8 +107,8 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
    * Returns the public certificates encoded URL.
    *
    * @since 1.15
-   * @deprecated (scheduled to be removed in 1.18) Use {@link #getPublicKeysManager()} and
-   *             {@link GooglePublicKeysManager#getPublicCertsEncodedUrl()} instead.
+   * @deprecated (scheduled to be removed in 1.18) Use {@link #getPublicKeysManager()} and {@link
+   *     GooglePublicKeysManager#getPublicCertsEncodedUrl()} instead.
    */
   @Deprecated
   public final String getPublicCertsEncodedUrl() {
@@ -122,14 +118,12 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
   /**
    * Returns the public keys.
    *
-   * <p>
-   * Upgrade warning: in prior version 1.16 it may return {@code null} and not throw any exceptions,
-   * but starting with version 1.17 it cannot return {@code null} and may throw
-   * {@link GeneralSecurityException} or {@link IOException}.
-   * </p>
+   * <p>Upgrade warning: in prior version 1.16 it may return {@code null} and not throw any
+   * exceptions, but starting with version 1.17 it cannot return {@code null} and may throw {@link
+   * GeneralSecurityException} or {@link IOException}.
    *
-   * @deprecated (scheduled to be removed in 1.18) Use {@link #getPublicKeysManager()} and
-   *             {@link GooglePublicKeysManager#getPublicKeys()} instead.
+   * @deprecated (scheduled to be removed in 1.18) Use {@link #getPublicKeysManager()} and {@link
+   *     GooglePublicKeysManager#getPublicKeys()} instead.
    */
   @Deprecated
   public final List<PublicKey> getPublicKeys() throws GeneralSecurityException, IOException {
@@ -140,8 +134,8 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
    * Returns the expiration time in milliseconds to be used with {@link Clock#currentTimeMillis()}
    * or {@code 0} for none.
    *
-   * @deprecated (scheduled to be removed in 1.18) Use {@link #getPublicKeysManager()} and
-   *             {@link GooglePublicKeysManager#getExpirationTimeMilliseconds()} instead.
+   * @deprecated (scheduled to be removed in 1.18) Use {@link #getPublicKeysManager()} and {@link
+   *     GooglePublicKeysManager#getExpirationTimeMilliseconds()} instead.
    */
   @Deprecated
   public final long getExpirationTimeMilliseconds() {
@@ -151,14 +145,14 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
   /**
    * Verifies that the given ID token is valid using the cached public keys.
    *
-   * It verifies:
+   * <p>It verifies:
    *
    * <ul>
-   * <li>The RS256 signature, which uses RSA and SHA-256 based on the public keys downloaded from
-   * the public certificate endpoint.</li>
-   * <li>The current time against the issued at and expiration time (allowing for a 5 minute clock
-   * skew).</li>
-   * <li>The issuer is {@code "accounts.google.com"} or {@code "https://accounts.google.com"}.</li>
+   *   <li>The RS256 signature, which uses RSA and SHA-256 based on the public keys downloaded from
+   *       the public certificate endpoint.
+   *   <li>The current time against the issued at and expiration time (allowing for a 5 minute clock
+   *       skew).
+   *   <li>The issuer is {@code "accounts.google.com"} or {@code "https://accounts.google.com"}.
    * </ul>
    *
    * @param googleIdToken Google ID token
@@ -192,17 +186,15 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
   }
 
   /**
-   * Downloads the public keys from the public certificates endpoint at
-   * {@link #getPublicCertsEncodedUrl}.
+   * Downloads the public keys from the public certificates endpoint at {@link
+   * #getPublicCertsEncodedUrl}.
    *
-   * <p>
-   * This method is automatically called if the public keys have not yet been initialized or if the
-   * expiration time is very close, so normally this doesn't need to be called. Only call this
+   * <p>This method is automatically called if the public keys have not yet been initialized or if
+   * the expiration time is very close, so normally this doesn't need to be called. Only call this
    * method explicitly to force the public keys to be updated.
-   * </p>
    *
-   * @deprecated (scheduled to be removed in 1.18) Use {@link #getPublicKeysManager()} and
-   *             {@link GooglePublicKeysManager#refresh()} instead.
+   * @deprecated (scheduled to be removed in 1.18) Use {@link #getPublicKeysManager()} and {@link
+   *     GooglePublicKeysManager#refresh()} instead.
    */
   @Deprecated
   public GoogleIdTokenVerifier loadPublicCerts() throws GeneralSecurityException, IOException {
@@ -211,12 +203,10 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Builder for {@link GoogleIdTokenVerifier}.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
    *
    * @since 1.9
    */
@@ -236,7 +226,6 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
 
     /**
      * @param publicKeys Google public keys manager
-     *
      * @since 1.17
      */
     public Builder(GooglePublicKeysManager publicKeys) {
@@ -273,8 +262,8 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
      * Returns the public certificates encoded URL.
      *
      * @since 1.15
-     * @deprecated (scheduled to be removed in 1.18) Use {@link #getPublicCerts()} and
-     *             {@link GooglePublicKeysManager#getPublicCertsEncodedUrl()} instead.
+     * @deprecated (scheduled to be removed in 1.18) Use {@link #getPublicCerts()} and {@link
+     *     GooglePublicKeysManager#getPublicCertsEncodedUrl()} instead.
      */
     @Deprecated
     public final String getPublicCertsEncodedUrl() {
@@ -284,25 +273,23 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
     /**
      * Sets the public certificates encoded URL.
      *
-     * <p>
-     * The default value is {@link GoogleOAuthConstants#DEFAULT_PUBLIC_CERTS_ENCODED_URL}.
-     * </p>
+     * <p>The default value is {@link GoogleOAuthConstants#DEFAULT_PUBLIC_CERTS_ENCODED_URL}.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      *
      * @since 1.15
-     * @deprecated (scheduled to be removed in 1.18) Use
-     *             {@link GooglePublicKeysManager.Builder#setPublicCertsEncodedUrl(String)} instead.
+     * @deprecated (scheduled to be removed in 1.18) Use {@link
+     *     GooglePublicKeysManager.Builder#setPublicCertsEncodedUrl(String)} instead.
      */
     @Deprecated
     public Builder setPublicCertsEncodedUrl(String publicKeysEncodedUrl) {
       // TODO(yanivi): make publicKeys field final when this method is removed
-      publicKeys = new GooglePublicKeysManager.Builder(
-          getTransport(), getJsonFactory()).setPublicCertsEncodedUrl(publicKeysEncodedUrl)
-          .setClock(publicKeys.getClock()).build();
+      publicKeys =
+          new GooglePublicKeysManager.Builder(getTransport(), getJsonFactory())
+              .setPublicCertsEncodedUrl(publicKeysEncodedUrl)
+              .setClock(publicKeys.getClock())
+              .build();
       return this;
     }
 
@@ -311,9 +298,7 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
       return (Builder) super.setIssuer(issuer);
     }
 
-    /**
-     * @since 1.21.0
-     */
+    /** @since 1.21.0 */
     @Override
     public Builder setIssuers(Collection<String> issuers) {
       return (Builder) super.setIssuers(issuers);

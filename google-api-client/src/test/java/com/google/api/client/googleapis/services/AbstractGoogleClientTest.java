@@ -46,12 +46,11 @@ public class AbstractGoogleClientTest extends TestCase {
   private static final JsonObjectParser JSON_OBJECT_PARSER = new JsonObjectParser(JSON_FACTORY);
   private static final HttpTransport TRANSPORT = new MockHttpTransport();
 
-  static private class TestRemoteRequestInitializer implements GoogleClientRequestInitializer {
+  private static class TestRemoteRequestInitializer implements GoogleClientRequestInitializer {
 
     boolean isCalled;
 
-    TestRemoteRequestInitializer() {
-    }
+    TestRemoteRequestInitializer() {}
 
     public void initialize(AbstractGoogleClientRequest<?> request) {
       isCalled = true;
@@ -64,10 +63,11 @@ public class AbstractGoogleClientTest extends TestCase {
     GoogleClientRequestInitializer jsonHttpRequestInitializer = new TestRemoteRequestInitializer();
     String applicationName = "Test Application";
 
-    AbstractGoogleClient.Builder setApplicationName = new MockGoogleClient.Builder(
-        TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null).setApplicationName(
-        applicationName).setGoogleClientRequestInitializer(jsonHttpRequestInitializer)
-        .setSuppressAllChecks(true);
+    AbstractGoogleClient.Builder setApplicationName =
+        new MockGoogleClient.Builder(TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null)
+            .setApplicationName(applicationName)
+            .setGoogleClientRequestInitializer(jsonHttpRequestInitializer)
+            .setSuppressAllChecks(true);
     AbstractGoogleClient client = setApplicationName.build();
 
     assertEquals(rootUrl + servicePath, client.getBaseUrl());
@@ -84,8 +84,8 @@ public class AbstractGoogleClientTest extends TestCase {
     String servicePath = "path/v1/";
 
     // Assert suppression defaults.
-    AbstractGoogleClient.Builder googleClientBuilder = new MockGoogleClient.Builder(
-        TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null);
+    AbstractGoogleClient.Builder googleClientBuilder =
+        new MockGoogleClient.Builder(TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null);
     assertFalse(googleClientBuilder.getSuppressPatternChecks());
     assertFalse(googleClientBuilder.getSuppressRequiredParameterChecks());
 
@@ -95,19 +95,29 @@ public class AbstractGoogleClientTest extends TestCase {
   }
 
   public void testBaseServerAndBasePathBuilder() {
-    AbstractGoogleClient client = new MockGoogleClient.Builder(
-        TRANSPORT, "http://www.testgoogleapis.com/test/", "path/v1/", JSON_OBJECT_PARSER,
-        null).setApplicationName("Test Application")
-        .setRootUrl("http://www.googleapis.com/test/").setServicePath("path/v2/").build();
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(
+                TRANSPORT,
+                "http://www.testgoogleapis.com/test/",
+                "path/v1/",
+                JSON_OBJECT_PARSER,
+                null)
+            .setApplicationName("Test Application")
+            .setRootUrl("http://www.googleapis.com/test/")
+            .setServicePath("path/v2/")
+            .build();
 
     assertEquals("http://www.googleapis.com/test/path/v2/", client.getBaseUrl());
   }
 
   public void testInitialize() throws Exception {
     TestRemoteRequestInitializer remoteRequestInitializer = new TestRemoteRequestInitializer();
-    AbstractGoogleClient client = new MockGoogleClient.Builder(
-        TRANSPORT, "http://www.test.com/", "", JSON_OBJECT_PARSER, null).setApplicationName(
-        "Test Application").setGoogleClientRequestInitializer(remoteRequestInitializer).build();
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(
+                TRANSPORT, "http://www.test.com/", "", JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application")
+            .setGoogleClientRequestInitializer(remoteRequestInitializer)
+            .build();
     client.initialize(null);
     assertTrue(remoteRequestInitializer.isCalled);
   }
@@ -123,8 +133,7 @@ public class AbstractGoogleClientTest extends TestCase {
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE;
     boolean contentLengthNotSpecified;
 
-    protected MediaTransport() {
-    }
+    protected MediaTransport() {}
 
     @Override
     public LowLevelHttpRequest buildRequest(String name, String url) {
@@ -132,7 +141,7 @@ public class AbstractGoogleClientTest extends TestCase {
         assertEquals(TEST_RESUMABLE_REQUEST_URL, url);
 
         return new MockLowLevelHttpRequest() {
-            @Override
+          @Override
           public LowLevelHttpResponse execute() {
             // Assert that the required headers are set.
             if (!contentLengthNotSpecified) {
@@ -151,7 +160,7 @@ public class AbstractGoogleClientTest extends TestCase {
       assertEquals(TEST_UPLOAD_URL, url);
 
       return new MockLowLevelHttpRequest() {
-          @Override
+        @Override
         public LowLevelHttpResponse execute() {
           MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
 
@@ -178,15 +187,16 @@ public class AbstractGoogleClientTest extends TestCase {
   }
 
   public static class A {
-    @Key
-    String foo;
+    @Key String foo;
   }
 
   public void testMediaUpload() throws Exception {
     MediaTransport transport = new MediaTransport();
-    AbstractGoogleClient client = new MockGoogleClient.Builder(
-        transport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER, null).setApplicationName(
-        "Test Application").build();
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(
+                transport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application")
+            .build();
     InputStream is = new ByteArrayInputStream(new byte[MediaHttpUploader.DEFAULT_CHUNK_SIZE]);
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
     mediaContent.setLength(MediaHttpUploader.DEFAULT_CHUNK_SIZE);
@@ -219,7 +229,8 @@ public class AbstractGoogleClientTest extends TestCase {
     }
 
     public void intercept(HttpRequest request) {
-      assertEquals(!gzipDisabled && !(request.getContent() instanceof EmptyContent),
+      assertEquals(
+          !gzipDisabled && !(request.getContent() instanceof EmptyContent),
           request.getEncoding() != null);
     }
   }
@@ -227,9 +238,15 @@ public class AbstractGoogleClientTest extends TestCase {
   public void testMediaUpload_disableGZip() throws Exception {
     MediaTransport transport = new MediaTransport();
     transport.contentLengthNotSpecified = true;
-    AbstractGoogleClient client = new MockGoogleClient.Builder(
-        transport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER,
-        new GZipCheckerInitializer(true)).setApplicationName("Test Application").build();
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(
+                transport,
+                TEST_RESUMABLE_REQUEST_URL,
+                "",
+                JSON_OBJECT_PARSER,
+                new GZipCheckerInitializer(true))
+            .setApplicationName("Test Application")
+            .build();
     InputStream is = new ByteArrayInputStream(new byte[MediaHttpUploader.DEFAULT_CHUNK_SIZE]);
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
     MockGoogleClientRequest<A> rq =
@@ -243,9 +260,15 @@ public class AbstractGoogleClientTest extends TestCase {
   public void testMediaUpload_enableGZip() throws Exception {
     MediaTransport transport = new MediaTransport();
     transport.contentLengthNotSpecified = true;
-    AbstractGoogleClient client = new MockGoogleClient.Builder(
-        transport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER,
-        new GZipCheckerInitializer(false)).setApplicationName("Test Application").build();
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(
+                transport,
+                TEST_RESUMABLE_REQUEST_URL,
+                "",
+                JSON_OBJECT_PARSER,
+                new GZipCheckerInitializer(false))
+            .setApplicationName("Test Application")
+            .build();
     InputStream is = new ByteArrayInputStream(new byte[MediaHttpUploader.DEFAULT_CHUNK_SIZE]);
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
     MockGoogleClientRequest<A> rq =
@@ -259,9 +282,15 @@ public class AbstractGoogleClientTest extends TestCase {
   public void testMediaUpload_defaultGZip() throws Exception {
     MediaTransport transport = new MediaTransport();
     transport.contentLengthNotSpecified = true;
-    AbstractGoogleClient client = new MockGoogleClient.Builder(
-        transport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER,
-        new GZipCheckerInitializer(false)).setApplicationName("Test Application").build();
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(
+                transport,
+                TEST_RESUMABLE_REQUEST_URL,
+                "",
+                JSON_OBJECT_PARSER,
+                new GZipCheckerInitializer(false))
+            .setApplicationName("Test Application")
+            .build();
     InputStream is = new ByteArrayInputStream(new byte[MediaHttpUploader.DEFAULT_CHUNK_SIZE]);
     InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
     MockGoogleClientRequest<A> rq =

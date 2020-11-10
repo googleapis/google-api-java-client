@@ -11,7 +11,7 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
+ * {@link com.google.api.client.util.Beta} <br>
  * Utilities based on <a href="https://developers.google.com/android/google-play-services/">Google
  * Play services</a>.
  *
@@ -20,4 +20,3 @@
  */
 @com.google.api.client.util.Beta
 package com.google.api.client.googleapis.extensions.android.gms.auth;
-

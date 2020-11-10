@@ -14,24 +14,24 @@
 
 package com.google.api.client.googleapis.mtls;
 
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.util.SecurityUtils;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.GeneralSecurityException;
-import java.security.KeyStore;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public abstract class MtlsTransportBaseTest  {
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.util.SecurityUtils;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import org.junit.Test;
+
+public abstract class MtlsTransportBaseTest {
   protected KeyStore createTestMtlsKeyStore() throws IOException, GeneralSecurityException {
-    InputStream certAndKey = getClass()
-        .getClassLoader()
-        .getResourceAsStream("com/google/api/client/googleapis/util/mtlsCertAndKey.pem");
+    InputStream certAndKey =
+        getClass()
+            .getClassLoader()
+            .getResourceAsStream("com/google/api/client/googleapis/util/mtlsCertAndKey.pem");
     return SecurityUtils.createMtlsKeyStore(certAndKey);
   }
 
@@ -41,7 +41,11 @@ public abstract class MtlsTransportBaseTest  {
     private String keyStorePassword;
     private boolean throwExceptionForGetKeyStore;
 
-    TestMtlsProvider(boolean useClientCertificate, KeyStore keystore, String keyStorePassword, boolean throwExceptionForGetKeyStore) {
+    TestMtlsProvider(
+        boolean useClientCertificate,
+        KeyStore keystore,
+        String keyStorePassword,
+        boolean throwExceptionForGetKeyStore) {
       this.useClientCertificate = useClientCertificate;
       this.keyStore = keystore;
       this.keyStorePassword = keyStorePassword;
@@ -67,7 +71,8 @@ public abstract class MtlsTransportBaseTest  {
     }
   }
 
-  abstract protected HttpTransport buildTrustedTransport(MtlsProvider mtlsProvider) throws IOException, GeneralSecurityException;
+  protected abstract HttpTransport buildTrustedTransport(MtlsProvider mtlsProvider)
+      throws IOException, GeneralSecurityException;
 
   // If client certificate shouldn't be used, then neither the provided mtlsKeyStore
   // nor the default mtls key store should be used.

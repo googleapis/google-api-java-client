@@ -19,4 +19,3 @@
  * @author Yaniv Inbar
  */
 package com.google.api.client.googleapis.extensions.java6.auth.oauth2;
-

@@ -17,7 +17,7 @@ package com.google.api.client.googleapis.notifications;
 import com.google.api.client.util.Beta;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Standard resource states used by notifications.
  *
  * @author Yaniv Inbar
@@ -35,6 +35,5 @@ public final class ResourceStates {
   /** Resource does not exist, for example on a delete. */
   public static final String NOT_EXISTS = "NOT_EXISTS";
 
-  private ResourceStates() {
-  }
+  private ResourceStates() {}
 }

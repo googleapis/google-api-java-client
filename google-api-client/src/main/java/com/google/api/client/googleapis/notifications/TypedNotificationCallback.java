@@ -22,49 +22,43 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Callback to receive notifications for watched resource in which the . Callback which is used to
  * receive typed {@link AbstractNotification}s after subscribing to a topic.
  *
- * <p>
- * Must NOT be implemented in form of an anonymous class as this will break serialization.
- * </p>
+ * <p>Must NOT be implemented in form of an anonymous class as this will break serialization.
  *
- * <p>
- * Implementation should be thread-safe.
- * </p>
- *
- * <b>Example usage:</b>
+ * <p>Implementation should be thread-safe. <b>Example usage:</b>
  *
  * <pre>
-  static class MyNotificationCallback
-      extends JsonNotificationCallback{@literal <}ListResponse{@literal >} {
-
-    private static final long serialVersionUID = 1L;
-
-    {@literal @}Override
-    protected void onNotification(
-        StoredChannel subscription, Notification notification, ListResponse content) {
-      switch (notification.getResourceState()) {
-        case ResourceStates.SYNC:
-          break;
-        case ResourceStates.EXISTS:
-          break;
-        case ResourceStates.NOT_EXISTS:
-          break;
-      }
-    }
-
-    {@literal @}Override
-    protected ObjectParser getObjectParser(Notification notification) throws IOException {
-      return new JsonObjectParser(new JacksonFactory());
-    }
-
-    {@literal @}Override
-    protected Class{@literal <}ListResponse{@literal >} getDataClass() throws IOException {
-      return ListResponse.class;
-    }
-  }
+ * static class MyNotificationCallback
+ * extends JsonNotificationCallback{@literal <}ListResponse{@literal >} {
+ *
+ * private static final long serialVersionUID = 1L;
+ *
+ * {@literal @}Override
+ * protected void onNotification(
+ * StoredChannel subscription, Notification notification, ListResponse content) {
+ * switch (notification.getResourceState()) {
+ * case ResourceStates.SYNC:
+ * break;
+ * case ResourceStates.EXISTS:
+ * break;
+ * case ResourceStates.NOT_EXISTS:
+ * break;
+ * }
+ * }
+ *
+ * {@literal @}Override
+ * protected ObjectParser getObjectParser(Notification notification) throws IOException {
+ * return new JsonObjectParser(new JacksonFactory());
+ * }
+ *
+ * {@literal @}Override
+ * protected Class{@literal <}ListResponse{@literal >} getDataClass() throws IOException {
+ * return ListResponse.class;
+ * }
+ * }
  * </pre>
  *
  * @param <T> Java type of the notification content

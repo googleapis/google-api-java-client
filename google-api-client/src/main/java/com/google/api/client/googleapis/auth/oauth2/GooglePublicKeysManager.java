@@ -41,14 +41,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Thread-safe Google public keys manager.
  *
- * <p>
- * The public keys are loaded from the public certificates endpoint at
- * {@link #getPublicCertsEncodedUrl} and cached in this instance. Therefore, for maximum efficiency,
+ * <p>The public keys are loaded from the public certificates endpoint at {@link
+ * #getPublicCertsEncodedUrl} and cached in this instance. Therefore, for maximum efficiency,
  * applications should use a single globally-shared instance of the {@link GooglePublicKeysManager}.
- * </p>
  *
  * @since 1.17
  */
@@ -93,9 +91,7 @@ public class GooglePublicKeysManager {
     this(new Builder(transport, jsonFactory));
   }
 
-  /**
-   * @param builder builder
-   */
+  /** @param builder builder */
   protected GooglePublicKeysManager(Builder builder) {
     transport = builder.transport;
     jsonFactory = builder.jsonFactory;
@@ -126,11 +122,9 @@ public class GooglePublicKeysManager {
   /**
    * Returns an unmodifiable view of the public keys.
    *
-   * <p>
-   * For efficiency, an in-memory cache of the public keys is used here. If this method is called
+   * <p>For efficiency, an in-memory cache of the public keys is used here. If this method is called
    * for the first time, or the certificates have expired since last time it has been called (or are
    * within 5 minutes of expiring), {@link #refresh()} will be called before returning the value.
-   * </p>
    */
   public final List<PublicKey> getPublicKeys() throws GeneralSecurityException, IOException {
     lock.lock();
@@ -156,11 +150,9 @@ public class GooglePublicKeysManager {
   /**
    * Forces a refresh of the public certificates downloaded from {@link #getPublicCertsEncodedUrl}.
    *
-   * <p>
-   * This method is automatically called from {@link #getPublicKeys()} if the public keys have not
-   * yet been initialized or if the expiration time is very close, so normally this doesn't need to
-   * be called. Only call this method to explicitly force the public keys to be updated.
-   * </p>
+   * <p>This method is automatically called from {@link #getPublicKeys()} if the public keys have
+   * not yet been initialized or if the expiration time is very close, so normally this doesn't need
+   * to be called. Only call this method to explicitly force the public keys to be updated.
    */
   public GooglePublicKeysManager refresh() throws GeneralSecurityException, IOException {
     lock.lock();
@@ -168,8 +160,11 @@ public class GooglePublicKeysManager {
       publicKeys = new ArrayList<PublicKey>();
       // HTTP request to public endpoint
       CertificateFactory factory = SecurityUtils.getX509CertificateFactory();
-      HttpResponse certsResponse = transport.createRequestFactory()
-          .buildGetRequest(new GenericUrl(publicCertsEncodedUrl)).execute();
+      HttpResponse certsResponse =
+          transport
+              .createRequestFactory()
+              .buildGetRequest(new GenericUrl(publicCertsEncodedUrl))
+              .execute();
       expirationTimeMilliseconds =
           clock.currentTimeMillis() + getCacheTimeInSec(certsResponse.getHeaders()) * 1000;
       // parse each public key in the JSON response
@@ -184,8 +179,10 @@ public class GooglePublicKeysManager {
         while (parser.nextToken() != JsonToken.END_OBJECT) {
           parser.nextToken();
           String certValue = parser.getText();
-          X509Certificate x509Cert = (X509Certificate) factory.generateCertificate(
-              new ByteArrayInputStream(StringUtils.getBytesUtf8(certValue)));
+          X509Certificate x509Cert =
+              (X509Certificate)
+                  factory.generateCertificate(
+                      new ByteArrayInputStream(StringUtils.getBytesUtf8(certValue)));
           publicKeys.add(x509Cert.getPublicKey());
         }
         publicKeys = Collections.unmodifiableList(publicKeys);
@@ -223,12 +220,10 @@ public class GooglePublicKeysManager {
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Builder for {@link GooglePublicKeysManager}.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
    *
    * @since 1.17
    */
@@ -281,14 +276,10 @@ public class GooglePublicKeysManager {
     /**
      * Sets the public certificates encoded URL.
      *
-     * <p>
-     * The default value is {@link GoogleOAuthConstants#DEFAULT_PUBLIC_CERTS_ENCODED_URL}.
-     * </p>
+     * <p>The default value is {@link GoogleOAuthConstants#DEFAULT_PUBLIC_CERTS_ENCODED_URL}.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setPublicCertsEncodedUrl(String publicCertsEncodedUrl) {
       this.publicCertsEncodedUrl = Preconditions.checkNotNull(publicCertsEncodedUrl);
@@ -303,10 +294,8 @@ public class GooglePublicKeysManager {
     /**
      * Sets the clock.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setClock(Clock clock) {
       this.clock = Preconditions.checkNotNull(clock);

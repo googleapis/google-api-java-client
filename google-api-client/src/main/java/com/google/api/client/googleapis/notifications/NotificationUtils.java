@@ -29,6 +29,5 @@ public final class NotificationUtils {
     return UUID.randomUUID().toString();
   }
 
-  private NotificationUtils() {
-  }
+  private NotificationUtils() {}
 }

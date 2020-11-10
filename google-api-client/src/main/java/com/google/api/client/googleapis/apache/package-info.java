@@ -18,6 +18,4 @@
  * @since 1.14
  * @author Yaniv Inbar
  */
-
 package com.google.api.client.googleapis.apache;
-

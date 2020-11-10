@@ -28,7 +28,7 @@ import com.google.api.client.util.Beta;
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Transport that simulates the GCE metadata server for access tokens.
  *
  * @since 1.19
@@ -59,47 +59,50 @@ public class MockMetadataServerTransport extends MockHttpTransport {
   public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
     if (url.equals(METADATA_TOKEN_SERVER_URL)) {
 
-      MockLowLevelHttpRequest request = new MockLowLevelHttpRequest(url) {
-        @Override
-        public LowLevelHttpResponse execute() throws IOException {
+      MockLowLevelHttpRequest request =
+          new MockLowLevelHttpRequest(url) {
+            @Override
+            public LowLevelHttpResponse execute() throws IOException {
 
-          if (tokenRequestStatusCode != null) {
-            MockLowLevelHttpResponse response = new MockLowLevelHttpResponse()
-              .setStatusCode(tokenRequestStatusCode)
-              .setContent("Token Fetch Error");
-            return response;
-          }
+              if (tokenRequestStatusCode != null) {
+                MockLowLevelHttpResponse response =
+                    new MockLowLevelHttpResponse()
+                        .setStatusCode(tokenRequestStatusCode)
+                        .setContent("Token Fetch Error");
+                return response;
+              }
 
-          String metadataRequestHeader = getFirstHeaderValue("Metadata-Flavor");
-          if (!"Google".equals(metadataRequestHeader)) {
-            throw new IOException("Metadata request header not found.");
-          }
+              String metadataRequestHeader = getFirstHeaderValue("Metadata-Flavor");
+              if (!"Google".equals(metadataRequestHeader)) {
+                throw new IOException("Metadata request header not found.");
+              }
 
-          // Create the JSon response
-          GenericJson refreshContents = new GenericJson();
-          refreshContents.setFactory(JSON_FACTORY);
-          refreshContents.put("access_token", accessToken);
-          refreshContents.put("expires_in", 3600000);
-          refreshContents.put("token_type", "Bearer");
-          String refreshText  = refreshContents.toPrettyString();
+              // Create the JSon response
+              GenericJson refreshContents = new GenericJson();
+              refreshContents.setFactory(JSON_FACTORY);
+              refreshContents.put("access_token", accessToken);
+              refreshContents.put("expires_in", 3600000);
+              refreshContents.put("token_type", "Bearer");
+              String refreshText = refreshContents.toPrettyString();
 
-          MockLowLevelHttpResponse response = new MockLowLevelHttpResponse()
-            .setContentType(Json.MEDIA_TYPE)
-            .setContent(refreshText);
-          return response;
-
-        }
-      };
+              MockLowLevelHttpResponse response =
+                  new MockLowLevelHttpResponse()
+                      .setContentType(Json.MEDIA_TYPE)
+                      .setContent(refreshText);
+              return response;
+            }
+          };
       return request;
     } else if (url.equals(METADATA_SERVER_URL)) {
-      MockLowLevelHttpRequest request = new MockLowLevelHttpRequest(url) {
-        @Override
-        public LowLevelHttpResponse execute() {
-          MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
-          response.addHeader("Metadata-Flavor", "Google");
-          return response;
-        }
-      };
+      MockLowLevelHttpRequest request =
+          new MockLowLevelHttpRequest(url) {
+            @Override
+            public LowLevelHttpResponse execute() {
+              MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+              response.addHeader("Metadata-Flavor", "Google");
+              return response;
+            }
+          };
       return request;
     }
     return super.buildRequest(method, url);

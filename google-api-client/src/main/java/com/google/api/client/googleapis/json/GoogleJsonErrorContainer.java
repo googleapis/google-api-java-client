@@ -25,8 +25,7 @@ import com.google.api.client.util.Key;
  */
 public class GoogleJsonErrorContainer extends GenericJson {
 
-  @Key
-  private GoogleJsonError error;
+  @Key private GoogleJsonError error;
 
   /** Returns the {@link GoogleJsonError}. */
   public final GoogleJsonError getError() {

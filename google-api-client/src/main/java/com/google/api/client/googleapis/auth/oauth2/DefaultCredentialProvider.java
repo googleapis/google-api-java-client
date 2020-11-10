@@ -35,11 +35,11 @@ import java.security.AccessControlException;
 import java.util.Locale;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Provides a default credential available from the host or from an environment variable.
  *
- * <p>An instance represents the per-process state used to get and cache the credential and
- * allows overriding the state and environment for testing purposes.
+ * <p>An instance represents the per-process state used to get and cache the credential and allows
+ * overriding the state and environment for testing purposes.
  */
 @Beta
 class DefaultCredentialProvider extends SystemEnvironmentProvider {
@@ -55,12 +55,17 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
 
   static final String APP_ENGINE_CREDENTIAL_CLASS =
       "com.google.api.client.googleapis.extensions.appengine.auth.oauth2"
-      + ".AppIdentityCredential$AppEngineCredentialWrapper";
+          + ".AppIdentityCredential$AppEngineCredentialWrapper";
 
   static final String CLOUD_SHELL_ENV_VAR = "DEVSHELL_CLIENT_PORT";
 
   private static enum Environment {
-    UNKNOWN, ENVIRONMENT_VARIABLE, WELL_KNOWN_FILE, CLOUD_SHELL, APP_ENGINE, COMPUTE_ENGINE,
+    UNKNOWN,
+    ENVIRONMENT_VARIABLE,
+    WELL_KNOWN_FILE,
+    CLOUD_SHELL,
+    APP_ENGINE,
+    COMPUTE_ENGINE,
   }
 
   // These variables should only be accessed inside a synchronized block
@@ -70,13 +75,13 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
   DefaultCredentialProvider() {}
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Returns the Application Default Credentials.
    *
    * <p>Returns the Application Default Credentials which are credentials that identify and
    * authorize the whole application. This is the built-in service account if running on Google
    * Compute Engine or the credentials file from the path in the environment variable
-   * GOOGLE_APPLICATION_CREDENTIALS.</p>
+   * GOOGLE_APPLICATION_CREDENTIALS.
    *
    * @param transport the transport for Http calls.
    * @param jsonFactory the factory for Json parsing and formatting.
@@ -94,13 +99,13 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
       }
     }
 
-    throw new IOException(String.format(
-        "The Application Default Credentials are not available. They are available if running "
-            + "on Google App Engine, Google Compute Engine, or Google Cloud Shell. Otherwise, "
-            + "the environment variable %s must be defined pointing to a file defining "
-            + "the credentials. See %s for more information.",
-        CREDENTIAL_ENV_VAR,
-        HELP_PERMALINK));
+    throw new IOException(
+        String.format(
+            "The Application Default Credentials are not available. They are available if running "
+                + "on Google App Engine, Google Compute Engine, or Google Cloud Shell. Otherwise, "
+                + "the environment variable %s must be defined pointing to a file defining "
+                + "the credentials. See %s for more information.",
+            CREDENTIAL_ENV_VAR, HELP_PERMALINK));
   }
 
   private final GoogleCredential getDefaultCredentialUnsynchronized(
@@ -139,23 +144,17 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
     return credentialFilePath;
   }
 
-  /**
-   * Override in test code to isolate from environment.
-   */
+  /** Override in test code to isolate from environment. */
   boolean fileExists(File file) {
     return file.exists() && !file.isDirectory();
   }
 
-  /**
-   * Override in test code to isolate from environment.
-   */
+  /** Override in test code to isolate from environment. */
   String getProperty(String property, String def) {
     return System.getProperty(property, def);
   }
 
-  /**
-   * Override in test code to isolate from environment.
-   */
+  /** Override in test code to isolate from environment. */
   Class<?> forName(String className) throws ClassNotFoundException {
     return Class.forName(className);
   }
@@ -165,20 +164,20 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
     if (runningUsingEnvironmentVariable()) {
       return Environment.ENVIRONMENT_VARIABLE;
 
-    // Then try the well-known file
+      // Then try the well-known file
     } else if (runningUsingWellKnownFile()) {
       return Environment.WELL_KNOWN_FILE;
 
-    // Try App Engine
+      // Try App Engine
     } else if (useGAEStandardAPI()) {
       return Environment.APP_ENGINE;
 
-    // Then try Cloud Shell.  This must be done BEFORE checking
-    // Compute Engine, as Cloud Shell runs on GCE VMs.
+      // Then try Cloud Shell.  This must be done BEFORE checking
+      // Compute Engine, as Cloud Shell runs on GCE VMs.
     } else if (runningOnCloudShell()) {
       return Environment.CLOUD_SHELL;
 
-    // Then try Compute Engine
+      // Then try Compute Engine
     } else if (OAuth2Utils.runningOnComputeEngine(transport, this)) {
       return Environment.COMPUTE_ENGINE;
     }
@@ -198,7 +197,8 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
         throw new IOException(
             String.format(
                 "Error reading credential file from environment variable %s, value '%s': "
-                + "File does not exist.", CREDENTIAL_ENV_VAR, credentialsPath));
+                    + "File does not exist.",
+                CREDENTIAL_ENV_VAR, credentialsPath));
       }
       return true;
     } catch (AccessControlException expected) {
@@ -219,9 +219,12 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
       // Although it is also the cause, the message of the caught exception can have very
       // important information for diagnosing errors, so include its message in the
       // outer exception message also
-      throw OAuth2Utils.exceptionWithCause(new IOException(String.format(
-          "Error reading credential file from environment variable %s, value '%s': %s",
-          CREDENTIAL_ENV_VAR, credentialsPath, e.getMessage())), e);
+      throw OAuth2Utils.exceptionWithCause(
+          new IOException(
+              String.format(
+                  "Error reading credential file from environment variable %s, value '%s': %s",
+                  CREDENTIAL_ENV_VAR, credentialsPath, e.getMessage())),
+          e);
     } finally {
       if (credentialsStream != null) {
         credentialsStream.close();
@@ -247,9 +250,10 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
       credentialsStream = new FileInputStream(wellKnownFileLocation);
       return GoogleCredential.fromStream(credentialsStream, transport, jsonFactory);
     } catch (IOException e) {
-      throw new IOException(String.format(
-          "Error reading credential file from location %s: %s",
-          wellKnownFileLocation, e.getMessage()));
+      throw new IOException(
+          String.format(
+              "Error reading credential file from location %s: %s",
+              wellKnownFileLocation, e.getMessage()));
     } finally {
       if (credentialsStream != null) {
         credentialsStream.close();
@@ -287,9 +291,12 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
     } catch (InvocationTargetException exception) {
       cause = exception;
     }
-    throw OAuth2Utils.exceptionWithCause(new RuntimeException(String.format(
-        "Unexpcted error trying to determine if runnning on Google App Engine: %s",
-        cause.getMessage())), cause);
+    throw OAuth2Utils.exceptionWithCause(
+        new RuntimeException(
+            String.format(
+                "Unexpcted error trying to determine if runnning on Google App Engine: %s",
+                cause.getMessage())),
+        cause);
   }
 
   private final GoogleCredential getAppEngineCredential(
@@ -297,8 +304,8 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
     Exception innerException = null;
     try {
       Class<?> credentialClass = forName(APP_ENGINE_CREDENTIAL_CLASS);
-      Constructor<?> constructor = credentialClass
-          .getConstructor(HttpTransport.class, JsonFactory.class);
+      Constructor<?> constructor =
+          credentialClass.getConstructor(HttpTransport.class, JsonFactory.class);
       return (GoogleCredential) constructor.newInstance(transport, jsonFactory);
     } catch (ClassNotFoundException e) {
       innerException = e;
@@ -311,11 +318,14 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
     } catch (InvocationTargetException e) {
       innerException = e;
     }
-    throw OAuth2Utils.exceptionWithCause(new IOException(String.format(
-        "Application Default Credentials failed to create the Google App Engine service account"
-            + " credentials class %s. Check that the component 'google-api-client-appengine' is"
-            + " deployed.",
-        APP_ENGINE_CREDENTIAL_CLASS)), innerException);
+    throw OAuth2Utils.exceptionWithCause(
+        new IOException(
+            String.format(
+                "Application Default Credentials failed to create the Google App Engine service"
+                    + " account credentials class %s. Check that the component"
+                    + " 'google-api-client-appengine' is deployed.",
+                APP_ENGINE_CREDENTIAL_CLASS)),
+        innerException);
   }
 
   private boolean runningOnCloudShell() {
@@ -336,14 +346,16 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
   private static class ComputeGoogleCredential extends GoogleCredential {
 
     /** Metadata Service Account token server encoded URL. */
-    private static final String TOKEN_SERVER_ENCODED_URL = OAuth2Utils.getMetadataServerUrl()
-        + "/computeMetadata/v1/instance/service-accounts/default/token";
+    private static final String TOKEN_SERVER_ENCODED_URL =
+        OAuth2Utils.getMetadataServerUrl()
+            + "/computeMetadata/v1/instance/service-accounts/default/token";
 
     ComputeGoogleCredential(HttpTransport transport, JsonFactory jsonFactory) {
-      super(new GoogleCredential.Builder()
-          .setTransport(transport)
-          .setJsonFactory(jsonFactory)
-          .setTokenServerEncodedUrl(TOKEN_SERVER_ENCODED_URL));
+      super(
+          new GoogleCredential.Builder()
+              .setTransport(transport)
+              .setJsonFactory(jsonFactory)
+              .setTokenServerEncodedUrl(TOKEN_SERVER_ENCODED_URL));
     }
 
     @Override
@@ -366,14 +378,19 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
         return parser.parseAndClose(content, response.getContentCharset(), TokenResponse.class);
       }
       if (statusCode == HttpStatusCodes.STATUS_CODE_NOT_FOUND) {
-        throw new IOException(String.format("Error code %s trying to get security access token from"
-            + " Compute Engine metadata for the default service account. This may be because"
-            + " the virtual machine instance does not have permission scopes specified.",
-            statusCode));
+        throw new IOException(
+            String.format(
+                "Error code %s trying to get security access token from"
+                    + " Compute Engine metadata for the default service account. This may be"
+                    + " because the virtual machine instance does not have permission scopes"
+                    + " specified.",
+                statusCode));
       }
-      throw new IOException(String.format("Unexpected Error code %s trying to get security access"
-          + " token from Compute Engine metadata for the default service account: %s", statusCode,
-          response.parseAsString()));
+      throw new IOException(
+          String.format(
+              "Unexpected Error code %s trying to get security access"
+                  + " token from Compute Engine metadata for the default service account: %s",
+              statusCode, response.parseAsString()));
     }
   }
 }

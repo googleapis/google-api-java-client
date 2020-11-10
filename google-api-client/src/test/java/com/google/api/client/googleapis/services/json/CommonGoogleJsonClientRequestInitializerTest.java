@@ -18,7 +18,6 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.util.Key;
-
 import junit.framework.TestCase;
 
 /**
@@ -29,11 +28,14 @@ import junit.framework.TestCase;
 public class CommonGoogleJsonClientRequestInitializerTest extends TestCase {
 
   public static class MyRequest extends AbstractGoogleJsonClientRequest<String> {
-    @Key
-    String key;
+    @Key String key;
 
-    protected MyRequest(MockGoogleJsonClient client, String method, String uriTemplate,
-        HttpContent content, Class<String> responseClass) {
+    protected MyRequest(
+        MockGoogleJsonClient client,
+        String method,
+        String uriTemplate,
+        HttpContent content,
+        Class<String> responseClass) {
       super(client, method, uriTemplate, content, responseClass);
     }
   }
@@ -41,9 +43,16 @@ public class CommonGoogleJsonClientRequestInitializerTest extends TestCase {
   public void testInitialize() throws Exception {
     CommonGoogleJsonClientRequestInitializer key =
         new CommonGoogleJsonClientRequestInitializer("foo");
-    MockGoogleJsonClient client = new MockGoogleJsonClient.Builder(
-        new MockHttpTransport(), new JacksonFactory(), HttpTesting.SIMPLE_URL, "test/", null,
-        false).setApplicationName("Test Application").build();
+    MockGoogleJsonClient client =
+        new MockGoogleJsonClient.Builder(
+                new MockHttpTransport(),
+                new JacksonFactory(),
+                HttpTesting.SIMPLE_URL,
+                "test/",
+                null,
+                false)
+            .setApplicationName("Test Application")
+            .build();
     MyRequest request = new MyRequest(client, "GET", "", null, String.class);
     assertNull(request.key);
     key.initialize(request);

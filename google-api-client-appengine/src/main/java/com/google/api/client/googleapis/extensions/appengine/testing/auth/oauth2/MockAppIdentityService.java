@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.Date;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Mock implementation of AppIdentityService interface for testing.
  *
  * @since 1.19
@@ -33,8 +33,7 @@ public class MockAppIdentityService implements AppIdentityService {
   private int getAccessTokenCallCount = 0;
   private String accessTokenText = null;
 
-  public MockAppIdentityService() {
-  }
+  public MockAppIdentityService() {}
 
   public int getGetAccessTokenCallCount() {
     return getAccessTokenCallCount;
@@ -70,8 +69,8 @@ public class MockAppIdentityService implements AppIdentityService {
     if (scopeCount == 0) {
       throw new AppIdentityServiceFailureException("No scopes specified.");
     }
-    return new GetAccessTokenResult(accessTokenText,
-        new Date(System.currentTimeMillis() + 3600000));
+    return new GetAccessTokenResult(
+        accessTokenText, new Date(System.currentTimeMillis() + 3600000));
   }
 
   @Override

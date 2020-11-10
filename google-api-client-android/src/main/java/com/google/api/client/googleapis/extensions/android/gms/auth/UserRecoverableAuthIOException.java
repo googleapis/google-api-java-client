@@ -19,20 +19,18 @@ import com.google.api.client.util.Beta;
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Wraps a {@link UserRecoverableAuthException} into an {@link IOException} so it can be caught
  * directly.
  *
- * <p>
- * Use {@link #getIntent()} to allow user interaction to recover. Alternatively, use
- * {@link #getCause()} to get the wrapped {@link UserRecoverableAuthException}. Example usage:
- * </p>
+ * <p>Use {@link #getIntent()} to allow user interaction to recover. Alternatively, use {@link
+ * #getCause()} to get the wrapped {@link UserRecoverableAuthException}. Example usage:
  *
  * <pre>
-    } catch (UserRecoverableAuthIOException userRecoverableException) {
-      myActivity.startActivityForResult(
-          userRecoverableException.getIntent(), MyActivity.REQUEST_AUTHORIZATION);
-    }
+ * } catch (UserRecoverableAuthIOException userRecoverableException) {
+ * myActivity.startActivityForResult(
+ * userRecoverableException.getIntent(), MyActivity.REQUEST_AUTHORIZATION);
+ * }
  * </pre>
  *
  * @since 1.12
@@ -43,9 +41,7 @@ public class UserRecoverableAuthIOException extends GoogleAuthIOException {
 
   private static final long serialVersionUID = 1L;
 
-  /**
-   * @since 1.21.0
-   */
+  /** @since 1.21.0 */
   public UserRecoverableAuthIOException(UserRecoverableAuthException wrapped) {
     super(wrapped);
   }
@@ -56,8 +52,8 @@ public class UserRecoverableAuthIOException extends GoogleAuthIOException {
   }
 
   /**
-   * Returns the {@link Intent} that when supplied to
-   * {@link Activity#startActivityForResult(Intent, int)} will allow user intervention.
+   * Returns the {@link Intent} that when supplied to {@link Activity#startActivityForResult(Intent,
+   * int)} will allow user intervention.
    */
   public final Intent getIntent() {
     return getCause().getIntent();

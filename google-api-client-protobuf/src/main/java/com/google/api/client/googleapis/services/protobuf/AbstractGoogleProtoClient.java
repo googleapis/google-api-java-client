@@ -22,7 +22,7 @@ import com.google.api.client.protobuf.ProtoObjectParser;
 import com.google.api.client.util.Beta;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Thread-safe Google protocol buffer client.
  *
  * @since 1.16
@@ -31,9 +31,7 @@ import com.google.api.client.util.Beta;
 @Beta
 public abstract class AbstractGoogleProtoClient extends AbstractGoogleClient {
 
-  /**
-   * @param builder builder
-   */
+  /** @param builder builder */
   protected AbstractGoogleProtoClient(Builder builder) {
     super(builder);
   }
@@ -44,12 +42,11 @@ public abstract class AbstractGoogleProtoClient extends AbstractGoogleClient {
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Builder for {@link AbstractGoogleProtoClient}.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
+   *
    * @since 1.16
    */
   @Beta
@@ -61,7 +58,10 @@ public abstract class AbstractGoogleProtoClient extends AbstractGoogleClient {
      * @param servicePath service path
      * @param httpRequestInitializer HTTP request initializer or {@code null} for none
      */
-    protected Builder(HttpTransport transport, String rootUrl, String servicePath,
+    protected Builder(
+        HttpTransport transport,
+        String rootUrl,
+        String servicePath,
         HttpRequestInitializer httpRequestInitializer) {
       super(transport, rootUrl, servicePath, new ProtoObjectParser(), httpRequestInitializer);
     }

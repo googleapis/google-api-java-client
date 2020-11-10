@@ -21,7 +21,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Beta;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Thread-safe mock Google protocol buffer client.
  *
  * @since 1.16
@@ -30,9 +30,7 @@ import com.google.api.client.util.Beta;
 @Beta
 public class MockGoogleProtoClient extends AbstractGoogleProtoClient {
 
-  /**
-   * @param builder builder
-   */
+  /** @param builder builder */
   protected MockGoogleProtoClient(Builder builder) {
     super(builder);
   }
@@ -43,18 +41,19 @@ public class MockGoogleProtoClient extends AbstractGoogleProtoClient {
    * @param servicePath service path
    * @param httpRequestInitializer HTTP request initializer or {@code null} for none
    */
-  public MockGoogleProtoClient(HttpTransport transport, String rootUrl, String servicePath,
+  public MockGoogleProtoClient(
+      HttpTransport transport,
+      String rootUrl,
+      String servicePath,
       HttpRequestInitializer httpRequestInitializer) {
     this(new Builder(transport, rootUrl, servicePath, httpRequestInitializer));
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Builder for {@link MockGoogleProtoClient}.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
    */
   @Beta
   public static class Builder extends AbstractGoogleProtoClient.Builder {
@@ -65,7 +64,10 @@ public class MockGoogleProtoClient extends AbstractGoogleProtoClient {
      * @param servicePath service path
      * @param httpRequestInitializer HTTP request initializer or {@code null} for none
      */
-    public Builder(HttpTransport transport, String rootUrl, String servicePath,
+    public Builder(
+        HttpTransport transport,
+        String rootUrl,
+        String servicePath,
         HttpRequestInitializer httpRequestInitializer) {
       super(transport, rootUrl, servicePath, httpRequestInitializer);
     }

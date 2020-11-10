@@ -15,7 +15,7 @@ import com.google.api.client.util.Clock;
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Mock for {@link GoogleCredential}.
  *
  * @since 1.20
@@ -26,15 +26,16 @@ public class MockGoogleCredential extends GoogleCredential {
   public static final String REFRESH_TOKEN = "refresh123";
   private static final String EXPIRES_IN_SECONDS = "3600";
   private static final String TOKEN_TYPE = "Bearer";
-  private static final String TOKEN_RESPONSE = "{"
-      +   "\"access_token\": \"%s\", "
-      +   "\"expires_in\":  %s, "
-      +   "\"refresh_token\": \"%s\", "
-      +   "\"token_type\": \"%s\""
-      + "}";
+  private static final String TOKEN_RESPONSE =
+      "{"
+          + "\"access_token\": \"%s\", "
+          + "\"expires_in\":  %s, "
+          + "\"refresh_token\": \"%s\", "
+          + "\"token_type\": \"%s\""
+          + "}";
 
-  private static final String DEFAULT_TOKEN_RESPONSE_JSON = String.format(TOKEN_RESPONSE,
-      ACCESS_TOKEN, EXPIRES_IN_SECONDS, REFRESH_TOKEN, TOKEN_TYPE);
+  private static final String DEFAULT_TOKEN_RESPONSE_JSON =
+      String.format(TOKEN_RESPONSE, ACCESS_TOKEN, EXPIRES_IN_SECONDS, REFRESH_TOKEN, TOKEN_TYPE);
 
   public MockGoogleCredential(Builder builder) {
     super(builder);
@@ -46,12 +47,11 @@ public class MockGoogleCredential extends GoogleCredential {
    * <p>Setters that are necessary for simple {@link GoogleCredential} creation are overridden in
    * order to change the return type. A concrete {@link JsonFactory} is set by default, since JSON
    * parsing is relied upon often in GoogleCredential which makes mocking parse calls problematic.
-   * </p>
    *
    * <p>By default, a standard {@link MockHttpTransport} is supplied. For simple tests in which
-   * 'refresh' methods are called but the request/response isn't used
-   * {@link #newMockHttpTransportWithSampleTokenResponse()} provides a minimal implementation. For
-   * more complex tests which check request/response behavior prefer MockTokenServerTransport.</p>
+   * 'refresh' methods are called but the request/response isn't used {@link
+   * #newMockHttpTransportWithSampleTokenResponse()} provides a minimal implementation. For more
+   * complex tests which check request/response behavior prefer MockTokenServerTransport.
    */
   @Beta
   public static class Builder extends GoogleCredential.Builder {
@@ -90,30 +90,27 @@ public class MockGoogleCredential extends GoogleCredential {
     }
   }
 
- /**
-  * Returns a new {@link MockHttpTransport} with a sample {@link MockLowLevelHttpResponse}. The
-  * response includes sample TokenResponse content as specified in DEFAULT_TOKEN_RESPONSE_JSON. This
-  * is meant to produce a minimal implementation that allows methods such as
-  * {@link GoogleCredential#executeRefreshToken()} to be called without failing abruptly. This
-  * content is static. If you are making assertions based on the content of the request, then
-  * MockTokenServerTransport should be used instead.
-  *
-  * @return mockHttpTransport
-  */
+  /**
+   * Returns a new {@link MockHttpTransport} with a sample {@link MockLowLevelHttpResponse}. The
+   * response includes sample TokenResponse content as specified in DEFAULT_TOKEN_RESPONSE_JSON.
+   * This is meant to produce a minimal implementation that allows methods such as {@link
+   * GoogleCredential#executeRefreshToken()} to be called without failing abruptly. This content is
+   * static. If you are making assertions based on the content of the request, then
+   * MockTokenServerTransport should be used instead.
+   *
+   * @return mockHttpTransport
+   */
   public static MockHttpTransport newMockHttpTransportWithSampleTokenResponse() {
-    MockLowLevelHttpResponse mockLowLevelHttpResponse = new MockLowLevelHttpResponse()
-       .setContentType(Json.MEDIA_TYPE)
-       .setContent(DEFAULT_TOKEN_RESPONSE_JSON);
-    MockLowLevelHttpRequest request = new MockLowLevelHttpRequest()
-        .setResponse(mockLowLevelHttpResponse);
-    return new MockHttpTransport.Builder()
-        .setLowLevelHttpRequest(request)
-        .build();
+    MockLowLevelHttpResponse mockLowLevelHttpResponse =
+        new MockLowLevelHttpResponse()
+            .setContentType(Json.MEDIA_TYPE)
+            .setContent(DEFAULT_TOKEN_RESPONSE_JSON);
+    MockLowLevelHttpRequest request =
+        new MockLowLevelHttpRequest().setResponse(mockLowLevelHttpResponse);
+    return new MockHttpTransport.Builder().setLowLevelHttpRequest(request).build();
   }
 
-  /**
-   * Mock for ClientAuthentication.
-   */
+  /** Mock for ClientAuthentication. */
   @Beta
   private static class MockClientAuthentication implements HttpExecuteInterceptor {
     @Override

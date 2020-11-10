@@ -13,7 +13,7 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
+ * {@link com.google.api.client.util.Beta} <br>
  * Notification channel handling based on the <a
  * href="http://wiki.fasterxml.com/JacksonRelease20">Jackson 2</a> JSON library.
  *
@@ -22,4 +22,3 @@
  */
 @com.google.api.client.util.Beta
 package com.google.api.client.googleapis.notifications.json.jackson2;
-

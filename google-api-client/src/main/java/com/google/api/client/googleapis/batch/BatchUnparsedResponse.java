@@ -34,7 +34,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * The unparsed batch response.
  *
@@ -71,8 +70,11 @@ final class BatchUnparsedResponse {
    * @param requestInfos List of request infos
    * @param retryAllowed Whether unsuccessful HTTP requests can be retried
    */
-  BatchUnparsedResponse(InputStream inputStream, String boundary,
-      List<RequestInfo<?, ?>> requestInfos, boolean retryAllowed)
+  BatchUnparsedResponse(
+      InputStream inputStream,
+      String boundary,
+      List<RequestInfo<?, ?>> requestInfos,
+      boolean retryAllowed)
       throws IOException {
     this.boundary = boundary;
     this.requestInfos = requestInfos;
@@ -85,9 +87,7 @@ final class BatchUnparsedResponse {
   /**
    * Parses the next response in the queue if a data class and a {@link BatchCallback} is specified.
    *
-   * <p>
-   * This method closes the input stream if there are no more individual responses left.
-   * </p>
+   * <p>This method closes the input stream if there are no more individual responses left.
    */
   void parseNextResponse() throws IOException {
     contentId++;
@@ -116,7 +116,7 @@ final class BatchUnparsedResponse {
       headerNames.add(headerName);
       headerValues.add(headerValue);
       if ("Content-Length".equalsIgnoreCase(headerName.trim())) {
-          contentLength = Long.parseLong(headerValue);
+        contentLength = Long.parseLong(headerValue);
       }
     }
 
@@ -135,22 +135,21 @@ final class BatchUnparsedResponse {
       // Remove CRLF from the boundary token (to match readLine)
       line = trimCrlf(line);
     } else {
-      body = new FilterInputStream(ByteStreams.limit(inputStream, contentLength)) {
-        @Override
-        public void close() {
-          // Don't allow the parser to close the underlying stream
-        }
-      };
+      body =
+          new FilterInputStream(ByteStreams.limit(inputStream, contentLength)) {
+            @Override
+            public void close() {
+              // Don't allow the parser to close the underlying stream
+            }
+          };
     }
 
-    HttpResponse response =
-        getFakeResponse(statusCode, body, headerNames, headerValues);
+    HttpResponse response = getFakeResponse(statusCode, body, headerNames, headerValues);
 
     parseAndCallback(requestInfos.get(contentId - 1), statusCode, response);
 
     // Consume any bytes that were not consumed by the parser
-    while (body.skip(contentLength) > 0 || body.read() != -1) {
-    }
+    while (body.skip(contentLength) > 0 || body.read() != -1) {}
 
     if (contentLength != -1) {
       line = readLine();
@@ -166,12 +165,11 @@ final class BatchUnparsedResponse {
   }
 
   /**
-   * Parse an object into a new instance of the data class using
-   * {@link HttpResponse#parseAs(java.lang.reflect.Type)}.
+   * Parse an object into a new instance of the data class using {@link
+   * HttpResponse#parseAs(java.lang.reflect.Type)}.
    */
   private <T, E> void parseAndCallback(
-      RequestInfo<T, E> requestInfo, int statusCode, HttpResponse response)
-      throws IOException {
+      RequestInfo<T, E> requestInfo, int statusCode, HttpResponse response) throws IOException {
     BatchCallback<T, E> callback = requestInfo.callback;
 
     HttpHeaders responseHeaders = response.getHeaders();
@@ -191,8 +189,9 @@ final class BatchUnparsedResponse {
       boolean errorHandled = false;
       boolean redirectRequest = false;
       if (unsuccessfulResponseHandler != null) {
-        errorHandled = unsuccessfulResponseHandler.handleResponse(
-            requestInfo.request, response, retrySupported);
+        errorHandled =
+            unsuccessfulResponseHandler.handleResponse(
+                requestInfo.request, response, retrySupported);
       }
       if (!errorHandled) {
         if (requestInfo.request.handleRedirect(response.getStatusCode(), response.getHeaders())) {
@@ -218,17 +217,23 @@ final class BatchUnparsedResponse {
     if (dataClass == Void.class) {
       return null;
     }
-    return requestInfo.request.getParser().parseAndClose(
-        response.getContent(), response.getContentCharset(), dataClass);
+    return requestInfo
+        .request
+        .getParser()
+        .parseAndClose(response.getContent(), response.getContentCharset(), dataClass);
   }
 
   /** Create a fake HTTP response object populated with the partContent and the statusCode. */
-  private HttpResponse getFakeResponse(final int statusCode, final InputStream partContent,
-      List<String> headerNames, List<String> headerValues)
+  private HttpResponse getFakeResponse(
+      final int statusCode,
+      final InputStream partContent,
+      List<String> headerNames,
+      List<String> headerValues)
       throws IOException {
-    HttpRequest request = new FakeResponseHttpTransport(
-        statusCode, partContent, headerNames, headerValues).createRequestFactory()
-        .buildPostRequest(new GenericUrl("http://google.com/"), null);
+    HttpRequest request =
+        new FakeResponseHttpTransport(statusCode, partContent, headerNames, headerValues)
+            .createRequestFactory()
+            .buildPostRequest(new GenericUrl("http://google.com/"), null);
     request.setLoggingEnabled(false);
     request.setThrowExceptionOnExecuteError(false);
     return request.execute();
@@ -257,9 +262,9 @@ final class BatchUnparsedResponse {
 
   /**
    * Reads an HTTP response line (ISO-8859-1 encoding)
-   * <p>
-   * This method is similar to {@link java.io.BufferedReader#readLine()}, but handles newlines in a
-   * way that is consistent with the HTTP RFC 2616.
+   *
+   * <p>This method is similar to {@link java.io.BufferedReader#readLine()}, but handles newlines in
+   * a way that is consistent with the HTTP RFC 2616.
    *
    * @return The line that was read, excluding CRLF.
    */
@@ -306,7 +311,10 @@ final class BatchUnparsedResponse {
     private List<String> headerNames;
     private List<String> headerValues;
 
-    FakeResponseHttpTransport(int statusCode, InputStream partContent, List<String> headerNames,
+    FakeResponseHttpTransport(
+        int statusCode,
+        InputStream partContent,
+        List<String> headerNames,
         List<String> headerValues) {
       super();
       this.statusCode = statusCode;
@@ -328,7 +336,10 @@ final class BatchUnparsedResponse {
     private List<String> headerNames;
     private List<String> headerValues;
 
-    FakeLowLevelHttpRequest(InputStream partContent, int statusCode, List<String> headerNames,
+    FakeLowLevelHttpRequest(
+        InputStream partContent,
+        int statusCode,
+        List<String> headerNames,
         List<String> headerValues) {
       this.partContent = partContent;
       this.statusCode = statusCode;
@@ -337,13 +348,12 @@ final class BatchUnparsedResponse {
     }
 
     @Override
-    public void addHeader(String name, String value) {
-    }
+    public void addHeader(String name, String value) {}
 
     @Override
     public LowLevelHttpResponse execute() {
-      FakeLowLevelHttpResponse response = new FakeLowLevelHttpResponse(
-          partContent, statusCode, headerNames, headerValues);
+      FakeLowLevelHttpResponse response =
+          new FakeLowLevelHttpResponse(partContent, statusCode, headerNames, headerValues);
       return response;
     }
   }
@@ -355,7 +365,10 @@ final class BatchUnparsedResponse {
     private List<String> headerNames = new ArrayList<String>();
     private List<String> headerValues = new ArrayList<String>();
 
-    FakeLowLevelHttpResponse(InputStream partContent, int statusCode, List<String> headerNames,
+    FakeLowLevelHttpResponse(
+        InputStream partContent,
+        int statusCode,
+        List<String> headerNames,
         List<String> headerValues) {
       this.partContent = partContent;
       this.statusCode = statusCode;

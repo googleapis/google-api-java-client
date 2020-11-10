@@ -42,10 +42,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import junit.framework.TestCase;
 
-/**
- * Tests {@link DefaultCredentialProvider}.
- *
- */
+/** Tests {@link DefaultCredentialProvider}. */
 public class DefaultCredentialProviderTest extends TestCase {
 
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
@@ -54,18 +51,19 @@ public class DefaultCredentialProviderTest extends TestCase {
       Collections.unmodifiableCollection(Arrays.asList("scope1", "scope2"));
 
   private static final String SA_KEY_ID = "key_id";
-  private static final String SA_KEY_TEXT = "-----BEGIN PRIVATE KEY-----\n"
-      + "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALX0PQoe1igW12i"
-      + "kv1bN/r9lN749y2ijmbc/mFHPyS3hNTyOCjDvBbXYbDhQJzWVUikh4mvGBA07qTj79Xc3yBDfKP2IeyYQIFe0t0"
-      + "zkd7R9Zdn98Y2rIQC47aAbDfubtkU1U72t4zL11kHvoa0/RuFZjncvlr42X7be7lYh4p3NAgMBAAECgYASk5wDw"
-      + "4Az2ZkmeuN6Fk/y9H+Lcb2pskJIXjrL533vrDWGOC48LrsThMQPv8cxBky8HFSEklPpkfTF95tpD43iVwJRB/Gr"
-      + "CtGTw65IfJ4/tI09h6zGc4yqvIo1cHX/LQ+SxKLGyir/dQM925rGt/VojxY5ryJR7GLbCzxPnJm/oQJBANwOCO6"
-      + "D2hy1LQYJhXh7O+RLtA/tSnT1xyMQsGT+uUCMiKS2bSKx2wxo9k7h3OegNJIu1q6nZ6AbxDK8H3+d0dUCQQDTrP"
-      + "SXagBxzp8PecbaCHjzNRSQE2in81qYnrAFNB4o3DpHyMMY6s5ALLeHKscEWnqP8Ur6X4PvzZecCWU9BKAZAkAut"
-      + "LPknAuxSCsUOvUfS1i87ex77Ot+w6POp34pEX+UWb+u5iFn2cQacDTHLV1LtE80L8jVLSbrbrlH43H0DjU5AkEA"
-      + "gidhycxS86dxpEljnOMCw8CKoUBd5I880IUahEiUltk7OLJYS/Ts1wbn3kPOVX3wyJs8WBDtBkFrDHW2ezth2QJ"
-      + "ADj3e1YhMVdjJW5jqwlD/VNddGjgzyunmiZg0uOXsHXbytYmsA545S8KRQFaJKFXYYFo2kOjqOiC1T2cAzMDjCQ"
-      + "==\n-----END PRIVATE KEY-----\n";
+  private static final String SA_KEY_TEXT =
+      "-----BEGIN PRIVATE KEY-----\n"
+          + "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALX0PQoe1igW12i"
+          + "kv1bN/r9lN749y2ijmbc/mFHPyS3hNTyOCjDvBbXYbDhQJzWVUikh4mvGBA07qTj79Xc3yBDfKP2IeyYQIFe0t0"
+          + "zkd7R9Zdn98Y2rIQC47aAbDfubtkU1U72t4zL11kHvoa0/RuFZjncvlr42X7be7lYh4p3NAgMBAAECgYASk5wDw"
+          + "4Az2ZkmeuN6Fk/y9H+Lcb2pskJIXjrL533vrDWGOC48LrsThMQPv8cxBky8HFSEklPpkfTF95tpD43iVwJRB/Gr"
+          + "CtGTw65IfJ4/tI09h6zGc4yqvIo1cHX/LQ+SxKLGyir/dQM925rGt/VojxY5ryJR7GLbCzxPnJm/oQJBANwOCO6"
+          + "D2hy1LQYJhXh7O+RLtA/tSnT1xyMQsGT+uUCMiKS2bSKx2wxo9k7h3OegNJIu1q6nZ6AbxDK8H3+d0dUCQQDTrP"
+          + "SXagBxzp8PecbaCHjzNRSQE2in81qYnrAFNB4o3DpHyMMY6s5ALLeHKscEWnqP8Ur6X4PvzZecCWU9BKAZAkAut"
+          + "LPknAuxSCsUOvUfS1i87ex77Ot+w6POp34pEX+UWb+u5iFn2cQacDTHLV1LtE80L8jVLSbrbrlH43H0DjU5AkEA"
+          + "gidhycxS86dxpEljnOMCw8CKoUBd5I880IUahEiUltk7OLJYS/Ts1wbn3kPOVX3wyJs8WBDtBkFrDHW2ezth2QJ"
+          + "ADj3e1YhMVdjJW5jqwlD/VNddGjgzyunmiZg0uOXsHXbytYmsA545S8KRQFaJKFXYYFo2kOjqOiC1T2cAzMDjCQ"
+          + "==\n-----END PRIVATE KEY-----\n";
   private static final String ACCESS_TOKEN = "1/MkSJoj1xsli0AccessToken_NKPY2";
 
   private static final String GAE_SIGNAL_CLASS = "com.google.appengine.api.utils.SystemProperty";
@@ -74,11 +72,11 @@ public class DefaultCredentialProviderTest extends TestCase {
 
   private static File tempDirectory = null;
 
-  public void testDefaultCredentialAppEngineDeployed() throws IOException  {
+  public void testDefaultCredentialAppEngineDeployed() throws IOException {
     HttpTransport transport = new MockHttpTransport();
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
-    testProvider.addType(DefaultCredentialProvider.APP_ENGINE_CREDENTIAL_CLASS,
-        MockAppEngineCredential.class);
+    testProvider.addType(
+        DefaultCredentialProvider.APP_ENGINE_CREDENTIAL_CLASS, MockAppEngineCredential.class);
     testProvider.addType(GAE_SIGNAL_CLASS, MockAppEngineSystemProperty.class);
 
     Credential defaultCredential = testProvider.getDefaultCredential(transport, JSON_FACTORY);
@@ -92,8 +90,8 @@ public class DefaultCredentialProviderTest extends TestCase {
   public void testDefaultCredentialAppEngineComponentOffAppEngineGivesNotFoundError() {
     HttpTransport transport = new MockHttpTransport();
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
-    testProvider.addType(DefaultCredentialProvider.APP_ENGINE_CREDENTIAL_CLASS,
-        MockAppEngineCredential.class);
+    testProvider.addType(
+        DefaultCredentialProvider.APP_ENGINE_CREDENTIAL_CLASS, MockAppEngineCredential.class);
     testProvider.addType(GAE_SIGNAL_CLASS, MockOffAppEngineSystemProperty.class);
 
     try {
@@ -121,11 +119,11 @@ public class DefaultCredentialProviderTest extends TestCase {
     }
   }
 
-  public void testDefaultCredentialCaches() throws IOException  {
+  public void testDefaultCredentialCaches() throws IOException {
     HttpTransport transport = new MockHttpTransport();
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
-    testProvider.addType(DefaultCredentialProvider.APP_ENGINE_CREDENTIAL_CLASS,
-        MockAppEngineCredential.class);
+    testProvider.addType(
+        DefaultCredentialProvider.APP_ENGINE_CREDENTIAL_CLASS, MockAppEngineCredential.class);
     testProvider.addType(GAE_SIGNAL_CLASS, MockAppEngineSystemProperty.class);
 
     Credential firstCall = testProvider.getDefaultCredential(transport, JSON_FACTORY);
@@ -260,8 +258,8 @@ public class DefaultCredentialProviderTest extends TestCase {
 
     HttpTransport transport = new MockHttpTransport();
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
-    testProvider.setEnv(DefaultCredentialProvider.CREDENTIAL_ENV_VAR,
-        nonExistentFile.getAbsolutePath());
+    testProvider.setEnv(
+        DefaultCredentialProvider.CREDENTIAL_ENV_VAR, nonExistentFile.getAbsolutePath());
     try {
       testProvider.getDefaultCredential(transport, JSON_FACTORY);
       fail("Non existent user credential should throw exception.");
@@ -286,8 +284,8 @@ public class DefaultCredentialProviderTest extends TestCase {
   }
 
   public void testDefaultCredentialServiceAccount() throws IOException {
-    File serviceAccountFile = new java.io.File(getTempDirectory(),
-        "DefaultCredentialServiceAccount.json");
+    File serviceAccountFile =
+        new java.io.File(getTempDirectory(), "DefaultCredentialServiceAccount.json");
     if (serviceAccountFile.exists()) {
       serviceAccountFile.delete();
     }
@@ -315,8 +313,8 @@ public class DefaultCredentialProviderTest extends TestCase {
       writer.close();
 
       // Point the default credential to the file
-      testProvider.setEnv(DefaultCredentialProvider.CREDENTIAL_ENV_VAR,
-          serviceAccountFile.getAbsolutePath());
+      testProvider.setEnv(
+          DefaultCredentialProvider.CREDENTIAL_ENV_VAR, serviceAccountFile.getAbsolutePath());
 
       GoogleCredential credential = testProvider.getDefaultCredential(transport, JSON_FACTORY);
       assertNotNull(credential);
@@ -339,8 +337,8 @@ public class DefaultCredentialProviderTest extends TestCase {
 
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
     // Point the default credential to the file
-    testProvider.setEnv(DefaultCredentialProvider.CREDENTIAL_ENV_VAR,
-        userCredentialFile.getAbsolutePath());
+    testProvider.setEnv(
+        DefaultCredentialProvider.CREDENTIAL_ENV_VAR, userCredentialFile.getAbsolutePath());
 
     testDefaultCredentialUser(userCredentialFile, testProvider);
   }
@@ -356,8 +354,8 @@ public class DefaultCredentialProviderTest extends TestCase {
     if (!cloudConfigDir.exists()) {
       cloudConfigDir.mkdir();
     }
-    File wellKnownFile = new File(
-        cloudConfigDir, DefaultCredentialProvider.WELL_KNOWN_CREDENTIALS_FILE);
+    File wellKnownFile =
+        new File(cloudConfigDir, DefaultCredentialProvider.WELL_KNOWN_CREDENTIALS_FILE);
     if (wellKnownFile.exists()) {
       wellKnownFile.delete();
     }
@@ -376,8 +374,8 @@ public class DefaultCredentialProviderTest extends TestCase {
     if (!cloudConfigDir.exists()) {
       cloudConfigDir.mkdir();
     }
-    File wellKnownFile = new File(
-        cloudConfigDir, DefaultCredentialProvider.WELL_KNOWN_CREDENTIALS_FILE);
+    File wellKnownFile =
+        new File(cloudConfigDir, DefaultCredentialProvider.WELL_KNOWN_CREDENTIALS_FILE);
     if (wellKnownFile.exists()) {
       wellKnownFile.delete();
     }
@@ -404,8 +402,8 @@ public class DefaultCredentialProviderTest extends TestCase {
     if (environmentVariableFile.exists()) {
       environmentVariableFile.delete();
     }
-    testProvider.setEnv(DefaultCredentialProvider.CREDENTIAL_ENV_VAR,
-        environmentVariableFile.getAbsolutePath());
+    testProvider.setEnv(
+        DefaultCredentialProvider.CREDENTIAL_ENV_VAR, environmentVariableFile.getAbsolutePath());
 
     // Also set up a well-known-location file
     File homeDir = getTempDirectory();
@@ -417,8 +415,8 @@ public class DefaultCredentialProviderTest extends TestCase {
     if (!cloudConfigDir.exists()) {
       cloudConfigDir.mkdir();
     }
-    File wellKnownFile = new File(
-        cloudConfigDir, DefaultCredentialProvider.WELL_KNOWN_CREDENTIALS_FILE);
+    File wellKnownFile =
+        new File(cloudConfigDir, DefaultCredentialProvider.WELL_KNOWN_CREDENTIALS_FILE);
     if (wellKnownFile.exists()) {
       wellKnownFile.delete();
     }
@@ -527,7 +525,7 @@ public class DefaultCredentialProviderTest extends TestCase {
 
     @SuppressWarnings("unused")
     public static final MockEnvironment environment =
-      new MockEnvironment(MockEnvironmentEnum.Production);
+        new MockEnvironment(MockEnvironmentEnum.Production);
   }
 
   private static class MockOffAppEngineSystemProperty {
@@ -561,8 +559,7 @@ public class DefaultCredentialProviderTest extends TestCase {
   private static class MockRequestUrlRecordingTransport extends MockHttpTransport {
     List<String> requestUrls = new ArrayList<String>();
 
-    MockRequestUrlRecordingTransport() {
-    }
+    MockRequestUrlRecordingTransport() {}
 
     int getRequestCount() {
       return requestUrls.size();
@@ -574,18 +571,19 @@ public class DefaultCredentialProviderTest extends TestCase {
 
     @Override
     public LowLevelHttpRequest buildRequest(String method, String url) {
-      MockLowLevelHttpRequest request = new MockLowLevelHttpRequest(url) {
-        @Override
-        public LowLevelHttpResponse execute() throws IOException {
-          requestUrls.add(getUrl());
-          throw new IOException("MockRequestCountingTransport request failed.");
-        }
-      };
+      MockLowLevelHttpRequest request =
+          new MockLowLevelHttpRequest(url) {
+            @Override
+            public LowLevelHttpResponse execute() throws IOException {
+              requestUrls.add(getUrl());
+              throw new IOException("MockRequestCountingTransport request failed.");
+            }
+          };
       return request;
     }
   }
 
-  private static class TestDefaultCredentialProvider extends DefaultCredentialProvider  {
+  private static class TestDefaultCredentialProvider extends DefaultCredentialProvider {
 
     private Map<String, Class<?>> types = new HashMap<String, Class<?>>();
     private Map<String, String> variables = new HashMap<String, String>();
@@ -593,8 +591,7 @@ public class DefaultCredentialProviderTest extends TestCase {
     private Set<String> files = new HashSet<String>();
     private int forNameCallCount = 0;
 
-    TestDefaultCredentialProvider() {
-    }
+    TestDefaultCredentialProvider() {}
 
     void addFile(String file) {
       files.add(file);

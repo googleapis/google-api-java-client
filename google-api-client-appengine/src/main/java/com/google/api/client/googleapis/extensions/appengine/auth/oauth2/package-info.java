@@ -18,6 +18,4 @@
  * @since 1.7
  * @author Yaniv Inbar
  */
-
 package com.google.api.client.googleapis.extensions.appengine.auth.oauth2;
-

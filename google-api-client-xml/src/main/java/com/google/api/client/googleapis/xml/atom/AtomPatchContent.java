@@ -21,30 +21,24 @@ import com.google.api.client.xml.Xml;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Serializes Atom XML PATCH HTTP content based on the data key/value mapping object for an Atom
  * entry.
  *
- * <p>
- * Default value for {@link #getType()} is {@link Xml#MEDIA_TYPE}.
- * </p>
+ * <p>Default value for {@link #getType()} is {@link Xml#MEDIA_TYPE}.
  *
- * <p>
- * Sample usage:
- * </p>
+ * <p>Sample usage:
  *
  * <pre>
- *<code>
-  static void setContent(
-      HttpRequest request, XmlNamespaceDictionary namespaceDictionary, Object patchEntry) {
-    request.setContent(new AtomPatchContent(namespaceDictionary, patchEntry));
-  }
+ * <code>
+ * static void setContent(
+ * HttpRequest request, XmlNamespaceDictionary namespaceDictionary, Object patchEntry) {
+ * request.setContent(new AtomPatchContent(namespaceDictionary, patchEntry));
+ * }
  * </code>
  * </pre>
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.0
  * @author Yaniv Inbar

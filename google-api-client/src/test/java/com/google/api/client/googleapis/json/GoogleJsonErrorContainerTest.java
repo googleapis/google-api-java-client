@@ -17,7 +17,6 @@ package com.google.api.client.googleapis.json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
-
 import junit.framework.TestCase;
 
 /**
@@ -28,9 +27,16 @@ import junit.framework.TestCase;
 public class GoogleJsonErrorContainerTest extends TestCase {
 
   static final JsonFactory FACTORY = new JacksonFactory();
-  static final String ERROR = "{" + "\"error\":{" + "\"code\":403," + "\"errors\":[{"
-      + "\"domain\":\"usageLimits\"," + "\"message\":\"Access Not Configured\","
-      + "\"reason\":\"accessNotConfigured\"" + "}]," + "\"message\":\"Access Not Configured\"}}";
+  static final String ERROR =
+      "{"
+          + "\"error\":{"
+          + "\"code\":403,"
+          + "\"errors\":[{"
+          + "\"domain\":\"usageLimits\","
+          + "\"message\":\"Access Not Configured\","
+          + "\"reason\":\"accessNotConfigured\""
+          + "}],"
+          + "\"message\":\"Access Not Configured\"}}";
 
   public void test_json() throws Exception {
     JsonParser parser = FACTORY.createJsonParser(ERROR);

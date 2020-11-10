@@ -44,9 +44,7 @@ class MediaUploadErrorHandler implements HttpUnsuccessfulResponseHandler, HttpIO
   /** The original {@link HttpUnsuccessfulResponseHandler} of the HTTP request. */
   private final HttpUnsuccessfulResponseHandler originalUnsuccessfulHandler;
 
-  /**
-   * Constructs a new instance from {@link MediaHttpUploader} and {@link HttpRequest}.
-   */
+  /** Constructs a new instance from {@link MediaHttpUploader} and {@link HttpRequest}. */
   public MediaUploadErrorHandler(MediaHttpUploader uploader, HttpRequest request) {
     this.uploader = Preconditions.checkNotNull(uploader);
     originalIOExceptionHandler = request.getIOExceptionHandler();
@@ -57,8 +55,9 @@ class MediaUploadErrorHandler implements HttpUnsuccessfulResponseHandler, HttpIO
   }
 
   public boolean handleIOException(HttpRequest request, boolean supportsRetry) throws IOException {
-    boolean handled = originalIOExceptionHandler != null
-        && originalIOExceptionHandler.handleIOException(request, supportsRetry);
+    boolean handled =
+        originalIOExceptionHandler != null
+            && originalIOExceptionHandler.handleIOException(request, supportsRetry);
 
     // TODO(peleyal): figure out what is best practice - call serverErrorCallback only if I/O
     // exception was handled, or call it regardless
@@ -74,8 +73,9 @@ class MediaUploadErrorHandler implements HttpUnsuccessfulResponseHandler, HttpIO
 
   public boolean handleResponse(HttpRequest request, HttpResponse response, boolean supportsRetry)
       throws IOException {
-    boolean handled = originalUnsuccessfulHandler != null
-        && originalUnsuccessfulHandler.handleResponse(request, response, supportsRetry);
+    boolean handled =
+        originalUnsuccessfulHandler != null
+            && originalUnsuccessfulHandler.handleResponse(request, response, supportsRetry);
 
     // TODO(peleyal): figure out what is best practice - call serverErrorCallback only if the
     // abnormal response was handled, or call it regardless

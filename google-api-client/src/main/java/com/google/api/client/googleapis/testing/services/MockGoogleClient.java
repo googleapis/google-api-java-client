@@ -20,7 +20,7 @@ import com.google.api.client.util.Beta;
 import com.google.api.client.util.ObjectParser;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Thread-safe mock Google client.
  *
  * @since 1.12
@@ -35,17 +35,19 @@ public class MockGoogleClient extends AbstractGoogleClient {
    * @param servicePath service path
    * @param objectParser object parser or {@code null} for none
    * @param httpRequestInitializer HTTP request initializer or {@code null} for none
-   *
    * @since 1.14
    */
-  public MockGoogleClient(HttpTransport transport, String rootUrl, String servicePath,
-      ObjectParser objectParser, HttpRequestInitializer httpRequestInitializer) {
+  public MockGoogleClient(
+      HttpTransport transport,
+      String rootUrl,
+      String servicePath,
+      ObjectParser objectParser,
+      HttpRequestInitializer httpRequestInitializer) {
     this(new Builder(transport, rootUrl, servicePath, objectParser, httpRequestInitializer));
   }
 
   /**
    * @param builder builder
-   *
    * @since 1.14
    */
   protected MockGoogleClient(Builder builder) {
@@ -55,9 +57,7 @@ public class MockGoogleClient extends AbstractGoogleClient {
   /**
    * Builder for {@link MockGoogleClient}.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
    */
   @Beta
   public static class Builder extends AbstractGoogleClient.Builder {
@@ -69,8 +69,12 @@ public class MockGoogleClient extends AbstractGoogleClient {
      * @param objectParser object parser or {@code null} for none
      * @param httpRequestInitializer HTTP request initializer or {@code null} for none
      */
-    public Builder(HttpTransport transport, String rootUrl, String servicePath,
-        ObjectParser objectParser, HttpRequestInitializer httpRequestInitializer) {
+    public Builder(
+        HttpTransport transport,
+        String rootUrl,
+        String servicePath,
+        ObjectParser objectParser,
+        HttpRequestInitializer httpRequestInitializer) {
       super(transport, rootUrl, servicePath, objectParser, httpRequestInitializer);
     }
 

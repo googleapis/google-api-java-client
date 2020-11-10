@@ -19,25 +19,23 @@ import java.io.IOException;
 /**
  * An interface for receiving progress notifications for downloads.
  *
- * <p>
- * Sample usage:
- * </p>
+ * <p>Sample usage:
  *
  * <pre>
-  public static class MyDownloadProgressListener implements MediaHttpDownloaderProgressListener {
-
-    public void progressChanged(MediaHttpDownloader downloader) throws IOException {
-      switch (downloader.getDownloadState()) {
-        case MEDIA_IN_PROGRESS:
-          System.out.println("Download in progress");
-          System.out.println("Download percentage: " + downloader.getProgress());
-          break;
-        case MEDIA_COMPLETE:
-          System.out.println("Download Completed!");
-          break;
-      }
-    }
-  }
+ * public static class MyDownloadProgressListener implements MediaHttpDownloaderProgressListener {
+ *
+ * public void progressChanged(MediaHttpDownloader downloader) throws IOException {
+ * switch (downloader.getDownloadState()) {
+ * case MEDIA_IN_PROGRESS:
+ * System.out.println("Download in progress");
+ * System.out.println("Download percentage: " + downloader.getProgress());
+ * break;
+ * case MEDIA_COMPLETE:
+ * System.out.println("Download Completed!");
+ * break;
+ * }
+ * }
+ * }
  * </pre>
  *
  * @since 1.9
@@ -48,15 +46,11 @@ public interface MediaHttpDownloaderProgressListener {
   /**
    * Called to notify that progress has been changed.
    *
-   * <p>
-   * This method is called multiple times depending on how many chunks are downloaded. Once the
+   * <p>This method is called multiple times depending on how many chunks are downloaded. Once the
    * download completes it is called one final time.
-   * </p>
    *
-   * <p>
-   * The download state can be queried by calling {@link MediaHttpDownloader#getDownloadState} and
-   * the progress by calling {@link MediaHttpDownloader#getProgress}.
-   * </p>
+   * <p>The download state can be queried by calling {@link MediaHttpDownloader#getDownloadState}
+   * and the progress by calling {@link MediaHttpDownloader#getProgress}.
    *
    * @param downloader Media HTTP downloader
    */
