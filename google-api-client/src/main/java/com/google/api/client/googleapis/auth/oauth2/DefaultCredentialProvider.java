@@ -321,9 +321,9 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
     throw OAuth2Utils.exceptionWithCause(
         new IOException(
             String.format(
-                "Application Default Credentials failed to create the Google App Engine service account"
-                    + " credentials class %s. Check that the component 'google-api-client-appengine' is"
-                    + " deployed.",
+                "Application Default Credentials failed to create the Google App Engine service"
+                    + " account credentials class %s. Check that the component"
+                    + " 'google-api-client-appengine' is deployed.",
                 APP_ENGINE_CREDENTIAL_CLASS)),
         innerException);
   }
@@ -381,8 +381,9 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
         throw new IOException(
             String.format(
                 "Error code %s trying to get security access token from"
-                    + " Compute Engine metadata for the default service account. This may be because"
-                    + " the virtual machine instance does not have permission scopes specified.",
+                    + " Compute Engine metadata for the default service account. This may be"
+                    + " because the virtual machine instance does not have permission scopes"
+                    + " specified.",
                 statusCode));
       }
       throw new IOException(

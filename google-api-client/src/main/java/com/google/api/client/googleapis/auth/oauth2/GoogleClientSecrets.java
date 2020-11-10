@@ -30,11 +30,14 @@ import java.util.List;
  * <p>Sample usage:
  *
  * <pre>
- * static GoogleClientSecrets loadClientSecretsResource(JsonFactory jsonFactory) throws IOException {
- * return GoogleClientSecrets.load(
- * jsonFactory,
- * new InputStreamReader(
- * SampleClass.class.getResourceAsStream("/client_secrets.json"), "UTF-8"));
+ * static GoogleClientSecrets loadClientSecretsResource(JsonFactory jsonFactory)
+ *   throws IOException {
+ *     return GoogleClientSecrets.load(
+ *       jsonFactory,
+ *       new InputStreamReader(
+ *         SampleClass.class.getResourceAsStream("/client_secrets.json"), "UTF-8"
+ *       )
+ *     );
  * }
  * </pre>
  *
