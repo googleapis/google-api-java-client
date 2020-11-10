@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.31.0](https://www.github.com/googleapis/google-api-java-client/compare/v1.30.11...v1.31.0) (2020-11-10)
+
+
+### Features
+
+* add GoogleApacheHttpTransport that uses the v2 ApacheHttpTransport implementation ([#1568](https://www.github.com/googleapis/google-api-java-client/issues/1568)) ([d0dbca7](https://www.github.com/googleapis/google-api-java-client/commit/d0dbca720479f1ca8627c58eda195857ea0b2423))
+* add mtls support to GoogleNetHttpTransport and GoogleApacheHttpTransport ([#1619](https://www.github.com/googleapis/google-api-java-client/issues/1619)) ([1d8304c](https://www.github.com/googleapis/google-api-java-client/commit/1d8304c6311e910293b800ffdbf0bb6f19cf7fff))
+
+
+### Dependencies
+
+* update dependency com.google.appengine:appengine-api-1.0-sdk to v1.9.83 ([#1622](https://www.github.com/googleapis/google-api-java-client/issues/1622)) ([10bb904](https://www.github.com/googleapis/google-api-java-client/commit/10bb90441c90cb5ea7045a1ac5d39d669fad963d))
+* update dependency com.google.oauth-client:google-oauth-client-bom to v1.31.2 ([#1623](https://www.github.com/googleapis/google-api-java-client/issues/1623)) ([5942561](https://www.github.com/googleapis/google-api-java-client/commit/594256120e4eb37b0f3ca386f69542b68b53d05b))
+* update google-http-client to v1.38.0 ([#1620](https://www.github.com/googleapis/google-api-java-client/issues/1620)) ([bb63ded](https://www.github.com/googleapis/google-api-java-client/commit/bb63ded8846cd515c993c288728063f35e226ec5))
+
 ### [1.30.11](https://www.github.com/googleapis/google-api-java-client/compare/v1.30.10...v1.30.11) (2020-10-13)
 
 
