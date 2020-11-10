@@ -29,9 +29,7 @@ import com.google.api.client.util.Beta;
 @Beta
 public final class Utils {
 
-  /**
-   * Returns a cached default implementation of the JsonFactory interface.
-   */
+  /** Returns a cached default implementation of the JsonFactory interface. */
   public static JsonFactory getDefaultJsonFactory() {
     return JsonFactoryInstanceHolder.INSTANCE;
   }
@@ -44,9 +42,7 @@ public final class Utils {
     static final JsonFactory INSTANCE = new JacksonFactory();
   }
 
-  /**
-   * Returns a cached default implementation of the HttpTransport interface.
-   */
+  /** Returns a cached default implementation of the HttpTransport interface. */
   public static HttpTransport getDefaultTransport() {
     return TransportInstanceHolder.INSTANCE;
   }
@@ -55,6 +51,5 @@ public final class Utils {
     static final HttpTransport INSTANCE = new NetHttpTransport();
   }
 
-  private Utils() {
-  }
+  private Utils() {}
 }
