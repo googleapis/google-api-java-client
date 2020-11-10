@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2015, Google Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,7 +47,7 @@ import java.util.List;
  *
  * @since 1.21.0
  * @deprecated Please use <a href="https://github.com/googleapis/google-auth-library-java">
- *   google-auth-library</a> for handling authentication and authorization from Cloud Shell.
+ *     google-auth-library</a> for handling authentication and authorization from Cloud Shell.
  */
 @Deprecated
 public class CloudShellCredential extends GoogleCredential {
@@ -56,11 +56,9 @@ public class CloudShellCredential extends GoogleCredential {
   private static final int READ_TIMEOUT_MS = 5000;
 
   /**
-   * The Cloud Shell back authorization channel uses serialized
-   * Javascript Protobufers, preceeded by the message lengeth and a
-   * new line character. However, the request message has no content,
-   * so a token request consists of an empty JsPb, and its 2 character
-   * lenth prefix.
+   * The Cloud Shell back authorization channel uses serialized Javascript Protobufers, preceeded by
+   * the message lengeth and a new line character. However, the request message has no content, so a
+   * token request consists of an empty JsPb, and its 2 character lenth prefix.
    */
   protected static final String GET_AUTH_TOKEN_REQUEST = "2\n[]";
 
@@ -77,23 +75,20 @@ public class CloudShellCredential extends GoogleCredential {
   }
 
   @Override
-  protected TokenResponse executeRefreshToken()
-      throws IOException {
+  protected TokenResponse executeRefreshToken() throws IOException {
     Socket socket = new Socket("localhost", this.getAuthPort());
     socket.setSoTimeout(READ_TIMEOUT_MS);
     TokenResponse token = new TokenResponse();
     try {
-      PrintWriter out =
-        new PrintWriter(socket.getOutputStream(), true);
+      PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
       out.println(GET_AUTH_TOKEN_REQUEST);
 
-      BufferedReader input =
-          new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
       // Ignore the size line
       input.readLine();
 
-      Collection<Object> messageArray = jsonFactory.createJsonParser(input)
-        .parseArray(LinkedList.class, Object.class);
+      Collection<Object> messageArray =
+          jsonFactory.createJsonParser(input).parseArray(LinkedList.class, Object.class);
       String accessToken = ((List<Object>) messageArray).get(ACCESS_TOKEN_INDEX).toString();
       token.setAccessToken(accessToken);
     } finally {

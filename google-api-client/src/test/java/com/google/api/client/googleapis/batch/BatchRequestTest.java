@@ -83,29 +83,23 @@ public class BatchRequestTest extends TestCase {
   }
 
   public static class MockDataClass1 extends GenericJson {
-    @Key
-    String id;
+    @Key String id;
 
-    @Key
-    String kind;
+    @Key String kind;
   }
 
   public static class MockDataClass2 extends GenericJson {
-    @Key
-    String name;
+    @Key String name;
 
-    @Key
-    String number;
+    @Key String number;
   }
 
   private static class TestCallback1
-      implements
-        BatchCallback<MockDataClass1, GoogleJsonErrorContainer> {
+      implements BatchCallback<MockDataClass1, GoogleJsonErrorContainer> {
 
     int successCalls;
 
-    TestCallback1() {
-    }
+    TestCallback1() {}
 
     @Override
     public void onSuccess(MockDataClass1 dataClass, HttpHeaders responseHeaders) {
@@ -121,14 +115,12 @@ public class BatchRequestTest extends TestCase {
   }
 
   private static class TestCallback2
-      implements
-        BatchCallback<MockDataClass2, GoogleJsonErrorContainer> {
+      implements BatchCallback<MockDataClass2, GoogleJsonErrorContainer> {
 
     int successCalls;
     int failureCalls;
 
-    TestCallback2() {
-    }
+    TestCallback2() {}
 
     @Override
     public void onSuccess(MockDataClass2 dataClass, HttpHeaders responseHeaders) {
@@ -155,8 +147,7 @@ public class BatchRequestTest extends TestCase {
     int successCalls;
     int failureCalls;
 
-    TestCallback3() {
-    }
+    TestCallback3() {}
 
     @Override
     public void onSuccess(Void dataClass, HttpHeaders responseHeaders) {
@@ -177,8 +168,8 @@ public class BatchRequestTest extends TestCase {
    * @param <InputType> The input type
    * @param <OutputType> The output type
    */
-  private abstract static class TestCallbackBaseAdapter<InputType, OutputType> implements
-      BatchCallback<InputType, ErrorOutput.ErrorBody> {
+  private abstract static class TestCallbackBaseAdapter<InputType, OutputType>
+      implements BatchCallback<InputType, ErrorOutput.ErrorBody> {
 
     protected final BatchCallback<OutputType, GoogleJsonErrorContainer> callback;
 
@@ -223,8 +214,8 @@ public class BatchRequestTest extends TestCase {
     }
   }
 
-  private static class TestCallback1Adapter extends
-      TestCallbackBaseAdapter<MockData.Class1, MockDataClass1> {
+  private static class TestCallback1Adapter
+      extends TestCallbackBaseAdapter<MockData.Class1, MockDataClass1> {
 
     public TestCallback1Adapter(TestCallback1 callback) {
       super(callback);
@@ -239,8 +230,8 @@ public class BatchRequestTest extends TestCase {
     }
   }
 
-  private static class TestCallback2Adapter extends
-      TestCallbackBaseAdapter<MockData.Class2, MockDataClass2> {
+  private static class TestCallback2Adapter
+      extends TestCallbackBaseAdapter<MockData.Class2, MockDataClass2> {
 
     public TestCallback2Adapter(TestCallback2 callback) {
       super(callback);
@@ -280,13 +271,11 @@ public class BatchRequestTest extends TestCase {
       }
       return true;
     }
-
   }
 
   @Deprecated
   private static class MockExponentialBackOffPolicy extends ExponentialBackOffPolicy {
-    public MockExponentialBackOffPolicy() {
-    }
+    public MockExponentialBackOffPolicy() {}
 
     @Override
     public long getNextBackOffMillis() {
@@ -306,7 +295,11 @@ public class BatchRequestTest extends TestCase {
     int actualCalls;
     int callsBeforeSuccess;
 
-    MockTransport(boolean testServerError, boolean testAuthenticationError, boolean testRedirect, boolean testBinary,
+    MockTransport(
+        boolean testServerError,
+        boolean testAuthenticationError,
+        boolean testRedirect,
+        boolean testBinary,
         boolean testMissingLength) {
       this.testServerError = testServerError;
       this.testAuthenticationError = testAuthenticationError;
@@ -319,44 +312,73 @@ public class BatchRequestTest extends TestCase {
     public LowLevelHttpRequest buildRequest(String name, String url) {
       actualCalls++;
       return new MockLowLevelHttpRequest() {
-          @Override
+        @Override
         public LowLevelHttpResponse execute() throws IOException {
           MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
           response.setStatusCode(200);
           response.addHeader("Content-Type", "multipart/mixed; boundary=" + RESPONSE_BOUNDARY);
           String contentType =
               testBinary ? "application/x-protobuf" : "application/json; charset=UTF-8";
-          byte[] content1 = testBinary ? MockData.Class1.newBuilder()
-              .setId(TEST_ID)
-              .setKind(TEST_KIND)
-              .build().toByteArray()
-              : utf8Encode("{\n \"id\": \"" + TEST_ID + "\",\n \"kind\": \""
-                  + TEST_KIND.replace("\n", "\\n") + "\"\n}");
-          byte[] content2 = testBinary ? MockData.Class2.newBuilder()
-              .setName(TEST_NAME)
-              .setNumber(TEST_NUM)
-              .build().toByteArray()
-              : utf8Encode("{\"name\": \"" + TEST_NAME + "\", \"number\": \"" + TEST_NUM + "\"}");
-          byte[] errorContent = testBinary ? ErrorOutput.ErrorBody.newBuilder()
-              .setError(ErrorOutput.ErrorProto.newBuilder()
-                  .setCode(ERROR_CODE)
-                  .setMessage(ERROR_MSG)
-                  .addErrors(ErrorOutput.IndividualError.newBuilder()
-                      .setDomain(ERROR_DOMAIN)
-                      .setReason(ERROR_REASON)
-                      .setMessage(ERROR_MSG))
-              ).build().toByteArray()
-              : utf8Encode("{\"error\": { \"errors\": [{\"domain\": \"" + ERROR_DOMAIN + "\","
-                  + "\"reason\": \"" + ERROR_REASON + "\", \"message\": \"" + ERROR_MSG + "\"}],"
-                  + "\"code\": " + ERROR_CODE + ", \"message\": \"" + ERROR_MSG + "\"}}");
+          byte[] content1 =
+              testBinary
+                  ? MockData.Class1.newBuilder()
+                      .setId(TEST_ID)
+                      .setKind(TEST_KIND)
+                      .build()
+                      .toByteArray()
+                  : utf8Encode(
+                      "{\n \"id\": \""
+                          + TEST_ID
+                          + "\",\n \"kind\": \""
+                          + TEST_KIND.replace("\n", "\\n")
+                          + "\"\n}");
+          byte[] content2 =
+              testBinary
+                  ? MockData.Class2.newBuilder()
+                      .setName(TEST_NAME)
+                      .setNumber(TEST_NUM)
+                      .build()
+                      .toByteArray()
+                  : utf8Encode(
+                      "{\"name\": \"" + TEST_NAME + "\", \"number\": \"" + TEST_NUM + "\"}");
+          byte[] errorContent =
+              testBinary
+                  ? ErrorOutput.ErrorBody.newBuilder()
+                      .setError(
+                          ErrorOutput.ErrorProto.newBuilder()
+                              .setCode(ERROR_CODE)
+                              .setMessage(ERROR_MSG)
+                              .addErrors(
+                                  ErrorOutput.IndividualError.newBuilder()
+                                      .setDomain(ERROR_DOMAIN)
+                                      .setReason(ERROR_REASON)
+                                      .setMessage(ERROR_MSG)))
+                      .build()
+                      .toByteArray()
+                  : utf8Encode(
+                      "{\"error\": { \"errors\": [{\"domain\": \""
+                          + ERROR_DOMAIN
+                          + "\","
+                          + "\"reason\": \""
+                          + ERROR_REASON
+                          + "\", \"message\": \""
+                          + ERROR_MSG
+                          + "\"}],"
+                          + "\"code\": "
+                          + ERROR_CODE
+                          + ", \"message\": \""
+                          + ERROR_MSG
+                          + "\"}}");
           ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
           Writer responseContent = new OutputStreamWriter(outputStream, "ISO-8859-1");
           if (returnSuccessAuthenticatedContent || (testRedirect && actualCalls > 1)) {
             if (returnSuccessAuthenticatedContent || actualCalls == callsBeforeSuccess) {
-              responseContent.append("--" + RESPONSE_BOUNDARY + "\n")
+              responseContent
+                  .append("--" + RESPONSE_BOUNDARY + "\n")
                   .append("Content-Type: application/http\n")
                   .append("Content-Transfer-Encoding: binary\n")
-                  .append("Content-ID: response-1\n\n").append("HTTP/1.1 200 OK\n")
+                  .append("Content-ID: response-1\n\n")
+                  .append("HTTP/1.1 200 OK\n")
                   .append("Content-Type: " + contentType + "\n");
               if (!testMissingLength) {
                 responseContent.append("Content-Length: " + content2.length + "\n");
@@ -366,24 +388,28 @@ public class BatchRequestTest extends TestCase {
               outputStream.write(content2);
               responseContent.append("\n--" + RESPONSE_BOUNDARY + "--\n\n");
             } else {
-              responseContent.append("--" + RESPONSE_BOUNDARY + "\n")
+              responseContent
+                  .append("--" + RESPONSE_BOUNDARY + "\n")
                   .append("Content-Type: application/http\n")
                   .append("Content-Transfer-Encoding: binary\n")
                   .append("Content-ID: response-1\n\n")
                   .append("HTTP/1.1 " + ERROR_CODE + " Not Found\n")
                   .append("Content-Type: " + contentType + "\n");
-                  if (!testMissingLength) {
-                    responseContent.append("Content-Length: " + errorContent.length + "\n");
-                  }
-                  responseContent.append("\n");
-                  responseContent.flush();
-                  outputStream.write(errorContent);
-                  responseContent.append("\n--" + RESPONSE_BOUNDARY + "--\n\n");
+              if (!testMissingLength) {
+                responseContent.append("Content-Length: " + errorContent.length + "\n");
+              }
+              responseContent.append("\n");
+              responseContent.flush();
+              outputStream.write(errorContent);
+              responseContent.append("\n--" + RESPONSE_BOUNDARY + "--\n\n");
             }
           } else if (returnErrorAuthenticatedContent) {
-            responseContent.append("Content-Type: application/http\n")
-                .append("Content-Transfer-Encoding: binary\n").append("Content-ID: response-1\n\n");
-            responseContent.append("HTTP/1.1 " + ERROR_CODE + " Not Found\n")
+            responseContent
+                .append("Content-Type: application/http\n")
+                .append("Content-Transfer-Encoding: binary\n")
+                .append("Content-ID: response-1\n\n");
+            responseContent
+                .append("HTTP/1.1 " + ERROR_CODE + " Not Found\n")
                 .append("Content-Type: " + contentType + "\n");
             if (!testMissingLength) {
               responseContent.append("Content-Length: " + errorContent.length + "\n");
@@ -393,9 +419,11 @@ public class BatchRequestTest extends TestCase {
             outputStream.write(errorContent);
             responseContent.append("\n--" + RESPONSE_BOUNDARY + "--\n\n");
           } else {
-            responseContent.append("--" + RESPONSE_BOUNDARY + "\n")
+            responseContent
+                .append("--" + RESPONSE_BOUNDARY + "\n")
                 .append("Content-Type: application/http\n")
-                .append("Content-Transfer-Encoding: binary\n").append("Content-ID: response-1\n\n")
+                .append("Content-Transfer-Encoding: binary\n")
+                .append("Content-ID: response-1\n\n")
                 .append("HTTP/1.1 200 OK\n")
                 .append("Content-Type: " + contentType + "\n");
             if (!testMissingLength) {
@@ -411,7 +439,8 @@ public class BatchRequestTest extends TestCase {
                 .append("Content-ID: response-2\n\n");
 
             if (testServerError) {
-              responseContent.append("HTTP/1.1 " + ERROR_CODE + " Not Found\n")
+              responseContent
+                  .append("HTTP/1.1 " + ERROR_CODE + " Not Found\n")
                   .append("Content-Type: " + contentType + "\n");
               if (!testMissingLength) {
                 responseContent.append("Content-Length: " + errorContent.length + "\n");
@@ -421,24 +450,27 @@ public class BatchRequestTest extends TestCase {
               outputStream.write(errorContent);
               responseContent.append("\n--" + RESPONSE_BOUNDARY + "--\n\n");
             } else if (testAuthenticationError) {
-              responseContent.append("HTTP/1.1 401 Unauthorized\n")
+              responseContent
+                  .append("HTTP/1.1 401 Unauthorized\n")
                   .append("Content-Type: application/json; charset=UTF-8\n\n")
                   .append("--" + RESPONSE_BOUNDARY + "--\n\n");
             } else if (testRedirect && actualCalls == 1) {
-              responseContent.append("HTTP/1.1 301 MovedPermanently\n")
+              responseContent
+                  .append("HTTP/1.1 301 MovedPermanently\n")
                   .append("Content-Type: " + contentType + "\n")
                   .append("Location: http://redirect/location\n\n")
                   .append("--" + RESPONSE_BOUNDARY + "--\n\n");
             } else {
-              responseContent.append("HTTP/1.1 200 OK\n")
+              responseContent
+                  .append("HTTP/1.1 200 OK\n")
                   .append("Content-Type: " + contentType + "\n");
-                  if (!testMissingLength) {
-                    responseContent.append("Content-Length: " + content2.length + "\n");
-                  }
-                  responseContent.append("\n");
-                  responseContent.flush();
-                  outputStream.write(content2);
-                  responseContent.append("\n--" + RESPONSE_BOUNDARY + "--\n\n");
+              if (!testMissingLength) {
+                responseContent.append("Content-Length: " + content2.length + "\n");
+              }
+              responseContent.append("\n");
+              responseContent.flush();
+              outputStream.write(content2);
+              responseContent.append("\n--" + RESPONSE_BOUNDARY + "--\n\n");
             }
           }
           responseContent.flush();
@@ -459,8 +491,7 @@ public class BatchRequestTest extends TestCase {
     boolean initializerCalled = false;
     boolean interceptorCalled = false;
 
-    MockCredential() {
-    }
+    MockCredential() {}
 
     @Override
     public void initialize(HttpRequest request) {
@@ -472,23 +503,23 @@ public class BatchRequestTest extends TestCase {
     public void intercept(HttpRequest request) {
       interceptorCalled = true;
     }
-
   }
 
-  private BatchRequest getBatchPopulatedWithRequests(boolean testServerError,
+  private BatchRequest getBatchPopulatedWithRequests(
+      boolean testServerError,
       boolean testAuthenticationError,
       boolean returnSuccessAuthenticatedContent,
       boolean testRedirect,
       boolean testBinary,
-      boolean testMissingLength) throws IOException {
-    transport = new MockTransport(testServerError,
-        testAuthenticationError,
-        testRedirect,
-        testBinary,
-        testMissingLength);
-    MockGoogleClient client = new MockGoogleClient.Builder(
-        transport, ROOT_URL, SERVICE_PATH, null, null).setApplicationName("Test Application")
-        .build();
+      boolean testMissingLength)
+      throws IOException {
+    transport =
+        new MockTransport(
+            testServerError, testAuthenticationError, testRedirect, testBinary, testMissingLength);
+    MockGoogleClient client =
+        new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH, null, null)
+            .setApplicationName("Test Application")
+            .build();
     MockGoogleClientRequest<String> jsonHttpRequest1 =
         new MockGoogleClientRequest<String>(client, METHOD1, URI_TEMPLATE1, null, String.class);
     MockGoogleClientRequest<String> jsonHttpRequest2 =
@@ -509,9 +540,15 @@ public class BatchRequestTest extends TestCase {
     }
 
     if (testBinary) {
-      batchRequest.queue(request1, MockData.Class1.class, ErrorOutput.ErrorBody.class,
+      batchRequest.queue(
+          request1,
+          MockData.Class1.class,
+          ErrorOutput.ErrorBody.class,
           new TestCallback1Adapter(callback1));
-      batchRequest.queue(request2, MockData.Class2.class, ErrorOutput.ErrorBody.class,
+      batchRequest.queue(
+          request2,
+          MockData.Class2.class,
+          ErrorOutput.ErrorBody.class,
           new TestCallback2Adapter(callback2));
     } else {
       batchRequest.queue(request1, MockDataClass1.class, GoogleJsonErrorContainer.class, callback1);
@@ -583,10 +620,11 @@ public class BatchRequestTest extends TestCase {
   }
 
   public void subTestExecuteWithVoidCallback(boolean testServerError) throws IOException {
-    MockTransport transport = new MockTransport(testServerError, false,false, false, false);
-    MockGoogleClient client = new MockGoogleClient.Builder(
-        transport, ROOT_URL, SERVICE_PATH, null, null).setApplicationName("Test Application")
-        .build();
+    MockTransport transport = new MockTransport(testServerError, false, false, false, false);
+    MockGoogleClient client =
+        new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH, null, null)
+            .setApplicationName("Test Application")
+            .build();
     MockGoogleClientRequest<String> jsonHttpRequest1 =
         new MockGoogleClientRequest<String>(client, METHOD1, URI_TEMPLATE1, null, String.class);
     MockGoogleClientRequest<String> jsonHttpRequest2 =
@@ -661,7 +699,7 @@ public class BatchRequestTest extends TestCase {
 
     String request2Method = HttpMethods.GET;
     String request2Url = "http://test/dummy/url2";
-    
+
     // MIME content boundaries are not reproducible.
     StringBuilder part1 = new StringBuilder();
     part1.append("Content-Length: 118\r\n");
@@ -676,7 +714,7 @@ public class BatchRequestTest extends TestCase {
     part1.append(request1Content + "\r\n");
     part1.append("--__END_OF_PART__");
     String expected1 = part1.toString();
-    
+
     StringBuilder part2 = new StringBuilder();
     part2.append("Content-Length: 39\r\n");
     part2.append("Content-Type: application/http\r\n");
@@ -688,7 +726,7 @@ public class BatchRequestTest extends TestCase {
     part2.append("\r\n");
     part2.append("--__END_OF_PART__");
     String expected2 = part2.toString();
-    
+
     MockHttpTransport transport = new MockHttpTransport();
     HttpRequest request1 =
         transport
@@ -697,58 +735,66 @@ public class BatchRequestTest extends TestCase {
                 request1Method,
                 new GenericUrl(request1Url),
                 new ByteArrayContent(request1ContentType, request1Content.getBytes(UTF_8)));
-    HttpRequest request2 = transport.createRequestFactory()
-        .buildRequest(request2Method, new GenericUrl(request2Url), null);
+    HttpRequest request2 =
+        transport
+            .createRequestFactory()
+            .buildRequest(request2Method, new GenericUrl(request2Url), null);
     subtestExecute_checkWriteTo(expected1, expected2, request1, request2);
   }
 
   private void subtestExecute_checkWriteTo(
       final String part1, final String part2, HttpRequest... requests) throws IOException {
 
-    MockHttpTransport transport = new MockHttpTransport() {
-
-      @Override
-      public LowLevelHttpRequest buildRequest(String method, String url) {
-        return new MockLowLevelHttpRequest(url) {
+    MockHttpTransport transport =
+        new MockHttpTransport() {
 
           @Override
-          public LowLevelHttpResponse execute() throws IOException {
-            assertTrue(getContentType().startsWith("multipart/mixed; boundary=__END_OF_PART__"));
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            getStreamingContent().writeTo(out);
-            String actual = out.toString("UTF-8");
-            assertTrue(actual + "\n does not contain \n" + part1, actual.contains(part1));
-            assertTrue(actual.contains(part2));
-            MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
-            response.setStatusCode(200);
-            response.addHeader("Content-Type", "multipart/mixed; boundary=" + RESPONSE_BOUNDARY);
-            String content2 = "{\"name\": \"" + TEST_NAME + "\", \"number\": \"" + TEST_NUM + "\"}";
-            StringBuilder responseContent = new StringBuilder();
-            responseContent.append("--" + RESPONSE_BOUNDARY + "\n")
-                .append("Content-Type: application/http\n")
-                .append("Content-Transfer-Encoding: binary\n").append("Content-ID: response-1\n\n")
-                .append("HTTP/1.1 200 OK\n")
-                .append("Content-Type: application/json; charset=UTF-8\n")
-                .append("Content-Length: " + content2.length() + "\n\n").append(content2 + "\n\n")
-                .append("--" + RESPONSE_BOUNDARY + "--\n\n");
-            response.setContent(responseContent.toString());
-            return response;
+          public LowLevelHttpRequest buildRequest(String method, String url) {
+            return new MockLowLevelHttpRequest(url) {
+
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                assertTrue(
+                    getContentType().startsWith("multipart/mixed; boundary=__END_OF_PART__"));
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                getStreamingContent().writeTo(out);
+                String actual = out.toString("UTF-8");
+                assertTrue(actual + "\n does not contain \n" + part1, actual.contains(part1));
+                assertTrue(actual.contains(part2));
+                MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+                response.setStatusCode(200);
+                response.addHeader(
+                    "Content-Type", "multipart/mixed; boundary=" + RESPONSE_BOUNDARY);
+                String content2 =
+                    "{\"name\": \"" + TEST_NAME + "\", \"number\": \"" + TEST_NUM + "\"}";
+                StringBuilder responseContent = new StringBuilder();
+                responseContent
+                    .append("--" + RESPONSE_BOUNDARY + "\n")
+                    .append("Content-Type: application/http\n")
+                    .append("Content-Transfer-Encoding: binary\n")
+                    .append("Content-ID: response-1\n\n")
+                    .append("HTTP/1.1 200 OK\n")
+                    .append("Content-Type: application/json; charset=UTF-8\n")
+                    .append("Content-Length: " + content2.length() + "\n\n")
+                    .append(content2 + "\n\n")
+                    .append("--" + RESPONSE_BOUNDARY + "--\n\n");
+                response.setContent(responseContent.toString());
+                return response;
+              }
+            };
           }
         };
-      }
-    };
 
     BatchRequest batchRequest = new BatchRequest(transport, null);
-    BatchCallback<Void, Void> callback = new BatchCallback<Void, Void>() {
+    BatchCallback<Void, Void> callback =
+        new BatchCallback<Void, Void>() {
 
-      @Override
-      public void onSuccess(Void t, HttpHeaders responseHeaders) {
-      }
+          @Override
+          public void onSuccess(Void t, HttpHeaders responseHeaders) {}
 
-      @Override
-      public void onFailure(Void e, HttpHeaders responseHeaders) {
-      }
-    };
+          @Override
+          public void onFailure(Void e, HttpHeaders responseHeaders) {}
+        };
     for (HttpRequest request : requests) {
       batchRequest.queue(request, Void.class, Void.class, callback);
     }
@@ -757,33 +803,43 @@ public class BatchRequestTest extends TestCase {
 
   public void testExecute_checkWriteToNoHeaders() throws IOException {
     MockHttpTransport transport = new MockHttpTransport();
-    HttpRequest request = transport.createRequestFactory()
-        .buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL, new HttpContent() {
+    HttpRequest request =
+        transport
+            .createRequestFactory()
+            .buildPostRequest(
+                HttpTesting.SIMPLE_GENERIC_URL,
+                new HttpContent() {
 
-          @Override
-          public long getLength() {
-            return -1;
-          }
+                  @Override
+                  public long getLength() {
+                    return -1;
+                  }
 
-          @Override
-          public String getType() {
-            return null;
-          }
+                  @Override
+                  public String getType() {
+                    return null;
+                  }
 
-          @Override
-          public void writeTo(OutputStream out) {
-          }
+                  @Override
+                  public void writeTo(OutputStream out) {}
 
-          @Override
-          public boolean retrySupported() {
-            return true;
-          }
-        });
-    String expected = new StringBuilder()
-      .append("Content-Length: 36\r\n").append("Content-Type: application/http\r\n")
-      .append("content-id: 1\r\n").append("content-transfer-encoding: binary\r\n").append("\r\n")
-      .append("POST http://google.com/ HTTP/1.1\r\n").append("\r\n").append("\r\n")
-      .append("--__END_OF_PART__").toString();
+                  @Override
+                  public boolean retrySupported() {
+                    return true;
+                  }
+                });
+    String expected =
+        new StringBuilder()
+            .append("Content-Length: 36\r\n")
+            .append("Content-Type: application/http\r\n")
+            .append("content-id: 1\r\n")
+            .append("content-transfer-encoding: binary\r\n")
+            .append("\r\n")
+            .append("POST http://google.com/ HTTP/1.1\r\n")
+            .append("\r\n")
+            .append("\r\n")
+            .append("--__END_OF_PART__")
+            .toString();
     subtestExecute_checkWriteTo(expected, expected, request);
   }
 

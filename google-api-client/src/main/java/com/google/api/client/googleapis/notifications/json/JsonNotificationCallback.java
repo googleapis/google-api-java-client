@@ -21,49 +21,43 @@ import com.google.api.client.util.Beta;
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * A {@link TypedNotificationCallback} which uses an JSON content encoding.
  *
- * <p>
- * Must NOT be implemented in form of an anonymous class as this will break serialization.
- * </p>
+ * <p>Must NOT be implemented in form of an anonymous class as this will break serialization.
  *
- * <p>
- * Implementation should be thread-safe.
- * </p>
- *
- * <b>Example usage:</b>
+ * <p>Implementation should be thread-safe. <b>Example usage:</b>
  *
  * <pre>
-  static class MyNotificationCallback
-      extends JsonNotificationCallback{@literal <}ListResponse{@literal >} {
-
-    private static final long serialVersionUID = 1L;
-
-    {@literal @}Override
-    protected void onNotification(
-        StoredChannel channel, TypedNotification{@literal <}ListResponse{@literal >} notification) {
-      ListResponse content = notification.getContent();
-      switch (notification.getResourceState()) {
-        case ResourceStates.SYNC:
-          break;
-        case ResourceStates.EXISTS:
-          break;
-        case ResourceStates.NOT_EXISTS:
-          break;
-      }
-    }
-
-    {@literal @}Override
-    protected JsonFactory getJsonFactory() throws IOException {
-      return new JacksonFactory();
-    }
-
-    {@literal @}Override
-    protected Class{@literal <}ListResponse{@literal >} getDataClass() throws IOException {
-      return ListResponse.class;
-    }
-  }
+ * static class MyNotificationCallback
+ * extends JsonNotificationCallback{@literal <}ListResponse{@literal >} {
+ *
+ * private static final long serialVersionUID = 1L;
+ *
+ * {@literal @}Override
+ * protected void onNotification(
+ * StoredChannel channel, TypedNotification{@literal <}ListResponse{@literal >} notification) {
+ * ListResponse content = notification.getContent();
+ * switch (notification.getResourceState()) {
+ * case ResourceStates.SYNC:
+ * break;
+ * case ResourceStates.EXISTS:
+ * break;
+ * case ResourceStates.NOT_EXISTS:
+ * break;
+ * }
+ * }
+ *
+ * {@literal @}Override
+ * protected JsonFactory getJsonFactory() throws IOException {
+ * return new JacksonFactory();
+ * }
+ *
+ * {@literal @}Override
+ * protected Class{@literal <}ListResponse{@literal >} getDataClass() throws IOException {
+ * return ListResponse.class;
+ * }
+ * }
  * </pre>
  *
  * @param <T> Type of the data contained within a notification

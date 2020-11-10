@@ -18,7 +18,7 @@ import com.google.api.client.googleapis.notifications.ResourceStates;
 import com.google.api.client.util.Beta;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Headers for Webhook notifications.
  *
  * @author Yaniv Inbar
@@ -61,6 +61,5 @@ public final class WebhookHeaders {
   /** Name of header for the type of change performed on the resource. */
   public static final String CHANGED = "X-Goog-Changed";
 
-  private WebhookHeaders() {
-  }
+  private WebhookHeaders() {}
 }

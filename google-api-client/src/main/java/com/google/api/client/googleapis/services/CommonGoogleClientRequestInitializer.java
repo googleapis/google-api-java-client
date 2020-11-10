@@ -14,72 +14,61 @@ package com.google.api.client.googleapis.services;
 
 import java.io.IOException;
 
-
 /**
  * Google common client request initializer implementation for setting properties like key and
  * userIp.
  *
- * <p>
- * The simplest usage is to use it to set the key parameter:
- * </p>
+ * <p>The simplest usage is to use it to set the key parameter:
  *
  * <pre>
-  public static final GoogleClientRequestInitializer KEY_INITIALIZER =
-      CommonGoogleClientRequestInitializer.newBuilder()
-          .setKey(KEY)
-          .build();
+ * public static final GoogleClientRequestInitializer KEY_INITIALIZER =
+ * CommonGoogleClientRequestInitializer.newBuilder()
+ * .setKey(KEY)
+ * .build();
  * </pre>
  *
- * <p>
- * There is also a constructor to set both the key and userIp parameters:
- * </p>
+ * <p>There is also a constructor to set both the key and userIp parameters:
  *
  * <pre>
-  public static final GoogleClientRequestInitializer INITIALIZER =
-      CommonGoogleClientRequestInitializer.newBuilder()
-          .setKey(KEY)
-          .setUserIp(USER_IP)
-          .build();
+ * public static final GoogleClientRequestInitializer INITIALIZER =
+ * CommonGoogleClientRequestInitializer.newBuilder()
+ * .setKey(KEY)
+ * .setUserIp(USER_IP)
+ * .build();
  * </pre>
  *
- * <p>
- * If you want to implement custom logic, extend it like this:
- * </p>
+ * <p>If you want to implement custom logic, extend it like this:
  *
  * <pre>
-  public static class MyRequestInitializer extends CommonGoogleClientRequestInitializer {
-
-    {@literal @}Override
-    public void initialize(AbstractGoogleClientRequest{@literal <}?{@literal >} request)
-        throws IOException {
-      // custom logic
-    }
-  }
+ * public static class MyRequestInitializer extends CommonGoogleClientRequestInitializer {
+ *
+ * {@literal @}Override
+ * public void initialize(AbstractGoogleClientRequest{@literal <}?{@literal >} request)
+ * throws IOException {
+ * // custom logic
+ * }
+ * }
  * </pre>
  *
- * <p>
- * Finally, to set the key and userIp parameters and insert custom logic, extend it like this:
- * </p>
+ * <p>Finally, to set the key and userIp parameters and insert custom logic, extend it like this:
  *
  * <pre>
-  public static class MyRequestInitializer2 extends CommonGoogleClientRequestInitializer {
-
-    public MyRequestInitializer2() {
-      super(KEY, USER_IP);
-    }
-
-    {@literal @}Override
-    public void initialize(AbstractGoogleClientRequest{@literal <}?{@literal >} request)
-        throws IOException {
-      super.initialize(request); // must be called to set the key and userIp parameters
-      // insert some additional logic
-    }
-  }
+ * public static class MyRequestInitializer2 extends CommonGoogleClientRequestInitializer {
+ *
+ * public MyRequestInitializer2() {
+ * super(KEY, USER_IP);
+ * }
+ *
+ * {@literal @}Override
+ * public void initialize(AbstractGoogleClientRequest{@literal <}?{@literal >} request)
+ * throws IOException {
+ * super.initialize(request); // must be called to set the key and userIp parameters
+ * // insert some additional logic
+ * }
+ * }
  * </pre>
  *
- * <p>
- * Subclasses should be thread-safe.
- * </p>
+ * <p>Subclasses should be thread-safe.
  *
  * @since 1.12
  * @author Yaniv Inbar
@@ -87,8 +76,8 @@ import java.io.IOException;
 public class CommonGoogleClientRequestInitializer implements GoogleClientRequestInitializer {
 
   /**
-   * Contains a reason for making the request, which is intended to be recorded in audit logging.
-   * An example reason would be a support-case ticket number.
+   * Contains a reason for making the request, which is intended to be recorded in audit logging. An
+   * example reason would be a support-case ticket number.
    */
   private static final String REQUEST_REASON_HEADER_NAME = "X-Goog-Request-Reason";
 
@@ -113,9 +102,7 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
   /** Project for quota and billing purposes of {@code null} to leave it unchanged. */
   private final String userProject;
 
-  /**
-   * @deprecated Please use the builder interface
-   */
+  /** @deprecated Please use the builder interface */
   @Deprecated
   public CommonGoogleClientRequestInitializer() {
     this(newBuilder());

@@ -56,8 +56,7 @@ public class AppIdentityCredentialTest extends TestCase {
     builder.setAppIdentityService(appIdentity);
     AppIdentityCredential appCredential = builder.build();
     HttpTransport transport = new MockHttpTransport();
-    HttpRequest request = transport.createRequestFactory().buildRequest(
-        "get", null, null);
+    HttpRequest request = transport.createRequestFactory().buildRequest("get", null, null);
 
     appCredential.intercept(request);
 
@@ -82,8 +81,8 @@ public class AppIdentityCredentialTest extends TestCase {
     builder.setAppIdentityService(appIdentity);
     AppIdentityCredential appCredential = builder.build();
 
-    GoogleCredential wrapper = new
-        AppIdentityCredential.AppEngineCredentialWrapper(appCredential, transport, jsonFactory);
+    GoogleCredential wrapper =
+        new AppIdentityCredential.AppEngineCredentialWrapper(appCredential, transport, jsonFactory);
 
     HttpRequest request = transport.createRequestFactory().buildRequest("get", null, null);
 
@@ -118,8 +117,8 @@ public class AppIdentityCredentialTest extends TestCase {
     builder.setAppIdentityService(appIdentity);
     AppIdentityCredential appCredential = builder.build();
 
-    GoogleCredential wrapper = new
-        AppIdentityCredential.AppEngineCredentialWrapper(appCredential, transport, jsonFactory);
+    GoogleCredential wrapper =
+        new AppIdentityCredential.AppEngineCredentialWrapper(appCredential, transport, jsonFactory);
     assertTrue(wrapper.refreshToken());
     assertEquals(expectedAccessToken, wrapper.getAccessToken());
   }

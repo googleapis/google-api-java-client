@@ -44,14 +44,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for CloudShellCredential
- */
+/** Unit tests for CloudShellCredential */
 @RunWith(JUnit4.class)
 public class CloudShellCredentialTest {
 
   @Test
-  public void refreshAccessToken() throws IOException{
+  public void refreshAccessToken() throws IOException {
     final ServerSocket authSocket = new ServerSocket(0);
     Runnable serverTask =
         new Runnable() {
@@ -65,8 +63,7 @@ public class CloudShellCredentialTest {
               lines += '\n' + input.readLine();
               assertEquals(CloudShellCredential.GET_AUTH_TOKEN_REQUEST, lines);
 
-              PrintWriter out =
-                  new PrintWriter(clientSocket.getOutputStream(), true);
+              PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
               out.println("32\n[\"email\", \"project-id\", \"token\", 1234]");
             } catch (Exception reThrown) {
               throw new RuntimeException(reThrown);
@@ -76,8 +73,8 @@ public class CloudShellCredentialTest {
     Thread serverThread = new Thread(serverTask);
     serverThread.start();
 
-    GoogleCredential creds = new CloudShellCredential(
-        authSocket.getLocalPort(), GsonFactory.getDefaultInstance());
+    GoogleCredential creds =
+        new CloudShellCredential(authSocket.getLocalPort(), GsonFactory.getDefaultInstance());
     assertEquals("token", creds.executeRefreshToken().getAccessToken());
   }
 }

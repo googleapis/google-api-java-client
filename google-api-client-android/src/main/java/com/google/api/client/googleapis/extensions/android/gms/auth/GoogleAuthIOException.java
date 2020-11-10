@@ -18,12 +18,10 @@ import com.google.api.client.util.Preconditions;
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Wraps a {@link GoogleAuthException} into an {@link IOException} so it can be caught directly.
  *
- * <p>
- * Use {@link #getCause()} to get the wrapped {@link GoogleAuthException}.
- * </p>
+ * <p>Use {@link #getCause()} to get the wrapped {@link GoogleAuthException}.
  *
  * @since 1.12
  * @author Yaniv Inbar

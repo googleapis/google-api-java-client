@@ -31,7 +31,7 @@ public class GoogleOAuthConstants {
   public static final String TOKEN_SERVER_URL = "https://oauth2.googleapis.com/token";
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Encoded URL of Google's public certificates.
    *
    * @since 1.15
@@ -47,6 +47,5 @@ public class GoogleOAuthConstants {
    */
   public static final String OOB_REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
 
-  private GoogleOAuthConstants() {
-  }
+  private GoogleOAuthConstants() {}
 }

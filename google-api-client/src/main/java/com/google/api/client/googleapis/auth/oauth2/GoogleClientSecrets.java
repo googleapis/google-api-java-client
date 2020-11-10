@@ -27,17 +27,15 @@ import java.util.List;
  * href="https://developers.google.com/api-client-library/python/guide/aaa_client_secrets">client_secrets.json
  * file format</a>.
  *
- * <p>
- * Sample usage:
- * </p>
+ * <p>Sample usage:
  *
  * <pre>
-  static GoogleClientSecrets loadClientSecretsResource(JsonFactory jsonFactory) throws IOException {
-    return GoogleClientSecrets.load(
-        jsonFactory,
-        new InputStreamReader(
-            SampleClass.class.getResourceAsStream("/client_secrets.json"), "UTF-8"));
-  }
+ * static GoogleClientSecrets loadClientSecretsResource(JsonFactory jsonFactory) throws IOException {
+ * return GoogleClientSecrets.load(
+ * jsonFactory,
+ * new InputStreamReader(
+ * SampleClass.class.getResourceAsStream("/client_secrets.json"), "UTF-8"));
+ * }
  * </pre>
  *
  * @since 1.7
@@ -46,12 +44,10 @@ import java.util.List;
 public final class GoogleClientSecrets extends GenericJson {
 
   /** Details for installed applications. */
-  @Key
-  private Details installed;
+  @Key private Details installed;
 
   /** Details for web applications. */
-  @Key
-  private Details web;
+  @Key private Details web;
 
   /** Returns the details for installed applications. */
   public Details getInstalled() {

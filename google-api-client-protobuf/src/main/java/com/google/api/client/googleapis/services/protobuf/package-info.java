@@ -13,7 +13,7 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
+ * {@link com.google.api.client.util.Beta} <br>
  * Contains the basis for the generated service-specific libraries based on the Protobuf format.
  *
  * @since 1.16
@@ -21,4 +21,3 @@
  */
 @com.google.api.client.util.Beta
 package com.google.api.client.googleapis.services.protobuf;
-

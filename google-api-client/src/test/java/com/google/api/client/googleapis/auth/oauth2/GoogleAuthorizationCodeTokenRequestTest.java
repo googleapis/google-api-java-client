@@ -17,7 +17,6 @@ package com.google.api.client.googleapis.auth.oauth2;
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
-
 import junit.framework.TestCase;
 
 /**
@@ -34,7 +33,8 @@ public class GoogleAuthorizationCodeTokenRequestTest extends TestCase {
 
   public void test() {
     GoogleAuthorizationCodeTokenRequest request =
-        new GoogleAuthorizationCodeTokenRequest(new MockHttpTransport(),
+        new GoogleAuthorizationCodeTokenRequest(
+            new MockHttpTransport(),
             new JacksonFactory(),
             CLIENT_ID,
             CLIENT_SECRET,

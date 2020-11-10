@@ -49,9 +49,12 @@ public class GoogleIdTokenVerifierTest extends TestCase {
   }
 
   public void testBuilder() throws Exception {
-    GoogleIdTokenVerifier.Builder builder = new GoogleIdTokenVerifier.Builder(
-        new GooglePublicKeysManagerTest.PublicCertsMockHttpTransport(), new JacksonFactory()).setIssuer(
-        ISSUER).setAudience(TRUSTED_CLIENT_IDS);
+    GoogleIdTokenVerifier.Builder builder =
+        new GoogleIdTokenVerifier.Builder(
+                new GooglePublicKeysManagerTest.PublicCertsMockHttpTransport(),
+                new JacksonFactory())
+            .setIssuer(ISSUER)
+            .setAudience(TRUSTED_CLIENT_IDS);
     assertEquals(Clock.SYSTEM, builder.getClock());
     assertEquals(ISSUER, builder.getIssuer());
     assertTrue(TRUSTED_CLIENT_IDS.equals(builder.getAudience()));
@@ -65,8 +68,11 @@ public class GoogleIdTokenVerifierTest extends TestCase {
   }
 
   public void testVerify() throws Exception {
-    GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
-        new GooglePublicKeysManagerTest.PublicCertsMockHttpTransport(), new JacksonFactory()).build();
+    GoogleIdTokenVerifier verifier =
+        new GoogleIdTokenVerifier.Builder(
+                new GooglePublicKeysManagerTest.PublicCertsMockHttpTransport(),
+                new JacksonFactory())
+            .build();
     Header header = new Header();
     header.setAlgorithm("RS25");
     Payload payload = newPayload(CLIENT_ID);
@@ -75,8 +81,9 @@ public class GoogleIdTokenVerifierTest extends TestCase {
     GoogleIdToken idToken2 = new GoogleIdToken(header, payload2, new byte[0], new byte[0]);
     assertFalse(verifier.verify(idToken));
     assertFalse(verifier.verify(idToken2));
-    verifier = new GoogleIdTokenVerifier(
-        new GooglePublicKeysManagerTest.PublicCertsMockHttpTransport(), new JacksonFactory());
+    verifier =
+        new GoogleIdTokenVerifier(
+            new GooglePublicKeysManagerTest.PublicCertsMockHttpTransport(), new JacksonFactory());
     assertFalse(verifier.verify(idToken));
     assertFalse(verifier.verify(idToken2));
     // TODO(yanivi): add a unit test that returns true

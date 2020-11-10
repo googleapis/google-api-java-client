@@ -37,25 +37,22 @@ import java.io.IOException;
 import java.util.Collection;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Manages authorization and account selection for Google accounts.
  *
- * <p>
- * When fetching a token, any thrown {@link GoogleAuthException} would be wrapped:
- * <ul>
- * <li>{@link GooglePlayServicesAvailabilityException} would be wrapped inside of
- * {@link GooglePlayServicesAvailabilityIOException}</li>
- * <li>{@link UserRecoverableAuthException} would be wrapped inside of
- * {@link UserRecoverableAuthIOException}</li>
- * <li>{@link GoogleAuthException} when be wrapped inside of {@link GoogleAuthIOException}</li>
- * </ul>
- * </p>
+ * <p>When fetching a token, any thrown {@link GoogleAuthException} would be wrapped:
  *
- * <p>
- * Upgrade warning: in prior version 1.14 exponential back-off was enabled by default when I/O
+ * <ul>
+ *   <li>{@link GooglePlayServicesAvailabilityException} would be wrapped inside of {@link
+ *       GooglePlayServicesAvailabilityIOException}
+ *   <li>{@link UserRecoverableAuthException} would be wrapped inside of {@link
+ *       UserRecoverableAuthIOException}
+ *   <li>{@link GoogleAuthException} when be wrapped inside of {@link GoogleAuthIOException}
+ * </ul>
+ *
+ * <p>Upgrade warning: in prior version 1.14 exponential back-off was enabled by default when I/O
  * exception was thrown inside {@link #getToken}, but starting with version 1.15 you need to call
  * {@link #setBackOff} with {@link ExponentialBackOff} to enable it.
- * </p>
  *
  * @since 1.12
  * @author Yaniv Inbar
@@ -106,7 +103,6 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
    * @param context context
    * @param scopes non empty OAuth 2.0 scope list
    * @return new instance
-   *
    * @since 1.15
    */
   public static GoogleAccountCredential usingOAuth2(Context context, Collection<String> scopes) {
@@ -128,8 +124,8 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
   }
 
   /**
-   * Sets the selected Google account name (e-mail address) -- for example
-   * {@code "johndoe@gmail.com"} -- or {@code null} for none.
+   * Sets the selected Google account name (e-mail address) -- for example {@code
+   * "johndoe@gmail.com"} -- or {@code null} for none.
    */
   public final GoogleAccountCredential setSelectedAccountName(String accountName) {
     selectedAccount = accountManager.getAccountByName(accountName);
@@ -141,9 +137,7 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
   /**
    * Sets the selected Google {@link Account} or {@code null} for none.
    *
-   * <p>
-   * Caller must ensure the given Google account exists.
-   * </p>
+   * <p>Caller must ensure the given Google account exists.
    */
   public final GoogleAccountCredential setSelectedAccount(Account selectedAccount) {
     this.selectedAccount = selectedAccount;
@@ -184,8 +178,8 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
   }
 
   /**
-   * Returns the back-off policy which is used when an I/O exception is thrown inside
-   * {@link #getToken} or {@code null} for none.
+   * Returns the back-off policy which is used when an I/O exception is thrown inside {@link
+   * #getToken} or {@code null} for none.
    *
    * @since 1.15
    */
@@ -224,8 +218,8 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
   }
 
   /**
-   * Returns the selected Google account name (e-mail address), for example
-   * {@code "johndoe@gmail.com"}, or {@code null} for none.
+   * Returns the selected Google account name (e-mail address), for example {@code
+   * "johndoe@gmail.com"}, or {@code null} for none.
    */
   public final String getSelectedAccountName() {
     return accountName;
@@ -235,12 +229,11 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
    * Returns an intent to show the user to select a Google account, or create a new one if there are
    * none on the device yet.
    *
-   * <p>
-   * Must be run from the main UI thread.
-   * </p>
+   * <p>Must be run from the main UI thread.
    */
   public final Intent newChooseAccountIntent() {
-    return AccountPicker.newChooseAccountIntent(selectedAccount,
+    return AccountPicker.newChooseAccountIntent(
+        selectedAccount,
         null,
         new String[] {GoogleAccountManager.ACCOUNT_TYPE},
         true,
@@ -253,9 +246,7 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
   /**
    * Returns an OAuth 2.0 access token.
    *
-   * <p>
-   * Must be run from a background thread, not the main UI thread.
-   * </p>
+   * <p>Must be run from a background thread, not the main UI thread.
    */
   public String getToken() throws IOException, GoogleAuthException {
     if (backOff != null) {
@@ -278,12 +269,12 @@ public class GoogleAccountCredential implements HttpRequestInitializer {
     }
   }
 
-
   @Beta
   class RequestHandler implements HttpExecuteInterceptor, HttpUnsuccessfulResponseHandler {
 
     /** Whether we've received a 401 error code indicating the token is invalid. */
     boolean received401;
+
     String token;
 
     @Override

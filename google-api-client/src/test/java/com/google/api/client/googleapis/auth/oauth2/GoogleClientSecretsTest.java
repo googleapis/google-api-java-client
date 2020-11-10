@@ -30,8 +30,12 @@ public class GoogleClientSecretsTest extends TestCase {
 
   private static final String CLIENT_SECRET = "{client_secret}";
 
-  private final static String CLIENT_SECRETS = "{\"installed\": {\"client_id\": \"" + CLIENT_ID
-      + "\",\"client_secret\": \"" + CLIENT_SECRET + "\"}}";
+  private static final String CLIENT_SECRETS =
+      "{\"installed\": {\"client_id\": \""
+          + CLIENT_ID
+          + "\",\"client_secret\": \""
+          + CLIENT_SECRET
+          + "\"}}";
 
   public void testLoad() throws Exception {
     GoogleClientSecrets clientSecrets =

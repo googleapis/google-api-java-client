@@ -14,11 +14,10 @@
 
 package com.google.api.client.googleapis.mtls;
 
-import java.util.List;
-
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Key;
+import java.util.List;
 
 /**
  * {@link Beta} <br>

@@ -108,7 +108,10 @@ public class MtlsUtilsTest {
   @Test
   public void testExtractCertificateProviderCommand() throws IOException {
     InputStream inputStream =
-        this.getClass().getClassLoader().getResourceAsStream("com/google/api/client/googleapis/util/mtls_context_aware_metadata.json");
+        this.getClass()
+            .getClassLoader()
+            .getResourceAsStream(
+                "com/google/api/client/googleapis/util/mtls_context_aware_metadata.json");
     List<String> command =
         MtlsUtils.DefaultMtlsProvider.extractCertificateProviderCommand(inputStream);
     assertEquals(2, command.size());
@@ -162,8 +165,8 @@ public class MtlsUtilsTest {
   @Test
   public void testRunCertificateProviderCommandSuccess() throws IOException, InterruptedException {
     Process certCommandProcess = new TestCertProviderCommandProcess(0, false);
-    int exitValue = 
-      MtlsUtils.DefaultMtlsProvider.runCertificateProviderCommand(certCommandProcess, 100);
+    int exitValue =
+        MtlsUtils.DefaultMtlsProvider.runCertificateProviderCommand(certCommandProcess, 100);
     assertEquals(0, exitValue);
   }
 

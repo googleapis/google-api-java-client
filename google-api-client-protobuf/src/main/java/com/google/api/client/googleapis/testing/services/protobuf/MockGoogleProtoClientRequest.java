@@ -22,7 +22,7 @@ import com.google.api.client.util.Beta;
 import com.google.protobuf.MessageLite;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Thread-safe mock Google protocol buffer request.
  *
  * @param <T> type of the response
@@ -36,14 +36,18 @@ public class MockGoogleProtoClientRequest<T> extends AbstractGoogleProtoClientRe
    * @param client Google client
    * @param method HTTP Method
    * @param uriTemplate URI template for the path relative to the base URL. If it starts with a "/"
-   *        the base path from the base URL will be stripped out. The URI template can also be a
-   *        full URL. URI template expansion is done using
-   *        {@link UriTemplate#expand(String, String, Object, boolean)}
+   *     the base path from the base URL will be stripped out. The URI template can also be a full
+   *     URL. URI template expansion is done using {@link UriTemplate#expand(String, String, Object,
+   *     boolean)}
    * @param message message to serialize or {@code null} for none
    * @param responseClass response class to parse into
    */
-  public MockGoogleProtoClientRequest(AbstractGoogleProtoClient client, String method,
-      String uriTemplate, MessageLite message, Class<T> responseClass) {
+  public MockGoogleProtoClientRequest(
+      AbstractGoogleProtoClient client,
+      String method,
+      String uriTemplate,
+      MessageLite message,
+      Class<T> responseClass) {
     super(client, method, uriTemplate, message, responseClass);
   }
 

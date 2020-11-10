@@ -17,15 +17,12 @@ package com.google.api.client.googleapis.notifications;
 import com.google.api.client.util.Beta;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Notification metadata and parsed content sent to this client about a watched resource.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @param <T> Java type of the notification content
- *
  * @author Yaniv Inbar
  * @author Matthias Linder (mlinder)
  * @since 1.16
@@ -41,24 +38,24 @@ public class TypedNotification<T> extends AbstractNotification {
    * @param resourceState {@link ResourceStates resource state}
    * @param resourceId opaque ID for the watched resource that is stable across API versions
    * @param resourceUri opaque ID (in the form of a canonicalized URI) for the watched resource that
-   *        is sensitive to the API version
+   *     is sensitive to the API version
    * @param channelId notification channel UUID provided by the client in the watch request
    */
-  public TypedNotification(long messageNumber, String resourceState, String resourceId,
-      String resourceUri, String channelId) {
+  public TypedNotification(
+      long messageNumber,
+      String resourceState,
+      String resourceId,
+      String resourceUri,
+      String channelId) {
     super(messageNumber, resourceState, resourceId, resourceUri, channelId);
   }
 
-  /**
-   * @param sourceNotification source notification metadata to copy
-   */
+  /** @param sourceNotification source notification metadata to copy */
   public TypedNotification(UnparsedNotification sourceNotification) {
     super(sourceNotification);
   }
 
-  /**
-   * Returns the parsed notification content or {@code null} for none.
-   */
+  /** Returns the parsed notification content or {@code null} for none. */
   public final T getContent() {
     return content;
   }
@@ -66,10 +63,8 @@ public class TypedNotification<T> extends AbstractNotification {
   /**
    * Sets the parsed notification content or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public TypedNotification<T> setContent(T content) {
     this.content = content;

@@ -11,7 +11,7 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
+ * {@link com.google.api.client.util.Beta} <br>
  * Test utilities for the {@code com.google.api.client.googleapis.services.json} package.
  *
  * @since 1.12
@@ -19,4 +19,3 @@
  */
 @com.google.api.client.util.Beta
 package com.google.api.client.googleapis.testing.services.json;
-

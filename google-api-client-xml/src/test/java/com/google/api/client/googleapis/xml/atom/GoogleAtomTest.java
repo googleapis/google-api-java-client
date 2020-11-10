@@ -16,7 +16,6 @@ package com.google.api.client.googleapis.xml.atom;
 
 import com.google.api.client.util.Key;
 import com.google.api.client.xml.GenericXml;
-
 import junit.framework.TestCase;
 
 /**
@@ -35,35 +34,26 @@ public class GoogleAtomTest extends TestCase {
   }
 
   class A {
-    @Key
-    int x;
+    @Key int x;
 
-    @Key
-    B b;
+    @Key B b;
 
-    @Key
-    C c;
-    @Key
-    G g;
+    @Key C c;
+    @Key G g;
   }
 
   class B {
-    @Key
-    int y;
+    @Key int y;
   }
 
   class C {
-    @Key
-    int z;
-    @Key
-    GenericXml generic;
-    @Key
-    B b;
+    @Key int z;
+    @Key GenericXml generic;
+    @Key B b;
   }
 
   class G extends GenericXml {
-    @Key
-    int something;
+    @Key int something;
   }
 
   public void testGetFieldsFor() {

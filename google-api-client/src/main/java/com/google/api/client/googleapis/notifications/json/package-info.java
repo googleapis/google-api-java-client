@@ -13,7 +13,7 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
+ * {@link com.google.api.client.util.Beta} <br>
  * JSON-based notification handling for notification channels.
  *
  * @author Yaniv Inbar
@@ -21,4 +21,3 @@
  */
 @com.google.api.client.util.Beta
 package com.google.api.client.googleapis.notifications.json;
-

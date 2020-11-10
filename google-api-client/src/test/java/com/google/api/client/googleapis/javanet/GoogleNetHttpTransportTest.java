@@ -14,16 +14,16 @@
 
 package com.google.api.client.googleapis.javanet;
 
+import com.google.api.client.googleapis.mtls.MtlsProvider;
+import com.google.api.client.googleapis.mtls.MtlsTransportBaseTest;
+import com.google.api.client.http.HttpTransport;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-import com.google.api.client.googleapis.mtls.MtlsTransportBaseTest;
-import com.google.api.client.googleapis.mtls.MtlsProvider;
-import com.google.api.client.http.HttpTransport;
-
 public class GoogleNetHttpTransportTest extends MtlsTransportBaseTest {
   @Override
-  protected HttpTransport buildTrustedTransport(MtlsProvider mtlsProvider) throws GeneralSecurityException, IOException {
+  protected HttpTransport buildTrustedTransport(MtlsProvider mtlsProvider)
+      throws GeneralSecurityException, IOException {
     return GoogleNetHttpTransport.newTrustedTransport(mtlsProvider);
   }
 }

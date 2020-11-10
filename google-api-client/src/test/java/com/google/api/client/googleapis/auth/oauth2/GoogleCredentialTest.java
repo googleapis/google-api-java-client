@@ -42,18 +42,19 @@ public class GoogleCredentialTest extends TestCase {
       Collections.unmodifiableCollection(Arrays.asList("scope1", "scope2"));
   private static final Collection<String> EMPTY_SCOPES = Collections.emptyList();
 
-  private static final String SA_KEY_TEXT = "-----BEGIN PRIVATE KEY-----\n"
-      + "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALX0PQoe1igW12i"
-      + "kv1bN/r9lN749y2ijmbc/mFHPyS3hNTyOCjDvBbXYbDhQJzWVUikh4mvGBA07qTj79Xc3yBDfKP2IeyYQIFe0t0"
-      + "zkd7R9Zdn98Y2rIQC47aAbDfubtkU1U72t4zL11kHvoa0/RuFZjncvlr42X7be7lYh4p3NAgMBAAECgYASk5wDw"
-      + "4Az2ZkmeuN6Fk/y9H+Lcb2pskJIXjrL533vrDWGOC48LrsThMQPv8cxBky8HFSEklPpkfTF95tpD43iVwJRB/Gr"
-      + "CtGTw65IfJ4/tI09h6zGc4yqvIo1cHX/LQ+SxKLGyir/dQM925rGt/VojxY5ryJR7GLbCzxPnJm/oQJBANwOCO6"
-      + "D2hy1LQYJhXh7O+RLtA/tSnT1xyMQsGT+uUCMiKS2bSKx2wxo9k7h3OegNJIu1q6nZ6AbxDK8H3+d0dUCQQDTrP"
-      + "SXagBxzp8PecbaCHjzNRSQE2in81qYnrAFNB4o3DpHyMMY6s5ALLeHKscEWnqP8Ur6X4PvzZecCWU9BKAZAkAut"
-      + "LPknAuxSCsUOvUfS1i87ex77Ot+w6POp34pEX+UWb+u5iFn2cQacDTHLV1LtE80L8jVLSbrbrlH43H0DjU5AkEA"
-      + "gidhycxS86dxpEljnOMCw8CKoUBd5I880IUahEiUltk7OLJYS/Ts1wbn3kPOVX3wyJs8WBDtBkFrDHW2ezth2QJ"
-      + "ADj3e1YhMVdjJW5jqwlD/VNddGjgzyunmiZg0uOXsHXbytYmsA545S8KRQFaJKFXYYFo2kOjqOiC1T2cAzMDjCQ"
-      + "==\n-----END PRIVATE KEY-----\n";
+  private static final String SA_KEY_TEXT =
+      "-----BEGIN PRIVATE KEY-----\n"
+          + "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALX0PQoe1igW12i"
+          + "kv1bN/r9lN749y2ijmbc/mFHPyS3hNTyOCjDvBbXYbDhQJzWVUikh4mvGBA07qTj79Xc3yBDfKP2IeyYQIFe0t0"
+          + "zkd7R9Zdn98Y2rIQC47aAbDfubtkU1U72t4zL11kHvoa0/RuFZjncvlr42X7be7lYh4p3NAgMBAAECgYASk5wDw"
+          + "4Az2ZkmeuN6Fk/y9H+Lcb2pskJIXjrL533vrDWGOC48LrsThMQPv8cxBky8HFSEklPpkfTF95tpD43iVwJRB/Gr"
+          + "CtGTw65IfJ4/tI09h6zGc4yqvIo1cHX/LQ+SxKLGyir/dQM925rGt/VojxY5ryJR7GLbCzxPnJm/oQJBANwOCO6"
+          + "D2hy1LQYJhXh7O+RLtA/tSnT1xyMQsGT+uUCMiKS2bSKx2wxo9k7h3OegNJIu1q6nZ6AbxDK8H3+d0dUCQQDTrP"
+          + "SXagBxzp8PecbaCHjzNRSQE2in81qYnrAFNB4o3DpHyMMY6s5ALLeHKscEWnqP8Ur6X4PvzZecCWU9BKAZAkAut"
+          + "LPknAuxSCsUOvUfS1i87ex77Ot+w6POp34pEX+UWb+u5iFn2cQacDTHLV1LtE80L8jVLSbrbrlH43H0DjU5AkEA"
+          + "gidhycxS86dxpEljnOMCw8CKoUBd5I880IUahEiUltk7OLJYS/Ts1wbn3kPOVX3wyJs8WBDtBkFrDHW2ezth2QJ"
+          + "ADj3e1YhMVdjJW5jqwlD/VNddGjgzyunmiZg0uOXsHXbytYmsA545S8KRQFaJKFXYYFo2kOjqOiC1T2cAzMDjCQ"
+          + "==\n-----END PRIVATE KEY-----\n";
   private static final String SA_KEY_ID = "key_id";
 
   public void testRefreshToken_ServiceAccounts() throws Exception {
@@ -64,13 +65,14 @@ public class GoogleCredentialTest extends TestCase {
     MockTokenServerTransport transport = new MockTokenServerTransport();
     transport.addServiceAccount(serviceAccountEmail, accessToken);
 
-    GoogleCredential credential = new GoogleCredential.Builder()
-        .setServiceAccountId(serviceAccountEmail)
-        .setServiceAccountScopes(SCOPES)
-        .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
-        .setTransport(transport)
-        .setJsonFactory(JSON_FACTORY)
-        .build();
+    GoogleCredential credential =
+        new GoogleCredential.Builder()
+            .setServiceAccountId(serviceAccountEmail)
+            .setServiceAccountScopes(SCOPES)
+            .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
+            .setTransport(transport)
+            .setJsonFactory(JSON_FACTORY)
+            .build();
 
     assertTrue(credential.refreshToken());
     assertEquals(accessToken, credential.getAccessToken());
@@ -86,11 +88,12 @@ public class GoogleCredentialTest extends TestCase {
     transport.addClient(clientId, clientSecret);
     transport.addRefreshToken(refreshToken, accessToken);
 
-    GoogleCredential credential = new GoogleCredential.Builder()
-        .setClientSecrets(clientId, clientSecret)
-        .setTransport(transport)
-        .setJsonFactory(JSON_FACTORY)
-        .build();
+    GoogleCredential credential =
+        new GoogleCredential.Builder()
+            .setClientSecrets(clientId, clientSecret)
+            .setTransport(transport)
+            .setJsonFactory(JSON_FACTORY)
+            .build();
     credential.setRefreshToken(refreshToken);
 
     assertTrue(credential.refreshToken());
@@ -104,13 +107,14 @@ public class GoogleCredentialTest extends TestCase {
 
     MockTokenServerTransport transport = new MockTokenServerTransport();
     transport.addServiceAccount(serviceAccountEmail, accessToken);
-    GoogleCredential credential = new GoogleCredential.Builder()
-        .setServiceAccountId(serviceAccountEmail)
-        .setServiceAccountScopes(EMPTY_SCOPES)
-        .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
-        .setTransport(transport)
-        .setJsonFactory(JSON_FACTORY)
-        .build();
+    GoogleCredential credential =
+        new GoogleCredential.Builder()
+            .setServiceAccountId(serviceAccountEmail)
+            .setServiceAccountScopes(EMPTY_SCOPES)
+            .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
+            .setTransport(transport)
+            .setJsonFactory(JSON_FACTORY)
+            .build();
     assertTrue(credential.createScopedRequired());
     try {
       credential.refreshToken();
@@ -129,8 +133,8 @@ public class GoogleCredentialTest extends TestCase {
     assertSame(credential.getJsonFactory(), scopedCredential.getJsonFactory());
     assertSame(credential.getServiceAccountId(), scopedCredential.getServiceAccountId());
     assertSame(credential.getServiceAccountUser(), scopedCredential.getServiceAccountUser());
-    assertSame(credential.getServiceAccountPrivateKey(),
-        scopedCredential.getServiceAccountPrivateKey());
+    assertSame(
+        credential.getServiceAccountPrivateKey(), scopedCredential.getServiceAccountPrivateKey());
   }
 
   public void testCreateScopesNotSet() throws Exception {
@@ -140,12 +144,13 @@ public class GoogleCredentialTest extends TestCase {
     MockTokenServerTransport transport = new MockTokenServerTransport();
     transport.addServiceAccount(serviceAccountEmail, accessToken);
 
-    GoogleCredential credential = new GoogleCredential.Builder()
-        .setServiceAccountId(serviceAccountEmail)
-        .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
-        .setTransport(transport)
-        .setJsonFactory(JSON_FACTORY)
-        .build();
+    GoogleCredential credential =
+        new GoogleCredential.Builder()
+            .setServiceAccountId(serviceAccountEmail)
+            .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
+            .setTransport(transport)
+            .setJsonFactory(JSON_FACTORY)
+            .build();
     // Note that setServiceAccountScopes() is not called, so it is uninitialized (i.e. null) on the
     // builder.
     assertTrue(credential.getServiceAccountScopes().isEmpty());
@@ -217,8 +222,8 @@ public class GoogleCredentialTest extends TestCase {
     String json = serviceAccountContents.toPrettyString();
     InputStream serviceAccountStream = new ByteArrayInputStream(json.getBytes());
 
-    GoogleCredential defaultCredential = GoogleCredential
-        .fromStream(serviceAccountStream, transport, JSON_FACTORY);
+    GoogleCredential defaultCredential =
+        GoogleCredential.fromStream(serviceAccountStream, transport, JSON_FACTORY);
     assertNotNull(defaultCredential);
     defaultCredential = defaultCredential.createScoped(SCOPES);
 
@@ -249,8 +254,8 @@ public class GoogleCredentialTest extends TestCase {
     String json = serviceAccountContents.toPrettyString();
     InputStream serviceAccountStream = new ByteArrayInputStream(json.getBytes());
 
-    GoogleCredential defaultCredential = GoogleCredential
-        .fromStream(serviceAccountStream, transport, JSON_FACTORY);
+    GoogleCredential defaultCredential =
+        GoogleCredential.fromStream(serviceAccountStream, transport, JSON_FACTORY);
     assertNotNull(defaultCredential);
     assertEquals(tokenServerUrl, defaultCredential.getTokenServerEncodedUrl());
     defaultCredential = defaultCredential.createScoped(SCOPES);
@@ -375,8 +380,8 @@ public class GoogleCredentialTest extends TestCase {
     String json = createUserJson(clientId, clientSecret, refreshToken);
     InputStream userStream = new ByteArrayInputStream(json.getBytes());
 
-    GoogleCredential defaultCredential = GoogleCredential
-        .fromStream(userStream, transport, JSON_FACTORY);
+    GoogleCredential defaultCredential =
+        GoogleCredential.fromStream(userStream, transport, JSON_FACTORY);
 
     assertNotNull(defaultCredential);
     assertEquals(refreshToken, defaultCredential.getRefreshToken());
@@ -459,13 +464,14 @@ public class GoogleCredentialTest extends TestCase {
 
     MockTokenServerTransport transport = new MockTokenServerTransport();
     transport.addServiceAccount(serviceAccountEmail, accessToken);
-    GoogleCredential credential = new GoogleCredential.Builder()
-        .setServiceAccountId(serviceAccountEmail)
-        .setServiceAccountScopes(SCOPES)
-        .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
-        .setTransport(transport)
-        .setJsonFactory(JSON_FACTORY)
-        .build();
+    GoogleCredential credential =
+        new GoogleCredential.Builder()
+            .setServiceAccountId(serviceAccountEmail)
+            .setServiceAccountScopes(SCOPES)
+            .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
+            .setTransport(transport)
+            .setJsonFactory(JSON_FACTORY)
+            .build();
 
     assertNotSame(delegateUser, credential.getServiceAccountUser());
 
@@ -480,7 +486,8 @@ public class GoogleCredentialTest extends TestCase {
     assertSame(credential.getTransport(), delegatedCredential.getTransport());
     assertSame(credential.getJsonFactory(), delegatedCredential.getJsonFactory());
     assertSame(credential.getServiceAccountId(), delegatedCredential.getServiceAccountId());
-    assertSame(credential.getServiceAccountPrivateKey(),
+    assertSame(
+        credential.getServiceAccountPrivateKey(),
         delegatedCredential.getServiceAccountPrivateKey());
   }
 
@@ -494,11 +501,12 @@ public class GoogleCredentialTest extends TestCase {
     transport.addClient(clientId, clientSecret);
     transport.addRefreshToken(refreshToken, accessToken);
 
-    GoogleCredential credential = new GoogleCredential.Builder()
-        .setClientSecrets(clientId, clientSecret)
-        .setTransport(transport)
-        .setJsonFactory(JSON_FACTORY)
-        .build();
+    GoogleCredential credential =
+        new GoogleCredential.Builder()
+            .setClientSecrets(clientId, clientSecret)
+            .setTransport(transport)
+            .setJsonFactory(JSON_FACTORY)
+            .build();
     credential.setRefreshToken(refreshToken);
 
     assertTrue(credential.refreshToken());
@@ -523,38 +531,37 @@ public class GoogleCredentialTest extends TestCase {
 
     MockTokenServerTransport transport = new MockTokenServerTransport();
     transport.addServiceAccount(serviceAccountEmail, accessToken);
-    GoogleCredential credential = new GoogleCredential.Builder()
-        .setServiceAccountId(serviceAccountEmail)
-        .setServiceAccountScopes(SCOPES)
-        .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
-        .setServiceAccountUser(delegateUser)
-        .setTransport(transport)
-        .setJsonFactory(JSON_FACTORY)
-        .build();
+    GoogleCredential credential =
+        new GoogleCredential.Builder()
+            .setServiceAccountId(serviceAccountEmail)
+            .setServiceAccountScopes(SCOPES)
+            .setServiceAccountPrivateKey(SecurityTestUtils.newRsaPrivateKey())
+            .setServiceAccountUser(delegateUser)
+            .setTransport(transport)
+            .setJsonFactory(JSON_FACTORY)
+            .build();
     assertTrue(credential.refreshToken());
 
     GoogleCredential newCredential = credential.toBuilder().build();
 
     assertNotSame(credential, newCredential);
 
-    assertEquals(credential.getServiceAccountId(),
-        newCredential.getServiceAccountId());
+    assertEquals(credential.getServiceAccountId(), newCredential.getServiceAccountId());
 
-    assertEquals(credential.getServiceAccountProjectId(),
-        newCredential.getServiceAccountProjectId());
+    assertEquals(
+        credential.getServiceAccountProjectId(), newCredential.getServiceAccountProjectId());
 
     org.junit.Assert.assertArrayEquals(
         credential.getServiceAccountScopes().toArray(),
         newCredential.getServiceAccountScopes().toArray());
 
-    assertEquals(credential.getServiceAccountPrivateKey(),
-        newCredential.getServiceAccountPrivateKey());
+    assertEquals(
+        credential.getServiceAccountPrivateKey(), newCredential.getServiceAccountPrivateKey());
 
-    assertEquals(credential.getServiceAccountPrivateKeyId(),
-        newCredential.getServiceAccountPrivateKeyId());
+    assertEquals(
+        credential.getServiceAccountPrivateKeyId(), newCredential.getServiceAccountPrivateKeyId());
 
-    assertEquals(credential.getServiceAccountUser(),
-       newCredential.getServiceAccountUser());
+    assertEquals(credential.getServiceAccountUser(), newCredential.getServiceAccountUser());
 
     assertTrue(newCredential.refreshToken());
     assertEquals(credential.getAccessToken(), newCredential.getAccessToken());
@@ -562,7 +569,6 @@ public class GoogleCredentialTest extends TestCase {
     assertEquals(credential.getTransport(), newCredential.getTransport());
     assertEquals(credential.getJsonFactory(), newCredential.getJsonFactory());
   }
-
 
   static String createUserJson(String clientId, String clientSecret, String refreshToken)
       throws IOException {

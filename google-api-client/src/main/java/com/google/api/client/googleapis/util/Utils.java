@@ -21,7 +21,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.Beta;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Utility class for the Google API Client Library.
  *
  * @since 1.19

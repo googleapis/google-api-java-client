@@ -17,6 +17,4 @@
  *
  * @since 1.31
  */
-
 package com.google.api.client.googleapis.apache.v2;
-

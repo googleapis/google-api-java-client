@@ -19,12 +19,10 @@ import com.google.api.client.util.Objects;
 import com.google.api.client.util.Preconditions;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Notification metadata sent to this client about a watched resource.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @author Yaniv Inbar
  * @author Matthias Linder (mlinder)
@@ -68,11 +66,15 @@ public abstract class AbstractNotification {
    * @param resourceState {@link ResourceStates resource state}
    * @param resourceId opaque ID for the watched resource that is stable across API versions
    * @param resourceUri opaque ID (in the form of a canonicalized URI) for the watched resource that
-   *        is sensitive to the API version
+   *     is sensitive to the API version
    * @param channelId notification channel UUID provided by the client in the watch request
    */
-  protected AbstractNotification(long messageNumber, String resourceState, String resourceId,
-      String resourceUri, String channelId) {
+  protected AbstractNotification(
+      long messageNumber,
+      String resourceState,
+      String resourceId,
+      String resourceUri,
+      String channelId) {
     setMessageNumber(messageNumber);
     setResourceState(resourceState);
     setResourceId(resourceId);
@@ -82,8 +84,12 @@ public abstract class AbstractNotification {
 
   /** Copy constructor based on a source notification object. */
   protected AbstractNotification(AbstractNotification source) {
-    this(source.getMessageNumber(), source.getResourceState(), source.getResourceId(), source
-        .getResourceUri(), source.getChannelId());
+    this(
+        source.getMessageNumber(),
+        source.getResourceState(),
+        source.getResourceId(),
+        source.getResourceUri(),
+        source.getChannelId());
     setChannelExpiration(source.getChannelExpiration());
     setChannelToken(source.getChannelToken());
     setChanged(source.getChanged());
@@ -96,10 +102,14 @@ public abstract class AbstractNotification {
 
   /** Returns the helper for {@link #toString()}. */
   protected Objects.ToStringHelper toStringHelper() {
-    return Objects.toStringHelper(this).add("messageNumber", messageNumber)
-        .add("resourceState", resourceState).add("resourceId", resourceId)
-        .add("resourceUri", resourceUri).add("channelId", channelId)
-        .add("channelExpiration", channelExpiration).add("channelToken", channelToken)
+    return Objects.toStringHelper(this)
+        .add("messageNumber", messageNumber)
+        .add("resourceState", resourceState)
+        .add("resourceId", resourceId)
+        .add("resourceUri", resourceUri)
+        .add("channelId", channelId)
+        .add("channelExpiration", channelExpiration)
+        .add("channelToken", channelToken)
         .add("changed", changed);
   }
 
@@ -111,10 +121,8 @@ public abstract class AbstractNotification {
   /**
    * Sets the message number (a monotonically increasing value starting with 1).
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public AbstractNotification setMessageNumber(long messageNumber) {
     Preconditions.checkArgument(messageNumber >= 1);
@@ -130,10 +138,8 @@ public abstract class AbstractNotification {
   /**
    * Sets the {@link ResourceStates resource state}.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public AbstractNotification setResourceState(String resourceState) {
     this.resourceState = Preconditions.checkNotNull(resourceState);
@@ -148,10 +154,8 @@ public abstract class AbstractNotification {
   /**
    * Sets the opaque ID for the watched resource that is stable across API versions.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public AbstractNotification setResourceId(String resourceId) {
     this.resourceId = Preconditions.checkNotNull(resourceId);
@@ -170,10 +174,8 @@ public abstract class AbstractNotification {
    * Sets the opaque ID (in the form of a canonicalized URI) for the watched resource that is
    * sensitive to the API version.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public AbstractNotification setResourceUri(String resourceUri) {
     this.resourceUri = Preconditions.checkNotNull(resourceUri);
@@ -188,10 +190,8 @@ public abstract class AbstractNotification {
   /**
    * Sets the notification channel UUID provided by the client in the watch request.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public AbstractNotification setChannelId(String channelId) {
     this.channelId = Preconditions.checkNotNull(channelId);
@@ -206,10 +206,8 @@ public abstract class AbstractNotification {
   /**
    * Sets the notification channel expiration time or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public AbstractNotification setChannelExpiration(String channelExpiration) {
     this.channelExpiration = channelExpiration;
@@ -228,19 +226,15 @@ public abstract class AbstractNotification {
    * Sets the notification channel token (an opaque string) provided by the client in the watch
    * request or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public AbstractNotification setChannelToken(String channelToken) {
     this.channelToken = channelToken;
     return this;
   }
 
-  /**
-   * Returns the type of change performed on the resource or {@code null} for none.
-   */
+  /** Returns the type of change performed on the resource or {@code null} for none. */
   public final String getChanged() {
     return changed;
   }
@@ -248,10 +242,8 @@ public abstract class AbstractNotification {
   /**
    * Sets the type of change performed on the resource or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public AbstractNotification setChanged(String changed) {
     this.changed = changed;

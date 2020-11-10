@@ -43,47 +43,35 @@ import java.util.Arrays;
 
 /**
  * Media HTTP Uploader, with support for both direct and resumable media uploads. Documentation is
- * available <a href='https://googleapis.github.io/google-api-java-client/media-upload.html'>here</a>.
+ * available <a
+ * href='https://googleapis.github.io/google-api-java-client/media-upload.html'>here</a>.
  *
- * <p>
- * For resumable uploads, when the media content length is known, if the provided
- * {@link InputStream} has {@link InputStream#markSupported} as {@code false} then it is wrapped in
- * an {@link BufferedInputStream} to support the {@link InputStream#mark} and
- * {@link InputStream#reset} methods required for handling server errors. If the media content
- * length is unknown then each chunk is stored temporarily in memory. This is required to determine
- * when the last chunk is reached.
- * </p>
+ * <p>For resumable uploads, when the media content length is known, if the provided {@link
+ * InputStream} has {@link InputStream#markSupported} as {@code false} then it is wrapped in an
+ * {@link BufferedInputStream} to support the {@link InputStream#mark} and {@link InputStream#reset}
+ * methods required for handling server errors. If the media content length is unknown then each
+ * chunk is stored temporarily in memory. This is required to determine when the last chunk is
+ * reached.
  *
- * <p>
- * See {@link #setDisableGZipContent(boolean)} for information on when content is gzipped and how to
- * control that behavior.
- * </p>
+ * <p>See {@link #setDisableGZipContent(boolean)} for information on when content is gzipped and how
+ * to control that behavior.
  *
- * <p>
- * Back-off is disabled by default. To enable it for an abnormal HTTP response and an I/O exception
- * you should call {@link HttpRequest#setUnsuccessfulResponseHandler} with a new
- * {@link HttpBackOffUnsuccessfulResponseHandler} instance and
- * {@link HttpRequest#setIOExceptionHandler} with {@link HttpBackOffIOExceptionHandler}.
- * </p>
+ * <p>Back-off is disabled by default. To enable it for an abnormal HTTP response and an I/O
+ * exception you should call {@link HttpRequest#setUnsuccessfulResponseHandler} with a new {@link
+ * HttpBackOffUnsuccessfulResponseHandler} instance and {@link HttpRequest#setIOExceptionHandler}
+ * with {@link HttpBackOffIOExceptionHandler}.
  *
- * <p>
- * Upgrade warning: in prior version 1.14 exponential back-off was enabled by default for an
+ * <p>Upgrade warning: in prior version 1.14 exponential back-off was enabled by default for an
  * abnormal HTTP response and there was a regular retry (without back-off) when I/O exception was
  * thrown. Starting with version 1.15 back-off is disabled and there is no retry on I/O exception by
  * default.
- * </p>
  *
- * <p>
- * Upgrade warning: in prior version 1.16 {@link #serverErrorCallback} was public but starting with
- * version 1.17 it has been removed from the public API, and changed to be package private.
- * </p>
+ * <p>Upgrade warning: in prior version 1.16 {@link #serverErrorCallback} was public but starting
+ * with version 1.17 it has been removed from the public API, and changed to be package private.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.9
- *
  * @author rmistry@google.com (Ravi Mistry)
  * @author peleyal@google.com (Eyal Peled)
  */
@@ -104,9 +92,7 @@ public final class MediaHttpUploader {
    */
   public static final String CONTENT_TYPE_HEADER = "X-Upload-Content-Type";
 
-  /**
-   * Upload state associated with the Media HTTP uploader.
-   */
+  /** Upload state associated with the Media HTTP uploader. */
   public enum UploadState {
     /** The upload process has not started yet. */
     NOT_STARTED,
@@ -130,9 +116,7 @@ public final class MediaHttpUploader {
   static final int MB = 0x100000;
   private static final int KB = 0x400;
 
-  /**
-   * Minimum number of bytes that can be uploaded to the server (set to 256KB).
-   */
+  /** Minimum number of bytes that can be uploaded to the server (set to 256KB). */
   public static final int MINIMUM_CHUNK_SIZE = 256 * KB;
 
   /**
@@ -156,11 +140,9 @@ public final class MediaHttpUploader {
   /**
    * The length of the HTTP media content.
    *
-   * <p>
-   * {@code 0} before it is lazily initialized in {@link #getMediaContentLength()} after which it
+   * <p>{@code 0} before it is lazily initialized in {@link #getMediaContentLength()} after which it
    * could still be {@code 0} for empty media content. Will be {@code < 0} if the media content
    * length has not been specified.
-   * </p>
    */
   private long mediaContentLength;
 
@@ -172,10 +154,8 @@ public final class MediaHttpUploader {
   /**
    * The HTTP method used for the initiation request.
    *
-   * <p>
-   * Can only be {@link HttpMethods#POST} (for media upload) or {@link HttpMethods#PUT} (for media
-   * update). The default value is {@link HttpMethods#POST}.
-   * </p>
+   * <p>Can only be {@link HttpMethods#POST} (for media upload) or {@link HttpMethods#PUT} (for
+   * media update). The default value is {@link HttpMethods#POST}.
    */
   private String initiationRequestMethod = HttpMethods.POST;
 
@@ -199,9 +179,7 @@ public final class MediaHttpUploader {
    */
   private boolean directUploadEnabled;
 
-  /**
-   * Progress listener to send progress notifications to or {@code null} for none.
-   */
+  /** Progress listener to send progress notifications to or {@code null} for none. */
   private MediaHttpUploaderProgressListener progressListener;
 
   /**
@@ -245,82 +223,77 @@ public final class MediaHttpUploader {
   /**
    * The content buffer of the current request or {@code null} for none. It is used for resumable
    * media upload when the media content length is not specified. It is instantiated for every
-   * request in {@link #buildContentChunk()} and is set to {@code null} when the
-   * request is completed in {@link #upload}.
+   * request in {@link #buildContentChunk()} and is set to {@code null} when the request is
+   * completed in {@link #upload}.
    */
   private byte currentRequestContentBuffer[];
 
   /**
    * Whether to disable GZip compression of HTTP content.
    *
-   * <p>
-   * The default value is {@code false}.
-   * </p>
+   * <p>The default value is {@code false}.
    */
   private boolean disableGZipContent;
 
-  /** Sleeper. **/
+  /** Sleeper. * */
   Sleeper sleeper = Sleeper.DEFAULT;
 
   /**
    * Construct the {@link MediaHttpUploader}.
    *
-   * <p>
-   * The input stream received by calling {@link AbstractInputStreamContent#getInputStream} is
+   * <p>The input stream received by calling {@link AbstractInputStreamContent#getInputStream} is
    * closed when the upload process is successfully completed. For resumable uploads, when the media
-   * content length is known, if the input stream has {@link InputStream#markSupported} as
-   * {@code false} then it is wrapped in an {@link BufferedInputStream} to support the
-   * {@link InputStream#mark} and {@link InputStream#reset} methods required for handling server
-   * errors. If the media content length is unknown then each chunk is stored temporarily in memory.
-   * This is required to determine when the last chunk is reached.
-   * </p>
+   * content length is known, if the input stream has {@link InputStream#markSupported} as {@code
+   * false} then it is wrapped in an {@link BufferedInputStream} to support the {@link
+   * InputStream#mark} and {@link InputStream#reset} methods required for handling server errors. If
+   * the media content length is unknown then each chunk is stored temporarily in memory. This is
+   * required to determine when the last chunk is reached.
    *
    * @param mediaContent The Input stream content of the media to be uploaded
    * @param transport The transport to use for requests
    * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
-   *        {@code null} for none
+   *     {@code null} for none
    */
-  public MediaHttpUploader(AbstractInputStreamContent mediaContent, HttpTransport transport,
+  public MediaHttpUploader(
+      AbstractInputStreamContent mediaContent,
+      HttpTransport transport,
       HttpRequestInitializer httpRequestInitializer) {
     this.mediaContent = Preconditions.checkNotNull(mediaContent);
     this.transport = Preconditions.checkNotNull(transport);
-    this.requestFactory = httpRequestInitializer == null
-        ? transport.createRequestFactory() : transport.createRequestFactory(httpRequestInitializer);
+    this.requestFactory =
+        httpRequestInitializer == null
+            ? transport.createRequestFactory()
+            : transport.createRequestFactory(httpRequestInitializer);
   }
 
   /**
    * Executes a direct media upload or resumable media upload conforming to the specifications
-   * listed <a href='https://developers.google.com/api-client-library/java/google-api-java-client/media-upload'>here.</a>
+   * listed <a
+   * href='https://developers.google.com/api-client-library/java/google-api-java-client/media-upload'>here.</a>
    *
-   * <p>
-   * This method is not reentrant. A new instance of {@link MediaHttpUploader} must be instantiated
-   * before upload called be called again.
-   * </p>
+   * <p>This method is not reentrant. A new instance of {@link MediaHttpUploader} must be
+   * instantiated before upload called be called again.
    *
-   * <p>
-   * If an error is encountered during the request execution the caller is responsible for parsing
-   * the response correctly. For example for JSON errors:
-   * </p>
+   * <p>If an error is encountered during the request execution the caller is responsible for
+   * parsing the response correctly. For example for JSON errors:
    *
    * <pre>
-    if (!response.isSuccessStatusCode()) {
-      throw GoogleJsonResponseException.from(jsonFactory, response);
-    }
+   * if (!response.isSuccessStatusCode()) {
+   * throw GoogleJsonResponseException.from(jsonFactory, response);
+   * }
    * </pre>
    *
-   * <p>
-   * Callers should call {@link HttpResponse#disconnect} when the returned HTTP response object is
-   * no longer needed. However, {@link HttpResponse#disconnect} does not have to be called if the
+   * <p>Callers should call {@link HttpResponse#disconnect} when the returned HTTP response object
+   * is no longer needed. However, {@link HttpResponse#disconnect} does not have to be called if the
    * response stream is properly closed. Example usage:
-   * </p>
    *
    * <pre>
-     HttpResponse response = batch.upload(initiationRequestUrl);
-     try {
-       // process the HTTP response object
-     } finally {
-       response.disconnect();
-     }
+   * HttpResponse response = batch.upload(initiationRequestUrl);
+   * try {
+   * // process the HTTP response object
+   * } finally {
+   * response.disconnect();
+   * }
    * </pre>
    *
    * @param initiationRequestUrl The request URL where the initiation request will be sent
@@ -482,9 +455,7 @@ public final class MediaHttpUploader {
     }
   }
 
-  /**
-   * @return {@code true} if the media length is known, otherwise {@code false}
-   */
+  /** @return {@code true} if the media length is known, otherwise {@code false} */
   private boolean isMediaLengthKnown() throws IOException {
     return getMediaContentLength() >= 0;
   }
@@ -492,9 +463,7 @@ public final class MediaHttpUploader {
   /**
    * Uses lazy initialization to compute the media content length.
    *
-   * <p>
-   * This is done to avoid throwing an {@link IOException} in the constructor.
-   * </p>
+   * <p>This is done to avoid throwing an {@link IOException} in the constructor.
    */
   private long getMediaContentLength() throws IOException {
     if (!isMediaContentLengthCalculated) {
@@ -589,9 +558,11 @@ public final class MediaHttpUploader {
       contentInputStream.mark(blockSize);
 
       InputStream limitInputStream = ByteStreams.limit(contentInputStream, blockSize);
-      contentChunk = new InputStreamContent(
-          mediaContent.getType(), limitInputStream).setRetrySupported(true)
-          .setLength(blockSize).setCloseInputStream(false);
+      contentChunk =
+          new InputStreamContent(mediaContent.getType(), limitInputStream)
+              .setRetrySupported(true)
+              .setLength(blockSize)
+              .setCloseInputStream(false);
       mediaContentLengthStr = String.valueOf(getMediaContentLength());
     } else {
       // If the media content length is not known we implement a custom buffered input stream that
@@ -621,8 +592,12 @@ public final class MediaHttpUploader {
         copyBytes = (int) (totalBytesClientSent - totalBytesServerReceived);
         // shift copyBytes bytes to the beginning - those are the bytes which weren't received by
         // the server in the last chunk.
-        System.arraycopy(currentRequestContentBuffer, currentChunkLength - copyBytes,
-            currentRequestContentBuffer, 0, copyBytes);
+        System.arraycopy(
+            currentRequestContentBuffer,
+            currentChunkLength - copyBytes,
+            currentRequestContentBuffer,
+            0,
+            copyBytes);
         if (cachedByte != null) {
           // add the last cached byte to the buffer
           currentRequestContentBuffer[copyBytes] = cachedByte;
@@ -631,9 +606,12 @@ public final class MediaHttpUploader {
         bytesAllowedToRead = blockSize - copyBytes;
       }
 
-      actualBytesRead = ByteStreams.read(
-          contentInputStream, currentRequestContentBuffer, blockSize + 1 - bytesAllowedToRead,
-          bytesAllowedToRead);
+      actualBytesRead =
+          ByteStreams.read(
+              contentInputStream,
+              currentRequestContentBuffer,
+              blockSize + 1 - bytesAllowedToRead,
+              bytesAllowedToRead);
 
       if (actualBytesRead < bytesAllowedToRead) {
         actualBlockSize = copyBytes + Math.max(0, actualBytesRead);
@@ -651,8 +629,9 @@ public final class MediaHttpUploader {
         cachedByte = currentRequestContentBuffer[blockSize];
       }
 
-      contentChunk = new ByteArrayContent(
-          mediaContent.getType(), currentRequestContentBuffer, 0, actualBlockSize);
+      contentChunk =
+          new ByteArrayContent(
+              mediaContent.getType(), currentRequestContentBuffer, 0, actualBlockSize);
       totalBytesClientSent = totalBytesServerReceived + actualBlockSize;
     }
 
@@ -665,8 +644,13 @@ public final class MediaHttpUploader {
       // mediaContentLengthStr will contain the actual media length.
       contentRange = "bytes */" + mediaContentLengthStr;
     } else {
-      contentRange = "bytes " + totalBytesServerReceived + "-"
-              + (totalBytesServerReceived + actualBlockSize - 1) + "/" + mediaContentLengthStr;
+      contentRange =
+          "bytes "
+              + totalBytesServerReceived
+              + "-"
+              + (totalBytesServerReceived + actualBlockSize - 1)
+              + "/"
+              + mediaContentLengthStr;
     }
     return new ContentChunk(contentChunk, contentRange);
   }
@@ -690,14 +674,12 @@ public final class MediaHttpUploader {
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * The call back method that will be invoked on a server error or an I/O exception during
    * resumable upload inside {@link #upload}.
    *
-   * <p>
-   * This method changes the current request to query the current status of the upload to find how
-   * many bytes were successfully uploaded before the server error occurred.
-   * </p>
+   * <p>This method changes the current request to query the current status of the upload to find
+   * how many bytes were successfully uploaded before the server error occurred.
    */
   @Beta
   void serverErrorCallback() throws IOException {
@@ -747,22 +729,16 @@ public final class MediaHttpUploader {
   /**
    * Sets whether direct media upload is enabled or disabled.
    *
-   * <p>
-   * If value is set to {@code true} then a direct upload will be done where the whole media content
-   * is uploaded in a single request. If value is set to {@code false} then the upload uses the
-   * resumable media upload protocol to upload in data chunks.
-   * </p>
+   * <p>If value is set to {@code true} then a direct upload will be done where the whole media
+   * content is uploaded in a single request. If value is set to {@code false} then the upload uses
+   * the resumable media upload protocol to upload in data chunks.
    *
-   * <p>
-   * Direct upload is recommended if the content size falls below a certain minimum limit. This is
-   * because there's minimum block write size for some Google APIs, so if the resumable request
+   * <p>Direct upload is recommended if the content size falls below a certain minimum limit. This
+   * is because there's minimum block write size for some Google APIs, so if the resumable request
    * fails in the space of that first block, the client will have to restart from the beginning
    * anyway.
-   * </p>
    *
-   * <p>
-   * Defaults to {@code false}.
-   * </p>
+   * <p>Defaults to {@code false}.
    *
    * @since 1.9
    */
@@ -783,17 +759,13 @@ public final class MediaHttpUploader {
     return directUploadEnabled;
   }
 
-  /**
-   * Sets the progress listener to send progress notifications to or {@code null} for none.
-   */
+  /** Sets the progress listener to send progress notifications to or {@code null} for none. */
   public MediaHttpUploader setProgressListener(MediaHttpUploaderProgressListener progressListener) {
     this.progressListener = progressListener;
     return this;
   }
 
-  /**
-   * Returns the progress listener to send progress notifications to or {@code null} for none.
-   */
+  /** Returns the progress listener to send progress notifications to or {@code null} for none. */
   public MediaHttpUploaderProgressListener getProgressListener() {
     return progressListener;
   }
@@ -802,14 +774,13 @@ public final class MediaHttpUploader {
    * Sets the maximum size of individual chunks that will get uploaded by single HTTP requests. The
    * default value is {@link #DEFAULT_CHUNK_SIZE}.
    *
-   * <p>
-   * The minimum allowable value is {@link #MINIMUM_CHUNK_SIZE} and the specified chunk size must be
-   * a multiple of {@link #MINIMUM_CHUNK_SIZE}.
-   * </p>
+   * <p>The minimum allowable value is {@link #MINIMUM_CHUNK_SIZE} and the specified chunk size must
+   * be a multiple of {@link #MINIMUM_CHUNK_SIZE}.
    */
   public MediaHttpUploader setChunkSize(int chunkSize) {
-    Preconditions.checkArgument(chunkSize > 0 && chunkSize % MINIMUM_CHUNK_SIZE == 0, "chunkSize"
-        + " must be a positive multiple of " + MINIMUM_CHUNK_SIZE + ".");
+    Preconditions.checkArgument(
+        chunkSize > 0 && chunkSize % MINIMUM_CHUNK_SIZE == 0,
+        "chunkSize" + " must be a positive multiple of " + MINIMUM_CHUNK_SIZE + ".");
     this.chunkSize = chunkSize;
     return this;
   }
@@ -834,16 +805,12 @@ public final class MediaHttpUploader {
   /**
    * Sets whether to disable GZip compression of HTTP content.
    *
-   * <p>
-   * By default it is {@code false}.
-   * </p>
+   * <p>By default it is {@code false}.
    *
-   * <p>
-   * If {@link #setDisableGZipContent(boolean)} is set to false (the default value) then content is
-   * gzipped for direct media upload and resumable media uploads when content length is not known.
-   * Due to a current limitation, content is not gzipped for resumable media uploads when content
-   * length is known; this limitation will be removed in the future.
-   * </p>
+   * <p>If {@link #setDisableGZipContent(boolean)} is set to false (the default value) then content
+   * is gzipped for direct media upload and resumable media uploads when content length is not
+   * known. Due to a current limitation, content is not gzipped for resumable media uploads when
+   * content length is known; this limitation will be removed in the future.
    *
    * @since 1.13
    */
@@ -874,9 +841,7 @@ public final class MediaHttpUploader {
   /**
    * Returns the HTTP method used for the initiation request.
    *
-   * <p>
-   * The default value is {@link HttpMethods#POST}.
-   * </p>
+   * <p>The default value is {@link HttpMethods#POST}.
    *
    * @since 1.12
    */
@@ -887,17 +852,16 @@ public final class MediaHttpUploader {
   /**
    * Sets the HTTP method used for the initiation request.
    *
-   * <p>
-   * Can only be {@link HttpMethods#POST} (for media upload) or {@link HttpMethods#PUT} (for media
-   * update). The default value is {@link HttpMethods#POST}.
-   * </p>
+   * <p>Can only be {@link HttpMethods#POST} (for media upload) or {@link HttpMethods#PUT} (for
+   * media update). The default value is {@link HttpMethods#POST}.
    *
    * @since 1.12
    */
   public MediaHttpUploader setInitiationRequestMethod(String initiationRequestMethod) {
-    Preconditions.checkArgument(initiationRequestMethod.equals(HttpMethods.POST)
-        || initiationRequestMethod.equals(HttpMethods.PUT)
-        || initiationRequestMethod.equals(HttpMethods.PATCH));
+    Preconditions.checkArgument(
+        initiationRequestMethod.equals(HttpMethods.POST)
+            || initiationRequestMethod.equals(HttpMethods.PUT)
+            || initiationRequestMethod.equals(HttpMethods.PATCH));
     this.initiationRequestMethod = initiationRequestMethod;
     return this;
   }
@@ -948,20 +912,21 @@ public final class MediaHttpUploader {
    * Gets the upload progress denoting the percentage of bytes that have been uploaded, represented
    * between 0.0 (0%) and 1.0 (100%).
    *
-   * <p>
-   * Do not use if the specified {@link AbstractInputStreamContent} has no content length specified.
-   * Instead, consider using {@link #getNumBytesUploaded} to denote progress.
-   * </p>
+   * <p>Do not use if the specified {@link AbstractInputStreamContent} has no content length
+   * specified. Instead, consider using {@link #getNumBytesUploaded} to denote progress.
    *
    * @throws IllegalArgumentException if the specified {@link AbstractInputStreamContent} has no
-   *         content length
+   *     content length
    * @return the upload progress
    */
   public double getProgress() throws IOException {
-    Preconditions.checkArgument(isMediaLengthKnown(), "Cannot call getProgress() if "
-        + "the specified AbstractInputStreamContent has no content length. Use "
-        + " getNumBytesUploaded() to denote progress instead.");
-    return getMediaContentLength() == 0 ? 0 : (double) totalBytesServerReceived
-        / getMediaContentLength();
+    Preconditions.checkArgument(
+        isMediaLengthKnown(),
+        "Cannot call getProgress() if "
+            + "the specified AbstractInputStreamContent has no content length. Use "
+            + " getNumBytesUploaded() to denote progress instead.");
+    return getMediaContentLength() == 0
+        ? 0
+        : (double) totalBytesServerReceived / getMediaContentLength();
   }
 }

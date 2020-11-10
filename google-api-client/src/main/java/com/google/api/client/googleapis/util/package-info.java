@@ -18,4 +18,3 @@
  * @since 1.19
  */
 package com.google.api.client.googleapis.util;
-

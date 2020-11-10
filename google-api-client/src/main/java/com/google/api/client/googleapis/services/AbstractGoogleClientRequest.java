@@ -46,12 +46,9 @@ import java.util.regex.Pattern;
 /**
  * Abstract Google client request for a {@link AbstractGoogleClient}.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @param <T> type of the response
- *
  * @since 1.12
  * @author Yaniv Inbar
  */
@@ -109,14 +106,18 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * @param abstractGoogleClient Google client
    * @param requestMethod HTTP Method
    * @param uriTemplate URI template for the path relative to the base URL. If it starts with a "/"
-   *        the base path from the base URL will be stripped out. The URI template can also be a
-   *        full URL. URI template expansion is done using
-   *        {@link UriTemplate#expand(String, String, Object, boolean)}
+   *     the base path from the base URL will be stripped out. The URI template can also be a full
+   *     URL. URI template expansion is done using {@link UriTemplate#expand(String, String, Object,
+   *     boolean)}
    * @param httpContent HTTP content or {@code null} for none
    * @param responseClass response class to parse into
    */
-  protected AbstractGoogleClientRequest(AbstractGoogleClient abstractGoogleClient,
-      String requestMethod, String uriTemplate, HttpContent httpContent, Class<T> responseClass) {
+  protected AbstractGoogleClientRequest(
+      AbstractGoogleClient abstractGoogleClient,
+      String requestMethod,
+      String uriTemplate,
+      HttpContent httpContent,
+      Class<T> responseClass) {
     this.responseClass = Preconditions.checkNotNull(responseClass);
     this.abstractGoogleClient = Preconditions.checkNotNull(abstractGoogleClient);
     this.requestMethod = Preconditions.checkNotNull(requestMethod);
@@ -125,8 +126,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     // application name
     String applicationName = abstractGoogleClient.getApplicationName();
     if (applicationName != null) {
-      requestHeaders.setUserAgent(applicationName + " " + USER_AGENT_SUFFIX + "/"
-              + GoogleUtils.VERSION);
+      requestHeaders.setUserAgent(
+          applicationName + " " + USER_AGENT_SUFFIX + "/" + GoogleUtils.VERSION);
     } else {
       requestHeaders.setUserAgent(USER_AGENT_SUFFIX + "/" + GoogleUtils.VERSION);
     }
@@ -221,7 +222,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * Returns whether response should return raw input stream.
    *
    * @since 1.30
-   * */
+   */
   public final boolean getReturnRawInputSteam() {
     return returnRawInputStream;
   }
@@ -229,14 +230,10 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /**
    * Sets whether to disable GZip compression of HTTP content.
    *
-   * <p>
-   * By default it is {@code false}.
-   * </p>
+   * <p>By default it is {@code false}.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public AbstractGoogleClientRequest<T> setDisableGZipContent(boolean disableGZipContent) {
     this.disableGZipContent = disableGZipContent;
@@ -246,16 +243,12 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /**
    * Sets whether the response should return raw input stream or not.
    *
-   * <p>
-   * By default it is {@code false}.
-   * </p>
+   * <p>By default it is {@code false}.
    *
-   * <p>
-   * When the response contains a known content-encoding header, the response stream is wrapped
-   * with an InputStream that decodes the content. This fails when we download large files in
-   * chunks (see <a href="https://github.com/googleapis/google-api-java-client/issues/1009">#1009
-   * </a>). Setting this to true will make the response return the raw input stream.
-   * </p>
+   * <p>When the response contains a known content-encoding header, the response stream is wrapped
+   * with an InputStream that decodes the content. This fails when we download large files in chunks
+   * (see <a href="https://github.com/googleapis/google-api-java-client/issues/1009">#1009 </a>).
+   * Setting this to true will make the response return the raw input stream.
    *
    * @since 1.30
    */
@@ -282,10 +275,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /**
    * Returns the Google client.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public AbstractGoogleClient getAbstractGoogleClient() {
     return abstractGoogleClient;
@@ -299,15 +290,11 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /**
    * Sets the HTTP headers used for the Google client request.
    *
-   * <p>
-   * These headers are set on the request after {@link #buildHttpRequest} is called, this means that
-   * {@link HttpRequestInitializer#initialize} is called first.
-   * </p>
+   * <p>These headers are set on the request after {@link #buildHttpRequest} is called, this means
+   * that {@link HttpRequestInitializer#initialize} is called first.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public AbstractGoogleClientRequest<T> setRequestHeaders(HttpHeaders headers) {
     this.requestHeaders = headers;
@@ -353,8 +340,9 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    */
   protected final void initializeMediaUpload(AbstractInputStreamContent mediaContent) {
     HttpRequestFactory requestFactory = abstractGoogleClient.getRequestFactory();
-    this.uploader = new MediaHttpUploader(
-        mediaContent, requestFactory.getTransport(), requestFactory.getInitializer());
+    this.uploader =
+        new MediaHttpUploader(
+            mediaContent, requestFactory.getTransport(), requestFactory.getInitializer());
     this.uploader.setInitiationRequestMethod(requestMethod);
     if (httpContent != null) {
       this.uploader.setMetadata(httpContent);
@@ -376,9 +364,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /**
    * Creates a new instance of {@link GenericUrl} suitable for use against this service.
    *
-   * <p>
-   * Subclasses may override by calling the super implementation.
-   * </p>
+   * <p>Subclasses may override by calling the super implementation.
    *
    * @return newly created {@link GenericUrl}
    */
@@ -390,9 +376,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /**
    * Create a request suitable for use against this service.
    *
-   * <p>
-   * Subclasses may override by calling the super implementation.
-   * </p>
+   * <p>Subclasses may override by calling the super implementation.
    */
   public HttpRequest buildHttpRequest() throws IOException {
     return buildHttpRequest(false);
@@ -401,13 +385,9 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /**
    * Create a request suitable for use against this service, but using HEAD instead of GET.
    *
-   * <p>
-   * Only supported when the original request method is GET.
-   * </p>
+   * <p>Only supported when the original request method is GET.
    *
-   * <p>
-   * Subclasses may override by calling the super implementation.
-   * </p>
+   * <p>Subclasses may override by calling the super implementation.
    */
   protected HttpRequest buildHttpRequestUsingHead() throws IOException {
     return buildHttpRequest(true);
@@ -418,13 +398,17 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     Preconditions.checkArgument(uploader == null);
     Preconditions.checkArgument(!usingHead || requestMethod.equals(HttpMethods.GET));
     String requestMethodToUse = usingHead ? HttpMethods.HEAD : requestMethod;
-    final HttpRequest httpRequest = getAbstractGoogleClient()
-        .getRequestFactory().buildRequest(requestMethodToUse, buildHttpRequestUrl(), httpContent);
+    final HttpRequest httpRequest =
+        getAbstractGoogleClient()
+            .getRequestFactory()
+            .buildRequest(requestMethodToUse, buildHttpRequestUrl(), httpContent);
     new MethodOverride().intercept(httpRequest);
     httpRequest.setParser(getAbstractGoogleClient().getObjectParser());
     // custom methods may use POST with no content but require a Content-Length header
-    if (httpContent == null && (requestMethod.equals(HttpMethods.POST)
-        || requestMethod.equals(HttpMethods.PUT) || requestMethod.equals(HttpMethods.PATCH))) {
+    if (httpContent == null
+        && (requestMethod.equals(HttpMethods.POST)
+            || requestMethod.equals(HttpMethods.PUT)
+            || requestMethod.equals(HttpMethods.PATCH))) {
       httpRequest.setContent(new EmptyContent());
     }
     httpRequest.getHeaders().putAll(requestHeaders);
@@ -433,40 +417,37 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     }
     httpRequest.setResponseReturnRawInputStream(returnRawInputStream);
     final HttpResponseInterceptor responseInterceptor = httpRequest.getResponseInterceptor();
-    httpRequest.setResponseInterceptor(new HttpResponseInterceptor() {
+    httpRequest.setResponseInterceptor(
+        new HttpResponseInterceptor() {
 
-      public void interceptResponse(HttpResponse response) throws IOException {
-        if (responseInterceptor != null) {
-          responseInterceptor.interceptResponse(response);
-        }
-        if (!response.isSuccessStatusCode() && httpRequest.getThrowExceptionOnExecuteError()) {
-          throw newExceptionOnError(response);
-        }
-      }
-    });
+          public void interceptResponse(HttpResponse response) throws IOException {
+            if (responseInterceptor != null) {
+              responseInterceptor.interceptResponse(response);
+            }
+            if (!response.isSuccessStatusCode() && httpRequest.getThrowExceptionOnExecuteError()) {
+              throw newExceptionOnError(response);
+            }
+          }
+        });
     return httpRequest;
   }
 
   /**
    * Sends the metadata request to the server and returns the raw metadata {@link HttpResponse}.
    *
-   * <p>
-   * Callers are responsible for disconnecting the HTTP response by calling
-   * {@link HttpResponse#disconnect}. Example usage:
-   * </p>
+   * <p>Callers are responsible for disconnecting the HTTP response by calling {@link
+   * HttpResponse#disconnect}. Example usage:
    *
    * <pre>
-     HttpResponse response = request.executeUnparsed();
-     try {
-       // process response..
-     } finally {
-       response.disconnect();
-     }
+   * HttpResponse response = request.executeUnparsed();
+   * try {
+   * // process response..
+   * } finally {
+   * response.disconnect();
+   * }
    * </pre>
    *
-   * <p>
-   * Subclasses may override by calling the super implementation.
-   * </p>
+   * <p>Subclasses may override by calling the super implementation.
    *
    * @return the {@link HttpResponse}
    */
@@ -477,23 +458,19 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /**
    * Sends the media request to the server and returns the raw media {@link HttpResponse}.
    *
-   * <p>
-   * Callers are responsible for disconnecting the HTTP response by calling
-   * {@link HttpResponse#disconnect}. Example usage:
-   * </p>
+   * <p>Callers are responsible for disconnecting the HTTP response by calling {@link
+   * HttpResponse#disconnect}. Example usage:
    *
    * <pre>
-     HttpResponse response = request.executeMedia();
-     try {
-       // process response..
-     } finally {
-       response.disconnect();
-     }
+   * HttpResponse response = request.executeMedia();
+   * try {
+   * // process response..
+   * } finally {
+   * response.disconnect();
+   * }
    * </pre>
    *
-   * <p>
-   * Subclasses may override by calling the super implementation.
-   * </p>
+   * <p>Subclasses may override by calling the super implementation.
    *
    * @return the {@link HttpResponse}
    */
@@ -503,23 +480,19 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   }
 
   /**
-   * Sends the metadata request using HEAD to the server and returns the raw metadata
-   * {@link HttpResponse} for the response headers.
+   * Sends the metadata request using HEAD to the server and returns the raw metadata {@link
+   * HttpResponse} for the response headers.
    *
-   * <p>
-   * Only supported when the original request method is GET. The response content is assumed to be
-   * empty and ignored. Calls {@link HttpResponse#ignore()} so there is no need to disconnect the
+   * <p>Only supported when the original request method is GET. The response content is assumed to
+   * be empty and ignored. Calls {@link HttpResponse#ignore()} so there is no need to disconnect the
    * response. Example usage:
-   * </p>
    *
    * <pre>
-     HttpResponse response = request.executeUsingHead();
-     // look at response.getHeaders()
+   * HttpResponse response = request.executeUsingHead();
+   * // look at response.getHeaders()
    * </pre>
    *
-   * <p>
-   * Subclasses may override by calling the super implementation.
-   * </p>
+   * <p>Subclasses may override by calling the super implementation.
    *
    * @return the {@link HttpResponse}
    */
@@ -542,12 +515,17 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     } else {
       // upload request
       GenericUrl httpRequestUrl = buildHttpRequestUrl();
-      HttpRequest httpRequest = getAbstractGoogleClient()
-          .getRequestFactory().buildRequest(requestMethod, httpRequestUrl, httpContent);
+      HttpRequest httpRequest =
+          getAbstractGoogleClient()
+              .getRequestFactory()
+              .buildRequest(requestMethod, httpRequestUrl, httpContent);
       boolean throwExceptionOnExecuteError = httpRequest.getThrowExceptionOnExecuteError();
 
-      response = uploader.setInitiationHeaders(requestHeaders)
-          .setDisableGZipContent(disableGZipContent).upload(httpRequestUrl);
+      response =
+          uploader
+              .setInitiationHeaders(requestHeaders)
+              .setDisableGZipContent(disableGZipContent)
+              .upload(httpRequestUrl);
       response.getRequest().setParser(getAbstractGoogleClient().getObjectParser());
       // process any error
       if (throwExceptionOnExecuteError && !response.isSuccessStatusCode()) {
@@ -562,14 +540,12 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   }
 
   /**
-   * Returns the exception to throw on an HTTP error response as defined by
-   * {@link HttpResponse#isSuccessStatusCode()}.
+   * Returns the exception to throw on an HTTP error response as defined by {@link
+   * HttpResponse#isSuccessStatusCode()}.
    *
-   * <p>
-   * It is guaranteed that {@link HttpResponse#isSuccessStatusCode()} is {@code false}. Default
+   * <p>It is guaranteed that {@link HttpResponse#isSuccessStatusCode()} is {@code false}. Default
    * implementation is to call {@link HttpResponseException#HttpResponseException(HttpResponse)},
    * but subclasses may override.
-   * </p>
    *
    * @param response HTTP response
    * @return exception to throw
@@ -581,9 +557,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /**
    * Sends the metadata request to the server and returns the parsed metadata response.
    *
-   * <p>
-   * Subclasses may override by calling the super implementation.
-   * </p>
+   * <p>Subclasses may override by calling the super implementation.
    *
    * @return parsed HTTP response
    */
@@ -595,22 +569,18 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * Sends the metadata request to the server and returns the metadata content input stream of
    * {@link HttpResponse}.
    *
-   * <p>
-   * Callers are responsible for closing the input stream after it is processed. Example sample:
-   * </p>
+   * <p>Callers are responsible for closing the input stream after it is processed. Example sample:
    *
    * <pre>
-     InputStream is = request.executeAsInputStream();
-     try {
-       // Process input stream..
-     } finally {
-       is.close();
-     }
+   * InputStream is = request.executeAsInputStream();
+   * try {
+   * // Process input stream..
+   * } finally {
+   * is.close();
+   * }
    * </pre>
    *
-   * <p>
-   * Subclasses may override by calling the super implementation.
-   * </p>
+   * <p>Subclasses may override by calling the super implementation.
    *
    * @return input stream of the response content
    */
@@ -619,25 +589,21 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   }
 
   /**
-   * Sends the media request to the server and returns the media content input stream of
-   * {@link HttpResponse}.
+   * Sends the media request to the server and returns the media content input stream of {@link
+   * HttpResponse}.
    *
-   * <p>
-   * Callers are responsible for closing the input stream after it is processed. Example sample:
-   * </p>
+   * <p>Callers are responsible for closing the input stream after it is processed. Example sample:
    *
    * <pre>
-     InputStream is = request.executeMediaAsInputStream();
-     try {
-       // Process input stream..
-     } finally {
-       is.close();
-     }
+   * InputStream is = request.executeMediaAsInputStream();
+   * try {
+   * // Process input stream..
+   * } finally {
+   * is.close();
+   * }
    * </pre>
    *
-   * <p>
-   * Subclasses may override by calling the super implementation.
-   * </p>
+   * <p>Subclasses may override by calling the super implementation.
    *
    * @return input stream of the response content
    */
@@ -646,16 +612,12 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   }
 
   /**
-   * Sends the metadata request to the server and writes the metadata content input stream of
-   * {@link HttpResponse} into the given destination output stream.
+   * Sends the metadata request to the server and writes the metadata content input stream of {@link
+   * HttpResponse} into the given destination output stream.
    *
-   * <p>
-   * This method closes the content of the HTTP response from {@link HttpResponse#getContent()}.
-   * </p>
+   * <p>This method closes the content of the HTTP response from {@link HttpResponse#getContent()}.
    *
-   * <p>
-   * Subclasses may override by calling the super implementation.
-   * </p>
+   * <p>Subclasses may override by calling the super implementation.
    *
    * @param outputStream destination output stream
    */
@@ -664,16 +626,12 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   }
 
   /**
-   * Sends the media request to the server and writes the media content input stream of
-   * {@link HttpResponse} into the given destination output stream.
+   * Sends the media request to the server and writes the media content input stream of {@link
+   * HttpResponse} into the given destination output stream.
    *
-   * <p>
-   * This method closes the content of the HTTP response from {@link HttpResponse#getContent()}.
-   * </p>
+   * <p>This method closes the content of the HTTP response from {@link HttpResponse#getContent()}.
    *
-   * <p>
-   * Subclasses may override by calling the super implementation.
-   * </p>
+   * <p>Subclasses may override by calling the super implementation.
    *
    * @param outputStream destination output stream
    */
@@ -688,13 +646,11 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   /**
    * Queues the request into the specified batch request container using the specified error class.
    *
-   * <p>
-   * Batched requests are then executed when {@link BatchRequest#execute()} is called.
-   * </p>
+   * <p>Batched requests are then executed when {@link BatchRequest#execute()} is called.
    *
    * @param batchRequest batch request container
-   * @param errorClass data class the unsuccessful response will be parsed into or
-   *        {@code Void.class} to ignore the content
+   * @param errorClass data class the unsuccessful response will be parsed into or {@code
+   *     Void.class} to ignore the content
    * @param callback batch callback
    */
   public final <E> void queue(
@@ -715,18 +671,19 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   }
 
   /**
-   * Ensures that the specified required parameter is not null or
-   * {@link AbstractGoogleClient#getSuppressRequiredParameterChecks()} is true.
+   * Ensures that the specified required parameter is not null or {@link
+   * AbstractGoogleClient#getSuppressRequiredParameterChecks()} is true.
    *
    * @param value the value of the required parameter
    * @param name the name of the required parameter
-   * @throws IllegalArgumentException if the specified required parameter is null and
-   *         {@link AbstractGoogleClient#getSuppressRequiredParameterChecks()} is false
+   * @throws IllegalArgumentException if the specified required parameter is null and {@link
+   *     AbstractGoogleClient#getSuppressRequiredParameterChecks()} is false
    * @since 1.14
    */
   protected final void checkRequiredParameter(Object value, String name) {
     Preconditions.checkArgument(
         abstractGoogleClient.getSuppressRequiredParameterChecks() || value != null,
-        "Required parameter %s must be specified", name);
+        "Required parameter %s must be specified",
+        name);
   }
 }
