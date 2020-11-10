@@ -40,7 +40,7 @@ public class MtlsUtils {
     private static final String DEFAULT_CONTEXT_AWARE_METADATA_PATH =
         System.getProperty("user.home") + "/.secureConnect/context_aware_metadata.json";
 
-    /** GOOGLE_API_USE_CLIENT_CERTIFICATE environment variable */
+    /** GOOGLE_API_USE_CLIENT_CERTIFICATE environment variable. */
     public static final String GOOGLE_API_USE_CLIENT_CERTIFICATE =
         "GOOGLE_API_USE_CLIENT_CERTIFICATE";
 
@@ -90,7 +90,7 @@ public class MtlsUtils {
         Process process = new ProcessBuilder(command).start();
         int exitCode = runCertificateProviderCommand(process, 1000);
         if (exitCode != 0) {
-          throw new IOException(String.format("Failed to execute cert provider command with exit code: %d", exitCode));
+          throw new IOException("Cert provider command failed with exit code: " + exitCode);
         }
 
         // Create mTLS key store with the input certificates from shell command.
