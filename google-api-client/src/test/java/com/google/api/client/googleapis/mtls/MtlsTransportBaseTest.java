@@ -41,7 +41,7 @@ public abstract class MtlsTransportBaseTest {
     private String keyStorePassword;
     private boolean throwExceptionForGetKeyStore;
 
-    TestMtlsProvider(
+    public TestMtlsProvider(
         boolean useClientCertificate,
         KeyStore keystore,
         String keyStorePassword,
