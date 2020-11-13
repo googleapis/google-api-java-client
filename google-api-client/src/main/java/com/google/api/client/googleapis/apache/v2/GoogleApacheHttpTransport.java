@@ -28,6 +28,9 @@ import java.security.KeyStore;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
 import org.apache.http.client.HttpClient;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -71,12 +74,6 @@ public final class GoogleApacheHttpTransport {
       mtlsKeyStorePassword = mtlsProvider.getKeyStorePassword();
     }
 
-    PoolingHttpClientConnectionManager connectionManager =
-        new PoolingHttpClientConnectionManager(-1, TimeUnit.MILLISECONDS);
-
-    // Disable the stale connection check (previously configured in the HttpConnectionParams
-    connectionManager.setValidateAfterInactivity(-1);
-
     // Use the included trust store
     KeyStore trustStore = GoogleUtils.getCertificateTrustStore();
     SSLContext sslContext = SslUtils.getTlsSslContext();
@@ -95,6 +92,16 @@ public final class GoogleApacheHttpTransport {
       SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory());
     }
     LayeredConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext);
+
+    Registry<ConnectionSocketFactory> socketFactoryRegistry =
+        RegistryBuilder.<ConnectionSocketFactory>create().register("https", socketFactory).build();
+    PoolingHttpClientConnectionManager connectionManager =
+        new PoolingHttpClientConnectionManager(
+            socketFactoryRegistry, null, null, null, -1, TimeUnit.MILLISECONDS);
+
+    // Disable the stale connection check (previously configured in the
+    // HttpConnectionParams
+    connectionManager.setValidateAfterInactivity(-1);
 
     HttpClient client =
         HttpClientBuilder.create()
