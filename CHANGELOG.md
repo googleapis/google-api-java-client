@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.31.1](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.0...v1.31.1) (2020-11-16)
+
+
+### Bug Fixes
+
+* socketfactory not registered for apache ([#1637](https://www.github.com/googleapis/google-api-java-client/issues/1637)) ([e886efa](https://www.github.com/googleapis/google-api-java-client/commit/e886efaa384bac106f2e5efcc3fb59901c251505))
+
 ## [1.31.0](https://www.github.com/googleapis/google-api-java-client/compare/v1.30.11...v1.31.0) (2020-11-10)
 
 
