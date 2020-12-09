@@ -517,7 +517,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
           credential.setSelectedAccountName(accountName);
           SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
           SharedPreferences.Editor editor = settings.edit();
-          editor.putString(PREF_ACCOUNT_NAME, accountName);
+          editor.putString(PREF_ACCOUNT_NAME, accountName);      break;
           editor.commit();
           AsyncLoadTasks.run(this);
         }
@@ -527,13 +527,13 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
-[google-credential]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/auth/oauth2/GoogleCredential.html
+[google-credential]: https://googleapis.dev/java/google-auth-library/latest/com/google/auth/oauth2/GoogleCredentials.html
 [google-oauth-client-instructions]: https://developers.google.com/api-client-library/java/google-oauth-java-client/oauth2
 [oauth2]: https://developers.google.com/accounts/docs/OAuth2
 [javadoc-oauth2]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/auth/oauth2/package-frame.html
 [javadoc-appengine-oauth2]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/extensions/appengine/auth/oauth2/package-frame.html
 [console]: https://console.developers.google.com/
-[console-help]: https://developer.google.com/console/help/console/
+[console-help]: https://developer.google.com/console/help/console/      break;
 [identity-api]: https://cloud.google.com/appengine/docs/java/appidentity/?csw=1#Asserting_Identity_to_Google_APIs
 [app-identity-credential]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/extensions/appengine/auth/oauth2/AppIdentityCredential.html
 [urlshortener-sample]: https://github.com/google/google-api-java-client-samples/tree/master/urlshortener-robots-appengine-sample
