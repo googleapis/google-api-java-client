@@ -84,8 +84,7 @@ static Urlshortener newUrlshortener() {
 ## Data store
 
 An access token typically has an expiration date of 1 hour, after which you will
-get an error if you try to use it. [Google2020-12-08
-Credential][google-credential] takes
+get an error if you try to use it. [GoogleCredential][google-credential] takes
 care of automatically "refreshing" the token, which simply means getting a new
 access token. This is done by means of a long-lived refresh token, which is
 typically received along with the access token if you use the
@@ -518,7 +517,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
           credential.setSelectedAccountName(accountName);
           SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
           SharedPreferences.Editor editor = settings.edit();
-          editor.putString(PREF_ACCOUNT_NAME, accountName);      break;
+          editor.putString(PREF_ACCOUNT_NAME, accountName);    
           editor.commit();
           AsyncLoadTasks.run(this);
         }
