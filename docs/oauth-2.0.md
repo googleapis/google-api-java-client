@@ -84,7 +84,8 @@ static Urlshortener newUrlshortener() {
 ## Data store
 
 An access token typically has an expiration date of 1 hour, after which you will
-get an error if you try to use it. [GoogleCredential][google-credential] takes
+get an error if you try to use it. [Google2020-12-08
+Credential][google-credential] takes
 care of automatically "refreshing" the token, which simply means getting a new
 access token. This is done by means of a long-lived refresh token, which is
 typically received along with the access token if you use the
@@ -533,7 +534,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 [javadoc-oauth2]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/auth/oauth2/package-frame.html
 [javadoc-appengine-oauth2]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/extensions/appengine/auth/oauth2/package-frame.html
 [console]: https://console.developers.google.com/
-[console-help]: https://developer.google.com/console/help/console/      break;
+[console-help]: https://developer.google.com/console/help/console/      
 [identity-api]: https://cloud.google.com/appengine/docs/java/appidentity/?csw=1#Asserting_Identity_to_Google_APIs
 [app-identity-credential]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/extensions/appengine/auth/oauth2/AppIdentityCredential.html
 [urlshortener-sample]: https://github.com/google/google-api-java-client-samples/tree/master/urlshortener-robots-appengine-sample
