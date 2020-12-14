@@ -47,12 +47,14 @@ For instructions on setting up your credentials properly, see the
 already have an access token, you can make a request in the following way:
 
 ```java
-  GoogleCredentials googleCredentials = GoogleCredentials.create(ACCESS_TOKEN);
-    HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(googleCredentials);
-    Storage storage = new Storage.Builder(HTTP_TRANSPORT,
-        JSON_FACTORY,
-        requestInitializer)
-        .setApplicationName("MyProject-1234.json")
+HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+
+GoogleCredentials googleCredentials = GoogleCredentials.create(access_token);
+HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(googleCredentials);
+
+Storage storage = new Storage.Builder(httpTransport, jsonFactory, requestInitializer)
+        .setApplicationName("MyProject-1234")
         .build();
 ```
 
@@ -349,13 +351,16 @@ a private key downloaded from the [Google API Console][console].
 For example, you can make a request in the following way:
 
 ```java
-    //Build service account credential
-    GoogleCredentials googleCredentials = GoogleCredentials.
-        fromStream(new FileInputStream("/path/to/file"));
-    HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(googleCredentials);
+HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 
-    Storage storage = new Storage.Builder(HTTP_TRANSPORT, JSON_FACTORY, requestInitializer)
-        .setApplicationName("MyProject-1234.json)
+//Build service account credential
+GoogleCredentials googleCredentials = GoogleCredentials.
+        fromStream(new FileInputStream("/path/to/file"));
+HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(googleCredentials);
+
+Storage storage = new Storage.Builder(httpTransport, jsonFactory, requestInitializer)
+        .setApplicationName("MyProject-1234")
         .build();
 ```
 
