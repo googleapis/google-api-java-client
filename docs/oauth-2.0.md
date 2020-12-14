@@ -47,12 +47,13 @@ For instructions on setting up your credentials properly, see the
 already have an access token, you can make a request in the following way:
 
 ```java
-GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken);
-Plus plus = new Plus.builder(new NetHttpTransport(),
-                             JacksonFactory.getDefaultInstance(),
-                             credential)
-    .setApplicationName("Google-PlusSample/1.0")
-    .build();
+  GoogleCredentials googleCredentials = GoogleCredentials.create(ACCESS_TOKEN);
+    HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(googleCredentials);
+    Storage storage = new Storage.Builder(HTTP_TRANSPORT,
+        JSON_FACTORY,
+        requestInitializer)
+        .setApplicationName("MyProject-1234.json")
+        .build();
 ```
 
 ### Google App Engine identity
@@ -345,20 +346,17 @@ end-user's data, Service Accounts provide access to the client application's
 own data. Your client application signs the request for an access token using
 a private key downloaded from the [Google API Console][console].
 
-Example code taken from [plus-serviceaccount-cmdline-sample][plus-sample]:
+For example, you can make a request in the following way:
 
 ```java
-HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-...
-// Build service account credential.
+    //Build service account credential
+    GoogleCredentials googleCredentials = GoogleCredentials.
+        fromStream(new FileInputStream("/path/to/file"));
+    HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(googleCredentials);
 
-GoogleCredential credential = GoogleCredential.fromStream(new FileInputStream("MyProject-1234.json"))
-    .createScoped(Collections.singleton(PlusScopes.PLUS_ME));
-// Set up global Plus instance.
-plus = new Plus.Builder(httpTransport, jsonFactory, credential)
-    .setApplicationName(APPLICATION_NAME).build();
-...
+    Storage storage = new Storage.Builder(HTTP_TRANSPORT, JSON_FACTORY, requestInitializer)
+        .setApplicationName("MyProject-1234.json)
+        .build();
 ```
 
 For an additional sample, see [storage-serviceaccount-cmdline-sample][storage-sample].
