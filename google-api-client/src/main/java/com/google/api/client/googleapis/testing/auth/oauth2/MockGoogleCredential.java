@@ -6,7 +6,7 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
@@ -84,7 +84,7 @@ public class MockGoogleCredential extends GoogleCredential {
         setClientAuthentication(new MockClientAuthentication());
       }
       if (getJsonFactory() == null) {
-        setJsonFactory(new JacksonFactory());
+        setJsonFactory(new GsonFactory());
       }
       return new MockGoogleCredential(this);
     }
