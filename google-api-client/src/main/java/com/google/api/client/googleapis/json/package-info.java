@@ -113,7 +113,7 @@
  * headers.setApplicationName("Google-YouTubeSample/1.0");
  * headers.gdataVersion = "2";
  * JsonCParser parser = new JsonCParser();
- * parser.jsonFactory = new JacksonFactory();
+ * parser.jsonFactory = new GsonFactory();
  * transport.addParser(parser);
  * // insert authentication code...
  * return transport;

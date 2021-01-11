@@ -23,7 +23,7 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import java.io.File;
@@ -45,7 +45,7 @@ import junit.framework.TestCase;
 /** Tests {@link DefaultCredentialProvider}. */
 public class DefaultCredentialProviderTest extends TestCase {
 
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  private static final JsonFactory JSON_FACTORY = new GsonFactory();
 
   private static final Collection<String> SCOPES =
       Collections.unmodifiableCollection(Arrays.asList("scope1", "scope2"));

@@ -20,7 +20,7 @@ import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import java.io.IOException;
 import java.util.Arrays;
@@ -72,7 +72,7 @@ public class AppIdentityCredentialTest extends TestCase {
     final Collection<String> emptyScopes = Collections.emptyList();
 
     HttpTransport transport = new MockHttpTransport();
-    JsonFactory jsonFactory = new JacksonFactory();
+    JsonFactory jsonFactory = new GsonFactory();
 
     MockAppIdentityService appIdentity = new MockAppIdentityService();
     appIdentity.setAccessTokenText(expectedAccessToken);
@@ -108,7 +108,7 @@ public class AppIdentityCredentialTest extends TestCase {
     final String expectedAccessToken = "ExpectedAccessToken";
 
     HttpTransport transport = new MockHttpTransport();
-    JsonFactory jsonFactory = new JacksonFactory();
+    JsonFactory jsonFactory = new GsonFactory();
 
     MockAppIdentityService appIdentity = new MockAppIdentityService();
     appIdentity.setAccessTokenText(expectedAccessToken);
@@ -124,7 +124,7 @@ public class AppIdentityCredentialTest extends TestCase {
   }
 
   public void testAppEngineCredentialWrapperNullTransportThrows() throws IOException {
-    JsonFactory jsonFactory = new JacksonFactory();
+    JsonFactory jsonFactory = new GsonFactory();
     try {
       new AppIdentityCredential.AppEngineCredentialWrapper(null, jsonFactory);
       fail();

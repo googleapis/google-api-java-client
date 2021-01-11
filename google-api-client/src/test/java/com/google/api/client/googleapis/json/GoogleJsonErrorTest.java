@@ -22,7 +22,7 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
@@ -36,7 +36,7 @@ import junit.framework.TestCase;
  */
 public class GoogleJsonErrorTest extends TestCase {
 
-  static final JsonFactory FACTORY = new JacksonFactory();
+  static final JsonFactory FACTORY = new GsonFactory();
   static final String ERROR =
       "{"
           + "\"code\":403,"

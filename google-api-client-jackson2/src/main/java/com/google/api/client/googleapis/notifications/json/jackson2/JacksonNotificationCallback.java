@@ -17,7 +17,7 @@ package com.google.api.client.googleapis.notifications.json.jackson2;
 import com.google.api.client.googleapis.notifications.TypedNotificationCallback;
 import com.google.api.client.googleapis.notifications.json.JsonNotificationCallback;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.Beta;
 
 /**

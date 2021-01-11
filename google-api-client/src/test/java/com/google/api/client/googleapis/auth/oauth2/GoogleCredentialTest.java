@@ -18,7 +18,7 @@ import com.google.api.client.googleapis.testing.auth.oauth2.MockTokenServerTrans
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.util.SecurityTestUtils;
 import java.io.ByteArrayInputStream;
@@ -36,7 +36,7 @@ import junit.framework.TestCase;
  */
 public class GoogleCredentialTest extends TestCase {
 
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  private static final JsonFactory JSON_FACTORY = new GsonFactory();
 
   private static final Collection<String> SCOPES =
       Collections.unmodifiableCollection(Arrays.asList("scope1", "scope2"));

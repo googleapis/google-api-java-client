@@ -41,7 +41,7 @@ import java.util.Collection;
  * static void refreshAccessToken() throws IOException {
  * try {
  * TokenResponse response =
- * new GoogleRefreshTokenRequest(new NetHttpTransport(), new JacksonFactory(),
+ * new GoogleRefreshTokenRequest(new NetHttpTransport(), new GsonFactory(),
  * "tGzv3JOkF0XG5Qx2TlKWIA", "s6BhdRkqt3", "7Fjfp0ZBr1KtDRbnfVdmIw").execute();
  * System.out.println("Access token: " + response.getAccessToken());
  * } catch (TokenResponseException e) {

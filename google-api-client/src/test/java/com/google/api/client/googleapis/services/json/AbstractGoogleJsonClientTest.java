@@ -22,7 +22,7 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
@@ -56,7 +56,7 @@ public class AbstractGoogleJsonClientTest extends TestCase {
             };
           }
         };
-    JsonFactory jsonFactory = new JacksonFactory();
+    JsonFactory jsonFactory = new GsonFactory();
     MockGoogleJsonClient client =
         new MockGoogleJsonClient.Builder(
                 transport, jsonFactory, HttpTesting.SIMPLE_URL, "", null, false)
