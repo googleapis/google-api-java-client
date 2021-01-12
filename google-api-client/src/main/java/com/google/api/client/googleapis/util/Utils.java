@@ -17,7 +17,7 @@ package com.google.api.client.googleapis.util;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.Beta;
 
 /**
@@ -35,11 +35,11 @@ public final class Utils {
   }
 
   private static class JsonFactoryInstanceHolder {
-    // The jackson2.JacksonFactory was introduced as a product dependency in 1.19 to enable
+    // The static JsonFactory was introduced as a product dependency in 1.19 to enable
     // other APIs to not require one of these for input. This was the most commonly used
     // implementation in public samples. This is a compile-time dependency to help detect the
     // dependency as early as possible.
-    static final JsonFactory INSTANCE = new JacksonFactory();
+    static final JsonFactory INSTANCE = new GsonFactory();
   }
 
   /** Returns a cached default implementation of the HttpTransport interface. */

@@ -22,7 +22,9 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.Preconditions;
 import java.io.IOException;
 import java.util.Collection;
@@ -41,26 +43,26 @@ import java.util.Collection;
  *
  * <pre>
  * static void requestAccessToken() throws IOException {
- * try {
- * GoogleTokenResponse response =
- * new GoogleAuthorizationCodeTokenRequest(new NetHttpTransport(), new JacksonFactory(),
- * "812741506391.apps.googleusercontent.com", "{client_secret}",
- * "4/P7q7W91a-oMsCeLvIaQm6bTrgtp7", "https://oauth2-login-demo.appspot.com/code")
- * .execute();
- * System.out.println("Access token: " + response.getAccessToken());
- * } catch (TokenResponseException e) {
- * if (e.getDetails() != null) {
- * System.err.println("Error: " + e.getDetails().getError());
- * if (e.getDetails().getErrorDescription() != null) {
- * System.err.println(e.getDetails().getErrorDescription());
- * }
- * if (e.getDetails().getErrorUri() != null) {
- * System.err.println(e.getDetails().getErrorUri());
- * }
- * } else {
- * System.err.println(e.getMessage());
- * }
- * }
+ *   try {
+ *     GoogleTokenResponse response =
+ *       new GoogleAuthorizationCodeTokenRequest(new NetHttpTransport(), new GsonFactory(),
+ *             "812741506391.apps.googleusercontent.com", "{client_secret}",
+ *             "4/P7q7W91a-oMsCeLvIaQm6bTrgtp7", "https://oauth2-login-demo.appspot.com/code")
+ *       .execute();
+ *     System.out.println("Access token: " + response.getAccessToken());
+ *   } catch (TokenResponseException e) {
+ *     if (e.getDetails() != null) {
+ *       System.err.println("Error: " + e.getDetails().getError());
+ *       if (e.getDetails().getErrorDescription() != null) {
+ *         System.err.println(e.getDetails().getErrorDescription());
+ *       }
+ *       if (e.getDetails().getErrorUri() != null) {
+ *         System.err.println(e.getDetails().getErrorUri());
+ *       }
+ *     } else {
+ *       System.err.println(e.getMessage());
+ *     }
+ *   }
  * }
  * </pre>
  *
