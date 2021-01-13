@@ -23,7 +23,7 @@ import com.google.api.client.util.Beta;
 /**
  * {@link Beta} <br>
  * A {@link TypedNotificationCallback} which uses an JSON content encoding with {@link
- * JacksonFactory#getDefaultInstance()}.
+ * GsonFactory#getDefaultInstance()}.
  *
  * <p>Must NOT be implemented in form of an anonymous class as this will break serialization.
  *
@@ -31,7 +31,7 @@ import com.google.api.client.util.Beta;
  *
  * <pre>
  * static class MyNotificationCallback
- * extends GsonNotificationCallback{@literal <}ListResponse{@literal >} {
+ * extends JacksonNotificationCallback{@literal <}ListResponse{@literal >} {
  *
  * private static final long serialVersionUID = 1L;
  *
@@ -67,6 +67,6 @@ public abstract class JacksonNotificationCallback<T> extends JsonNotificationCal
 
   @Override
   protected JsonFactory getJsonFactory() {
-    return JacksonFactory.getDefaultInstance();
+    return GsonFactory.getDefaultInstance();
   }
 }
