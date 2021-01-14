@@ -448,7 +448,7 @@
       <plugin>
         <groupId>com.coveo</groupId>
         <artifactId>fmt-maven-plugin</artifactId>
-        <version>2.9</version>
+        <version>2.10</version>
         <configuration>
           <style>google</style>
           <verbose>true</verbose>
@@ -457,7 +457,7 @@
           <dependency>
             <groupId>com.google.googlejavaformat</groupId>
             <artifactId>google-java-format</artifactId>
-            <version>1.7</version>
+            <version>1.9</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -465,13 +465,13 @@
   </build>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>1.38.0</project.http.version>
-    <project.oauth.version>1.31.2</project.oauth.version>
+    <project.http.version>1.38.1</project.http.version>
+    <project.oauth.version>1.31.4</project.oauth.version>
     <project.jsr305.version>3.0.2</project.jsr305.version>
     <project.gson.version>2.8.6</project.gson.version>
     <project.protobuf-java.version>3.14.0</project.protobuf-java.version>
     <project.guava.version>30.1-android</project.guava.version>
-    <project.appengine.version>1.9.83</project.appengine.version>
+    <project.appengine.version>1.9.84</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.jdo2-api.version>2.3-eb</project.jdo2-api.version>
     <project.datanucleus-core.version>3.2.2</project.datanucleus-core.version>
