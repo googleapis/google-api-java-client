@@ -552,11 +552,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
-<<<<<<< HEAD
 [google-credentials]: https://googleapis.dev/java/google-auth-library/latest/index.html?com/google/auth/oauth2/GoogleCredentials.html
-=======
-[google-credential]: https://googleapis.dev/java/google-auth-library/latest/com/google/auth/oauth2/GoogleCredentials.html
->>>>>>> master
 [google-oauth-client-instructions]: https://developers.google.com/api-client-library/java/google-oauth-java-client/oauth2
 [oauth2]: https://developers.google.com/accounts/docs/OAuth2
 [javadoc-oauth2]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/auth/oauth2/package-frame.html
