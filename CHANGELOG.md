@@ -1,5 +1,24 @@
 # Changelog
 
+### [1.31.2](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.1...v1.31.2) (2021-01-14)
+
+
+### Bug Fixes
+
+* remove unused code ([#1664](https://www.github.com/googleapis/google-api-java-client/issues/1664)) ([3e9169f](https://www.github.com/googleapis/google-api-java-client/commit/3e9169f1af87dd947d24440f82fd4e0d7d4e4e5a))
+* use Gson instead of Jackson ([#1661](https://www.github.com/googleapis/google-api-java-client/issues/1661)) ([63ed2ca](https://www.github.com/googleapis/google-api-java-client/commit/63ed2caecc200a407ef40b249bed158f18e2c5ae))
+
+
+### Documentation
+
+* Update the documentation link for GoogleCredential from deprecated version to newer version ([#1652](https://www.github.com/googleapis/google-api-java-client/issues/1652)) ([98db6ca](https://www.github.com/googleapis/google-api-java-client/commit/98db6ca0113396e715894a083227f062269ca93d))
+
+
+### Dependencies
+
+* update Guava to 30.0 ([#1645](https://www.github.com/googleapis/google-api-java-client/issues/1645)) ([9e34f37](https://www.github.com/googleapis/google-api-java-client/commit/9e34f37e2ef667507e03cb2d495b2c945851eb30))
+* update Guava to 30.1 ([#1658](https://www.github.com/googleapis/google-api-java-client/issues/1658)) ([677011e](https://www.github.com/googleapis/google-api-java-client/commit/677011ea4ec40e85d6e219de4e0d8d095b40acd8))
+
 ### [1.31.1](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.0...v1.31.1) (2020-11-16)
 
 
