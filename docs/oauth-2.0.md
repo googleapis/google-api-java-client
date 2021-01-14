@@ -48,7 +48,7 @@ already have an access token, you can make a request in the following way:
 
 ```java
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.books.Books;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.AccessToken;
@@ -60,7 +60,7 @@ GoogleCredentials credentials =
 Books books =
     new Books.Builder(
             new NetHttpTransport(),
-            JacksonFactory.getDefaultInstance(),
+            GsonFactory.getDefaultInstance(),
             new HttpCredentialsAdapter(credentials))
         .setApplicationName("BooksExample/1.0")
         .build();
@@ -80,7 +80,7 @@ scope you need.
 
 ```java
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.books.Books;
 import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
@@ -100,7 +100,7 @@ GoogleCredentials credentials =
 Books books =
     new Books.Builder(
             new NetHttpTransport(),
-            JacksonFactory.getDefaultInstance(),
+            GsonFactory.getDefaultInstance(),
             new HttpCredentialsAdapter(credentials))
         .setApplicationName("BooksExample/1.0")
         .build();
@@ -223,7 +223,7 @@ public class CalendarServletSample extends AbstractAuthorizationCodeServlet {
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws IOException {
     return new GoogleAuthorizationCodeFlow.Builder(
-        new NetHttpTransport(), JacksonFactory.getDefaultInstance(),
+        new NetHttpTransport(), GsonFactory.getDefaultInstance(),
         "[[ENTER YOUR CLIENT ID]]", "[[ENTER YOUR CLIENT SECRET]]",
         Collections.singleton(CalendarScopes.CALENDAR)).setDataStoreFactory(
         DATA_STORE_FACTORY).setAccessType("offline").build();
@@ -260,7 +260,7 @@ public class CalendarServletCallbackSample extends AbstractAuthorizationCodeCall
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws IOException {
     return new GoogleAuthorizationCodeFlow.Builder(
-        new NetHttpTransport(), JacksonFactory.getDefaultInstance()
+        new NetHttpTransport(), GsonFactory.getDefaultInstance()
         "[[ENTER YOUR CLIENT ID]]", "[[ENTER YOUR CLIENT SECRET]]",
         Collections.singleton(CalendarScopes.CALENDAR)).setDataStoreFactory(
         DATA_STORE_FACTORY).setAccessType("offline").build();
@@ -374,7 +374,7 @@ For example, you can make a request in the following way:
 
 ```java
 HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
 //Build service account credential
 GoogleCredentials googleCredentials = GoogleCredentials.
