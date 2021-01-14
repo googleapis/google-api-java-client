@@ -27,7 +27,7 @@ import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
@@ -48,7 +48,7 @@ public class AbstractGoogleClientRequestTest extends TestCase {
   private static final String ROOT_URL = "https://www.googleapis.com/test/";
   private static final String SERVICE_PATH = "path/v1/";
   private static final String URI_TEMPLATE = "tests/{testId}";
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  private static final JsonFactory JSON_FACTORY = new GsonFactory();
   private static final JsonObjectParser JSON_OBJECT_PARSER = new JsonObjectParser(JSON_FACTORY);
   private static final String ERROR_CONTENT =
       "{\"error\":{\"code\":401,\"errors\":[{\"domain\":\"global\","

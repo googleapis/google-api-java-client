@@ -14,7 +14,7 @@
 
 package com.google.api.client.googleapis.auth.oauth2;
 
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.common.collect.ImmutableList;
 import junit.framework.TestCase;
@@ -33,7 +33,7 @@ public class GoogleAuthorizationCodeFlowTest extends TestCase {
     GoogleAuthorizationCodeFlow.Builder builder =
         new GoogleAuthorizationCodeFlow.Builder(
             new MockHttpTransport(),
-            new JacksonFactory(),
+            new GsonFactory(),
             CLIENT_ID,
             CLIENT_SECRET,
             ImmutableList.of("https://www.googleapis.com/auth/userinfo.email"));

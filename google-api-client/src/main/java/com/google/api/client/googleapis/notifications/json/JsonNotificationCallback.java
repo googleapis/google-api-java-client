@@ -50,7 +50,7 @@ import java.io.IOException;
  *
  * {@literal @}Override
  * protected JsonFactory getJsonFactory() throws IOException {
- * return new JacksonFactory();
+ * return new GsonFactory();
  * }
  *
  * {@literal @}Override

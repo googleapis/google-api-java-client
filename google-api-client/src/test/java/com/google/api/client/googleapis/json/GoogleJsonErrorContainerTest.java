@@ -16,7 +16,7 @@ package com.google.api.client.googleapis.json;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import junit.framework.TestCase;
 
 /**
@@ -26,7 +26,7 @@ import junit.framework.TestCase;
  */
 public class GoogleJsonErrorContainerTest extends TestCase {
 
-  static final JsonFactory FACTORY = new JacksonFactory();
+  static final JsonFactory FACTORY = new GsonFactory();
   static final String ERROR =
       "{"
           + "\"error\":{"

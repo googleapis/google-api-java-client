@@ -43,7 +43,7 @@ import java.util.Collection;
  * static void requestAccessToken() throws IOException {
  * try {
  * GoogleTokenResponse response =
- * new GoogleAuthorizationCodeTokenRequest(new NetHttpTransport(), new JacksonFactory(),
+ * new GoogleAuthorizationCodeTokenRequest(new NetHttpTransport(), new GsonFactory(),
  * "812741506391.apps.googleusercontent.com", "{client_secret}",
  * "4/P7q7W91a-oMsCeLvIaQm6bTrgtp7", "https://oauth2-login-demo.appspot.com/code")
  * .execute();

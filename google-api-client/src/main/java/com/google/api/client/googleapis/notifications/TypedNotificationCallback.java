@@ -51,7 +51,7 @@ import java.nio.charset.Charset;
  *
  * {@literal @}Override
  * protected ObjectParser getObjectParser(Notification notification) throws IOException {
- * return new JsonObjectParser(new JacksonFactory());
+ * return new JsonObjectParser(new GsonFactory());
  * }
  *
  * {@literal @}Override

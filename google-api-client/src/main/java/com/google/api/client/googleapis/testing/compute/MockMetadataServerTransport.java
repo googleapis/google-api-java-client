@@ -20,7 +20,7 @@ import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
@@ -41,7 +41,7 @@ public class MockMetadataServerTransport extends MockHttpTransport {
   private static final String METADATA_TOKEN_SERVER_URL =
       METADATA_SERVER_URL + "/computeMetadata/v1/instance/service-accounts/default/token";
 
-  static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  static final JsonFactory JSON_FACTORY = new GsonFactory();
 
   String accessToken;
 
