@@ -47,7 +47,7 @@ For instructions on setting up your credentials properly, see the
 already have an access token, you can make a request in the following way:
 
 ```java
-import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.books.Books;
 import com.google.auth.http.HttpCredentialsAdapter;
@@ -59,7 +59,7 @@ GoogleCredentials credentials =
 
 Books books =
     new Books.Builder(
-            new NetHttpTransport(),
+            GoogleNetHttpTransport.newTrustedTransport(),
             GsonFactory.getDefaultInstance(),
             new HttpCredentialsAdapter(credentials))
         .setApplicationName("BooksExample/1.0")
@@ -79,7 +79,7 @@ App Engine takes care of all of the details. You only specify the OAuth 2.0
 scope you need.
 
 ```java
-import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.books.Books;
 import com.google.appengine.api.appidentity.AppIdentityService;
@@ -99,7 +99,7 @@ GoogleCredentials credentials =
 
 Books books =
     new Books.Builder(
-            new NetHttpTransport(),
+            GoogleNetHttpTransport.newTrustedTransport(),
             GsonFactory.getDefaultInstance(),
             new HttpCredentialsAdapter(credentials))
         .setApplicationName("BooksExample/1.0")
