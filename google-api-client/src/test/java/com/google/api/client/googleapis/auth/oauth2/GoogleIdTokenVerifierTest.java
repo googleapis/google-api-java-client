@@ -16,7 +16,7 @@ package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.auth.openidconnect.IdTokenVerifier;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.json.webtoken.JsonWebSignature.Header;
 import com.google.api.client.testing.http.FixedClock;
 import com.google.api.client.util.Clock;
@@ -52,7 +52,7 @@ public class GoogleIdTokenVerifierTest extends TestCase {
     GoogleIdTokenVerifier.Builder builder =
         new GoogleIdTokenVerifier.Builder(
                 new GooglePublicKeysManagerTest.PublicCertsMockHttpTransport(),
-                new JacksonFactory())
+                new GsonFactory())
             .setIssuer(ISSUER)
             .setAudience(TRUSTED_CLIENT_IDS);
     assertEquals(Clock.SYSTEM, builder.getClock());
@@ -71,7 +71,7 @@ public class GoogleIdTokenVerifierTest extends TestCase {
     GoogleIdTokenVerifier verifier =
         new GoogleIdTokenVerifier.Builder(
                 new GooglePublicKeysManagerTest.PublicCertsMockHttpTransport(),
-                new JacksonFactory())
+                new GsonFactory())
             .build();
     Header header = new Header();
     header.setAlgorithm("RS25");
@@ -83,7 +83,7 @@ public class GoogleIdTokenVerifierTest extends TestCase {
     assertFalse(verifier.verify(idToken2));
     verifier =
         new GoogleIdTokenVerifier(
-            new GooglePublicKeysManagerTest.PublicCertsMockHttpTransport(), new JacksonFactory());
+            new GooglePublicKeysManagerTest.PublicCertsMockHttpTransport(), new GsonFactory());
     assertFalse(verifier.verify(idToken));
     assertFalse(verifier.verify(idToken2));
     // TODO(yanivi): add a unit test that returns true

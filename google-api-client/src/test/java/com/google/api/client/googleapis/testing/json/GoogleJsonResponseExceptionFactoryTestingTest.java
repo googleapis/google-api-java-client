@@ -16,7 +16,7 @@ package com.google.api.client.googleapis.testing.json;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import java.io.IOException;
 import junit.framework.TestCase;
 
@@ -27,7 +27,7 @@ import junit.framework.TestCase;
  */
 public class GoogleJsonResponseExceptionFactoryTestingTest extends TestCase {
 
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  private static final JsonFactory JSON_FACTORY = new GsonFactory();
   private static final int HTTP_CODE_NOT_FOUND = 404;
   private static final String REASON_PHRASE_NOT_FOUND = "NOT FOUND";
 
