@@ -273,16 +273,6 @@ public class BatchRequestTest extends TestCase {
     }
   }
 
-  @Deprecated
-  private static class MockExponentialBackOffPolicy extends ExponentialBackOffPolicy {
-    public MockExponentialBackOffPolicy() {}
-
-    @Override
-    public long getNextBackOffMillis() {
-      return 0;
-    }
-  }
-
   private static class MockTransport extends MockHttpTransport {
 
     final boolean testServerError;

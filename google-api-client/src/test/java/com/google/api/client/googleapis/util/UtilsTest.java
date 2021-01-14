@@ -17,10 +17,6 @@ package com.google.api.client.googleapis.util;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Map;
 import junit.framework.TestCase;
 
 /**
@@ -43,20 +39,5 @@ public class UtilsTest extends TestCase {
     assertTrue(transport instanceof NetHttpTransport);
     HttpTransport secondCall = Utils.getDefaultTransport();
     assertSame(transport, secondCall);
-  }
-
-  public static Map<String, String> parseQuery(String query) throws IOException {
-    Map<String, String> map = new HashMap<String, String>();
-    String[] entries = query.split("&");
-    for (String entry : entries) {
-      String[] sides = entry.split("=");
-      if (sides.length != 2) {
-        throw new IOException("Invalid Query String");
-      }
-      String key = URLDecoder.decode(sides[0], "UTF-8");
-      String value = URLDecoder.decode(sides[1], "UTF-8");
-      map.put(key, value);
-    }
-    return map;
   }
 }
