@@ -13,7 +13,7 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
+ * {@link com.google.api.client.util.Beta} <br>
  * Support for notification channels to listen for changes to watched Google API resources.
  *
  * @author Yaniv Inbar
@@ -22,4 +22,3 @@
  */
 @com.google.api.client.util.Beta
 package com.google.api.client.googleapis.notifications;
-

@@ -14,11 +14,9 @@
 
 package com.google.api.client.googleapis.compute;
 
-
 import com.google.api.client.googleapis.testing.compute.MockMetadataServerTransport;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
-
+import com.google.api.client.json.gson.GsonFactory;
 import junit.framework.TestCase;
 
 /**
@@ -34,7 +32,7 @@ public class ComputeCredentialTest extends TestCase {
 
     HttpTransport transport = new MockMetadataServerTransport(ACCESS_TOKEN);
 
-    ComputeCredential credential = new ComputeCredential(transport, new JacksonFactory());
+    ComputeCredential credential = new ComputeCredential(transport, new GsonFactory());
 
     assertTrue(credential.refreshToken());
     assertEquals(ACCESS_TOKEN, credential.getAccessToken());

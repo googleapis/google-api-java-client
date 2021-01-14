@@ -20,7 +20,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Beta;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Thread-safe mock Google JSON client.
  *
  * @since 1.12
@@ -31,7 +31,6 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
 
   /**
    * @param builder builder
-   *
    * @since 1.14
    */
   protected MockGoogleJsonClient(Builder builder) {
@@ -46,20 +45,28 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
    * @param httpRequestInitializer HTTP request initializer or {@code null} for none
    * @param legacyDataWrapper whether using the legacy data wrapper in responses
    */
-  public MockGoogleJsonClient(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
-      String servicePath, HttpRequestInitializer httpRequestInitializer,
+  public MockGoogleJsonClient(
+      HttpTransport transport,
+      JsonFactory jsonFactory,
+      String rootUrl,
+      String servicePath,
+      HttpRequestInitializer httpRequestInitializer,
       boolean legacyDataWrapper) {
-    this(new Builder(
-        transport, jsonFactory, rootUrl, servicePath, httpRequestInitializer, legacyDataWrapper));
+    this(
+        new Builder(
+            transport,
+            jsonFactory,
+            rootUrl,
+            servicePath,
+            httpRequestInitializer,
+            legacyDataWrapper));
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Builder for {@link MockGoogleJsonClient}.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
    */
   @Beta
   public static class Builder extends AbstractGoogleJsonClient.Builder {
@@ -72,8 +79,12 @@ public class MockGoogleJsonClient extends AbstractGoogleJsonClient {
      * @param httpRequestInitializer HTTP request initializer or {@code null} for none
      * @param legacyDataWrapper whether using the legacy data wrapper in responses
      */
-    public Builder(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
-        String servicePath, HttpRequestInitializer httpRequestInitializer,
+    public Builder(
+        HttpTransport transport,
+        JsonFactory jsonFactory,
+        String rootUrl,
+        String servicePath,
+        HttpRequestInitializer httpRequestInitializer,
         boolean legacyDataWrapper) {
       super(
           transport, jsonFactory, rootUrl, servicePath, httpRequestInitializer, legacyDataWrapper);

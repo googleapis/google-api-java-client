@@ -22,16 +22,13 @@ import com.google.api.client.http.UriTemplate;
 import com.google.api.client.http.protobuf.ProtoHttpContent;
 import com.google.api.client.util.Beta;
 import com.google.protobuf.MessageLite;
-
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Google protocol buffer request for a {@link AbstractGoogleProtoClient}.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @param <T> type of the response
  * @since 1.16
@@ -47,16 +44,24 @@ public abstract class AbstractGoogleProtoClientRequest<T> extends AbstractGoogle
    * @param abstractGoogleProtoClient Google protocol buffer client
    * @param requestMethod HTTP Method
    * @param uriTemplate URI template for the path relative to the base URL. If it starts with a "/"
-   *        the base path from the base URL will be stripped out. The URI template can also be a
-   *        full URL. URI template expansion is done using
-   *        {@link UriTemplate#expand(String, String, Object, boolean)}
+   *     the base path from the base URL will be stripped out. The URI template can also be a full
+   *     URL. URI template expansion is done using {@link UriTemplate#expand(String, String, Object,
+   *     boolean)}
    * @param message message to serialize or {@code null} for none
    * @param responseClass response class to parse into
    */
-  protected AbstractGoogleProtoClientRequest(AbstractGoogleProtoClient abstractGoogleProtoClient,
-      String requestMethod, String uriTemplate, MessageLite message, Class<T> responseClass) {
-    super(abstractGoogleProtoClient, requestMethod, uriTemplate, message == null
-        ? null : new ProtoHttpContent(message), responseClass);
+  protected AbstractGoogleProtoClientRequest(
+      AbstractGoogleProtoClient abstractGoogleProtoClient,
+      String requestMethod,
+      String uriTemplate,
+      MessageLite message,
+      Class<T> responseClass) {
+    super(
+        abstractGoogleProtoClient,
+        requestMethod,
+        uriTemplate,
+        message == null ? null : new ProtoHttpContent(message),
+        responseClass);
     this.message = message;
   }
 
@@ -78,27 +83,23 @@ public abstract class AbstractGoogleProtoClientRequest<T> extends AbstractGoogle
   /**
    * Queues the request into the specified batch request container.
    *
-   * <p>
-   * Batched requests are then executed when {@link BatchRequest#execute()} is called.
-   * </p>
-   * <p>
-   * Example usage:
-   * </p>
+   * <p>Batched requests are then executed when {@link BatchRequest#execute()} is called.
+   *
+   * <p>Example usage:
    *
    * <pre>
    *
-    request.queue(batchRequest, new BatchCallback{@literal <}SomeResponseType, Void{@literal >}() {
-
-      public void onSuccess(SomeResponseType content, HttpHeaders responseHeaders) {
-        log("Success");
-      }
-
-      public void onFailure(Void unused, HttpHeaders responseHeaders) {
-        log(e.getMessage());
-      }
-    });
-   * </pre>
+   * request.queue(batchRequest, new BatchCallback{@literal <}SomeResponseType, Void{@literal >}() {
    *
+   * public void onSuccess(SomeResponseType content, HttpHeaders responseHeaders) {
+   * log("Success");
+   * }
+   *
+   * public void onFailure(Void unused, HttpHeaders responseHeaders) {
+   * log(e.getMessage());
+   * }
+   * });
+   * </pre>
    *
    * @param batchRequest batch request container
    * @param callback batch callback

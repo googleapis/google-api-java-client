@@ -58,29 +58,47 @@ public class MethodOverrideTest extends TestCase {
 
   public void testIntercept() throws Exception {
     subtestIntercept(ImmutableSet.<String>of(), new MockHttpTransport(), new MethodOverride());
-    subtestIntercept(OVERRIDDEN_METHODS, new MockHttpTransport(),
+    subtestIntercept(
+        OVERRIDDEN_METHODS,
+        new MockHttpTransport(),
         new MethodOverride.Builder().setOverrideAllMethods(true).build());
-    subtestIntercept(OVERRIDDEN_METHODS, new MockHttpTransport.Builder()
-        .setSupportedMethods(ImmutableSet.<String>of(HttpMethods.GET, HttpMethods.POST)).build(),
+    subtestIntercept(
+        OVERRIDDEN_METHODS,
+        new MockHttpTransport.Builder()
+            .setSupportedMethods(ImmutableSet.<String>of(HttpMethods.GET, HttpMethods.POST))
+            .build(),
         new MethodOverride());
   }
 
-  private void subtestIntercept(Collection<String> methodsThatShouldOverride,
-      HttpTransport transport, MethodOverride interceptor) throws Exception {
+  private void subtestIntercept(
+      Collection<String> methodsThatShouldOverride,
+      HttpTransport transport,
+      MethodOverride interceptor)
+      throws Exception {
     for (String requestMethod : SUPPORTED_METHODS) {
       subtestIntercept(
           methodsThatShouldOverride.contains(requestMethod), transport, interceptor, requestMethod);
     }
   }
 
-  private void subtestIntercept(boolean shouldOverride, HttpTransport transport,
-      MethodOverride interceptor, String requestMethod) throws Exception {
-    HttpRequest request = transport.createRequestFactory()
-        .buildRequest(requestMethod, HttpTesting.SIMPLE_GENERIC_URL, null);
+  private void subtestIntercept(
+      boolean shouldOverride,
+      HttpTransport transport,
+      MethodOverride interceptor,
+      String requestMethod)
+      throws Exception {
+    HttpRequest request =
+        transport
+            .createRequestFactory()
+            .buildRequest(requestMethod, HttpTesting.SIMPLE_GENERIC_URL, null);
     interceptor.intercept(request);
-    assertEquals(requestMethod, shouldOverride ? HttpMethods.POST : requestMethod,
+    assertEquals(
+        requestMethod,
+        shouldOverride ? HttpMethods.POST : requestMethod,
         request.getRequestMethod());
-    assertEquals(requestMethod, shouldOverride ? requestMethod : null,
+    assertEquals(
+        requestMethod,
+        shouldOverride ? requestMethod : null,
         request.getHeaders().get(MethodOverride.HEADER));
   }
 

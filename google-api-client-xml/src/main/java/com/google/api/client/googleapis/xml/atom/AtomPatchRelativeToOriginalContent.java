@@ -25,21 +25,19 @@ import java.util.Map;
 import org.xmlpull.v1.XmlSerializer;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Serializes an optimal Atom XML PATCH HTTP content based on the data key/value mapping object for
  * an Atom entry, by comparing the original value to the patched value.
  *
- * <p>
- * Sample usage:
- * </p>
+ * <p>Sample usage:
  *
  * <pre>
  * <code>
-  static void setContent(HttpRequest request, XmlNamespaceDictionary namespaceDictionary,
-      Object originalEntry, Object patchedEntry) {
-    request.setContent(
-        new AtomPatchRelativeToOriginalContent(namespaceDictionary, originalEntry, patchedEntry));
-  }
+ * static void setContent(HttpRequest request, XmlNamespaceDictionary namespaceDictionary,
+ * Object originalEntry, Object patchedEntry) {
+ * request.setContent(
+ * new AtomPatchRelativeToOriginalContent(namespaceDictionary, originalEntry, patchedEntry));
+ * }
  * </code>
  * </pre>
  *

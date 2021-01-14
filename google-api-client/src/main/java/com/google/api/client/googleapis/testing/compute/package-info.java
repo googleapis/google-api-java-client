@@ -13,11 +13,10 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
+ * {@link com.google.api.client.util.Beta} <br>
  * Test utilities for the {@code com.google.api.client.googleapis.compute} package.
  *
  * @since 1.19
  */
 @com.google.api.client.util.Beta
 package com.google.api.client.googleapis.testing.compute;
-

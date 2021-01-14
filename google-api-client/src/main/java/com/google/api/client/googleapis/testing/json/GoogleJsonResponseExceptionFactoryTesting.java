@@ -23,13 +23,11 @@ import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
- * Factory class that builds {@link GoogleJsonResponseException} instances for
- * testing.
+ * {@link Beta} <br>
+ * Factory class that builds {@link GoogleJsonResponseException} instances for testing.
  *
  * @since 1.18
  */
@@ -37,38 +35,41 @@ import java.io.IOException;
 public final class GoogleJsonResponseExceptionFactoryTesting {
 
   /**
-   * Convenience factory method that builds a {@link GoogleJsonResponseException}
-   * from its arguments. The method builds a dummy {@link HttpRequest} and
-   * {@link HttpResponse}, sets the response's status to a user-specified HTTP
-   * error code, suppresses exceptions, and executes the request. This forces
-   * the underlying framework to create, but not throw, a
-   * {@link GoogleJsonResponseException}, which the method retrieves and returns
-   * to the invoker.
+   * Convenience factory method that builds a {@link GoogleJsonResponseException} from its
+   * arguments. The method builds a dummy {@link HttpRequest} and {@link HttpResponse}, sets the
+   * response's status to a user-specified HTTP error code, suppresses exceptions, and executes the
+   * request. This forces the underlying framework to create, but not throw, a {@link
+   * GoogleJsonResponseException}, which the method retrieves and returns to the invoker.
    *
-   * @param jsonFactory the JSON factory that will create all JSON required
-   *        by the underlying framework
-   * @param httpCode the desired HTTP error code. Note: do nut specify any codes
-   *        that indicate successful completion, e.g. 2XX.
-   * @param reasonPhrase the HTTP reason code that explains the error. For example,
-   *        if {@code httpCode} is {@code 404}, the reason phrase should be
-   *        {@code NOT FOUND}.
+   * @param jsonFactory the JSON factory that will create all JSON required by the underlying
+   *     framework
+   * @param httpCode the desired HTTP error code. Note: do nut specify any codes that indicate
+   *     successful completion, e.g. 2XX.
+   * @param reasonPhrase the HTTP reason code that explains the error. For example, if {@code
+   *     httpCode} is {@code 404}, the reason phrase should be {@code NOT FOUND}.
    * @return the generated {@link GoogleJsonResponseException}, as specified.
    * @throws IOException if request transport fails.
    */
-  public static GoogleJsonResponseException newMock(JsonFactory jsonFactory,
-      int httpCode, String reasonPhrase) throws IOException {
+  public static GoogleJsonResponseException newMock(
+      JsonFactory jsonFactory, int httpCode, String reasonPhrase) throws IOException {
     MockLowLevelHttpResponse otherServiceUnavaiableLowLevelResponse =
         new MockLowLevelHttpResponse()
-        .setStatusCode(httpCode)
-        .setReasonPhrase(reasonPhrase)
-        .setContentType(Json.MEDIA_TYPE)
-        .setContent("{ \"error\": { \"errors\": [ { \"reason\": \"" + reasonPhrase + "\" } ], " +
-                                    "\"code\": " + httpCode + " } }");
-    MockHttpTransport otherTransport = new MockHttpTransport.Builder()
-        .setLowLevelHttpResponse(otherServiceUnavaiableLowLevelResponse)
-        .build();
-    HttpRequest otherRequest = otherTransport
-        .createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+            .setStatusCode(httpCode)
+            .setReasonPhrase(reasonPhrase)
+            .setContentType(Json.MEDIA_TYPE)
+            .setContent(
+                "{ \"error\": { \"errors\": [ { \"reason\": \""
+                    + reasonPhrase
+                    + "\" } ], "
+                    + "\"code\": "
+                    + httpCode
+                    + " } }");
+    MockHttpTransport otherTransport =
+        new MockHttpTransport.Builder()
+            .setLowLevelHttpResponse(otherServiceUnavaiableLowLevelResponse)
+            .build();
+    HttpRequest otherRequest =
+        otherTransport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     otherRequest.setThrowExceptionOnExecuteError(false);
     HttpResponse otherServiceUnavailableResponse = otherRequest.execute();
     return GoogleJsonResponseException.from(jsonFactory, otherServiceUnavailableResponse);

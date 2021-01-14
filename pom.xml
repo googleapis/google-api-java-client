@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-parent</artifactId>
-  <version>1.30.6-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+  <version>1.31.2-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
   <packaging>pom</packaging>
   <name>Parent for the Google API Client Library for Java</name>
 
@@ -89,7 +89,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.12</version>
+        <version>4.13.1</version>
       </dependency>
       <dependency>
         <groupId>com.google.appengine</groupId>
@@ -97,34 +97,9 @@
         <version>${project.appengine.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.google.appengine</groupId>
-        <artifactId>appengine-tools-sdk</artifactId>
-        <version>${project.appengine.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.appengine</groupId>
-        <artifactId>appengine-testing</artifactId>
-        <version>${project.appengine.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.appengine</groupId>
-        <artifactId>appengine-api-labs</artifactId>
-        <version>${project.appengine.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.appengine</groupId>
-        <artifactId>appengine-api-stubs</artifactId>
-        <version>${project.appengine.version}</version>
-      </dependency>
-      <dependency>
         <groupId>xpp3</groupId>
         <artifactId>xpp3</artifactId>
         <version>${project.xpp3.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.httpcomponents</groupId>
-        <artifactId>httpclient</artifactId>
-        <version>${project.httpclient.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
@@ -239,11 +214,11 @@
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.2</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>2.3.2</version>
+          <version>3.8.1</version>
           <configuration>
             <source>1.7</source>
             <target>1.7</target>
@@ -253,7 +228,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.2.1</version>
           <executions>
             <execution>
               <id>attach-sources</id>
@@ -266,7 +241,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>3.2.0</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>
@@ -290,7 +265,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.0.0-M3</version>
+          <version>3.0.0-M5</version>
           <configuration>
             <argLine>-Xmx1024m</argLine>
             <reportNameSuffix>sponge_log</reportNameSuffix>
@@ -299,7 +274,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.1.1</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -319,17 +294,17 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>3.1.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.8.2</version>
+          <version>3.9.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.2.0</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -470,29 +445,34 @@
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
       </plugin>
+      <plugin>
+        <groupId>com.coveo</groupId>
+        <artifactId>fmt-maven-plugin</artifactId>
+        <version>2.10</version>
+        <configuration>
+          <style>google</style>
+          <verbose>true</verbose>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>com.google.googlejavaformat</groupId>
+            <artifactId>google-java-format</artifactId>
+            <version>1.9</version>
+          </dependency>
+        </dependencies>
+      </plugin>
     </plugins>
   </build>
   <properties>
-    <!--
-      NOTE: if you make a change to these versions, you MUST make the same change to:
-      - google-api-client-assembly/android-properties (make the filenames match the version here)
-      - google-oauth-java-client/pom.xml (versions must match)
-      - google-oauth-java-client/google-oauth-client-assembly/android-properties (make the filenames match the version here)
-      - google-http-java-client/pom.xml (versions must match)
-      - google-http-java-client/google-http-client-assembly/android-properties (make the filenames match the version here)
-      - Internally, update the default features.json file
-    -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>1.32.1</project.http.version>
-    <project.oauth.version>1.30.4</project.oauth.version>
+    <project.http.version>1.38.1</project.http.version>
+    <project.oauth.version>1.31.4</project.oauth.version>
     <project.jsr305.version>3.0.2</project.jsr305.version>
-    <project.gson.version>2.8.5</project.gson.version>
-    <project.protobuf-java.version>3.11.1</project.protobuf-java.version>
-    <project.guava.version>28.1-android</project.guava.version>
-    <project.appengine.version>1.9.77</project.appengine.version>
+    <project.gson.version>2.8.6</project.gson.version>
+    <project.protobuf-java.version>3.14.0</project.protobuf-java.version>
+    <project.guava.version>30.0-android</project.guava.version>
+    <project.appengine.version>1.9.84</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
-    <project.httpclient.version>4.5.9</project.httpclient.version>
-    <project.httpcore.version>4.4.11</project.httpcore.version>
     <project.jdo2-api.version>2.3-eb</project.jdo2-api.version>
     <project.datanucleus-core.version>3.2.2</project.datanucleus-core.version>
     <project.datanucleus-api-jdo.version>3.2.1</project.datanucleus-api-jdo.version>

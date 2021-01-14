@@ -19,7 +19,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Preconditions;
-
 import java.io.IOException;
 
 /**
@@ -28,15 +27,11 @@ import java.io.IOException;
  * token as specified in <a href="http://openid.net/specs/openid-connect-session-1_0.html">OpenID
  * Connect Session Management 1.0</a>.
  *
- * <p>
- * This response object is the result of {@link GoogleAuthorizationCodeTokenRequest#execute()} and
- * {@link GoogleRefreshTokenRequest#execute()}. Use {@link #parseIdToken()} to parse the
- * {@link GoogleIdToken} and then call {@link GoogleIdTokenVerifier#verify(GoogleIdToken)}.
- * </p>
+ * <p>This response object is the result of {@link GoogleAuthorizationCodeTokenRequest#execute()}
+ * and {@link GoogleRefreshTokenRequest#execute()}. Use {@link #parseIdToken()} to parse the {@link
+ * GoogleIdToken} and then call {@link GoogleIdTokenVerifier#verify(GoogleIdToken)}.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.7
  * @author Yaniv Inbar
@@ -73,7 +68,7 @@ public class GoogleTokenResponse extends TokenResponse {
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Returns the ID token.
    */
   @Beta
@@ -82,13 +77,11 @@ public class GoogleTokenResponse extends TokenResponse {
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Sets the ID token.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   @Beta
   public GoogleTokenResponse setIdToken(String idToken) {
@@ -97,7 +90,7 @@ public class GoogleTokenResponse extends TokenResponse {
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Parses using {@link GoogleIdToken#parse(JsonFactory, String)} based on the {@link #getFactory()
    * JSON factory} and {@link #getIdToken() ID token}.
    */

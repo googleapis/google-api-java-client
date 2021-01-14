@@ -18,6 +18,4 @@
  * @since 1.6
  * @author Ravi Mistry
  */
-
 package com.google.api.client.googleapis.services;
-

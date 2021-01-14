@@ -15,16 +15,13 @@
 package com.google.api.client.googleapis.notifications;
 
 import com.google.api.client.util.Beta;
-
 import java.io.InputStream;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Notification metadata and unparsed content stream sent to this client about a watched resource.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @author Yaniv Inbar
  * @author Matthias Linder (mlinder)
@@ -44,11 +41,15 @@ public class UnparsedNotification extends AbstractNotification {
    * @param resourceState {@link ResourceStates resource state}
    * @param resourceId opaque ID for the watched resource that is stable across API versions
    * @param resourceUri opaque ID (in the form of a canonicalized URI) for the watched resource that
-   *        is sensitive to the API version
+   *     is sensitive to the API version
    * @param channelId notification channel UUID provided by the client in the watch request
    */
-  public UnparsedNotification(long messageNumber, String resourceState, String resourceId,
-      String resourceUri, String channelId) {
+  public UnparsedNotification(
+      long messageNumber,
+      String resourceState,
+      String resourceId,
+      String resourceUri,
+      String channelId) {
     super(messageNumber, resourceState, resourceId, resourceUri, channelId);
   }
 
@@ -64,19 +65,15 @@ public class UnparsedNotification extends AbstractNotification {
    * Sets the notification content media type for the content stream or {@code null} for none or
    * unknown.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public UnparsedNotification setContentType(String contentType) {
     this.contentType = contentType;
     return this;
   }
 
-  /**
-   * Returns the notification content input stream or {@code null} for none.
-   */
+  /** Returns the notification content input stream or {@code null} for none. */
   public final InputStream getContentStream() {
     return contentStream;
   }
@@ -84,10 +81,8 @@ public class UnparsedNotification extends AbstractNotification {
   /**
    * Sets the notification content content input stream or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public UnparsedNotification setContentStream(InputStream contentStream) {
     this.contentStream = contentStream;

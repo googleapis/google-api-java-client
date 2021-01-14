@@ -27,7 +27,6 @@ import com.google.api.client.util.Preconditions;
 import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.appidentity.AppIdentityService.GetAccessTokenResult;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,26 +36,20 @@ import java.util.Collections;
  * owns, based on <a href="https://developers.google.com/appengine/docs/java/appidentity/
  * #Java_Asserting_identity_to_Google_APIs">Asserting Identity to Google APIs</a>
  *
- * <p>
- * Intercepts the request by using the access token obtained from
- * {@link AppIdentityService#getAccessToken(Iterable)}.
- * </p>
+ * <p>Intercepts the request by using the access token obtained from {@link
+ * AppIdentityService#getAccessToken(Iterable)}.
  *
- * <p>
- * Sample usage:
- * </p>
+ * <p>Sample usage:
  *
  * <pre>
-  public static HttpRequestFactory createRequestFactory(
-      HttpTransport transport, JsonFactory jsonFactory, TokenResponse tokenResponse) {
-    return transport.createRequestFactory(
-        new AppIdentityCredential("https://www.googleapis.com/auth/urlshortener"));
-  }
+ * public static HttpRequestFactory createRequestFactory(
+ * HttpTransport transport, JsonFactory jsonFactory, TokenResponse tokenResponse) {
+ * return transport.createRequestFactory(
+ * new AppIdentityCredential("https://www.googleapis.com/auth/urlshortener"));
+ * }
  * </pre>
  *
- * <p>
- * Implementation is immutable and thread-safe.
- * </p>
+ * <p>Implementation is immutable and thread-safe.
  *
  * @since 1.7
  * @author Yaniv Inbar
@@ -79,14 +72,15 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
 
   /**
    * @param builder builder
-   *
    * @since 1.14
    */
   protected AppIdentityCredential(Builder builder) {
     // Lazily retrieved rather than setting as the default value in order to not add runtime
     // dependencies on AppIdentityServiceFactory unless it is actually being used.
-    appIdentityService = builder.appIdentityService == null
-        ? AppIdentityServiceFactory.getAppIdentityService() : builder.appIdentityService;
+    appIdentityService =
+        builder.appIdentityService == null
+            ? AppIdentityServiceFactory.getAppIdentityService()
+            : builder.appIdentityService;
     scopes = builder.scopes;
   }
 
@@ -122,17 +116,15 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
   /**
    * Builder for {@link AppIdentityCredential}.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
    *
    * @since 1.12
    */
   public static class Builder {
 
     /**
-     * App Identity Service that provides the access token or {@code null} to use
-     * {@link AppIdentityServiceFactory#getAppIdentityService()}.
+     * App Identity Service that provides the access token or {@code null} to use {@link
+     * AppIdentityServiceFactory#getAppIdentityService()}.
      */
     AppIdentityService appIdentityService;
 
@@ -150,8 +142,8 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
     }
 
     /**
-     * Returns the App Identity Service that provides the access token or {@code null} to use
-     * {@link AppIdentityServiceFactory#getAppIdentityService()}.
+     * Returns the App Identity Service that provides the access token or {@code null} to use {@link
+     * AppIdentityServiceFactory#getAppIdentityService()}.
      *
      * @since 1.14
      */
@@ -160,22 +152,18 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
     }
 
     /**
-     * Sets the App Identity Service that provides the access token or {@code null} to use
-     * {@link AppIdentityServiceFactory#getAppIdentityService()}.
+     * Sets the App Identity Service that provides the access token or {@code null} to use {@link
+     * AppIdentityServiceFactory#getAppIdentityService()}.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setAppIdentityService(AppIdentityService appIdentityService) {
       this.appIdentityService = appIdentityService;
       return this;
     }
 
-    /**
-     * Returns a new {@link AppIdentityCredential}.
-     */
+    /** Returns a new {@link AppIdentityCredential}. */
     public AppIdentityCredential build() {
       return new AppIdentityCredential(this);
     }
@@ -191,7 +179,7 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Credential wrapper for application identity that inherits from GoogleCredential.
    */
   @Beta
@@ -205,25 +193,26 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
      *
      * @param transport the transport for Http calls.
      * @param jsonFactory the factory for Json parsing and formatting.
-     * @throws IOException if the credential cannot be created for the current environment,
-     *                     such as when the AppIndentityService is not available.
+     * @throws IOException if the credential cannot be created for the current environment, such as
+     *     when the AppIndentityService is not available.
      */
     public AppEngineCredentialWrapper(HttpTransport transport, JsonFactory jsonFactory)
         throws IOException {
       // May be called via reflection to test whether running on App Engine, so fail even if
       // the type can be loaded but the service is not available.
-      this(getCheckedAppIdentityCredential(), Preconditions.checkNotNull(transport),
+      this(
+          getCheckedAppIdentityCredential(),
+          Preconditions.checkNotNull(transport),
           Preconditions.checkNotNull(jsonFactory));
     }
 
     AppEngineCredentialWrapper(
-        AppIdentityCredential appIdentity,
-        HttpTransport transport,
-        JsonFactory jsonFactory) {
-      super(new GoogleCredential.Builder()
-          .setRequestInitializer(appIdentity)
-          .setTransport(transport)
-          .setJsonFactory(jsonFactory));
+        AppIdentityCredential appIdentity, HttpTransport transport, JsonFactory jsonFactory) {
+      super(
+          new GoogleCredential.Builder()
+              .setRequestInitializer(appIdentity)
+              .setTransport(transport)
+              .setJsonFactory(jsonFactory));
       this.appIdentity = appIdentity;
       Collection<String> scopes = appIdentity.getScopes();
       scopesRequired = (scopes == null || scopes.isEmpty());
@@ -260,8 +249,8 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
 
     @Override
     protected TokenResponse executeRefreshToken() throws IOException {
-      GetAccessTokenResult tokenResult = appIdentity.getAppIdentityService()
-          .getAccessToken(appIdentity.getScopes());
+      GetAccessTokenResult tokenResult =
+          appIdentity.getAppIdentityService().getAccessToken(appIdentity.getScopes());
       TokenResponse response = new TokenResponse();
       response.setAccessToken(tokenResult.getAccessToken());
       long expiresInSeconds =

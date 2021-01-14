@@ -24,7 +24,6 @@ import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
-
 import java.io.IOException;
 
 /**
@@ -33,20 +32,18 @@ import java.io.IOException;
  * href="https://developers.google.com/url-shortener/v1/getting_started?csw=1#errors">Error
  * Responses</a>.
  *
- * <p>
- * To execute a request, call {@link #execute(JsonFactory, HttpRequest)}. This will throw a
+ * <p>To execute a request, call {@link #execute(JsonFactory, HttpRequest)}. This will throw a
  * {@link GoogleJsonResponseException} on an error response. To get the structured details, use
  * {@link #getDetails()}.
- * </p>
  *
  * <pre>
-  static void executeShowingError(JsonFactory factory, HttpRequest request) throws IOException {
-    try {
-      GoogleJsonResponseException.execute(factory, request);
-    } catch (GoogleJsonResponseException e) {
-      System.err.println(e.getDetails());
-    }
-  }
+ * static void executeShowingError(JsonFactory factory, HttpRequest request) throws IOException {
+ * try {
+ * GoogleJsonResponseException.execute(factory, request);
+ * } catch (GoogleJsonResponseException e) {
+ * System.err.println(e.getDetails());
+ * }
+ * }
  * </pre>
  *
  * @since 1.6
@@ -80,19 +77,18 @@ public class GoogleJsonResponseException extends HttpResponseException {
   /**
    * Returns a new instance of {@link GoogleJsonResponseException}.
    *
-   * <p>
-   * If there is a JSON error response, it is parsed using {@link GoogleJsonError}, which can be
+   * <p>If there is a JSON error response, it is parsed using {@link GoogleJsonError}, which can be
    * inspected using {@link #getDetails()}. Otherwise, the full response content is read and
    * included in the exception message.
-   * </p>
    *
    * @param jsonFactory JSON factory
    * @param response HTTP response
    * @return new instance of {@link GoogleJsonResponseException}
    */
   public static GoogleJsonResponseException from(JsonFactory jsonFactory, HttpResponse response) {
-    HttpResponseException.Builder builder = new HttpResponseException.Builder(
-        response.getStatusCode(), response.getStatusMessage(), response.getHeaders());
+    HttpResponseException.Builder builder =
+        new HttpResponseException.Builder(
+            response.getStatusCode(), response.getStatusMessage(), response.getHeaders());
     // details
     Preconditions.checkNotNull(jsonFactory);
     GoogleJsonError details = null;
@@ -151,30 +147,28 @@ public class GoogleJsonResponseException extends HttpResponseException {
   }
 
   /**
-   * Executes an HTTP request using {@link HttpRequest#execute()}, but throws a
-   * {@link GoogleJsonResponseException} on error instead of {@link HttpResponseException}.
+   * Executes an HTTP request using {@link HttpRequest#execute()}, but throws a {@link
+   * GoogleJsonResponseException} on error instead of {@link HttpResponseException}.
    *
-   * <p>
-   * Callers should call {@link HttpResponse#disconnect} when the returned HTTP response object is
-   * no longer needed. However, {@link HttpResponse#disconnect} does not have to be called if the
+   * <p>Callers should call {@link HttpResponse#disconnect} when the returned HTTP response object
+   * is no longer needed. However, {@link HttpResponse#disconnect} does not have to be called if the
    * response stream is properly closed. Example usage:
-   * </p>
    *
    * <pre>
-     HttpResponse response = GoogleJsonResponseException.execute(jsonFactory, request);
-     try {
-       // process the HTTP response object
-     } finally {
-       response.disconnect();
-     }
+   * HttpResponse response = GoogleJsonResponseException.execute(jsonFactory, request);
+   * try {
+   * // process the HTTP response object
+   * } finally {
+   * response.disconnect();
+   * }
    * </pre>
    *
    * @param jsonFactory JSON factory
    * @param request HTTP request
-   * @return HTTP response for an HTTP success code (or error code if
-   *         {@link HttpRequest#getThrowExceptionOnExecuteError()})
-   * @throws GoogleJsonResponseException for an HTTP error code (only if not
-   *         {@link HttpRequest#getThrowExceptionOnExecuteError()})
+   * @return HTTP response for an HTTP success code (or error code if {@link
+   *     HttpRequest#getThrowExceptionOnExecuteError()})
+   * @throws GoogleJsonResponseException for an HTTP error code (only if not {@link
+   *     HttpRequest#getThrowExceptionOnExecuteError()})
    * @throws IOException some other kind of I/O exception
    * @since 1.7
    */

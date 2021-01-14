@@ -26,15 +26,20 @@ public class GoogleBrowserClientRequestUrlTest extends TestCase {
 
   private static final String EXPECTED =
       "https://accounts.google.com/o/oauth2/auth?client_id=812741506391.apps.googleusercontent.com&"
-      + "redirect_uri=https://oauth2-login-demo.appspot.com/oauthcallback&response_type=token"
-      + "&scope=https://www.googleapis.com/auth/userinfo.email%20"
-      + "https://www.googleapis.com/auth/userinfo.profile&state=/profile";
+          + "redirect_uri=https://oauth2-login-demo.appspot.com/oauthcallback&response_type=token"
+          + "&scope=https://www.googleapis.com/auth/userinfo.email%20"
+          + "https://www.googleapis.com/auth/userinfo.profile&state=/profile";
 
   public void testBuild() {
-    assertEquals(EXPECTED, new GoogleBrowserClientRequestUrl(
-        "812741506391.apps.googleusercontent.com",
-        "https://oauth2-login-demo.appspot.com/oauthcallback", Arrays.asList(
-            "https://www.googleapis.com/auth/userinfo.email",
-            "https://www.googleapis.com/auth/userinfo.profile")).setState("/profile").build());
+    assertEquals(
+        EXPECTED,
+        new GoogleBrowserClientRequestUrl(
+                "812741506391.apps.googleusercontent.com",
+                "https://oauth2-login-demo.appspot.com/oauthcallback",
+                Arrays.asList(
+                    "https://www.googleapis.com/auth/userinfo.email",
+                    "https://www.googleapis.com/auth/userinfo.profile"))
+            .setState("/profile")
+            .build());
   }
 }

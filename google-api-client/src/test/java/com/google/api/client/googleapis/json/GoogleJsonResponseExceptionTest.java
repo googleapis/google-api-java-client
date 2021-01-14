@@ -21,10 +21,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.Json;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
-import com.google.api.client.util.StringUtils;
-
 import junit.framework.TestCase;
-
 
 /**
  * Tests {@link GoogleJsonResponseException}.
@@ -42,7 +39,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
-    assertEquals("200", ge.getMessage());
+    assertTrue(ge.getMessage().startsWith("200"));
   }
 
   public void testFrom_withDetails() throws Exception {
@@ -54,8 +51,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertEquals(GoogleJsonErrorTest.ERROR, GoogleJsonErrorTest.FACTORY.toString(ge.getDetails()));
-    assertTrue(
-        ge.getMessage(), ge.getMessage().startsWith("403" + StringUtils.LINE_SEPARATOR + "{"));
+    assertTrue(ge.getMessage().startsWith("403"));
   }
 
   public void testFrom_detailsMissingContent() throws Exception {
@@ -67,7 +63,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
-    assertEquals("403", ge.getMessage());
+    assertTrue(ge.getMessage().startsWith("403"));
   }
 
   public void testFrom_detailsArbitraryJsonContent() throws Exception {
@@ -79,7 +75,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
-    assertEquals("403", ge.getMessage());
+    assertTrue(ge.getMessage().startsWith("403"));
   }
 
   public void testFrom_detailsArbitraryXmlContent() throws Exception {
@@ -91,36 +87,39 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
-    assertTrue(
-        ge.getMessage(), ge.getMessage().startsWith("403" + StringUtils.LINE_SEPARATOR + "<"));
+    assertTrue(ge.getMessage().startsWith("403"));
+    assertTrue(ge.getMessage().contains("<foo>"));
   }
 
   public void testFrom_errorNoContentButWithJsonContentType() throws Exception {
     HttpTransport transport = new ErrorTransport("", Json.MEDIA_TYPE);
-      HttpRequest request =
+    HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
-    assertEquals("403", ge.getMessage());
+    assertTrue(ge.getMessage().startsWith("403"));
   }
 
   public void testFrom_errorEmptyContentButWithJsonContentType() throws Exception {
     HttpTransport transport = new ErrorTransport(null, Json.MEDIA_TYPE);
-      HttpRequest request =
+    HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
-    assertEquals("403", ge.getMessage());
+    assertTrue(ge.getMessage().startsWith("403"));
   }
 
   public void testFrom_detailsErrorObject() throws Exception {
-    HttpTransport transport = new ErrorTransport("{\"error\": {\"message\": \"invalid_token\"}, \"error_description\": \"Invalid value\"}", Json.MEDIA_TYPE);
+    HttpTransport transport =
+        new ErrorTransport(
+            "{\"error\": {\"message\": \"invalid_token\"}, \"error_description\": \"Invalid value\"}",
+            Json.MEDIA_TYPE);
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);
@@ -133,7 +132,10 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
   }
 
   public void testFrom_detailsErrorString() throws Exception {
-    HttpTransport transport = new ErrorTransport("{\"error\": \"invalid_token\", \"error_description\": \"Invalid value\"}", Json.MEDIA_TYPE);
+    HttpTransport transport =
+        new ErrorTransport(
+            "{\"error\": \"invalid_token\", \"error_description\": \"Invalid value\"}",
+            Json.MEDIA_TYPE);
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);
@@ -146,7 +148,8 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
   }
 
   public void testFrom_detailsNoErrorField() throws Exception {
-    HttpTransport transport = new ErrorTransport("{\"error_description\": \"Invalid value\"}", Json.MEDIA_TYPE);
+    HttpTransport transport =
+        new ErrorTransport("{\"error_description\": \"Invalid value\"}", Json.MEDIA_TYPE);
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);
@@ -154,6 +157,6 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
-    assertEquals("403", ge.getMessage());
+    assertTrue(ge.getMessage().startsWith("403"));
   }
 }

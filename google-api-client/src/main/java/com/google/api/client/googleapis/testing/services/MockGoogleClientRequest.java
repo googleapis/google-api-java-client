@@ -20,7 +20,7 @@ import com.google.api.client.http.UriTemplate;
 import com.google.api.client.util.Beta;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Thread-safe mock Google request.
  *
  * @param <T> type of the response
@@ -34,14 +34,18 @@ public class MockGoogleClientRequest<T> extends AbstractGoogleClientRequest<T> {
    * @param client Google client
    * @param method HTTP Method
    * @param uriTemplate URI template for the path relative to the base URL. If it starts with a "/"
-   *        the base path from the base URL will be stripped out. The URI template can also be a
-   *        full URL. URI template expansion is done using
-   *        {@link UriTemplate#expand(String, String, Object, boolean)}
+   *     the base path from the base URL will be stripped out. The URI template can also be a full
+   *     URL. URI template expansion is done using {@link UriTemplate#expand(String, String, Object,
+   *     boolean)}
    * @param content HTTP content or {@code null} for none
    * @param responseClass response class to parse into
    */
-  public MockGoogleClientRequest(AbstractGoogleClient client, String method, String uriTemplate,
-      HttpContent content, Class<T> responseClass) {
+  public MockGoogleClientRequest(
+      AbstractGoogleClient client,
+      String method,
+      String uriTemplate,
+      HttpContent content,
+      Class<T> responseClass) {
     super(client, method, uriTemplate, content, responseClass);
   }
 

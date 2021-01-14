@@ -19,24 +19,19 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.webtoken.JsonWebSignature;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Key;
-
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Google ID tokens as specified in <a
  * href="https://developers.google.com/identity/protocols/OpenIDConnect">OpenID Connect</a>.
  *
- * <p>
- * Google ID tokens contain useful information about the authorized end user. Google ID tokens are
- * signed and the signature must be verified using {@link #verify(GoogleIdTokenVerifier)}.
- * </p>
+ * <p>Google ID tokens contain useful information about the authorized end user. Google ID tokens
+ * are signed and the signature must be verified using {@link #verify(GoogleIdTokenVerifier)}.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.7
  * @author Yaniv Inbar
@@ -56,7 +51,10 @@ public class GoogleIdToken extends IdToken {
       throws IOException {
     JsonWebSignature jws =
         JsonWebSignature.parser(jsonFactory).setPayloadClass(Payload.class).parse(idTokenString);
-    return new GoogleIdToken(jws.getHeader(), (Payload) jws.getPayload(), jws.getSignatureBytes(),
+    return new GoogleIdToken(
+        jws.getHeader(),
+        (Payload) jws.getPayload(),
+        jws.getSignatureBytes(),
         jws.getSignedContentBytes());
   }
 
@@ -85,7 +83,7 @@ public class GoogleIdToken extends IdToken {
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Google ID token payload.
    */
   @Beta
@@ -99,16 +97,14 @@ public class GoogleIdToken extends IdToken {
     private String email;
 
     /**
-     * {@code true} if the email is verified.
-     * TODO(mwan): change the type of the field to Boolean and the handling in
-     * {@link #getEmailVerified()} accordingly after Google OpenID Connect endpoint fixes the
-     * type of the field in ID Token.
+     * {@code true} if the email is verified. TODO(mwan): change the type of the field to Boolean
+     * and the handling in {@link #getEmailVerified()} accordingly after Google OpenID Connect
+     * endpoint fixes the type of the field in ID Token.
      */
     @Key("email_verified")
     private Object emailVerified;
 
-    public Payload() {
-    }
+    public Payload() {}
 
     /**
      * Returns the obfuscated Google user id or {@code null} for none.
@@ -144,7 +140,7 @@ public class GoogleIdToken extends IdToken {
      * Sets the client ID of issuee or {@code null} for none.
      *
      * @deprecated (scheduled to be removed in 1.18) Use {@link #setAuthorizedParty(String)}
-     *             instead.
+     *     instead.
      */
     @Deprecated
     public Payload setIssuee(String issuee) {
@@ -171,9 +167,7 @@ public class GoogleIdToken extends IdToken {
     /**
      * Returns the e-mail address of the user or {@code null} if it was not requested.
      *
-     * <p>
-     * Requires the {@code "https://www.googleapis.com/auth/userinfo.email"} scope.
-     * </p>
+     * <p>Requires the {@code "https://www.googleapis.com/auth/userinfo.email"} scope.
      *
      * @since 1.10
      */
@@ -184,9 +178,8 @@ public class GoogleIdToken extends IdToken {
     /**
      * Sets the e-mail address of the user or {@code null} if it was not requested.
      *
-     * <p>
-     * Used in conjunction with the {@code "https://www.googleapis.com/auth/userinfo.email"} scope.
-     * </p>
+     * <p>Used in conjunction with the {@code "https://www.googleapis.com/auth/userinfo.email"}
+     * scope.
      *
      * @since 1.10
      */
@@ -198,18 +191,13 @@ public class GoogleIdToken extends IdToken {
     /**
      * Returns {@code true} if the users e-mail address has been verified by Google.
      *
-     * <p>
-     * Requires the {@code "https://www.googleapis.com/auth/userinfo.email"} scope.
-     * </p>
+     * <p>Requires the {@code "https://www.googleapis.com/auth/userinfo.email"} scope.
      *
      * @since 1.10
-     *
-     * <p>
-     * Upgrade warning: in prior version 1.16 this method accessed {@code "verified_email"}
-     * and returns a boolean, but starting with verison 1.17, it now accesses
-     * {@code "email_verified"} and returns a Boolean. Previously, if this value was not
-     * specified, this method would return {@code false}, but now it returns {@code null}.
-     * </p>
+     *     <p>Upgrade warning: in prior version 1.16 this method accessed {@code "verified_email"}
+     *     and returns a boolean, but starting with verison 1.17, it now accesses {@code
+     *     "email_verified"} and returns a Boolean. Previously, if this value was not specified,
+     *     this method would return {@code false}, but now it returns {@code null}.
      */
     public Boolean getEmailVerified() {
       if (emailVerified == null) {
@@ -225,17 +213,13 @@ public class GoogleIdToken extends IdToken {
     /**
      * Sets whether the users e-mail address has been verified by Google or not.
      *
-     * <p>
-     * Used in conjunction with the {@code "https://www.googleapis.com/auth/userinfo.email"} scope.
-     * </p>
+     * <p>Used in conjunction with the {@code "https://www.googleapis.com/auth/userinfo.email"}
+     * scope.
      *
      * @since 1.10
-     *
-     * <p>
-     * Upgrade warning: in prior version 1.16 this method accessed {@code "verified_email"} and
-     * required a boolean parameter, but starting with verison 1.17, it now accesses
-     * {@code "email_verified"} and requires a Boolean parameter.
-     * </p>
+     *     <p>Upgrade warning: in prior version 1.16 this method accessed {@code "verified_email"}
+     *     and required a boolean parameter, but starting with verison 1.17, it now accesses {@code
+     *     "email_verified"} and requires a Boolean parameter.
      */
     public Payload setEmailVerified(Boolean emailVerified) {
       this.emailVerified = emailVerified;

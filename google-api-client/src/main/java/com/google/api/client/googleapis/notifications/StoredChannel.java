@@ -19,19 +19,16 @@ import com.google.api.client.util.Objects;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.store.DataStore;
 import com.google.api.client.util.store.DataStoreFactory;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Notification channel information to be stored in a data store.
  *
- * <p>
- * Implementation is thread safe.
- * </p>
+ * <p>Implementation is thread safe.
  *
  * @author Yaniv Inbar
  * @author Matthias Linder (mlinder)
@@ -76,7 +73,7 @@ public final class StoredChannel implements Serializable {
    * Constructor with a random UUID using {@link NotificationUtils#randomUuidString()}.
    *
    * @param notificationCallback notification handler called when a notification is received for
-   *        this subscription
+   *     this subscription
    */
   public StoredChannel(UnparsedNotificationCallback notificationCallback) {
     this(notificationCallback, NotificationUtils.randomUuidString());
@@ -86,7 +83,7 @@ public final class StoredChannel implements Serializable {
    * Constructor with a custom UUID.
    *
    * @param notificationCallback notification handler called when a notification is received for
-   *        this subscription
+   *     this subscription
    * @param id subscription UUID
    */
   public StoredChannel(UnparsedNotificationCallback notificationCallback, String id) {
@@ -98,10 +95,8 @@ public final class StoredChannel implements Serializable {
    * Stores this notification channel in the notification channel data store, which is derived from
    * {@link #getDefaultDataStore(DataStoreFactory)} on the given data store factory.
    *
-   * <p>
-   * It is important that this method be called before the watch HTTP request is made in case the
+   * <p>It is important that this method be called before the watch HTTP request is made in case the
    * notification is received before the watch HTTP response is received.
-   * </p>
    *
    * @param dataStoreFactory data store factory
    */
@@ -112,10 +107,8 @@ public final class StoredChannel implements Serializable {
   /**
    * Stores this notification channel in the given notification channel data store.
    *
-   * <p>
-   * It is important that this method be called before the watch HTTP request is made in case the
+   * <p>It is important that this method be called before the watch HTTP request is made in case the
    * notification is received before the watch HTTP response is received.
-   * </p>
    *
    * @param dataStore notification channel data store
    */
@@ -206,8 +199,8 @@ public final class StoredChannel implements Serializable {
   }
 
   /**
-   * Returns the opaque ID for the subscribed resource that is stable across API versions or
-   * {@code null} for none.
+   * Returns the opaque ID for the subscribed resource that is stable across API versions or {@code
+   * null} for none.
    */
   public String getTopicId() {
     lock.lock();
@@ -219,8 +212,8 @@ public final class StoredChannel implements Serializable {
   }
 
   /**
-   * Sets the opaque ID for the subscribed resource that is stable across API versions or
-   * {@code null} for none.
+   * Sets the opaque ID for the subscribed resource that is stable across API versions or {@code
+   * null} for none.
    */
   public StoredChannel setTopicId(String topicId) {
     lock.lock();
@@ -235,8 +228,11 @@ public final class StoredChannel implements Serializable {
   @Override
   public String toString() {
     return Objects.toStringHelper(StoredChannel.class)
-        .add("notificationCallback", getNotificationCallback()).add("clientToken", getClientToken())
-        .add("expiration", getExpiration()).add("id", getId()).add("topicId", getTopicId())
+        .add("notificationCallback", getNotificationCallback())
+        .add("clientToken", getClientToken())
+        .add("expiration", getExpiration())
+        .add("id", getId())
+        .add("topicId", getTopicId())
         .toString();
   }
 

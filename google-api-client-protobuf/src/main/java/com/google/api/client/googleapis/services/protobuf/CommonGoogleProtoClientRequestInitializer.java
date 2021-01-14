@@ -17,69 +17,58 @@ package com.google.api.client.googleapis.services.protobuf;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.CommonGoogleClientRequestInitializer;
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Google protocol buffer client request initializer implementation for setting properties like key
  * and userIp.
  *
- * <p>
- * The simplest usage is to use it to set the key parameter:
- * </p>
+ * <p>The simplest usage is to use it to set the key parameter:
  *
  * <pre>
-  public static final GoogleClientRequestInitializer KEY_INITIALIZER =
-      new CommonGoogleProtoClientRequestInitializer(KEY);
+ * public static final GoogleClientRequestInitializer KEY_INITIALIZER =
+ * new CommonGoogleProtoClientRequestInitializer(KEY);
  * </pre>
  *
- * <p>
- * There is also a constructor to set both the key and userIp parameters:
- * </p>
+ * <p>There is also a constructor to set both the key and userIp parameters:
  *
  * <pre>
-  public static final GoogleClientRequestInitializer INITIALIZER =
-      new CommonGoogleProtoClientRequestInitializer(KEY, USER_IP);
+ * public static final GoogleClientRequestInitializer INITIALIZER =
+ * new CommonGoogleProtoClientRequestInitializer(KEY, USER_IP);
  * </pre>
  *
- * <p>
- * If you want to implement custom logic, extend it like this:
- * </p>
+ * <p>If you want to implement custom logic, extend it like this:
  *
  * <pre>
-  public static class MyRequestInitializer extends CommonGoogleProtoClientRequestInitializer {
-
-    {@literal @}Override
-    public void initialize(AbstractGoogleProtoClientRequest{@literal <}?{@literal >} request)
-        throws IOException {
-      // custom logic
-    }
-  }
+ * public static class MyRequestInitializer extends CommonGoogleProtoClientRequestInitializer {
+ *
+ * {@literal @}Override
+ * public void initialize(AbstractGoogleProtoClientRequest{@literal <}?{@literal >} request)
+ * throws IOException {
+ * // custom logic
+ * }
+ * }
  * </pre>
  *
- * <p>
- * Finally, to set the key and userIp parameters and insert custom logic, extend it like this:
- * </p>
+ * <p>Finally, to set the key and userIp parameters and insert custom logic, extend it like this:
  *
  * <pre>
-  public static class MyKeyRequestInitializer extends CommonGoogleProtoClientRequestInitializer {
-
-    public MyKeyRequestInitializer() {
-      super(KEY, USER_IP);
-    }
-
-    {@literal @}Override
-    public void initializeProtoRequest(
-        AbstractGoogleProtoClientRequest{@literal <}?{@literal >} request) throws IOException {
-      // custom logic
-    }
-  }
+ * public static class MyKeyRequestInitializer extends CommonGoogleProtoClientRequestInitializer {
+ *
+ * public MyKeyRequestInitializer() {
+ * super(KEY, USER_IP);
+ * }
+ *
+ * {@literal @}Override
+ * public void initializeProtoRequest(
+ * AbstractGoogleProtoClientRequest{@literal <}?{@literal >} request) throws IOException {
+ * // custom logic
+ * }
+ * }
  * </pre>
  *
- * <p>
- * Subclasses should be thread-safe.
- * </p>
+ * <p>Subclasses should be thread-safe.
  *
  * @since 1.16
  * @author Yaniv Inbar
@@ -92,9 +81,7 @@ public class CommonGoogleProtoClientRequestInitializer
     super();
   }
 
-  /**
-   * @param key API key or {@code null} to leave it unchanged
-   */
+  /** @param key API key or {@code null} to leave it unchanged */
   public CommonGoogleProtoClientRequestInitializer(String key) {
     super(key);
   }
@@ -116,14 +103,11 @@ public class CommonGoogleProtoClientRequestInitializer
   /**
    * Initializes a Google protocol buffer client request.
    *
-   * <p>
-   * Default implementation does nothing. Called from
-   * {@link #initialize(AbstractGoogleClientRequest)}.
-   * </p>
+   * <p>Default implementation does nothing. Called from {@link
+   * #initialize(AbstractGoogleClientRequest)}.
    *
    * @throws IOException I/O exception
    */
   protected void initializeProtoRequest(AbstractGoogleProtoClientRequest<?> request)
-      throws IOException {
-  }
+      throws IOException {}
 }

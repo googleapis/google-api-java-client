@@ -13,22 +13,16 @@
  */
 package com.google.api.client.googleapis.auth.oauth2;
 
-/**
- * Abstraction which allows overriding of the system environment for tests.
- */
+/** Abstraction which allows overriding of the system environment for tests. */
 class SystemEnvironmentProvider {
   static final SystemEnvironmentProvider INSTANCE = new SystemEnvironmentProvider();
 
-  /**
-   * Override in test code to isolate from environment.
-   */
+  /** Override in test code to isolate from environment. */
   String getEnv(String name) {
     return System.getenv(name);
   }
 
-  /**
-   * Override in test code to isolate from environment.
-   */
+  /** Override in test code to isolate from environment. */
   boolean getEnvEquals(String name, String value) {
     return System.getenv().containsKey(name) && System.getenv(name).equals(value);
   }

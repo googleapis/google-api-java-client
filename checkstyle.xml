@@ -53,12 +53,11 @@ page at http://checkstyle.sourceforge.net/config.html -->
     </module>
 
     <module name="ImportOrder">
-      <!-- Checks for out of order import statements. -->
-
       <property name="severity" value="warning"/>
-      <property name="groups" value="com.google,android,junit,net,org,java,javax"/>
       <!-- This ensures that static imports go first. -->
       <property name="option" value="top"/>
+      <property name="separatedStaticGroups" value="true"/>
+      <property name="caseSensitive" value="true"/>
       <property name="tokens" value="STATIC_IMPORT, IMPORT"/>
     </module>
 

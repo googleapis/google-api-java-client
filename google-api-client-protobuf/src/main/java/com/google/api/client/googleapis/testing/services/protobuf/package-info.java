@@ -13,7 +13,7 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
+ * {@link com.google.api.client.util.Beta} <br>
  * Test utilities for the {@code com.google.api.client.googleapis.protobuf} package.
  *
  * @since 1.16
@@ -21,4 +21,3 @@
  */
 @com.google.api.client.util.Beta
 package com.google.api.client.googleapis.testing.services.protobuf;
-

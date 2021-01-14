@@ -2,7 +2,6 @@
 
 syntax = "proto2";
 package api.client.googleapis.batch;
-option optimize_for = LITE_RUNTIME;
 option java_package = "com.google.api.client.googleapis.batch";
 
 // These messages are the protobuf version of the

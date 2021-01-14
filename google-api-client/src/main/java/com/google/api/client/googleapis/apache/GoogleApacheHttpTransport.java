@@ -16,7 +16,6 @@ package com.google.api.client.googleapis.apache;
 
 import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.http.apache.ApacheHttpTransport;
-
 import com.google.api.client.util.SslUtils;
 import java.io.IOException;
 import java.net.ProxySelector;
@@ -37,21 +36,23 @@ import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
  *
  * @since 1.14
  * @author Yaniv Inbar
+ * @deprecated Use com.google.api.client.googleapis.apache.v2.GoogleApacheHttpTransport
  */
+@Deprecated
 public final class GoogleApacheHttpTransport {
 
   /**
-   * Returns a new instance of {@link ApacheHttpTransport} that uses
-   * {@link GoogleUtils#getCertificateTrustStore()} for the trusted certificates.
+   * Returns a new instance of {@link ApacheHttpTransport} that uses {@link
+   * GoogleUtils#getCertificateTrustStore()} for the trusted certificates.
+   *
+   * @deprecated Use
+   *     com.google.api.client.googleapis.apache.v2.GoogleApacheHttpTransport.newTrustedTransport()
    */
-  public static ApacheHttpTransport newTrustedTransport() throws GeneralSecurityException,
-      IOException {
+  public static ApacheHttpTransport newTrustedTransport()
+      throws GeneralSecurityException, IOException {
     // Set socket buffer sizes to 8192
     SocketConfig socketConfig =
-        SocketConfig.custom()
-            .setRcvBufSize(8192)
-            .setSndBufSize(8192)
-            .build();
+        SocketConfig.custom().setRcvBufSize(8192).setSndBufSize(8192).build();
 
     PoolingHttpClientConnectionManager connectionManager =
         new PoolingHttpClientConnectionManager(-1, TimeUnit.MILLISECONDS);
@@ -65,20 +66,20 @@ public final class GoogleApacheHttpTransport {
     SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory());
     LayeredConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext);
 
-    HttpClient client = HttpClientBuilder.create()
-        .useSystemProperties()
-        .setSSLSocketFactory(socketFactory)
-        .setDefaultSocketConfig(socketConfig)
-        .setMaxConnTotal(200)
-        .setMaxConnPerRoute(20)
-        .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
-        .setConnectionManager(connectionManager)
-        .disableRedirectHandling()
-        .disableAutomaticRetries()
-        .build();
+    HttpClient client =
+        HttpClientBuilder.create()
+            .useSystemProperties()
+            .setSSLSocketFactory(socketFactory)
+            .setDefaultSocketConfig(socketConfig)
+            .setMaxConnTotal(200)
+            .setMaxConnPerRoute(20)
+            .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
+            .setConnectionManager(connectionManager)
+            .disableRedirectHandling()
+            .disableAutomaticRetries()
+            .build();
     return new ApacheHttpTransport(client);
   }
 
-  private GoogleApacheHttpTransport() {
-  }
+  private GoogleApacheHttpTransport() {}
 }

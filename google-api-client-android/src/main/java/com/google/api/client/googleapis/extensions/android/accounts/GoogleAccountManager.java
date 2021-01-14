@@ -21,7 +21,7 @@ import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Account manager wrapper for Google accounts.
  *
  * @since 1.11
@@ -36,16 +36,12 @@ public final class GoogleAccountManager {
   /** Account manager. */
   private final AccountManager manager;
 
-  /**
-   * @param accountManager account manager
-   */
+  /** @param accountManager account manager */
   public GoogleAccountManager(AccountManager accountManager) {
     this.manager = Preconditions.checkNotNull(accountManager);
   }
 
-  /**
-   * @param context context from which to retrieve the account manager
-   */
+  /** @param context context from which to retrieve the account manager */
   public GoogleAccountManager(Context context) {
     this(AccountManager.get(context));
   }

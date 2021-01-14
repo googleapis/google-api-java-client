@@ -15,11 +15,9 @@
 package com.google.api.client.googleapis.auth.oauth2;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-
 import junit.framework.TestCase;
 
-/** Tests for {@link GoogleIdToken}.*/
-
+/** Tests for {@link GoogleIdToken}. */
 public class GoogleIdTokenTest extends TestCase {
   private static final String USER_ID = "1234567890";
   private static final String ANOTHER_USER_ID = "2345678901";

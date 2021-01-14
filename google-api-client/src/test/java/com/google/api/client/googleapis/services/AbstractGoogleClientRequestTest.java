@@ -27,17 +27,15 @@ import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
-import com.google.api.client.util.StringUtils;
 import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.zip.GZIPInputStream;
 import junit.framework.TestCase;
 
 /**
@@ -50,12 +48,12 @@ public class AbstractGoogleClientRequestTest extends TestCase {
   private static final String ROOT_URL = "https://www.googleapis.com/test/";
   private static final String SERVICE_PATH = "path/v1/";
   private static final String URI_TEMPLATE = "tests/{testId}";
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  private static final JsonFactory JSON_FACTORY = new GsonFactory();
   private static final JsonObjectParser JSON_OBJECT_PARSER = new JsonObjectParser(JSON_FACTORY);
   private static final String ERROR_CONTENT =
       "{\"error\":{\"code\":401,\"errors\":[{\"domain\":\"global\","
-      + "\"location\":\"Authorization\",\"locationType\":\"header\","
-      + "\"message\":\"me\",\"reason\":\"authError\"}],\"message\":\"me\"}}";
+          + "\"location\":\"Authorization\",\"locationType\":\"header\","
+          + "\"message\":\"me\",\"reason\":\"authError\"}],\"message\":\"me\"}}";
   private String originalOsName;
   private String originalOsVersion;
 
@@ -78,57 +76,63 @@ public class AbstractGoogleClientRequestTest extends TestCase {
   }
 
   public void testExecuteUnparsed_error() throws Exception {
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildRequest(final String method, final String url) {
-        return new MockLowLevelHttpRequest() {
+    HttpTransport transport =
+        new MockHttpTransport() {
           @Override
-          public LowLevelHttpResponse execute() {
-            assertEquals("GET", method);
-            assertEquals("https://www.googleapis.com/test/path/v1/tests/foo", url);
-            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
-            result.setStatusCode(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED);
-            result.setContentType(Json.MEDIA_TYPE);
-            result.setContent(ERROR_CONTENT);
-            return result;
+          public LowLevelHttpRequest buildRequest(final String method, final String url) {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() {
+                assertEquals("GET", method);
+                assertEquals("https://www.googleapis.com/test/path/v1/tests/foo", url);
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.setStatusCode(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED);
+                result.setContentType(Json.MEDIA_TYPE);
+                result.setContent(ERROR_CONTENT);
+                return result;
+              }
+            };
           }
         };
-      }
-    };
-    MockGoogleClient client = new MockGoogleClient.Builder(
-        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).setApplicationName(
-        "Test Application").build();
-    MockGoogleClientRequest<String> request = new MockGoogleClientRequest<String>(
-        client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
+    MockGoogleClient client =
+        new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application")
+            .build();
+    MockGoogleClientRequest<String> request =
+        new MockGoogleClientRequest<String>(
+            client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
     try {
       request.put("testId", "foo");
       request.executeUnparsed();
       fail("expected " + HttpResponseException.class);
     } catch (HttpResponseException e) {
       // expected
-      assertEquals("401" + StringUtils.LINE_SEPARATOR + ERROR_CONTENT, e.getMessage());
+      assertTrue(e.getMessage().startsWith("401"));
     }
   }
 
   public void testExecuteUsingHead() throws Exception {
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildRequest(final String method, final String url) {
-        return new MockLowLevelHttpRequest() {
+    HttpTransport transport =
+        new MockHttpTransport() {
           @Override
-          public LowLevelHttpResponse execute() {
-            assertEquals("HEAD", method);
-            assertEquals("https://www.googleapis.com/test/path/v1/tests/foo", url);
-            return new MockLowLevelHttpResponse();
+          public LowLevelHttpRequest buildRequest(final String method, final String url) {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() {
+                assertEquals("HEAD", method);
+                assertEquals("https://www.googleapis.com/test/path/v1/tests/foo", url);
+                return new MockLowLevelHttpResponse();
+              }
+            };
           }
         };
-      }
-    };
-    MockGoogleClient client = new MockGoogleClient.Builder(
-        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).setApplicationName(
-        "Test Application").build();
-    MockGoogleClientRequest<String> request = new MockGoogleClientRequest<String>(
-        client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
+    MockGoogleClient client =
+        new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application")
+            .build();
+    MockGoogleClientRequest<String> request =
+        new MockGoogleClientRequest<String>(
+            client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
     request.put("testId", "foo");
     request.executeUsingHead();
   }
@@ -145,9 +149,10 @@ public class AbstractGoogleClientRequestTest extends TestCase {
   private void subtestBuildHttpRequest_emptyContent(String method, boolean expectEmptyContent)
       throws Exception {
     HttpTransport transport = new MockHttpTransport();
-    MockGoogleClient client = new MockGoogleClient.Builder(
-        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).setApplicationName(
-        "Test Application").build();
+    MockGoogleClient client =
+        new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application")
+            .build();
     MockGoogleClientRequest<String> request =
         new MockGoogleClientRequest<String>(client, method, URI_TEMPLATE, null, String.class);
     HttpRequest httpRequest = request.buildHttpRequest();
@@ -160,11 +165,13 @@ public class AbstractGoogleClientRequestTest extends TestCase {
 
   public void testCheckRequiredParameter() throws Exception {
     HttpTransport transport = new MockHttpTransport();
-    MockGoogleClient client = new MockGoogleClient.Builder(
-        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).setApplicationName(
-        "Test Application").build();
-    MockGoogleClientRequest<String> request = new MockGoogleClientRequest<String>(
-        client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
+    MockGoogleClient client =
+        new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application")
+            .build();
+    MockGoogleClientRequest<String> request =
+        new MockGoogleClientRequest<String>(
+            client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
 
     // Should not throw an Exception.
     request.checkRequiredParameter("Not Null", "notNull()");
@@ -178,21 +185,24 @@ public class AbstractGoogleClientRequestTest extends TestCase {
   }
 
   public void testExecute_void() throws Exception {
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildRequest(final String method, final String url) {
-        return new MockLowLevelHttpRequest() {
+    HttpTransport transport =
+        new MockHttpTransport() {
           @Override
-          public LowLevelHttpResponse execute() {
-            return new MockLowLevelHttpResponse().setContent("{\"a\":\"ignored\"}")
-                .setContentType(Json.MEDIA_TYPE);
+          public LowLevelHttpRequest buildRequest(final String method, final String url) {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() {
+                return new MockLowLevelHttpResponse()
+                    .setContent("{\"a\":\"ignored\"}")
+                    .setContentType(Json.MEDIA_TYPE);
+              }
+            };
           }
         };
-      }
-    };
-    MockGoogleClient client = new MockGoogleClient.Builder(
-        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).setApplicationName(
-        "Test Application").build();
+    MockGoogleClient client =
+        new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application")
+            .build();
     MockGoogleClientRequest<Void> request =
         new MockGoogleClientRequest<Void>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
     Void v = request.execute();
@@ -203,12 +213,17 @@ public class AbstractGoogleClientRequestTest extends TestCase {
     AssertUserAgentTransport transport = new AssertUserAgentTransport();
     // Specify an Application Name.
     String applicationName = "Test Application";
-    transport.expectedUserAgent = applicationName + " "
-        + "Google-API-Java-Client/" + GoogleUtils.VERSION + " "
-        + HttpRequest.USER_AGENT_SUFFIX;
-    MockGoogleClient client = new MockGoogleClient.Builder(
-        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).setApplicationName(
-            applicationName).build();
+    transport.expectedUserAgent =
+        applicationName
+            + " "
+            + "Google-API-Java-Client/"
+            + GoogleUtils.VERSION
+            + " "
+            + HttpRequest.USER_AGENT_SUFFIX;
+    MockGoogleClient client =
+        new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null)
+            .setApplicationName(applicationName)
+            .build();
     MockGoogleClientRequest<Void> request =
         new MockGoogleClientRequest<Void>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
     request.executeUnparsed();
@@ -216,20 +231,23 @@ public class AbstractGoogleClientRequestTest extends TestCase {
 
   public void testUserAgent() throws IOException {
     AssertUserAgentTransport transport = new AssertUserAgentTransport();
-    transport.expectedUserAgent = "Google-API-Java-Client/" + GoogleUtils.VERSION + " "
-        + HttpRequest.USER_AGENT_SUFFIX;
+    transport.expectedUserAgent =
+        "Google-API-Java-Client/" + GoogleUtils.VERSION + " " + HttpRequest.USER_AGENT_SUFFIX;
     // Don't specify an Application Name.
-    MockGoogleClient client = new MockGoogleClient.Builder(
-        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
+    MockGoogleClient client =
+        new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null)
+            .build();
     MockGoogleClientRequest<Void> request =
         new MockGoogleClientRequest<>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
     request.executeUnparsed();
   }
 
   public void testSetsApiClientHeader() throws IOException {
-    HttpTransport transport = new AssertHeaderTransport("X-Goog-Api-Client", "gl-java/\\d+\\.\\d+\\.\\d+.*");
-    MockGoogleClient client = new MockGoogleClient.Builder(
-        transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
+    HttpTransport transport =
+        new AssertHeaderTransport("X-Goog-Api-Client", "gl-java/\\d+\\.\\d+\\.\\d+.*");
+    MockGoogleClient client =
+        new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null)
+            .build();
     MockGoogleClientRequest<Void> request =
         new MockGoogleClientRequest<>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
     request.executeUnparsed();
@@ -253,62 +271,77 @@ public class AbstractGoogleClientRequestTest extends TestCase {
   }
 
   public void testSetsApiClientHeaderDiscoveryVersion() throws IOException {
-    HttpTransport transport = new AssertHeaderTransport("X-Goog-Api-Client", ".*gdcl/\\d+\\.\\d+\\.\\d+.*");
-    MockGoogleClient client = new MockGoogleClient.Builder(
-            transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null).build();
+    HttpTransport transport =
+        new AssertHeaderTransport("X-Goog-Api-Client", ".*gdcl/\\d+\\.\\d+\\.\\d+.*");
+    MockGoogleClient client =
+        new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null)
+            .build();
     MockGoogleClientRequest<Void> request =
-            new MockGoogleClientRequest<>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
+        new MockGoogleClientRequest<>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
     request.executeUnparsed();
   }
 
   public void testReturnRawInputStream_defaultFalse() throws Exception {
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildRequest(final String method, final String url) {
-        return new MockLowLevelHttpRequest() {
+    HttpTransport transport =
+        new MockHttpTransport() {
           @Override
-          public LowLevelHttpResponse execute() {
-            return new MockLowLevelHttpResponse().setContentEncoding("gzip").setContent(new ByteArrayInputStream(
-                BaseEncoding.base64()
-                    .decode("H4sIAAAAAAAAAPNIzcnJV3DPz0/PSVVwzskvTVEILskvSkxPVQQA/LySchsAAAA=")));
+          public LowLevelHttpRequest buildRequest(final String method, final String url) {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() {
+                return new MockLowLevelHttpResponse()
+                    .setContentEncoding("gzip")
+                    .setContent(
+                        new ByteArrayInputStream(
+                            BaseEncoding.base64()
+                                .decode(
+                                    "H4sIAAAAAAAAAPNIzcnJV3DPz0/PSVVwzskvTVEILskvSkxPVQQA/LySchsAAAA=")));
+              }
+            };
           }
         };
-      }
-    };
-    MockGoogleClient client = new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH,
-        JSON_OBJECT_PARSER, null).setApplicationName(
-        "Test Application").build();
-    MockGoogleClientRequest<String> request = new MockGoogleClientRequest<String>(
-        client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
+    MockGoogleClient client =
+        new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application")
+            .build();
+    MockGoogleClientRequest<String> request =
+        new MockGoogleClientRequest<String>(
+            client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
     InputStream inputStream = request.executeAsInputStream();
-    assertTrue(inputStream instanceof GZIPInputStream);
+    // The response will be wrapped because of gzip encoding
+    assertFalse(inputStream instanceof ByteArrayInputStream);
   }
 
   public void testReturnRawInputStream_True() throws Exception {
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildRequest(final String method, final String url) {
-        return new MockLowLevelHttpRequest() {
+    HttpTransport transport =
+        new MockHttpTransport() {
           @Override
-          public LowLevelHttpResponse execute() {
-            byte[] data = BaseEncoding.base64().decode(
-                "H4sIAAAAAAAAAPNIzcnJV3DPz0/PSVVwzskvTVEILskvSkxPVQQA/LySchsAAAA=");
-            ByteArrayInputStream content = new ByteArrayInputStream(data);
-            return new MockLowLevelHttpResponse()
-                .setContentEncoding("gzip")
-                .setContent(content);
+          public LowLevelHttpRequest buildRequest(final String method, final String url) {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() {
+                return new MockLowLevelHttpResponse()
+                    .setContentEncoding("gzip")
+                    .setContent(
+                        new ByteArrayInputStream(
+                            BaseEncoding.base64()
+                                .decode(
+                                    "H4sIAAAAAAAAAPNIzcnJV3DPz0/PSVVwzskvTVEILskvSkxPVQQA/LySchsAAAA=")));
+              }
+            };
           }
         };
-      }
-    };
-    MockGoogleClient client = new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH,
-        JSON_OBJECT_PARSER, null).setApplicationName(
-        "Test Application").build();
-    MockGoogleClientRequest<String> request = new MockGoogleClientRequest<String>(
-        client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
+    MockGoogleClient client =
+        new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application")
+            .build();
+    MockGoogleClientRequest<String> request =
+        new MockGoogleClientRequest<String>(
+            client, HttpMethods.GET, URI_TEMPLATE, null, String.class);
     request.setReturnRawInputStream(true);
     InputStream inputStream = request.executeAsInputStream();
-    assertFalse(inputStream instanceof GZIPInputStream);
+    // The response will not be wrapped due to setReturnRawInputStream(true)
+    assertTrue(inputStream instanceof ByteArrayInputStream);
   }
 
   private class AssertHeaderTransport extends MockHttpTransport {
@@ -329,11 +362,8 @@ public class AbstractGoogleClientRequestTest extends TestCase {
           assertTrue(
               String.format(
                   "Expected header value to match %s, instead got %s.",
-                  expectedHeaderValue,
-                  firstHeader
-              ),
-              firstHeader.matches(expectedHeaderValue)
-          );
+                  expectedHeaderValue, firstHeader),
+              firstHeader.matches(expectedHeaderValue));
           return new MockLowLevelHttpResponse();
         }
       };

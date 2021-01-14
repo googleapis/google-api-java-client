@@ -22,14 +22,12 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
-
 import junit.framework.TestCase;
-
 
 /**
  * Tests {@link GoogleJsonError}.
@@ -38,10 +36,16 @@ import junit.framework.TestCase;
  */
 public class GoogleJsonErrorTest extends TestCase {
 
-  static final JsonFactory FACTORY = new JacksonFactory();
-  static final String ERROR = "{" + "\"code\":403," + "\"errors\":[{"
-      + "\"domain\":\"usageLimits\"," + "\"message\":\"Access Not Configured\","
-      + "\"reason\":\"accessNotConfigured\"" + "}]," + "\"message\":\"Access Not Configured\"}";
+  static final JsonFactory FACTORY = new GsonFactory();
+  static final String ERROR =
+      "{"
+          + "\"code\":403,"
+          + "\"errors\":[{"
+          + "\"domain\":\"usageLimits\","
+          + "\"message\":\"Access Not Configured\","
+          + "\"reason\":\"accessNotConfigured\""
+          + "}],"
+          + "\"message\":\"Access Not Configured\"}";
   static final String ERROR_RESPONSE = "{\"error\":" + ERROR + "}";
 
   public void test_json() throws Exception {
@@ -59,8 +63,11 @@ public class GoogleJsonErrorTest extends TestCase {
     }
 
     ErrorTransport(String content, String contentType) {
-      response = new MockLowLevelHttpResponse().setContent(content)
-          .setContentType(contentType).setStatusCode(HttpStatusCodes.STATUS_CODE_FORBIDDEN);
+      response =
+          new MockLowLevelHttpResponse()
+              .setContent(content)
+              .setContentType(contentType)
+              .setStatusCode(HttpStatusCodes.STATUS_CODE_FORBIDDEN);
     }
 
     @Override

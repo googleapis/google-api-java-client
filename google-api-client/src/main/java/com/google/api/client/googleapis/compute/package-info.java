@@ -13,7 +13,7 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
+ * {@link com.google.api.client.util.Beta} <br>
  * Support for <a href="https://developers.google.com/compute/">Google Compute Engine</a>.
  *
  * @since 1.15
@@ -21,4 +21,3 @@
  */
 @com.google.api.client.util.Beta
 package com.google.api.client.googleapis.compute;
-

@@ -21,13 +21,12 @@ import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Types;
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeSet;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Utilities for working with the Atom XML of Google Data APIs.
  *
  * @since 1.0
@@ -68,8 +67,8 @@ public class GoogleAtom {
   /**
    * Returns the fields mask to use for the given data class of key/value pairs for the feed class
    * and for the entry class. This should only be used if the feed class does not contain the entry
-   * class as a field. The data classes cannot be a {@link Map}, {@link GenericData} or a
-   * {@link Collection}.
+   * class as a field. The data classes cannot be a {@link Map}, {@link GenericData} or a {@link
+   * Collection}.
    *
    * @param feedClass feed data class
    * @param entryClass entry data class
@@ -267,6 +266,5 @@ public class GoogleAtom {
     }
   }
 
-  private GoogleAtom() {
-  }
+  private GoogleAtom() {}
 }

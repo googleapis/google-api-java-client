@@ -23,7 +23,6 @@ import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-
 import java.io.IOException;
 import java.util.Collection;
 
@@ -32,42 +31,36 @@ import java.util.Collection;
  * refresh token as specified in <a href="http://tools.ietf.org/html/rfc6749#section-6">Refreshing
  * an Access Token</a>.
  *
- * <p>
- * Use {@link GoogleCredential} to access protected resources from the resource server using the
- * {@link TokenResponse} returned by {@link #execute()}. On error, it will instead throw
- * {@link TokenResponseException}.
- * </p>
+ * <p>Use {@link GoogleCredential} to access protected resources from the resource server using the
+ * {@link TokenResponse} returned by {@link #execute()}. On error, it will instead throw {@link
+ * TokenResponseException}.
  *
- * <p>
- * Sample usage:
- * </p>
+ * <p>Sample usage:
  *
  * <pre>
-  static void refreshAccessToken() throws IOException {
-    try {
-      TokenResponse response =
-          new GoogleRefreshTokenRequest(new NetHttpTransport(), new JacksonFactory(),
-              "tGzv3JOkF0XG5Qx2TlKWIA", "s6BhdRkqt3", "7Fjfp0ZBr1KtDRbnfVdmIw").execute();
-      System.out.println("Access token: " + response.getAccessToken());
-    } catch (TokenResponseException e) {
-      if (e.getDetails() != null) {
-        System.err.println("Error: " + e.getDetails().getError());
-        if (e.getDetails().getErrorDescription() != null) {
-          System.err.println(e.getDetails().getErrorDescription());
-        }
-        if (e.getDetails().getErrorUri() != null) {
-          System.err.println(e.getDetails().getErrorUri());
-        }
-      } else {
-        System.err.println(e.getMessage());
-      }
-    }
-  }
+ * static void refreshAccessToken() throws IOException {
+ * try {
+ * TokenResponse response =
+ * new GoogleRefreshTokenRequest(new NetHttpTransport(), new GsonFactory(),
+ * "tGzv3JOkF0XG5Qx2TlKWIA", "s6BhdRkqt3", "7Fjfp0ZBr1KtDRbnfVdmIw").execute();
+ * System.out.println("Access token: " + response.getAccessToken());
+ * } catch (TokenResponseException e) {
+ * if (e.getDetails() != null) {
+ * System.err.println("Error: " + e.getDetails().getError());
+ * if (e.getDetails().getErrorDescription() != null) {
+ * System.err.println(e.getDetails().getErrorDescription());
+ * }
+ * if (e.getDetails().getErrorUri() != null) {
+ * System.err.println(e.getDetails().getErrorUri());
+ * }
+ * } else {
+ * System.err.println(e.getMessage());
+ * }
+ * }
+ * }
  * </pre>
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.7
  * @author Yaniv Inbar
@@ -81,9 +74,16 @@ public class GoogleRefreshTokenRequest extends RefreshTokenRequest {
    * @param clientId client identifier issued to the client during the registration process
    * @param clientSecret client secret
    */
-  public GoogleRefreshTokenRequest(HttpTransport transport, JsonFactory jsonFactory,
-      String refreshToken, String clientId, String clientSecret) {
-    super(transport, jsonFactory, new GenericUrl(GoogleOAuthConstants.TOKEN_SERVER_URL),
+  public GoogleRefreshTokenRequest(
+      HttpTransport transport,
+      JsonFactory jsonFactory,
+      String refreshToken,
+      String clientId,
+      String clientSecret) {
+    super(
+        transport,
+        jsonFactory,
+        new GenericUrl(GoogleOAuthConstants.TOKEN_SERVER_URL),
         refreshToken);
     setClientAuthentication(new ClientParametersAuthentication(clientId, clientSecret));
   }

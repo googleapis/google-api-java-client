@@ -370,20 +370,20 @@ end-user's data, Service Accounts provide access to the client application's
 own data. Your client application signs the request for an access token using
 a private key downloaded from the [Google API Console][console].
 
-Example code taken from [plus-serviceaccount-cmdline-sample][plus-sample]:
+For example, you can make a request in the following way:
 
 ```java
 HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-...
-// Build service account credential.
 
-GoogleCredential credential = GoogleCredential.fromStream(new FileInputStream("MyProject-1234.json"))
-    .createScoped(Collections.singleton(PlusScopes.PLUS_ME));
-// Set up global Plus instance.
-plus = new Plus.Builder(httpTransport, jsonFactory, credential)
-    .setApplicationName(APPLICATION_NAME).build();
-...
+//Build service account credential
+GoogleCredentials googleCredentials = GoogleCredentials.
+        fromStream(new FileInputStream("/path/to/file"));
+HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(googleCredentials);
+
+Storage storage = new Storage.Builder(httpTransport, jsonFactory, requestInitializer)
+        .setApplicationName("MyProject-1234")
+        .build();
 ```
 
 For an additional sample, see [storage-serviceaccount-cmdline-sample][storage-sample].
@@ -542,7 +542,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
           credential.setSelectedAccountName(accountName);
           SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
           SharedPreferences.Editor editor = settings.edit();
-          editor.putString(PREF_ACCOUNT_NAME, accountName);
+          editor.putString(PREF_ACCOUNT_NAME, accountName);    
           editor.commit();
           AsyncLoadTasks.run(this);
         }
@@ -552,13 +552,17 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
+<<<<<<< HEAD
 [google-credentials]: https://googleapis.dev/java/google-auth-library/latest/index.html?com/google/auth/oauth2/GoogleCredentials.html
+=======
+[google-credential]: https://googleapis.dev/java/google-auth-library/latest/com/google/auth/oauth2/GoogleCredentials.html
+>>>>>>> master
 [google-oauth-client-instructions]: https://developers.google.com/api-client-library/java/google-oauth-java-client/oauth2
 [oauth2]: https://developers.google.com/accounts/docs/OAuth2
 [javadoc-oauth2]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/auth/oauth2/package-frame.html
 [javadoc-appengine-oauth2]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/extensions/appengine/auth/oauth2/package-frame.html
 [console]: https://console.developers.google.com/
-[console-help]: https://developer.google.com/console/help/console/
+[console-help]: https://developer.google.com/console/help/console/      
 [identity-api]: https://cloud.google.com/appengine/docs/java/appidentity/?csw=1#Asserting_Identity_to_Google_APIs
 [app-identity-credential]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/extensions/appengine/auth/oauth2/AppIdentityCredential.html
 [auth-code-flow-set-access-type]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/auth/oauth2/GoogleAuthorizationCodeFlow.Builder.html#setAccessType-java.lang.String-

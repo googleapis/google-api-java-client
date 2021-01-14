@@ -15,43 +15,37 @@
 package com.google.api.client.googleapis.notifications;
 
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 import java.io.Serializable;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Callback to receive unparsed notifications for watched resource.
  *
- * <p>
- * Must NOT be implemented in form of an anonymous class since this would break serialization.
- * </p>
+ * <p>Must NOT be implemented in form of an anonymous class since this would break serialization.
  *
- * <p>
- * Should be thread-safe as several notifications might be processed at the same time.
- * </p>
- *
- * <b>Example usage:</b>
+ * <p>Should be thread-safe as several notifications might be processed at the same time. <b>Example
+ * usage:</b>
  *
  * <pre>
-  static class MyNotificationCallback implements UnparsedNotificationCallback {
-
-    private static final long serialVersionUID = 1L;
-
-    {@literal @}Override
-    public void onNotification(StoredChannel storedChannel, UnparsedNotification notification) {
-      String contentType = notification.getContentType();
-      InputStream contentStream = notification.getContentStream();
-      switch (notification.getResourceState()) {
-        case ResourceStates.SYNC:
-          break;
-        case ResourceStates.EXISTS:
-          break;
-        case ResourceStates.NOT_EXISTS:
-          break;
-      }
-    }
-  }
+ * static class MyNotificationCallback implements UnparsedNotificationCallback {
+ *
+ * private static final long serialVersionUID = 1L;
+ *
+ * {@literal @}Override
+ * public void onNotification(StoredChannel storedChannel, UnparsedNotification notification) {
+ * String contentType = notification.getContentType();
+ * InputStream contentStream = notification.getContentStream();
+ * switch (notification.getResourceState()) {
+ * case ResourceStates.SYNC:
+ * break;
+ * case ResourceStates.EXISTS:
+ * break;
+ * case ResourceStates.NOT_EXISTS:
+ * break;
+ * }
+ * }
+ * }
  * </pre>
  *
  * @author Yaniv Inbar

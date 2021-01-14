@@ -13,13 +13,12 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
- * Notification channel handling based on the <a
- * href="https://github.com/google/gson/">GSON</a> JSON library.
+ * {@link com.google.api.client.util.Beta} <br>
+ * Notification channel handling based on the <a href="https://github.com/google/gson/">GSON</a>
+ * JSON library.
  *
  * @author Yaniv Inbar
  * @since 1.16
  */
 @com.google.api.client.util.Beta
 package com.google.api.client.googleapis.notifications.json.gson;
-

@@ -21,34 +21,33 @@ import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.json.webtoken.JsonWebSignature;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * A test transport that simulates Google's token server for refresh tokens and service accounts.
  *
  * @since 1.19
  */
 @Beta
 public class MockTokenServerTransport extends MockHttpTransport {
-  /** Old URL of Google's token server (for backwards compatibility) */
+  /** Old URL of Google's token server (for backwards compatibility). */
   private static final String LEGACY_TOKEN_SERVER_URL =
       "https://accounts.google.com/o/oauth2/token";
 
   private static final Logger LOGGER = Logger.getLogger(MockTokenServerTransport.class.getName());
 
   static final String EXPECTED_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer";
-  static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  static final JsonFactory JSON_FACTORY = new GsonFactory();
   final String tokenServerUrl;
   Map<String, String> serviceAccounts = new HashMap<String, String>();
   Map<String, String> clients = new HashMap<String, String>();
@@ -79,8 +78,9 @@ public class MockTokenServerTransport extends MockHttpTransport {
     if (url.equals(tokenServerUrl)) {
       return buildTokenRequest(url);
     } else if (url.equals(LEGACY_TOKEN_SERVER_URL)) {
-      LOGGER.warning("Your configured token_uri is using a legacy endpoint. You may want to "
-          + "redownload your credentials.");
+      LOGGER.warning(
+          "Your configured token_uri is using a legacy endpoint. You may want to "
+              + "redownload your credentials.");
       return buildTokenRequest(url);
     }
     return super.buildRequest(method, url);
@@ -135,11 +135,10 @@ public class MockTokenServerTransport extends MockHttpTransport {
         refreshContents.put("access_token", accessToken);
         refreshContents.put("expires_in", 3600);
         refreshContents.put("token_type", "Bearer");
-        String refreshText  = refreshContents.toPrettyString();
+        String refreshText = refreshContents.toPrettyString();
 
-        MockLowLevelHttpResponse response = new MockLowLevelHttpResponse()
-            .setContentType(Json.MEDIA_TYPE)
-            .setContent(refreshText);
+        MockLowLevelHttpResponse response =
+            new MockLowLevelHttpResponse().setContentType(Json.MEDIA_TYPE).setContent(refreshText);
         return response;
       }
     };

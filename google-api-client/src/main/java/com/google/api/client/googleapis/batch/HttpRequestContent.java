@@ -34,6 +34,7 @@ class HttpRequestContent extends AbstractHttpContent {
 
   /** HTTP request. */
   private final HttpRequest request;
+
   private static final String HTTP_VERSION = "HTTP/1.1";
 
   HttpRequestContent(HttpRequest request) {
@@ -55,8 +56,12 @@ class HttpRequestContent extends AbstractHttpContent {
     // write headers
     HttpHeaders headers = new HttpHeaders();
     headers.fromHttpHeaders(request.getHeaders());
-    headers.setAcceptEncoding(null).setUserAgent(null)
-        .setContentEncoding(null).setContentType(null).setContentLength(null);
+    headers
+        .setAcceptEncoding(null)
+        .setUserAgent(null)
+        .setContentEncoding(null)
+        .setContentType(null)
+        .setContentLength(null);
     // analyze the content
     HttpContent content = request.getContent();
     if (content != null) {

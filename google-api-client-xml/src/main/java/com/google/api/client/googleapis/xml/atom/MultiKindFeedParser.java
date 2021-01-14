@@ -31,11 +31,10 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * GData Atom feed pull parser when the entry class can be computed from the kind.
  *
  * @param <T> feed type
- *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -50,8 +49,11 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
    * @param inputStream input stream to read
    * @param feedClass feed class to parse
    */
-  MultiKindFeedParser(XmlNamespaceDictionary namespaceDictionary, XmlPullParser parser,
-      InputStream inputStream, Class<T> feedClass) {
+  MultiKindFeedParser(
+      XmlNamespaceDictionary namespaceDictionary,
+      XmlPullParser parser,
+      InputStream inputStream,
+      Class<T> feedClass) {
     super(namespaceDictionary, parser, inputStream, feedClass);
   }
 
@@ -102,8 +104,11 @@ public final class MultiKindFeedParser<T> extends AbstractAtomFeedParser<T> {
    * @throws IOException I/O exception
    * @throws XmlPullParserException XML pull parser exception
    */
-  public static <T, E> MultiKindFeedParser<T> create(HttpResponse response,
-      XmlNamespaceDictionary namespaceDictionary, Class<T> feedClass, Class<E>... entryClasses)
+  public static <T, E> MultiKindFeedParser<T> create(
+      HttpResponse response,
+      XmlNamespaceDictionary namespaceDictionary,
+      Class<T> feedClass,
+      Class<E>... entryClasses)
       throws IOException, XmlPullParserException {
     InputStream content = response.getContent();
     try {

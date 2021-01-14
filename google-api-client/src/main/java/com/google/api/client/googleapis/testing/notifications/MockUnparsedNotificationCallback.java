@@ -18,11 +18,10 @@ import com.google.api.client.googleapis.notifications.StoredChannel;
 import com.google.api.client.googleapis.notifications.UnparsedNotification;
 import com.google.api.client.googleapis.notifications.UnparsedNotificationCallback;
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Mock for the {@link UnparsedNotificationCallback} class.
  *
  * @author Yaniv Inbar
@@ -43,8 +42,7 @@ public class MockUnparsedNotificationCallback implements UnparsedNotificationCal
     return wasCalled;
   }
 
-  public MockUnparsedNotificationCallback() {
-  }
+  public MockUnparsedNotificationCallback() {}
 
   @SuppressWarnings("unused")
   public void onNotification(StoredChannel storedChannel, UnparsedNotification notification)

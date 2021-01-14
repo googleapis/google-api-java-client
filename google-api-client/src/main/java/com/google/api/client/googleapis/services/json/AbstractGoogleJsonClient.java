@@ -20,7 +20,6 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
-
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -34,7 +33,6 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
 
   /**
    * @param builder builder
-   *
    * @since 1.14
    */
   protected AbstractGoogleJsonClient(Builder builder) {
@@ -54,9 +52,7 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
   /**
    * Builder for {@link AbstractGoogleJsonClient}.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
    */
   public abstract static class Builder extends AbstractGoogleClient.Builder {
 
@@ -68,13 +64,24 @@ public abstract class AbstractGoogleJsonClient extends AbstractGoogleClient {
      * @param httpRequestInitializer HTTP request initializer or {@code null} for none
      * @param legacyDataWrapper whether using the legacy data wrapper in responses
      */
-    protected Builder(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
-        String servicePath, HttpRequestInitializer httpRequestInitializer,
+    protected Builder(
+        HttpTransport transport,
+        JsonFactory jsonFactory,
+        String rootUrl,
+        String servicePath,
+        HttpRequestInitializer httpRequestInitializer,
         boolean legacyDataWrapper) {
-      super(transport, rootUrl, servicePath, new JsonObjectParser.Builder(
-          jsonFactory).setWrapperKeys(
-          legacyDataWrapper ? Arrays.asList("data", "error") : Collections.<String>emptySet())
-          .build(), httpRequestInitializer);
+      super(
+          transport,
+          rootUrl,
+          servicePath,
+          new JsonObjectParser.Builder(jsonFactory)
+              .setWrapperKeys(
+                  legacyDataWrapper
+                      ? Arrays.asList("data", "error")
+                      : Collections.<String>emptySet())
+              .build(),
+          httpRequestInitializer);
     }
 
     @Override

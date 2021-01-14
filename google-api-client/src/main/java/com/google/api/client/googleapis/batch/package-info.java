@@ -18,6 +18,4 @@
  * @since 1.9
  * @author Ravi Mistry
  */
-
 package com.google.api.client.googleapis.batch;
-

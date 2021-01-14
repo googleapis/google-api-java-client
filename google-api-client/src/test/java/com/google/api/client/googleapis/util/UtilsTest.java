@@ -17,7 +17,6 @@ package com.google.api.client.googleapis.util;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.HashMap;
@@ -34,7 +33,6 @@ public class UtilsTest extends TestCase {
   public void testGetDefaultJsonFactory() {
     JsonFactory jsonFactory = Utils.getDefaultJsonFactory();
     assertNotNull(jsonFactory);
-    assertTrue(jsonFactory instanceof JacksonFactory);
     JsonFactory secondCall = Utils.getDefaultJsonFactory();
     assertSame(jsonFactory, secondCall);
   }

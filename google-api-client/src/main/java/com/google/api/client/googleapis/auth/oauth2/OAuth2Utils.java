@@ -20,7 +20,6 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
@@ -28,9 +27,7 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Utilities used by the com.google.api.client.googleapis.auth.oauth2 namespace.
- */
+/** Utilities used by the com.google.api.client.googleapis.auth.oauth2 namespace. */
 @Beta
 public class OAuth2Utils {
 
@@ -71,8 +68,8 @@ public class OAuth2Utils {
     return false;
   }
 
-  static boolean runningOnComputeEngine(HttpTransport transport,
-      SystemEnvironmentProvider environment) {
+  static boolean runningOnComputeEngine(
+      HttpTransport transport, SystemEnvironmentProvider environment) {
     // If the environment has requested that we do no GCE checks, return immediately.
     if (Boolean.parseBoolean(environment.getEnv("NO_GCE_CHECK"))) {
       return false;
@@ -95,9 +92,7 @@ public class OAuth2Utils {
         // Ignore logging timeouts which is the expected failure mode in non GCE environments.
       } catch (IOException e) {
         LOGGER.log(
-            Level.WARNING,
-            "Failed to detect whether we are running on Google Compute Engine.",
-            e);
+            Level.WARNING, "Failed to detect whether we are running on Google Compute Engine.", e);
       }
     }
     return false;

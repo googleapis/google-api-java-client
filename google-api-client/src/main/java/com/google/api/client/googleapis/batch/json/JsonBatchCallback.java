@@ -18,29 +18,26 @@ import com.google.api.client.googleapis.batch.BatchCallback;
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonErrorContainer;
 import com.google.api.client.http.HttpHeaders;
-
 import java.io.IOException;
 
 /**
  * Callback for an individual batch JSON response.
  *
- * <p>
- * Sample use:
- * </p>
+ * <p>Sample use:
  *
  * <pre>
-   batch.queue(volumesList.buildHttpRequest(), Volumes.class, GoogleJsonErrorContainer.class,
-       new JsonBatchCallback&lt;Volumes&gt;() {
-
-     public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
-       log("Success");
-       printVolumes(volumes.getItems());
-     }
-
-     public void onFailure(GoogleJsonError e, HttpHeaders responseHeaders) {
-       log(e.getMessage());
-     }
-   });
+ * batch.queue(volumesList.buildHttpRequest(), Volumes.class, GoogleJsonErrorContainer.class,
+ * new JsonBatchCallback&lt;Volumes&gt;() {
+ *
+ * public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
+ * log("Success");
+ * printVolumes(volumes.getItems());
+ * }
+ *
+ * public void onFailure(GoogleJsonError e, HttpHeaders responseHeaders) {
+ * log(e.getMessage());
+ * }
+ * });
  * </pre>
  *
  * @param <T> Type of the data model class
@@ -60,6 +57,5 @@ public abstract class JsonBatchCallback<T> implements BatchCallback<T, GoogleJso
    * @param e Google JSON error response content
    * @param responseHeaders Headers of the batch response
    */
-  public abstract void onFailure(GoogleJsonError e, HttpHeaders responseHeaders)
-      throws IOException;
+  public abstract void onFailure(GoogleJsonError e, HttpHeaders responseHeaders) throws IOException;
 }

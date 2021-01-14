@@ -18,7 +18,6 @@ import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.AuthorizationCodeResponseUrl;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Preconditions;
-
 import java.util.Collection;
 
 /**
@@ -28,31 +27,25 @@ import java.util.Collection;
  * href="https://developers.google.com/accounts/docs/OAuth2WebServer">Using OAuth 2.0 for Web Server
  * Applications</a>.
  *
- * <p>
- * The default for {@link #getResponseTypes()} is {@code "code"}. Use
- * {@link AuthorizationCodeResponseUrl} to parse the redirect response after the end user
- * grants/denies the request. Using the authorization code in this response, use
- * {@link GoogleAuthorizationCodeTokenRequest} to request the access token.
- * </p>
+ * <p>The default for {@link #getResponseTypes()} is {@code "code"}. Use {@link
+ * AuthorizationCodeResponseUrl} to parse the redirect response after the end user grants/denies the
+ * request. Using the authorization code in this response, use {@link
+ * GoogleAuthorizationCodeTokenRequest} to request the access token.
  *
- * <p>
- * Sample usage for a web application:
- * </p>
+ * <p>Sample usage for a web application:
  *
  * <pre>
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String url =
-        new GoogleAuthorizationCodeRequestUrl("812741506391.apps.googleusercontent.com",
-            "https://oauth2-login-demo.appspot.com/code", Arrays.asList(
-                "https://www.googleapis.com/auth/userinfo.email",
-                "https://www.googleapis.com/auth/userinfo.profile")).setState("/profile").build();
-    response.sendRedirect(url);
-  }
+ * public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+ * String url =
+ * new GoogleAuthorizationCodeRequestUrl("812741506391.apps.googleusercontent.com",
+ * "https://oauth2-login-demo.appspot.com/code", Arrays.asList(
+ * "https://www.googleapis.com/auth/userinfo.email",
+ * "https://www.googleapis.com/auth/userinfo.profile")).setState("/profile").build();
+ * response.sendRedirect(url);
+ * }
  * </pre>
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.7
  * @author Yaniv Inbar
@@ -76,9 +69,8 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
   /**
    * @param clientId client identifier
    * @param redirectUri URI that the authorization server directs the resource owner's user-agent
-   *        back to the client after a successful authorization grant
+   *     back to the client after a successful authorization grant
    * @param scopes scopes (see {@link #setScopes(Collection)})
-   *
    * @since 1.15
    */
   public GoogleAuthorizationCodeRequestUrl(
@@ -90,13 +82,15 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
    * @param authorizationServerEncodedUrl authorization server encoded URL
    * @param clientId client identifier
    * @param redirectUri URI that the authorization server directs the resource owner's user-agent
-   *        back to the client after a successful authorization grant
+   *     back to the client after a successful authorization grant
    * @param scopes scopes (see {@link #setScopes(Collection)})
-   *
    * @since 1.15
    */
-  public GoogleAuthorizationCodeRequestUrl(String authorizationServerEncodedUrl, String clientId,
-      String redirectUri, Collection<String> scopes) {
+  public GoogleAuthorizationCodeRequestUrl(
+      String authorizationServerEncodedUrl,
+      String clientId,
+      String redirectUri,
+      Collection<String> scopes) {
     super(authorizationServerEncodedUrl, clientId);
     setRedirectUri(redirectUri);
     setScopes(scopes);
@@ -104,12 +98,11 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
 
   /**
    * @param clientSecrets OAuth 2.0 client secrets JSON model as specified in <a
-   *        href="https://developers.google.com/api-client-library/python/guide/aaa_client_secrets">
-   *        client_secrets.json file format</a>
+   *     href="https://developers.google.com/api-client-library/python/guide/aaa_client_secrets">
+   *     client_secrets.json file format</a>
    * @param redirectUri URI that the authorization server directs the resource owner's user-agent
-   *        back to the client after a successful authorization grant
+   *     back to the client after a successful authorization grant
    * @param scopes scopes (see {@link #setScopes(Collection)})
-   *
    * @since 1.15
    */
   public GoogleAuthorizationCodeRequestUrl(
@@ -118,9 +111,9 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
   }
 
   /**
-   * Returns the approval prompt behavior ({@code "auto"} to request auto-approval or
-   * {@code "force"} to force the approval UI to show) or {@code null} for the default behavior of
-   * {@code "auto"}.
+   * Returns the approval prompt behavior ({@code "auto"} to request auto-approval or {@code
+   * "force"} to force the approval UI to show) or {@code null} for the default behavior of {@code
+   * "auto"}.
    */
   public final String getApprovalPrompt() {
     return approvalPrompt;
@@ -130,10 +123,8 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
    * Sets the approval prompt behavior ({@code "auto"} to request auto-approval or {@code "force"}
    * to force the approval UI to show) or {@code null} for the default behavior of {@code "auto"}.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public GoogleAuthorizationCodeRequestUrl setApprovalPrompt(String approvalPrompt) {
     this.approvalPrompt = approvalPrompt;
@@ -152,10 +143,8 @@ public class GoogleAuthorizationCodeRequestUrl extends AuthorizationCodeRequestU
    * Sets the access type ({@code "online"} to request online access or {@code "offline"} to request
    * offline access) or {@code null} for the default behavior of {@code "online"}.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public GoogleAuthorizationCodeRequestUrl setAccessType(String accessType) {
     this.accessType = accessType;

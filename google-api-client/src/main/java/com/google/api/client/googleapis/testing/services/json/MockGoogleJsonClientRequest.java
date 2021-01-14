@@ -19,7 +19,7 @@ import com.google.api.client.http.UriTemplate;
 import com.google.api.client.util.Beta;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Thread-safe mock Google JSON request.
  *
  * @param <T> type of the response
@@ -33,13 +33,17 @@ public class MockGoogleJsonClientRequest<T> extends AbstractGoogleJsonClientRequ
    * @param client Google client
    * @param method HTTP Method
    * @param uriTemplate URI template for the path relative to the base URL. If it starts with a "/"
-   *        the base path from the base URL will be stripped out. The URI template can also be a
-   *        full URL. URI template expansion is done using
-   *        {@link UriTemplate#expand(String, String, Object, boolean)}
+   *     the base path from the base URL will be stripped out. The URI template can also be a full
+   *     URL. URI template expansion is done using {@link UriTemplate#expand(String, String, Object,
+   *     boolean)}
    * @param content A POJO that can be serialized into JSON or {@code null} for none
    */
-  public MockGoogleJsonClientRequest(AbstractGoogleJsonClient client, String method,
-      String uriTemplate, Object content, Class<T> responseClass) {
+  public MockGoogleJsonClientRequest(
+      AbstractGoogleJsonClient client,
+      String method,
+      String uriTemplate,
+      Object content,
+      Class<T> responseClass) {
     super(client, method, uriTemplate, content, responseClass);
   }
 

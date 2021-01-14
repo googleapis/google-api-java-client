@@ -22,12 +22,11 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
-
 import junit.framework.TestCase;
 
 /**
@@ -38,27 +37,31 @@ import junit.framework.TestCase;
 public class AbstractGoogleJsonClientTest extends TestCase {
 
   public void testExecuteUnparsed_error() throws Exception {
-    HttpTransport transport = new MockHttpTransport() {
-        @Override
-      public LowLevelHttpRequest buildRequest(String name, String url) {
-        return new MockLowLevelHttpRequest() {
-            @Override
-          public LowLevelHttpResponse execute() {
-            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
-            result.setStatusCode(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED);
-            result.setContentType(Json.MEDIA_TYPE);
-            result.setContent("{\"error\":{\"code\":401,\"errors\":[{\"domain\":\"global\","
-                + "\"location\":\"Authorization\",\"locationType\":\"header\","
-                + "\"message\":\"me\",\"reason\":\"authError\"}],\"message\":\"me\"}}");
-            return result;
+    HttpTransport transport =
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String name, String url) {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() {
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.setStatusCode(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED);
+                result.setContentType(Json.MEDIA_TYPE);
+                result.setContent(
+                    "{\"error\":{\"code\":401,\"errors\":[{\"domain\":\"global\","
+                        + "\"location\":\"Authorization\",\"locationType\":\"header\","
+                        + "\"message\":\"me\",\"reason\":\"authError\"}],\"message\":\"me\"}}");
+                return result;
+              }
+            };
           }
         };
-      }
-    };
-    JsonFactory jsonFactory = new JacksonFactory();
-    MockGoogleJsonClient client = new MockGoogleJsonClient.Builder(
-        transport, jsonFactory, HttpTesting.SIMPLE_URL, "", null, false).setApplicationName(
-        "Test Application").build();
+    JsonFactory jsonFactory = new GsonFactory();
+    MockGoogleJsonClient client =
+        new MockGoogleJsonClient.Builder(
+                transport, jsonFactory, HttpTesting.SIMPLE_URL, "", null, false)
+            .setApplicationName("Test Application")
+            .build();
     MockGoogleJsonClientRequest<String> request =
         new MockGoogleJsonClientRequest<String>(client, "GET", "foo", null, String.class);
     try {

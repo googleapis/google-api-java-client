@@ -16,16 +16,13 @@ package com.google.api.client.googleapis.testing;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Utility class for test code.
- */
+/** Utility class for test code. */
 public final class TestUtils {
 
   private static final String UTF_8 = "UTF-8";
@@ -45,6 +42,5 @@ public final class TestUtils {
     return map;
   }
 
-  private TestUtils() {
-  }
+  private TestUtils() {}
 }

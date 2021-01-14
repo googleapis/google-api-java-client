@@ -48,14 +48,10 @@ public abstract class AbstractGoogleClient {
    */
   private final String rootUrl;
 
-  /**
-   * Service path, for example {@code "tasks/v1/"}. Must be URL-encoded and must end with a "/".
-   */
+  /** Service path, for example {@code "tasks/v1/"}. Must be URL-encoded and must end with a "/". */
   private final String servicePath;
 
-  /**
-   * Batch path, for example {@code "batch/tasks"}.  Must be URL-encoded.
-   */
+  /** Batch path, for example {@code "batch/tasks"}. Must be URL-encoded. */
   private final String batchPath;
 
   /**
@@ -74,7 +70,6 @@ public abstract class AbstractGoogleClient {
 
   /**
    * @param builder builder
-   *
    * @since 1.14
    */
   protected AbstractGoogleClient(Builder builder) {
@@ -86,21 +81,20 @@ public abstract class AbstractGoogleClient {
       logger.warning("Application name is not set. Call Builder#setApplicationName.");
     }
     applicationName = builder.applicationName;
-    requestFactory = builder.httpRequestInitializer == null
-        ? builder.transport.createRequestFactory()
-        : builder.transport.createRequestFactory(builder.httpRequestInitializer);
+    requestFactory =
+        builder.httpRequestInitializer == null
+            ? builder.transport.createRequestFactory()
+            : builder.transport.createRequestFactory(builder.httpRequestInitializer);
     objectParser = builder.objectParser;
     suppressPatternChecks = builder.suppressPatternChecks;
     suppressRequiredParameterChecks = builder.suppressRequiredParameterChecks;
   }
 
   /**
-   * Returns the URL-encoded root URL of the service, for example
-   * {@code "https://www.googleapis.com/"}.
+   * Returns the URL-encoded root URL of the service, for example {@code
+   * "https://www.googleapis.com/"}.
    *
-   * <p>
-   * Must end with a "/".
-   * </p>
+   * <p>Must end with a "/".
    */
   public final String getRootUrl() {
     return rootUrl;
@@ -109,30 +103,27 @@ public abstract class AbstractGoogleClient {
   /**
    * Returns the URL-encoded service path of the service, for example {@code "tasks/v1/"}.
    *
-   * <p>
-   * Must end with a "/" and not begin with a "/". It is allowed to be an empty string {@code ""} or
-   * a forward slash {@code "/"}, if it is a forward slash then it is treated as an empty string
-   * </p>
+   * <p>Must end with a "/" and not begin with a "/". It is allowed to be an empty string {@code ""}
+   * or a forward slash {@code "/"}, if it is a forward slash then it is treated as an empty string
    */
   public final String getServicePath() {
     return servicePath;
   }
 
   /**
-   * Returns the URL-encoded base URL of the service, for example
-   * {@code "https://www.googleapis.com/tasks/v1/"}.
+   * Returns the URL-encoded base URL of the service, for example {@code
+   * "https://www.googleapis.com/tasks/v1/"}.
    *
-   * <p>
-   * Must end with a "/". It is guaranteed to be equal to {@code getRootUrl() + getServicePath()}.
-   * </p>
+   * <p>Must end with a "/". It is guaranteed to be equal to {@code getRootUrl() +
+   * getServicePath()}.
    */
   public final String getBaseUrl() {
     return rootUrl + servicePath;
   }
 
   /**
-   * Returns the application name to be sent in the User-Agent header of each request or
-   * {@code null} for none.
+   * Returns the application name to be sent in the User-Agent header of each request or {@code
+   * null} for none.
    */
   public final String getApplicationName() {
     return applicationName;
@@ -151,39 +142,33 @@ public abstract class AbstractGoogleClient {
   /**
    * Returns the object parser or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public ObjectParser getObjectParser() {
     return objectParser;
   }
 
   /**
-   * Initializes a {@link AbstractGoogleClientRequest} using a
-   * {@link GoogleClientRequestInitializer}.
+   * Initializes a {@link AbstractGoogleClientRequest} using a {@link
+   * GoogleClientRequestInitializer}.
    *
-   * <p>
-   * Must be called before the Google client request is executed, preferably right after the request
-   * is instantiated. Sample usage:
-   * </p>
+   * <p>Must be called before the Google client request is executed, preferably right after the
+   * request is instantiated. Sample usage:
    *
    * <pre>
-    public class Get extends HttpClientRequest {
-      ...
-    }
-
-    public Get get(String userId) throws IOException {
-      Get result = new Get(userId);
-      initialize(result);
-      return result;
-    }
+   * public class Get extends HttpClientRequest {
+   * ...
+   * }
+   *
+   * public Get get(String userId) throws IOException {
+   * Get result = new Get(userId);
+   * initialize(result);
+   * return result;
+   * }
    * </pre>
    *
-   * <p>
-   * Subclasses may override by calling the super implementation.
-   * </p>
+   * <p>Subclasses may override by calling the super implementation.
    *
    * @param httpClientRequest Google client request type
    */
@@ -196,15 +181,13 @@ public abstract class AbstractGoogleClient {
   /**
    * Create an {@link BatchRequest} object from this Google API client instance.
    *
-   * <p>
-   * Sample usage:
-   * </p>
+   * <p>Sample usage:
    *
    * <pre>
-     client.batch()
-         .queue(...)
-         .queue(...)
-         .execute();
+   * client.batch()
+   * .queue(...)
+   * .queue(...)
+   * .execute();
    * </pre>
    *
    * @return newly created Batch request
@@ -216,19 +199,17 @@ public abstract class AbstractGoogleClient {
   /**
    * Create an {@link BatchRequest} object from this Google API client instance.
    *
-   * <p>
-   * Sample usage:
-   * </p>
+   * <p>Sample usage:
    *
    * <pre>
-     client.batch(httpRequestInitializer)
-         .queue(...)
-         .queue(...)
-         .execute();
+   * client.batch(httpRequestInitializer)
+   * .queue(...)
+   * .queue(...)
+   * .execute();
    * </pre>
    *
    * @param httpRequestInitializer The initializer to use when creating the top-level batch HTTP
-   *        request or {@code null} for none
+   *     request or {@code null} for none
    * @return newly created Batch request
    */
   public final BatchRequest batch(HttpRequestInitializer httpRequestInitializer) {
@@ -290,9 +271,7 @@ public abstract class AbstractGoogleClient {
   /**
    * Builder for {@link AbstractGoogleClient}.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
    */
   public abstract static class Builder {
 
@@ -341,8 +320,12 @@ public abstract class AbstractGoogleClient {
      * @param objectParser object parser or {@code null} for none
      * @param httpRequestInitializer HTTP request initializer or {@code null} for none
      */
-    protected Builder(HttpTransport transport, String rootUrl, String servicePath,
-        ObjectParser objectParser, HttpRequestInitializer httpRequestInitializer) {
+    protected Builder(
+        HttpTransport transport,
+        String rootUrl,
+        String servicePath,
+        ObjectParser objectParser,
+        HttpRequestInitializer httpRequestInitializer) {
       this.transport = Preconditions.checkNotNull(transport);
       this.objectParser = objectParser;
       setRootUrl(rootUrl);
@@ -361,22 +344,18 @@ public abstract class AbstractGoogleClient {
     /**
      * Returns the object parser or {@code null} for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public ObjectParser getObjectParser() {
       return objectParser;
     }
 
     /**
-     * Returns the URL-encoded root URL of the service, for example
-     * {@code https://www.googleapis.com/}.
+     * Returns the URL-encoded root URL of the service, for example {@code
+     * https://www.googleapis.com/}.
      *
-     * <p>
-     * Must be URL-encoded and must end with a "/".
-     * </p>
+     * <p>Must be URL-encoded and must end with a "/".
      */
     public final String getRootUrl() {
       return rootUrl;
@@ -385,14 +364,11 @@ public abstract class AbstractGoogleClient {
     /**
      * Sets the URL-encoded root URL of the service, for example {@code https://www.googleapis.com/}
      * .
-     * <p>
-     * If the specified root URL does not end with a "/" then a "/" is added to the end.
-     * </p>
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>If the specified root URL does not end with a "/" then a "/" is added to the end.
+     *
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setRootUrl(String rootUrl) {
       this.rootUrl = normalizeRootUrl(rootUrl);
@@ -402,10 +378,8 @@ public abstract class AbstractGoogleClient {
     /**
      * Returns the URL-encoded service path of the service, for example {@code "tasks/v1/"}.
      *
-     * <p>
-     * Must be URL-encoded and must end with a "/" and not begin with a "/". It is allowed to be an
-     * empty string {@code ""}.
-     * </p>
+     * <p>Must be URL-encoded and must end with a "/" and not begin with a "/". It is allowed to be
+     * an empty string {@code ""}.
      */
     public final String getServicePath() {
       return servicePath;
@@ -414,30 +388,22 @@ public abstract class AbstractGoogleClient {
     /**
      * Sets the URL-encoded service path of the service, for example {@code "tasks/v1/"}.
      *
-     * <p>
-     * It is allowed to be an empty string {@code ""} or a forward slash {@code "/"}, if it is a
+     * <p>It is allowed to be an empty string {@code ""} or a forward slash {@code "/"}, if it is a
      * forward slash then it is treated as an empty string. This is determined when the library is
      * generated and normally should not be changed.
-     * </p>
      *
-     * <p>
-     * If the specified service path does not end with a "/" then a "/" is added to the end. If the
-     * specified service path begins with a "/" then the "/" is removed.
-     * </p>
+     * <p>If the specified service path does not end with a "/" then a "/" is added to the end. If
+     * the specified service path begins with a "/" then the "/" is removed.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setServicePath(String servicePath) {
       this.servicePath = normalizeServicePath(servicePath);
       return this;
     }
 
-    /**
-     * Sets the URL-encoded batch path of the service, for example {@code "batch/tasks"}.
-     */
+    /** Sets the URL-encoded batch path of the service, for example {@code "batch/tasks"}. */
     public Builder setBatchPath(String batchPath) {
       this.batchPath = batchPath;
       return this;
@@ -451,10 +417,8 @@ public abstract class AbstractGoogleClient {
     /**
      * Sets the Google client request initializer or {@code null} for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setGoogleClientRequestInitializer(
         GoogleClientRequestInitializer googleClientRequestInitializer) {
@@ -470,10 +434,8 @@ public abstract class AbstractGoogleClient {
     /**
      * Sets the HTTP request initializer or {@code null} for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setHttpRequestInitializer(HttpRequestInitializer httpRequestInitializer) {
       this.httpRequestInitializer = httpRequestInitializer;
@@ -481,8 +443,8 @@ public abstract class AbstractGoogleClient {
     }
 
     /**
-     * Returns the application name to be used in the UserAgent header of each request or
-     * {@code null} for none.
+     * Returns the application name to be used in the UserAgent header of each request or {@code
+     * null} for none.
      */
     public final String getApplicationName() {
       return applicationName;
@@ -492,10 +454,8 @@ public abstract class AbstractGoogleClient {
      * Sets the application name to be used in the UserAgent header of each request or {@code null}
      * for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setApplicationName(String applicationName) {
       this.applicationName = applicationName;
@@ -510,14 +470,10 @@ public abstract class AbstractGoogleClient {
     /**
      * Sets whether discovery pattern checks should be suppressed on required parameters.
      *
-     * <p>
-     * Default value is {@code false}.
-     * </p>
+     * <p>Default value is {@code false}.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setSuppressPatternChecks(boolean suppressPatternChecks) {
       this.suppressPatternChecks = suppressPatternChecks;
@@ -536,14 +492,10 @@ public abstract class AbstractGoogleClient {
     /**
      * Sets whether discovery required parameter checks should be suppressed.
      *
-     * <p>
-     * Default value is {@code false}.
-     * </p>
+     * <p>Default value is {@code false}.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      *
      * @since 1.14
      */
@@ -555,10 +507,8 @@ public abstract class AbstractGoogleClient {
     /**
      * Suppresses all discovery pattern and required parameter checks.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      *
      * @since 1.14
      */

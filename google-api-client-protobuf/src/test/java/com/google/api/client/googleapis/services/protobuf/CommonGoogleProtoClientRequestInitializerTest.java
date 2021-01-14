@@ -19,7 +19,6 @@ import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.util.Key;
 import com.google.protobuf.MessageLite;
-
 import junit.framework.TestCase;
 
 /**
@@ -30,11 +29,14 @@ import junit.framework.TestCase;
 public class CommonGoogleProtoClientRequestInitializerTest extends TestCase {
 
   public static class MyRequest extends AbstractGoogleProtoClientRequest<String> {
-    @Key
-    String key;
+    @Key String key;
 
-    protected MyRequest(MockGoogleProtoClient client, String method, String uriTemplate,
-        MessageLite message, Class<String> responseClass) {
+    protected MyRequest(
+        MockGoogleProtoClient client,
+        String method,
+        String uriTemplate,
+        MessageLite message,
+        Class<String> responseClass) {
       super(client, method, uriTemplate, message, responseClass);
     }
   }
@@ -43,8 +45,10 @@ public class CommonGoogleProtoClientRequestInitializerTest extends TestCase {
     CommonGoogleProtoClientRequestInitializer key =
         new CommonGoogleProtoClientRequestInitializer("foo");
     MockGoogleProtoClient client =
-        new MockGoogleProtoClient.Builder(new MockHttpTransport(), HttpTesting.SIMPLE_URL, "test/",
-            null).setApplicationName("Test Application").build();
+        new MockGoogleProtoClient.Builder(
+                new MockHttpTransport(), HttpTesting.SIMPLE_URL, "test/", null)
+            .setApplicationName("Test Application")
+            .build();
     MyRequest request = new MyRequest(client, "GET", "", null, String.class);
     assertNull(request.key);
     key.initialize(request);

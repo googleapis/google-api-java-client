@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-bom</artifactId>
-  <version>1.30.6-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+  <version>1.31.2-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
   <packaging>pom</packaging>
 
   <name>Google API Client Library for Java BOM</name>
@@ -63,52 +63,52 @@
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client</artifactId>
-        <version>1.30.6-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.2-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-android</artifactId>
-        <version>1.30.6-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.2-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-appengine</artifactId>
-        <version>1.30.6-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.2-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-assembly</artifactId>
-        <version>1.30.6-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.2-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-gson</artifactId>
-        <version>1.30.6-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.2-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-jackson2</artifactId>
-        <version>1.30.6-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.2-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-java6</artifactId>
-        <version>1.30.6-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.2-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-protobuf</artifactId>
-        <version>1.30.6-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.2-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-servlet</artifactId>
-        <version>1.30.6-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.2-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-xml</artifactId>
-        <version>1.30.6-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.2-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -128,7 +128,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.1.1</version>
+        <version>3.2.0</version>
         <configuration>
           <skip>true</skip>
         </configuration>
@@ -136,10 +136,26 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-        <version>3.8.2</version>
+        <version>3.9.1</version>
         <configuration>
           <skip>true</skip>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.coveo</groupId>
+        <artifactId>fmt-maven-plugin</artifactId>
+        <version>2.10</version>
+        <configuration>
+          <style>google</style>
+          <verbose>true</verbose>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>com.google.googlejavaformat</groupId>
+            <artifactId>google-java-format</artifactId>
+            <version>1.9</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>

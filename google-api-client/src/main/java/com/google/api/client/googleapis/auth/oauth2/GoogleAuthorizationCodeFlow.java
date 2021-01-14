@@ -32,7 +32,6 @@ import com.google.api.client.util.Clock;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.store.DataStore;
 import com.google.api.client.util.store.DataStoreFactory;
-
 import java.io.IOException;
 import java.util.Collection;
 
@@ -40,29 +39,23 @@ import java.util.Collection;
  * Thread-safe Google OAuth 2.0 authorization code flow that manages and persists end-user
  * credentials.
  *
- * <p>
- * This is designed to simplify the flow in which an end-user authorizes the application to access
- * their protected data, and then the application has access to their data based on an access token
- * and a refresh token to refresh that access token when it expires.
- * </p>
+ * <p>This is designed to simplify the flow in which an end-user authorizes the application to
+ * access their protected data, and then the application has access to their data based on an access
+ * token and a refresh token to refresh that access token when it expires.
  *
- * <p>
- * The first step is to call {@link #loadCredential(String)} based on the known user ID to check if
- * the end-user's credentials are already known. If not, call {@link #newAuthorizationUrl()} and
+ * <p>The first step is to call {@link #loadCredential(String)} based on the known user ID to check
+ * if the end-user's credentials are already known. If not, call {@link #newAuthorizationUrl()} and
  * direct the end-user's browser to an authorization page. The web browser will then redirect to the
  * redirect URL with a {@code "code"} query parameter which can then be used to request an access
- * token using {@link #newTokenRequest(String)}. Finally, use
- * {@link #createAndStoreCredential(TokenResponse, String)} to store and obtain a credential for
- * accessing protected resources.
- * </p>
+ * token using {@link #newTokenRequest(String)}. Finally, use {@link
+ * #createAndStoreCredential(TokenResponse, String)} to store and obtain a credential for accessing
+ * protected resources.
  *
- * <p>
- * The default for the {@code approval_prompt} and {@code access_type} parameters is {@code null}.
- * For web applications that means {@code "approval_prompt=auto&access_type=online"} and for
+ * <p>The default for the {@code approval_prompt} and {@code access_type} parameters is {@code
+ * null}. For web applications that means {@code "approval_prompt=auto&access_type=online"} and for
  * installed applications that means {@code "approval_prompt=force&access_type=offline"}. To
  * override the default, you need to explicitly call {@link Builder#setApprovalPrompt(String)} and
  * {@link Builder#setAccessType(String)}.
- * </p>
  *
  * @author Yaniv Inbar
  * @since 1.7
@@ -88,17 +81,19 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
    * @param clientId client identifier
    * @param clientSecret client secret
    * @param scopes collection of scopes to be joined by a space separator
-   *
    * @since 1.15
    */
-  public GoogleAuthorizationCodeFlow(HttpTransport transport, JsonFactory jsonFactory,
-      String clientId, String clientSecret, Collection<String> scopes) {
+  public GoogleAuthorizationCodeFlow(
+      HttpTransport transport,
+      JsonFactory jsonFactory,
+      String clientId,
+      String clientSecret,
+      Collection<String> scopes) {
     this(new Builder(transport, jsonFactory, clientId, clientSecret, scopes));
   }
 
   /**
    * @param builder Google authorization code flow builder
-   *
    * @since 1.14
    */
   protected GoogleAuthorizationCodeFlow(Builder builder) {
@@ -111,24 +106,32 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
   public GoogleAuthorizationCodeTokenRequest newTokenRequest(String authorizationCode) {
     // don't need to specify clientId & clientSecret because specifying clientAuthentication
     // don't want to specify redirectUri to give control of it to user of this class
-    return new GoogleAuthorizationCodeTokenRequest(getTransport(), getJsonFactory(),
-        getTokenServerEncodedUrl(), "", "", authorizationCode, "").setClientAuthentication(
-        getClientAuthentication())
-        .setRequestInitializer(getRequestInitializer()).setScopes(getScopes());
+    return new GoogleAuthorizationCodeTokenRequest(
+            getTransport(),
+            getJsonFactory(),
+            getTokenServerEncodedUrl(),
+            "",
+            "",
+            authorizationCode,
+            "")
+        .setClientAuthentication(getClientAuthentication())
+        .setRequestInitializer(getRequestInitializer())
+        .setScopes(getScopes());
   }
 
   @Override
   public GoogleAuthorizationCodeRequestUrl newAuthorizationUrl() {
     // don't want to specify redirectUri to give control of it to user of this class
     return new GoogleAuthorizationCodeRequestUrl(
-        getAuthorizationServerEncodedUrl(), getClientId(), "", getScopes()).setAccessType(
-        accessType).setApprovalPrompt(approvalPrompt);
+            getAuthorizationServerEncodedUrl(), getClientId(), "", getScopes())
+        .setAccessType(accessType)
+        .setApprovalPrompt(approvalPrompt);
   }
 
   /**
-   * Returns the approval prompt behavior ({@code "auto"} to request auto-approval or
-   * {@code "force"} to force the approval UI to show) or {@code null} for the default behavior of
-   * {@code "auto"}.
+   * Returns the approval prompt behavior ({@code "auto"} to request auto-approval or {@code
+   * "force"} to force the approval UI to show) or {@code null} for the default behavior of {@code
+   * "auto"}.
    */
   public final String getApprovalPrompt() {
     return approvalPrompt;
@@ -145,9 +148,7 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
   /**
    * Google authorization code flow builder.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
    */
   public static class Builder extends AuthorizationCodeFlow.Builder {
 
@@ -164,21 +165,28 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
     String accessType;
 
     /**
-     *
      * @param transport HTTP transport
      * @param jsonFactory JSON factory
      * @param clientId client identifier
      * @param clientSecret client secret
      * @param scopes collection of scopes to be joined by a space separator (or a single value
-     *        containing multiple space-separated scopes)
-     *
+     *     containing multiple space-separated scopes)
      * @since 1.15
      */
-    public Builder(HttpTransport transport, JsonFactory jsonFactory, String clientId,
-        String clientSecret, Collection<String> scopes) {
-      super(BearerToken.authorizationHeaderAccessMethod(), transport, jsonFactory, new GenericUrl(
-          GoogleOAuthConstants.TOKEN_SERVER_URL), new ClientParametersAuthentication(
-          clientId, clientSecret), clientId, GoogleOAuthConstants.AUTHORIZATION_SERVER_URL);
+    public Builder(
+        HttpTransport transport,
+        JsonFactory jsonFactory,
+        String clientId,
+        String clientSecret,
+        Collection<String> scopes) {
+      super(
+          BearerToken.authorizationHeaderAccessMethod(),
+          transport,
+          jsonFactory,
+          new GenericUrl(GoogleOAuthConstants.TOKEN_SERVER_URL),
+          new ClientParametersAuthentication(clientId, clientSecret),
+          clientId,
+          GoogleOAuthConstants.AUTHORIZATION_SERVER_URL);
       setScopes(scopes);
     }
 
@@ -187,15 +195,23 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
      * @param jsonFactory JSON factory
      * @param clientSecrets Google client secrets
      * @param scopes collection of scopes to be joined by a space separator
-     *
      * @since 1.15
      */
-    public Builder(HttpTransport transport, JsonFactory jsonFactory,
-        GoogleClientSecrets clientSecrets, Collection<String> scopes) {
-      super(BearerToken.authorizationHeaderAccessMethod(), transport, jsonFactory, new GenericUrl(
-          GoogleOAuthConstants.TOKEN_SERVER_URL), new ClientParametersAuthentication(
-          clientSecrets.getDetails().getClientId(), clientSecrets.getDetails().getClientSecret()),
-          clientSecrets.getDetails().getClientId(), GoogleOAuthConstants.AUTHORIZATION_SERVER_URL);
+    public Builder(
+        HttpTransport transport,
+        JsonFactory jsonFactory,
+        GoogleClientSecrets clientSecrets,
+        Collection<String> scopes) {
+      super(
+          BearerToken.authorizationHeaderAccessMethod(),
+          transport,
+          jsonFactory,
+          new GenericUrl(GoogleOAuthConstants.TOKEN_SERVER_URL),
+          new ClientParametersAuthentication(
+              clientSecrets.getDetails().getClientId(),
+              clientSecrets.getDetails().getClientSecret()),
+          clientSecrets.getDetails().getClientId(),
+          GoogleOAuthConstants.AUTHORIZATION_SERVER_URL);
       setScopes(scopes);
     }
 
@@ -238,65 +254,49 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
       return (Builder) super.setScopes(scopes);
     }
 
-    /**
-     * @since 1.11
-     */
+    /** @since 1.11 */
     @Override
     public Builder setMethod(AccessMethod method) {
       return (Builder) super.setMethod(method);
     }
 
-    /**
-     * @since 1.11
-     */
+    /** @since 1.11 */
     @Override
     public Builder setTransport(HttpTransport transport) {
       return (Builder) super.setTransport(transport);
     }
 
-    /**
-     * @since 1.11
-     */
+    /** @since 1.11 */
     @Override
     public Builder setJsonFactory(JsonFactory jsonFactory) {
       return (Builder) super.setJsonFactory(jsonFactory);
     }
 
-    /**
-     * @since 1.11
-     */
+    /** @since 1.11 */
     @Override
     public Builder setTokenServerUrl(GenericUrl tokenServerUrl) {
       return (Builder) super.setTokenServerUrl(tokenServerUrl);
     }
 
-    /**
-     * @since 1.11
-     */
+    /** @since 1.11 */
     @Override
     public Builder setClientAuthentication(HttpExecuteInterceptor clientAuthentication) {
       return (Builder) super.setClientAuthentication(clientAuthentication);
     }
 
-    /**
-     * @since 1.11
-     */
+    /** @since 1.11 */
     @Override
     public Builder setClientId(String clientId) {
       return (Builder) super.setClientId(clientId);
     }
 
-    /**
-     * @since 1.11
-     */
+    /** @since 1.11 */
     @Override
     public Builder setAuthorizationServerEncodedUrl(String authorizationServerEncodedUrl) {
       return (Builder) super.setAuthorizationServerEncodedUrl(authorizationServerEncodedUrl);
     }
 
-    /**
-     * @since 1.11
-     */
+    /** @since 1.11 */
     @Override
     public Builder setClock(Clock clock) {
       return (Builder) super.setClock(clock);
@@ -317,14 +317,10 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
      * to force the approval UI to show) or {@code null} for the default behavior ({@code "auto"}
      * for web applications and {@code "force"} for installed applications).
      *
-     * <p>
-     * By default this has the value {@code null}.
-     * </p>
+     * <p>By default this has the value {@code null}.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setApprovalPrompt(String approvalPrompt) {
       this.approvalPrompt = approvalPrompt;
@@ -332,9 +328,9 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
     }
 
     /**
-     * Returns the approval prompt behavior ({@code "auto"} to request auto-approval or
-     * {@code "force"} to force the approval UI to show) or {@code null} for the default behavior of
-     * {@code "auto"}.
+     * Returns the approval prompt behavior ({@code "auto"} to request auto-approval or {@code
+     * "force"} to force the approval UI to show) or {@code null} for the default behavior of {@code
+     * "auto"}.
      */
     public final String getApprovalPrompt() {
       return approvalPrompt;
@@ -345,14 +341,10 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
      * request offline access) or {@code null} for the default behavior ({@code "online"} for web
      * applications and {@code "offline"} for installed applications).
      *
-     * <p>
-     * By default this has the value {@code null}.
-     * </p>
+     * <p>By default this has the value {@code null}.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setAccessType(String accessType) {
       this.accessType = accessType;

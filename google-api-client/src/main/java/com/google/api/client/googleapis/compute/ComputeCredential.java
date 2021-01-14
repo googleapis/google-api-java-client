@@ -29,30 +29,25 @@ import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
 import com.google.api.client.util.Preconditions;
-
 import java.io.IOException;
 import java.util.Collection;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Google Compute Engine service accounts OAuth 2.0 credential based on <a
  * href="https://developers.google.com/compute/docs/authentication">Authenticating from Google
  * Compute Engine</a>.
  *
- * <p>
- * Sample usage:
- * </p>
+ * <p>Sample usage:
  *
  * <pre>
-  public static HttpRequestFactory createRequestFactory(
-      HttpTransport transport, JsonFactory jsonFactory) {
-    return transport.createRequestFactory(new GoogleComputeCredential(transport, jsonFactory));
-  }
+ * public static HttpRequestFactory createRequestFactory(
+ * HttpTransport transport, JsonFactory jsonFactory) {
+ * return transport.createRequestFactory(new GoogleComputeCredential(transport, jsonFactory));
+ * }
  * </pre>
  *
- * <p>
- * Implementation is immutable and thread-safe.
- * </p>
+ * <p>Implementation is immutable and thread-safe.
  *
  * @since 1.15
  * @author Yaniv Inbar
@@ -61,8 +56,9 @@ import java.util.Collection;
 public class ComputeCredential extends Credential {
 
   /** Metadata Service Account token server encoded URL. */
-  public static final String TOKEN_SERVER_ENCODED_URL = OAuth2Utils.getMetadataServerUrl()
-      + "/computeMetadata/v1/instance/service-accounts/default/token";
+  public static final String TOKEN_SERVER_ENCODED_URL =
+      OAuth2Utils.getMetadataServerUrl()
+          + "/computeMetadata/v1/instance/service-accounts/default/token";
 
   /**
    * @param transport HTTP transport
@@ -72,9 +68,7 @@ public class ComputeCredential extends Credential {
     this(new Builder(transport, jsonFactory));
   }
 
-  /**
-   * @param builder builder
-   */
+  /** @param builder builder */
   protected ComputeCredential(Builder builder) {
     super(builder);
   }
@@ -89,12 +83,10 @@ public class ComputeCredential extends Credential {
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Google Compute Engine credential builder.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
    */
   @Beta
   public static class Builder extends Credential.Builder {
@@ -137,8 +129,8 @@ public class ComputeCredential extends Credential {
 
     @Override
     public Builder setTokenServerEncodedUrl(String tokenServerEncodedUrl) {
-      return (Builder) super.setTokenServerEncodedUrl(
-          Preconditions.checkNotNull(tokenServerEncodedUrl));
+      return (Builder)
+          super.setTokenServerEncodedUrl(Preconditions.checkNotNull(tokenServerEncodedUrl));
     }
 
     @Override

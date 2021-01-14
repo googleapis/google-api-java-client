@@ -17,7 +17,6 @@ package com.google.api.client.googleapis.auth.oauth2;
 import com.google.api.client.auth.oauth2.BrowserClientRequestUrl;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Preconditions;
-
 import java.util.Collection;
 
 /**
@@ -27,27 +26,21 @@ import java.util.Collection;
  * specified in <a href="https://developers.google.com/accounts/docs/OAuth2UserAgent">Using OAuth
  * 2.0 for Client-side Applications</a>.
  *
- * <p>
- * The default for {@link #getResponseTypes()} is {@code "token"}.
- * </p>
+ * <p>The default for {@link #getResponseTypes()} is {@code "token"}.
  *
- * <p>
- * Sample usage for a web application:
- * </p>
+ * <p>Sample usage for a web application:
  *
  * <pre>
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String url = new GoogleBrowserClientRequestUrl("812741506391.apps.googleusercontent.com",
-        "https://oauth2-login-demo.appspot.com/oauthcallback", Arrays.asList(
-            "https://www.googleapis.com/auth/userinfo.email",
-            "https://www.googleapis.com/auth/userinfo.profile")).setState("/profile").build();
-    response.sendRedirect(url);
-  }
+ * public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+ * String url = new GoogleBrowserClientRequestUrl("812741506391.apps.googleusercontent.com",
+ * "https://oauth2-login-demo.appspot.com/oauthcallback", Arrays.asList(
+ * "https://www.googleapis.com/auth/userinfo.email",
+ * "https://www.googleapis.com/auth/userinfo.profile")).setState("/profile").build();
+ * response.sendRedirect(url);
+ * }
  * </pre>
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.7
  * @author Yaniv Inbar
@@ -64,9 +57,8 @@ public class GoogleBrowserClientRequestUrl extends BrowserClientRequestUrl {
   /**
    * @param clientId client identifier
    * @param redirectUri URI that the authorization server directs the resource owner's user-agent
-   *        back to the client after a successful authorization grant
+   *     back to the client after a successful authorization grant
    * @param scopes scopes (see {@link #setScopes(Collection)})
-   *
    * @since 1.15
    */
   public GoogleBrowserClientRequestUrl(
@@ -78,12 +70,11 @@ public class GoogleBrowserClientRequestUrl extends BrowserClientRequestUrl {
 
   /**
    * @param clientSecrets OAuth 2.0 client secrets JSON model as specified in <a
-   *        href="https://developers.google.com/api-client-library/python/guide/aaa_client_secrets">
-   *        client_secrets.json file format</a>
+   *     href="https://developers.google.com/api-client-library/python/guide/aaa_client_secrets">
+   *     client_secrets.json file format</a>
    * @param redirectUri URI that the authorization server directs the resource owner's user-agent
-   *        back to the client after a successful authorization grant
+   *     back to the client after a successful authorization grant
    * @param scopes scopes (see {@link #setScopes(Collection)})
-   *
    * @since 1.15
    */
   public GoogleBrowserClientRequestUrl(
@@ -92,9 +83,9 @@ public class GoogleBrowserClientRequestUrl extends BrowserClientRequestUrl {
   }
 
   /**
-   * Returns the approval prompt behavior ({@code "auto"} to request auto-approval or
-   * {@code "force"} to force the approval UI to show) or {@code null} for the default behavior of
-   * {@code "auto"}.
+   * Returns the approval prompt behavior ({@code "auto"} to request auto-approval or {@code
+   * "force"} to force the approval UI to show) or {@code null} for the default behavior of {@code
+   * "auto"}.
    */
   public final String getApprovalPrompt() {
     return approvalPrompt;
@@ -104,10 +95,8 @@ public class GoogleBrowserClientRequestUrl extends BrowserClientRequestUrl {
    * Sets the approval prompt behavior ({@code "auto"} to request auto-approval or {@code "force"}
    * to force the approval UI to show) or {@code null} for the default behavior of {@code "auto"}.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public GoogleBrowserClientRequestUrl setApprovalPrompt(String approvalPrompt) {
     this.approvalPrompt = approvalPrompt;

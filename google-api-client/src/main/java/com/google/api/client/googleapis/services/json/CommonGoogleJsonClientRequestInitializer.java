@@ -16,81 +16,68 @@ package com.google.api.client.googleapis.services.json;
 
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.CommonGoogleClientRequestInitializer;
-
 import java.io.IOException;
 
 /**
  * Google JSON client request initializer implementation for setting properties like key and userIp.
  *
- * <p>
- * The simplest usage is to use it to set the key parameter:
- * </p>
+ * <p>The simplest usage is to use it to set the key parameter:
  *
  * <pre>
-  public static final GoogleClientRequestInitializer KEY_INITIALIZER =
-      CommonGoogleJsonClientRequestInitializer.newBuilder()
-          .setKey(KEY)
-          .build();
+ * public static final GoogleClientRequestInitializer KEY_INITIALIZER =
+ * CommonGoogleJsonClientRequestInitializer.newBuilder()
+ * .setKey(KEY)
+ * .build();
  * </pre>
  *
- * <p>
- * There is also a constructor to set both the key and userIp parameters:
- * </p>
+ * <p>There is also a constructor to set both the key and userIp parameters:
  *
  * <pre>
-  public static final GoogleClientRequestInitializer INITIALIZER =
-      CommonGoogleJsonClientRequestInitializer.newBuilder()
-          .setKey(KEY)
-          .setUserIp(USER_IP)
-          .build();
+ * public static final GoogleClientRequestInitializer INITIALIZER =
+ * CommonGoogleJsonClientRequestInitializer.newBuilder()
+ * .setKey(KEY)
+ * .setUserIp(USER_IP)
+ * .build();
  * </pre>
  *
- * <p>
- * If you want to implement custom logic, extend it like this:
- * </p>
+ * <p>If you want to implement custom logic, extend it like this:
  *
  * <pre>
-  public static class MyRequestInitializer extends CommonGoogleJsonClientRequestInitializer {
-
-    {@literal @}Override
-    public void initialize(AbstractGoogleJsonClientRequest{@literal <}?{@literal >} request)
-        throws IOException {
-      // custom logic
-    }
-  }
+ * public static class MyRequestInitializer extends CommonGoogleJsonClientRequestInitializer {
+ *
+ * {@literal @}Override
+ * public void initialize(AbstractGoogleJsonClientRequest{@literal <}?{@literal >} request)
+ * throws IOException {
+ * // custom logic
+ * }
+ * }
  * </pre>
  *
- * <p>
- * Finally, to set the key and userIp parameters and insert custom logic, extend it like this:
- * </p>
+ * <p>Finally, to set the key and userIp parameters and insert custom logic, extend it like this:
  *
  * <pre>
-  public static class MyKeyRequestInitializer extends CommonGoogleJsonClientRequestInitializer {
-
-    public MyKeyRequestInitializer() {
-      super(KEY, USER_IP);
-    }
-
-    {@literal @}Override
-    public void initializeJsonRequest(
-        AbstractGoogleJsonClientRequest{@literal <}?{@literal >} request) throws IOException {
-      // custom logic
-    }
-  }
+ * public static class MyKeyRequestInitializer extends CommonGoogleJsonClientRequestInitializer {
+ *
+ * public MyKeyRequestInitializer() {
+ * super(KEY, USER_IP);
+ * }
+ *
+ * {@literal @}Override
+ * public void initializeJsonRequest(
+ * AbstractGoogleJsonClientRequest{@literal <}?{@literal >} request) throws IOException {
+ * // custom logic
+ * }
+ * }
  * </pre>
  *
- * <p>
- * Subclasses should be thread-safe.
- * </p>
+ * <p>Subclasses should be thread-safe.
  *
  * @since 1.12
  * @author Yaniv Inbar
  */
 public class CommonGoogleJsonClientRequestInitializer extends CommonGoogleClientRequestInitializer {
 
-  /**
-   * @deprecated Please use the builder interface
-   */
+  /** @deprecated Please use the builder interface */
   @Deprecated
   public CommonGoogleJsonClientRequestInitializer() {
     super();
@@ -124,16 +111,13 @@ public class CommonGoogleJsonClientRequestInitializer extends CommonGoogleClient
   /**
    * Initializes a Google JSON client request.
    *
-   * <p>
-   * Default implementation does nothing. Called from
-   * {@link #initialize(AbstractGoogleClientRequest)}.
-   * </p>
+   * <p>Default implementation does nothing. Called from {@link
+   * #initialize(AbstractGoogleClientRequest)}.
    *
    * @throws IOException I/O exception
    */
   protected void initializeJsonRequest(AbstractGoogleJsonClientRequest<?> request)
-      throws IOException {
-  }
+      throws IOException {}
 
   /**
    * Builder for {@code CommonGoogleJsonClientRequestInitializer}.

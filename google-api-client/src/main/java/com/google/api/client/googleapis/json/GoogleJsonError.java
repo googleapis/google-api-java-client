@@ -21,15 +21,13 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.Key;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * Data class representing the Google JSON error response content, as documented for example in <a
- * href="https://developers.google.com/url-shortener/v1/getting_started#errors">Error
- * responses</a>.
+ * href="https://developers.google.com/url-shortener/v1/getting_started#errors">Error responses</a>.
  *
  * @since 1.4
  * @author Yaniv Inbar
@@ -43,12 +41,14 @@ public class GoogleJsonError extends GenericJson {
    * @param response HTTP response
    * @return new instance of the Google JSON error information
    * @throws IllegalArgumentException if content type is not {@link Json#MEDIA_TYPE} or if expected
-   *         {@code "data"} or {@code "error"} key is not found
+   *     {@code "data"} or {@code "error"} key is not found
    */
   public static GoogleJsonError parse(JsonFactory jsonFactory, HttpResponse response)
       throws IOException {
-    JsonObjectParser jsonObjectParser = new JsonObjectParser.Builder(jsonFactory).setWrapperKeys(
-        Collections.singleton("error")).build();
+    JsonObjectParser jsonObjectParser =
+        new JsonObjectParser.Builder(jsonFactory)
+            .setWrapperKeys(Collections.singleton("error"))
+            .build();
     return jsonObjectParser.parseAndClose(
         response.getContent(), response.getContentCharset(), GoogleJsonError.class);
   }
@@ -63,27 +63,22 @@ public class GoogleJsonError extends GenericJson {
   public static class ErrorInfo extends GenericJson {
 
     /** Error classification or {@code null} for none. */
-    @Key
-    private String domain;
+    @Key private String domain;
 
     /** Error reason or {@code null} for none. */
-    @Key
-    private String reason;
+    @Key private String reason;
 
     /** Human readable explanation of the error or {@code null} for none. */
-    @Key
-    private String message;
+    @Key private String message;
 
     /**
      * Location in the request that caused the error or {@code null} for none or {@code null} for
      * none.
      */
-    @Key
-    private String location;
+    @Key private String location;
 
     /** Type of location in the request that caused the error or {@code null} for none. */
-    @Key
-    private String locationType;
+    @Key private String locationType;
 
     /**
      * Returns the error classification or {@code null} for none.
@@ -140,8 +135,8 @@ public class GoogleJsonError extends GenericJson {
     }
 
     /**
-     * Returns the location in the request that caused the error or {@code null} for none or
-     * {@code null} for none.
+     * Returns the location in the request that caused the error or {@code null} for none or {@code
+     * null} for none.
      *
      * @since 1.8
      */
@@ -150,8 +145,8 @@ public class GoogleJsonError extends GenericJson {
     }
 
     /**
-     * Sets the location in the request that caused the error or {@code null} for none or
-     * {@code null} for none.
+     * Sets the location in the request that caused the error or {@code null} for none or {@code
+     * null} for none.
      *
      * @since 1.8
      */
@@ -189,16 +184,13 @@ public class GoogleJsonError extends GenericJson {
   }
 
   /** List of detailed errors or {@code null} for none. */
-  @Key
-  private List<ErrorInfo> errors;
+  @Key private List<ErrorInfo> errors;
 
   /** HTTP status code of this response or {@code null} for none. */
-  @Key
-  private int code;
+  @Key private int code;
 
   /** Human-readable explanation of the error or {@code null} for none. */
-  @Key
-  private String message;
+  @Key private String message;
 
   /**
    * Returns the list of detailed errors or {@code null} for none.

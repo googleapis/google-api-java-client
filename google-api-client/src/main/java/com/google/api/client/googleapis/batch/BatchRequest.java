@@ -27,7 +27,6 @@ import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.http.MultipartContent;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Sleeper;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -38,59 +37,49 @@ import java.util.logging.Logger;
 /**
  * An instance of this class represents a single batch of requests.
  *
- * <p>
- * Sample use:
- * </p>
+ * <p>Sample use:
  *
  * <pre>
-   // client is a AbstractGoogleClient (e.g. com.google.api.services.books.Books)
-   BatchRequest batch = client.batch(httpRequestInitializer);
-   batch.queue(volumesList, Volumes.class, GoogleJsonErrorContainer.class,
-       new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
-
-     public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
-       log("Success");
-       printVolumes(volumes.getItems());
-     }
-
-     public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
-       log(e.getError().getMessage());
-     }
-   });
-   batch.queue(volumesList, Volumes.class, GoogleJsonErrorContainer.class,
-       new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
-
-     public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
-       log("Success");
-       printVolumes(volumes.getItems());
-     }
-
-     public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
-       log(e.getError().getMessage());
-     }
-   });
-   batch.execute();
+ * // client is a AbstractGoogleClient (e.g. com.google.api.services.books.Books)
+ * BatchRequest batch = client.batch(httpRequestInitializer);
+ * batch.queue(volumesList, Volumes.class, GoogleJsonErrorContainer.class,
+ * new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
+ *
+ * public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
+ * log("Success");
+ * printVolumes(volumes.getItems());
+ * }
+ *
+ * public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
+ * log(e.getError().getMessage());
+ * }
+ * });
+ * batch.queue(volumesList, Volumes.class, GoogleJsonErrorContainer.class,
+ * new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
+ *
+ * public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
+ * log("Success");
+ * printVolumes(volumes.getItems());
+ * }
+ *
+ * public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
+ * log(e.getError().getMessage());
+ * }
+ * });
+ * batch.execute();
  * </pre>
  *
- * <p>
- * The content of each individual response is stored in memory. There is thus a potential of
+ * <p>The content of each individual response is stored in memory. There is thus a potential of
  * encountering an {@link OutOfMemoryError} for very large responses.
- * </p>
  *
- * <p>
- * Redirects are currently not followed in {@link BatchRequest}.
- * </p>
+ * <p>Redirects are currently not followed in {@link BatchRequest}.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
- * <p>
- * Note: When setting an {@link HttpUnsuccessfulResponseHandler} by calling to
- * {@link HttpRequest#setUnsuccessfulResponseHandler}, the handler is called for each unsuccessful
- * part. As a result it's not recommended to use {@link HttpBackOffUnsuccessfulResponseHandler} on a
- * batch request, since the back-off policy is invoked for each unsuccessful part.
- * </p>
+ * <p>Note: When setting an {@link HttpUnsuccessfulResponseHandler} by calling to {@link
+ * HttpRequest#setUnsuccessfulResponseHandler}, the handler is called for each unsuccessful part. As
+ * a result it's not recommended to use {@link HttpBackOffUnsuccessfulResponseHandler} on a batch
+ * request, since the back-off policy is invoked for each unsuccessful part.
  *
  * @since 1.9
  * @author rmistry@google.com (Ravi Mistry)
@@ -102,10 +91,12 @@ public final class BatchRequest {
    * declared by the service configuration.
    */
   private static final String GLOBAL_BATCH_ENDPOINT = "https://www.googleapis.com/batch";
-  private static final String GLOBAL_BATCH_ENDPOINT_WARNING = "You are using the global batch "
-      + "endpoint which will soon be shut down. Please instantiate your BatchRequest via your "
-      + "service client's `batch(HttpRequestInitializer)` method. For an example, please see "
-      + "https://github.com/googleapis/google-api-java-client#batching.";
+
+  private static final String GLOBAL_BATCH_ENDPOINT_WARNING =
+      "You are using the global batch "
+          + "endpoint which will soon be shut down. Please instantiate your BatchRequest via your "
+          + "service client's `batch(HttpRequestInitializer)` method. For an example, please see "
+          + "https://github.com/googleapis/google-api-java-client#batching.";
 
   private static final Logger LOGGER = Logger.getLogger(BatchRequest.class.getName());
 
@@ -128,7 +119,10 @@ public final class BatchRequest {
     final Class<E> errorClass;
     final HttpRequest request;
 
-    RequestInfo(BatchCallback<T, E> callback, Class<T> dataClass, Class<E> errorClass,
+    RequestInfo(
+        BatchCallback<T, E> callback,
+        Class<T> dataClass,
+        Class<E> errorClass,
         HttpRequest request) {
       this.callback = callback;
       this.dataClass = dataClass;
@@ -142,19 +136,21 @@ public final class BatchRequest {
    *
    * @param transport The transport to use for requests
    * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
-   *        {@code null} for none
+   *     {@code null} for none
    * @deprecated Please use AbstractGoogleClient#batch(HttpRequestInitializer) to instantiate your
-   *        batch request.
+   *     batch request.
    */
   @Deprecated
   public BatchRequest(HttpTransport transport, HttpRequestInitializer httpRequestInitializer) {
-    this.requestFactory = httpRequestInitializer == null
-        ? transport.createRequestFactory() : transport.createRequestFactory(httpRequestInitializer);
+    this.requestFactory =
+        httpRequestInitializer == null
+            ? transport.createRequestFactory()
+            : transport.createRequestFactory(httpRequestInitializer);
   }
 
   /**
-   * Sets the URL that will be hit when {@link #execute()} is called. The default value is
-   * {@code https://www.googleapis.com/batch}.
+   * Sets the URL that will be hit when {@link #execute()} is called. The default value is {@code
+   * https://www.googleapis.com/batch}.
    */
   public BatchRequest setBatchUrl(GenericUrl batchUrl) {
     this.batchUrl = batchUrl;
@@ -193,15 +189,19 @@ public final class BatchRequest {
    * @param <E> error class type
    * @param httpRequest HTTP Request
    * @param dataClass Data class the response will be parsed into or {@code Void.class} to ignore
-   *        the content
-   * @param errorClass Data class the unsuccessful response will be parsed into or
-   *        {@code Void.class} to ignore the content
+   *     the content
+   * @param errorClass Data class the unsuccessful response will be parsed into or {@code
+   *     Void.class} to ignore the content
    * @param callback Batch Callback
    * @return this Batch request
    * @throws IOException If building the HTTP Request fails
    */
-  public <T, E> BatchRequest queue(HttpRequest httpRequest, Class<T> dataClass, Class<E> errorClass,
-      BatchCallback<T, E> callback) throws IOException {
+  public <T, E> BatchRequest queue(
+      HttpRequest httpRequest,
+      Class<T> dataClass,
+      Class<E> errorClass,
+      BatchCallback<T, E> callback)
+      throws IOException {
     Preconditions.checkNotNull(httpRequest);
     // TODO(rmistry): Add BatchUnparsedCallback with onResponse(InputStream content, HttpHeaders).
     Preconditions.checkNotNull(callback);
@@ -212,9 +212,7 @@ public final class BatchRequest {
     return this;
   }
 
-  /**
-   * Returns the number of queued requests in this batch request.
-   */
+  /** Returns the number of queued requests in this batch request. */
   public int size() {
     return requestInfos.size();
   }
@@ -222,11 +220,9 @@ public final class BatchRequest {
   /**
    * Executes all queued HTTP requests in a single call, parses the responses and invokes callbacks.
    *
-   * <p>
-   * Calling {@link #execute()} executes and clears the queued requests. This means that the
+   * <p>Calling {@link #execute()} executes and clears the queued requests. This means that the
    * {@link BatchRequest} object can be reused to {@link #queue} and {@link #execute()} requests
    * again.
-   * </p>
    */
   public void execute() throws IOException {
     boolean retryAllowed;
@@ -250,9 +246,10 @@ public final class BatchRequest {
       batchContent.getMediaType().setSubType("mixed");
       int contentId = 1;
       for (RequestInfo<?, ?> requestInfo : requestInfos) {
-        batchContent.addPart(new MultipartContent.Part(
-            new HttpHeaders().setAcceptEncoding(null).set("Content-ID", contentId++),
-            new HttpRequestContent(requestInfo.request)));
+        batchContent.addPart(
+            new MultipartContent.Part(
+                new HttpHeaders().setAcceptEncoding(null).set("Content-ID", contentId++),
+                new HttpRequestContent(requestInfo.request)));
       }
       batchRequest.setContent(batchContent);
       HttpResponse response = batchRequest.execute();
@@ -307,6 +304,5 @@ public final class BatchRequest {
         }
       }
     }
-
   }
 }

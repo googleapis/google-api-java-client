@@ -20,47 +20,99 @@ scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 ## cd to the parent directory, i.e. the root of the git repo
 cd ${scriptDir}/..
 
+# include common functions
+source ${scriptDir}/common.sh
+
 # Print out Java version
 java -version
 echo ${JOB_TYPE}
 
-mvn install -B -V \
-  -DskipTests=true \
-  -Dclirr.skip=true \
-  -Denforcer.skip=true \
-  -Dmaven.javadoc.skip=true \
-  -Dgcloud.download.skip=true \
-  -T 1C
+# attempt to install 3 times with exponential backoff (starting with 10 seconds)
+retry_with_backoff 3 10 \
+  mvn install -B -V \
+    -DskipTests=true \
+    -Dclirr.skip=true \
+    -Denforcer.skip=true \
+    -Dmaven.javadoc.skip=true \
+    -Dgcloud.download.skip=true \
+    -T 1C
 
 # if GOOGLE_APPLICATION_CREDIENTIALS is specified as a relative path prepend Kokoro root directory onto it
 if [[ ! -z "${GOOGLE_APPLICATION_CREDENTIALS}" && "${GOOGLE_APPLICATION_CREDENTIALS}" != /* ]]; then
-    export GOOGLE_APPLICATION_CREDENTIALS=$(realpath ${KOKORO_ROOT}/src/${GOOGLE_APPLICATION_CREDENTIALS})
+    export GOOGLE_APPLICATION_CREDENTIALS=$(realpath ${KOKORO_GFILE_DIR}/${GOOGLE_APPLICATION_CREDENTIALS})
 fi
+
+RETURN_CODE=0
+set +e
 
 case ${JOB_TYPE} in
 test)
     mvn test -B -Dclirr.skip=true -Denforcer.skip=true
-    bash ${KOKORO_GFILE_DIR}/codecov.sh
-    bash .kokoro/coerce_logs.sh
+    RETURN_CODE=$?
     ;;
 lint)
     mvn com.coveo:fmt-maven-plugin:check
+    RETURN_CODE=$?
     ;;
 javadoc)
     mvn javadoc:javadoc javadoc:test-javadoc
+    RETURN_CODE=$?
     ;;
 integration)
     mvn -B ${INTEGRATION_TEST_ARGS} \
+      -Penable-integration-tests \
       -DtrimStackTrace=false \
       -Dclirr.skip=true \
       -Denforcer.skip=true \
       -fae \
       verify
-    bash .kokoro/coerce_logs.sh
+    RETURN_CODE=$?
+    ;;
+samples)
+    SAMPLES_DIR=samples
+    # only run ITs in snapshot/ on presubmit PRs. run ITs in all 3 samples/ subdirectories otherwise.
+    if [[ ! -z ${KOKORO_GITHUB_PULL_REQUEST_NUMBER} ]]
+    then
+      SAMPLES_DIR=samples/snapshot
+    fi
+
+    if [[ -f ${SAMPLES_DIR}/pom.xml ]]
+    then
+        pushd ${SAMPLES_DIR}
+        mvn -B \
+          -Penable-samples \
+          -DtrimStackTrace=false \
+          -Dclirr.skip=true \
+          -Denforcer.skip=true \
+          -fae \
+          verify
+        RETURN_CODE=$?
+        popd
+    else
+        echo "no sample pom.xml found - skipping sample tests"
+    fi
     ;;
 clirr)
     mvn -B -Denforcer.skip=true clirr:check
+    RETURN_CODE=$?
     ;;
 *)
     ;;
 esac
+
+if [ "${REPORT_COVERAGE}" == "true" ]
+then
+  bash ${KOKORO_GFILE_DIR}/codecov.sh
+fi
+
+# fix output location of logs
+bash .kokoro/coerce_logs.sh
+
+if [[ "${ENABLE_BUILD_COP}" == "true" ]]
+then
+    chmod +x ${KOKORO_GFILE_DIR}/linux_amd64/buildcop
+    ${KOKORO_GFILE_DIR}/linux_amd64/buildcop -repo=googleapis/google-api-java-client
+fi
+
+echo "exiting with ${RETURN_CODE}"
+exit ${RETURN_CODE}

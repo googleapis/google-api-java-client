@@ -1,0 +1,9 @@
+{
+  "cert_provider_command": [
+    "echo",
+    "\"foo\""
+  ],
+  "device_resource_ids": [
+    "123"
+  ]
+}
