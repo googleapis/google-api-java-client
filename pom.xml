@@ -3,9 +3,9 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.google.cloud</groupId>
-    <artifactId>google-cloud-shared-config</artifactId>
-    <version>0.10.0</version>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
   </parent>
   <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-parent</artifactId>
@@ -305,6 +305,23 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <!-- Copied from com.google.cloud:google-cloud-shared-config:0.10.0 -->
+          <groupId>com.coveo</groupId>
+          <artifactId>fmt-maven-plugin</artifactId>
+          <version>2.9</version>
+          <dependencies>
+            <dependency>
+              <groupId>com.google.googlejavaformat</groupId>
+              <artifactId>google-java-format</artifactId>
+              <version>1.7</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <style>google</style>
+            <verbose>true</verbose>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
