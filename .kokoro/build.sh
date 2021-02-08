@@ -15,18 +15,6 @@
 
 set -eo pipefail
 
-# Install google-play-services artifact locally
-mkdir -p /tmp/foo && pushd /tmp/foo
-curl -O https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar
-unzip play-services-basement-8.3.0.aar
-mvn install:install-file \
-  -Dfile=classes.jar \
-  -DgroupId=com.google.android.google-play-services \
-  -DartifactId=google-play-services \
-  -Dversion=1 \
-  -Dpackaging=jar
-popd
-
 ## Get the directory of the build script
 scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 ## cd to the parent directory, i.e. the root of the git repo
