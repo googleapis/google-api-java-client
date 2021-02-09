@@ -306,23 +306,6 @@
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.2.0</version>
         </plugin>
-        <plugin>
-          <!-- Copied from com.google.cloud:google-cloud-shared-config:0.10.0 -->
-          <groupId>com.coveo</groupId>
-          <artifactId>fmt-maven-plugin</artifactId>
-          <version>2.9</version>
-          <dependencies>
-            <dependency>
-              <groupId>com.google.googlejavaformat</groupId>
-              <artifactId>google-java-format</artifactId>
-              <version>1.7</version>
-            </dependency>
-          </dependencies>
-          <configuration>
-            <style>google</style>
-            <verbose>true</verbose>
-          </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
