@@ -22,4 +22,6 @@ java.common_templates(excludes=[
     "checkstyle.xml",
     "renovate.json",
     "license-checks.xml",
+    ".github/workflows/ci.yaml",
+    ".github/workflows/samples.yaml",
 ])
