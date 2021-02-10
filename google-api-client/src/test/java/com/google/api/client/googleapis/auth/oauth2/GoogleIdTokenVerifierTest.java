@@ -51,8 +51,7 @@ public class GoogleIdTokenVerifierTest extends TestCase {
   public void testBuilder() throws Exception {
     GoogleIdTokenVerifier.Builder builder =
         new GoogleIdTokenVerifier.Builder(
-                new GooglePublicKeysManagerTest.PublicCertsMockHttpTransport(),
-                new GsonFactory())
+                new GooglePublicKeysManagerTest.PublicCertsMockHttpTransport(), new GsonFactory())
             .setIssuer(ISSUER)
             .setAudience(TRUSTED_CLIENT_IDS);
     assertEquals(Clock.SYSTEM, builder.getClock());
@@ -70,8 +69,7 @@ public class GoogleIdTokenVerifierTest extends TestCase {
   public void testVerify() throws Exception {
     GoogleIdTokenVerifier verifier =
         new GoogleIdTokenVerifier.Builder(
-                new GooglePublicKeysManagerTest.PublicCertsMockHttpTransport(),
-                new GsonFactory())
+                new GooglePublicKeysManagerTest.PublicCertsMockHttpTransport(), new GsonFactory())
             .build();
     Header header = new Header();
     header.setAlgorithm("RS25");
