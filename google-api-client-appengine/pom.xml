@@ -92,8 +92,21 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-gson</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.google.oauth-client</groupId>
-      <artifactId>google-oauth-client-appengine</artifactId>
+      <artifactId>google-oauth-client</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.api-client</groupId>
@@ -111,16 +124,6 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-jackson2</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
