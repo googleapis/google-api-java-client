@@ -4,13 +4,8 @@
      "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
-
-  <suppress checks="LineLength" files="com/google/api/client/googleapis/apache/GoogleApacheHttpTransport.java"/>
-  <suppress checks="LineLength" files="com/google/api/client/googleapis/extensions/appengine/notifications/AppEngineNotificationServlet.java"/>
-  <suppress checks="LineLength" files="com/google/api/client/googleapis/extensions/appengine/subscriptions/package-info.java"/>
-  <suppress checks="LineLength" files="com/google/api/client/googleapis/extensions/servlet/notifications/NotificationServlet.java"/>
-  <suppress checks="LineLength" files="com/google/api/client/googleapis/javanet/GoogleNetHttpTransport.java"/>
-  <suppress checks="LineLength" files="com/google/api/client/googleapis/subscriptions/NotificationHeaders.java"/>
+  <suppress checks="LineLength" files="src/main/java/com/google/api/client/googleapis/extensions/appengine/notifications/AppEngineNotificationServlet.java"/>
+  <suppress checks="LineLength" files="src/main/java/com/google/api/client/googleapis/extensions/servlet/notifications/NotificationServlet.java"/>
 
   <!-- Don't check JavaDoc on package-info. -->
   <suppress checks="JavadocStyleCheck" files="package-info.java"/>
