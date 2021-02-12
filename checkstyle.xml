@@ -72,12 +72,8 @@ page at http://checkstyle.sourceforge.net/config.html -->
     <module name="JavadocMethod">
       <property name="scope" value="protected"/>
       <property name="severity" value="warning"/>
-      <property name="allowMissingJavadoc" value="true"/>
       <property name="allowMissingParamTags" value="true"/>
       <property name="allowMissingReturnTag" value="true"/>
-      <property name="allowMissingThrowsTags" value="true"/>
-      <property name="allowThrowsTagsForSubclasses" value="true"/>
-      <property name="allowUndeclaredRTE" value="true"/>
     </module>
 
     <module name="JavadocType">
@@ -182,22 +178,6 @@ page at http://checkstyle.sourceforge.net/config.html -->
     LENGTH and CODING CHECKS
 
     -->
-
-    <module name="LineLength">
-      <!-- Checks if a line is too long. -->
-      <property name="max" value="${com.puppycrawl.tools.checkstyle.checks.sizes.LineLength.max}" default="100"/>
-      <property name="severity" value="error"/>
-
-      <!--
-        The default ignore pattern exempts the following elements:
-          - import statements
-          - long URLs inside comments
-      -->
-
-      <property name="ignorePattern"
-          value="${com.puppycrawl.tools.checkstyle.checks.sizes.LineLength.ignorePattern}"
-          default="^(package .*;\s*)|(import .*;\s*)|( *(\*|//).*https?://.*)$"/>
-    </module>
 
     <module name="LeftCurly">
       <!-- Checks for placement of the left curly brace ('{'). -->
@@ -316,7 +296,23 @@ page at http://checkstyle.sourceforge.net/config.html -->
       -->
       <property name="severity" value="warning"/>
     </module>
+  </module>
 
+
+  <module name="LineLength">
+    <!-- Checks if a line is too long. -->
+    <property name="max" value="${com.puppycrawl.tools.checkstyle.checks.sizes.LineLength.max}" default="100"/>
+    <property name="severity" value="error"/>
+
+    <!--
+      The default ignore pattern exempts the following elements:
+        - import statements
+        - long URLs inside comments
+    -->
+
+    <property name="ignorePattern"
+      value="${com.puppycrawl.tools.checkstyle.checks.sizes.LineLength.ignorePattern}"
+      default="^(package .*;\s*)|(import .*;\s*)|( *(\*|//).*https?://.*)$"/>
   </module>
 </module>
 
