@@ -44,12 +44,8 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.google.api-client</groupId>
-      <artifactId>google-api-client</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-android</artifactId>
+      <artifactId>google-http-client</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.android.google-play-services</groupId>

@@ -101,8 +101,7 @@ public class GooglePublicKeysManagerTest extends TestCase {
 
   public void testRefresh() throws Exception {
     GooglePublicKeysManager certs =
-        new GooglePublicKeysManager.Builder(
-                new PublicCertsMockHttpTransport(), new GsonFactory())
+        new GooglePublicKeysManager.Builder(new PublicCertsMockHttpTransport(), new GsonFactory())
             .build();
     certs.refresh();
     assertEquals(2, certs.getPublicKeys().size());

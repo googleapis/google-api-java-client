@@ -38,23 +38,31 @@ that runs in browser.
 For instructions on setting up your credentials properly, see the 
 [API Console Help][console-help].
 
-## Credential
+## Credentials
 
-### GoogleCredential
+### GoogleCredentials
 
-[`GoogleCredential`][google-credential] is a thread-safe helper class for OAuth
+[`GoogleCredentials`][google-credentials] is a thread-safe helper class for OAuth
 2.0 for accessing protected resources using an access token. For example, if you
 already have an access token, you can make a request in the following way:
 
 ```java
-HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.books.Books;
+import com.google.auth.http.HttpCredentialsAdapter;
+import com.google.auth.oauth2.AccessToken;
+import com.google.auth.oauth2.GoogleCredentials;
 
-GoogleCredentials googleCredentials = GoogleCredentials.create(access_token);
-HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(googleCredentials);
+GoogleCredentials credentials =
+    GoogleCredentials.newBuilder().setAccessToken(new AccessToken("token", null)).build();
 
-Storage storage = new Storage.Builder(httpTransport, jsonFactory, requestInitializer)
-        .setApplicationName("MyProject-1234")
+Books books =
+    new Books.Builder(
+            GoogleNetHttpTransport.newTrustedTransport(),
+            GsonFactory.getDefaultInstance(),
+            new HttpCredentialsAdapter(credentials))
+        .setApplicationName("BooksExample/1.0")
         .build();
 ```
 
@@ -70,24 +78,38 @@ Use [`AppIdentityCredential`][app-identity-credential] (from
 App Engine takes care of all of the details. You only specify the OAuth 2.0
 scope you need.
 
-Example code taken from [urlshortener-robots-appengine-sample][urlshortener-sample]:
-
 ```java
-static Urlshortener newUrlshortener() {
-  AppIdentityCredential credential =
-      new AppIdentityCredential(
-          Collections.singletonList(UrlshortenerScopes.URLSHORTENER));
-  return new Urlshortener.Builder(new UrlFetchTransport(),
-                                  JacksonFactory.getDefaultInstance(),
-                                  credential)
-      .build();
-}
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.books.Books;
+import com.google.appengine.api.appidentity.AppIdentityService;
+import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
+import com.google.auth.appengine.AppEngineCredentials;
+import com.google.auth.http.HttpCredentialsAdapter;
+import com.google.auth.oauth2.GoogleCredentials;
+import java.util.Arrays;
+
+AppIdentityService appIdentityService = AppIdentityServiceFactory.getAppIdentityService();
+
+GoogleCredentials credentials =
+    AppEngineCredentials.newBuilder()
+        .setScopes(Arrays.asList("scope1", "scope2", "scope3"))
+        .setAppIdentityService(appIdentityService)
+        .build();
+
+Books books =
+    new Books.Builder(
+            GoogleNetHttpTransport.newTrustedTransport(),
+            GsonFactory.getDefaultInstance(),
+            new HttpCredentialsAdapter(credentials))
+        .setApplicationName("BooksExample/1.0")
+        .build();
 ```
 
 ## Data store
 
 An access token typically has an expiration date of 1 hour, after which you will
-get an error if you try to use it. [GoogleCredential][google-credential] takes
+get an error if you try to use it. [GoogleCredentials][google-credentials] takes
 care of automatically "refreshing" the token, which simply means getting a new
 access token. This is done by means of a long-lived refresh token, which is
 typically received along with the access token if you use the
@@ -201,7 +223,7 @@ public class CalendarServletSample extends AbstractAuthorizationCodeServlet {
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws IOException {
     return new GoogleAuthorizationCodeFlow.Builder(
-        new NetHttpTransport(), JacksonFactory.getDefaultInstance(),
+        new NetHttpTransport(), GsonFactory.getDefaultInstance(),
         "[[ENTER YOUR CLIENT ID]]", "[[ENTER YOUR CLIENT SECRET]]",
         Collections.singleton(CalendarScopes.CALENDAR)).setDataStoreFactory(
         DATA_STORE_FACTORY).setAccessType("offline").build();
@@ -238,7 +260,7 @@ public class CalendarServletCallbackSample extends AbstractAuthorizationCodeCall
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws IOException {
     return new GoogleAuthorizationCodeFlow.Builder(
-        new NetHttpTransport(), JacksonFactory.getDefaultInstance()
+        new NetHttpTransport(), GsonFactory.getDefaultInstance()
         "[[ENTER YOUR CLIENT ID]]", "[[ENTER YOUR CLIENT SECRET]]",
         Collections.singleton(CalendarScopes.CALENDAR)).setDataStoreFactory(
         DATA_STORE_FACTORY).setAccessType("offline").build();
@@ -342,7 +364,7 @@ For an additional sample, see
 
 ### Service accounts
 
-[GoogleCredential][google-credential] also supports [service accounts][service-accounts].
+[GoogleCredentials][google-credentials] also supports [service accounts][service-accounts].
 Unlike the credential in which a client application requests access to an
 end-user's data, Service Accounts provide access to the client application's
 own data. Your client application signs the request for an access token using
@@ -352,7 +374,7 @@ For example, you can make a request in the following way:
 
 ```java
 HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
 //Build service account credential
 GoogleCredentials googleCredentials = GoogleCredentials.
@@ -530,7 +552,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
-[google-credential]: https://googleapis.dev/java/google-auth-library/latest/com/google/auth/oauth2/GoogleCredentials.html
+[google-credentials]: https://googleapis.dev/java/google-auth-library/latest/index.html?com/google/auth/oauth2/GoogleCredentials.html
 [google-oauth-client-instructions]: https://developers.google.com/api-client-library/java/google-oauth-java-client/oauth2
 [oauth2]: https://developers.google.com/accounts/docs/OAuth2
 [javadoc-oauth2]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/auth/oauth2/package-frame.html
@@ -539,7 +561,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 [console-help]: https://developer.google.com/console/help/console/      
 [identity-api]: https://cloud.google.com/appengine/docs/java/appidentity/?csw=1#Asserting_Identity_to_Google_APIs
 [app-identity-credential]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/extensions/appengine/auth/oauth2/AppIdentityCredential.html
-[urlshortener-sample]: https://github.com/google/google-api-java-client-samples/tree/master/urlshortener-robots-appengine-sample
 [auth-code-flow-set-access-type]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/auth/oauth2/GoogleAuthorizationCodeFlow.Builder.html#setAccessType-java.lang.String-
 [data-store-factory]: https://googleapis.dev/java/google-http-client/latest/com/google/api/client/util/store/DataStoreFactory.html
 [stored-credential]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/auth/oauth2/StoredCredential.html

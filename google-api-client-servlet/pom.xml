@@ -74,25 +74,16 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>com.google.oauth-client</groupId>
-      <artifactId>google-oauth-client-servlet</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.jdo</groupId>
-      <artifactId>jdo2-api</artifactId>
     </dependency>
   </dependencies>
 </project>

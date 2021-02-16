@@ -78,7 +78,8 @@
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-assembly</artifactId>
-        <version>1.31.3-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.2</version><!-- {x-version-update:google-api-client:current} -->
+        <type>pom</type>
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
