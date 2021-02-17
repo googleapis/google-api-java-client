@@ -1,4 +1,6 @@
 /*
+ * Copyright 2021 Google LLC
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
  *
@@ -22,45 +24,58 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Test for {@link EndToEndChecksumHandler}.
- */
+/** Test for {@link EndToEndChecksumHandler}. */
 @RunWith(JUnit4.class)
 public class EndToEndChecksumHandlerTest {
   private byte[] payloadBytes;
-  private String expectedChecksum;
+  private byte[] expectedChecksum;
 
   @Before
   public void setUp() {
     payloadBytes =
-        "This is a long tring with numbers 1234, 134.56 boolean value true".getBytes(UTF_8);
+        "This is a long string with numbers 1234, 134.56 boolean value true".getBytes(UTF_8);
     expectedChecksum = EndToEndChecksumHandler.computeChecksum(payloadBytes);
   }
 
   @Test
-  public void validateChecksum_http_api_correctChecksum() {
-    String computed = EndToEndChecksumHandler.computeChecksum(payloadBytes);
-    assertTrue(EndToEndChecksumHandler.validateChecksumString(computed, payloadBytes));
+  public void validateChecksum_correctChecksum() {
+    byte[] computed = EndToEndChecksumHandler.computeChecksum(payloadBytes);
+    assertTrue(EndToEndChecksumHandler.validateChecksum(computed, payloadBytes));
   }
 
   @Test
-  public void validateChecksum_http_api_negativeTestcases() {
-    // negative testcase:  pass incorrect checksum to the call.
-    String computed = EndToEndChecksumHandler.computeChecksum("random string".getBytes(UTF_8));
-    assertFalse(EndToEndChecksumHandler.validateChecksumString(computed, payloadBytes));
-    // negative testcase: pass null checksum but payload is not null.
-    assertFalse(EndToEndChecksumHandler.validateChecksumString(null, payloadBytes));
-    // negative testcase: pass empty checksum but payload is not null.
-    assertFalse(EndToEndChecksumHandler.validateChecksumString("", payloadBytes));
-    // negative testcase: payload is null but checksum exists
-    assertFalse(EndToEndChecksumHandler.validateChecksumString(computed, null));
-    // negative testcase: payload is empty but checksum exists
-    assertFalse(EndToEndChecksumHandler.validateChecksumString(computed, new byte[0]));
+  public void validateChecksum_incorrectChecksum() {
+    byte[] computed = EndToEndChecksumHandler.computeChecksum("random string".getBytes(UTF_8));
+    assertFalse(EndToEndChecksumHandler.validateChecksum(computed, payloadBytes));
   }
 
   @Test
-  public void computeChecksum_negativeTestcases() {
+  public void validateChecksum_nullChecksum() {
+    assertFalse(EndToEndChecksumHandler.validateChecksum(null, payloadBytes));
+  }
+
+  @Test
+  public void validateChecksum_emptyChecksum() {
+    assertFalse(EndToEndChecksumHandler.validateChecksum(new byte[0], payloadBytes));
+  }
+
+  @Test
+  public void validateChecksum_nullPayload() {
+    assertFalse(EndToEndChecksumHandler.validateChecksum(new byte[1], null));
+  }
+
+  @Test
+  public void validateChecksum_emptyPayload() {
+    assertFalse(EndToEndChecksumHandler.validateChecksum(new byte[1], new byte[0]));
+  }
+
+  @Test
+  public void computeChecksum_nullInputBytes() {
     assertNull(EndToEndChecksumHandler.computeChecksum(null));
+  }
+
+  @Test
+  public void computeChecksum_emptyArrayForInputBytes() {
     assertNull(EndToEndChecksumHandler.computeChecksum(new byte[0]));
   }
 }

@@ -1,4 +1,6 @@
 /*
+ * Copyright 2021 Google LLC
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
  *
@@ -12,18 +14,12 @@
 
 package com.google.api.client.googleapis.services;
 
-import com.google.common.base.Ascii;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Logger;
-import javax.xml.bind.DatatypeConverter;
+import java.util.Arrays;
 
-/** This class provides End-to-End Checksum API for http protocol.
- */
+/** This class provides End-to-End Checksum API for http protocol. */
 public class EndToEndChecksumHandler {
-  private static final Logger log =
-      Logger.getLogger(EndToEndChecksumHandler.class.getCanonicalName());
-
   /** The checksum http header on http requests */
   public static final String HTTP_REQUEST_CHECKSUM_HEADER = "x-request-checksum-348659783";
   /** The checksum http header on http responses */
@@ -32,34 +28,34 @@ public class EndToEndChecksumHandler {
   /**
    * Create and return checksum as a string value for the input 'bytes'.
    *
-   * Args
-   *   bytes: raw message for which the checksum is being computed.
-   * Returns: computed checksum as a string value.
+   * @param bytes raw message for which the checksum is being computed
+   * @return computed checksum as a {@code byte array}
+   * @throws RuntimeException if MD5 Algorithm is not found in the VM
    */
-  public static String computeChecksum(byte[] bytes) {
+  public static byte[] computeChecksum(byte[] bytes) {
     if (bytes == null || (bytes.length == 0)) {
       return null;
     }
 
     try {
-      byte[] b = MessageDigest.getInstance("MD5").digest(bytes);
-      return DatatypeConverter.printHexBinary(b);
+      return MessageDigest.getInstance("MD5").digest(bytes);
     } catch (NoSuchAlgorithmException e) {
-      log.severe("MD5 algorithm is not found when computing checksum!");
-      return null;
+      throw new RuntimeException("MD5 algorithm is not found when computing checksum!");
     }
   }
 
   /**
    * Validates the checksum for the given input 'bytes' and returns true if valid, false otherwise.
    *
-   * <p>Args checksum: the checksum. bytes: raw message for which the checksum was sent.
+   * @param checksum the checksum value
+   * @param bytes the raw message for which the checksum was sent
+   * @return {@code true} if input checksum is valid for the input bytes; {@code false} otherwise
    */
-  public static boolean validateChecksumString(String checksum, byte[] bytes) {
-    return (checksum != null)
-        && !checksum.isEmpty()
-        && (bytes != null)
+  public static boolean validateChecksum(byte[] checksum, byte[] bytes) {
+    return checksum != null
+        && checksum.length > 0
+        && bytes != null
         && bytes.length > 0
-        && Ascii.equalsIgnoreCase(computeChecksum(bytes), checksum);
+        && Arrays.equals(computeChecksum(bytes), checksum);
   }
 }
