@@ -29,7 +29,7 @@ echo ${JOB_TYPE}
 
 # Some repositories (such as google-api-java-client) require artifacts not in Maven Central
 if [ -r "${scriptDir}/install_dependencies.sh" ]; then
-    sh ${scriptDir}/install_dependencies.sh
+    bash ${scriptDir}/install_dependencies.sh
 fi
 
 # attempt to install 3 times with exponential backoff (starting with 10 seconds)
