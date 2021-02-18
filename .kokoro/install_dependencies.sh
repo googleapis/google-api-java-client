@@ -23,7 +23,7 @@ mvn dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9.65
 
 # Install play services
 mvn dependency:get -Dartifact=com.google.android.google-play-services:google-play-services:1 -o -DremoteRepositories=file:~/.m2 || \
-  (wget https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar && \
+  (curl --fail --output play-services-basement-8.3.0.aar https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar && \
    unzip play-services-basement-8.3.0.aar && \
    mvn install:install-file \
       -Dfile=classes.jar \
