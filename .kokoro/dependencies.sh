@@ -29,6 +29,11 @@ echo $JOB_TYPE
 
 export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=128m"
 
+# Some repositories (such as google-api-java-client) require artifacts not in Maven Central
+if [ -r "${scriptDir}/install_dependencies.sh" ]; then
+    bash ${scriptDir}/install_dependencies.sh
+fi
+
 # this should run maven enforcer
 retry_with_backoff 3 10 \
   mvn install -B -V \
