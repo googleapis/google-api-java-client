@@ -36,19 +36,13 @@ jobs:
       with:
         java-version: 8
     - run: java -version
-    - name: Install google-play-services artifact
+    - run: >
+        if [ -r .kokoro/install_dependencies.sh ]; then
+          sh .kokoro/install_dependencies.sh
+        else
+          echo "No .kokoro/install_dependencies.sh found"
+        fi
       shell: bash
-      run: |
-        mkdir play-services
-        cd play-services
-        curl --output play-services-basement-8.3.0.aar https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar
-        unzip play-services-basement-8.3.0.aar
-        mvn install:install-file \
-            -Dfile=classes.jar \
-            -DgroupId=com.google.android.google-play-services \
-            -DartifactId=google-play-services \
-            -Dversion=1 \
-            -Dpackaging=jar
     - run: .kokoro/build.sh
       shell: bash
       env:
@@ -74,7 +68,13 @@ jobs:
       with:
         java-version: 8
     - run: java -version
-    - run: .kokoro/install_dependencies.sh
+    - run: >
+        if [ -r .kokoro/install_dependencies.sh ]; then
+          sh .kokoro/install_dependencies.sh
+        else
+          echo "No .kokoro/install_dependencies.sh found"
+        fi
+      shell: bash
     - run: .kokoro/linkage-monitor.sh
   lint:
     runs-on: ubuntu-latest
