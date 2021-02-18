@@ -74,6 +74,7 @@ jobs:
       with:
         java-version: 8
     - run: java -version
+    - run: .kokoro/install_dependencies.sh
     - name: Install artifacts to local Maven repository
       run: .kokoro/build.sh
       shell: bash
