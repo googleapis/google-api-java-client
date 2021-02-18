@@ -30,4 +30,4 @@ mvn dependency:get -Dartifact=com.google.android.google-play-services:google-pla
       -DgroupId=com.google.android.google-play-services \
       -DartifactId=google-play-services \
       -Dversion=1 \
-   -Dpackaging=jar)
+      -Dpackaging=jar)

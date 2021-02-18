@@ -16,7 +16,6 @@ jobs:
       with:
         java-version: ${{matrix.java}}
     - run: java -version
-    - run: .kokoro/install_dependencies.sh
     - run: .kokoro/build.sh
       env:
         JOB_TYPE: test
@@ -36,13 +35,6 @@ jobs:
       with:
         java-version: 8
     - run: java -version
-    - run: >
-        if [ -r .kokoro/install_dependencies.sh ]; then
-          sh .kokoro/install_dependencies.sh
-        else
-          echo "No .kokoro/install_dependencies.sh found"
-        fi
-      shell: bash
     - run: .kokoro/build.sh
       shell: bash
       env:
@@ -58,7 +50,6 @@ jobs:
       with:
         java-version: ${{matrix.java}}
     - run: java -version
-    - run: .kokoro/install_dependencies.sh
     - run: .kokoro/dependencies.sh
   linkage-monitor:
     runs-on: ubuntu-latest
@@ -68,13 +59,6 @@ jobs:
       with:
         java-version: 8
     - run: java -version
-    - run: >
-        if [ -r .kokoro/install_dependencies.sh ]; then
-          sh .kokoro/install_dependencies.sh
-        else
-          echo "No .kokoro/install_dependencies.sh found"
-        fi
-      shell: bash
     - run: .kokoro/linkage-monitor.sh
   lint:
     runs-on: ubuntu-latest
@@ -84,7 +68,6 @@ jobs:
       with:
         java-version: 11
     - run: java -version
-    - run: .kokoro/install_dependencies.sh
     - run: .kokoro/build.sh
       env:
         JOB_TYPE: lint
@@ -96,7 +79,6 @@ jobs:
       with:
         java-version: 8
     - run: java -version
-    - run: .kokoro/install_dependencies.sh
     - run: .kokoro/build.sh
       env:
         JOB_TYPE: clirr

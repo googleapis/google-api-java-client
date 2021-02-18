@@ -27,6 +27,11 @@ source ${scriptDir}/common.sh
 java -version
 echo ${JOB_TYPE}
 
+# Some repositories (such as google-api-java-client) require artifacts not in Maven Central
+if [ -r "${scriptDir}/install_dependencies.sh" ]; then
+    sh ${scriptDir}/install_dependencies.sh
+fi
+
 # attempt to install 3 times with exponential backoff (starting with 10 seconds)
 retry_with_backoff 3 10 \
   mvn install -B -V \
