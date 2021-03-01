@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.31.3](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.2...v1.31.3) (2021-03-01)
+
+
+### Dependencies
+
+* update google-http-client to v1.39.0 ([#1731](https://www.github.com/googleapis/google-api-java-client/issues/1731)) ([918fc3b](https://www.github.com/googleapis/google-api-java-client/commit/918fc3bc2eb45d704edad6c02ca811348c6df922))
+
 ### [1.31.2](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.1...v1.31.2) (2021-01-14)
 
 
