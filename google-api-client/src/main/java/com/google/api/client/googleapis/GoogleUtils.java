@@ -81,8 +81,8 @@ public final class GoogleUtils {
   public static synchronized KeyStore getCertificateTrustStore()
       throws IOException, GeneralSecurityException {
     if (certTrustStore == null) {
-      certTrustStore = SecurityUtils.getJavaKeyStore();
-      InputStream keyStoreStream = GoogleUtils.class.getResourceAsStream("google.jks");
+      certTrustStore = SecurityUtils.getPkcs12KeyStore();
+      InputStream keyStoreStream = GoogleUtils.class.getResourceAsStream("google.p12");
       SecurityUtils.loadKeyStore(certTrustStore, keyStoreStream, "notasecret");
     }
     return certTrustStore;
