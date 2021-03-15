@@ -21,7 +21,6 @@ import org.junit.Test;
 
 /**
  * Tests {@link BatchRequest}.
- *
  */
 public class BatchRequestTest2 {
 
