@@ -14,6 +14,8 @@
 
 package com.google.api.client.googleapis.batch;
 
+import static org.junit.Assert.assertEquals;
+
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpHeaders;
@@ -30,19 +32,18 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.GZIPOutputStream;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
-/** Tests {@link BatchRequest}. */
+/**
+ * Tests {@link BatchRequest}.
+ */
 public class BatchRequestStressTest {
 
-  public static BatchRequest batchRequest;
   private static final int BATCH_SIZE = 100;
+  public static BatchRequest batchRequest;
   private static AtomicInteger parseCount = new AtomicInteger(0);
   private static AtomicInteger errorCount = new AtomicInteger(0);
 
@@ -83,7 +84,6 @@ public class BatchRequestStressTest {
             };
           }
         };
-
 
     BatchCallback<Void, Void> callback =
         new BatchCallback<Void, Void>() {
