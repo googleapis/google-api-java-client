@@ -37,9 +37,7 @@ import java.util.zip.GZIPOutputStream;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
- * Tests {@link BatchRequest}.
- */
+/** Tests {@link BatchRequest}. */
 public class BatchRequestStressTest {
 
   private static final int BATCH_SIZE = 100;
