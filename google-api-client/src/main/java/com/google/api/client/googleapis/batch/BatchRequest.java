@@ -27,6 +27,7 @@ import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.http.MultipartContent;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Sleeper;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -259,7 +260,7 @@ public final class BatchRequest {
         String boundary = "--" + response.getMediaType().getParameter("boundary");
 
         // Parse the content stream.
-        InputStream contentStream = response.getContent();
+        InputStream contentStream = new BufferedInputStream(response.getContent());
         batchResponse =
             new BatchUnparsedResponse(contentStream, boundary, requestInfos, retryAllowed);
 
