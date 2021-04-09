@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-bom</artifactId>
-  <version>1.31.4-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+  <version>1.31.4</version><!-- {x-version-update:google-api-client:current} -->
   <packaging>pom</packaging>
 
   <name>Google API Client Library for Java BOM</name>
@@ -63,53 +63,53 @@
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client</artifactId>
-        <version>1.31.4-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.4</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-android</artifactId>
-        <version>1.31.4-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.4</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-appengine</artifactId>
-        <version>1.31.4-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.4</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-assembly</artifactId>
-        <version>1.31.4-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.4</version><!-- {x-version-update:google-api-client:current} -->
         <type>pom</type>
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-gson</artifactId>
-        <version>1.31.4-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.4</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-jackson2</artifactId>
-        <version>1.31.4-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.4</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-java6</artifactId>
-        <version>1.31.4-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.4</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-protobuf</artifactId>
-        <version>1.31.4-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.4</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-servlet</artifactId>
-        <version>1.31.4-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.4</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-xml</artifactId>
-        <version>1.31.4-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+        <version>1.31.4</version><!-- {x-version-update:google-api-client:current} -->
       </dependency>
     </dependencies>
   </dependencyManagement>

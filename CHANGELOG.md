@@ -1,5 +1,19 @@
 # Changelog
 
+### [1.31.4](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.3...v1.31.4) (2021-04-09)
+
+
+### Bug Fixes
+
+* re-encode public keys from google.jks into p12 format for android ([#1738](https://www.github.com/googleapis/google-api-java-client/issues/1738)) ([83f3702](https://www.github.com/googleapis/google-api-java-client/commit/83f37023ea50a643a76eb6e5230072e5c829a205))
+* wrap BatchRequest InputStream with BufferedInputStream ([#1749](https://www.github.com/googleapis/google-api-java-client/issues/1749)) ([07346d8](https://www.github.com/googleapis/google-api-java-client/commit/07346d8dfa955a40daf01b8fb17fe1d75dc2a998))
+
+
+### Dependencies
+
+* update guava ([#1762](https://www.github.com/googleapis/google-api-java-client/issues/1762)) ([2197258](https://www.github.com/googleapis/google-api-java-client/commit/219725878e9954e724a1832ee615553319771c54))
+* update project.http.version to v1.39.2 ([#1748](https://www.github.com/googleapis/google-api-java-client/issues/1748)) ([5f62a41](https://www.github.com/googleapis/google-api-java-client/commit/5f62a412dcaabe8cb17783b9add6366dde7d96be))
+
 ### [1.31.3](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.2...v1.31.3) (2021-03-01)
 
 
