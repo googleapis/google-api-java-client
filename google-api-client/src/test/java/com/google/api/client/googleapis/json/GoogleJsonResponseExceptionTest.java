@@ -50,6 +50,7 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     HttpResponse response = request.execute();
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+    System.out.println(ge.getDetails());
     assertEquals(GoogleJsonErrorTest.ERROR, GoogleJsonErrorTest.FACTORY.toString(ge.getDetails()));
     assertTrue(ge.getMessage().startsWith("403"));
   }
@@ -116,19 +117,35 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
   }
 
   public void testFrom_detailsErrorObject() throws Exception {
+    String testError ="{"
+        + "\"error\": {"
+        + "\"code\": 400,"
+        + "\"message\": \"The template parameters are invalid.\","
+        + "\"status\": \"INVALID_ARGUMENT\","
+        + "\"details\": [{"
+        + "\"@type\": \"type.googleapis.com\\/google.dataflow.v1beta3.InvalidTemplateParameters\","
+        + "\"parameterViolations\": [{"
+        + "\"parameter\": \"safeBrowsingApiKey\","
+        + "\"description\": \"Parameter didn't match regex '^[0-9a-zA-Z_]+$'\""
+        + "}]},{"
+        + "\"@type\": \"type.googleapis.com\\/google.rpc.DebugInfo\","
+        + "\"detail\": \"test detail\"}]}}";
     HttpTransport transport =
         new ErrorTransport(
-            "{\"error\": {\"message\": \"invalid_token\"}, \"error_description\": \"Invalid value\"}",
+            testError,
             Json.MEDIA_TYPE);
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
+    System.out.println(response.getStatusCode());
+
     GoogleJsonResponseException ge =
         GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+    System.out.println(ge.getDetails().getErrors());
     assertNotNull(ge.getDetails());
-    assertEquals("invalid_token", ge.getDetails().getMessage());
-    assertTrue(ge.getMessage().contains("403"));
+    assertEquals("The template parameters are invalid.", ge.getDetails().getMessage());
+    assertTrue(ge.getMessage().contains("400"));
   }
 
   public void testFrom_detailsErrorString() throws Exception {

@@ -59,6 +59,62 @@ public class GoogleJsonError extends GenericJson {
     Data.nullOf(ErrorInfo.class);
   }
 
+  public static class ParameterViolations {
+    @Key
+    private String parameter;
+    @Key
+    private String description;
+
+    public String getDescription() {
+      return description;
+    }
+
+    public void setDescription(String description) {
+      this.description = description;
+    }
+
+    public String getParameter() {
+      return parameter;
+    }
+
+    public void setParameter(String parameter) {
+      this.parameter = parameter;
+    }
+
+
+  }
+  public static class Details {
+    @Key
+    private String type;
+    @Key
+    private String detail;
+    @Key
+    private List<ParameterViolations> parameterViolations;
+
+    public String getType() {
+      return type;
+    }
+
+    public void setType(String type) {
+      this.type = type;
+    }
+
+    public String getDetail() {
+      return detail;
+    }
+
+    public void setDetail(String detail) {
+      this.detail = detail;
+    }
+
+    public List<ParameterViolations> getParameterViolations() {
+      return parameterViolations;
+    }
+
+    public void setParameterViolations(List<ParameterViolations> parameterViolations) {
+      this.parameterViolations = parameterViolations;
+    }
+  }
   /** Detailed error information. */
   public static class ErrorInfo extends GenericJson {
 
@@ -79,6 +135,17 @@ public class GoogleJsonError extends GenericJson {
 
     /** Type of location in the request that caused the error or {@code null} for none. */
     @Key private String locationType;
+
+    @Key private List<Details> details;
+
+    public List<Details> getDetails() {
+      return details;
+    }
+
+    public void setDetails(
+        List<Details> details) {
+      this.details = details;
+    }
 
     /**
      * Returns the error classification or {@code null} for none.
@@ -185,12 +252,21 @@ public class GoogleJsonError extends GenericJson {
 
   /** List of detailed errors or {@code null} for none. */
   @Key private List<ErrorInfo> errors;
+  @Key private ErrorInfo error;
 
   /** HTTP status code of this response or {@code null} for none. */
   @Key private int code;
 
   /** Human-readable explanation of the error or {@code null} for none. */
   @Key private String message;
+
+  public ErrorInfo getError() {
+    return error;
+  }
+
+  public void setError(ErrorInfo error) {
+    this.error = error;
+  }
 
   /**
    * Returns the list of detailed errors or {@code null} for none.

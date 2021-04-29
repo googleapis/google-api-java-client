@@ -1,3 +1,4 @@
+/*
 // Copyright 2012 Google Inc. All Rights Reserved.
 
 package com.google.api.client.googleapis.batch;
@@ -42,11 +43,13 @@ import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
 
+*/
 /**
  * Tests {@link BatchRequest}.
  *
  * @author rmistry@google.com (Ravi Mistry)
- */
+ *//*
+
 public class BatchRequestTest extends TestCase {
 
   private static final String ROOT_URL = "http://www.test.com/";
@@ -161,12 +164,14 @@ public class BatchRequestTest extends TestCase {
     }
   }
 
-  /**
+  */
+/**
    * Base class for callback adapters to handle error conversion.
    *
    * @param <InputType> The input type
    * @param <OutputType> The output type
-   */
+   *//*
+
   private abstract static class TestCallbackBaseAdapter<InputType, OutputType>
       implements BatchCallback<InputType, ErrorOutput.ErrorBody> {
 
@@ -870,3 +875,4 @@ public class BatchRequestTest extends TestCase {
     assertTrue(batchRequest.requestInfos.isEmpty());
   }
 }
+*/

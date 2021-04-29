@@ -14,6 +14,7 @@
 
 package com.google.api.client.googleapis.json;
 
+import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpStatusCodes;
@@ -27,6 +28,7 @@ import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
+import java.util.List;
 import junit.framework.TestCase;
 
 /**
@@ -38,14 +40,17 @@ public class GoogleJsonErrorTest extends TestCase {
 
   static final JsonFactory FACTORY = new GsonFactory();
   static final String ERROR =
-      "{"
-          + "\"code\":403,"
-          + "\"errors\":[{"
-          + "\"domain\":\"usageLimits\","
-          + "\"message\":\"Access Not Configured\","
-          + "\"reason\":\"accessNotConfigured\""
-          + "}],"
-          + "\"message\":\"Access Not Configured\"}";
+      "{\"code\":400,"
+          + "\"message\":\"The template parameters are invalid.\","
+          + "\"status\":\"INVALID_ARGUMENT\","
+          + "\"details\":[{"
+          + "\"@type\":\"type.googleapis.com/google.dataflow.v1beta3.InvalidTemplateParameters\","
+          + "\"parameterViolations\":[{"
+          + "\"parameter\":\"safeBrowsingApiKey\","
+          + "\"description\":\"Parameter didn't match regex '^[0-9a-zA-Z_]+$'\""
+          + "}]},{"
+          + "\"@type\":\"type.googleapis.com/google.rpc.DebugInfo\","
+          + "\"detail\":\"test detail\"}]}";
   static final String ERROR_RESPONSE = "{\"error\":" + ERROR + "}";
 
   public void test_json() throws Exception {
@@ -77,12 +82,30 @@ public class GoogleJsonErrorTest extends TestCase {
   }
 
   public void testParse() throws Exception {
-    HttpTransport transport = new ErrorTransport();
+    String testError ="{"
+        + "\"error\": {"
+        + "\"code\": 400,"
+        + "\"message\": \"The template parameters are invalid.\","
+        + "\"status\": \"INVALID_ARGUMENT\","
+        + "\"details\": [{"
+        + "\"@type\": \"type.googleapis.com\\/google.dataflow.v1beta3.InvalidTemplateParameters\","
+        + "\"parameterViolations\": [{"
+        + "\"parameter\": \"safeBrowsingApiKey\","
+        + "\"description\": \"Parameter didn't match regex '^[0-9a-zA-Z_]+$'\""
+        + "}]},{"
+        + "\"@type\": \"type.googleapis.com\\/google.rpc.DebugInfo\","
+        + "\"detail\": \"test detail\"}]}}";
+    HttpTransport transport = new ErrorTransport(testError, Json.MEDIA_TYPE);
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
     GoogleJsonError errorResponse = GoogleJsonError.parse(FACTORY, response);
+    System.out.println(errorResponse.getCode());
+    System.out.println(errorResponse.getMessage());
+
+    ErrorInfo errorInfoList = errorResponse.getError();
+    System.out.println(errorInfoList);
     assertEquals(ERROR, FACTORY.toString(errorResponse));
   }
 }
