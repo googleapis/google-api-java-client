@@ -59,6 +59,14 @@ public class GoogleJsonError extends GenericJson {
     Data.nullOf(ErrorInfo.class);
   }
 
+//  public List<Details> getDetails() {
+//    return details;
+//  }
+//
+//  public void setDetails(List<Details> details) {
+//    this.details = details;
+//  }
+
   public static class ParameterViolations {
     @Key
     private String parameter;
@@ -252,7 +260,6 @@ public class GoogleJsonError extends GenericJson {
 
   /** List of detailed errors or {@code null} for none. */
   @Key private List<ErrorInfo> errors;
-  @Key private ErrorInfo error;
 
   /** HTTP status code of this response or {@code null} for none. */
   @Key private int code;
@@ -260,13 +267,7 @@ public class GoogleJsonError extends GenericJson {
   /** Human-readable explanation of the error or {@code null} for none. */
   @Key private String message;
 
-  public ErrorInfo getError() {
-    return error;
-  }
-
-  public void setError(ErrorInfo error) {
-    this.error = error;
-  }
+//  @Key private List<Details> details;
 
   /**
    * Returns the list of detailed errors or {@code null} for none.

@@ -1,0 +1,20 @@
+{
+    "code": 400,
+    "message": "The template parameters are invalid.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.dataflow.v1beta3.InvalidTemplateParameters",
+        "parameterViolations": [
+          {
+            "parameter": "safeBrowsingApiKey",
+            "description": "Parameter didn't match regex '^[0-9a-zA-Z_]+$'"
+          }
+        ]
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.DebugInfo",
+        "detail": "[ORIGINAL ERROR] generic::invalid_argument: The template parameters are invalid. [google.rpc.error_details_ext] { message: \"The template parameters are invalid.\" details { type_url: \"type.googleapis.com/google.dataflow.v1beta3.InvalidTemplateParameters\" value: \"\\nD\\n\\022safeBrowsingApiKey\\022.Parameter didn\\'t match regex \\'^[0-9a-zA-Z_]+$\\'\" } } 54820903 { 1 { 1 { 1: \"cloud/dataflow/router/services/templates/flex_template_handler.cc\" 2: 123 } } }"
+      }
+    ]
+}
