@@ -7,7 +7,8 @@
   <version>1.31.5-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
   <packaging>pom</packaging>
   <name>Parent for the Google API Client Library for Java</name>
-
+  <description>The Google APIs Client Library for Java is a Java client library
+               for accessing any HTTP-based API on the web</description>
   <url>https://github.com/googleapis/google-api-java-client</url>
 
   <issueManagement>
