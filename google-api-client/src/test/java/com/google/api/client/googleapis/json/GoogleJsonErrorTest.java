@@ -31,7 +31,7 @@ import java.io.InputStream;
 import junit.framework.TestCase;
 
 /**
- * Tests {@link GoogleJsonError}.
+ * Tests {@link com.google.api.client.googleapis.json.GoogleJsonError}.
  *
  * @author Yaniv Inbar
  */
@@ -52,8 +52,8 @@ public class GoogleJsonErrorTest extends TestCase {
   public void test_json() throws Exception {
     JsonParser parser = FACTORY.createJsonParser(ERROR);
     parser.nextToken();
-    GoogleJsonError e = parser.parse(
-        GoogleJsonError.class);
+    com.google.api.client.googleapis.json.GoogleJsonError e =
+        parser.parse(com.google.api.client.googleapis.json.GoogleJsonError.class);
     assertEquals(ERROR, FACTORY.toString(e));
   }
 
@@ -88,8 +88,8 @@ public class GoogleJsonErrorTest extends TestCase {
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
-    GoogleJsonError errorResponse = GoogleJsonError
-        .parse(FACTORY, response);
+    com.google.api.client.googleapis.json.GoogleJsonError errorResponse =
+        com.google.api.client.googleapis.json.GoogleJsonError.parse(FACTORY, response);
     assertEquals(ERROR, FACTORY.toString(errorResponse));
   }
 
@@ -119,8 +119,8 @@ public class GoogleJsonErrorTest extends TestCase {
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
-    GoogleJsonError errorResponse = GoogleJsonError
-        .parse(FACTORY, response);
+    com.google.api.client.googleapis.json.GoogleJsonError errorResponse =
+        com.google.api.client.googleapis.json.GoogleJsonError.parse(FACTORY, response);
     assertEquals(DETAILS_ERROR, FACTORY.toString(errorResponse));
     assertNotNull(errorResponse.getDetails());
   }
