@@ -121,6 +121,7 @@ public class GoogleJsonErrorTest extends TestCase {
     HttpResponse response = request.execute();
     com.google.api.client.googleapis.json.GoogleJsonError errorResponse =
         com.google.api.client.googleapis.json.GoogleJsonError.parse(FACTORY, response);
+
     assertEquals(DETAILS_ERROR, FACTORY.toString(errorResponse));
     assertNotNull(errorResponse.getDetails());
   }

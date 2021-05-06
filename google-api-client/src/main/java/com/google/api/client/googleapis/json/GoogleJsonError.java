@@ -21,6 +21,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.Key;
+import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -210,8 +211,13 @@ public class GoogleJsonError extends GenericJson {
       return parameterViolations;
     }
 
+    /**
+     * Sets parameterViolations list as immutable to prevent exposing mutable state.
+     *
+     * @param parameterViolations
+     */
     public void setParameterViolations(List<ParameterViolations> parameterViolations) {
-      this.parameterViolations = parameterViolations;
+      this.parameterViolations = ImmutableList.copyOf(parameterViolations);
     }
   }
 
@@ -258,12 +264,13 @@ public class GoogleJsonError extends GenericJson {
   }
 
   /**
-   * Sets the list of detailed errors or {@code null} for none.
+   * Sets the list of detailed errors or {@code null} for none. Sets the list of detailed errors as
+   * immutable to prevent exposing mutable state.
    *
    * @since 1.8
    */
   public final void setErrors(List<ErrorInfo> errors) {
-    this.errors = errors;
+    this.errors = ImmutableList.copyOf(errors);
   }
 
   /**
@@ -306,8 +313,14 @@ public class GoogleJsonError extends GenericJson {
     return details;
   }
 
+  /**
+   * Sets the list of invalid parameter error details as immutable to prevent exposing mutable
+   * state.
+   *
+   * @param details
+   */
   public void setDetails(List<Details> details) {
-    this.details = details;
+    this.details = ImmutableList.copyOf(details);
   }
 
   @Override
