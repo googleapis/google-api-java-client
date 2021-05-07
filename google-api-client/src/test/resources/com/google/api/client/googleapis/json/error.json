@@ -1,0 +1,23 @@
+{
+  "error": {
+    "code": 400,
+    "message": "The template parameters are invalid.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.dataflow.v1beta3.InvalidTemplateParameters",
+        "parameterViolations": [
+          {
+            "parameter": "safeBrowsingApiKey",
+            "description": "Parameter didn't match regex '^[0-9a-zA-Z_]+$'"
+          }
+        ]
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.DebugInfo",
+        "detail": "test detail"
+      }
+    ]
+  }
+}
+

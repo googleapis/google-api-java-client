@@ -17,10 +17,13 @@ package com.google.api.client.googleapis.json;
 import com.google.api.client.googleapis.json.GoogleJsonErrorTest.ErrorTransport;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.Json;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
+import com.google.api.client.testing.http.MockLowLevelHttpResponse;
+import java.io.InputStream;
 import junit.framework.TestCase;
 
 /**
@@ -37,7 +40,8 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
     GoogleJsonResponseException ge =
-        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+        GoogleJsonResponseException.from(
+            com.google.api.client.googleapis.json.GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
     assertTrue(ge.getMessage().startsWith("200"));
   }
@@ -49,8 +53,12 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
     GoogleJsonResponseException ge =
-        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
-    assertEquals(GoogleJsonErrorTest.ERROR, GoogleJsonErrorTest.FACTORY.toString(ge.getDetails()));
+        GoogleJsonResponseException.from(
+            com.google.api.client.googleapis.json.GoogleJsonErrorTest.FACTORY, response);
+    assertEquals(
+        com.google.api.client.googleapis.json.GoogleJsonErrorTest.ERROR,
+        com.google.api.client.googleapis.json.GoogleJsonErrorTest.FACTORY.toString(
+            ge.getDetails()));
     assertTrue(ge.getMessage().startsWith("403"));
   }
 
@@ -61,7 +69,8 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
     GoogleJsonResponseException ge =
-        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+        GoogleJsonResponseException.from(
+            com.google.api.client.googleapis.json.GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
     assertTrue(ge.getMessage().startsWith("403"));
   }
@@ -73,7 +82,8 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
     GoogleJsonResponseException ge =
-        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+        GoogleJsonResponseException.from(
+            com.google.api.client.googleapis.json.GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
     assertTrue(ge.getMessage().startsWith("403"));
   }
@@ -85,7 +95,8 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
     GoogleJsonResponseException ge =
-        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+        GoogleJsonResponseException.from(
+            com.google.api.client.googleapis.json.GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
     assertTrue(ge.getMessage().startsWith("403"));
     assertTrue(ge.getMessage().contains("<foo>"));
@@ -98,7 +109,8 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
     GoogleJsonResponseException ge =
-        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+        GoogleJsonResponseException.from(
+            com.google.api.client.googleapis.json.GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
     assertTrue(ge.getMessage().startsWith("403"));
   }
@@ -110,7 +122,8 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
     GoogleJsonResponseException ge =
-        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+        GoogleJsonResponseException.from(
+            com.google.api.client.googleapis.json.GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
     assertTrue(ge.getMessage().startsWith("403"));
   }
@@ -125,7 +138,8 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
     GoogleJsonResponseException ge =
-        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+        GoogleJsonResponseException.from(
+            com.google.api.client.googleapis.json.GoogleJsonErrorTest.FACTORY, response);
     assertNotNull(ge.getDetails());
     assertEquals("invalid_token", ge.getDetails().getMessage());
     assertTrue(ge.getMessage().contains("403"));
@@ -141,7 +155,8 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
     GoogleJsonResponseException ge =
-        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+        GoogleJsonResponseException.from(
+            com.google.api.client.googleapis.json.GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
     assertTrue(ge.getMessage().contains("403"));
     assertTrue(ge.getMessage().contains("invalid_token"));
@@ -155,8 +170,43 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
     GoogleJsonResponseException ge =
-        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+        GoogleJsonResponseException.from(
+            com.google.api.client.googleapis.json.GoogleJsonErrorTest.FACTORY, response);
     assertNull(ge.getDetails());
     assertTrue(ge.getMessage().startsWith("403"));
+  }
+
+  public void testFrom_detailsWithInvalidParameter() throws Exception {
+    String DETAILS_ERROR =
+        "{"
+            + "\"code\":400,"
+            + "\"details\":[{"
+            + "\"@type\":\"type.googleapis.com/google.dataflow.v1beta3.InvalidTemplateParameters\","
+            + "\"parameterViolations\":[{"
+            + "\"description\":\"Parameter didn't match regex '^[0-9a-zA-Z_]+$'\","
+            + "\"parameter\":\"safeBrowsingApiKey\""
+            + "}]},{"
+            + "\"@type\":\"type.googleapis.com/google.rpc.DebugInfo\","
+            + "\"detail\":\"test detail\"}],"
+            + "\"message\":\"The template parameters are invalid.\","
+            + "\"status\":\"INVALID_ARGUMENT\""
+            + "}";
+    InputStream errorContent =
+        com.google.api.client.googleapis.json.GoogleJsonErrorTest.class.getResourceAsStream(
+            "error.json");
+    HttpTransport transport =
+        new ErrorTransport(
+            new MockLowLevelHttpResponse()
+                .setContent(errorContent)
+                .setContentType(Json.MEDIA_TYPE)
+                .setStatusCode(HttpStatusCodes.STATUS_CODE_FORBIDDEN));
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException ge =
+        GoogleJsonResponseException.from(
+            com.google.api.client.googleapis.json.GoogleJsonErrorTest.FACTORY, response);
+    assertNotNull(ge.getDetails().getDetails());
   }
 }
