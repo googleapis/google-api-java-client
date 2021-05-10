@@ -1,5 +1,14 @@
 # Changelog
 
+### [1.31.5](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.4...v1.31.5) (2021-05-10)
+
+
+### Bug Fixes
+
+* release scripts from issuing overlapping phases ([#1769](https://www.github.com/googleapis/google-api-java-client/issues/1769)) ([3174ff9](https://www.github.com/googleapis/google-api-java-client/commit/3174ff9ddf0c7428b90bff766c6b18bf17d1feac))
+* remove deprecated parent pom ([#1785](https://www.github.com/googleapis/google-api-java-client/issues/1785)) ([5da3355](https://www.github.com/googleapis/google-api-java-client/commit/5da335518ff5076ea5dd4f40fd0494330458296c))
+* update GoogleJsonError object to accomodate all fields in Invalid parameter exception ([#1783](https://www.github.com/googleapis/google-api-java-client/issues/1783)) ([94c4570](https://www.github.com/googleapis/google-api-java-client/commit/94c4570e16324b4c654d4ec3f0f940926064d955))
+
 ### [1.31.4](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.3...v1.31.4) (2021-04-09)
 
 
