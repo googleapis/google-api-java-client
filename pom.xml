@@ -10,7 +10,13 @@
   <description>The Google APIs Client Library for Java is a Java client library
                for accessing any HTTP-based API on the web</description>
   <url>https://github.com/googleapis/google-api-java-client</url>
-
+  
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+  
   <issueManagement>
     <system>GitHub</system>
     <url>https://github.com/googleapis/google-api-java-client/issues</url>
