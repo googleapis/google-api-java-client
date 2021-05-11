@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.31.3-sp.1](https://www.github.com/googleapis/google-api-java-client/compare/1.31.3...v1.31.3-sp.1) (2021-05-11)
+
+
+### Features
+
+* configure initial sp version ([#1796](https://www.github.com/googleapis/google-api-java-client/issues/1796)) ([234c38c](https://www.github.com/googleapis/google-api-java-client/commit/234c38c5a5ec0b66ccef4a9bd48a56fdccfba2d3))
+
 ### [1.31.3](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.2...v1.31.3) (2021-03-01)
 
 
