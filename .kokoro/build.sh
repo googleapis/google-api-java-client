@@ -107,6 +107,11 @@ clirr)
     ;;
 esac
 
+if [ "${REPORT_COVERAGE}" == "true" ]
+then
+  bash ${KOKORO_GFILE_DIR}/codecov.sh
+fi
+
 # fix output location of logs
 bash .kokoro/coerce_logs.sh
 
