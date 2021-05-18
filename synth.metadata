@@ -4,7 +4,7 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/google-api-java-client.git",
-        "sha": "dbeebd8be5c60cbe60aeda97eeea4b4dca99c0d6"
+        "sha": "bfb871a1c1ddb23d2362223140824f1501fdbd88"
       }
     },
     {
@@ -80,6 +80,7 @@
     "CODE_OF_CONDUCT.md",
     "CONTRIBUTING.md",
     "LICENSE",
+    "codecov.yaml",
     "samples/install-without-bom/pom.xml",
     "samples/pom.xml",
     "samples/snapshot/pom.xml",
