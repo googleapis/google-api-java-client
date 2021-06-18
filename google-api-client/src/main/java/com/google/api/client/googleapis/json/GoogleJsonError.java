@@ -189,6 +189,7 @@ public class GoogleJsonError extends GenericJson {
     private String type;
 
     @Key private String detail;
+    @Key private String reason;
     @Key private List<ParameterViolations> parameterViolations;
 
     public String getType() {
@@ -205,6 +206,14 @@ public class GoogleJsonError extends GenericJson {
 
     public void setDetail(String detail) {
       this.detail = detail;
+    }
+
+    public String getReason() {
+      return reason;
+    }
+
+    public void setReason(String reason) {
+      this.reason = reason;
     }
 
     public List<ParameterViolations> getParameterViolations() {
