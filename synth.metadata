@@ -4,14 +4,14 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/google-api-java-client.git",
-        "sha": "56f5b8be0a60cb1cf0b279743d85ef57d9aa46b6"
+        "sha": "d979c5bfdeaf8bd85cd7295abf5695dc6095bad6"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "8eae0234a16b26c2ff616d305dbd9786c8b10a47"
+        "sha": "8f76a885deaaf2fe234daeba4a8cc4d1b3de8086"
       }
     }
   ],
@@ -80,6 +80,7 @@
     "CODE_OF_CONDUCT.md",
     "CONTRIBUTING.md",
     "LICENSE",
+    "SECURITY.md",
     "codecov.yaml",
     "samples/install-without-bom/pom.xml",
     "samples/pom.xml",
