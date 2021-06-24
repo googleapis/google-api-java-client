@@ -1,5 +1,18 @@
 # Changelog
 
+### [1.32.1](https://www.github.com/googleapis/google-api-java-client/compare/v1.32.0...v1.32.1) (2021-06-24)
+
+
+### Bug Fixes
+
+* bring comment up to date with code ([#1838](https://www.github.com/googleapis/google-api-java-client/issues/1838)) ([f150c5a](https://www.github.com/googleapis/google-api-java-client/commit/f150c5aa6e2de0c6cbad7461f4b76be8e0027567))
+* Update dependencies.sh to not break on mac ([#1830](https://www.github.com/googleapis/google-api-java-client/issues/1830)) ([97940b3](https://www.github.com/googleapis/google-api-java-client/commit/97940b3fd96e343df3985630398811f3c417afcc))
+
+
+### Dependencies
+
+* don't use sp versions in the regular release ([#1840](https://www.github.com/googleapis/google-api-java-client/issues/1840)) ([94cde71](https://www.github.com/googleapis/google-api-java-client/commit/94cde719e9ad845bcd186595e06279e2b7c19096))
+
 ## [1.32.0](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.5...v1.32.0) (2021-06-22)
 
 
