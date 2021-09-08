@@ -4,14 +4,14 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/google-api-java-client.git",
-        "sha": "190f135f5dd08ec2ce6d5682bf1a1e5769015164"
+        "sha": "f7e7a675b8ac2ca32d891e2219b27203bf128e2e"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "63cff634aabb85854caa511c5837ea6b45f42b4b"
+        "sha": "df5093b950d4aafd49a4c7758d74c44485263ada"
       }
     }
   ],
@@ -38,7 +38,6 @@
     ".kokoro/common.sh",
     ".kokoro/continuous/common.cfg",
     ".kokoro/continuous/java8.cfg",
-    ".kokoro/continuous/readme.cfg",
     ".kokoro/dependencies.sh",
     ".kokoro/nightly/common.cfg",
     ".kokoro/nightly/integration.cfg",
