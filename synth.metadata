@@ -11,7 +11,7 @@
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "df5093b950d4aafd49a4c7758d74c44485263ada"
+        "sha": "2d31a9243781b282202b4f76dc7bbc8b45803196"
       }
     }
   ],
@@ -23,7 +23,6 @@
     ".github/PULL_REQUEST_TEMPLATE.md",
     ".github/blunderbuss.yml",
     ".github/generated-files-bot.yml",
-    ".github/readme/synth.py",
     ".github/release-please.yml",
     ".github/release-trigger.yml",
     ".github/snippet-bot.yml",
