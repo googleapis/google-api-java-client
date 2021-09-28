@@ -8,13 +8,11 @@ branchProtectionRules:
     requiresCodeOwnerReviews: true
     requiresStrictStatusChecks: false
     requiredStatusCheckContexts:
-      - units (7)
       - units (8)
       - units (11)
       - windows
       - dependencies (8)
       - dependencies (11)
-      - linkage-monitor
       - lint
       - clirr
       - cla/google
@@ -30,7 +28,6 @@ branchProtectionRules:
       - windows
       - dependencies (8)
       - dependencies (11)
-      - linkage-monitor
       - lint
       - clirr
       - cla/google
