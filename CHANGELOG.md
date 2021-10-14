@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.32.2](https://www.github.com/googleapis/google-api-java-client/compare/v1.32.1...v1.32.2) (2021-10-14)
+
+
+### Dependencies
+
+* update dependency com.google.guava:guava to v31 ([#1894](https://www.github.com/googleapis/google-api-java-client/issues/1894)) ([aba6059](https://www.github.com/googleapis/google-api-java-client/commit/aba605962518d5c8ee16361b042753c6d27884ba))
+
 ### [1.32.1](https://www.github.com/googleapis/google-api-java-client/compare/v1.32.0...v1.32.1) (2021-06-24)
 
 
