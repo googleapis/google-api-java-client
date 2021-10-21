@@ -6,3 +6,7 @@ branches:
     handleGHRelease: true
     releaseType: java-lts
     branch: 1.31.3-sp
+  - bumpMinorPreMajor: true
+    handleGHRelease: true
+    releaseType: java-backport
+    branch: 1.32.x
