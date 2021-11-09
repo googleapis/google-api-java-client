@@ -156,17 +156,17 @@ public abstract class AbstractGoogleClient {
    * <p>Must be called before the Google client request is executed, preferably right after the
    * request is instantiated. Sample usage:
    *
-   * <pre>
+   * <pre>{@code
    * public class Get extends HttpClientRequest {
-   * ...
+   *   ...
    * }
    *
    * public Get get(String userId) throws IOException {
-   * Get result = new Get(userId);
-   * initialize(result);
-   * return result;
+   *   Get result = new Get(userId);
+   *   initialize(result);
+   *   return result;
    * }
-   * </pre>
+   * }</pre>
    *
    * <p>Subclasses may override by calling the super implementation.
    *
@@ -181,14 +181,15 @@ public abstract class AbstractGoogleClient {
   /**
    * Create an {@link BatchRequest} object from this Google API client instance.
    *
-   * <p>Sample usage:
+   * <p>
+   * Sample usage:
    *
-   * <pre>
+   * <pre>{@code
    * client.batch()
-   * .queue(...)
-   * .queue(...)
-   * .execute();
-   * </pre>
+   *    .queue(...)
+   *    .queue(...)
+   *    .execute();
+   * }</pre>
    *
    * @return newly created Batch request
    */
@@ -199,17 +200,19 @@ public abstract class AbstractGoogleClient {
   /**
    * Create an {@link BatchRequest} object from this Google API client instance.
    *
-   * <p>Sample usage:
+   * <p>
+   * Sample usage:
    *
-   * <pre>
+   * <pre>{@code
    * client.batch(httpRequestInitializer)
-   * .queue(...)
-   * .queue(...)
-   * .execute();
-   * </pre>
+   *    .queue(...)
+   *    .queue(...)
+   *    .execute();
+   * }</pre>
    *
-   * @param httpRequestInitializer The initializer to use when creating the top-level batch HTTP
-   *     request or {@code null} for none
+   * @param httpRequestInitializer The initializer to use when creating the
+   *                               top-level batch HTTP request or {@code null}
+   *                               for none
    * @return newly created Batch request
    */
   public final BatchRequest batch(HttpRequestInitializer httpRequestInitializer) {

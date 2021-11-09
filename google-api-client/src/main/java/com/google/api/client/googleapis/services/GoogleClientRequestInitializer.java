@@ -19,13 +19,13 @@ import java.io.IOException;
  *
  * <p>For example, this might be used to set a key URL query parameter on all requests:
  *
- * <pre>
+ * <pre>{@code
  * public class KeyRequestInitializer implements GoogleClientRequestInitializer {
- * public void initialize(GoogleClientRequest<?> request) {
- * request.put("key", KEY);
+ *   public void initialize(GoogleClientRequest<?> request) {
+ *     request.put("key", KEY);
+ *   }
  * }
- * }
- * </pre>
+ * }</pre>
  *
  * <p>Implementations should be thread-safe.
  *

@@ -92,18 +92,18 @@ public abstract class AbstractGoogleJsonClientRequest<T> extends AbstractGoogleC
    *
    * <p>Example usage:
    *
-   * <pre>
+   * <pre>{@code
    * request.queue(batchRequest, new JsonBatchCallback&lt;SomeResponseType&gt;() {
    *
-   * public void onSuccess(SomeResponseType content, HttpHeaders responseHeaders) {
-   * log("Success");
-   * }
+   *   public void onSuccess(SomeResponseType content, HttpHeaders responseHeaders) {
+   *     log("Success");
+   *   }
    *
-   * public void onFailure(GoogleJsonError e, HttpHeaders responseHeaders) {
-   * log(e.getMessage());
-   * }
+   *   public void onFailure(GoogleJsonError e, HttpHeaders responseHeaders) {
+   *     log(e.getMessage());
+   *   }
    * });
-   * </pre>
+   * }</pre>
    *
    * @param batchRequest batch request container
    * @param callback batch callback

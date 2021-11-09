@@ -26,12 +26,12 @@ import java.io.IOException;
  * <p>Use {@link #getIntent()} to allow user interaction to recover. Alternatively, use {@link
  * #getCause()} to get the wrapped {@link UserRecoverableAuthException}. Example usage:
  *
- * <pre>
+ * <pre>{@code
  * } catch (UserRecoverableAuthIOException userRecoverableException) {
- * myActivity.startActivityForResult(
- * userRecoverableException.getIntent(), MyActivity.REQUEST_AUTHORIZATION);
+ *   myActivity.startActivityForResult(
+ *   userRecoverableException.getIntent(), MyActivity.REQUEST_AUTHORIZATION);
  * }
- * </pre>
+ * }</pre>
  *
  * @since 1.12
  * @author Yaniv Inbar

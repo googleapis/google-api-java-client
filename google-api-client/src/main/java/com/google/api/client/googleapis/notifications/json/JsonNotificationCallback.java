@@ -28,37 +28,35 @@ import java.io.IOException;
  *
  * <p>Implementation should be thread-safe. <b>Example usage:</b>
  *
- * <pre>
- * static class MyNotificationCallback
- * extends JsonNotificationCallback{@literal <}ListResponse{@literal >} {
+ * <pre>{@code
+ * static class MyNotificationCallback extends JsonNotificationCallback{@literal <}ListResponse{@literal >} {
  *
- * private static final long serialVersionUID = 1L;
+ *   private static final long serialVersionUID = 1L;
  *
- * {@literal @}Override
- * protected void onNotification(
- * StoredChannel channel, TypedNotification{@literal <}ListResponse{@literal >} notification) {
- * ListResponse content = notification.getContent();
- * switch (notification.getResourceState()) {
- * case ResourceStates.SYNC:
- * break;
- * case ResourceStates.EXISTS:
- * break;
- * case ResourceStates.NOT_EXISTS:
- * break;
- * }
- * }
+ *   {@literal @}Override
+ *   protected void onNotification(StoredChannel channel, TypedNotification{@literal <}ListResponse{@literal >} notification) {
+ *     ListResponse content = notification.getContent();
+ *     switch (notification.getResourceState()) {
+ *       case ResourceStates.SYNC:
+ *         break;
+ *       case ResourceStates.EXISTS:
+ *         break;
+ *       case ResourceStates.NOT_EXISTS:
+ *         break;
+ *    }
+ *   }
  *
- * {@literal @}Override
- * protected JsonFactory getJsonFactory() throws IOException {
- * return new GsonFactory();
- * }
+ *   {@literal @}Override
+ *   protected JsonFactory getJsonFactory() throws IOException {
+ *     return new GsonFactory();
+ *   }
  *
- * {@literal @}Override
- * protected Class{@literal <}ListResponse{@literal >} getDataClass() throws IOException {
- * return ListResponse.class;
+ *   {@literal @}Override
+ *   protected Class{@literal <}ListResponse{@literal >} getDataClass() throws IOException {
+ *     return ListResponse.class;
+ *   }
  * }
- * }
- * </pre>
+ * }</pre>
  *
  * @param <T> Type of the data contained within a notification
  * @author Yaniv Inbar

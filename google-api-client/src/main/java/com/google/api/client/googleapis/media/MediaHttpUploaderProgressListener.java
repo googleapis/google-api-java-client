@@ -22,28 +22,28 @@ import java.io.IOException;
  * <p>Sample usage (if media content length is provided, else consider using {@link
  * MediaHttpUploader#getNumBytesUploaded} instead of {@link MediaHttpUploader#getProgress}:
  *
- * <pre>
+ * <pre>{@code
  * public static class MyUploadProgressListener implements MediaHttpUploaderProgressListener {
  *
- * public void progressChanged(MediaHttpUploader uploader) throws IOException {
- * switch (uploader.getUploadState()) {
- * case INITIATION_STARTED:
- * System.out.println("Initiation Started");
- * break;
- * case INITIATION_COMPLETE:
- * System.out.println("Initiation Completed");
- * break;
- * case MEDIA_IN_PROGRESS:
- * System.out.println("Upload in progress");
- * System.out.println("Upload percentage: " + uploader.getProgress());
- * break;
- * case MEDIA_COMPLETE:
- * System.out.println("Upload Completed!");
- * break;
+ *   public void progressChanged(MediaHttpUploader uploader) throws IOException {
+ *     switch (uploader.getUploadState()) {
+ *       case INITIATION_STARTED:
+ *         System.out.println("Initiation Started");
+ *         break;
+ *       case INITIATION_COMPLETE:
+ *         System.out.println("Initiation Completed");
+ *         break;
+ *       case MEDIA_IN_PROGRESS:
+ *         System.out.println("Upload in progress");
+ *         System.out.println("Upload percentage: " + uploader.getProgress());
+ *         break;
+ *       case MEDIA_COMPLETE:
+ *         System.out.println("Upload Completed!");
+ *         break;
+ *      }
+ *   }
  * }
- * }
- * }
- * </pre>
+ * }</pre>
  *
  * @since 1.9
  * @author rmistry@google.com (Ravi Mistry)

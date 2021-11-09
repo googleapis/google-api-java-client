@@ -27,40 +27,43 @@ import java.io.IOException;
 import java.util.Collection;
 
 /**
- * Google-specific implementation of the OAuth 2.0 request to refresh an access token using a
- * refresh token as specified in <a href="http://tools.ietf.org/html/rfc6749#section-6">Refreshing
- * an Access Token</a>.
+ * Google-specific implementation of the OAuth 2.0 request to refresh an access
+ * token using a refresh token as specified in
+ * <a href="http://tools.ietf.org/html/rfc6749#section-6">Refreshing an Access
+ * Token</a>.
  *
- * <p>Use {@link GoogleCredential} to access protected resources from the resource server using the
- * {@link TokenResponse} returned by {@link #execute()}. On error, it will instead throw {@link
- * TokenResponseException}.
+ * <p>
+ * Use {@link GoogleCredential} to access protected resources from the resource
+ * server using the {@link TokenResponse} returned by {@link #execute()}. On
+ * error, it will instead throw {@link TokenResponseException}.
  *
- * <p>Sample usage:
+ * <p>
+ * Sample usage:
  *
- * <pre>
+ * <pre>{@code
  * static void refreshAccessToken() throws IOException {
- * try {
- * TokenResponse response =
- * new GoogleRefreshTokenRequest(new NetHttpTransport(), new GsonFactory(),
- * "tGzv3JOkF0XG5Qx2TlKWIA", "s6BhdRkqt3", "7Fjfp0ZBr1KtDRbnfVdmIw").execute();
- * System.out.println("Access token: " + response.getAccessToken());
- * } catch (TokenResponseException e) {
- * if (e.getDetails() != null) {
- * System.err.println("Error: " + e.getDetails().getError());
- * if (e.getDetails().getErrorDescription() != null) {
- * System.err.println(e.getDetails().getErrorDescription());
+ *   try {
+ *     TokenResponse response = new GoogleRefreshTokenRequest(new NetHttpTransport(), new GsonFactory(),
+ *         "tGzv3JOkF0XG5Qx2TlKWIA", "s6BhdRkqt3", "7Fjfp0ZBr1KtDRbnfVdmIw").execute();
+ *     System.out.println("Access token: " + response.getAccessToken());
+ *   } catch (TokenResponseException e) {
+ *     if (e.getDetails() != null) {
+ *       System.err.println("Error: " + e.getDetails().getError());
+ *       if (e.getDetails().getErrorDescription() != null) {
+ *         System.err.println(e.getDetails().getErrorDescription());
+ *       }
+ *       if (e.getDetails().getErrorUri() != null) {
+ *         System.err.println(e.getDetails().getErrorUri());
+ *       }
+ *     } else {
+ *       System.err.println(e.getMessage());
+ *     }
+ *   }
  * }
- * if (e.getDetails().getErrorUri() != null) {
- * System.err.println(e.getDetails().getErrorUri());
- * }
- * } else {
- * System.err.println(e.getMessage());
- * }
- * }
- * }
- * </pre>
+ * }</pre>
  *
- * <p>Implementation is not thread-safe.
+ * <p>
+ * Implementation is not thread-safe.
  *
  * @since 1.7
  * @author Yaniv Inbar

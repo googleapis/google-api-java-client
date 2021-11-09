@@ -36,20 +36,20 @@ import javax.servlet.http.HttpServletResponse;
  * may alternatively call that method instead from your {@link HttpServlet#doPost} with no loss of
  * functionality. <b>Example usage:</b>
  *
- * <pre>
+ * <pre>{@code
  * public class MyNotificationServlet extends NotificationServlet {
  *
- * private static final long serialVersionUID = 1L;
+ *   private static final long serialVersionUID = 1L;
  *
- * public MyNotificationServlet() throws IOException {
- * super(new SomeDataStoreFactory());
+ *   public MyNotificationServlet() throws IOException {
+ *     super(new SomeDataStoreFactory());
+ *   }
  * }
- * }
- * </pre>
+ * }</pre>
  *
  * <b>Sample web.xml setup:</b>
  *
- * <pre>
+ * <pre>{@code
  * {@literal <}servlet{@literal >}
  * {@literal <}servlet-name{@literal >}MyNotificationServlet{@literal <}/servlet-name{@literal >}
  * {@literal <}servlet-class{@literal >}com.mypackage.MyNotificationServlet{@literal <}/servlet-class{@literal >}
@@ -58,7 +58,7 @@ import javax.servlet.http.HttpServletResponse;
  * {@literal <}servlet-name{@literal >}MyNotificationServlet{@literal <}/servlet-name{@literal >}
  * {@literal <}url-pattern{@literal >}/notifications{@literal <}/url-pattern{@literal >}
  * {@literal <}/servlet-mapping{@literal >}
- * </pre>
+ * }</pre>
  *
  * <p>WARNING: by default it uses {@link MemoryDataStoreFactory#getDefaultInstance()} which means it
  * will NOT persist the notification channels when the servlet process dies, so it is a BAD CHOICE
@@ -66,7 +66,7 @@ import javax.servlet.http.HttpServletResponse;
  * you don't need to override it, and can simply reference it directly in your web.xml file. For
  * example:
  *
- * <pre>
+ * <pre>{@code
  * {@literal <}servlet{@literal >}
  * {@literal <}servlet-name{@literal >}NotificationServlet{@literal <}/servlet-name{@literal >}
  * {@literal <}servlet-class{@literal >}com.google.api.client.googleapis.extensions.servlet.notificationsNotificationServlet{@literal <}/servlet-class{@literal >}
@@ -75,7 +75,7 @@ import javax.servlet.http.HttpServletResponse;
  * {@literal <}servlet-name{@literal >}NotificationServlet{@literal <}/servlet-name{@literal >}
  * {@literal <}url-pattern{@literal >}/notifications{@literal <}/url-pattern{@literal >}
  * {@literal <}/servlet-mapping{@literal >}
- * </pre>
+ * }</pre>
  *
  * @author Yaniv Inbar
  * @since 1.16

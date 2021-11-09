@@ -31,15 +31,11 @@ import org.xmlpull.v1.XmlSerializer;
  *
  * <p>Sample usage:
  *
- * <pre>
- * <code>
- * static void setContent(HttpRequest request, XmlNamespaceDictionary namespaceDictionary,
- * Object originalEntry, Object patchedEntry) {
- * request.setContent(
- * new AtomPatchRelativeToOriginalContent(namespaceDictionary, originalEntry, patchedEntry));
+ * <pre>{@code
+ * static void setContent(HttpRequest request, XmlNamespaceDictionary namespaceDictionary, Object originalEntry, Object patchedEntry) {
+ *   request.setContent(new AtomPatchRelativeToOriginalContent(namespaceDictionary, originalEntry, patchedEntry));
  * }
- * </code>
- * </pre>
+ * }</pre>
  *
  * @since 1.0
  * @author Yaniv Inbar

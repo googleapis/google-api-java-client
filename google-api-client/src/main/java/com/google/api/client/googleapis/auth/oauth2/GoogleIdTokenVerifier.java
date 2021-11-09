@@ -32,20 +32,24 @@ import java.util.List;
  * {@link Beta} <br>
  * Thread-safe Google ID token verifier.
  *
- * <p>Call {@link #verify(IdToken)} to verify a ID token. Use the constructor {@link
- * #GoogleIdTokenVerifier(HttpTransport, JsonFactory)} for the typical simpler case if your
- * application has only a single instance of {@link GoogleIdTokenVerifier}. Otherwise, ideally you
- * should use {@link #GoogleIdTokenVerifier(GooglePublicKeysManager)} with a shared global instance
- * of the {@link GooglePublicKeysManager} since that way the Google public keys are cached. Sample
- * usage:
+ * <p>
+ * Call {@link #verify(IdToken)} to verify a ID token. Use the constructor
+ * {@link #GoogleIdTokenVerifier(HttpTransport, JsonFactory)} for the typical
+ * simpler case if your application has only a single instance of
+ * {@link GoogleIdTokenVerifier}. Otherwise, ideally you should use
+ * {@link #GoogleIdTokenVerifier(GooglePublicKeysManager)} with a shared global
+ * instance of the {@link GooglePublicKeysManager} since that way the Google
+ * public keys are cached. Sample usage:
  *
- * <pre>
+ * <pre>{@code
  * GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
- * .setAudience(Arrays.asList("myClientId"))
- * .build();
+ *        .setAudience(Arrays.asList("myClientId"))
+ *        .build();
+ * 
  * ...
+ *  
  * if (!verifier.verify(googleIdToken)) {...}
- * </pre>
+ * }</pre>
  *
  * @since 1.7
  */

@@ -23,22 +23,22 @@ import java.io.IOException;
 /**
  * Callback for an individual batch JSON response.
  *
- * <p>Sample use:
+ * <p>
+ * Sample use:
  *
- * <pre>
+ * <pre>{@code
  * batch.queue(volumesList.buildHttpRequest(), Volumes.class, GoogleJsonErrorContainer.class,
- * new JsonBatchCallback&lt;Volumes&gt;() {
- *
- * public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
- * log("Success");
- * printVolumes(volumes.getItems());
- * }
- *
- * public void onFailure(GoogleJsonError e, HttpHeaders responseHeaders) {
- * log(e.getMessage());
- * }
- * });
- * </pre>
+ *     new JsonBatchCallback&lt;Volumes&gt;() {
+ *       public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
+ *         log("Success");
+ *         printVolumes(volumes.getItems());
+ *       }
+ * 
+ *       public void onFailure(GoogleJsonError e, HttpHeaders responseHeaders) {
+ *         log(e.getMessage());
+ *       }
+ *     });
+ * }</pre>
  *
  * @param <T> Type of the data model class
  * @since 1.9

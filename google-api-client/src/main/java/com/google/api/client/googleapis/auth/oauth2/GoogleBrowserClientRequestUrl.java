@@ -20,27 +20,31 @@ import com.google.api.client.util.Preconditions;
 import java.util.Collection;
 
 /**
- * Google-specific implementation of the OAuth 2.0 URL builder for an authorization web page to
- * allow the end user to authorize the application to access their protected resources and that
- * returns the access token to a browser client using a scripting language such as JavaScript, as
- * specified in <a href="https://developers.google.com/accounts/docs/OAuth2UserAgent">Using OAuth
- * 2.0 for Client-side Applications</a>.
+ * Google-specific implementation of the OAuth 2.0 URL builder for an
+ * authorization web page to allow the end user to authorize the application to
+ * access their protected resources and that returns the access token to a
+ * browser client using a scripting language such as JavaScript, as specified in
+ * <a href="https://developers.google.com/accounts/docs/OAuth2UserAgent">Using
+ * OAuth 2.0 for Client-side Applications</a>.
  *
- * <p>The default for {@link #getResponseTypes()} is {@code "token"}.
+ * <p>
+ * The default for {@link #getResponseTypes()} is {@code "token"}.
  *
- * <p>Sample usage for a web application:
+ * <p>
+ * Sample usage for a web application:
  *
- * <pre>
+ * <pre>{@code
  * public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
- * String url = new GoogleBrowserClientRequestUrl("812741506391.apps.googleusercontent.com",
- * "https://oauth2-login-demo.appspot.com/oauthcallback", Arrays.asList(
- * "https://www.googleapis.com/auth/userinfo.email",
- * "https://www.googleapis.com/auth/userinfo.profile")).setState("/profile").build();
- * response.sendRedirect(url);
+ *   String url = new GoogleBrowserClientRequestUrl("812741506391.apps.googleusercontent.com",
+ *       "https://oauth2-login-demo.appspot.com/oauthcallback", Arrays.asList(
+ *           "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile"))
+ *               .setState("/profile").build();
+ *   response.sendRedirect(url);
  * }
- * </pre>
+ * }</pre>
  *
- * <p>Implementation is not thread-safe.
+ * <p>
+ * Implementation is not thread-safe.
  *
  * @since 1.7
  * @author Yaniv Inbar

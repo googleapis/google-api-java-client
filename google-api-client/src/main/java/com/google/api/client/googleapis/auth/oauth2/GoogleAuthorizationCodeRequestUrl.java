@@ -21,31 +21,36 @@ import com.google.api.client.util.Preconditions;
 import java.util.Collection;
 
 /**
- * Google-specific implementation of the OAuth 2.0 URL builder for an authorization web page to
- * allow the end user to authorize the application to access their protected resources and that
- * returns an authorization code, as specified in <a
- * href="https://developers.google.com/accounts/docs/OAuth2WebServer">Using OAuth 2.0 for Web Server
- * Applications</a>.
+ * Google-specific implementation of the OAuth 2.0 URL builder for an
+ * authorization web page to allow the end user to authorize the application to
+ * access their protected resources and that returns an authorization code, as
+ * specified in
+ * <a href="https://developers.google.com/accounts/docs/OAuth2WebServer">Using
+ * OAuth 2.0 for Web Server Applications</a>.
  *
- * <p>The default for {@link #getResponseTypes()} is {@code "code"}. Use {@link
- * AuthorizationCodeResponseUrl} to parse the redirect response after the end user grants/denies the
- * request. Using the authorization code in this response, use {@link
- * GoogleAuthorizationCodeTokenRequest} to request the access token.
+ * <p>
+ * The default for {@link #getResponseTypes()} is {@code "code"}. Use
+ * {@link AuthorizationCodeResponseUrl} to parse the redirect response after the
+ * end user grants/denies the request. Using the authorization code in this
+ * response, use {@link GoogleAuthorizationCodeTokenRequest} to request the
+ * access token.
  *
- * <p>Sample usage for a web application:
+ * <p>
+ * Sample usage for a web application:
  *
- * <pre>
+ * <pre>{@code
  * public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
- * String url =
- * new GoogleAuthorizationCodeRequestUrl("812741506391.apps.googleusercontent.com",
- * "https://oauth2-login-demo.appspot.com/code", Arrays.asList(
- * "https://www.googleapis.com/auth/userinfo.email",
- * "https://www.googleapis.com/auth/userinfo.profile")).setState("/profile").build();
- * response.sendRedirect(url);
+ *      String url = new GoogleAuthorizationCodeRequestUrl("812741506391.apps.googleusercontent.com",
+ *              "https://oauth2-login-demo.appspot.com/code",
+ *              Arrays.asList("https://www.googleapis.com/auth/userinfo.email",
+ *                      "https://www.googleapis.com/auth/userinfo.profile"))
+ *              .setState("/profile").build();
+ *      response.sendRedirect(url);
  * }
- * </pre>
+ * }</pre>
  *
- * <p>Implementation is not thread-safe.
+ * <p>
+ * Implementation is not thread-safe.
  *
  * @since 1.7
  * @author Yaniv Inbar

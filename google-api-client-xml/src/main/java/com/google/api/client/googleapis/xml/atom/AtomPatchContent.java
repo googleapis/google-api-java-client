@@ -29,14 +29,12 @@ import com.google.api.client.xml.XmlNamespaceDictionary;
  *
  * <p>Sample usage:
  *
- * <pre>
- * <code>
+ * <pre>{@code
  * static void setContent(
- * HttpRequest request, XmlNamespaceDictionary namespaceDictionary, Object patchEntry) {
- * request.setContent(new AtomPatchContent(namespaceDictionary, patchEntry));
+ *   HttpRequest request, XmlNamespaceDictionary namespaceDictionary, Object patchEntry) {
+ *   request.setContent(new AtomPatchContent(namespaceDictionary, patchEntry));
  * }
- * </code>
- * </pre>
+ * }</pre>
  *
  * <p>Implementation is not thread-safe.
  *

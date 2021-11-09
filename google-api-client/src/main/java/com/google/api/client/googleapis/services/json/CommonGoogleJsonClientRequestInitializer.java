@@ -23,52 +23,51 @@ import java.io.IOException;
  *
  * <p>The simplest usage is to use it to set the key parameter:
  *
- * <pre>
+ * <pre>{@code
  * public static final GoogleClientRequestInitializer KEY_INITIALIZER =
- * CommonGoogleJsonClientRequestInitializer.newBuilder()
- * .setKey(KEY)
- * .build();
- * </pre>
+ *        CommonGoogleJsonClientRequestInitializer.newBuilder()
+ *              .setKey(KEY)
+ *              .build();
+ * }</pre>
  *
  * <p>There is also a constructor to set both the key and userIp parameters:
  *
- * <pre>
- * public static final GoogleClientRequestInitializer INITIALIZER =
- * CommonGoogleJsonClientRequestInitializer.newBuilder()
- * .setKey(KEY)
- * .setUserIp(USER_IP)
- * .build();
- * </pre>
+ * <pre>{@code
+ * public static final GoogleClientRequestInitializer INITIALIZER = 
+ *       CommonGoogleJsonClientRequestInitializer.newBuilder()
+ *              .setKey(KEY)
+ *              .setUserIp(USER_IP)
+ *              .build();
+ * }</pre>
  *
  * <p>If you want to implement custom logic, extend it like this:
  *
- * <pre>
+ * <pre>{@code
  * public static class MyRequestInitializer extends CommonGoogleJsonClientRequestInitializer {
  *
- * {@literal @}Override
- * public void initialize(AbstractGoogleJsonClientRequest{@literal <}?{@literal >} request)
- * throws IOException {
- * // custom logic
+ *   {@literal @}Override
+ *   public void initialize(AbstractGoogleJsonClientRequest{@literal <}?{@literal >} request)
+ *     throws IOException {
+ *     // custom logic
+ *   }
  * }
- * }
- * </pre>
+ * }</pre>
  *
  * <p>Finally, to set the key and userIp parameters and insert custom logic, extend it like this:
  *
- * <pre>
+ * <pre>{@code
  * public static class MyKeyRequestInitializer extends CommonGoogleJsonClientRequestInitializer {
  *
- * public MyKeyRequestInitializer() {
- * super(KEY, USER_IP);
- * }
+ *   public MyKeyRequestInitializer() {
+ *     super(KEY, USER_IP);
+ *   }
  *
- * {@literal @}Override
- * public void initializeJsonRequest(
- * AbstractGoogleJsonClientRequest{@literal <}?{@literal >} request) throws IOException {
- * // custom logic
+ *   {@literal @}Override
+ *   public void initializeJsonRequest(AbstractGoogleJsonClientRequest{@literal <}?{@literal >} request) throws IOException {
+ *     // custom logic
+ *   }
  * }
- * }
- * </pre>
+ * }</pre>
  *
  * <p>Subclasses should be thread-safe.
  *

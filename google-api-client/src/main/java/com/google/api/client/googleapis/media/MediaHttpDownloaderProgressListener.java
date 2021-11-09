@@ -21,22 +21,22 @@ import java.io.IOException;
  *
  * <p>Sample usage:
  *
- * <pre>
+ * <pre>{@code
  * public static class MyDownloadProgressListener implements MediaHttpDownloaderProgressListener {
  *
- * public void progressChanged(MediaHttpDownloader downloader) throws IOException {
- * switch (downloader.getDownloadState()) {
- * case MEDIA_IN_PROGRESS:
- * System.out.println("Download in progress");
- * System.out.println("Download percentage: " + downloader.getProgress());
- * break;
- * case MEDIA_COMPLETE:
- * System.out.println("Download Completed!");
- * break;
+ *   public void progressChanged(MediaHttpDownloader downloader) throws IOException {
+ *     switch (downloader.getDownloadState()) {
+ *       case MEDIA_IN_PROGRESS:
+ *         System.out.println("Download in progress");
+ *         System.out.println("Download percentage: " + downloader.getProgress());
+ *         break;
+ *       case MEDIA_COMPLETE:
+ *         System.out.println("Download Completed!");
+ *         break;
+ *     }
+ *   }
  * }
- * }
- * }
- * </pre>
+ * }</pre>
  *
  * @since 1.9
  * @author rmistry@google.com (Ravi Mistry)

@@ -38,49 +38,57 @@ import java.util.logging.Logger;
 /**
  * An instance of this class represents a single batch of requests.
  *
- * <p>Sample use:
+ * <p>
+ * Sample use:
  *
- * <pre>
- * // client is a AbstractGoogleClient (e.g. com.google.api.services.books.Books)
+ * <pre>{@code
+ * // client is a AbstractGoogleClient (e.g.
+ * // com.google.api.services.books.Books)
  * BatchRequest batch = client.batch(httpRequestInitializer);
  * batch.queue(volumesList, Volumes.class, GoogleJsonErrorContainer.class,
- * new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
- *
- * public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
- * log("Success");
- * printVolumes(volumes.getItems());
- * }
- *
- * public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
- * log(e.getError().getMessage());
- * }
- * });
+ *     new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
+ * 
+ *       public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
+ *         log("Success");
+ *         printVolumes(volumes.getItems());
+ *       }
+ * 
+ *       public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
+ *         log(e.getError().getMessage());
+ *       }
+ *     });
  * batch.queue(volumesList, Volumes.class, GoogleJsonErrorContainer.class,
- * new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
- *
- * public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
- * log("Success");
- * printVolumes(volumes.getItems());
- * }
- *
- * public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
- * log(e.getError().getMessage());
- * }
- * });
+ *     new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
+ * 
+ *       public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
+ *         log("Success");
+ *         printVolumes(volumes.getItems());
+ *       }
+ * 
+ *       public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
+ *         log(e.getError().getMessage());
+ *       }
+ *     });
  * batch.execute();
- * </pre>
+ * }</pre>
  *
- * <p>The content of each individual response is stored in memory. There is thus a potential of
- * encountering an {@link OutOfMemoryError} for very large responses.
+ * <p>
+ * The content of each individual response is stored in memory. There is thus a
+ * potential of encountering an {@link OutOfMemoryError} for very large
+ * responses.
  *
- * <p>Redirects are currently not followed in {@link BatchRequest}.
+ * <p>
+ * Redirects are currently not followed in {@link BatchRequest}.
  *
- * <p>Implementation is not thread-safe.
+ * <p>
+ * Implementation is not thread-safe.
  *
- * <p>Note: When setting an {@link HttpUnsuccessfulResponseHandler} by calling to {@link
- * HttpRequest#setUnsuccessfulResponseHandler}, the handler is called for each unsuccessful part. As
- * a result it's not recommended to use {@link HttpBackOffUnsuccessfulResponseHandler} on a batch
- * request, since the back-off policy is invoked for each unsuccessful part.
+ * <p>
+ * Note: When setting an {@link HttpUnsuccessfulResponseHandler} by calling to
+ * {@link HttpRequest#setUnsuccessfulResponseHandler}, the handler is called for
+ * each unsuccessful part. As a result it's not recommended to use
+ * {@link HttpBackOffUnsuccessfulResponseHandler} on a batch request, since the
+ * back-off policy is invoked for each unsuccessful part.
  *
  * @since 1.9
  * @author rmistry@google.com (Ravi Mistry)

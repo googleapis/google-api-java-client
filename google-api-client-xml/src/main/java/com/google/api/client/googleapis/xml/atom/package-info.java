@@ -40,7 +40,7 @@
  * <p>Let's take a look at a typical partial Atom XML album feed from the Picasa Web Albums Data
  * API:
  *
- * <pre><code>
+ * <pre>{@code
  * &lt;?xml version='1.0' encoding='utf-8'?&gt;
  * &lt;feed xmlns='http://www.w3.org/2005/Atom'
  * xmlns:openSearch='http://a9.com/-/spec/opensearch/1.1/'
@@ -60,151 +60,150 @@
  * &lt;gphoto:access&gt;public&lt;/gphoto:access&gt;
  * &lt;/entry&gt;
  * &lt;/feed&gt;
- * </code></pre>
+ * }</pre>
  *
  * <p>Here's one possible way to design the Java data classes for this (each class in its own Java
  * file):
  *
- * <pre><code>
+ * <pre>{@code
  * import com.google.api.client.util.*;
  * import java.util.List;
  *
  * public class Link {
  *
- * &#64;Key("&#64;href")
- * public String href;
+ *   &#64;Key("&#64;href")
+ *   public String href;
  *
- * &#64;Key("&#64;rel")
- * public String rel;
+ *   &#64;Key("&#64;rel")
+ *   public String rel;
  *
- * public static String find(List&lt;Link&gt; links, String rel) {
- * if (links != null) {
- * for (Link link : links) {
- * if (rel.equals(link.rel)) {
- * return link.href;
- * }
- * }
- * }
- * return null;
- * }
+ *   public static String find(List&lt;Link&gt; links, String rel) {
+ *     if (links != null) {
+ *       for (Link link : links) {
+ *         if (rel.equals(link.rel)) {
+ *           return link.href;
+ *         }
+ *       }
+ *     }
+ *     return null;
+ *   }
  * }
  *
  * public class Category {
  *
- * &#64;Key("&#64;scheme")
- * public String scheme;
+ *   &#64;Key("&#64;scheme")
+ *   public String scheme;
  *
- * &#64;Key("&#64;term")
- * public String term;
+ *   &#64;Key("&#64;term")
+ *   public String term;
  *
- * public static Category newKind(String kind) {
- * Category category = new Category();
- * category.scheme = "http://schemas.google.com/g/2005#kind";
- * category.term = "http://schemas.google.com/photos/2007#" + kind;
- * return category;
- * }
+ *   public static Category newKind(String kind) {
+ *     Category category = new Category();
+ *     category.scheme = "http://schemas.google.com/g/2005#kind";
+ *     category.term = "http://schemas.google.com/photos/2007#" + kind;
+ *     return category;
+ *   }
  * }
  *
  * public class AlbumEntry {
  *
- * &#64;Key
- * public String summary;
+ *   &#64;Key
+ *   public String summary;
  *
- * &#64;Key
- * public String title;
+ *   &#64;Key
+ *   public String title;
  *
- * &#64;Key("gphoto:access")
- * public String access;
+ *   &#64;Key("gphoto:access")
+ *   public String access;
  *
- * public Category category = newKind("album");
+ *   public Category category = newKind("album");
  *
- * private String getEditLink() {
- * return Link.find(links, "edit");
- * }
+ *   private String getEditLink() {
+ *     return Link.find(links, "edit");
+ *   }
  * }
  *
  * public class Author {
  *
- * &#64;Key
- * public String name;
+ *   &#64;Key
+ *   public String name;
  * }
  *
  * public class AlbumFeed {
  *
- * &#64;Key
- * public Author author;
+ *   &#64;Key
+ *   public Author author;
  *
- * &#64;Key("openSearch:totalResults")
- * public int totalResults;
+ *   &#64;Key("openSearch:totalResults")
+ *   public int totalResults;
  *
- * &#64;Key("entry")
- * public List&lt;AlbumEntry&gt; photos;
+ *   &#64;Key("entry")
+ *   public List&lt;AlbumEntry&gt; photos;
  *
- * &#64;Key("link")
- * public List&lt;Link&gt; links;
+ *   &#64;Key("link")
+ *   public List&lt;Link&gt; links;
  *
- * private String getPostLink() {
- * return Link.find(links, "http://schemas.google.com/g/2005#post");
+ *   private String getPostLink() {
+ *     return Link.find(links, "http://schemas.google.com/g/2005#post");
+ *   }
  * }
- * }
- * </code></pre>
+ * }</pre>
  *
  * <p>You can also use the @{@link com.google.api.client.util.Key} annotation to defined query
  * parameters for a URL. For example:
  *
- * <pre><code>
+ * <pre>{@code
  * public class PicasaUrl extends GoogleUrl {
  *
- * &#64;Key("max-results")
- * public Integer maxResults;
+ *   &#64;Key("max-results")
+ *   public Integer maxResults;
  *
- * &#64;Key
- * public String kinds;
+ *   &#64;Key
+ *   public String kinds;
  *
- * public PicasaUrl(String url) {
- * super(url);
- * }
+ *   public PicasaUrl(String url) {
+ *     super(url);
+ *   }
  *
- * public static PicasaUrl fromRelativePath(String relativePath) {
- * PicasaUrl result = new PicasaUrl(PicasaWebAlbums.ROOT_URL);
- * result.path += relativePath;
- * return result;
+ *   public static PicasaUrl fromRelativePath(String relativePath) {
+ *     PicasaUrl result = new PicasaUrl(PicasaWebAlbums.ROOT_URL);
+ *     result.path += relativePath;
+ *     return result;
+ *   }
  * }
- * }
- * </code></pre>
+ * }</pre>
  *
  * <p>To work with a Google API, you first need to set up the {@link
  * com.google.api.client.http.HttpTransport}. For example:
  *
- * <pre><code>
+ * <pre>{@code
  * private static HttpTransport setUpTransport() throws IOException {
- * HttpTransport result = new NetHttpTransport();
- * GoogleUtils.useMethodOverride(result);
- * HttpHeaders headers = new HttpHeaders();
- * headers.setApplicationName("Google-PicasaSample/1.0");
- * headers.gdataVersion = "2";
- * AtomParser parser = new AtomParser();
- * parser.namespaceDictionary = PicasaWebAlbumsAtom.NAMESPACE_DICTIONARY;
- * transport.addParser(parser);
- * // insert authentication code...
- * return transport;
+ *   HttpTransport result = new NetHttpTransport();
+ *   GoogleUtils.useMethodOverride(result);
+ *   HttpHeaders headers = new HttpHeaders();
+ *   headers.setApplicationName("Google-PicasaSample/1.0");
+ *   headers.gdataVersion = "2";
+ *   AtomParser parser = new AtomParser();
+ *   parser.namespaceDictionary = PicasaWebAlbumsAtom.NAMESPACE_DICTIONARY;
+ *   transport.addParser(parser);
+ *   // insert authentication code...
+ *   return transport;
  * }
- * </code></pre>
+ * }</pre>
  *
  * <p>Now that we have a transport, we can execute a partial GET request to the Picasa Web Albums
  * API and parse the result:
  *
- * <pre><code>
- * public static AlbumFeed executeGet(HttpTransport transport, PicasaUrl url)
- * throws IOException {
- * url.fields = GoogleAtom.getFieldsFor(AlbumFeed.class);
- * url.kinds = "photo";
- * url.maxResults = 5;
- * HttpRequest request = transport.buildGetRequest();
- * request.url = url;
- * return request.execute().parseAs(AlbumFeed.class);
+ * <pre>{@code
+ * public static AlbumFeed executeGet(HttpTransport transport, PicasaUrl url) throws IOException {
+ *   url.fields = GoogleAtom.getFieldsFor(AlbumFeed.class);
+ *   url.kinds = "photo";
+ *   url.maxResults = 5;
+ *   HttpRequest request = transport.buildGetRequest();
+ *   request.url = url;
+ *   return request.execute().parseAs(AlbumFeed.class);
  * }
- * </code></pre>
+ * }</pre>
  *
  * <p>If the server responds with an error the {@link
  * com.google.api.client.http.HttpRequest#execute} method will throw an {@link
@@ -212,74 +211,70 @@
  * com.google.api.client.http.HttpResponse} field which can be parsed the same way as a success
  * response inside of a catch block. For example:
  *
- * <pre><code>
+ * <pre>{@code
  * try {
- * ...
+ *   ...
  * } catch (HttpResponseException e) {
- * if (e.response.getParser() != null) {
- * Error error = e.response.parseAs(Error.class);
- * // process error response
- * } else {
- * String errorContentString = e.response.parseAsString();
- * // process error response as string
+ *   if (e.response.getParser() != null) {
+ *     Error error = e.response.parseAs(Error.class);
+ *     // process error response
+ *   } else {
+ *     String errorContentString = e.response.parseAsString();
+ *     // process error response as string
+ *   }
+ *   throw e;
  * }
- * throw e;
- * }
- * </code></pre>
+ * }</pre>
  *
  * <p>To update an album, we use the transport to execute an efficient partial update request using
  * the PATCH method to the Picasa Web Albums API:
  *
- * <pre><code>
- * public AlbumEntry executePatchRelativeToOriginal(HttpTransport transport,
- * AlbumEntry original) throws IOException {
- * HttpRequest request = transport.buildPatchRequest();
- * request.setUrl(getEditLink());
- * request.headers.ifMatch = etag;
- * AtomPatchRelativeToOriginalContent content =
- * new AtomPatchRelativeToOriginalContent();
- * content.namespaceDictionary = PicasaWebAlbumsAtom.NAMESPACE_DICTIONARY;
- * content.originalEntry = original;
- * content.patchedEntry = this;
- * request.content = content;
- * return request.execute().parseAs(AlbumEntry.class);
+ * <pre>{@code
+ * public AlbumEntry executePatchRelativeToOriginal(HttpTransport transport, AlbumEntry original) throws IOException {
+ *   HttpRequest request = transport.buildPatchRequest();
+ *   request.setUrl(getEditLink());
+ *   request.headers.ifMatch = etag;
+ *   AtomPatchRelativeToOriginalContent content = new AtomPatchRelativeToOriginalContent();
+ *   content.namespaceDictionary = PicasaWebAlbumsAtom.NAMESPACE_DICTIONARY;
+ *   content.originalEntry = original;
+ *   content.patchedEntry = this;
+ *   request.content = content;
+ *   return request.execute().parseAs(AlbumEntry.class);
  * }
  *
- * private static AlbumEntry updateTitle(HttpTransport transport,
- * AlbumEntry album) throws IOException {
- * AlbumEntry patched = album.clone();
- * patched.title = "An alternate title";
- * return patched.executePatchRelativeToOriginal(transport, album);
+ * private static AlbumEntry updateTitle(HttpTransport transport, AlbumEntry album) throws IOException {
+ *   AlbumEntry patched = album.clone();
+ *   patched.title = "An alternate title";
+ *   return patched.executePatchRelativeToOriginal(transport, album);
  * }
- * </code></pre>
+ * }</pre>
  *
  * <p>To insert an album, we use the transport to execute a POST request to the Picasa Web Albums
  * API:
  *
- * <pre><code>
- * public AlbumEntry insertAlbum(HttpTransport transport, AlbumEntry entry)
- * throws IOException {
- * HttpRequest request = transport.buildPostRequest();
- * request.setUrl(getPostLink());
- * AtomContent content = new AtomContent();
- * content.namespaceDictionary = PicasaWebAlbumsAtom.NAMESPACE_DICTIONARY;
- * content.entry = entry;
- * request.content = content;
- * return request.execute().parseAs(AlbumEntry.class);
+ * <pre>{@code
+ * public AlbumEntry insertAlbum(HttpTransport transport, AlbumEntry entry) throws IOException {
+ *   HttpRequest request = transport.buildPostRequest();
+ *   request.setUrl(getPostLink());
+ *   AtomContent content = new AtomContent();
+ *   content.namespaceDictionary = PicasaWebAlbumsAtom.NAMESPACE_DICTIONARY;
+ *   content.entry = entry;
+ *   request.content = content;
+ *   return request.execute().parseAs(AlbumEntry.class);
  * }
- * </code></pre>
+ * }</pre>
  *
  * <p>To delete an album, we use the transport to execute a DELETE request to the Picasa Web Albums
  * API:
  *
- * <pre><code>
+ * <pre>{@code
  * public void executeDelete(HttpTransport transport) throws IOException {
- * HttpRequest request = transport.buildDeleteRequest();
- * request.setUrl(getEditLink());
- * request.headers.ifMatch = etag;
- * request.execute().ignore();
+ *   HttpRequest request = transport.buildDeleteRequest();
+ *   request.setUrl(getEditLink());
+ *   request.headers.ifMatch = etag;
+ *   request.execute().ignore();
  * }
- * </code></pre>
+ * }</pre>
  *
  * <p>NOTE: As you might guess, the library uses reflection to populate the user-defined data model.
  * It's not quite as fast as writing the wire format parsing code yourself can potentially be, but

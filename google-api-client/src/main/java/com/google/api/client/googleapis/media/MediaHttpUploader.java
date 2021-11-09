@@ -277,24 +277,24 @@ public final class MediaHttpUploader {
    * <p>If an error is encountered during the request execution the caller is responsible for
    * parsing the response correctly. For example for JSON errors:
    *
-   * <pre>
+   * <pre>{@code
    * if (!response.isSuccessStatusCode()) {
-   * throw GoogleJsonResponseException.from(jsonFactory, response);
+   *   throw GoogleJsonResponseException.from(jsonFactory, response);
    * }
-   * </pre>
+   * }</pre>
    *
    * <p>Callers should call {@link HttpResponse#disconnect} when the returned HTTP response object
    * is no longer needed. However, {@link HttpResponse#disconnect} does not have to be called if the
    * response stream is properly closed. Example usage:
    *
-   * <pre>
+   * <pre>{@code
    * HttpResponse response = batch.upload(initiationRequestUrl);
    * try {
-   * // process the HTTP response object
+   *   // process the HTTP response object
    * } finally {
-   * response.disconnect();
+   *   response.disconnect();
    * }
-   * </pre>
+   * }</pre>
    *
    * @param initiationRequestUrl The request URL where the initiation request will be sent
    * @return HTTP response
