@@ -131,7 +131,8 @@ public class GoogleJsonResponseExceptionTest extends TestCase {
   public void testFrom_detailsErrorObject() throws Exception {
     HttpTransport transport =
         new ErrorTransport(
-            "{\"error\": {\"message\": \"invalid_token\"}, \"error_description\": \"Invalid value\"}",
+            "{\"error\": {\"message\": \"invalid_token\"}, \"error_description\": \"Invalid"
+                + " value\"}",
             Json.MEDIA_TYPE);
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
