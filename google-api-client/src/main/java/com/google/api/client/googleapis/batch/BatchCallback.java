@@ -22,20 +22,20 @@ import java.io.IOException;
  *
  * <p>Sample use:
  *
- * <pre>
+ * <pre>{@code
  * batch.queue(volumesList.buildHttpRequest(), Volumes.class, GoogleJsonErrorContainer.class,
- * new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
+ *     new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
  *
- * public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
- * log("Success");
- * printVolumes(volumes.getItems());
- * }
+ *       public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
+ *         log("Success");
+ *         printVolumes(volumes.getItems());
+ *       }
  *
- * public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
- * log(e.getError().getMessage());
- * }
- * });
- * </pre>
+ *       public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
+ *         log(e.getError().getMessage());
+ *       }
+ *     });
+ * }</pre>
  *
  * @param <T> Type of the data model class
  * @param <E> Type of the error data model class

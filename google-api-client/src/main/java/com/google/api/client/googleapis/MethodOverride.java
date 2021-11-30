@@ -37,11 +37,11 @@ import java.io.IOException;
  *
  * <p>Sample usage, taking advantage that this class implements {@link HttpRequestInitializer}:
  *
- * <pre>
+ * <pre>{@code
  * public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
- * return transport.createRequestFactory(new MethodOverride());
+ *   return transport.createRequestFactory(new MethodOverride());
  * }
- * </pre>
+ * }</pre>
  *
  * <p>If you have a custom request initializer, take a look at the sample usage for {@link
  * HttpExecuteInterceptor}, which this class also implements.

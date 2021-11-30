@@ -28,23 +28,23 @@ import java.io.IOException;
 
 /**
  * Exception thrown when an error status code is detected in an HTTP response to a Google API that
- * uses the JSON format, using the format specified in <a
- * href="https://developers.google.com/url-shortener/v1/getting_started?csw=1#errors">Error
+ * uses the JSON format, using the format specified in <a href=
+ * "https://developers.google.com/url-shortener/v1/getting_started?csw=1#errors">Error
  * Responses</a>.
  *
  * <p>To execute a request, call {@link #execute(JsonFactory, HttpRequest)}. This will throw a
  * {@link GoogleJsonResponseException} on an error response. To get the structured details, use
  * {@link #getDetails()}.
  *
- * <pre>
+ * <pre>{@code
  * static void executeShowingError(JsonFactory factory, HttpRequest request) throws IOException {
- * try {
- * GoogleJsonResponseException.execute(factory, request);
- * } catch (GoogleJsonResponseException e) {
- * System.err.println(e.getDetails());
+ *   try {
+ *     GoogleJsonResponseException.execute(factory, request);
+ *   } catch (GoogleJsonResponseException e) {
+ *     System.err.println(e.getDetails());
+ *   }
  * }
- * }
- * </pre>
+ * }</pre>
  *
  * @since 1.6
  * @author Yaniv Inbar
@@ -154,14 +154,14 @@ public class GoogleJsonResponseException extends HttpResponseException {
    * is no longer needed. However, {@link HttpResponse#disconnect} does not have to be called if the
    * response stream is properly closed. Example usage:
    *
-   * <pre>
+   * <pre>{@code
    * HttpResponse response = GoogleJsonResponseException.execute(jsonFactory, request);
    * try {
-   * // process the HTTP response object
+   *   // process the HTTP response object
    * } finally {
-   * response.disconnect();
+   *   response.disconnect();
    * }
-   * </pre>
+   * }</pre>
    *
    * @param jsonFactory JSON factory
    * @param request HTTP request

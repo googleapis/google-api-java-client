@@ -40,35 +40,36 @@ import java.util.logging.Logger;
  *
  * <p>Sample use:
  *
- * <pre>
- * // client is a AbstractGoogleClient (e.g. com.google.api.services.books.Books)
+ * <pre>{@code
+ * // client is a AbstractGoogleClient (e.g.
+ * // com.google.api.services.books.Books)
  * BatchRequest batch = client.batch(httpRequestInitializer);
  * batch.queue(volumesList, Volumes.class, GoogleJsonErrorContainer.class,
- * new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
+ *     new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
  *
- * public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
- * log("Success");
- * printVolumes(volumes.getItems());
- * }
+ *       public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
+ *         log("Success");
+ *         printVolumes(volumes.getItems());
+ *       }
  *
- * public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
- * log(e.getError().getMessage());
- * }
- * });
+ *       public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
+ *         log(e.getError().getMessage());
+ *       }
+ *     });
  * batch.queue(volumesList, Volumes.class, GoogleJsonErrorContainer.class,
- * new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
+ *     new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
  *
- * public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
- * log("Success");
- * printVolumes(volumes.getItems());
- * }
+ *       public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
+ *         log("Success");
+ *         printVolumes(volumes.getItems());
+ *       }
  *
- * public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
- * log(e.getError().getMessage());
- * }
- * });
+ *       public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
+ *         log(e.getError().getMessage());
+ *       }
+ *     });
  * batch.execute();
- * </pre>
+ * }</pre>
  *
  * <p>The content of each individual response is stored in memory. There is thus a potential of
  * encountering an {@link OutOfMemoryError} for very large responses.

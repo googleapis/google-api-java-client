@@ -69,11 +69,11 @@ import java.util.Collections;
  * credential using {@link Builder#setFromTokenResponse(TokenResponse)}. Google credential uses
  * {@link BearerToken#authorizationHeaderAccessMethod()} as the access method. Sample usage:
  *
- * <pre>
+ * <pre>{@code
  * public static GoogleCredential createCredentialWithAccessTokenOnly(TokenResponse tokenResponse) {
- * return new GoogleCredential().setFromTokenResponse(tokenResponse);
+ *   return new GoogleCredential().setFromTokenResponse(tokenResponse);
  * }
- * </pre>
+ * }</pre>
  *
  * <p>If you have a refresh token, it is similar to the case of access token only, but you
  * additionally need to pass the credential the client secrets using {@link
@@ -82,61 +82,55 @@ import java.util.Collections;
  * server URL, and {@link ClientParametersAuthentication} with the client ID and secret as the
  * client authentication. Sample usage:
  *
- * <pre>
- * public static GoogleCredential createCredentialWithRefreshToken(HttpTransport transport,
- * JsonFactory jsonFactory, GoogleClientSecrets clientSecrets, TokenResponse tokenResponse) {
- * return new GoogleCredential.Builder().setTransport(transport)
- * .setJsonFactory(jsonFactory)
- * .setClientSecrets(clientSecrets)
- * .build()
- * .setFromTokenResponse(tokenResponse);
+ * <pre>{@code
+ * public static GoogleCredential createCredentialWithRefreshToken(
+ *     HttpTransport transport, JsonFactory jsonFactory,
+ *     GoogleClientSecrets clientSecrets, TokenResponse tokenResponse) {
+ *  return new GoogleCredential.Builder().setTransport(transport)
+ *                        .setJsonFactory(jsonFactory)
+ *                        .setClientSecrets(clientSecrets)
+ *                        .build()
+ *                        .setFromTokenResponse(tokenResponse);
  * }
- * </pre>
+ * }</pre>
  *
- * <p>The <a href="https://developers.google.com/accounts/docs/OAuth2ServiceAccount">service account
- * flow</a> is used when you want to access data owned by your client application. You download the
- * private key in a {@code .p12} file from the Google APIs Console. Use {@link
+ * <p>The <a href= "https://developers.google.com/accounts/docs/OAuth2ServiceAccount">service
+ * account flow</a> is used when you want to access data owned by your client application. You
+ * download the private key in a {@code .p12} file from the Google APIs Console. Use {@link
  * Builder#setServiceAccountId(String)}, {@link
  * Builder#setServiceAccountPrivateKeyFromP12File(File)}, and {@link
  * Builder#setServiceAccountScopes(Collection)}. Sample usage:
  *
- * <pre>
- * public static GoogleCredential createCredentialForServiceAccount(
- * HttpTransport transport,
- * JsonFactory jsonFactory,
- * String serviceAccountId,
- * Collection&lt;String&gt; serviceAccountScopes,
- * File p12File) throws GeneralSecurityException, IOException {
- * return new GoogleCredential.Builder().setTransport(transport)
- * .setJsonFactory(jsonFactory)
- * .setServiceAccountId(serviceAccountId)
- * .setServiceAccountScopes(serviceAccountScopes)
- * .setServiceAccountPrivateKeyFromP12File(p12File)
- * .build();
+ * <pre>{@code
+ * public static GoogleCredential createCredentialForServiceAccount(HttpTransport transport,
+ *     JsonFactory jsonFactory,
+ *     String serviceAccountId, Collection&lt;String&gt; serviceAccountScopes, File p12File)
+ *     throws GeneralSecurityException, IOException {
+ *   return new GoogleCredential.Builder().setTransport(transport).setJsonFactory(jsonFactory)
+ *       .setServiceAccountId(serviceAccountId).setServiceAccountScopes(serviceAccountScopes)
+ *       .setServiceAccountPrivateKeyFromP12File(p12File).build();
  * }
- * </pre>
+ * }</pre>
  *
  * <p>You can also use the service account flow to impersonate a user in a domain that you own. This
  * is very similar to the service account flow above, but you additionally call {@link
  * Builder#setServiceAccountUser(String)}. Sample usage:
  *
- * <pre>
- * public static GoogleCredential createCredentialForServiceAccountImpersonateUser(
- * HttpTransport transport,
- * JsonFactory jsonFactory,
- * String serviceAccountId,
- * Collection&lt;String&gt; serviceAccountScopes,
- * File p12File,
- * String serviceAccountUser) throws GeneralSecurityException, IOException {
- * return new GoogleCredential.Builder().setTransport(transport)
- * .setJsonFactory(jsonFactory)
- * .setServiceAccountId(serviceAccountId)
- * .setServiceAccountScopes(serviceAccountScopes)
- * .setServiceAccountPrivateKeyFromP12File(p12File)
- * .setServiceAccountUser(serviceAccountUser)
- * .build();
+ * <pre>{@code
+ * public static GoogleCredential createCredentialForServiceAccountImpersonateUser
+ *     (HttpTransport transport, JsonFactory jsonFactory, String serviceAccountId,
+ *      Collection&lt;String&gt; serviceAccountScopes, File p12File,
+ *      String serviceAccountUser) throws GeneralSecurityException, IOException {
+ *   return new GoogleCredential.Builder()
+ *       .setTransport(transport)
+ *       .setJsonFactory(jsonFactory)
+ *       .setServiceAccountId(serviceAccountId)
+ *       .setServiceAccountScopes(serviceAccountScopes)
+ *       .setServiceAccountPrivateKeyFromP12File(p12File)
+ *       .setServiceAccountUser(serviceAccountUser)
+ *       .build();
  * }
- * </pre>
+ * }</pre>
  *
  * <p>If you need to persist the access token in a data store, use {@link DataStoreFactory} and
  * {@link Builder#addRefreshListener(CredentialRefreshListener)} with {@link

@@ -34,18 +34,19 @@ import java.util.Collection;
 
 /**
  * {@link Beta} <br>
- * Google Compute Engine service accounts OAuth 2.0 credential based on <a
- * href="https://developers.google.com/compute/docs/authentication">Authenticating from Google
- * Compute Engine</a>.
+ * Google Compute Engine service accounts OAuth 2.0 credential based on <a href=
+ * "https://developers.google.com/compute/docs/authentication">Authenticating from Google Compute
+ * Engine</a>.
  *
  * <p>Sample usage:
  *
- * <pre>
+ * <pre>{@code
  * public static HttpRequestFactory createRequestFactory(
- * HttpTransport transport, JsonFactory jsonFactory) {
- * return transport.createRequestFactory(new GoogleComputeCredential(transport, jsonFactory));
+ *     HttpTransport transport, JsonFactory jsonFactory) {
+ *   return transport.createRequestFactory(
+ *     new GoogleComputeCredential(transport, jsonFactory));
  * }
- * </pre>
+ * }</pre>
  *
  * <p>Implementation is immutable and thread-safe.
  *

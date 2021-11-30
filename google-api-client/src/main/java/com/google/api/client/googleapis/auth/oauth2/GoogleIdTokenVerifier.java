@@ -39,13 +39,15 @@ import java.util.List;
  * of the {@link GooglePublicKeysManager} since that way the Google public keys are cached. Sample
  * usage:
  *
- * <pre>
+ * <pre>{@code
  * GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
- * .setAudience(Arrays.asList("myClientId"))
- * .build();
+ *        .setAudience(Arrays.asList("myClientId"))
+ *        .build();
+ *
  * ...
+ *
  * if (!verifier.verify(googleIdToken)) {...}
- * </pre>
+ * }</pre>
  *
  * @since 1.7
  */

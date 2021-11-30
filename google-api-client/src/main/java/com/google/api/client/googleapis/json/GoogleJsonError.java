@@ -260,7 +260,7 @@ public class GoogleJsonError extends GenericJson {
   /** Human-readable explanation of the error or {@code null} for none. */
   @Key private String message;
 
-  /** Lists type and parameterViolation details of an Exception */
+  /** Lists type and parameterViolation details of an Exception. */
   @Key private List<Details> details;
 
   /**
