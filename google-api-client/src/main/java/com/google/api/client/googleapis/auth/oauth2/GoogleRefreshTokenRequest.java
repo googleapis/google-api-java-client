@@ -43,7 +43,7 @@ import java.util.Collection;
  *     TokenResponse response = new GoogleRefreshTokenRequest(
  *         new NetHttpTransport(), new GsonFactory(),
  *         "tGzv3JOkF0XG5Qx2TlKWIA", "s6BhdRkqt3",
-           "7Fjfp0ZBr1KtDRbnfVdmIw").execute();
+ * "7Fjfp0ZBr1KtDRbnfVdmIw").execute();
  *     System.out.println("Access token: " + response.getAccessToken());
  *   } catch (TokenResponseException e) {
  *     if (e.getDetails() != null) {
@@ -87,8 +87,6 @@ public class GoogleRefreshTokenRequest extends RefreshTokenRequest {
         new GenericUrl(GoogleOAuthConstants.TOKEN_SERVER_URL),
         refreshToken);
     setClientAuthentication(new ClientParametersAuthentication(clientId, clientSecret));
-
-
   }
 
   @Override
