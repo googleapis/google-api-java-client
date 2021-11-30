@@ -36,11 +36,12 @@ import java.util.Collection;
  *
  * <pre>{@code
  * public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
- *      String url = new GoogleAuthorizationCodeRequestUrl("812741506391.apps.googleusercontent.com",
- *              "https://oauth2-login-demo.appspot.com/code",
- *              Arrays.asList("https://www.googleapis.com/auth/userinfo.email",
- *                      "https://www.googleapis.com/auth/userinfo.profile"))
- *              .setState("/profile").build();
+ *      String url = new GoogleAuthorizationCodeRequestUrl(
+ *           "812741506391.apps.googleusercontent.com",
+ *           "https://oauth2-login-demo.appspot.com/code",
+ *           Arrays.asList("https://www.googleapis.com/auth/userinfo.email",
+ *                   "https://www.googleapis.com/auth/userinfo.profile"))
+ *           .setState("/profile").build();
  *      response.sendRedirect(url);
  * }
  * }</pre>

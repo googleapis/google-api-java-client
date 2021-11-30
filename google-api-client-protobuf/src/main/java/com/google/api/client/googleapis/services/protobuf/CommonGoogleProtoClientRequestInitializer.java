@@ -27,13 +27,15 @@ import java.io.IOException;
  * <p>The simplest usage is to use it to set the key parameter:
  *
  * <pre>{@code
- * public static final GoogleClientRequestInitializer KEY_INITIALIZER = new CommonGoogleProtoClientRequestInitializer(KEY);
+ * public static final GoogleClientRequestInitializer KEY_INITIALIZER =
+ *   new CommonGoogleProtoClientRequestInitializer(KEY);
  * }</pre>
  *
  * <p>There is also a constructor to set both the key and userIp parameters:
  *
  * <pre>{@code
- * public static final GoogleClientRequestInitializer INITIALIZER = new CommonGoogleProtoClientRequestInitializer(KEY, USER_IP);
+ * public static final GoogleClientRequestInitializer INITIALIZER =
+ *   new CommonGoogleProtoClientRequestInitializer(KEY, USER_IP);
  * }</pre>
  *
  * <p>If you want to implement custom logic, extend it like this:
@@ -42,7 +44,8 @@ import java.io.IOException;
  * public static class MyRequestInitializer extends CommonGoogleProtoClientRequestInitializer {
  *
  *  {@literal @}Override
- *  public void initialize(AbstractGoogleProtoClientRequest{@literal <}?{@literal >} request)throws IOException {
+ *  public void initialize(AbstractGoogleProtoClientRequest{@literal <}?{@literal >} request)
+ *      throws IOException {
  *      // custom logic
  *  }
  * }

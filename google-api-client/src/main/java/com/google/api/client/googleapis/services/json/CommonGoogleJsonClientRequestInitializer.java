@@ -63,7 +63,8 @@ import java.io.IOException;
  *   }
  *
  *   {@literal @}Override
- *   public void initializeJsonRequest(AbstractGoogleJsonClientRequest{@literal <}?{@literal >} request) throws IOException {
+ *   public void initializeJsonRequest
+ *       (AbstractGoogleJsonClientRequest{@literal <}?{@literal >} request) throws IOException {
  *     // custom logic
  *   }
  * }

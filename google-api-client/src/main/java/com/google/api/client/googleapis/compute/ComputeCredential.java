@@ -41,8 +41,10 @@ import java.util.Collection;
  * <p>Sample usage:
  *
  * <pre>{@code
- * public static HttpRequestFactory createRequestFactory(HttpTransport transport, JsonFactory jsonFactory) {
- *   return transport.createRequestFactory(new GoogleComputeCredential(transport, jsonFactory));
+ * public static HttpRequestFactory createRequestFactory(
+ *     HttpTransport transport, JsonFactory jsonFactory) {
+ *   return transport.createRequestFactory(
+ *     new GoogleComputeCredential(transport, jsonFactory));
  * }
  * }</pre>
  *

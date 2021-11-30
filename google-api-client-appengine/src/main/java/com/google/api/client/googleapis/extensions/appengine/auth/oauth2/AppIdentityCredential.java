@@ -42,7 +42,8 @@ import java.util.Collections;
  * <p>Sample usage:
  *
  * <pre>{@code
- * public static HttpRequestFactory createRequestFactory(HttpTransport transport, JsonFactory jsonFactory, TokenResponse tokenResponse) {
+ * public static HttpRequestFactory createRequestFactory(HttpTransport transport,
+ *     JsonFactory jsonFactory, TokenResponse tokenResponse) {
  *   return transport.createRequestFactory(
  *   new AppIdentityCredential("https://www.googleapis.com/auth/urlshortener"));
  * }

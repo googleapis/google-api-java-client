@@ -31,12 +31,14 @@ import java.nio.charset.Charset;
  * <p>Implementation should be thread-safe. <b>Example usage:</b>
  *
  * <pre>{@code
- * static class MyNotificationCallback extends JsonNotificationCallback{@literal <}ListResponse{@literal >} {
+ * static class MyNotificationCallback
+ *     extends JsonNotificationCallback{@literal <}ListResponse{@literal >} {
  *
  *   private static final long serialVersionUID = 1L;
  *
  *   {@literal @}Override
- *   protected void onNotification(StoredChannel subscription, Notification notification, ListResponse content) {
+ *   protected void onNotification
+ *       (StoredChannel subscription, Notification notification, ListResponse content) {
  *     switch (notification.getResourceState()) {
  *       case ResourceStates.SYNC:
  *         break;

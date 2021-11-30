@@ -29,12 +29,14 @@ import java.io.IOException;
  * <p>Implementation should be thread-safe. <b>Example usage:</b>
  *
  * <pre>{@code
- * static class MyNotificationCallback extends JsonNotificationCallback{@literal <}ListResponse{@literal >} {
+ * static class MyNotificationCallback
+ *     extends JsonNotificationCallback{@literal <}ListResponse{@literal >} {
  *
  *   private static final long serialVersionUID = 1L;
  *
  *   {@literal @}Override
- *   protected void onNotification(StoredChannel channel, TypedNotification{@literal <}ListResponse{@literal >} notification) {
+ *   protected void onNotification(StoredChannel channel,
+ *       TypedNotification{@literal <}ListResponse{@literal >} notification) {
  *     ListResponse content = notification.getContent();
  *     switch (notification.getResourceState()) {
  *       case ResourceStates.SYNC:

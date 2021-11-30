@@ -230,7 +230,8 @@
  * the PATCH method to the Picasa Web Albums API:
  *
  * <pre>{@code
- * public AlbumEntry executePatchRelativeToOriginal(HttpTransport transport, AlbumEntry original) throws IOException {
+ * public AlbumEntry executePatchRelativeToOriginal
+ *     (HttpTransport transport, AlbumEntry original) throws IOException {
  *   HttpRequest request = transport.buildPatchRequest();
  *   request.setUrl(getEditLink());
  *   request.headers.ifMatch = etag;
@@ -242,7 +243,8 @@
  *   return request.execute().parseAs(AlbumEntry.class);
  * }
  *
- * private static AlbumEntry updateTitle(HttpTransport transport, AlbumEntry album) throws IOException {
+ * private static AlbumEntry updateTitle
+ *     (HttpTransport transport, AlbumEntry album) throws IOException {
  *   AlbumEntry patched = album.clone();
  *   patched.title = "An alternate title";
  *   return patched.executePatchRelativeToOriginal(transport, album);

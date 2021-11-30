@@ -30,7 +30,8 @@ import java.io.IOException;
  * } catch (final GooglePlayServicesAvailabilityIOException availabilityException) {
  *   myActivity.runOnUiThread(new Runnable() {
  *   public void run() {
- *   Dialog dialog = GooglePlayServicesUtil.getErrorDialog(availabilityException.getConnectionStatusCode(),
+ *   Dialog dialog = GooglePlayServicesUtil.getErrorDialog(
+ *      availabilityException.getConnectionStatusCode(),
  *      myActivity, MyActivity.REQUEST_GOOGLE_PLAY_SERVICES);
  *   dialog.show();
  * }

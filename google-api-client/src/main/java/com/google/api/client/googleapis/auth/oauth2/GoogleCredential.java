@@ -83,9 +83,9 @@ import java.util.Collections;
  * client authentication. Sample usage:
  *
  * <pre>{@code
- * public static GoogleCredential createCredentialWithRefreshToken(HttpTransport transport, JsonFactory jsonFactory,
- *                                                              GoogleClientSecrets clientSecrets,
- *                                                              TokenResponse tokenResponse) {
+ * public static GoogleCredential createCredentialWithRefreshToken(
+ *     HttpTransport transport, JsonFactory jsonFactory,
+ *     GoogleClientSecrets clientSecrets, TokenResponse tokenResponse) {
  *  return new GoogleCredential.Builder().setTransport(transport)
  *                        .setJsonFactory(jsonFactory)
  *                        .setClientSecrets(clientSecrets)
@@ -102,7 +102,8 @@ import java.util.Collections;
  * Builder#setServiceAccountScopes(Collection)}. Sample usage:
  *
  * <pre>{@code
- * public static GoogleCredential createCredentialForServiceAccount(HttpTransport transport, JsonFactory jsonFactory,
+ * public static GoogleCredential createCredentialForServiceAccount(HttpTransport transport,
+ *     JsonFactory jsonFactory,
  *     String serviceAccountId, Collection&lt;String&gt; serviceAccountScopes, File p12File)
  *     throws GeneralSecurityException, IOException {
  *   return new GoogleCredential.Builder().setTransport(transport).setJsonFactory(jsonFactory)
@@ -116,12 +117,18 @@ import java.util.Collections;
  * Builder#setServiceAccountUser(String)}. Sample usage:
  *
  * <pre>{@code
- * public static GoogleCredential createCredentialForServiceAccountImpersonateUser(HttpTransport transport,
- *     JsonFactory jsonFactory, String serviceAccountId, Collection&lt;String&gt; serviceAccountScopes, File p12File,
- *     String serviceAccountUser) throws GeneralSecurityException, IOException {
- *   return new GoogleCredential.Builder().setTransport(transport).setJsonFactory(jsonFactory)
- *       .setServiceAccountId(serviceAccountId).setServiceAccountScopes(serviceAccountScopes)
- *       .setServiceAccountPrivateKeyFromP12File(p12File).setServiceAccountUser(serviceAccountUser).build();
+ * public static GoogleCredential createCredentialForServiceAccountImpersonateUser
+ *     (HttpTransport transport, JsonFactory jsonFactory, String serviceAccountId,
+ *      Collection&lt;String&gt; serviceAccountScopes, File p12File,
+ *      String serviceAccountUser) throws GeneralSecurityException, IOException {
+ *   return new GoogleCredential.Builder()
+ *       .setTransport(transport)
+ *       .setJsonFactory(jsonFactory)
+ *       .setServiceAccountId(serviceAccountId)
+ *       .setServiceAccountScopes(serviceAccountScopes)
+ *       .setServiceAccountPrivateKeyFromP12File(p12File)
+ *       .setServiceAccountUser(serviceAccountUser)
+ *       .build();
  * }
  * }</pre>
  *

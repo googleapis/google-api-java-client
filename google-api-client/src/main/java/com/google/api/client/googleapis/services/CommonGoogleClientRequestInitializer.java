@@ -43,7 +43,8 @@ import java.io.IOException;
  * public static class MyRequestInitializer extends CommonGoogleClientRequestInitializer {
  *
  *   {@literal @}Override
- *   public void initialize(AbstractGoogleClientRequest{@literal <}?{@literal >} request) throws IOException {
+ *   public void initialize
+ *       (AbstractGoogleClientRequest{@literal <}?{@literal >} request) throws IOException {
  *     // custom logic
  *   }
  * }
@@ -59,7 +60,8 @@ import java.io.IOException;
  *   }
  *
  *   {@literal @}Override
- *   public void initialize(AbstractGoogleClientRequest{@literal <}?{@literal >} request) throws IOException {
+ *   public void initialize
+ *       (AbstractGoogleClientRequest{@literal <}?{@literal >} request) throws IOException {
  *     super.initialize(request); // must be called to set the key and userIp parameters
  *     // insert some additional logic
  *   }
