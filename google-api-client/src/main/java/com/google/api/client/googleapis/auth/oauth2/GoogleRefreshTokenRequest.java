@@ -27,18 +27,15 @@ import java.io.IOException;
 import java.util.Collection;
 
 /**
- * Google-specific implementation of the OAuth 2.0 request to refresh an access
- * token using a refresh token as specified in
- * <a href="http://tools.ietf.org/html/rfc6749#section-6">Refreshing an Access
- * Token</a>.
+ * Google-specific implementation of the OAuth 2.0 request to refresh an access token using a
+ * refresh token as specified in <a href="http://tools.ietf.org/html/rfc6749#section-6">Refreshing
+ * an Access Token</a>.
  *
- * <p>
- * Use {@link GoogleCredential} to access protected resources from the resource
- * server using the {@link TokenResponse} returned by {@link #execute()}. On
- * error, it will instead throw {@link TokenResponseException}.
+ * <p>Use {@link GoogleCredential} to access protected resources from the resource server using the
+ * {@link TokenResponse} returned by {@link #execute()}. On error, it will instead throw {@link
+ * TokenResponseException}.
  *
- * <p>
- * Sample usage:
+ * <p>Sample usage:
  *
  * <pre>{@code
  * static void refreshAccessToken() throws IOException {
@@ -62,8 +59,7 @@ import java.util.Collection;
  * }
  * }</pre>
  *
- * <p>
- * Implementation is not thread-safe.
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.7
  * @author Yaniv Inbar

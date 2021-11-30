@@ -28,18 +28,16 @@ import java.io.IOException;
 import java.util.Collection;
 
 /**
- * Google-specific implementation of the OAuth 2.0 request for an access token
- * based on an authorization code (as specified in <a href=
- * "https://developers.google.com/identity/protocols/OAuth2WebServer">Using
- * OAuth 2.0 for Web Server Applications</a>).
+ * Google-specific implementation of the OAuth 2.0 request for an access token based on an
+ * authorization code (as specified in <a href=
+ * "https://developers.google.com/identity/protocols/OAuth2WebServer">Using OAuth 2.0 for Web Server
+ * Applications</a>).
  *
- * <p>
- * Use {@link GoogleCredential} to access protected resources from the resource
- * server using the {@link TokenResponse} returned by {@link #execute()}. On
- * error, it will instead throw {@link TokenResponseException}.
+ * <p>Use {@link GoogleCredential} to access protected resources from the resource server using the
+ * {@link TokenResponse} returned by {@link #execute()}. On error, it will instead throw {@link
+ * TokenResponseException}.
  *
- * <p>
- * Sample usage:
+ * <p>Sample usage:
  *
  * <pre>{@code
  * static void requestAccessToken() throws IOException {
@@ -64,8 +62,7 @@ import java.util.Collection;
  * }
  * }</pre>
  *
- * <p>
- * Implementation is not thread-safe.
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.7
  * @author Yaniv Inbar

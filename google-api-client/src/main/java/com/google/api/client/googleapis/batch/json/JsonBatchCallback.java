@@ -23,8 +23,7 @@ import java.io.IOException;
 /**
  * Callback for an individual batch JSON response.
  *
- * <p>
- * Sample use:
+ * <p>Sample use:
  *
  * <pre>{@code
  * batch.queue(volumesList.buildHttpRequest(), Volumes.class, GoogleJsonErrorContainer.class,
@@ -33,7 +32,7 @@ import java.io.IOException;
  *         log("Success");
  *         printVolumes(volumes.getItems());
  *       }
- * 
+ *
  *       public void onFailure(GoogleJsonError e, HttpHeaders responseHeaders) {
  *         log(e.getMessage());
  *       }

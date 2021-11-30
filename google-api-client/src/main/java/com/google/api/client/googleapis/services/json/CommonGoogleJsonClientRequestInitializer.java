@@ -33,7 +33,7 @@ import java.io.IOException;
  * <p>There is also a constructor to set both the key and userIp parameters:
  *
  * <pre>{@code
- * public static final GoogleClientRequestInitializer INITIALIZER = 
+ * public static final GoogleClientRequestInitializer INITIALIZER =
  *       CommonGoogleJsonClientRequestInitializer.newBuilder()
  *              .setKey(KEY)
  *              .setUserIp(USER_IP)

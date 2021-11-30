@@ -21,25 +21,22 @@ import java.io.IOException;
 
 /**
  * {@link Beta} <br>
- * Google protocol buffer client request initializer implementation for setting
- * properties like key and userIp.
+ * Google protocol buffer client request initializer implementation for setting properties like key
+ * and userIp.
  *
- * <p>
- * The simplest usage is to use it to set the key parameter:
+ * <p>The simplest usage is to use it to set the key parameter:
  *
  * <pre>{@code
  * public static final GoogleClientRequestInitializer KEY_INITIALIZER = new CommonGoogleProtoClientRequestInitializer(KEY);
  * }</pre>
  *
- * <p>
- * There is also a constructor to set both the key and userIp parameters:
+ * <p>There is also a constructor to set both the key and userIp parameters:
  *
  * <pre>{@code
  * public static final GoogleClientRequestInitializer INITIALIZER = new CommonGoogleProtoClientRequestInitializer(KEY, USER_IP);
  * }</pre>
  *
- * <p>
- * If you want to implement custom logic, extend it like this:
+ * <p>If you want to implement custom logic, extend it like this:
  *
  * <pre>{@code
  * public static class MyRequestInitializer extends CommonGoogleProtoClientRequestInitializer {
@@ -51,9 +48,7 @@ import java.io.IOException;
  * }
  * }</pre>
  *
- * <p>
- * Finally, to set the key and userIp parameters and insert custom logic, extend
- * it like this:
+ * <p>Finally, to set the key and userIp parameters and insert custom logic, extend it like this:
  *
  * <pre>{@code
  * public static class MyKeyRequestInitializer extends CommonGoogleProtoClientRequestInitializer {
@@ -70,8 +65,7 @@ import java.io.IOException;
  * }
  * }</pre>
  *
- * <p>
- * Subclasses should be thread-safe.
+ * <p>Subclasses should be thread-safe.
  *
  * @since 1.16
  * @author Yaniv Inbar

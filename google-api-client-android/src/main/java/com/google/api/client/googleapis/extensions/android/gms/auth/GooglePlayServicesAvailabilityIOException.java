@@ -20,13 +20,11 @@ import java.io.IOException;
 
 /**
  * {@link Beta} <br>
- * Wraps a {@link GooglePlayServicesAvailabilityException} into an
- * {@link IOException} so it can be caught directly.
+ * Wraps a {@link GooglePlayServicesAvailabilityException} into an {@link IOException} so it can be
+ * caught directly.
  *
- * <p>
- * Use {@link #getConnectionStatusCode()} to display the error dialog.
- * Alternatively, use {@link #getCause()} to get the wrapped
- * {@link GooglePlayServicesAvailabilityException}. Example usage:
+ * <p>Use {@link #getConnectionStatusCode()} to display the error dialog. Alternatively, use {@link
+ * #getCause()} to get the wrapped {@link GooglePlayServicesAvailabilityException}. Example usage:
  *
  * <pre>{@code
  * } catch (final GooglePlayServicesAvailabilityIOException availabilityException) {

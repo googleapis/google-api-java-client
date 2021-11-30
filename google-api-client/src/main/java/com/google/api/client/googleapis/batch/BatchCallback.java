@@ -20,18 +20,17 @@ import java.io.IOException;
 /**
  * Callback for an individual batch response.
  *
- * <p>
- * Sample use:
+ * <p>Sample use:
  *
  * <pre>{@code
  * batch.queue(volumesList.buildHttpRequest(), Volumes.class, GoogleJsonErrorContainer.class,
  *     new BatchCallback&lt;Volumes, GoogleJsonErrorContainer&gt;() {
- * 
+ *
  *       public void onSuccess(Volumes volumes, HttpHeaders responseHeaders) {
  *         log("Success");
  *         printVolumes(volumes.getItems());
  *       }
- * 
+ *
  *       public void onFailure(GoogleJsonErrorContainer e, HttpHeaders responseHeaders) {
  *         log(e.getError().getMessage());
  *       }

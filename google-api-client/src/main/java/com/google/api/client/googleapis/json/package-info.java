@@ -37,19 +37,19 @@
  * Developer's Guide: JSON-C / JavaScript</a>)
  *
  * <pre>{@code
- * "data":{ 
- *  "updated":"2010-01-07T19:58:42.949Z", 
- *                  "totalItems":800, 
- *                  "startIndex":1, 
- *                  "itemsPerPage":1, 
+ * "data":{
+ *  "updated":"2010-01-07T19:58:42.949Z",
+ *                  "totalItems":800,
+ *                  "startIndex":1,
+ *                  "itemsPerPage":1,
  *                  "items":[
- *                          {"id":"hYB0mn5zh2c", 
- *                                  "updated":"2010-01-07T13:26:50.000Z", 
- *                                  "title":"Google Developers Day US - Maps API Introduction", 
- *                                  "description":"Google Maps API Introduction ...", 
+ *                          {"id":"hYB0mn5zh2c",
+ *                                  "updated":"2010-01-07T13:26:50.000Z",
+ *                                  "title":"Google Developers Day US - Maps API Introduction",
+ *                                  "description":"Google Maps API Introduction ...",
  *                                  "tags":[
  *                                          "GDD07","GDD07US","Maps"],
- *                              "player":{ 
+ *                              "player":{
  *                              "default":"http://www.youtube.com/watch?v\u003dhYB0mn5zh2c" },
  *                              ...
  *                          }]}
@@ -129,7 +129,7 @@
  * Now that we have a transport, we can execute a request to the YouTube API and
  * parse the result:
  *
- * <pre>{@code 
+ * <pre>{@code
  * public static VideoFeed list(HttpTransport transport, YouTubeUrl url) throws IOException {
  *   HttpRequest request = transport.buildGetRequest();
  *   request.url = url;
@@ -172,7 +172,7 @@
  * returned byte stream.
  *
  * @since 1.0
- * 
+ *
  * @author Yaniv Inbar
  */
 package com.google.api.client.googleapis.json;

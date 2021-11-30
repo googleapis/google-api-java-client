@@ -181,8 +181,7 @@ public abstract class AbstractGoogleClient {
   /**
    * Create an {@link BatchRequest} object from this Google API client instance.
    *
-   * <p>
-   * Sample usage:
+   * <p>Sample usage:
    *
    * <pre>{@code
    * client.batch()
@@ -200,8 +199,7 @@ public abstract class AbstractGoogleClient {
   /**
    * Create an {@link BatchRequest} object from this Google API client instance.
    *
-   * <p>
-   * Sample usage:
+   * <p>Sample usage:
    *
    * <pre>{@code
    * client.batch(httpRequestInitializer)
@@ -210,9 +208,8 @@ public abstract class AbstractGoogleClient {
    *    .execute();
    * }</pre>
    *
-   * @param httpRequestInitializer The initializer to use when creating the
-   *                               top-level batch HTTP request or {@code null}
-   *                               for none
+   * @param httpRequestInitializer The initializer to use when creating the top-level batch HTTP
+   *     request or {@code null} for none
    * @return newly created Batch request
    */
   public final BatchRequest batch(HttpRequestInitializer httpRequestInitializer) {

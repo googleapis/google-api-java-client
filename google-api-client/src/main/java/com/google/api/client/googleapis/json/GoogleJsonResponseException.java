@@ -27,16 +27,14 @@ import com.google.api.client.util.StringUtils;
 import java.io.IOException;
 
 /**
- * Exception thrown when an error status code is detected in an HTTP response to
- * a Google API that uses the JSON format, using the format specified in
- * <a href=
+ * Exception thrown when an error status code is detected in an HTTP response to a Google API that
+ * uses the JSON format, using the format specified in <a href=
  * "https://developers.google.com/url-shortener/v1/getting_started?csw=1#errors">Error
  * Responses</a>.
  *
- * <p>
- * To execute a request, call {@link #execute(JsonFactory, HttpRequest)}. This
- * will throw a {@link GoogleJsonResponseException} on an error response. To get
- * the structured details, use {@link #getDetails()}.
+ * <p>To execute a request, call {@link #execute(JsonFactory, HttpRequest)}. This will throw a
+ * {@link GoogleJsonResponseException} on an error response. To get the structured details, use
+ * {@link #getDetails()}.
  *
  * <pre>{@code
  * static void executeShowingError(JsonFactory factory, HttpRequest request) throws IOException {
