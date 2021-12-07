@@ -494,7 +494,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.http.version>1.40.1</project.http.version>
-    <project.httpcore.version>4.4.14</project.httpcore.version>
+    <project.httpcore.version>4.4.15</project.httpcore.version>
     <project.httpclient.version>4.5.13</project.httpclient.version>
     <project.oauth.version>1.32.1</project.oauth.version>
     <project.jsr305.version>3.0.2</project.jsr305.version>
