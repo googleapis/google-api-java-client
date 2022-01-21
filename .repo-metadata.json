@@ -1,10 +1,11 @@
 {
-  "name": "google-api-client",
+  "api_shortname": "google-api-client",
   "name_pretty": "Google API Java Client",
   "client_documentation": "https://googleapis.dev/java/google-api-client/latest/",
-  "release_level": "ga",
+  "release_level": "stable",
   "language": "java",
   "repo": "googleapis/google-api-java-client",
   "repo_short": "google-api-java-client",
+  "library_type": "CORE",
   "distribution_name": "com.google.api-client:google-api-client"
 }
