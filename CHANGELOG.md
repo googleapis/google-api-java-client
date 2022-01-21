@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.33.0](https://www.github.com/googleapis/google-api-java-client/compare/v1.32.2...v1.33.0) (2022-01-06)
+
+
+### Features
+
+* next release from main branch is 1.33.0 ([#1897](https://www.github.com/googleapis/google-api-java-client/issues/1897)) ([932a00b](https://www.github.com/googleapis/google-api-java-client/commit/932a00b4cac61cb3c9a4d9a29e6a7b43b67f9187))
+
+
+### Bug Fixes
+
+* **java:** add -ntp flag to native image testing command ([#1299](https://www.github.com/googleapis/google-api-java-client/issues/1299)) ([#1929](https://www.github.com/googleapis/google-api-java-client/issues/1929)) ([ee997f6](https://www.github.com/googleapis/google-api-java-client/commit/ee997f6dd351dd88eb18a230708627e8f2b059d8))
+* **java:** java 17 dependency arguments ([#1266](https://www.github.com/googleapis/google-api-java-client/issues/1266)) ([#1907](https://www.github.com/googleapis/google-api-java-client/issues/1907)) ([0bc4e26](https://www.github.com/googleapis/google-api-java-client/commit/0bc4e2684b105b5fe3ef538092c1042a704ee500))
+* **java:** run Maven in plain console-friendly mode ([#1301](https://www.github.com/googleapis/google-api-java-client/issues/1301)) ([#1939](https://www.github.com/googleapis/google-api-java-client/issues/1939)) ([826d7e1](https://www.github.com/googleapis/google-api-java-client/commit/826d7e1b83548b751d6e8a06af0689fb1c1b8081))
+
+
+### Dependencies
+
+* update dependency com.google.protobuf:protobuf-bom to v3.19.2 ([98b5898](https://www.github.com/googleapis/google-api-java-client/commit/98b5898754ecf8e8aa0d636744fbea1994af5c92))
+* update project.http.version to v1.41.0 ([#1944](https://www.github.com/googleapis/google-api-java-client/issues/1944)) ([98b5898](https://www.github.com/googleapis/google-api-java-client/commit/98b5898754ecf8e8aa0d636744fbea1994af5c92))
+
 ### [1.32.2](https://www.github.com/googleapis/google-api-java-client/compare/v1.32.1...v1.32.2) (2021-10-14)
 
 
