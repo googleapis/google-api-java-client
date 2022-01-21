@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- see http://mojo.codehaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
+
+<differences>
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/api/client/googleapis/auth/clientlogin/**</className>
+  </difference>
+</differences>
