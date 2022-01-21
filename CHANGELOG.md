@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.33.1](https://github.com/googleapis/google-api-java-client/compare/v1.33.0...v1.33.1) (2022-01-21)
+
+
+### Bug Fixes
+
+* library should released as 1.33.1 ([#1966](https://github.com/googleapis/google-api-java-client/issues/1966)) ([44bb1c5](https://github.com/googleapis/google-api-java-client/commit/44bb1c52372bf8de03fe1c05b835f5f04c3a0c85))
+
 ## [1.33.0](https://www.github.com/googleapis/google-api-java-client/compare/v1.32.2...v1.33.0) (2022-01-06)
 
 
