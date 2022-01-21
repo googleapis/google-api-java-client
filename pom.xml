@@ -241,7 +241,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
+          <version>3.9.0</version>
           <configuration>
             <source>1.7</source>
             <target>1.7</target>
@@ -493,7 +493,7 @@
   </build>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>1.41.0</project.http.version>
+    <project.http.version>1.41.1</project.http.version>
     <project.httpcore.version>4.4.15</project.httpcore.version>
     <project.httpclient.version>4.5.13</project.httpclient.version>
     <project.oauth.version>1.32.1</project.oauth.version>
@@ -605,7 +605,7 @@
       </activation>
       <properties>
         <!-- default config values -->
-        <docletName>java-docfx-doclet-1.4.0</docletName>
+        <docletName>java-docfx-doclet-1.5.0</docletName>
         <outputpath>${project.build.directory}/docfx-yml</outputpath>
         <projectname>${project.artifactId}</projectname>
         <excludeclasses></excludeclasses>
