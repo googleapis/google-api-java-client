@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.33.2](https://github.com/googleapis/google-api-java-client/compare/v1.33.1...v1.33.2) (2022-02-08)
+
+
+### Dependencies
+
+* **java:** update actions/github-script action to v5 ([#1339](https://github.com/googleapis/google-api-java-client/issues/1339)) ([#1972](https://github.com/googleapis/google-api-java-client/issues/1972)) ([b1d8c16](https://github.com/googleapis/google-api-java-client/commit/b1d8c167ea05735a08149681c61e30eb5b160368))
+
 ### [1.33.1](https://github.com/googleapis/google-api-java-client/compare/v1.33.0...v1.33.1) (2022-01-21)
 
 
