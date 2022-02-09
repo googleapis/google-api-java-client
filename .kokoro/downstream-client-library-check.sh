@@ -26,7 +26,10 @@ scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 cd ${scriptDir}/..
 
 # Make java core library artifacts available for 'mvn validate' at the bottom
-mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgcloud.download.skip=true -B -V -q
+mvn verify install -B -V -ntp -fae \
+-DskipTests=true \
+-Dmaven.javadoc.skip=true \
+-Dgcloud.download.skip=true
 
 # Read the current version of this java core library in the POM. Example version: '0.116.1-alpha-SNAPSHOT'
 CORE_VERSION_POM=pom.xml
@@ -56,7 +59,10 @@ EOF
 
 # run dependencies script
 cd ..
-mvn -Denforcer.skip=true clean install
+mvn verify install -B -V -ntp -fae \
+-DskipTests=true \
+-Dmaven.javadoc.skip=true \
+-Dgcloud.download.skip=true
 
 SHARED_DEPS_VERSION_POM=pom.xml
 # Namespace (xmlns) prevents xmllint from specifying tag names in XPath
@@ -90,4 +96,6 @@ if [[ $CLIENT_LIBRARY == "bigtable" ]]; then
   popd
 fi
 
-mvn -Denforcer.skip=true clean install
+mvn verify install -B -V -ntp -fae \
+-Dmaven.javadoc.skip=true \
+-Dgcloud.download.skip=true
