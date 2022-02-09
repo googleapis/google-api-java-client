@@ -29,7 +29,8 @@ cd ${scriptDir}/..
 mvn verify install -B -V -ntp -fae \
 -DskipTests=true \
 -Dmaven.javadoc.skip=true \
--Dgcloud.download.skip=true
+-Dgcloud.download.skip=true \
+-Denforcer.skip=true
 
 # Read the current version of this java core library in the POM. Example version: '0.116.1-alpha-SNAPSHOT'
 CORE_VERSION_POM=pom.xml
@@ -62,7 +63,8 @@ cd ..
 mvn verify install -B -V -ntp -fae \
 -DskipTests=true \
 -Dmaven.javadoc.skip=true \
--Dgcloud.download.skip=true
+-Dgcloud.download.skip=true \
+-Denforcer.skip=true
 
 SHARED_DEPS_VERSION_POM=pom.xml
 # Namespace (xmlns) prevents xmllint from specifying tag names in XPath
@@ -98,4 +100,5 @@ fi
 
 mvn verify install -B -V -ntp -fae \
 -Dmaven.javadoc.skip=true \
--Dgcloud.download.skip=true
+-Dgcloud.download.skip=true \
+-Denforcer.skip=true
