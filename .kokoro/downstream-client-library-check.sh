@@ -22,6 +22,17 @@ CORE_LIBRARY_ARTIFACT=$1
 CLIENT_LIBRARY=$2
 ## Get the directory of the build script
 scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
+
+mkdir /tmp/foo && cd /tmp/foo
+wget https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar
+unzip play-services-basement-8.3.0.aar
+mvn install:install-file \
+  -Dfile=classes.jar \
+  -DgroupId=com.google.android.google-play-services \
+  -DartifactId=google-play-services \
+  -Dversion=1 \
+  -Dpackaging=jar
+  
 ## cd to the parent directory, i.e. the root of the git repo
 cd ${scriptDir}/..
 
