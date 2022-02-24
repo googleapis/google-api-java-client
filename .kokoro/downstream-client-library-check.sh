@@ -23,6 +23,7 @@ CLIENT_LIBRARY=$2
 ## Get the directory of the build script
 scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 
+# Building this library locally requires a one time set up of google-play-services-basement
 mkdir /tmp/foo && cd /tmp/foo
 wget https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar
 unzip play-services-basement-8.3.0.aar
