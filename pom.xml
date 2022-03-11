@@ -2,17 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.sonatype.oss</groupId>
-    <artifactId>oss-parent</artifactId>
-    <version>7</version>
-  </parent>
   <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-parent</artifactId>
-  <version>1.31.2-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+  <version>1.33.3-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
   <packaging>pom</packaging>
   <name>Parent for the Google API Client Library for Java</name>
-
+  <description>The Google APIs Client Library for Java is a Java client library
+    for accessing any HTTP-based API on the web</description>
   <url>https://github.com/googleapis/google-api-java-client</url>
 
   <issueManagement>
@@ -21,6 +17,27 @@
   </issueManagement>
 
   <inceptionYear>2010</inceptionYear>
+
+  <developers>
+    <developer>
+      <id>chingor</id>
+      <name>Jeff Ching</name>
+      <email>chingor@google.com</email>
+      <organization>Google</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>neenushaji</id>
+      <name>Neenu Shaji</name>
+      <email>neenushaji@google.com</email>
+      <organization>Google</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+  </developers>
 
   <scm>
     <connection>scm:git:https://github.com/googleapis/google-api-java-client.git</connection>
@@ -78,10 +95,6 @@
       <name>Central Repository</name>
       <url>https://repo.maven.apache.org/maven2</url>
     </pluginRepository>
-    <pluginRepository>
-      <id>protoc-plugin</id>
-      <url>https://dl.bintray.com/sergei-ivanov/maven/</url>
-    </pluginRepository>
   </pluginRepositories>
 
   <dependencyManagement>
@@ -89,7 +102,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.13.1</version>
+        <version>4.13.2</version>
       </dependency>
       <dependency>
         <groupId>com.google.appengine</groupId>
@@ -120,6 +133,16 @@
         <groupId>javax.servlet</groupId>
         <artifactId>servlet-api</artifactId>
         <version>${project.servlet-api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpcore</artifactId>
+        <version>${project.httpcore.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>${project.httpclient.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
@@ -204,11 +227,11 @@
         <plugin>
           <groupId>org.sonatype.plugins</groupId>
           <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>1.6.8</version>
+          <version>1.6.11</version>
           <extensions>true</extensions>
           <configuration>
             <serverId>ossrh</serverId>
-            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+            <nexusUrl>https://google.oss.sonatype.org/</nexusUrl>
             <autoReleaseAfterClose>${deploy.autorelease}</autoReleaseAfterClose>
           </configuration>
         </plugin>
@@ -218,7 +241,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
+          <version>3.10.0</version>
           <configuration>
             <source>1.7</source>
             <target>1.7</target>
@@ -241,7 +264,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.3.2</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>
@@ -254,7 +277,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.2.2</version>
           <executions>
             <execution>
               <goals>
@@ -274,7 +297,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>3.1.2</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -289,22 +312,27 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>animal-sniffer-maven-plugin</artifactId>
-          <version>1.16</version>
+          <version>1.21</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>3.2.2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.9.1</version>
+          <version>3.11.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.1.2</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -312,7 +340,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0-M3</version><executions>
+        <version>3.0.0</version><executions>
         <execution>
           <id>enforce-maven</id>
           <goals>
@@ -448,7 +476,7 @@
       <plugin>
         <groupId>com.coveo</groupId>
         <artifactId>fmt-maven-plugin</artifactId>
-        <version>2.10</version>
+        <version>2.13</version>
         <configuration>
           <style>google</style>
           <verbose>true</verbose>
@@ -457,7 +485,7 @@
           <dependency>
             <groupId>com.google.googlejavaformat</groupId>
             <artifactId>google-java-format</artifactId>
-            <version>1.9</version>
+            <version>1.13.0</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -465,15 +493,17 @@
   </build>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>1.38.0</project.http.version>
-    <project.oauth.version>1.31.4</project.oauth.version>
+    <project.http.version>1.41.4</project.http.version>
+    <project.httpcore.version>4.4.15</project.httpcore.version>
+    <project.httpclient.version>4.5.13</project.httpclient.version>
+    <project.oauth.version>1.33.1</project.oauth.version>
     <project.jsr305.version>3.0.2</project.jsr305.version>
     <project.gson.version>2.8.6</project.gson.version>
-    <project.protobuf-java.version>3.14.0</project.protobuf-java.version>
-    <project.guava.version>30.0-android</project.guava.version>
-    <project.appengine.version>1.9.83</project.appengine.version>
+    <project.protobuf-java.version>3.19.4</project.protobuf-java.version>
+    <project.guava.version>31.1-jre</project.guava.version>
+    <project.appengine.version>2.0.4</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
-    <project.jdo2-api.version>2.3-eb</project.jdo2-api.version>
+    <project.jdo2-api.version>2.3-20090302111651</project.jdo2-api.version>
     <project.datanucleus-core.version>3.2.2</project.datanucleus-core.version>
     <project.datanucleus-api-jdo.version>3.2.1</project.datanucleus-api-jdo.version>
     <project.datanucleus-maven-plugin.version>4.0.3</project.datanucleus-maven-plugin.version>
@@ -495,7 +525,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.6</version>
+            <version>3.0.1</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -544,7 +574,7 @@
               <dependency>
                 <groupId>com.puppycrawl.tools</groupId>
                 <artifactId>checkstyle</artifactId>
-                <version>8.23</version>
+                <version>9.3</version>
               </dependency>
             </dependencies>
             <configuration>
@@ -559,6 +589,55 @@
                 </goals>
               </execution>
             </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <!-- cloud RAD generation -->
+      <id>docFX</id>
+      <activation>
+        <property>
+          <!-- activate with -P docFX -->
+          <name>docFX</name>
+        </property>
+      </activation>
+      <properties>
+        <!-- default config values -->
+        <docletName>java-docfx-doclet-1.5.0</docletName>
+        <outputpath>${project.build.directory}/docfx-yml</outputpath>
+        <projectname>${project.artifactId}</projectname>
+        <excludeclasses></excludeclasses>
+        <excludePackages></excludePackages>
+        <source>7</source>            
+        <sourceFileExclude></sourceFileExclude>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.3.2</version>
+            <configuration>
+              <doclet>com.microsoft.doclet.DocFxDoclet</doclet>
+              <useStandardDocletOptions>false</useStandardDocletOptions>
+               <!-- custom config with -Dproperty=value -->
+              <docletPath>${env.KOKORO_GFILE_DIR}/${docletName}.jar</docletPath>
+              <additionalOptions>
+                -outputpath ${outputpath} 
+                -projectname ${projectname} 
+                -excludeclasses ${excludeclasses}: 
+                -excludepackages ${excludePackages}:
+              </additionalOptions>
+              <doclint>none</doclint>
+              <show>protected</show>
+              <nohelp>true</nohelp>
+              <source>${source}</source>
+              <sourceFileExcludes>
+                <exclude>${sourceFileExclude}</exclude>
+              </sourceFileExcludes>
+            </configuration>
           </plugin>
         </plugins>
       </build>

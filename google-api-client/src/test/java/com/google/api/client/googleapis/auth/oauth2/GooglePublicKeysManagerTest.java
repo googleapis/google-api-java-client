@@ -20,7 +20,7 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.testing.http.FixedClock;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
@@ -68,7 +68,7 @@ public class GooglePublicKeysManagerTest extends TestCase {
 
   public void testBuilder() throws Exception {
     HttpTransport transport = new MockHttpTransport();
-    JsonFactory jsonFactory = new JacksonFactory();
+    JsonFactory jsonFactory = new GsonFactory();
     GooglePublicKeysManager.Builder builder =
         new GooglePublicKeysManager.Builder(transport, jsonFactory);
 
@@ -101,8 +101,7 @@ public class GooglePublicKeysManagerTest extends TestCase {
 
   public void testRefresh() throws Exception {
     GooglePublicKeysManager certs =
-        new GooglePublicKeysManager.Builder(
-                new PublicCertsMockHttpTransport(), new JacksonFactory())
+        new GooglePublicKeysManager.Builder(new PublicCertsMockHttpTransport(), new GsonFactory())
             .build();
     certs.refresh();
     assertEquals(2, certs.getPublicKeys().size());
@@ -112,7 +111,7 @@ public class GooglePublicKeysManagerTest extends TestCase {
     PublicCertsMockHttpTransport transport = new PublicCertsMockHttpTransport();
     transport.useAgeHeader = true;
     GooglePublicKeysManager certs =
-        new GooglePublicKeysManager.Builder(transport, new JacksonFactory())
+        new GooglePublicKeysManager.Builder(transport, new GsonFactory())
             .setClock(new FixedClock(100))
             .build();
 
@@ -123,7 +122,7 @@ public class GooglePublicKeysManagerTest extends TestCase {
 
   public void testGetCacheTimeInSec() throws Exception {
     GooglePublicKeysManager certs =
-        new GooglePublicKeysManager.Builder(new MockHttpTransport(), new JacksonFactory()).build();
+        new GooglePublicKeysManager.Builder(new MockHttpTransport(), new GsonFactory()).build();
     assertEquals(
         12000,
         certs.getCacheTimeInSec(

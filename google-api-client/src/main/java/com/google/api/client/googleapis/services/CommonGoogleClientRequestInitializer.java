@@ -20,53 +20,53 @@ import java.io.IOException;
  *
  * <p>The simplest usage is to use it to set the key parameter:
  *
- * <pre>
+ * <pre>{@code
  * public static final GoogleClientRequestInitializer KEY_INITIALIZER =
- * CommonGoogleClientRequestInitializer.newBuilder()
- * .setKey(KEY)
- * .build();
- * </pre>
+ *        CommonGoogleClientRequestInitializer.newBuilder()
+ *              .setKey(KEY)
+ *              .build();
+ * }</pre>
  *
  * <p>There is also a constructor to set both the key and userIp parameters:
  *
- * <pre>
+ * <pre>{@code
  * public static final GoogleClientRequestInitializer INITIALIZER =
  * CommonGoogleClientRequestInitializer.newBuilder()
  * .setKey(KEY)
  * .setUserIp(USER_IP)
  * .build();
- * </pre>
+ * }</pre>
  *
  * <p>If you want to implement custom logic, extend it like this:
  *
- * <pre>
+ * <pre>{@code
  * public static class MyRequestInitializer extends CommonGoogleClientRequestInitializer {
  *
- * {@literal @}Override
- * public void initialize(AbstractGoogleClientRequest{@literal <}?{@literal >} request)
- * throws IOException {
- * // custom logic
+ *   {@literal @}Override
+ *   public void initialize
+ *       (AbstractGoogleClientRequest{@literal <}?{@literal >} request) throws IOException {
+ *     // custom logic
+ *   }
  * }
- * }
- * </pre>
+ * }</pre>
  *
  * <p>Finally, to set the key and userIp parameters and insert custom logic, extend it like this:
  *
- * <pre>
+ * <pre>{@code
  * public static class MyRequestInitializer2 extends CommonGoogleClientRequestInitializer {
  *
- * public MyRequestInitializer2() {
- * super(KEY, USER_IP);
- * }
+ *   public MyRequestInitializer2() {
+ *     super(KEY, USER_IP);
+ *   }
  *
- * {@literal @}Override
- * public void initialize(AbstractGoogleClientRequest{@literal <}?{@literal >} request)
- * throws IOException {
- * super.initialize(request); // must be called to set the key and userIp parameters
- * // insert some additional logic
+ *   {@literal @}Override
+ *   public void initialize
+ *       (AbstractGoogleClientRequest{@literal <}?{@literal >} request) throws IOException {
+ *     super.initialize(request); // must be called to set the key and userIp parameters
+ *     // insert some additional logic
+ *   }
  * }
- * }
- * </pre>
+ * }</pre>
  *
  * <p>Subclasses should be thread-safe.
  *

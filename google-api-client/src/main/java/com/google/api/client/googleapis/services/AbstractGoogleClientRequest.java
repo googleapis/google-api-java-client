@@ -438,14 +438,14 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * <p>Callers are responsible for disconnecting the HTTP response by calling {@link
    * HttpResponse#disconnect}. Example usage:
    *
-   * <pre>
+   * <pre>{@code
    * HttpResponse response = request.executeUnparsed();
    * try {
-   * // process response..
+   *   // process response..
    * } finally {
-   * response.disconnect();
+   *   response.disconnect();
    * }
-   * </pre>
+   * }</pre>
    *
    * <p>Subclasses may override by calling the super implementation.
    *
@@ -461,14 +461,14 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * <p>Callers are responsible for disconnecting the HTTP response by calling {@link
    * HttpResponse#disconnect}. Example usage:
    *
-   * <pre>
+   * <pre>{@code
    * HttpResponse response = request.executeMedia();
    * try {
-   * // process response..
+   *   // process response..
    * } finally {
-   * response.disconnect();
+   *   response.disconnect();
    * }
-   * </pre>
+   * }</pre>
    *
    * <p>Subclasses may override by calling the super implementation.
    *
@@ -487,10 +487,10 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * be empty and ignored. Calls {@link HttpResponse#ignore()} so there is no need to disconnect the
    * response. Example usage:
    *
-   * <pre>
+   * <pre>{@code
    * HttpResponse response = request.executeUsingHead();
    * // look at response.getHeaders()
-   * </pre>
+   * }</pre>
    *
    * <p>Subclasses may override by calling the super implementation.
    *
@@ -571,14 +571,14 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    *
    * <p>Callers are responsible for closing the input stream after it is processed. Example sample:
    *
-   * <pre>
+   * <pre>{@code
    * InputStream is = request.executeAsInputStream();
    * try {
-   * // Process input stream..
+   *   // Process input stream..
    * } finally {
-   * is.close();
+   *   is.close();
    * }
-   * </pre>
+   * }</pre>
    *
    * <p>Subclasses may override by calling the super implementation.
    *
@@ -594,14 +594,14 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    *
    * <p>Callers are responsible for closing the input stream after it is processed. Example sample:
    *
-   * <pre>
+   * <pre>{@code
    * InputStream is = request.executeMediaAsInputStream();
    * try {
-   * // Process input stream..
+   *   // Process input stream..
    * } finally {
-   * is.close();
+   *   is.close();
    * }
-   * </pre>
+   * }</pre>
    *
    * <p>Subclasses may override by calling the super implementation.
    *

@@ -29,7 +29,7 @@ import java.util.List;
  *
  * <p>Sample usage:
  *
- * <pre>
+ * <pre>{@code
  * static GoogleClientSecrets loadClientSecretsResource(JsonFactory jsonFactory)
  *   throws IOException {
  *     return GoogleClientSecrets.load(
@@ -39,7 +39,7 @@ import java.util.List;
  *       )
  *     );
  * }
- * </pre>
+ * }</pre>
  *
  * @since 1.7
  * @author Yaniv Inbar

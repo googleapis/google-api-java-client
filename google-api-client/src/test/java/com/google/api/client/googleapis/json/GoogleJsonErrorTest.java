@@ -22,21 +22,22 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
+import java.io.InputStream;
 import junit.framework.TestCase;
 
 /**
- * Tests {@link GoogleJsonError}.
+ * Tests {@link com.google.api.client.googleapis.json.GoogleJsonError}.
  *
  * @author Yaniv Inbar
  */
 public class GoogleJsonErrorTest extends TestCase {
 
-  static final JsonFactory FACTORY = new JacksonFactory();
+  static final JsonFactory FACTORY = new GsonFactory();
   static final String ERROR =
       "{"
           + "\"code\":403,"
@@ -51,7 +52,8 @@ public class GoogleJsonErrorTest extends TestCase {
   public void test_json() throws Exception {
     JsonParser parser = FACTORY.createJsonParser(ERROR);
     parser.nextToken();
-    GoogleJsonError e = parser.parse(GoogleJsonError.class);
+    com.google.api.client.googleapis.json.GoogleJsonError e =
+        parser.parse(com.google.api.client.googleapis.json.GoogleJsonError.class);
     assertEquals(ERROR, FACTORY.toString(e));
   }
 
@@ -70,6 +72,10 @@ public class GoogleJsonErrorTest extends TestCase {
               .setStatusCode(HttpStatusCodes.STATUS_CODE_FORBIDDEN);
     }
 
+    ErrorTransport(MockLowLevelHttpResponse mockLowLevelHttpResponse) {
+      response = mockLowLevelHttpResponse;
+    }
+
     @Override
     public LowLevelHttpRequest buildRequest(String name, String url) {
       return new MockLowLevelHttpRequest(url).setResponse(response);
@@ -82,7 +88,85 @@ public class GoogleJsonErrorTest extends TestCase {
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
-    GoogleJsonError errorResponse = GoogleJsonError.parse(FACTORY, response);
+    com.google.api.client.googleapis.json.GoogleJsonError errorResponse =
+        com.google.api.client.googleapis.json.GoogleJsonError.parse(FACTORY, response);
     assertEquals(ERROR, FACTORY.toString(errorResponse));
+  }
+
+  public void testParse_withDetails() throws Exception {
+    String DETAILS_ERROR =
+        "{"
+            + "\"code\":400,"
+            + "\"details\":[{"
+            + "\"@type\":\"type.googleapis.com/google.dataflow.v1beta3.InvalidTemplateParameters\","
+            + "\"parameterViolations\":[{"
+            + "\"description\":\"Parameter didn't match regex '^[0-9a-zA-Z_]+$'\","
+            + "\"parameter\":\"safeBrowsingApiKey\""
+            + "}]},{"
+            + "\"@type\":\"type.googleapis.com/google.rpc.DebugInfo\","
+            + "\"detail\":\"test detail\"}],"
+            + "\"message\":\"The template parameters are invalid.\","
+            + "\"status\":\"INVALID_ARGUMENT\""
+            + "}";
+    InputStream errorContent = GoogleJsonErrorTest.class.getResourceAsStream("error.json");
+    HttpTransport transport =
+        new ErrorTransport(
+            new MockLowLevelHttpResponse()
+                .setContent(errorContent)
+                .setContentType(Json.MEDIA_TYPE)
+                .setStatusCode(HttpStatusCodes.STATUS_CODE_FORBIDDEN));
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    com.google.api.client.googleapis.json.GoogleJsonError errorResponse =
+        com.google.api.client.googleapis.json.GoogleJsonError.parse(FACTORY, response);
+
+    assertEquals(DETAILS_ERROR, FACTORY.toString(errorResponse));
+    assertNotNull(errorResponse.getDetails());
+  }
+
+  public void testParse_withReasonInDetails() throws Exception {
+    String DETAILS_ERROR =
+        "{"
+            + "\"code\":400,"
+            + "\"details\":"
+            + "[{"
+            + "\"@type\":\"type.googleapis.com/google.dataflow.v1beta3.InvalidTemplateParameters\","
+            + "\"parameterViolations\":[{"
+            + "\"description\":\"Parameter didn't match regex '^[0-9a-zA-Z_]+$'\","
+            + "\"parameter\":\"safeBrowsingApiKey\""
+            + "}],"
+            + "\"reason\":\"TEST REASON 1\""
+            + "},{"
+            + "\"@type\":\"type.googleapis.com/google.rpc.DebugInfo\","
+            + "\"detail\":\"test detail\""
+            + "},{"
+            + "\"@type\":\"type.googleapis.com/google.rpc.DebugInfo\","
+            + "\"reason\":\"test reason 2\""
+            + "},{"
+            + "\"@type\":\"type.googleapis.com/google.rpc.DebugInfo\""
+            + "}],"
+            + "\"message\":\"The template parameters are invalid.\","
+            + "\"status\":\"INVALID_ARGUMENT\""
+            + "}";
+    InputStream errorContent =
+        GoogleJsonErrorTest.class.getResourceAsStream("errorWithReasonInDetails.json");
+
+    HttpTransport transport =
+        new ErrorTransport(
+            new MockLowLevelHttpResponse()
+                .setContent(errorContent)
+                .setContentType(Json.MEDIA_TYPE)
+                .setStatusCode(HttpStatusCodes.STATUS_CODE_FORBIDDEN));
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    com.google.api.client.googleapis.json.GoogleJsonError errorResponse =
+        com.google.api.client.googleapis.json.GoogleJsonError.parse(FACTORY, response);
+
+    assertEquals(DETAILS_ERROR, FACTORY.toString(errorResponse));
+    assertNotNull(errorResponse.getDetails().get(2).getReason());
   }
 }

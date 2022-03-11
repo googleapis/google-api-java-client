@@ -29,9 +29,9 @@ import java.util.Collection;
 
 /**
  * Google-specific implementation of the OAuth 2.0 request for an access token based on an
- * authorization code (as specified in <a
- * href="https://developers.google.com/identity/protocols/OAuth2WebServer">Using OAuth 2.0 for Web
- * Server Applications</a>).
+ * authorization code (as specified in <a href=
+ * "https://developers.google.com/identity/protocols/OAuth2WebServer">Using OAuth 2.0 for Web Server
+ * Applications</a>).
  *
  * <p>Use {@link GoogleCredential} to access protected resources from the resource server using the
  * {@link TokenResponse} returned by {@link #execute()}. On error, it will instead throw {@link
@@ -39,30 +39,30 @@ import java.util.Collection;
  *
  * <p>Sample usage:
  *
- * <pre>
+ * <pre>{@code
  * static void requestAccessToken() throws IOException {
- * try {
- * GoogleTokenResponse response =
- * new GoogleAuthorizationCodeTokenRequest(new NetHttpTransport(), new JacksonFactory(),
- * "812741506391.apps.googleusercontent.com", "{client_secret}",
- * "4/P7q7W91a-oMsCeLvIaQm6bTrgtp7", "https://oauth2-login-demo.appspot.com/code")
- * .execute();
- * System.out.println("Access token: " + response.getAccessToken());
- * } catch (TokenResponseException e) {
- * if (e.getDetails() != null) {
- * System.err.println("Error: " + e.getDetails().getError());
- * if (e.getDetails().getErrorDescription() != null) {
- * System.err.println(e.getDetails().getErrorDescription());
+ *   try {
+ *     GoogleTokenResponse response = new GoogleAuthorizationCodeTokenRequest(
+ *         new NetHttpTransport(), new GsonFactory(),
+ *         "812741506391.apps.googleusercontent.com", "{client_secret}",
+ *         "4/P7q7W91a-oMsCeLvIaQm6bTrgtp7", "https://oauth2-login-demo.appspot.com/code")
+ *         .execute();
+ *     System.out.println("Access token: " + response.getAccessToken());
+ *   } catch (TokenResponseException e) {
+ *     if (e.getDetails() != null) {
+ *       System.err.println("Error: " + e.getDetails().getError());
+ *       if (e.getDetails().getErrorDescription() != null) {
+ *         System.err.println(e.getDetails().getErrorDescription());
+ *       }
+ *       if (e.getDetails().getErrorUri() != null) {
+ *         System.err.println(e.getDetails().getErrorUri());
+ *       }
+ *     } else {
+ *       System.err.println(e.getMessage());
+ *     }
+ *   }
  * }
- * if (e.getDetails().getErrorUri() != null) {
- * System.err.println(e.getDetails().getErrorUri());
- * }
- * } else {
- * System.err.println(e.getMessage());
- * }
- * }
- * }
- * </pre>
+ * }</pre>
  *
  * <p>Implementation is not thread-safe.
  *

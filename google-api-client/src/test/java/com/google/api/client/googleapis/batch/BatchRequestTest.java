@@ -11,7 +11,6 @@ import com.google.api.client.googleapis.json.GoogleJsonErrorContainer;
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest;
 import com.google.api.client.http.ByteArrayContent;
-import com.google.api.client.http.ExponentialBackOffPolicy;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpExecuteInterceptor;
@@ -25,7 +24,7 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonObjectParser;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.protobuf.ProtoObjectParser;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
@@ -273,16 +272,6 @@ public class BatchRequestTest extends TestCase {
     }
   }
 
-  @Deprecated
-  private static class MockExponentialBackOffPolicy extends ExponentialBackOffPolicy {
-    public MockExponentialBackOffPolicy() {}
-
-    @Override
-    public long getNextBackOffMillis() {
-      return 0;
-    }
-  }
-
   private static class MockTransport extends MockHttpTransport {
 
     final boolean testServerError;
@@ -527,7 +516,7 @@ public class BatchRequestTest extends TestCase {
     credential = new MockCredential();
 
     ObjectParser parser =
-        testBinary ? new ProtoObjectParser() : new JsonObjectParser(new JacksonFactory());
+        testBinary ? new ProtoObjectParser() : new JsonObjectParser(new GsonFactory());
     BatchRequest batchRequest =
         new BatchRequest(transport, credential).setBatchUrl(new GenericUrl(TEST_BATCH_URL));
     HttpRequest request1 = jsonHttpRequest1.buildHttpRequest();
@@ -629,7 +618,7 @@ public class BatchRequestTest extends TestCase {
         new MockGoogleClientRequest<String>(client, METHOD1, URI_TEMPLATE1, null, String.class);
     MockGoogleClientRequest<String> jsonHttpRequest2 =
         new MockGoogleClientRequest<String>(client, METHOD2, URI_TEMPLATE2, null, String.class);
-    ObjectParser parser = new JsonObjectParser(new JacksonFactory());
+    ObjectParser parser = new JsonObjectParser(new GsonFactory());
     BatchRequest batchRequest =
         new BatchRequest(transport, null).setBatchUrl(new GenericUrl(TEST_BATCH_URL));
     HttpRequest request1 = jsonHttpRequest1.buildHttpRequest();

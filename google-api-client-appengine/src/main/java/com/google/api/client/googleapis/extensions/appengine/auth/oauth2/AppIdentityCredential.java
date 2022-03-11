@@ -41,13 +41,13 @@ import java.util.Collections;
  *
  * <p>Sample usage:
  *
- * <pre>
- * public static HttpRequestFactory createRequestFactory(
- * HttpTransport transport, JsonFactory jsonFactory, TokenResponse tokenResponse) {
- * return transport.createRequestFactory(
- * new AppIdentityCredential("https://www.googleapis.com/auth/urlshortener"));
+ * <pre>{@code
+ * public static HttpRequestFactory createRequestFactory(HttpTransport transport,
+ *     JsonFactory jsonFactory, TokenResponse tokenResponse) {
+ *   return transport.createRequestFactory(
+ *   new AppIdentityCredential("https://www.googleapis.com/auth/urlshortener"));
  * }
- * </pre>
+ * }</pre>
  *
  * <p>Implementation is immutable and thread-safe.
  *

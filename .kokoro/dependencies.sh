@@ -14,6 +14,7 @@
 # limitations under the License.
 
 set -eo pipefail
+shopt -s nullglob
 
 ## Get the directory of the build script
 scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
@@ -27,12 +28,32 @@ source ${scriptDir}/common.sh
 java -version
 echo $JOB_TYPE
 
-export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=128m"
+function determineMavenOpts() {
+  local javaVersion=$(
+    # filter down to the version line, then pull out the version between quotes,
+    # then trim the version number down to its minimal number (removing any
+    # update or suffix number).
+    java -version 2>&1 | grep "version" \
+      | sed -E 's/^.*"(.*?)".*$/\1/g' \
+      | sed -E 's/^(1\.[0-9]\.0).*$/\1/g'
+  )
+
+  if [[ $javaVersion == 17* ]]
+    then
+      # MaxPermSize is no longer supported as of jdk 17
+      echo -n "-Xmx1024m"
+  else
+      echo -n "-Xmx1024m -XX:MaxPermSize=128m"
+  fi
+}
+
+export MAVEN_OPTS=$(determineMavenOpts)
 
 # this should run maven enforcer
 retry_with_backoff 3 10 \
-  mvn install -B -V \
+  mvn install -B -V -ntp \
     -DskipTests=true \
+    -Dmaven.javadoc.skip=true \
     -Dclirr.skip=true
 
 mvn -B dependency:analyze -DfailOnWarning=true
@@ -45,7 +66,7 @@ function completenessCheck() {
   # This is stripped from the output as it is not present in the flattened pom.
   # Only dependencies with 'compile' or 'runtime' scope are included from original dependency list.
   msg "Generating dependency list using original pom..."
-  mvn dependency:list -f pom.xml -DincludeScope=runtime -Dsort=true | grep '\[INFO]    .*:.*:.*:.*:.*' | sed -e s/\\s--\\smodule.*// >.org-list.txt
+  mvn dependency:list -f pom.xml -DincludeScope=runtime -Dsort=true | grep '\[INFO]    .*:.*:.*:.*:.*' | sed -e 's/ --.*//' >.org-list.txt
 
   # Output dep list generated using the flattened pom (only 'compile' and 'runtime' scopes)
   msg "Generating dependency list using flattened pom..."
@@ -69,7 +90,7 @@ function completenessCheck() {
 set +e
 
 error_count=0
-for path in $(find -name ".flattened-pom.xml")
+for path in **/.flattened-pom.xml
 do
   # Check flattened pom in each dir that contains it for completeness
   dir=$(dirname "$path")

@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
  * alternatively call that method instead from your {@link HttpServlet#doPost} with no loss of
  * functionality. <b>Sample web.xml setup:</b>
  *
- * <pre>
+ * <pre>{@code
  * {@literal <}servlet{@literal >}
  * {@literal <}servlet-name{@literal >}AppEngineNotificationServlet{@literal <}/servlet-name{@literal >}
  * {@literal <}servlet-class{@literal >}com.google.api.client.googleapis.extensions.appengine.notifications.AppEngineNotificationServlet{@literal <}/servlet-class{@literal >}
@@ -46,7 +46,7 @@ import javax.servlet.http.HttpServletResponse;
  * {@literal <}servlet-name{@literal >}AppEngineNotificationServlet{@literal <}/servlet-name{@literal >}
  * {@literal <}url-pattern{@literal >}/notifications{@literal <}/url-pattern{@literal >}
  * {@literal <}/servlet-mapping{@literal >}
- * </pre>
+ * }</pre>
  *
  * @author Yaniv Inbar
  * @since 1.16

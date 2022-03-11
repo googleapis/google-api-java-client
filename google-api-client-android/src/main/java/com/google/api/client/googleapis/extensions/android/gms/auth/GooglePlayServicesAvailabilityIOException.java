@@ -26,18 +26,16 @@ import java.io.IOException;
  * <p>Use {@link #getConnectionStatusCode()} to display the error dialog. Alternatively, use {@link
  * #getCause()} to get the wrapped {@link GooglePlayServicesAvailabilityException}. Example usage:
  *
- * <pre>
+ * <pre>{@code
  * } catch (final GooglePlayServicesAvailabilityIOException availabilityException) {
- * myActivity.runOnUiThread(new Runnable() {
- * public void run() {
- * Dialog dialog = GooglePlayServicesUtil.getErrorDialog(
- * availabilityException.getConnectionStatusCode(),
- * myActivity,
- * MyActivity.REQUEST_GOOGLE_PLAY_SERVICES);
- * dialog.show();
+ *   myActivity.runOnUiThread(new Runnable() {
+ *   public void run() {
+ *   Dialog dialog = GooglePlayServicesUtil.getErrorDialog(
+ *      availabilityException.getConnectionStatusCode(),
+ *      myActivity, MyActivity.REQUEST_GOOGLE_PLAY_SERVICES);
+ *   dialog.show();
  * }
- * });
- * </pre>
+ * }</pre>
  *
  * @since 1.12
  * @author Yaniv Inbar

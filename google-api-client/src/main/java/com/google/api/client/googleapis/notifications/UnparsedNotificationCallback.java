@@ -27,26 +27,26 @@ import java.io.Serializable;
  * <p>Should be thread-safe as several notifications might be processed at the same time. <b>Example
  * usage:</b>
  *
- * <pre>
+ * <pre>{@code
  * static class MyNotificationCallback implements UnparsedNotificationCallback {
  *
- * private static final long serialVersionUID = 1L;
+ *   private static final long serialVersionUID = 1L;
  *
- * {@literal @}Override
- * public void onNotification(StoredChannel storedChannel, UnparsedNotification notification) {
- * String contentType = notification.getContentType();
- * InputStream contentStream = notification.getContentStream();
- * switch (notification.getResourceState()) {
- * case ResourceStates.SYNC:
- * break;
- * case ResourceStates.EXISTS:
- * break;
- * case ResourceStates.NOT_EXISTS:
- * break;
+ *   {@literal @}Override
+ *   public void onNotification(StoredChannel storedChannel, UnparsedNotification notification) {
+ *     String contentType = notification.getContentType();
+ *     InputStream contentStream = notification.getContentStream();
+ *     switch (notification.getResourceState()) {
+ *       case ResourceStates.SYNC:
+ *         break;
+ *       case ResourceStates.EXISTS:
+ *         break;
+ *       case ResourceStates.NOT_EXISTS:
+ *         break;
+ *     }
+ *   }
  * }
- * }
- * }
- * </pre>
+ * }</pre>
  *
  * @author Yaniv Inbar
  * @author Matthias Linder (mlinder)

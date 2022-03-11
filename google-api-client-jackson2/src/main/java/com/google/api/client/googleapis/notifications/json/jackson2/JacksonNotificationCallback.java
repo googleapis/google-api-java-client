@@ -17,44 +17,44 @@ package com.google.api.client.googleapis.notifications.json.jackson2;
 import com.google.api.client.googleapis.notifications.TypedNotificationCallback;
 import com.google.api.client.googleapis.notifications.json.JsonNotificationCallback;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.Beta;
 
 /**
  * {@link Beta} <br>
  * A {@link TypedNotificationCallback} which uses an JSON content encoding with {@link
- * JacksonFactory#getDefaultInstance()}.
+ * GsonFactory#getDefaultInstance()}.
  *
  * <p>Must NOT be implemented in form of an anonymous class as this will break serialization.
  *
  * <p>Implementation should be thread-safe. <b>Example usage:</b>
  *
- * <pre>
+ * <pre>{@code
  * static class MyNotificationCallback
- * extends GsonNotificationCallback{@literal <}ListResponse{@literal >} {
+ *     extends JacksonNotificationCallback{@literal <}ListResponse{@literal >} {
  *
- * private static final long serialVersionUID = 1L;
+ *   private static final long serialVersionUID = 1L;
  *
- * {@literal @}Override
- * protected void onNotification(
- * StoredChannel channel, TypedNotification{@literal <}ListResponse{@literal >} notification) {
- * ListResponse content = notification.getContent();
- * switch (notification.getResourceState()) {
- * case ResourceStates.SYNC:
- * break;
- * case ResourceStates.EXISTS:
- * break;
- * case ResourceStates.NOT_EXISTS:
- * break;
- * }
- * }
+ *   {@literal @}Override
+ *   protected void onNotification(StoredChannel channel,
+ *       TypedNotification{@literal <}ListResponse{@literal >} notification) {
+ *     ListResponse content = notification.getContent();
+ *     switch (notification.getResourceState()) {
+ *     case ResourceStates.SYNC:
+ *       break;
+ *     case ResourceStates.EXISTS:
+ *       break;
+ *     case ResourceStates.NOT_EXISTS:
+ *       break;
+ *    }
+ *   }
  *
- * {@literal @}Override
- * protected Class{@literal <}ListResponse{@literal >} getDataClass() throws IOException {
- * return ListResponse.class;
+ *   {@literal @}Override
+ *   protected Class{@literal <}ListResponse{@literal >} getDataClass() throws IOException {
+ *     return ListResponse.class;
+ *   }
  * }
- * }
- * </pre>
+ * }</pre>
  *
  * @param <T> Type of the data contained within a notification
  * @author Yaniv Inbar
@@ -67,6 +67,6 @@ public abstract class JacksonNotificationCallback<T> extends JsonNotificationCal
 
   @Override
   protected JsonFactory getJsonFactory() {
-    return JacksonFactory.getDefaultInstance();
+    return GsonFactory.getDefaultInstance();
   }
 }

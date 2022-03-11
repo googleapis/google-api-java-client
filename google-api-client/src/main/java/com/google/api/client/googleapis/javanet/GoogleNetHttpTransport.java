@@ -44,14 +44,14 @@ public class GoogleNetHttpTransport {
    * as the ability to specify a proxy. To do use, use {@link
    * com.google.api.client.http.javanet.NetHttpTransport.Builder}, for example:
    *
-   * <pre>
+   * <pre>{@code
    * static HttpTransport newProxyTransport() throws GeneralSecurityException, IOException {
    *   NetHttpTransport.Builder builder = new NetHttpTransport.Builder();
    *   builder.trustCertificates(GoogleUtils.getCertificateTrustStore());
    *   builder.setProxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 3128)));
    *   return builder.build();
    * }
-   * </pre>
+   * }</pre>
    */
   public static NetHttpTransport newTrustedTransport()
       throws GeneralSecurityException, IOException {

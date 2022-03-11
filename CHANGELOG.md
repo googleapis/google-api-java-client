@@ -1,5 +1,120 @@
 # Changelog
 
+### [1.33.2](https://github.com/googleapis/google-api-java-client/compare/v1.33.1...v1.33.2) (2022-02-08)
+
+
+### Dependencies
+
+* **java:** update actions/github-script action to v5 ([#1339](https://github.com/googleapis/google-api-java-client/issues/1339)) ([#1972](https://github.com/googleapis/google-api-java-client/issues/1972)) ([b1d8c16](https://github.com/googleapis/google-api-java-client/commit/b1d8c167ea05735a08149681c61e30eb5b160368))
+
+### [1.33.1](https://github.com/googleapis/google-api-java-client/compare/v1.33.0...v1.33.1) (2022-01-21)
+
+
+### Bug Fixes
+
+* library should released as 1.33.1 ([#1966](https://github.com/googleapis/google-api-java-client/issues/1966)) ([44bb1c5](https://github.com/googleapis/google-api-java-client/commit/44bb1c52372bf8de03fe1c05b835f5f04c3a0c85))
+
+## [1.33.0](https://www.github.com/googleapis/google-api-java-client/compare/v1.32.2...v1.33.0) (2022-01-06)
+
+
+### Features
+
+* next release from main branch is 1.33.0 ([#1897](https://www.github.com/googleapis/google-api-java-client/issues/1897)) ([932a00b](https://www.github.com/googleapis/google-api-java-client/commit/932a00b4cac61cb3c9a4d9a29e6a7b43b67f9187))
+
+
+### Bug Fixes
+
+* **java:** add -ntp flag to native image testing command ([#1299](https://www.github.com/googleapis/google-api-java-client/issues/1299)) ([#1929](https://www.github.com/googleapis/google-api-java-client/issues/1929)) ([ee997f6](https://www.github.com/googleapis/google-api-java-client/commit/ee997f6dd351dd88eb18a230708627e8f2b059d8))
+* **java:** java 17 dependency arguments ([#1266](https://www.github.com/googleapis/google-api-java-client/issues/1266)) ([#1907](https://www.github.com/googleapis/google-api-java-client/issues/1907)) ([0bc4e26](https://www.github.com/googleapis/google-api-java-client/commit/0bc4e2684b105b5fe3ef538092c1042a704ee500))
+* **java:** run Maven in plain console-friendly mode ([#1301](https://www.github.com/googleapis/google-api-java-client/issues/1301)) ([#1939](https://www.github.com/googleapis/google-api-java-client/issues/1939)) ([826d7e1](https://www.github.com/googleapis/google-api-java-client/commit/826d7e1b83548b751d6e8a06af0689fb1c1b8081))
+
+
+### Dependencies
+
+* update dependency com.google.protobuf:protobuf-bom to v3.19.2 ([98b5898](https://www.github.com/googleapis/google-api-java-client/commit/98b5898754ecf8e8aa0d636744fbea1994af5c92))
+* update project.http.version to v1.41.0 ([#1944](https://www.github.com/googleapis/google-api-java-client/issues/1944)) ([98b5898](https://www.github.com/googleapis/google-api-java-client/commit/98b5898754ecf8e8aa0d636744fbea1994af5c92))
+
+### [1.32.2](https://www.github.com/googleapis/google-api-java-client/compare/v1.32.1...v1.32.2) (2021-10-14)
+
+
+### Dependencies
+
+* update dependency com.google.guava:guava to v31 ([#1894](https://www.github.com/googleapis/google-api-java-client/issues/1894)) ([aba6059](https://www.github.com/googleapis/google-api-java-client/commit/aba605962518d5c8ee16361b042753c6d27884ba))
+
+### [1.32.1](https://www.github.com/googleapis/google-api-java-client/compare/v1.32.0...v1.32.1) (2021-06-24)
+
+
+### Bug Fixes
+
+* bring comment up to date with code ([#1838](https://www.github.com/googleapis/google-api-java-client/issues/1838)) ([f150c5a](https://www.github.com/googleapis/google-api-java-client/commit/f150c5aa6e2de0c6cbad7461f4b76be8e0027567))
+* Update dependencies.sh to not break on mac ([#1830](https://www.github.com/googleapis/google-api-java-client/issues/1830)) ([97940b3](https://www.github.com/googleapis/google-api-java-client/commit/97940b3fd96e343df3985630398811f3c417afcc))
+
+
+### Dependencies
+
+* don't use sp versions in the regular release ([#1840](https://www.github.com/googleapis/google-api-java-client/issues/1840)) ([94cde71](https://www.github.com/googleapis/google-api-java-client/commit/94cde719e9ad845bcd186595e06279e2b7c19096))
+
+## [1.32.0](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.5...v1.32.0) (2021-06-22)
+
+
+### Features
+
+* add `gcf-owl-bot[bot]` to `ignoreAuthors` ([#1813](https://www.github.com/googleapis/google-api-java-client/issues/1813)) ([56f5b8b](https://www.github.com/googleapis/google-api-java-client/commit/56f5b8be0a60cb1cf0b279743d85ef57d9aa46b6))
+
+
+### Bug Fixes
+
+* add reason field to Details in GoogleJsonErrorObject ([#1831](https://www.github.com/googleapis/google-api-java-client/issues/1831)) ([5e92b4c](https://www.github.com/googleapis/google-api-java-client/commit/5e92b4c22e0d45686a58de58977d20c96593e901))
+
+### [1.31.5](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.4...v1.31.5) (2021-05-10)
+
+
+### Bug Fixes
+
+* release scripts from issuing overlapping phases ([#1769](https://www.github.com/googleapis/google-api-java-client/issues/1769)) ([3174ff9](https://www.github.com/googleapis/google-api-java-client/commit/3174ff9ddf0c7428b90bff766c6b18bf17d1feac))
+* remove deprecated parent pom ([#1785](https://www.github.com/googleapis/google-api-java-client/issues/1785)) ([5da3355](https://www.github.com/googleapis/google-api-java-client/commit/5da335518ff5076ea5dd4f40fd0494330458296c))
+* update GoogleJsonError object to accomodate all fields in Invalid parameter exception ([#1783](https://www.github.com/googleapis/google-api-java-client/issues/1783)) ([94c4570](https://www.github.com/googleapis/google-api-java-client/commit/94c4570e16324b4c654d4ec3f0f940926064d955))
+
+### [1.31.4](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.3...v1.31.4) (2021-04-09)
+
+
+### Bug Fixes
+
+* re-encode public keys from google.jks into p12 format for android ([#1738](https://www.github.com/googleapis/google-api-java-client/issues/1738)) ([83f3702](https://www.github.com/googleapis/google-api-java-client/commit/83f37023ea50a643a76eb6e5230072e5c829a205))
+* wrap BatchRequest InputStream with BufferedInputStream ([#1749](https://www.github.com/googleapis/google-api-java-client/issues/1749)) ([07346d8](https://www.github.com/googleapis/google-api-java-client/commit/07346d8dfa955a40daf01b8fb17fe1d75dc2a998))
+
+
+### Dependencies
+
+* update guava ([#1762](https://www.github.com/googleapis/google-api-java-client/issues/1762)) ([2197258](https://www.github.com/googleapis/google-api-java-client/commit/219725878e9954e724a1832ee615553319771c54))
+* update project.http.version to v1.39.2 ([#1748](https://www.github.com/googleapis/google-api-java-client/issues/1748)) ([5f62a41](https://www.github.com/googleapis/google-api-java-client/commit/5f62a412dcaabe8cb17783b9add6366dde7d96be))
+
+### [1.31.3](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.2...v1.31.3) (2021-03-01)
+
+
+### Dependencies
+
+* update google-http-client to v1.39.0 ([#1731](https://www.github.com/googleapis/google-api-java-client/issues/1731)) ([918fc3b](https://www.github.com/googleapis/google-api-java-client/commit/918fc3bc2eb45d704edad6c02ca811348c6df922))
+
+### [1.31.2](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.1...v1.31.2) (2021-01-14)
+
+
+### Bug Fixes
+
+* remove unused code ([#1664](https://www.github.com/googleapis/google-api-java-client/issues/1664)) ([3e9169f](https://www.github.com/googleapis/google-api-java-client/commit/3e9169f1af87dd947d24440f82fd4e0d7d4e4e5a))
+* use Gson instead of Jackson ([#1661](https://www.github.com/googleapis/google-api-java-client/issues/1661)) ([63ed2ca](https://www.github.com/googleapis/google-api-java-client/commit/63ed2caecc200a407ef40b249bed158f18e2c5ae))
+
+
+### Documentation
+
+* Update the documentation link for GoogleCredential from deprecated version to newer version ([#1652](https://www.github.com/googleapis/google-api-java-client/issues/1652)) ([98db6ca](https://www.github.com/googleapis/google-api-java-client/commit/98db6ca0113396e715894a083227f062269ca93d))
+
+
+### Dependencies
+
+* update Guava to 30.0 ([#1645](https://www.github.com/googleapis/google-api-java-client/issues/1645)) ([9e34f37](https://www.github.com/googleapis/google-api-java-client/commit/9e34f37e2ef667507e03cb2d495b2c945851eb30))
+* update Guava to 30.1 ([#1658](https://www.github.com/googleapis/google-api-java-client/issues/1658)) ([677011e](https://www.github.com/googleapis/google-api-java-client/commit/677011ea4ec40e85d6e219de4e0d8d095b40acd8))
+
 ### [1.31.1](https://www.github.com/googleapis/google-api-java-client/compare/v1.31.0...v1.31.1) (2020-11-16)
 
 

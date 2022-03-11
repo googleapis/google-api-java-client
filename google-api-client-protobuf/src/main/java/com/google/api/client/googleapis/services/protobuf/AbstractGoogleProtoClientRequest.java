@@ -87,19 +87,18 @@ public abstract class AbstractGoogleProtoClientRequest<T> extends AbstractGoogle
    *
    * <p>Example usage:
    *
-   * <pre>
-   *
+   * <pre>{@code
    * request.queue(batchRequest, new BatchCallback{@literal <}SomeResponseType, Void{@literal >}() {
    *
-   * public void onSuccess(SomeResponseType content, HttpHeaders responseHeaders) {
-   * log("Success");
-   * }
+   *   public void onSuccess(SomeResponseType content, HttpHeaders responseHeaders) {
+   *     log("Success");
+   *   }
    *
-   * public void onFailure(Void unused, HttpHeaders responseHeaders) {
-   * log(e.getMessage());
-   * }
+   *   public void onFailure(Void unused, HttpHeaders responseHeaders) {
+   *     log(e.getMessage());
+   *   }
    * });
-   * </pre>
+   * }</pre>
    *
    * @param batchRequest batch request container
    * @param callback batch callback

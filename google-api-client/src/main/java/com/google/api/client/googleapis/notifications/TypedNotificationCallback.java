@@ -30,36 +30,36 @@ import java.nio.charset.Charset;
  *
  * <p>Implementation should be thread-safe. <b>Example usage:</b>
  *
- * <pre>
+ * <pre>{@code
  * static class MyNotificationCallback
- * extends JsonNotificationCallback{@literal <}ListResponse{@literal >} {
+ *     extends JsonNotificationCallback{@literal <}ListResponse{@literal >} {
  *
- * private static final long serialVersionUID = 1L;
+ *   private static final long serialVersionUID = 1L;
  *
- * {@literal @}Override
- * protected void onNotification(
- * StoredChannel subscription, Notification notification, ListResponse content) {
- * switch (notification.getResourceState()) {
- * case ResourceStates.SYNC:
- * break;
- * case ResourceStates.EXISTS:
- * break;
- * case ResourceStates.NOT_EXISTS:
- * break;
- * }
- * }
+ *   {@literal @}Override
+ *   protected void onNotification
+ *       (StoredChannel subscription, Notification notification, ListResponse content) {
+ *     switch (notification.getResourceState()) {
+ *       case ResourceStates.SYNC:
+ *         break;
+ *       case ResourceStates.EXISTS:
+ *         break;
+ *       case ResourceStates.NOT_EXISTS:
+ *         break;
+ *     }
+ *   }
  *
- * {@literal @}Override
- * protected ObjectParser getObjectParser(Notification notification) throws IOException {
- * return new JsonObjectParser(new JacksonFactory());
- * }
+ *    {@literal @}Override
+ *    protected ObjectParser getObjectParser(Notification notification) throws IOException {
+ *      return new JsonObjectParser(new GsonFactory());
+ *    }
  *
- * {@literal @}Override
- * protected Class{@literal <}ListResponse{@literal >} getDataClass() throws IOException {
- * return ListResponse.class;
+ *    {@literal @}Override
+ *    protected Class{@literal <}ListResponse{@literal >} getDataClass() throws IOException {
+ *      return ListResponse.class;
+ *    }
  * }
- * }
- * </pre>
+ * }</pre>
  *
  * @param <T> Java type of the notification content
  * @author Yaniv Inbar
