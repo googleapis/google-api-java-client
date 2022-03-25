@@ -1,5 +1,18 @@
 # Changelog
 
+### [1.33.3](https://github.com/googleapis/google-api-java-client/compare/v1.33.2...v1.33.3) (2022-03-25)
+
+
+### Bug Fixes
+
+* **deps:** update dependency com.google.api-client:google-api-client to v1.33.2 ([#1985](https://github.com/googleapis/google-api-java-client/issues/1985)) ([191850a](https://github.com/googleapis/google-api-java-client/commit/191850a33a562300325ee7809e68fca89feeb5f3))
+* **deps:** update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.4 ([#2010](https://github.com/googleapis/google-api-java-client/issues/2010)) ([b4c64a0](https://github.com/googleapis/google-api-java-client/commit/b4c64a0365ed8656bd116763318e975c036551b7))
+* **deps:** update dependency com.google.cloud:libraries-bom to v24.3.0 ([#1987](https://github.com/googleapis/google-api-java-client/issues/1987)) ([1620e8f](https://github.com/googleapis/google-api-java-client/commit/1620e8f6fe69d1af46afb9838ab16594c6c486b5))
+* **deps:** update dependency com.google.cloud:libraries-bom to v24.4.0 ([#2007](https://github.com/googleapis/google-api-java-client/issues/2007)) ([cba8dd2](https://github.com/googleapis/google-api-java-client/commit/cba8dd246c455c0f857d31f94f465b0d92b01829))
+* **deps:** update dependency com.google.cloud:libraries-bom to v25 ([#2014](https://github.com/googleapis/google-api-java-client/issues/2014)) ([43bd4a1](https://github.com/googleapis/google-api-java-client/commit/43bd4a13aa4d74e99b138491674e690ea4db8eb0))
+* **deps:** update dependency com.google.guava:guava to v31.1-jre ([#2004](https://github.com/googleapis/google-api-java-client/issues/2004)) ([eac0e77](https://github.com/googleapis/google-api-java-client/commit/eac0e77e8ac9ab1b784ff7c7c4c7f2f8c3095797))
+* **deps:** update dependency com.google.oauth-client:google-oauth-client-bom to v1.33.1 ([#1986](https://github.com/googleapis/google-api-java-client/issues/1986)) ([b8376f1](https://github.com/googleapis/google-api-java-client/commit/b8376f15284adab2684e3622af4f3d960bb32387))
+
 ### [1.33.2](https://github.com/googleapis/google-api-java-client/compare/v1.33.1...v1.33.2) (2022-02-08)
 
 
