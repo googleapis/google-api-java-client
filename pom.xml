@@ -493,7 +493,7 @@
   </build>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>1.41.4</project.http.version>
+    <project.http.version>1.41.5</project.http.version>
     <project.httpcore.version>4.4.15</project.httpcore.version>
     <project.httpclient.version>4.5.13</project.httpclient.version>
     <project.oauth.version>1.33.1</project.oauth.version>
