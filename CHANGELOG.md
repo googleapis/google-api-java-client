@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.33.4](https://github.com/googleapis/google-api-java-client/compare/v1.33.3...v1.33.4) (2022-03-28)
+
+
+### Dependencies
+
+* update dependency org.sonatype.plugins:nexus-staging-maven-plugin to v1.6.12 ([#2019](https://github.com/googleapis/google-api-java-client/issues/2019)) ([f1e0909](https://github.com/googleapis/google-api-java-client/commit/f1e09099f2954df68e8d476f142db7c4b7388917))
+
 ### [1.33.3](https://github.com/googleapis/google-api-java-client/compare/v1.33.2...v1.33.3) (2022-03-25)
 
 
