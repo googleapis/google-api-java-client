@@ -27,6 +27,7 @@ import java.io.IOException;
  * @since 1.11
  * @author Yaniv Inbar
  */
+@Deprecated
 public class GooglePromptReceiver extends AbstractPromptReceiver {
 
   @Override
