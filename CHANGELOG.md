@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.34.0](https://github.com/googleapis/google-api-java-client/compare/v1.33.4...v1.34.0) (2022-04-12)
+
+
+### Features
+
+* deprecate OOB auth flow in GooglePromptReceiver ([#2034](https://github.com/googleapis/google-api-java-client/issues/2034)) ([334d8d6](https://github.com/googleapis/google-api-java-client/commit/334d8d68a455e41be137ed27dab50df7915b3992))
+
+
+### Bug Fixes
+
+* **deps:** update dependency com.google.api-client:google-api-client to v1.33.4 ([#2022](https://github.com/googleapis/google-api-java-client/issues/2022)) ([582bde1](https://github.com/googleapis/google-api-java-client/commit/582bde1f48c892b5856d0c51d8e051be6d20321e))
+* **deps:** update dependency com.google.cloud:libraries-bom to v25.1.0 ([#2025](https://github.com/googleapis/google-api-java-client/issues/2025)) ([ba36a44](https://github.com/googleapis/google-api-java-client/commit/ba36a44e27f97edc5a6aa6921b43b753f51af569))
+* **deps:** update dependency com.google.oauth-client:google-oauth-client-bom to v1.33.2 ([#2033](https://github.com/googleapis/google-api-java-client/issues/2033)) ([fed93e3](https://github.com/googleapis/google-api-java-client/commit/fed93e3a3db2396d7a4bf4c565864ce1e39dc3ba))
+
+
+### Dependencies
+
+* revert protobuf to 3.19 ([#2035](https://github.com/googleapis/google-api-java-client/issues/2035)) ([00eabeb](https://github.com/googleapis/google-api-java-client/commit/00eabeb293fc6978a7667fbdc695b81add7d700a))
+
 ### [1.33.4](https://github.com/googleapis/google-api-java-client/compare/v1.33.3...v1.33.4) (2022-03-28)
 
 
