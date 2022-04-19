@@ -184,72 +184,72 @@ public class GoogleJsonError extends GenericJson {
     }
   }
 
-//  public static class Details {
-//    @Key("@type")
-//    private String type;
-//
-//    @Key private String detail;
-//    @Key private String reason;
-//    @Key private List<ParameterViolations> parameterViolations;
-//
-//    public String getType() {
-//      return type;
-//    }
-//
-//    public void setType(String type) {
-//      this.type = type;
-//    }
-//
-//    public String getDetail() {
-//      return detail;
-//    }
-//
-//    public void setDetail(String detail) {
-//      this.detail = detail;
-//    }
-//
-//    public String getReason() {
-//      return reason;
-//    }
-//
-//    public void setReason(String reason) {
-//      this.reason = reason;
-//    }
-//
-//    public List<ParameterViolations> getParameterViolations() {
-//      return parameterViolations;
-//    }
-//
-//    /**
-//     * Sets parameterViolations list as immutable to prevent exposing mutable state.
-//     *
-//     * @param parameterViolations
-//     */
-//    public void setParameterViolations(List<ParameterViolations> parameterViolations) {
-//      this.parameterViolations = ImmutableList.copyOf(parameterViolations);
-//    }
-//  }
-//
-//  public static class ParameterViolations {
-//    @Key private String parameter;
-//    @Key private String description;
-//
-//    public String getDescription() {
-//      return description;
-//    }
-//
-//    public void setDescription(String description) {
-//      this.description = description;
-//    }
-//
-//    public String getParameter() {
-//      return parameter;
-//    }
-//
-//    public void setParameter(String parameter) {
-//      this.parameter = parameter;
-//    }
-//  }
+  public static class Details extends GenericJson{
+    @Key("@type")
+    private String type;
+
+    @Key private String detail;
+    @Key private String reason;
+    @Key private List<ParameterViolations> parameterViolations;
+
+    public String getType() {
+      return type;
+    }
+
+    public void setType(String type) {
+      this.type = type;
+    }
+
+    public String getDetail() {
+      return detail;
+    }
+
+    public void setDetail(String detail) {
+      this.detail = detail;
+    }
+
+    public String getReason() {
+      return reason;
+    }
+
+    public void setReason(String reason) {
+      this.reason = reason;
+    }
+
+    public List<ParameterViolations> getParameterViolations() {
+      return parameterViolations;
+    }
+
+    /**
+     * Sets parameterViolations list as immutable to prevent exposing mutable state.
+     *
+     * @param parameterViolations
+     */
+    public void setParameterViolations(List<ParameterViolations> parameterViolations) {
+      this.parameterViolations = ImmutableList.copyOf(parameterViolations);
+    }
+  }
+
+  public static class ParameterViolations extends GenericJson{
+    @Key private String parameter;
+    @Key private String description;
+
+    public String getDescription() {
+      return description;
+    }
+
+    public void setDescription(String description) {
+      this.description = description;
+    }
+
+    public String getParameter() {
+      return parameter;
+    }
+
+    public void setParameter(String parameter) {
+      this.parameter = parameter;
+    }
+  }
 
   /** List of detailed errors or {@code null} for none. */
   @Key private List<ErrorInfo> errors;
@@ -260,8 +260,8 @@ public class GoogleJsonError extends GenericJson {
   /** Human-readable explanation of the error or {@code null} for none. */
   @Key private String message;
 
-//  /** Lists type and parameterViolation details of an Exception. */
-//  @Key private List<Details> details;
+  /** Lists type and parameterViolation details of an Exception. */
+  @Key private List<Details> details;
 
   /**
    * Returns the list of detailed errors or {@code null} for none.
@@ -318,19 +318,19 @@ public class GoogleJsonError extends GenericJson {
     this.message = message;
   }
 
-//  public List<Details> getDetails() {
-//    return details;
-//  }
-//
-//  /**
-//   * Sets the list of invalid parameter error details as immutable to prevent exposing mutable
-//   * state.
-//   *
-//   * @param details
-//   */
-//  public void setDetails(List<Details> details) {
-//    this.details = ImmutableList.copyOf(details);
-//  }
+  public List<Details> getDetails() {
+    return details;
+  }
+
+  /**
+   * Sets the list of invalid parameter error details as immutable to prevent exposing mutable
+   * state.
+   *
+   * @param details
+   */
+  public void setDetails(List<Details> details) {
+    this.details = ImmutableList.copyOf(details);
+  }
 
   @Override
   public GoogleJsonError set(String fieldName, Object value) {
