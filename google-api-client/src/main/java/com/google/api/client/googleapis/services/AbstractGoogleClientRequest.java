@@ -14,6 +14,8 @@ package com.google.api.client.googleapis.services;
 
 import static com.google.common.base.StandardSystemProperty.OS_NAME;
 import static com.google.common.base.StandardSystemProperty.OS_VERSION;
+import static org.graalvm.nativeimage.ImageInfo.PROPERTY_IMAGE_CODE_KEY;
+import static org.graalvm.nativeimage.ImageInfo.PROPERTY_IMAGE_CODE_VALUE_RUNTIME;
 
 import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.googleapis.MethodOverride;
@@ -167,8 +169,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     public String toString() {
       // When running the application as a native image, append `-graalvm` to the
       // version.
-      String imageCode = System.getProperty("org.graalvm.nativeimage.imagecode");
-      if (imageCode != null && imageCode.equals("runtime")){
+      String imageCode = System.getProperty(PROPERTY_IMAGE_CODE_KEY);
+      if (imageCode != null && imageCode.equals(PROPERTY_IMAGE_CODE_VALUE_RUNTIME)){
         String[] tokens = versionString.split(" ");
         if (tokens.length > 0 && tokens[0].startsWith("gl-java")) {
           tokens[0] += "-graalvm";
