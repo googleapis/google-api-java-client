@@ -170,7 +170,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       // When running the application as a native image, append `-graalvm` to the
       // version.
       String imageCode = System.getProperty(PROPERTY_IMAGE_CODE_KEY);
-      if (imageCode != null && imageCode.equals(PROPERTY_IMAGE_CODE_VALUE_RUNTIME)){
+      if (imageCode != null && imageCode.equals(PROPERTY_IMAGE_CODE_VALUE_RUNTIME)) {
         String[] tokens = versionString.split(" ");
         if (tokens.length > 0 && tokens[0].startsWith("gl-java")) {
           tokens[0] += "-graalvm";
