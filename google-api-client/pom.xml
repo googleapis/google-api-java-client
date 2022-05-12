@@ -118,11 +118,6 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>org.graalvm.sdk</groupId>
-      <artifactId>graal-sdk</artifactId>
-      <version>22.1.0</version>
-    </dependency>
-    <dependency>
       <groupId>com.google.oauth-client</groupId>
       <artifactId>google-oauth-client</artifactId>
     </dependency>
