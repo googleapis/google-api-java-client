@@ -6,4 +6,32 @@
     <differenceType>8001</differenceType>
     <className>com/google/api/client/googleapis/auth/clientlogin/**</className>
   </difference>
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/api/client/googleapis/apache/GoogleApacheHttpTransport</className>
+  </difference>
+  <difference>
+    <differenceType>7006</differenceType>
+    <className> com/google/api/client/googleapis/extensions/android/gms/auth/GooglePlayServicesAvailabilityIOException</className>
+    <method>com.google.android.gms.auth.GoogleAuthException getCause()</method>
+    <to>java.lang.Throwable</to>
+  </difference>
+  <difference>
+    <differenceType>7006</differenceType>
+    <className> com/google/api/client/googleapis/extensions/android/gms/auth/GooglePlayServicesAvailabilityIOException</className>
+    <method>java.lang.Throwable getCause()</method>
+    <to>com.google.android.gms.auth.GoogleAuthException</to>
+  </difference>
+  <difference>
+    <differenceType>7006</differenceType>
+    <className>com/google/api/client/googleapis/xml/atom/AtomPatchContent</className>
+    <method>com.google.api.client.http.xml.AbstractXmlHttpContent setMediaType(com.google.api.client.http.HttpMediaType)</method>
+    <to>com.google.api.client.http.AbstractHttpContent</to>
+  </difference>
+  <difference>
+    <differenceType>7006</differenceType>
+    <className>com/google/api/client/googleapis/xml/atom/AtomPatchContent</className>
+    <method>com.google.api.client.http.AbstractHttpContent setMediaType(com.google.api.client.http.HttpMediaType)</method>
+    <to>com.google.api.client.http.xml.AbstractXmlHttpContent</to>
+  </difference>
 </differences>
