@@ -161,10 +161,11 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
    * @return {@code true} if verified successfully or {@code false} if failed
    */
   public boolean verify(GoogleIdToken googleIdToken) throws GeneralSecurityException, IOException {
-    // check the payload
-    if (!super.verify(googleIdToken)) {
+    // check the payload only
+    if (!super.verifyPayload(googleIdToken)) {
       return false;
     }
+
     // verify signature, try all public keys in turn.
     for (PublicKey publicKey : publicKeys.getPublicKeys()) {
       if (googleIdToken.verifySignature(publicKey)) {
