@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.35.0](https://github.com/googleapis/google-api-java-client/compare/v1.34.0...v1.35.0) (2022-06-02)
+
+
+### Features
+
+* add build scripts for native image testing in Java 17 ([#1440](https://github.com/googleapis/google-api-java-client/issues/1440)) ([#2075](https://github.com/googleapis/google-api-java-client/issues/2075)) ([2b1558d](https://github.com/googleapis/google-api-java-client/commit/2b1558d07d1f79939def761911d1fbdb6fb31257))
+* next release from main branch is 1.35.0 ([#2042](https://github.com/googleapis/google-api-java-client/issues/2042)) ([9005d5c](https://github.com/googleapis/google-api-java-client/commit/9005d5ca7df256342d0b6b94dfa92efc57ddeffa))
+
+
+### Bug Fixes
+
+* **deps:** update dependency com.google.api-client:google-api-client to v1.34.0 ([#2038](https://github.com/googleapis/google-api-java-client/issues/2038)) ([afea56f](https://github.com/googleapis/google-api-java-client/commit/afea56f5891e0e6e90369c04f99d64d2648edde6))
+* **deps:** update dependency com.google.api-client:google-api-client to v1.34.1 ([#2058](https://github.com/googleapis/google-api-java-client/issues/2058)) ([d1ddb69](https://github.com/googleapis/google-api-java-client/commit/d1ddb695b3ce4abc40f6af78845074f3d9e03e73))
+* **deps:** update dependency com.google.api-client:google-api-client-android to v1.34.1 ([#2059](https://github.com/googleapis/google-api-java-client/issues/2059)) ([54a9a0c](https://github.com/googleapis/google-api-java-client/commit/54a9a0c169a6a996f0ec6cfa338866e0ba3e5b57))
+* **deps:** update dependency com.google.api-client:google-api-client-appengine to v1.34.1 ([#2061](https://github.com/googleapis/google-api-java-client/issues/2061)) ([872ad59](https://github.com/googleapis/google-api-java-client/commit/872ad59ae77540bbcf27dc6966a722b68fd67a5c))
+* **deps:** update dependency com.google.api-client:google-api-client-assembly to v1.34.1 ([#2062](https://github.com/googleapis/google-api-java-client/issues/2062)) ([1a1d1b3](https://github.com/googleapis/google-api-java-client/commit/1a1d1b39f8f97bd1f9028c95a509e2205f9ecf53))
+* **deps:** update dependency com.google.api-client:google-api-client-gson to v1.34.1 ([#2064](https://github.com/googleapis/google-api-java-client/issues/2064)) ([3d1a03a](https://github.com/googleapis/google-api-java-client/commit/3d1a03a4702c09d1a880276900fcd02a9f933277))
+* **deps:** update dependency com.google.api-client:google-api-client-jackson2 to v1.34.1 ([#2065](https://github.com/googleapis/google-api-java-client/issues/2065)) ([3502186](https://github.com/googleapis/google-api-java-client/commit/350218698e07044c903e77ee2a326d21b48278ba))
+* **deps:** update dependency com.google.api-client:google-api-client-java6 to v1.34.1 ([#2066](https://github.com/googleapis/google-api-java-client/issues/2066)) ([705e865](https://github.com/googleapis/google-api-java-client/commit/705e865f05cae7e623eaba24c563512dc2cc05bc))
+* **deps:** update dependency com.google.api-client:google-api-client-protobuf to v1.34.1 ([#2068](https://github.com/googleapis/google-api-java-client/issues/2068)) ([ecedb5b](https://github.com/googleapis/google-api-java-client/commit/ecedb5b336d84a84b79d131848d438f9a31d36d0))
+* **deps:** update dependency com.google.api-client:google-api-client-servlet to v1.34.1 ([#2070](https://github.com/googleapis/google-api-java-client/issues/2070)) ([15540fe](https://github.com/googleapis/google-api-java-client/commit/15540fe7905fa19ab5e9ee104e97f7cad76e518a))
+* **deps:** update dependency com.google.api-client:google-api-client-xml to v1.34.1 ([#2071](https://github.com/googleapis/google-api-java-client/issues/2071)) ([050a269](https://github.com/googleapis/google-api-java-client/commit/050a2691a90dc5960c929661d3c31951d893e9ab))
+* **deps:** update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.5 ([#2072](https://github.com/googleapis/google-api-java-client/issues/2072)) ([526e103](https://github.com/googleapis/google-api-java-client/commit/526e1037fb370a9bae7fa9670ec62b72792b060d))
+* **deps:** update dependency com.google.cloud:libraries-bom to v25.2.0 ([#2050](https://github.com/googleapis/google-api-java-client/issues/2050)) ([6c48f89](https://github.com/googleapis/google-api-java-client/commit/6c48f8954ed6ac161512e01defa358e7c7ea0627))
+* **deps:** update dependency com.google.cloud:libraries-bom to v25.3.0 ([#2073](https://github.com/googleapis/google-api-java-client/issues/2073)) ([11dc2bb](https://github.com/googleapis/google-api-java-client/commit/11dc2bb17c8875989c80edb6b42a39b8fd87278d))
+* **deps:** update dependency com.google.oauth-client:google-oauth-client-bom to v1.33.3 ([#2041](https://github.com/googleapis/google-api-java-client/issues/2041)) ([be65181](https://github.com/googleapis/google-api-java-client/commit/be65181a67c87bdd1c7bcea3c99d25b4256fde4b))
+* **deps:** update dependency com.google.oauth-client:google-oauth-client-bom to v1.34.0 ([#2081](https://github.com/googleapis/google-api-java-client/issues/2081)) ([8684064](https://github.com/googleapis/google-api-java-client/commit/86840649d97a4236740c5d3f07dfb8034324c03a))
+* use verifyPayload instead of verify to disable duplicate signature check ([#2080](https://github.com/googleapis/google-api-java-client/issues/2080)) ([003ca44](https://github.com/googleapis/google-api-java-client/commit/003ca44b4d41a73053eef2c46ba3ec2c8f135e95))
+
 ## [1.34.0](https://github.com/googleapis/google-api-java-client/compare/v1.33.4...v1.34.0) (2022-04-12)
 
 
