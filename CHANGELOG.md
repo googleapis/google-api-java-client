@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.35.2](https://github.com/googleapis/google-api-java-client/compare/v1.35.1...v1.35.2) (2022-06-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency com.google.api-client:google-api-client to v1.35.1 ([#2091](https://github.com/googleapis/google-api-java-client/issues/2091)) ([a3b4780](https://github.com/googleapis/google-api-java-client/commit/a3b4780916b5acab86c43db8793a2d10c3e2c4fb))
+
 ## [1.35.1](https://github.com/googleapis/google-api-java-client/compare/v1.35.0...v1.35.1) (2022-06-10)
 
 
