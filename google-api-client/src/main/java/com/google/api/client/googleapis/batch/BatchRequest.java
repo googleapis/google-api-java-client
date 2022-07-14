@@ -228,7 +228,7 @@ public final class BatchRequest {
    */
   public void execute() throws IOException {
     boolean retryAllowed;
-    Preconditions.checkState(!requestInfos.isEmpty());
+    Preconditions.checkState(!requestInfos.isEmpty(), "Batch is empty");
 
     // Log a warning if the user is using the global batch endpoint. In the future, we can turn this
     // into a preconditions check.
