@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.0.0](https://github.com/googleapis/google-api-java-client/compare/v1.35.2...v2.0.0) (2022-07-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove deprecated class (#1666)
+
+### Bug Fixes
+
+* **deps:** update dependency com.google.api-client:google-api-client to v1.35.2 ([#2101](https://github.com/googleapis/google-api-java-client/issues/2101)) ([c6aa5b7](https://github.com/googleapis/google-api-java-client/commit/c6aa5b76153de47ae29b4ce3fa21c275c76de615))
+* **deps:** update dependency com.google.cloud:libraries-bom to v26 ([#2103](https://github.com/googleapis/google-api-java-client/issues/2103)) ([a0323fb](https://github.com/googleapis/google-api-java-client/commit/a0323fbb2f3d9fd98164d4c2408376a61b3e94ef))
+* remove deprecated class ([#1666](https://github.com/googleapis/google-api-java-client/issues/1666)) ([88fd7f3](https://github.com/googleapis/google-api-java-client/commit/88fd7f3ff1530e107136ea7158b0b017ca072ce1))
+
 ## [1.35.2](https://github.com/googleapis/google-api-java-client/compare/v1.35.1...v1.35.2) (2022-06-30)
 
 
