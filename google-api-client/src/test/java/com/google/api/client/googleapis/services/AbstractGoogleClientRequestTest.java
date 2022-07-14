@@ -261,6 +261,14 @@ public class AbstractGoogleClientRequestTest extends TestCase {
     assertTrue("Api version should contain the os version", version.matches(".* my-os/1.2.3"));
   }
 
+  public void testSetsApiClientHeader_NativeImage() throws IOException {
+    System.setProperty("org.graalvm.nativeimage.imagecode", "runtime");
+    System.setProperty("java.version", "11.0.0");
+    String version = new ApiClientVersion().toString();
+    assertTrue(
+        "Api version should contain -graalvm suffix", version.matches("gl-java/11.0.0-graalvm.*"));
+  }
+
   public void testSetsApiClientHeaderWithoutOsVersion() {
     System.setProperty("os.name", "My OS");
     System.clearProperty("os.version");

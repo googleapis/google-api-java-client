@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.google.api-client</groupId>
     <artifactId>google-api-client-parent</artifactId>
-    <version>1.33.3-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+    <version>1.35.3-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-api-client-servlet</artifactId>
@@ -40,7 +40,7 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <version>5.1.4</version>
+        <version>5.1.6</version>
         <executions>
           <execution>
             <id>bundle-manifest</id>

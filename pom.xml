@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-parent</artifactId>
-  <version>1.33.3-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+  <version>1.35.3-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
   <packaging>pom</packaging>
   <name>Parent for the Google API Client Library for Java</name>
   <description>The Google APIs Client Library for Java is a Java client library
@@ -227,7 +227,7 @@
         <plugin>
           <groupId>org.sonatype.plugins</groupId>
           <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>1.6.11</version>
+          <version>1.6.13</version>
           <extensions>true</extensions>
           <configuration>
             <serverId>ossrh</serverId>
@@ -237,11 +237,11 @@
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.4.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.10.0</version>
+          <version>3.10.1</version>
           <configuration>
             <source>1.7</source>
             <target>1.7</target>
@@ -264,7 +264,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.3.2</version>
+          <version>3.4.0</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>
@@ -288,7 +288,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.0.0-M5</version>
+          <version>3.0.0-M7</version>
           <configuration>
             <argLine>-Xmx1024m</argLine>
             <reportNameSuffix>sponge_log</reportNameSuffix>
@@ -317,12 +317,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.2.2</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.11.0</version>
+          <version>3.12.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -340,7 +340,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0</version><executions>
+        <version>3.1.0</version><executions>
         <execution>
           <id>enforce-maven</id>
           <goals>
@@ -493,15 +493,15 @@
   </build>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>1.41.4</project.http.version>
+    <project.http.version>1.42.1</project.http.version>
     <project.httpcore.version>4.4.15</project.httpcore.version>
     <project.httpclient.version>4.5.13</project.httpclient.version>
-    <project.oauth.version>1.33.1</project.oauth.version>
+    <project.oauth.version>1.34.1</project.oauth.version>
     <project.jsr305.version>3.0.2</project.jsr305.version>
     <project.gson.version>2.8.6</project.gson.version>
-    <project.protobuf-java.version>3.19.4</project.protobuf-java.version>
+    <project.protobuf-java.version>3.21.2</project.protobuf-java.version>
     <project.guava.version>31.1-jre</project.guava.version>
-    <project.appengine.version>2.0.4</project.appengine.version>
+    <project.appengine.version>2.0.5</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.jdo2-api.version>2.3-20090302111651</project.jdo2-api.version>
     <project.datanucleus-core.version>3.2.2</project.datanucleus-core.version>
@@ -618,7 +618,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.3.2</version>
+            <version>3.4.0</version>
             <configuration>
               <doclet>com.microsoft.doclet.DocFxDoclet</doclet>
               <useStandardDocletOptions>false</useStandardDocletOptions>
