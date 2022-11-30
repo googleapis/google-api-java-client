@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-parent</artifactId>
-  <version>2.1.0</version><!-- {x-version-update:google-api-client:current} -->
+  <version>2.1.1-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
   <packaging>pom</packaging>
   <name>Parent for the Google API Client Library for Java</name>
   <description>The Google APIs Client Library for Java is a Java client library
