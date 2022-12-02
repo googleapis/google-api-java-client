@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/googleapis/google-api-java-client/compare/v2.1.0...v2.1.1) (2022-12-02)
+
+
+### Bug Fixes
+
+* Pinning commons-codec dependency in google-api-client ([#2201](https://github.com/googleapis/google-api-java-client/issues/2201)) ([27e94c0](https://github.com/googleapis/google-api-java-client/commit/27e94c05dcc7d744b6e0227c37d9920a698190b9))
+
 ## [2.1.0](https://github.com/googleapis/google-api-java-client/compare/v2.0.1...v2.1.0) (2022-11-29)
 
 
