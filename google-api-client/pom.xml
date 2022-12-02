@@ -104,6 +104,13 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <usedDependencies>commons-codec:commons-codec</usedDependencies>
+        </configuration>
+      </plugin>
     </plugins>
 
     <resources>
@@ -117,6 +124,13 @@
     </resources>
   </build>
   <dependencies>
+    <dependency>
+      <!-- google-api-client itself does not touch commons-codec. Its
+        httpclient's dependency. For security advisories in commons-codec, it
+        declares a newer commons-codec than the one declared by httpclient. -->
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+    </dependency>
     <dependency>
       <groupId>com.google.oauth-client</groupId>
       <artifactId>google-oauth-client</artifactId>
