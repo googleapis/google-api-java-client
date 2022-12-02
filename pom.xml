@@ -338,6 +338,22 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
           <version>3.3.0</version>
+          <executions>
+            <execution>
+              <id>analyze</id>
+              <goals>
+                <goal>analyze</goal>
+              </goals>
+              <configuration>
+                <failOnWarning>true</failOnWarning>
+
+                <!-- ignore commons:codec for "used but undeclared", "declared but unused", and "non-test scoped" -->
+                <ignoredDependencies>
+                  <ignoredDependency>commons-codec:commons-codec</ignoredDependency>
+                </ignoredDependencies>
+              </configuration>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
