@@ -125,6 +125,9 @@
   </build>
   <dependencies>
     <dependency>
+      <!-- google-api-client itself does not touch commons-codec. Its
+        httpclient's dependency. For security advisories in commons-codec, it
+        declares a newer commons-codec than the one declared by httpclient. -->
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
     </dependency>
