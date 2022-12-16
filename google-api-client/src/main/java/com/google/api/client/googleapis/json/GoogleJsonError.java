@@ -184,7 +184,7 @@ public class GoogleJsonError extends GenericJson {
     }
   }
 
-  public static class Details extends GenericJson{
+  public static class Details extends GenericJson {
     @Key("@type")
     private String type;
 
