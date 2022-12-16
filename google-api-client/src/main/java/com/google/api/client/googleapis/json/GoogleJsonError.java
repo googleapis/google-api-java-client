@@ -184,13 +184,16 @@ public class GoogleJsonError extends GenericJson {
     }
   }
 
-  public static class Details extends GenericJson{
+  public static class Details {
     @Key("@type")
     private String type;
 
     @Key private String detail;
     @Key private String reason;
     @Key private List<ParameterViolations> parameterViolations;
+    //Add each known types, not scalable
+    @Key private List<FieldViolations> fieldViolations;
+    @Key private List<ModificationErrors> modificationErrors;
 
     public String getType() {
       return type;
@@ -340,5 +343,38 @@ public class GoogleJsonError extends GenericJson {
   @Override
   public GoogleJsonError clone() {
     return (GoogleJsonError) super.clone();
+  }
+
+  private static class FieldViolations {
+    @Key private String field;
+    @Key private String description;
+
+    public String getField() {
+      return field;
+    }
+
+    public void setField(String field) {
+      this.field = field;
+    }
+
+    public String getDescription() {
+      return description;
+    }
+
+    public void setDescription(String description) {
+      this.description = description;
+    }
+  }
+
+  private static class ModificationErrors {
+    @Key private String policySchema;
+
+    public String getPolicySchema() {
+      return policySchema;
+    }
+
+    public void setPolicySchema(String policySchema) {
+      this.policySchema = policySchema;
+    }
   }
 }
