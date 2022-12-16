@@ -230,7 +230,7 @@ public class GoogleJsonError extends GenericJson {
     }
   }
 
-  public static class ParameterViolations extends GenericJson{
+  public static class ParameterViolations {
     @Key private String parameter;
     @Key private String description;
 
