@@ -102,9 +102,7 @@ public class CommonGoogleClientRequestInitializer implements GoogleClientRequest
   /** Project for quota and billing purposes of {@code null} to leave it unchanged. */
   private final String userProject;
 
-  /**
-   * @deprecated Please use the builder interface
-   */
+  /** @deprecated Please use the builder interface */
   @Deprecated
   public CommonGoogleClientRequestInitializer() {
     this(newBuilder());

@@ -41,9 +41,7 @@ public class UserRecoverableAuthIOException extends GoogleAuthIOException {
 
   private static final long serialVersionUID = 1L;
 
-  /**
-   * @since 1.21.0
-   */
+  /** @since 1.21.0 */
   public UserRecoverableAuthIOException(UserRecoverableAuthException wrapped) {
     super(wrapped);
   }
