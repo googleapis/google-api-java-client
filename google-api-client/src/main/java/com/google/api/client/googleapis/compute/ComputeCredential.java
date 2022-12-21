@@ -69,7 +69,9 @@ public class ComputeCredential extends Credential {
     this(new Builder(transport, jsonFactory));
   }
 
-  /** @param builder builder */
+  /**
+   * @param builder builder
+   */
   protected ComputeCredential(Builder builder) {
     super(builder);
   }

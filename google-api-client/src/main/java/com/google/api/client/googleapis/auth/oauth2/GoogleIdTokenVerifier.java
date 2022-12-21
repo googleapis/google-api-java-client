@@ -301,7 +301,9 @@ public class GoogleIdTokenVerifier extends IdTokenVerifier {
       return (Builder) super.setIssuer(issuer);
     }
 
-    /** @since 1.21.0 */
+    /**
+     * @since 1.21.0
+     */
     @Override
     public Builder setIssuers(Collection<String> issuers) {
       return (Builder) super.setIssuers(issuers);

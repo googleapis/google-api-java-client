@@ -31,7 +31,9 @@ import com.google.api.client.util.Beta;
 @Beta
 public abstract class AbstractGoogleProtoClient extends AbstractGoogleClient {
 
-  /** @param builder builder */
+  /**
+   * @param builder builder
+   */
   protected AbstractGoogleProtoClient(Builder builder) {
     super(builder);
   }

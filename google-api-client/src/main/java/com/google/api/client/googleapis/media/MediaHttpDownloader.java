@@ -300,7 +300,9 @@ public final class MediaHttpDownloader {
     return this;
   }
 
-  /** @deprecated Use {@link #setContentRange(long, long)} instead. */
+  /**
+   * @deprecated Use {@link #setContentRange(long, long)} instead.
+   */
   @Deprecated
   public MediaHttpDownloader setContentRange(long firstBytePos, int lastBytePos) {
     return setContentRange(firstBytePos, (long) lastBytePos);
