@@ -96,30 +96,29 @@ public class GoogleJsonErrorTest extends TestCase {
   }
 
   public void testParse_withMultipleErrorTypesInDetails() throws Exception {
-    InputStream errorContent =
-        GoogleJsonErrorTest.class.getResourceAsStream("errorWithMultipleTypesInDetails.json");
-
-    InputStream expectedContent =
+    InputStream errorResponseStream =
         GoogleJsonErrorTest.class.getResourceAsStream(
-            "expectedResultErrorWithMultipleTypesInDetails.json");
+            "errorResponseWithMultipleTypesInDetails.json");
+
+    InputStream expectedParsedErrorResponse =
+        GoogleJsonErrorTest.class.getResourceAsStream(
+            "expectedParsedErrorWithMultipleTypesInDetails.json");
 
     HttpTransport transport =
         new ErrorTransport(
             new MockLowLevelHttpResponse()
-                .setContent(errorContent)
+                .setContent(errorResponseStream)
                 .setContentType(Json.MEDIA_TYPE)
                 .setStatusCode(HttpStatusCodes.STATUS_CODE_FORBIDDEN));
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(false);
     HttpResponse response = request.execute();
-    com.google.api.client.googleapis.json.GoogleJsonError errorResponse =
+    com.google.api.client.googleapis.json.GoogleJsonError actualParsedErrorResponse =
         com.google.api.client.googleapis.json.GoogleJsonError.parse(FACTORY, response);
-    System.out.println(errorResponse.toString());
     assertEquals(
-        JSON_PARSER.parse(new InputStreamReader(expectedContent)),
-        JSON_PARSER.parse(FACTORY.toString(errorResponse)));
-    // assertNotNull(errorResponse.getDetails().get(2).getReason());
+        JSON_PARSER.parse(new InputStreamReader(expectedParsedErrorResponse)),
+        JSON_PARSER.parse(FACTORY.toString(actualParsedErrorResponse)));
   }
 
   public void testParse_withDetails() throws Exception {
@@ -153,7 +152,7 @@ public class GoogleJsonErrorTest extends TestCase {
 
     assertEquals(
         JSON_PARSER.parse(DETAILS_ERROR), JSON_PARSER.parse(FACTORY.toString(errorResponse)));
-    //    assertNotNull(errorResponse.getDetails());
+    assertNotNull(errorResponse.getDetails());
   }
 
   public void testParse_withReasonInDetails() throws Exception {
@@ -198,6 +197,6 @@ public class GoogleJsonErrorTest extends TestCase {
 
     assertEquals(
         JSON_PARSER.parse(DETAILS_ERROR), JSON_PARSER.parse(FACTORY.toString(errorResponse)));
-    //    assertNotNull(errorResponse.getDetails().get(2).getReason());
+    assertNotNull(errorResponse.getDetails().get(2).getReason());
   }
 }
