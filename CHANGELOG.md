@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2](https://github.com/googleapis/google-api-java-client/compare/v2.1.1...v2.1.2) (2023-01-03)
+
+
+### Bug Fixes
+
+* Make Details field extends GenericJson so that GoogleJsonError should include any arbitrary error info from services ([#2210](https://github.com/googleapis/google-api-java-client/issues/2210)) ([60939b1](https://github.com/googleapis/google-api-java-client/commit/60939b19a8ab267846a7ec070e469d4b32c3c201))
+
 ## [2.1.1](https://github.com/googleapis/google-api-java-client/compare/v2.1.0...v2.1.1) (2022-12-02)
 
 
