@@ -1,0 +1,63 @@
+{
+  "code": 400,
+  "message": "The template parameters are invalid.",
+  "status": "INVALID_ARGUMENT",
+  "details": [
+    {
+      "@type": "type.googleapis.com/google.dataflow.v1beta3.InvalidTemplateParameters",
+      "reason": "TEST REASON 1",
+      "parameterViolations": [
+        {
+          "parameter": "safeBrowsingApiKey",
+          "description": "Parameter didn't match regex '^[0-9a-zA-Z_]+$'"
+        }
+      ]
+    },
+    {
+      "@type": "type.googleapis.com/google.rpc.DebugInfo",
+      "detail": "test detail"
+    },
+    {
+      "@type": "type.googleapis.com/google.rpc.DebugInfo",
+      "reason": "test reason 2"
+    },
+    {
+      "@type": "type.googleapis.com/google.rpc.BadRequest",
+      "fieldViolations": [
+        {
+          "field": "language_code",
+          "description": "Field is required"
+        }
+      ]
+    },
+    {
+      "@type": "type.googleapis.com/google.chrome.policy.v1.PolicyModificationErrorDetails",
+      "modificationErrors": [
+        {
+          "policyTargetKey": {
+            "targetResource": "orgunits/03ph8a2z19ryqq8"
+          },
+          "policySchema": "chrome.users.BrowserThemeColor",
+          "fieldErrors": [
+            {
+              "field": "browserThemeColor",
+              "error": "Field is an invalid hex color. Only the numbers 0-9 and letters A-F are permitted."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "@type": "type.googleapis.com/google.mybusiness.v4.ValidationError",
+      "errorDetails": [
+        {
+          "code": 3,
+          "field": "regular_hours.periods.close_time",
+          "message": "Time field must follow hh:mm format.",
+          "value": "25:00"
+        }
+      ]
+    }
+  ]
+}
+
