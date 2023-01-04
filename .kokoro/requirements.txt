@@ -223,9 +223,9 @@ google-resumable-media==2.3.3 \
     # via
     #   -r requirements.in
     #   google-cloud-storage
-googleapis-common-protos==1.56.3 \
-    --hash=sha256:6f1369b58ed6cf3a4b7054a44ebe8d03b29c309257583a2bbdc064cd1e4a1442 \
-    --hash=sha256:87955d7b3a73e6e803f2572a33179de23989ebba725e05ea42f24838b792e461
+googleapis-common-protos==1.57.1 \
+    --hash=sha256:2672d6b3a7b6188b70a5a4c70def7ddbb9000852dfbf49daf52fc7306c09db0c \
+    --hash=sha256:e877f2f041b640b4888b6917dde4f44515ab938bf744c4dbc06f11f0e8ed56b5
     # via
     #   -r requirements.in
     #   google-api-core
