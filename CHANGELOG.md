@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.3](https://github.com/googleapis/google-api-java-client/compare/v2.1.2...v2.1.3) (2023-01-20)
+
+
+### Bug Fixes
+
+* Media upload to have applicationName as User-Agent ([#2227](https://github.com/googleapis/google-api-java-client/issues/2227)) ([2595de0](https://github.com/googleapis/google-api-java-client/commit/2595de042b95fff8c6acc67f3427c0b8e4eee3bc))
+
 ## [2.1.2](https://github.com/googleapis/google-api-java-client/compare/v2.1.1...v2.1.2) (2023-01-03)
 
 
