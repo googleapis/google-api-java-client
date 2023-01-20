@@ -214,7 +214,7 @@ public class AbstractGoogleClientTest extends TestCase {
 
   public void testMediaUpload_applicationNameAsUserAgent() throws Exception {
     MediaTransport fakeTransport = new MediaTransport();
-    String applicationName = "Test Application";
+    String applicationName = "Foo/1.0 (BAR:Baz/1.0) XYZ/1.0";
     AbstractGoogleClient client =
         new MockGoogleClient.Builder(
                 fakeTransport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER, null)
@@ -226,7 +226,6 @@ public class AbstractGoogleClientTest extends TestCase {
     MockGoogleClientRequest<A> rq =
         new MockGoogleClientRequest<A>(client, "POST", "", null, A.class);
 
-    // Assertion on User-Agent
     rq.initializeMediaUpload(mediaContent);
     MediaHttpUploader mediaHttpUploader = rq.getMediaHttpUploader();
     mediaHttpUploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
@@ -237,15 +236,6 @@ public class AbstractGoogleClientTest extends TestCase {
           "UserAgent header does not have expected value in requests",
           userAgent.contains(applicationName));
     }
-
-    // This is not leveraging the initializer
-    // HttpRequestFactory requestFactory = mediaHttpUploader.getTransport().createRequestFactory();
-    // HttpRequest httpRequest =
-    //    requestFactory.buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL, mediaContent);
-    // String userAgentInSubsequentRequests = httpRequest.getHeaders().getUserAgent();
-    // assertTrue(
-    //    "UserAgent header does not contain application name",
-    //    userAgentInSubsequentRequests.contains("Test Application"));
   }
 
   private static class GZipCheckerInitializer implements HttpRequestInitializer {
