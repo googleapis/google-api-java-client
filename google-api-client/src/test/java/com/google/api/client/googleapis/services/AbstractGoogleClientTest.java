@@ -19,7 +19,6 @@ import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
@@ -29,7 +28,6 @@ import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
@@ -216,7 +214,7 @@ public class AbstractGoogleClientTest extends TestCase {
 
   public void testMediaUpload_applicationNameAsUserAgent() throws Exception {
     MediaTransport fakeTransport = new MediaTransport();
-    String applicationName="Test Application";
+    String applicationName = "Test Application";
     AbstractGoogleClient client =
         new MockGoogleClient.Builder(
                 fakeTransport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER, null)
@@ -235,7 +233,9 @@ public class AbstractGoogleClientTest extends TestCase {
 
     assertEquals(1, fakeTransport.userAgentsRecorded.size());
     for (String userAgent : fakeTransport.userAgentsRecorded) {
-      assertTrue("UserAgent header does not have expected value in requests", userAgent.contains(applicationName));
+      assertTrue(
+          "UserAgent header does not have expected value in requests",
+          userAgent.contains(applicationName));
     }
 
     // This is not leveraging the initializer

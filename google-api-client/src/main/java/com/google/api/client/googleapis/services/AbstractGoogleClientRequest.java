@@ -351,12 +351,40 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    */
   protected final void initializeMediaUpload(AbstractInputStreamContent mediaContent) {
     HttpRequestFactory requestFactory = abstractGoogleClient.getRequestFactory();
+    String applicationName = abstractGoogleClient.getApplicationName();
+    HttpRequestInitializer requestInitializer =
+        mediaUploadRequestUserAgentInitializer(applicationName, requestFactory.getInitializer());
     this.uploader =
-        new MediaHttpUploader(
-            mediaContent, requestFactory.getTransport(), requestFactory.getInitializer());
+        new MediaHttpUploader(mediaContent, requestFactory.getTransport(), requestInitializer);
     this.uploader.setInitiationRequestMethod(requestMethod);
     if (httpContent != null) {
       this.uploader.setMetadata(httpContent);
+    }
+  }
+
+  private HttpRequestInitializer mediaUploadRequestUserAgentInitializer(
+      final String applicationName, final HttpRequestInitializer originalInitializer) {
+    if (applicationName == null) {
+      return originalInitializer;
+    }
+    if (originalInitializer != null) {
+      return new HttpRequestInitializer() {
+        @Override
+        public void initialize(HttpRequest request) throws IOException {
+          originalInitializer.initialize(request);
+          HttpHeaders headers = request.getHeaders();
+          headers.setUserAgent(applicationName);
+        }
+      };
+    } else {
+      // originalInitializer is null
+      return new HttpRequestInitializer() {
+        @Override
+        public void initialize(HttpRequest request) {
+          HttpHeaders headers = request.getHeaders();
+          headers.setUserAgent(applicationName);
+        }
+      };
     }
   }
 
