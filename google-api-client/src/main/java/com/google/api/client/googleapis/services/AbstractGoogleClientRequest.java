@@ -362,25 +362,24 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     }
   }
 
-  private HttpRequestInitializer mediaUploadRequestUserAgentInitializer(
+  private static HttpRequestInitializer mediaUploadRequestUserAgentInitializer(
       final String applicationName, final HttpRequestInitializer originalInitializer) {
     if (applicationName == null) {
       return originalInitializer;
     }
-    if (originalInitializer != null) {
+    if (originalInitializer == null) {
       return new HttpRequestInitializer() {
         @Override
-        public void initialize(HttpRequest request) throws IOException {
-          originalInitializer.initialize(request);
+        public void initialize(HttpRequest request) {
           HttpHeaders headers = request.getHeaders();
           headers.setUserAgent(applicationName);
         }
       };
     } else {
-      // originalInitializer is null
       return new HttpRequestInitializer() {
         @Override
-        public void initialize(HttpRequest request) {
+        public void initialize(HttpRequest request) throws IOException {
+          originalInitializer.initialize(request);
           HttpHeaders headers = request.getHeaders();
           headers.setUserAgent(applicationName);
         }
