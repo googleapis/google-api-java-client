@@ -16,6 +16,7 @@ import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest;
 import com.google.api.client.http.EmptyContent;
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -33,6 +34,8 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.Key;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import junit.framework.TestCase;
 
 /**
@@ -132,6 +135,7 @@ public class AbstractGoogleClientTest extends TestCase {
     int bytesUploaded;
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE;
     boolean contentLengthNotSpecified;
+    List<String> userAgentsRecorded = new ArrayList<>();
 
     protected MediaTransport() {}
 
@@ -169,6 +173,7 @@ public class AbstractGoogleClientTest extends TestCase {
           String expectedContentRange = "bytes " + bytesRange + "/" + contentLength;
           assertEquals(expectedContentRange, getFirstHeaderValue("Content-Range"));
           bytesUploaded += MediaHttpUploader.DEFAULT_CHUNK_SIZE;
+          userAgentsRecorded.add(getFirstHeaderValue("User-Agent"));
 
           if (bytesUploaded == contentLength) {
             // Return 200 since the upload is complete.
@@ -205,6 +210,32 @@ public class AbstractGoogleClientTest extends TestCase {
     rq.initializeMediaUpload(mediaContent);
     A result = rq.execute();
     assertEquals("somevalue", result.foo);
+  }
+
+  public void testMediaUpload_applicationNameAsUserAgent() throws Exception {
+    MediaTransport fakeTransport = new MediaTransport();
+    String applicationName = "Foo/1.0 (BAR:Baz/1.0) XYZ/1.0";
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(
+                fakeTransport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER, null)
+            .setApplicationName(applicationName)
+            .build();
+    InputStream is = new ByteArrayInputStream(new byte[MediaHttpUploader.DEFAULT_CHUNK_SIZE]);
+    InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
+    mediaContent.setLength(MediaHttpUploader.DEFAULT_CHUNK_SIZE);
+    MockGoogleClientRequest<A> rq =
+        new MockGoogleClientRequest<A>(client, "POST", "", null, A.class);
+
+    rq.initializeMediaUpload(mediaContent);
+    MediaHttpUploader mediaHttpUploader = rq.getMediaHttpUploader();
+    mediaHttpUploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
+
+    assertEquals(1, fakeTransport.userAgentsRecorded.size());
+    for (String userAgent : fakeTransport.userAgentsRecorded) {
+      assertTrue(
+          "UserAgent header does not have expected value in requests",
+          userAgent.contains(applicationName));
+    }
   }
 
   private static class GZipCheckerInitializer implements HttpRequestInitializer {
