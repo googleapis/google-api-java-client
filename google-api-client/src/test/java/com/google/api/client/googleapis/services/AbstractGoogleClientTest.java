@@ -16,8 +16,10 @@ import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest;
 import com.google.api.client.http.EmptyContent;
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
@@ -27,12 +29,15 @@ import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.Key;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import junit.framework.TestCase;
 
 /**
@@ -132,6 +137,7 @@ public class AbstractGoogleClientTest extends TestCase {
     int bytesUploaded;
     int contentLength = MediaHttpUploader.DEFAULT_CHUNK_SIZE;
     boolean contentLengthNotSpecified;
+    List<String> userAgentsRecorded = new ArrayList<>();
 
     protected MediaTransport() {}
 
@@ -169,6 +175,7 @@ public class AbstractGoogleClientTest extends TestCase {
           String expectedContentRange = "bytes " + bytesRange + "/" + contentLength;
           assertEquals(expectedContentRange, getFirstHeaderValue("Content-Range"));
           bytesUploaded += MediaHttpUploader.DEFAULT_CHUNK_SIZE;
+          userAgentsRecorded.add(getFirstHeaderValue("User-Agent"));
 
           if (bytesUploaded == contentLength) {
             // Return 200 since the upload is complete.
@@ -205,6 +212,40 @@ public class AbstractGoogleClientTest extends TestCase {
     rq.initializeMediaUpload(mediaContent);
     A result = rq.execute();
     assertEquals("somevalue", result.foo);
+  }
+
+  public void testMediaUpload_applicationNameAsUserAgent() throws Exception {
+    MediaTransport fakeTransport = new MediaTransport();
+    String applicationName="Test Application";
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(
+                fakeTransport, TEST_RESUMABLE_REQUEST_URL, "", JSON_OBJECT_PARSER, null)
+            .setApplicationName(applicationName)
+            .build();
+    InputStream is = new ByteArrayInputStream(new byte[MediaHttpUploader.DEFAULT_CHUNK_SIZE]);
+    InputStreamContent mediaContent = new InputStreamContent(TEST_CONTENT_TYPE, is);
+    mediaContent.setLength(MediaHttpUploader.DEFAULT_CHUNK_SIZE);
+    MockGoogleClientRequest<A> rq =
+        new MockGoogleClientRequest<A>(client, "POST", "", null, A.class);
+
+    // Assertion on User-Agent
+    rq.initializeMediaUpload(mediaContent);
+    MediaHttpUploader mediaHttpUploader = rq.getMediaHttpUploader();
+    mediaHttpUploader.upload(new GenericUrl(TEST_RESUMABLE_REQUEST_URL));
+
+    assertEquals(1, fakeTransport.userAgentsRecorded.size());
+    for (String userAgent : fakeTransport.userAgentsRecorded) {
+      assertTrue("UserAgent header does not have expected value in requests", userAgent.contains(applicationName));
+    }
+
+    // This is not leveraging the initializer
+    // HttpRequestFactory requestFactory = mediaHttpUploader.getTransport().createRequestFactory();
+    // HttpRequest httpRequest =
+    //    requestFactory.buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL, mediaContent);
+    // String userAgentInSubsequentRequests = httpRequest.getHeaders().getUserAgent();
+    // assertTrue(
+    //    "UserAgent header does not contain application name",
+    //    userAgentInSubsequentRequests.contains("Test Application"));
   }
 
   private static class GZipCheckerInitializer implements HttpRequestInitializer {
