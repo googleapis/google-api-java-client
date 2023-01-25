@@ -3,7 +3,6 @@
 	<classpathentry kind="lib" path="libs/google-api-client-appengine-${project.version}.jar" sourcepath="libs-sources/google-api-client-appengine-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-api-client-gson-${project.version}.jar" sourcepath="libs-sources/google-api-client-gson-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-api-client-jackson2-${project.version}.jar" sourcepath="libs-sources/google-api-client-jackson2-${project.version}-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-api-client-java6-${project.version}.jar" sourcepath="libs-sources/google-api-client-java6-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-api-client-protobuf-${project.version}.jar" sourcepath="libs-sources/google-api-client-protobuf-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-api-client-servlet-${project.version}.jar" sourcepath="libs-sources/google-api-client-servlet-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-api-client-xml-${project.version}.jar" sourcepath="libs-sources/google-api-client-xml-${project.version}-sources.jar"/>

@@ -78,7 +78,6 @@
     <module>google-api-client-bom</module>
     <module>google-api-client-gson</module>
     <module>google-api-client-jackson2</module>
-    <module>google-api-client-java6</module>
     <module>google-api-client-protobuf</module>
     <module>google-api-client-xml</module>
   </modules>
@@ -176,11 +175,6 @@
       <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client-android</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.api-client</groupId>
-        <artifactId>google-api-client-java6</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -409,10 +403,6 @@
                 <group>
                   <title>google-api-client-jackson2</title>
                   <packages>com.google.api.client.googleapis.notifications.json.jackson2.*</packages>
-                </group>
-                <group>
-                  <title>google-api-client-java6</title>
-                  <packages>com.google.api.client.googleapis.extensions.java6.*</packages>
                 </group>
                 <group>
                   <title>google-api-client-protobuf</title>

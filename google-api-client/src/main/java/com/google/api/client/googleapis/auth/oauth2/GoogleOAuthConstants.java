@@ -40,12 +40,5 @@ public class GoogleOAuthConstants {
   public static final String DEFAULT_PUBLIC_CERTS_ENCODED_URL =
       "https://www.googleapis.com/oauth2/v1/certs";
 
-  /**
-   * Redirect URI to use for an installed application as specified in <a
-   * href="https://developers.google.com/identity/protocols/OAuth2InstalledApp">Using OAuth 2.0 for
-   * Mobile & Desktop Apps</a>.
-   */
-  public static final String OOB_REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
-
   private GoogleOAuthConstants() {}
 }
