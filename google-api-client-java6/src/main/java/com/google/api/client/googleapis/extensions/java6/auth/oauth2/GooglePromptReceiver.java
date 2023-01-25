@@ -22,6 +22,10 @@ import java.io.IOException;
  * Google OAuth 2.0 abstract verification code receiver that prompts user to paste the code copied
  * from the browser.
  *
+ * <p>This uses deprecated OAuth out-of-band (oob) flow. To migrate to an alternative flow, please
+ * refer to <a href="https://developers.googleblog.com/2022/02/making-oauth-flows-safer.html">Making
+ * Google OAuth interactions safer by using more secure OAuth flows</a>.
+ *
  * <p>Implementation is thread-safe.
  *
  * @since 1.11

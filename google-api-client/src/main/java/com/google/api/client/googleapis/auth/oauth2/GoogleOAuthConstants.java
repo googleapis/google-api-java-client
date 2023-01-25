@@ -44,8 +44,13 @@ public class GoogleOAuthConstants {
    * Redirect URI to use for an installed application as specified in <a
    * href="https://developers.google.com/identity/protocols/OAuth2InstalledApp">Using OAuth 2.0 for
    * Mobile & Desktop Apps</a>.
+   *
+   * <p>OAuth out-of-band (oob) flow has been deprecated. To migrate to an alternative flow, please
+   * refer to <a
+   * href="https://developers.googleblog.com/2022/02/making-oauth-flows-safer.html">Making Google
+   * OAuth interactions safer by using more secure OAuth flows</a>.
    */
-  public static final String OOB_REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
+  @Deprecated public static final String OOB_REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
 
   private GoogleOAuthConstants() {}
 }
