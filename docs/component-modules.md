@@ -43,12 +43,6 @@ Jackson2 extensions to the Google API Client Library for Java
 (`google-api-client-jackson2`). This module depends on `google-api-client` and
 `google-http-client-jackson2`.
 
-## google-api-client-java6
-
-Java 6 (and higher) extensions to the Google API Client Library for Java
-(`google-api-client-java6`). This module depends on `google-api-client` and
-`google-oauth-client-java6`.
-
 ## google-api-client-protobuf
 
 [Protocol buffer][protobuf] extensions to the Google API Client Library for Java
