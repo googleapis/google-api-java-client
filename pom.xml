@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-parent</artifactId>
-  <version>2.1.4-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
+  <version>2.1.4</version><!-- {x-version-update:google-api-client:current} -->
   <packaging>pom</packaging>
   <name>Parent for the Google API Client Library for Java</name>
   <description>The Google APIs Client Library for Java is a Java client library
@@ -293,7 +293,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.0.0-M7</version>
+          <version>3.0.0-M8</version>
           <configuration>
             <argLine>-Xmx1024m</argLine>
             <reportNameSuffix>sponge_log</reportNameSuffix>
@@ -337,7 +337,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.4.0</version>
+          <version>3.5.0</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -495,8 +495,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.http.version>1.42.3</project.http.version>
-    <project.httpcore.version>4.4.15</project.httpcore.version>
-    <project.httpclient.version>4.5.13</project.httpclient.version>
+    <project.httpcore.version>4.4.16</project.httpcore.version>
+    <project.httpclient.version>4.5.14</project.httpclient.version>
     <project.commons-codec.version>1.15</project.commons-codec.version>
     <project.oauth.version>1.34.1</project.oauth.version>
     <project.jsr305.version>3.0.2</project.jsr305.version>
