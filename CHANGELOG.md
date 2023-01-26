@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/googleapis/google-api-java-client/compare/v2.1.4...v2.2.0) (2023-01-26)
+
+
+### Features
+
+* Remove deprecated OOB flow ([#2242](https://github.com/googleapis/google-api-java-client/issues/2242)) ([bb494ee](https://github.com/googleapis/google-api-java-client/commit/bb494ee28f806570e2de81f3e76678137512fab3))
+
 ## [2.1.4](https://github.com/googleapis/google-api-java-client/compare/v2.1.3...v2.1.4) (2023-01-26)
 
 
