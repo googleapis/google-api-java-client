@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.1.4](https://github.com/googleapis/google-api-java-client/compare/v2.1.3...v2.1.4) (2023-01-26)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency com.google.api-client:google-api-client to v2.1.3 ([#2239](https://github.com/googleapis/google-api-java-client/issues/2239)) ([a830476](https://github.com/googleapis/google-api-java-client/commit/a83047687f9a2df4565ec33a8156af19cf97ffd3))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.4.0 ([#2240](https://github.com/googleapis/google-api-java-client/issues/2240)) ([710a5ad](https://github.com/googleapis/google-api-java-client/commit/710a5ade1068832df4cd949f31e8f319920c8d1b))
+* **deps:** Update dependency org.apache.httpcomponents:httpclient to v4.5.14 ([#2236](https://github.com/googleapis/google-api-java-client/issues/2236)) ([aa2b08c](https://github.com/googleapis/google-api-java-client/commit/aa2b08c599429551737e339df2742d7bfbf7ac2a))
+* **deps:** Update dependency org.apache.httpcomponents:httpcore to v4.4.16 ([#2237](https://github.com/googleapis/google-api-java-client/issues/2237)) ([5de8cc2](https://github.com/googleapis/google-api-java-client/commit/5de8cc20727df41fd008b3ff2709a60c3755b984))
+
+
+### Documentation
+
+* Adding deprecated annotation and guide for migration ([#2244](https://github.com/googleapis/google-api-java-client/issues/2244)) ([e505c26](https://github.com/googleapis/google-api-java-client/commit/e505c269078208dbce11c966189b2b4ca30956e7))
+
 ## [2.1.3](https://github.com/googleapis/google-api-java-client/compare/v2.1.2...v2.1.3) (2023-01-20)
 
 
