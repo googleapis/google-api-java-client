@@ -505,7 +505,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.http.version>1.42.3</project.http.version>
-    <project.httpcore.version>4.4.15</project.httpcore.version>
+    <project.httpcore.version>4.4.16</project.httpcore.version>
     <project.httpclient.version>4.5.13</project.httpclient.version>
     <project.commons-codec.version>1.15</project.commons-codec.version>
     <project.oauth.version>1.34.1</project.oauth.version>
