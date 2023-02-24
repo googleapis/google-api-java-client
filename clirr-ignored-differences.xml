@@ -34,4 +34,10 @@
     <method>com.google.api.client.http.AbstractHttpContent setMediaType(com.google.api.client.http.HttpMediaType)</method>
     <to>com.google.api.client.http.xml.AbstractXmlHttpContent</to>
   </difference>
+  <!-- Deprecated OOB flow: https://github.com/googleapis/google-api-java-client/pull/2242 -->
+  <difference>
+    <differenceType>6011</differenceType>
+    <className>com/google/api/client/googleapis/auth/oauth2/GoogleOAuthConstants</className>
+    <field>OOB_REDIRECT_URI</field>
+  </difference>
 </differences>
