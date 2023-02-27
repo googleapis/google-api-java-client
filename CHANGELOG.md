@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.2.1](https://github.com/googleapis/google-api-java-client/compare/v2.2.0...v2.2.1) (2023-02-27)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency com.google.api-client:google-api-client to v2.2.0 ([#2249](https://github.com/googleapis/google-api-java-client/issues/2249)) ([da164c5](https://github.com/googleapis/google-api-java-client/commit/da164c59c01316e949db43053fba6b819ee20ada))
+* **deps:** Update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.11 ([#2259](https://github.com/googleapis/google-api-java-client/issues/2259)) ([f078332](https://github.com/googleapis/google-api-java-client/commit/f078332c65da269a6063202844b104a971217245))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.9.0 ([#2250](https://github.com/googleapis/google-api-java-client/issues/2250)) ([3778401](https://github.com/googleapis/google-api-java-client/commit/3778401ff840851d88cc529fd1152a0e256f0957))
+
 ## [2.2.0](https://github.com/googleapis/google-api-java-client/compare/v2.1.4...v2.2.0) (2023-01-26)
 
 
