@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-parent</artifactId>
-  <version>2.2.0</version><!-- {x-version-update:google-api-client:current} -->
+  <version>2.2.1-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
   <packaging>pom</packaging>
   <name>Parent for the Google API Client Library for Java</name>
   <description>The Google APIs Client Library for Java is a Java client library
@@ -269,7 +269,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.4.1</version>
+          <version>3.5.0</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>
@@ -293,7 +293,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.0.0-M8</version>
+          <version>3.0.0-M9</version>
           <configuration>
             <argLine>-Xmx1024m</argLine>
             <reportNameSuffix>sponge_log</reportNameSuffix>
@@ -345,7 +345,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.1.0</version><executions>
+        <version>3.2.1</version><executions>
         <execution>
           <id>enforce-maven</id>
           <goals>
@@ -503,7 +503,7 @@
     <project.gson.version>2.8.6</project.gson.version>
     <project.protobuf-java.version>3.21.12</project.protobuf-java.version>
     <project.guava.version>31.1-jre</project.guava.version>
-    <project.appengine.version>2.0.10</project.appengine.version>
+    <project.appengine.version>2.0.11</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.jdo2-api.version>2.3-20090302111651</project.jdo2-api.version>
     <project.datanucleus-core.version>3.2.2</project.datanucleus-core.version>
@@ -621,7 +621,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.4.1</version>
+            <version>3.5.0</version>
             <configuration>
               <doclet>com.microsoft.doclet.DocFxDoclet</doclet>
               <useStandardDocletOptions>false</useStandardDocletOptions>
