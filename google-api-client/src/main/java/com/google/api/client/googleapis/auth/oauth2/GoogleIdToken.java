@@ -195,7 +195,7 @@ public class GoogleIdToken extends IdToken {
      *
      * @since 1.10
      *     <p>Upgrade warning: in prior version 1.16 this method accessed {@code "verified_email"}
-     *     and returns a boolean, but starting with verison 1.17, it now accesses {@code
+     *     and returns a boolean, but starting with version 1.17, it now accesses {@code
      *     "email_verified"} and returns a Boolean. Previously, if this value was not specified,
      *     this method would return {@code false}, but now it returns {@code null}.
      */
@@ -218,7 +218,7 @@ public class GoogleIdToken extends IdToken {
      *
      * @since 1.10
      *     <p>Upgrade warning: in prior version 1.16 this method accessed {@code "verified_email"}
-     *     and required a boolean parameter, but starting with verison 1.17, it now accesses {@code
+     *     and required a boolean parameter, but starting with version 1.17, it now accesses {@code
      *     "email_verified"} and requires a Boolean parameter.
      */
     public Payload setEmailVerified(Boolean emailVerified) {

@@ -148,7 +148,7 @@ public final class StoredChannel implements Serializable {
   }
 
   /**
-   * Sets the the arbitrary string provided by the client associated with this subscription that is
+   * Sets the arbitrary string provided by the client associated with this subscription that is
    * delivered to the target address with each notification or {@code null} for none.
    */
   public StoredChannel setClientToken(String clientToken) {
