@@ -40,7 +40,7 @@
  *       automatically be refreshed using the refresh token (if applicable).
  * </ul>
  *
- * <p>These are the typical steps of the the browser-based client flow specified in <a
+ * <p>These are the typical steps of the browser-based client flow specified in <a
  * href="https://developers.google.com/identity/protocols/OAuth2UserAgent">Using OAuth 2.0 for
  * Client-side Applications</a>:
  *
