@@ -93,7 +93,8 @@ public final class GoogleUtils {
     // this value should be read and cached for later use
     String version = null;
     try (InputStream inputStream =
-        GoogleUtils.class.getResourceAsStream("google-api-client.properties")) {
+        GoogleUtils.class.getResourceAsStream(
+            "/com/google/api/client/googleapis/google-api-client.properties")) {
       if (inputStream != null) {
         Properties properties = new Properties();
         properties.load(inputStream);
