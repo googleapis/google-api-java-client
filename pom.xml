@@ -293,7 +293,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>${project.surefire.version}</version>
           <configuration>
             <argLine>-Xmx1024m</argLine>
             <reportNameSuffix>sponge_log</reportNameSuffix>
@@ -510,6 +510,8 @@
     <project.datanucleus-api-jdo.version>3.2.1</project.datanucleus-api-jdo.version>
     <project.datanucleus-maven-plugin.version>4.0.3</project.datanucleus-maven-plugin.version>
     <project.servlet-api.version>2.5</project.servlet-api.version>
+    <!-- Declaring surefire version as property lets us ot specify its version as Maven's argument -->
+    <project.surefire.version>3.0.0-M7</project.surefire.version>
     <deploy.autorelease>false</deploy.autorelease>
     <gson.version>2.10.1</gson.version>
   </properties>
