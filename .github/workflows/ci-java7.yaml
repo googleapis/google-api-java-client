@@ -48,8 +48,11 @@ jobs:
         # Leveraging surefire's jvm option, running the test on Java 7.
         # Surefire plugin 2.22.2 is the last version for Java 7. Newer version would fail with 
         # "UnsupportedClassVersionError: org/apache/maven/surefire/booter/ForkedBooter" error.
+        # BatchRequestTest is not compatible for Java 7 because it touches Protobuf
+        # classes (not compatible with Java 7).
         mvn --batch-mode --show-version -ntp test \
             -Dclirr.skip=true -Denforcer.skip=true -Dmaven.javadoc.skip=true \
             -Dgcloud.download.skip=true -T 1C \
             -Dproject.surefire.version=2.22.2 \
+            -D="!com.google.api.client.googleapis.batch.BatchRequestTest" \
             -Djvm=${JAVA7_HOME}/bin/java
