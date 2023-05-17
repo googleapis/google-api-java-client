@@ -42,6 +42,7 @@ jobs:
       uses: stCarolas/setup-maven@v4.5
       with:
         maven-version: 3.8.8
+    - run: .kokoro/install_dependencies.sh
     - name: Build
       shell: bash
       run: |
@@ -54,5 +55,5 @@ jobs:
             -Dclirr.skip=true -Denforcer.skip=true -Dmaven.javadoc.skip=true \
             -Dgcloud.download.skip=true -T 1C \
             -Dproject.surefire.version=2.22.2 \
-            -D="!com.google.api.client.googleapis.batch.BatchRequestTest" \
+            -Dtest='!com.google.api.client.googleapis.batch.BatchRequestTest' \
             -Djvm=${JAVA7_HOME}/bin/java
