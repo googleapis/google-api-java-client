@@ -608,7 +608,7 @@
       </activation>
       <properties>
         <!-- default config values -->
-        <docletName>java-docfx-doclet-1.5.0</docletName>
+        <docletName>java-docfx-doclet-1.9.0</docletName>
         <outputpath>${project.build.directory}/docfx-yml</outputpath>
         <projectname>${project.artifactId}</projectname>
         <excludeclasses></excludeclasses>
