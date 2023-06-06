@@ -1,0 +1,59 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# Github action job to test core java library features on
+# downstream client libraries before they are released.
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+name: ci-java7
+jobs:
+  units:
+    name: "units (7)"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v1
+      # setup-java v2 or higher does not have version 1.7
+      with:
+        version: 1.7
+        architecture: x64
+    - run: |
+        java -version
+        # This value is used in "-Djvm=" later
+        echo "JAVA7_HOME=${JAVA_HOME}" >> $GITHUB_ENV
+    - uses: actions/setup-java@v3
+      with:
+        java-version: 8
+        distribution: temurin
+    - name: Set up Maven
+      uses: stCarolas/setup-maven@v4.5
+      with:
+        maven-version: 3.8.8
+    - run: .kokoro/install_dependencies.sh
+    - name: Build
+      shell: bash
+      run: |
+        # Leveraging surefire's jvm option, running the test on Java 7.
+        # Surefire plugin 2.22.2 is the last version for Java 7. Newer version would fail with 
+        # "UnsupportedClassVersionError: org/apache/maven/surefire/booter/ForkedBooter" error.
+        # BatchRequestTest is not compatible for Java 7 because it touches Protobuf
+        # classes (not compatible with Java 7).
+        mvn --batch-mode --show-version -ntp test \
+            -Dclirr.skip=true -Denforcer.skip=true -Dmaven.javadoc.skip=true \
+            -Dgcloud.download.skip=true -T 1C \
+            -Dproject.surefire.version=2.22.2 \
+            -Dtest='!com.google.api.client.googleapis.batch.BatchRequestTest' \
+            -Djvm=${JAVA7_HOME}/bin/java

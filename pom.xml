@@ -293,7 +293,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>${project.surefire.version}</version>
           <configuration>
             <argLine>-Xmx1024m</argLine>
             <reportNameSuffix>sponge_log</reportNameSuffix>
@@ -502,7 +502,7 @@
     <project.jsr305.version>3.0.2</project.jsr305.version>
     <project.gson.version>2.8.6</project.gson.version>
     <project.protobuf-java.version>3.23.0</project.protobuf-java.version>
-    <project.guava.version>31.1-jre</project.guava.version>
+    <project.guava.version>30.1.1-android</project.guava.version>
     <project.appengine.version>2.0.14</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.jdo2-api.version>2.3-20090302111651</project.jdo2-api.version>
@@ -510,6 +510,8 @@
     <project.datanucleus-api-jdo.version>3.2.1</project.datanucleus-api-jdo.version>
     <project.datanucleus-maven-plugin.version>4.0.3</project.datanucleus-maven-plugin.version>
     <project.servlet-api.version>2.5</project.servlet-api.version>
+    <!-- Declaring surefire version as property lets us ot specify its version as Maven's argument -->
+    <project.surefire.version>3.1.0</project.surefire.version>
     <deploy.autorelease>false</deploy.autorelease>
     <gson.version>2.10.1</gson.version>
   </properties>
