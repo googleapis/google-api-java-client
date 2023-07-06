@@ -35,14 +35,11 @@ jobs:
     - name: Install google-play-services artifact
       shell: bash
       run: |
-        mvn -v
-        mvn wrapper:wrapper -Dmaven=3.8.7
         mkdir play-services
         cd play-services
         curl --output play-services-basement-8.3.0.aar https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar
         unzip play-services-basement-8.3.0.aar
-        ../mvnw.cmd -v
-        ../mvnw.cmd install:install-file \
+        mvn install:install-file \
             -Dfile=classes.jar \
             -DgroupId=com.google.android.google-play-services \
             -DartifactId=google-play-services \
