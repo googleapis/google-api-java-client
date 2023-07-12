@@ -36,12 +36,16 @@ public final class GoogleAccountManager {
   /** Account manager. */
   private final AccountManager manager;
 
-  /** @param accountManager account manager */
+  /**
+   * @param accountManager account manager
+   */
   public GoogleAccountManager(AccountManager accountManager) {
     this.manager = Preconditions.checkNotNull(accountManager);
   }
 
-  /** @param context context from which to retrieve the account manager */
+  /**
+   * @param context context from which to retrieve the account manager
+   */
   public GoogleAccountManager(Context context) {
     this(AccountManager.get(context));
   }

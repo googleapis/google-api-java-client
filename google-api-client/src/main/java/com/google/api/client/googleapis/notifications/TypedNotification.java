@@ -50,7 +50,9 @@ public class TypedNotification<T> extends AbstractNotification {
     super(messageNumber, resourceState, resourceId, resourceUri, channelId);
   }
 
-  /** @param sourceNotification source notification metadata to copy */
+  /**
+   * @param sourceNotification source notification metadata to copy
+   */
   public TypedNotification(UnparsedNotification sourceNotification) {
     super(sourceNotification);
   }

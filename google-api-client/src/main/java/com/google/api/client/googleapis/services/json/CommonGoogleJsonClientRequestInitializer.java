@@ -77,7 +77,9 @@ import java.io.IOException;
  */
 public class CommonGoogleJsonClientRequestInitializer extends CommonGoogleClientRequestInitializer {
 
-  /** @deprecated Please use the builder interface */
+  /**
+   * @deprecated Please use the builder interface
+   */
   @Deprecated
   public CommonGoogleJsonClientRequestInitializer() {
     super();

@@ -91,7 +91,9 @@ public class GooglePublicKeysManager {
     this(new Builder(transport, jsonFactory));
   }
 
-  /** @param builder builder */
+  /**
+   * @param builder builder
+   */
   protected GooglePublicKeysManager(Builder builder) {
     transport = builder.transport;
     jsonFactory = builder.jsonFactory;

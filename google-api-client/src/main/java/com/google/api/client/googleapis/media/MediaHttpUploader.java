@@ -455,7 +455,9 @@ public final class MediaHttpUploader {
     }
   }
 
-  /** @return {@code true} if the media length is known, otherwise {@code false} */
+  /**
+   * @return {@code true} if the media length is known, otherwise {@code false}
+   */
   private boolean isMediaLengthKnown() throws IOException {
     return getMediaContentLength() >= 0;
   }

@@ -254,49 +254,65 @@ public class GoogleAuthorizationCodeFlow extends AuthorizationCodeFlow {
       return (Builder) super.setScopes(scopes);
     }
 
-    /** @since 1.11 */
+    /**
+     * @since 1.11
+     */
     @Override
     public Builder setMethod(AccessMethod method) {
       return (Builder) super.setMethod(method);
     }
 
-    /** @since 1.11 */
+    /**
+     * @since 1.11
+     */
     @Override
     public Builder setTransport(HttpTransport transport) {
       return (Builder) super.setTransport(transport);
     }
 
-    /** @since 1.11 */
+    /**
+     * @since 1.11
+     */
     @Override
     public Builder setJsonFactory(JsonFactory jsonFactory) {
       return (Builder) super.setJsonFactory(jsonFactory);
     }
 
-    /** @since 1.11 */
+    /**
+     * @since 1.11
+     */
     @Override
     public Builder setTokenServerUrl(GenericUrl tokenServerUrl) {
       return (Builder) super.setTokenServerUrl(tokenServerUrl);
     }
 
-    /** @since 1.11 */
+    /**
+     * @since 1.11
+     */
     @Override
     public Builder setClientAuthentication(HttpExecuteInterceptor clientAuthentication) {
       return (Builder) super.setClientAuthentication(clientAuthentication);
     }
 
-    /** @since 1.11 */
+    /**
+     * @since 1.11
+     */
     @Override
     public Builder setClientId(String clientId) {
       return (Builder) super.setClientId(clientId);
     }
 
-    /** @since 1.11 */
+    /**
+     * @since 1.11
+     */
     @Override
     public Builder setAuthorizationServerEncodedUrl(String authorizationServerEncodedUrl) {
       return (Builder) super.setAuthorizationServerEncodedUrl(authorizationServerEncodedUrl);
     }
 
-    /** @since 1.11 */
+    /**
+     * @since 1.11
+     */
     @Override
     public Builder setClock(Clock clock) {
       return (Builder) super.setClock(clock);
