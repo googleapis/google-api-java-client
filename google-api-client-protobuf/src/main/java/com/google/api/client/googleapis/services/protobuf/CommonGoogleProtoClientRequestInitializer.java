@@ -81,9 +81,7 @@ public class CommonGoogleProtoClientRequestInitializer
     super();
   }
 
-  /**
-   * @param key API key or {@code null} to leave it unchanged
-   */
+  /** @param key API key or {@code null} to leave it unchanged */
   public CommonGoogleProtoClientRequestInitializer(String key) {
     super(key);
   }

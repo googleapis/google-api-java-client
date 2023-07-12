@@ -30,9 +30,7 @@ import com.google.api.client.util.Beta;
 @Beta
 public class MockGoogleProtoClient extends AbstractGoogleProtoClient {
 
-  /**
-   * @param builder builder
-   */
+  /** @param builder builder */
   protected MockGoogleProtoClient(Builder builder) {
     super(builder);
   }
