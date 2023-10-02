@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.1.0](https://github.com/MutluRenegado/google-api-java-client/compare/v2.0.1...v2.1.0) (2023-09-05)
+
+
+### Features
+
+* next release from main branch is 2.1.0 ([#2179](https://github.com/MutluRenegado/google-api-java-client/issues/2179)) ([0b39ce1](https://github.com/MutluRenegado/google-api-java-client/commit/0b39ce1f50a1ccb49519d25d689b76e061791bb5))
+
+
+### Bug Fixes
+
+* **deps:** update dependency com.google.api-client:google-api-client to v2.0.1 ([#2176](https://github.com/MutluRenegado/google-api-java-client/issues/2176)) ([7cb91f7](https://github.com/MutluRenegado/google-api-java-client/commit/7cb91f70941e6c34b231aa367c7015cd9c0d346d))
+* **deps:** update dependency com.google.cloud:libraries-bom to v26.1.4 ([#2177](https://github.com/MutluRenegado/google-api-java-client/issues/2177)) ([0e3be64](https://github.com/MutluRenegado/google-api-java-client/commit/0e3be649b487e933be604022913375ec180e3fc2))
+
 ## [2.0.1](https://github.com/googleapis/google-api-java-client/compare/v2.0.0...v2.0.1) (2022-11-05)
 
 
