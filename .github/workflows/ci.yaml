@@ -106,6 +106,7 @@ jobs:
         with:
           java-version: 8
           distribution: temurin
+      - run: .kokoro/install_dependencies.sh
       - run: .kokoro/build.sh
         env:
           JOB_TYPE: test
