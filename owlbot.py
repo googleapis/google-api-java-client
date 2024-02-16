@@ -24,6 +24,7 @@ s.remove_staging_dirs()
 java.common_templates(
     excludes=[
         "README.md",
+        "CONTRIBUTING.md",
         "java.header",
         "checkstyle.xml",
         "renovate.json",
