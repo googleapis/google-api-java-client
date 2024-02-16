@@ -20,6 +20,9 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Strings;
+import com.google.auth.Credentials;
+import com.google.auth.http.HttpCredentialsAdapter;
+
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -68,12 +71,17 @@ public abstract class AbstractGoogleClient {
   /** Whether discovery required parameter checks should be suppressed. */
   private final boolean suppressRequiredParameterChecks;
 
+  private final String universeDomain;
+
+  private final HttpRequestInitializer httpRequestInitializer;
+
   /**
    * @param builder builder
    * @since 1.14
    */
   protected AbstractGoogleClient(Builder builder) {
     googleClientRequestInitializer = builder.googleClientRequestInitializer;
+    universeDomain = builder.universeDomain;
     rootUrl = normalizeRootUrl(builder.rootUrl);
     servicePath = normalizeServicePath(builder.servicePath);
     batchPath = builder.batchPath;
@@ -88,6 +96,26 @@ public abstract class AbstractGoogleClient {
     objectParser = builder.objectParser;
     suppressPatternChecks = builder.suppressPatternChecks;
     suppressRequiredParameterChecks = builder.suppressRequiredParameterChecks;
+    httpRequestInitializer = builder.httpRequestInitializer;
+  }
+
+  protected void validateUniverseDomain() {
+    HttpRequestInitializer requestInitializer = getHttpRequestInitializer();
+    if (!getUniverseDomain().equals("googleapis.com") &&  !(requestInitializer instanceof HttpCredentialsAdapter)) {
+      throw new IllegalStateException("You must pass in Credentials to configure the Universe Domain");
+    }
+    Credentials credentials = ((HttpCredentialsAdapter) requestInitializer).getCredentials();
+    try {
+      if (!credentials.getUniverseDomain().equals(getUniverseDomain())) {
+        throw new IllegalStateException(String.format(
+                "The configured universe domain (%s) does not match the universe domain found in the credentials (%s). If you haven't configured the universe domain explicitly, `googleapis.com` is the default.",
+                getUniverseDomain(),
+                credentials.getUniverseDomain()
+        ));
+      }
+    } catch (IOException e) {
+      throw new IllegalStateException("Unable to retrieve the Universe Domain from the Credentials.", e);
+    }
   }
 
   /**
@@ -137,6 +165,14 @@ public abstract class AbstractGoogleClient {
   /** Returns the Google client request initializer or {@code null} for none. */
   public final GoogleClientRequestInitializer getGoogleClientRequestInitializer() {
     return googleClientRequestInitializer;
+  }
+
+  public final String getUniverseDomain() {
+    return universeDomain;
+  }
+
+  public final HttpRequestInitializer getHttpRequestInitializer() {
+    return httpRequestInitializer;
   }
 
   /**
@@ -311,6 +347,10 @@ public abstract class AbstractGoogleClient {
     /** Whether discovery required parameter checks should be suppressed. */
     boolean suppressRequiredParameterChecks;
 
+    String universeDomain;
+
+    boolean userSetEndpoint;
+
     /**
      * Returns an instance of a new builder.
      *
@@ -331,6 +371,8 @@ public abstract class AbstractGoogleClient {
       setRootUrl(rootUrl);
       setServicePath(servicePath);
       this.httpRequestInitializer = httpRequestInitializer;
+      this.universeDomain = "googleapis.com";
+      this.userSetEndpoint = false;
     }
 
     /** Builds a new instance of {@link AbstractGoogleClient}. */
@@ -371,6 +413,7 @@ public abstract class AbstractGoogleClient {
      * changing the return type, but nothing else.
      */
     public Builder setRootUrl(String rootUrl) {
+      this.userSetEndpoint = true;
       this.rootUrl = normalizeRootUrl(rootUrl);
       return this;
     }
@@ -514,6 +557,29 @@ public abstract class AbstractGoogleClient {
      */
     public Builder setSuppressAllChecks(boolean suppressAllChecks) {
       return setSuppressPatternChecks(true).setSuppressRequiredParameterChecks(true);
+    }
+
+    public Builder setUniverseDomain(String universeDomain) {
+      if (universeDomain.isEmpty()) {
+        throw new IllegalArgumentException("The universe domain value cannot be empty.");
+      }
+      this.universeDomain = universeDomain;
+      return this;
+    }
+
+    public final String getUniverseDomain() {
+      return universeDomain;
+    }
+
+    protected void determineEndpoint() {
+      if (rootUrl.contains("mtls") && !universeDomain.equals("googleapis.com")) {
+        throw new IllegalArgumentException(
+                "mTLS is not supported in any universe other than googleapis.com");
+      }
+      String serviceName = "bigquery";
+      if (!userSetEndpoint) {
+        rootUrl = "https://" + serviceName + "." + universeDomain + ":443";
+      }
     }
   }
 }
