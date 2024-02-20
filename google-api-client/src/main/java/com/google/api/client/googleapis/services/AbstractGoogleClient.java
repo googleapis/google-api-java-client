@@ -22,7 +22,6 @@ import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Strings;
 import com.google.auth.Credentials;
 import com.google.auth.http.HttpCredentialsAdapter;
-
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -101,20 +100,24 @@ public abstract class AbstractGoogleClient {
 
   protected void validateUniverseDomain() {
     HttpRequestInitializer requestInitializer = getHttpRequestInitializer();
-    if (!getUniverseDomain().equals("googleapis.com") &&  !(requestInitializer instanceof HttpCredentialsAdapter)) {
-      throw new IllegalStateException("You must pass in Credentials to configure the Universe Domain");
+    if (!getUniverseDomain().equals(Credentials.GOOGLE_DEFAULT_UNIVERSE)
+        && !(requestInitializer instanceof HttpCredentialsAdapter)) {
+      throw new IllegalStateException(
+          "You must pass in Credentials to configure the Universe Domain");
     }
     Credentials credentials = ((HttpCredentialsAdapter) requestInitializer).getCredentials();
     try {
       if (!credentials.getUniverseDomain().equals(getUniverseDomain())) {
-        throw new IllegalStateException(String.format(
-                "The configured universe domain (%s) does not match the universe domain found in the credentials (%s). If you haven't configured the universe domain explicitly, `googleapis.com` is the default.",
-                getUniverseDomain(),
-                credentials.getUniverseDomain()
-        ));
+        throw new IllegalStateException(
+            String.format(
+                "The configured universe domain (%s) does not match the universe domain found in the "
+                    + "credentials (%s). If you haven't configured the universe domain explicitly, "
+                    + "`googleapis.com` is the default.",
+                getUniverseDomain(), credentials.getUniverseDomain()));
       }
     } catch (IOException e) {
-      throw new IllegalStateException("Unable to retrieve the Universe Domain from the Credentials.", e);
+      throw new IllegalStateException(
+          "Unable to retrieve the Universe Domain from the Credentials.", e);
     }
   }
 
@@ -572,9 +575,9 @@ public abstract class AbstractGoogleClient {
     }
 
     protected void determineEndpoint() {
-      if (rootUrl.contains("mtls") && !universeDomain.equals("googleapis.com")) {
+      if (rootUrl.contains("mtls") && !universeDomain.equals(Credentials.GOOGLE_DEFAULT_UNIVERSE)) {
         throw new IllegalArgumentException(
-                "mTLS is not supported in any universe other than googleapis.com");
+            "mTLS is not supported in any universe other than googleapis.com");
       }
       String serviceName = "bigquery";
       if (!userSetEndpoint) {
