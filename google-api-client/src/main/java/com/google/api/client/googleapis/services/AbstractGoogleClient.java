@@ -22,6 +22,7 @@ import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Strings;
 import com.google.auth.Credentials;
 import com.google.auth.http.HttpCredentialsAdapter;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -352,7 +353,9 @@ public abstract class AbstractGoogleClient {
 
     String universeDomain;
 
-    boolean userSetEndpoint;
+    boolean isUserConfiguredEndpoint;
+
+    String serviceName;
 
     /**
      * Returns an instance of a new builder.
@@ -371,11 +374,22 @@ public abstract class AbstractGoogleClient {
         HttpRequestInitializer httpRequestInitializer) {
       this.transport = Preconditions.checkNotNull(transport);
       this.objectParser = objectParser;
-      setRootUrl(rootUrl);
-      setServicePath(servicePath);
+      this.rootUrl = normalizeRootUrl(rootUrl);
+      this.servicePath = normalizeServicePath(servicePath);
       this.httpRequestInitializer = httpRequestInitializer;
-      this.universeDomain = "googleapis.com";
-      this.userSetEndpoint = false;
+      this.universeDomain = Credentials.GOOGLE_DEFAULT_UNIVERSE;
+      this.isUserConfiguredEndpoint = false;
+      this.serviceName = parseServiceName(rootUrl);
+    }
+
+    @VisibleForTesting
+    String parseServiceName(String rootUrl) {
+      // len of "https://"
+      int startIndex = 8;
+      if (rootUrl.contains("mtls")) {
+        return rootUrl.substring(startIndex, rootUrl.indexOf(".mtls"));
+      }
+      return rootUrl.substring(startIndex, rootUrl.indexOf(".googleapis.com"));
     }
 
     /** Builds a new instance of {@link AbstractGoogleClient}. */
@@ -416,7 +430,7 @@ public abstract class AbstractGoogleClient {
      * changing the return type, but nothing else.
      */
     public Builder setRootUrl(String rootUrl) {
-      this.userSetEndpoint = true;
+      this.isUserConfiguredEndpoint = true;
       this.rootUrl = normalizeRootUrl(rootUrl);
       return this;
     }
@@ -563,7 +577,7 @@ public abstract class AbstractGoogleClient {
     }
 
     public Builder setUniverseDomain(String universeDomain) {
-      if (universeDomain.isEmpty()) {
+      if (universeDomain != null && universeDomain.isEmpty()) {
         throw new IllegalArgumentException("The universe domain value cannot be empty.");
       }
       this.universeDomain = universeDomain;
@@ -579,9 +593,11 @@ public abstract class AbstractGoogleClient {
         throw new IllegalArgumentException(
             "mTLS is not supported in any universe other than googleapis.com");
       }
-      String serviceName = "bigquery";
-      if (!userSetEndpoint) {
-        rootUrl = "https://" + serviceName + "." + universeDomain + ":443";
+      // If the user did not set an endpoint, resolve the endpoint
+      String resolvedUniverseDomain =
+          universeDomain == null ? Credentials.GOOGLE_DEFAULT_UNIVERSE : universeDomain;
+      if (!isUserConfiguredEndpoint) {
+        rootUrl = "https://" + serviceName + "." + resolvedUniverseDomain + ":443";
       }
     }
   }
