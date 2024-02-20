@@ -110,9 +110,9 @@ public abstract class AbstractGoogleClient {
       if (!credentials.getUniverseDomain().equals(getUniverseDomain())) {
         throw new IllegalStateException(
             String.format(
-                "The configured universe domain (%s) does not match the universe domain found in the "
-                    + "credentials (%s). If you haven't configured the universe domain explicitly, "
-                    + "`googleapis.com` is the default.",
+                "The configured universe domain (%s) does not match the universe domain found"
+                    + " in the credentials (%s). If you haven't configured the universe domain"
+                    + " explicitly, `googleapis.com` is the default.",
                 getUniverseDomain(), credentials.getUniverseDomain()));
       }
     } catch (IOException e) {
