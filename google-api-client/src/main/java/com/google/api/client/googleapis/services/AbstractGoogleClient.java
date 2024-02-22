@@ -382,14 +382,21 @@ public abstract class AbstractGoogleClient {
       this.serviceName = parseServiceName(rootUrl);
     }
 
+    // The roolUrl from the Discovery Docs will always follow the format of
+    // https://{serviceName}(.mtls).googleapis.com:443
     @VisibleForTesting
     String parseServiceName(String rootUrl) {
       // len of "https://"
       int startIndex = 8;
-      if (rootUrl.contains("mtls")) {
+      if (rootUrl.contains("mtls.googleapis.com")) {
         return rootUrl.substring(startIndex, rootUrl.indexOf(".mtls"));
+      } else if (rootUrl.contains(".googleapis.com")) {
+        return rootUrl.substring(startIndex, rootUrl.indexOf(".googleapis.com"));
+      } else {
+        // Return null to not break behavior for any non-google users or any use
+        // case without a discovery doc
+        return null;
       }
-      return rootUrl.substring(startIndex, rootUrl.indexOf(".googleapis.com"));
     }
 
     /** Builds a new instance of {@link AbstractGoogleClient}. */
@@ -574,6 +581,11 @@ public abstract class AbstractGoogleClient {
      */
     public Builder setSuppressAllChecks(boolean suppressAllChecks) {
       return setSuppressPatternChecks(true).setSuppressRequiredParameterChecks(true);
+    }
+
+    public Builder setServiceName(String serviceName) {
+      this.serviceName = serviceName;
+      return this;
     }
 
     public Builder setUniverseDomain(String universeDomain) {
