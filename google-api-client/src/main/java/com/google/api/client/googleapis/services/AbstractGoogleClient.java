@@ -132,7 +132,9 @@ public abstract class AbstractGoogleClient {
       if (!getUniverseDomain().equals(Credentials.GOOGLE_DEFAULT_UNIVERSE)
           && !(httpRequestInitializer instanceof HttpCredentialsAdapter)) {
         logger.warning(
-            "To configure the universe domain, the HttpRequestInitializer must be a HttpCredentialsAdapter. The Universe Domain value is set to be `googleapis.com`.");
+            "To configure the universe domain, the HttpRequestInitializer must be a " +
+                    "HttpCredentialsAdapter. The Universe Domain value is set to be " +
+                    "`googleapis.com`.");
         expectedUniverseDomain = Credentials.GOOGLE_DEFAULT_UNIVERSE;
       } else {
         Credentials credentials =
@@ -386,13 +388,13 @@ public abstract class AbstractGoogleClient {
     /** Whether discovery required parameter checks should be suppressed. */
     boolean suppressRequiredParameterChecks;
 
-    /** User configured Universe Domain. Defaults to `googleapis.com` */
+    /** User configured Universe Domain. Defaults to `googleapis.com`. */
     String universeDomain = Credentials.GOOGLE_DEFAULT_UNIVERSE;
 
     /** Whether the user has configured an endpoint via {@link #setRootUrl(String)} */
     boolean isUserConfiguredEndpoint = false;
 
-    /** The parsed serviceName value from the rootUrl from the Discovery Doc */
+    /** The parsed serviceName value from the rootUrl from the Discovery Doc. */
     String serviceName;
 
     /**
