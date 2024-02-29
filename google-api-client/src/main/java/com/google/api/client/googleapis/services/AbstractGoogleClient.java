@@ -100,8 +100,8 @@ public abstract class AbstractGoogleClient {
   }
 
   private String determineEndpoint(Builder builder) {
-    if (builder.rootUrl.contains("mtls")
-        && !builder.universeDomain.equals(Credentials.GOOGLE_DEFAULT_UNIVERSE)) {
+    boolean mtlsEnabled = builder.rootUrl.contains(".mtls.");
+    if (mtlsEnabled && !builder.universeDomain.equals(Credentials.GOOGLE_DEFAULT_UNIVERSE)) {
       throw new IllegalArgumentException(
           "mTLS is not supported in any universe other than googleapis.com");
     }
@@ -113,7 +113,10 @@ public abstract class AbstractGoogleClient {
     if (builder.isUserConfiguredEndpoint) {
       return builder.rootUrl;
     }
-    return "https://" + builder.serviceName + "." + resolvedUniverseDomain + ":443";
+    if (mtlsEnabled) {
+      return "https://" + builder.serviceName + ".mtls." + resolvedUniverseDomain;
+    }
+    return "https://" + builder.serviceName + "." + resolvedUniverseDomain;
   }
 
   /**
@@ -126,15 +129,10 @@ public abstract class AbstractGoogleClient {
    * @throws IllegalStateException if the configured Universe Domain does not match the Universe
    *     Domain in the Credentials
    */
-  public void validateUniverseDomain() {
+  public boolean hasValidUniverseDomain() {
     String expectedUniverseDomain;
     try {
-      if (!getUniverseDomain().equals(Credentials.GOOGLE_DEFAULT_UNIVERSE)
-          && !(httpRequestInitializer instanceof HttpCredentialsAdapter)) {
-        logger.warning(
-            "To configure the universe domain, the HttpRequestInitializer must be a " +
-                    "HttpCredentialsAdapter. The Universe Domain value is set to be " +
-                    "`googleapis.com`.");
+      if (!(httpRequestInitializer instanceof HttpCredentialsAdapter)) {
         expectedUniverseDomain = Credentials.GOOGLE_DEFAULT_UNIVERSE;
       } else {
         Credentials credentials =
@@ -153,6 +151,7 @@ public abstract class AbstractGoogleClient {
       throw new IllegalStateException(
           "Unable to retrieve the Universe Domain from the Credentials.", e);
     }
+    return true;
   }
 
   /**
@@ -426,10 +425,9 @@ public abstract class AbstractGoogleClient {
      * used to construct an endpoint when the user passes in a custom Universe Domain value.
      *
      * <p>The roolUrl from the Discovery Docs will always follow the format of
-     * https://{serviceName}(.mtls).googleapis.com:443
+     * https://{serviceName}(.mtls).googleapis.com/
      */
-    @VisibleForTesting
-    String parseServiceName(String rootUrl) {
+    private String parseServiceName(String rootUrl) {
       // len of "https://"
       int startIndex = 8;
       if (rootUrl.contains("mtls.googleapis.com")) {
@@ -639,6 +637,11 @@ public abstract class AbstractGoogleClient {
       }
       this.universeDomain = universeDomain;
       return this;
+    }
+
+    @VisibleForTesting
+    String getServiceName() {
+      return serviceName;
     }
   }
 }
