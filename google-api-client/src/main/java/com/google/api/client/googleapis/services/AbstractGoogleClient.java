@@ -268,6 +268,7 @@ public abstract class AbstractGoogleClient {
    * @param httpClientRequest Google client request type
    */
   protected void initialize(AbstractGoogleClientRequest<?> httpClientRequest) throws IOException {
+    validateUniverseDomain();
     if (getGoogleClientRequestInitializer() != null) {
       getGoogleClientRequestInitializer().initialize(httpClientRequest);
     }
