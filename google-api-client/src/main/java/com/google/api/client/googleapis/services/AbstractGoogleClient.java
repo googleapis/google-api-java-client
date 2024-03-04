@@ -149,7 +149,7 @@ public abstract class AbstractGoogleClient {
    * @throws IllegalStateException if the configured Universe Domain does not match the Universe
    *     Domain in the Credentials
    */
-  public boolean hasValidUniverseDomain() {
+  public void validateUniverseDomain() {
     String expectedUniverseDomain;
     try {
       if (!(httpRequestInitializer instanceof HttpCredentialsAdapter)) {
@@ -171,7 +171,6 @@ public abstract class AbstractGoogleClient {
       throw new IllegalStateException(
           "Unable to retrieve the Universe Domain from the Credentials.", e);
     }
-    return true;
   }
 
   /**

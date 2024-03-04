@@ -296,7 +296,9 @@ public class AbstractGoogleClientTest extends TestCase {
                 TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, httpCredentialsAdapter)
             .setApplicationName(applicationName)
             .build();
-    assertTrue(client.hasValidUniverseDomain());
+
+    // Nothing throws
+    client.validateUniverseDomain();
   }
 
   @Test
@@ -318,7 +320,7 @@ public class AbstractGoogleClientTest extends TestCase {
         new ThrowingRunnable() {
           @Override
           public void run() {
-            client.hasValidUniverseDomain();
+            client.validateUniverseDomain();
           }
         });
   }
@@ -338,7 +340,9 @@ public class AbstractGoogleClientTest extends TestCase {
                 new TestHttpRequestInitializer())
             .setApplicationName(applicationName)
             .build();
-    assertTrue(client.hasValidUniverseDomain());
+
+    // Nothing throws
+    client.validateUniverseDomain();
   }
 
   @Test
@@ -363,7 +367,7 @@ public class AbstractGoogleClientTest extends TestCase {
         new ThrowingRunnable() {
           @Override
           public void run() {
-            client.hasValidUniverseDomain();
+            client.validateUniverseDomain();
           }
         });
   }
