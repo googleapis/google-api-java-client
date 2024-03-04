@@ -36,6 +36,8 @@ public abstract class AbstractGoogleClient {
 
   private static final Logger logger = Logger.getLogger(AbstractGoogleClient.class.getName());
 
+  private static final String GOOGLE_CLOUD_UNIVERSE_DOMAIN = "GOOGLE_CLOUD_UNIVERSE_DOMAIN";
+
   /** The request factory for connections to the server. */
   private final HttpRequestFactory requestFactory;
 
@@ -81,7 +83,7 @@ public abstract class AbstractGoogleClient {
    */
   protected AbstractGoogleClient(Builder builder) {
     googleClientRequestInitializer = builder.googleClientRequestInitializer;
-    universeDomain = builder.universeDomain;
+    universeDomain = determineUniverseDomain(builder);
     rootUrl = normalizeRootUrl(determineEndpoint(builder));
     servicePath = normalizeServicePath(builder.servicePath);
     batchPath = builder.batchPath;
@@ -99,24 +101,42 @@ public abstract class AbstractGoogleClient {
     httpRequestInitializer = builder.httpRequestInitializer;
   }
 
+  /**
+   * Resolve the Universe Domain to be used when resolving the endpoint. The logic for resolving the
+   * universe domain is the following order: 1. Use the user configured value is set, 2. Use the
+   * Universe Domain Env Var if set, 3. Default to the Google Default Universe
+   */
+  private String determineUniverseDomain(Builder builder) {
+    String resolvedUniverseDomain = builder.universeDomain;
+    if (resolvedUniverseDomain == null) {
+      resolvedUniverseDomain = System.getenv(GOOGLE_CLOUD_UNIVERSE_DOMAIN);
+    }
+    return resolvedUniverseDomain == null
+        ? Credentials.GOOGLE_DEFAULT_UNIVERSE
+        : resolvedUniverseDomain;
+  }
+
+  /**
+   * Resolve the endpoint based on user configurations. If the user as configured a custom rootUrl,
+   * use that value. Otherwise, construct the endpoint based on the serviceName and the
+   * universeDomain.
+   */
   private String determineEndpoint(Builder builder) {
     boolean mtlsEnabled = builder.rootUrl.contains(".mtls.");
-    if (mtlsEnabled && !builder.universeDomain.equals(Credentials.GOOGLE_DEFAULT_UNIVERSE)) {
+    // mTLS configurations is not compatible with anything other than the GDU
+    if (mtlsEnabled && !universeDomain.equals(Credentials.GOOGLE_DEFAULT_UNIVERSE)) {
       throw new IllegalArgumentException(
           "mTLS is not supported in any universe other than googleapis.com");
     }
-    // If the user did not set an endpoint, resolve the endpoint
-    String resolvedUniverseDomain =
-        builder.universeDomain == null
-            ? Credentials.GOOGLE_DEFAULT_UNIVERSE
-            : builder.universeDomain;
-    if (builder.isUserConfiguredEndpoint) {
+    // If the serviceName is null, we cannot construct a valid resolved endpoint. Simply return
+    // the rootUrl as this was custom configuration passed in.
+    if (builder.isUserConfiguredEndpoint || builder.serviceName == null) {
       return builder.rootUrl;
     }
     if (mtlsEnabled) {
-      return "https://" + builder.serviceName + ".mtls." + resolvedUniverseDomain;
+      return "https://" + builder.serviceName + ".mtls." + universeDomain;
     }
-    return "https://" + builder.serviceName + "." + resolvedUniverseDomain;
+    return "https://" + builder.serviceName + "." + universeDomain;
   }
 
   /**
@@ -388,9 +408,15 @@ public abstract class AbstractGoogleClient {
     boolean suppressRequiredParameterChecks;
 
     /** User configured Universe Domain. Defaults to `googleapis.com`. */
-    String universeDomain = Credentials.GOOGLE_DEFAULT_UNIVERSE;
+    String universeDomain;
 
-    /** Whether the user has configured an endpoint via {@link #setRootUrl(String)} */
+    /**
+     * Whether the user has configured an endpoint via {@link #setRootUrl(String)}. This is added in
+     * because the rootUrl is set in the Builder's constructor. Allow user configuration via {@link
+     * #setRootUrl(String)}, which we would need to track.
+     *
+     * <p>By default, it is set as false
+     */
     boolean isUserConfiguredEndpoint = false;
 
     /** The parsed serviceName value from the rootUrl from the Discovery Doc. */
@@ -430,13 +456,14 @@ public abstract class AbstractGoogleClient {
     private String parseServiceName(String rootUrl) {
       // len of "https://"
       int startIndex = 8;
-      if (rootUrl.contains("mtls.googleapis.com")) {
+      if (rootUrl.contains(".mtls.")) {
         return rootUrl.substring(startIndex, rootUrl.indexOf(".mtls"));
       } else if (rootUrl.contains(".googleapis.com")) {
         return rootUrl.substring(startIndex, rootUrl.indexOf(".googleapis.com"));
       } else {
         // Return null to not break behavior for any non-google users or any use
-        // case without a discovery doc
+        // case without a discovery doc. There may be certain use cases for this
+        // as the Builder's constructor is only protected scope
         return null;
       }
     }
