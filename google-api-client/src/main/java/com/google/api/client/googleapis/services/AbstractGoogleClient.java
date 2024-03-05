@@ -117,7 +117,7 @@ public abstract class AbstractGoogleClient {
   }
 
   /**
-   * Resolve the endpoint based on user configurations. If the user as configured a custom rootUrl,
+   * Resolve the endpoint based on user configurations. If the user has configured a custom rootUrl,
    * use that value. Otherwise, construct the endpoint based on the serviceName and the
    * universeDomain.
    */
@@ -142,9 +142,10 @@ public abstract class AbstractGoogleClient {
   /**
    * Check that the User configured universe domain matches the Credentials' universe domain. This
    * uses the HttpRequestInitializer to get the Credentials and is enforced that the
-   * HttpRequestInitializer is of the HttpCredentialsAdapter from the google-auth-library. If the
-   * HttpRequestInitializer is not used, the configured Universe Domain is validated against the
-   * Google Default Universe (GDU): `googleapis.com`.
+   * HttpRequestInitializer is of the {@see <a
+   * href="https://github.com/googleapis/google-auth-library-java/blob/main/oauth2_http/java/com/google/auth/http/HttpCredentialsAdapter.java">HttpCredentialsAdapter</a>}
+   * from the google-auth-library. If the HttpRequestInitializer is not used, the configured
+   * Universe Domain is validated against the Google Default Universe (GDU): `googleapis.com`.
    *
    * @throws IllegalStateException if the configured Universe Domain does not match the Universe
    *     Domain in the Credentials
