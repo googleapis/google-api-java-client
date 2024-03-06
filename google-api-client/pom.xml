@@ -211,7 +211,7 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <test>AbstractGoogleClientTest#testGoogleClientBuilder_noCustomEndpoint_universeDomainEnvVar+testGoogleClientBuilder_customEndpoint_universeDomainEnvVar</test>
+              <test>AbstractGoogleClientTest#testGoogleClientBuilder_noCustomUniverseDomain_universeDomainEnvVar+testGoogleClientBuilder_customUniverseDomain_universeDomainEnvVar</test>
             </configuration>
           </plugin>
         </plugins>
