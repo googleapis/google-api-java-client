@@ -218,9 +218,9 @@ public class AbstractGoogleClientTest extends TestCase {
     String expectedRootUrl = "https://test.random.com/";
 
     AbstractGoogleClient client =
-            new MockGoogleClient.Builder(TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null)
-                    .setApplicationName(applicationName)
-                    .build();
+        new MockGoogleClient.Builder(TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null)
+            .setApplicationName(applicationName)
+            .build();
     assertEquals(expectedRootUrl, client.getRootUrl());
     assertEquals(envVarUniverseDomain, client.getUniverseDomain());
   }
@@ -235,10 +235,10 @@ public class AbstractGoogleClientTest extends TestCase {
     String expectedRootUrl = "https://test.test.com/";
 
     AbstractGoogleClient client =
-            new MockGoogleClient.Builder(TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null)
-                    .setApplicationName(applicationName)
-                    .setUniverseDomain(customUniverseDomain)
-                    .build();
+        new MockGoogleClient.Builder(TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null)
+            .setApplicationName(applicationName)
+            .setUniverseDomain(customUniverseDomain)
+            .build();
     assertEquals(expectedRootUrl, client.getRootUrl());
     assertEquals(customUniverseDomain, client.getUniverseDomain());
   }
