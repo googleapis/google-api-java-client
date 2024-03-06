@@ -134,9 +134,9 @@ public abstract class AbstractGoogleClient {
       return builder.rootUrl;
     }
     if (mtlsEnabled) {
-      return "https://" + builder.serviceName + ".mtls." + universeDomain;
+      return "https://" + builder.serviceName + ".mtls." + universeDomain + "/";
     }
-    return "https://" + builder.serviceName + "." + universeDomain;
+    return "https://" + builder.serviceName + "." + universeDomain + "/";
   }
 
   /**

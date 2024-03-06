@@ -209,6 +209,41 @@ public class AbstractGoogleClientTest extends TestCase {
   }
 
   @Test
+  public void testGoogleClientBuilder_noCustomUniverseDomain_universeDomainEnvVar() {
+    String rootUrl = "https://test.googleapis.com/";
+    String applicationName = "Test Application";
+    String servicePath = "test/";
+    // Env Var Universe Domain is `random.com`
+    String envVarUniverseDomain = "random.com";
+    String expectedRootUrl = "https://test.random.com/";
+
+    AbstractGoogleClient client =
+            new MockGoogleClient.Builder(TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null)
+                    .setApplicationName(applicationName)
+                    .build();
+    assertEquals(expectedRootUrl, client.getRootUrl());
+    assertEquals(envVarUniverseDomain, client.getUniverseDomain());
+  }
+
+  @Test
+  public void testGoogleClientBuilder_customUniverseDomain_universeDomainEnvVar() {
+    String rootUrl = "https://test.googleapis.com/";
+    String applicationName = "Test Application";
+    String servicePath = "test/";
+    // Env Var Universe Domain is `random.com`
+    String customUniverseDomain = "test.com";
+    String expectedRootUrl = "https://test.test.com/";
+
+    AbstractGoogleClient client =
+            new MockGoogleClient.Builder(TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null)
+                    .setApplicationName(applicationName)
+                    .setUniverseDomain(customUniverseDomain)
+                    .build();
+    assertEquals(expectedRootUrl, client.getRootUrl());
+    assertEquals(customUniverseDomain, client.getUniverseDomain());
+  }
+
+  @Test
   public void testGoogleClientSuppressionDefaults() {
     String rootUrl = "http://www.testgoogleapis.com/test/";
     String servicePath = "path/v1/";
