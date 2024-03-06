@@ -413,12 +413,17 @@ public abstract class AbstractGoogleClient {
 
     /**
      * Whether the user has configured an endpoint via {@link #setRootUrl(String)}. This is added in
-     * because the rootUrl is set in the Builder's constructor. Allow user configuration via {@link
-     * #setRootUrl(String)}, which we would need to track.
+     * because the rootUrl is set in the Builder's constructor. ,
      *
-     * <p>By default, it is set as false
+     * <p>Apiary clients don't allow user configurations to this Builder's constructor, so this
+     * would be set to false by default for Apiary libraries. User configuration to the rootUrl is
+     * done via {@link #setRootUrl(String)}.
+     *
+     * <p>For other uses cases that touch this Builder's constructor directly, check if the rootUrl
+     * passed in references the Google Default Universe (GDU). Any rootUrl value that is not set in
+     * the GDU is a user configured endpoint.
      */
-    boolean isUserConfiguredEndpoint = false;
+    boolean isUserConfiguredEndpoint;
 
     /** The parsed serviceName value from the rootUrl from the Discovery Doc. */
     String serviceName;
@@ -444,6 +449,8 @@ public abstract class AbstractGoogleClient {
       this.servicePath = normalizeServicePath(servicePath);
       this.httpRequestInitializer = httpRequestInitializer;
       this.serviceName = parseServiceName(rootUrl);
+      this.isUserConfiguredEndpoint =
+          !this.rootUrl.endsWith(Credentials.GOOGLE_DEFAULT_UNIVERSE + "/");
     }
 
     /**

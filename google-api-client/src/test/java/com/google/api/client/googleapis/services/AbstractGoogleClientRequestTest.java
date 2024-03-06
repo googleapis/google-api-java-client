@@ -45,8 +45,8 @@ import junit.framework.TestCase;
  */
 public class AbstractGoogleClientRequestTest extends TestCase {
 
-  private static final String ROOT_URL = "https://www.googleapis.com/";
-  private static final String SERVICE_PATH = "test/path/v1/";
+  private static final String ROOT_URL = "https://www.googleapis.com/test/";
+  private static final String SERVICE_PATH = "path/v1/";
   private static final String URI_TEMPLATE = "tests/{testId}";
   private static final JsonFactory JSON_FACTORY = new GsonFactory();
   private static final JsonObjectParser JSON_OBJECT_PARSER = new JsonObjectParser(JSON_FACTORY);
