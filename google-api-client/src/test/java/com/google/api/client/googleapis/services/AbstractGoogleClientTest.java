@@ -351,17 +351,18 @@ public class AbstractGoogleClientTest extends TestCase {
             .setApplicationName(applicationName)
             .build();
     assertThrows(
-        IllegalStateException.class,
+        IOException.class,
         new ThrowingRunnable() {
           @Override
-          public void run() {
+          public void run() throws IOException {
             client.validateUniverseDomain();
           }
         });
   }
 
   @Test
-  public void validateUniverseDomain_notUsingHttpCredentialsAdapter_defaultUniverseDomain() {
+  public void validateUniverseDomain_notUsingHttpCredentialsAdapter_defaultUniverseDomain()
+      throws IOException {
     String rootUrl = "https://test.googleapis.com/";
     String applicationName = "Test Application";
     String servicePath = "test/";
@@ -398,10 +399,10 @@ public class AbstractGoogleClientTest extends TestCase {
             .setUniverseDomain(universeDomain)
             .build();
     assertThrows(
-        IllegalStateException.class,
+        IOException.class,
         new ThrowingRunnable() {
           @Override
-          public void run() {
+          public void run() throws IOException {
             client.validateUniverseDomain();
           }
         });
