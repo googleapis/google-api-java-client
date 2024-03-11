@@ -290,15 +290,6 @@ public class AbstractGoogleClientTest extends TestCase {
   }
 
   @Test
-  public void testParseServiceName_mtlsRootUrl() {
-    AbstractGoogleClient.Builder clientBuilder =
-        new MockGoogleClient.Builder(
-                TRANSPORT, "https://test.mtls.googleapis.com/", "", JSON_OBJECT_PARSER, null)
-            .setApplicationName("Test Application");
-    assertEquals(clientBuilder.getServiceName(), "test");
-  }
-
-  @Test
   public void testParseServiceName_nonMtlsRootUrl() {
     AbstractGoogleClient.Builder clientBuilder =
         new MockGoogleClient.Builder(
@@ -308,12 +299,61 @@ public class AbstractGoogleClientTest extends TestCase {
   }
 
   @Test
+  public void testParseServiceName_mtlsRootUrl() {
+    AbstractGoogleClient.Builder clientBuilder =
+        new MockGoogleClient.Builder(
+                TRANSPORT, "https://test.mtls.googleapis.com/", "", JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application");
+    assertEquals(clientBuilder.getServiceName(), "test");
+  }
+
+  @Test
   public void testParseServiceName_nonGDURootUrl() {
     AbstractGoogleClient.Builder clientBuilder =
         new MockGoogleClient.Builder(
                 TRANSPORT, "https://test.random.com/", "", JSON_OBJECT_PARSER, null)
             .setApplicationName("Test Application");
     assertNull(clientBuilder.getServiceName());
+  }
+
+  @Test
+  public void testIsUserSetEndpoint_nonMtlsRootUrl() {
+    AbstractGoogleClient.Builder clientBuilder =
+        new MockGoogleClient.Builder(
+                TRANSPORT, "https://random.googleapis.com/", "", JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application");
+    assertFalse(clientBuilder.isUserConfiguredEndpoint);
+  }
+
+  @Test
+  public void testIsUserSetEndpoint_mtlsRootUrl() {
+    AbstractGoogleClient.Builder clientBuilder =
+        new MockGoogleClient.Builder(
+                TRANSPORT, "https://test.mtls.googleapis.com/", "", JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application");
+    assertFalse(clientBuilder.isUserConfiguredEndpoint);
+  }
+
+  @Test
+  public void testIsUserSetEndpoint_nonGDURootUrl() {
+    AbstractGoogleClient.Builder clientBuilder =
+        new MockGoogleClient.Builder(
+                TRANSPORT, "https://test.random.com/", "", JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application");
+    assertTrue(clientBuilder.isUserConfiguredEndpoint);
+  }
+
+  @Test
+  public void testIsUserSetEndpoint_regionalEndpoint() {
+    AbstractGoogleClient.Builder clientBuilder =
+        new MockGoogleClient.Builder(
+                TRANSPORT,
+                "https://us-east-4.coolservice.googleapis.com/",
+                "",
+                JSON_OBJECT_PARSER,
+                null)
+            .setApplicationName("Test Application");
+    assertTrue(clientBuilder.isUserConfiguredEndpoint);
   }
 
   @Test

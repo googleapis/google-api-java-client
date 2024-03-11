@@ -25,6 +25,7 @@ import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * Abstract thread-safe Google client.
@@ -406,6 +407,13 @@ public abstract class AbstractGoogleClient {
     String universeDomain;
 
     /**
+     * Regex pattern to check if the URL passed in matches the default endpoint confgured from a
+     * discovery doc. Follows the format of `https://{serviceName}(.mtls).googleapis.com/`
+     */
+    Pattern defaultEndpointRegex =
+        Pattern.compile("https://[a-zA-Z]*(\\.mtls)?\\.googleapis.com/?");
+
+    /**
      * Whether the user has configured an endpoint via {@link #setRootUrl(String)}. This is added in
      * because the rootUrl is set in the Builder's constructor. ,
      *
@@ -443,8 +451,7 @@ public abstract class AbstractGoogleClient {
       this.servicePath = normalizeServicePath(servicePath);
       this.httpRequestInitializer = httpRequestInitializer;
       this.serviceName = parseServiceName(rootUrl);
-      this.isUserConfiguredEndpoint =
-          !this.rootUrl.endsWith(Credentials.GOOGLE_DEFAULT_UNIVERSE + "/");
+      this.isUserConfiguredEndpoint = !defaultEndpointRegex.matcher(this.rootUrl).matches();
     }
 
     /**
