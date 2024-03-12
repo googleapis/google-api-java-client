@@ -391,7 +391,7 @@ public class AbstractGoogleClientTest extends TestCase {
             .setApplicationName(applicationName)
             .build();
     assertThrows(
-        IOException.class,
+        IllegalStateException.class,
         new ThrowingRunnable() {
           @Override
           public void run() throws IOException {
@@ -439,7 +439,7 @@ public class AbstractGoogleClientTest extends TestCase {
             .setUniverseDomain(universeDomain)
             .build();
     assertThrows(
-        IOException.class,
+        IllegalStateException.class,
         new ThrowingRunnable() {
           @Override
           public void run() throws IOException {

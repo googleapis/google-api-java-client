@@ -25,6 +25,7 @@ import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -148,8 +149,9 @@ public abstract class AbstractGoogleClient {
    * from the google-auth-library. If the HttpRequestInitializer is not used, the configured
    * Universe Domain is validated against the Google Default Universe (GDU): `googleapis.com`.
    *
-   * @throws IOException if the configured Universe Domain does not match the Universe Domain in the
-   *     Credentials or there is an error reading the Universe Domain from the credentials
+   * @throws IOException if there is an error reading the Universe Domain from the credentials
+   * @throws IllegalStateException if the configured Universe Domain does not match the Universe
+   *     Domain in the Credentials
    */
   public void validateUniverseDomain() throws IOException {
     String expectedUniverseDomain;
@@ -160,7 +162,7 @@ public abstract class AbstractGoogleClient {
       expectedUniverseDomain = credentials.getUniverseDomain();
     }
     if (!expectedUniverseDomain.equals(getUniverseDomain())) {
-      throw new IOException(
+      throw new IllegalStateException(
           String.format(
               "The configured universe domain (%s) does not match the universe domain found"
                   + " in the credentials (%s). If you haven't configured the universe domain"
@@ -411,7 +413,7 @@ public abstract class AbstractGoogleClient {
      * discovery doc. Follows the format of `https://{serviceName}(.mtls).googleapis.com/`
      */
     Pattern defaultEndpointRegex =
-        Pattern.compile("https://[a-zA-Z]*(\\.mtls)?\\.googleapis.com/?");
+        Pattern.compile("https://([a-zA-Z]*)(\\.mtls)?\\.googleapis.com/?");
 
     /**
      * Whether the user has configured an endpoint via {@link #setRootUrl(String)}. This is added in
@@ -450,31 +452,10 @@ public abstract class AbstractGoogleClient {
       this.rootUrl = normalizeRootUrl(rootUrl);
       this.servicePath = normalizeServicePath(servicePath);
       this.httpRequestInitializer = httpRequestInitializer;
-      this.serviceName = parseServiceName(rootUrl);
-      this.isUserConfiguredEndpoint = !defaultEndpointRegex.matcher(this.rootUrl).matches();
-    }
-
-    /**
-     * This is intended to invoked once on the initial Builder's constructor call. This parses the
-     * rootUrl value (set from the Discovery Doc) to use for the serviceName. The serviceName is
-     * used to construct an endpoint when the user passes in a custom Universe Domain value.
-     *
-     * <p>The roolUrl from the Discovery Docs will always follow the format of
-     * https://{serviceName}(.mtls).googleapis.com/
-     */
-    private String parseServiceName(String rootUrl) {
-      // len of "https://"
-      int startIndex = 8;
-      if (rootUrl.contains(".mtls.")) {
-        return rootUrl.substring(startIndex, rootUrl.indexOf(".mtls"));
-      } else if (rootUrl.contains(".googleapis.com")) {
-        return rootUrl.substring(startIndex, rootUrl.indexOf(".googleapis.com"));
-      } else {
-        // Return null to not break behavior for any non-google users or any use
-        // case without a discovery doc. There may be certain use cases for this
-        // as the Builder's constructor is only protected scope
-        return null;
-      }
+      Matcher matcher = defaultEndpointRegex.matcher(rootUrl);
+      boolean matches = matcher.matches();
+      this.isUserConfiguredEndpoint = !matches;
+      this.serviceName = matches ? matcher.group(1) : null;
     }
 
     /** Builds a new instance of {@link AbstractGoogleClient}. */
@@ -665,7 +646,7 @@ public abstract class AbstractGoogleClient {
      * Sets the user configured Universe Domain value. This value will be used to try and construct
      * the endpoint to connect to GCP services.
      *
-     * @throws IllegalStateException if universeDomain is passed in with an empty string ("")
+     * @throws IllegalArgumentException if universeDomain is passed in with an empty string ("")
      */
     public Builder setUniverseDomain(String universeDomain) {
       if (universeDomain != null && universeDomain.isEmpty()) {
