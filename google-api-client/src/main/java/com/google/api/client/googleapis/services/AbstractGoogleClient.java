@@ -125,13 +125,12 @@ public abstract class AbstractGoogleClient {
    */
   private String determineEndpoint(Builder builder) {
     boolean mtlsEnabled = builder.rootUrl.contains(".mtls.");
-    // mTLS configurations is not compatible with anything other than the GDU
     if (mtlsEnabled && !universeDomain.equals(Credentials.GOOGLE_DEFAULT_UNIVERSE)) {
-      throw new IllegalArgumentException(
+      throw new IllegalStateException(
           "mTLS is not supported in any universe other than googleapis.com");
     }
     // If the serviceName is null, we cannot construct a valid resolved endpoint. Simply return
-    // the rootUrl as this was custom configuration passed in.
+    // the rootUrl as this was custom rootUrl passed in.
     if (builder.isUserConfiguredEndpoint || builder.serviceName == null) {
       return builder.rootUrl;
     }
@@ -146,8 +145,10 @@ public abstract class AbstractGoogleClient {
    * uses the HttpRequestInitializer to get the Credentials and is enforced that the
    * HttpRequestInitializer is of the {@see <a
    * href="https://github.com/googleapis/google-auth-library-java/blob/main/oauth2_http/java/com/google/auth/http/HttpCredentialsAdapter.java">HttpCredentialsAdapter</a>}
-   * from the google-auth-library. If the HttpRequestInitializer is not used, the configured
+   * from the google-auth-library. If the HttpCredentialsAdapter is not used, the configured
    * Universe Domain is validated against the Google Default Universe (GDU): `googleapis.com`.
+   *
+   * <p>To use a non-GDU Credentials, you must use the HttpCredentialsAdapter class.
    *
    * @throws IOException if there is an error reading the Universe Domain from the credentials
    * @throws IllegalStateException if the configured Universe Domain does not match the Universe
@@ -157,9 +158,9 @@ public abstract class AbstractGoogleClient {
     String expectedUniverseDomain = Credentials.GOOGLE_DEFAULT_UNIVERSE;
     if (httpRequestInitializer instanceof HttpCredentialsAdapter) {
       Credentials credentials = ((HttpCredentialsAdapter) httpRequestInitializer).getCredentials();
-      if (credentials != null) {
-        expectedUniverseDomain = credentials.getUniverseDomain();
-      }
+      // No need for a null check as HttpCredentialsAdapter cannot be initialized will null
+      // Credentials
+      expectedUniverseDomain = credentials.getUniverseDomain();
     }
     if (!expectedUniverseDomain.equals(getUniverseDomain())) {
       throw new IllegalStateException(
@@ -454,6 +455,8 @@ public abstract class AbstractGoogleClient {
       this.httpRequestInitializer = httpRequestInitializer;
       Matcher matcher = defaultEndpointRegex.matcher(rootUrl);
       boolean matches = matcher.matches();
+      // Checked here for the use case where users extend this class and may pass in
+      // a custom endpoint
       this.isUserConfiguredEndpoint = !matches;
       this.serviceName = matches ? matcher.group(1) : null;
     }
