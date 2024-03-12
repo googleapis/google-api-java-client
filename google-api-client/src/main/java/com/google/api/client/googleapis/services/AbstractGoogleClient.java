@@ -154,12 +154,12 @@ public abstract class AbstractGoogleClient {
    *     Domain in the Credentials
    */
   public void validateUniverseDomain() throws IOException {
-    String expectedUniverseDomain;
-    if (!(httpRequestInitializer instanceof HttpCredentialsAdapter)) {
-      expectedUniverseDomain = Credentials.GOOGLE_DEFAULT_UNIVERSE;
-    } else {
+    String expectedUniverseDomain = Credentials.GOOGLE_DEFAULT_UNIVERSE;
+    if (httpRequestInitializer instanceof HttpCredentialsAdapter) {
       Credentials credentials = ((HttpCredentialsAdapter) httpRequestInitializer).getCredentials();
-      expectedUniverseDomain = credentials.getUniverseDomain();
+      if (credentials != null) {
+        expectedUniverseDomain = credentials.getUniverseDomain();
+      }
     }
     if (!expectedUniverseDomain.equals(getUniverseDomain())) {
       throw new IllegalStateException(
@@ -409,7 +409,7 @@ public abstract class AbstractGoogleClient {
     String universeDomain;
 
     /**
-     * Regex pattern to check if the URL passed in matches the default endpoint confgured from a
+     * Regex pattern to check if the URL passed in matches the default endpoint configured from a
      * discovery doc. Follows the format of `https://{serviceName}(.mtls).googleapis.com/`
      */
     Pattern defaultEndpointRegex =
@@ -424,8 +424,8 @@ public abstract class AbstractGoogleClient {
      * done via {@link #setRootUrl(String)}.
      *
      * <p>For other uses cases that touch this Builder's constructor directly, check if the rootUrl
-     * passed in references the Google Default Universe (GDU). Any rootUrl value that is not set in
-     * the GDU is a user configured endpoint.
+     * passed matches the default endpoint regex. If it doesn't match, it is a user configured
+     * endpoint.
      */
     boolean isUserConfiguredEndpoint;
 
