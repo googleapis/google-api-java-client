@@ -145,8 +145,7 @@ public abstract class AbstractGoogleClient {
    * uses the HttpRequestInitializer to get the Credentials and is enforced that the
    * HttpRequestInitializer is of the {@see <a
    * href="https://github.com/googleapis/google-auth-library-java/blob/main/oauth2_http/java/com/google/auth/http/HttpCredentialsAdapter.java">HttpCredentialsAdapter</a>}
-   * from the google-auth-library. If the HttpCredentialsAdapter is not used, the configured
-   * Universe Domain is validated against the Google Default Universe (GDU): `googleapis.com`.
+   * from the google-auth-library.
    *
    * <p>To use a non-GDU Credentials, you must use the HttpCredentialsAdapter class.
    *
@@ -155,20 +154,19 @@ public abstract class AbstractGoogleClient {
    *     Domain in the Credentials
    */
   public void validateUniverseDomain() throws IOException {
-    String expectedUniverseDomain = Credentials.GOOGLE_DEFAULT_UNIVERSE;
     if (httpRequestInitializer instanceof HttpCredentialsAdapter) {
       Credentials credentials = ((HttpCredentialsAdapter) httpRequestInitializer).getCredentials();
-      // No need for a null check as HttpCredentialsAdapter cannot be initialized will null
+      // No need for a null check as HttpCredentialsAdapter cannot be initialized with null
       // Credentials
-      expectedUniverseDomain = credentials.getUniverseDomain();
-    }
-    if (!expectedUniverseDomain.equals(getUniverseDomain())) {
-      throw new IllegalStateException(
-          String.format(
-              "The configured universe domain (%s) does not match the universe domain found"
-                  + " in the credentials (%s). If you haven't configured the universe domain"
-                  + " explicitly, `googleapis.com` is the default.",
-              getUniverseDomain(), expectedUniverseDomain));
+      String expectedUniverseDomain = credentials.getUniverseDomain();
+      if (!expectedUniverseDomain.equals(getUniverseDomain())) {
+        throw new IllegalStateException(
+            String.format(
+                "The configured universe domain (%s) does not match the universe domain found"
+                    + " in the credentials (%s). If you haven't configured the universe domain"
+                    + " explicitly, `googleapis.com` is the default.",
+                getUniverseDomain(), expectedUniverseDomain));
+      }
     }
   }
 

@@ -162,9 +162,9 @@ public class AbstractGoogleClientTest extends TestCase {
             .setApplicationName(applicationName)
             .setUniverseDomain("random.com");
 
-    IllegalArgumentException exception =
+    IllegalStateException exception =
         assertThrows(
-            IllegalArgumentException.class,
+            IllegalStateException.class,
             new ThrowingRunnable() {
               @Override
               public void run() {
@@ -419,33 +419,6 @@ public class AbstractGoogleClientTest extends TestCase {
 
     // Nothing throws
     client.validateUniverseDomain();
-  }
-
-  @Test
-  public void validateUniverseDomain_notUsingHttpCredentialsAdapter_customUniverseDomain() {
-    String rootUrl = "https://test.googleapis.com/";
-    String applicationName = "Test Application";
-    String servicePath = "test/";
-    String universeDomain = "random.com";
-
-    final AbstractGoogleClient client =
-        new MockGoogleClient.Builder(
-                TRANSPORT,
-                rootUrl,
-                servicePath,
-                JSON_OBJECT_PARSER,
-                new TestHttpRequestInitializer())
-            .setApplicationName(applicationName)
-            .setUniverseDomain(universeDomain)
-            .build();
-    assertThrows(
-        IllegalStateException.class,
-        new ThrowingRunnable() {
-          @Override
-          public void run() throws IOException {
-            client.validateUniverseDomain();
-          }
-        });
   }
 
   private static final String TEST_RESUMABLE_REQUEST_URL =
