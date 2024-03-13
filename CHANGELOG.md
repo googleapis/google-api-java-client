@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.4.0](https://github.com/googleapis/google-api-java-client/compare/v2.3.0...v2.4.0) (2024-03-13)
+
+
+### Features
+
+* Add Universe Domain Support ([#2435](https://github.com/googleapis/google-api-java-client/issues/2435)) ([4adfed9](https://github.com/googleapis/google-api-java-client/commit/4adfed9e0ce65a82d0d7229611f43a34c5cb3a3d))
+
+
+### Bug Fixes
+
+* **deps:** Update dependency com.google.api-client:google-api-client to v2.3.0 ([#2427](https://github.com/googleapis/google-api-java-client/issues/2427)) ([a075e39](https://github.com/googleapis/google-api-java-client/commit/a075e3914e4ac1de97ee55f2942bf354dfa13fb5))
+* **deps:** Update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.25 ([#2438](https://github.com/googleapis/google-api-java-client/issues/2438)) ([830d021](https://github.com/googleapis/google-api-java-client/commit/830d021a7cf94178d5f9b1a2bc92228654ba5d6e))
+* **deps:** Update dependency com.google.auth:google-auth-library-bom to v1.23.0 ([#2443](https://github.com/googleapis/google-api-java-client/issues/2443)) ([690a21a](https://github.com/googleapis/google-api-java-client/commit/690a21a4435d8af4953b54a9aff5e5fa432cd8d9))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.34.0 ([#2425](https://github.com/googleapis/google-api-java-client/issues/2425)) ([94cd2a3](https://github.com/googleapis/google-api-java-client/commit/94cd2a370df2768dba3d3b902d29fa4f3badddfa))
+* **deps:** Update dependency com.google.guava:guava to v33 ([#2410](https://github.com/googleapis/google-api-java-client/issues/2410)) ([d6adc9b](https://github.com/googleapis/google-api-java-client/commit/d6adc9b64d3d4af688785b3739ab9cdedbc231a5))
+* **deps:** Update dependency commons-codec:commons-codec to v1.16.1 ([#2432](https://github.com/googleapis/google-api-java-client/issues/2432)) ([81bdcd1](https://github.com/googleapis/google-api-java-client/commit/81bdcd156f03c3bc25b81ceb60e74547b36ec759))
+
 ## [2.3.0](https://github.com/googleapis/google-api-java-client/compare/v2.2.0...v2.3.0) (2024-01-29)
 
 
