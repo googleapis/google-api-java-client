@@ -154,19 +154,20 @@ public abstract class AbstractGoogleClient {
    *     Domain in the Credentials
    */
   public void validateUniverseDomain() throws IOException {
-    if (httpRequestInitializer instanceof HttpCredentialsAdapter) {
-      Credentials credentials = ((HttpCredentialsAdapter) httpRequestInitializer).getCredentials();
-      // No need for a null check as HttpCredentialsAdapter cannot be initialized with null
-      // Credentials
-      String expectedUniverseDomain = credentials.getUniverseDomain();
-      if (!expectedUniverseDomain.equals(getUniverseDomain())) {
-        throw new IllegalStateException(
-            String.format(
-                "The configured universe domain (%s) does not match the universe domain found"
-                    + " in the credentials (%s). If you haven't configured the universe domain"
-                    + " explicitly, `googleapis.com` is the default.",
-                getUniverseDomain(), expectedUniverseDomain));
-      }
+    if (!(httpRequestInitializer instanceof HttpCredentialsAdapter)) {
+      return;
+    }
+    Credentials credentials = ((HttpCredentialsAdapter) httpRequestInitializer).getCredentials();
+    // No need for a null check as HttpCredentialsAdapter cannot be initialized with null
+    // Credentials
+    String expectedUniverseDomain = credentials.getUniverseDomain();
+    if (!expectedUniverseDomain.equals(getUniverseDomain())) {
+      throw new IllegalStateException(
+          String.format(
+              "The configured universe domain (%s) does not match the universe domain found"
+                  + " in the credentials (%s). If you haven't configured the universe domain"
+                  + " explicitly, `googleapis.com` is the default.",
+              getUniverseDomain(), expectedUniverseDomain));
     }
   }
 
