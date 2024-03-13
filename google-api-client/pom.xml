@@ -111,6 +111,14 @@
           <usedDependencies>commons-codec:commons-codec</usedDependencies>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!-- These tests require an Env Var to be set. Use -PenvVarTest to ONLY run these tests -->
+          <test>!AbstractGoogleClientTest#testGoogleClientBuilder_noCustomUniverseDomain_universeDomainEnvVar+testGoogleClientBuilder_customUniverseDomain_universeDomainEnvVar</test>
+        </configuration>
+      </plugin>
     </plugins>
 
     <resources>
@@ -134,6 +142,14 @@
     <dependency>
       <groupId>com.google.oauth-client</groupId>
       <artifactId>google-oauth-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.auth</groupId>
+      <artifactId>google-auth-library-credentials</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.auth</groupId>
+      <artifactId>google-auth-library-oauth2-http</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
@@ -179,6 +195,27 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>envVarTest</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <test>AbstractGoogleClientTest#testGoogleClientBuilder_noCustomUniverseDomain_universeDomainEnvVar+testGoogleClientBuilder_customUniverseDomain_universeDomainEnvVar</test>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

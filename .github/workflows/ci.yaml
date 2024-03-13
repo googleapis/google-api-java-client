@@ -20,6 +20,13 @@ jobs:
     - run: .kokoro/build.sh
       env:
         JOB_TYPE: test
+    # The `envVarTest` profile runs tests that require an environment variable
+    - name: Env Var Tests
+      run: |
+        mvn test -B -ntp -Dclirr.skip=true -Denforcer.skip=true -PenvVarTest
+      # Set the Env Var for this step only
+      env:
+        GOOGLE_CLOUD_UNIVERSE_DOMAIN: random.com
   windows:
     runs-on: windows-latest
     steps:

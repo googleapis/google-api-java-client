@@ -12,6 +12,8 @@
 
 package com.google.api.client.googleapis.services;
 
+import static org.junit.Assert.assertThrows;
+
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;
 import com.google.api.client.googleapis.testing.services.MockGoogleClientRequest;
@@ -32,22 +34,45 @@ import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.Key;
+import com.google.auth.Credentials;
+import com.google.auth.http.HttpCredentialsAdapter;
+import com.google.auth.oauth2.GoogleCredentials;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.function.ThrowingRunnable;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * Tests {@link AbstractGoogleClient}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(MockitoJUnitRunner.class)
 public class AbstractGoogleClientTest extends TestCase {
+
+  @Mock private GoogleCredentials googleCredentials;
+
+  @Mock private HttpCredentialsAdapter httpCredentialsAdapter;
 
   private static final JsonFactory JSON_FACTORY = new GsonFactory();
   private static final JsonObjectParser JSON_OBJECT_PARSER = new JsonObjectParser(JSON_FACTORY);
   private static final HttpTransport TRANSPORT = new MockHttpTransport();
+
+  private static class TestHttpRequestInitializer implements HttpRequestInitializer {
+
+    @Override
+    public void initialize(HttpRequest httpRequest) {
+      // no-op
+    }
+  }
 
   private static class TestRemoteRequestInitializer implements GoogleClientRequestInitializer {
 
@@ -60,9 +85,10 @@ public class AbstractGoogleClientTest extends TestCase {
     }
   }
 
+  @Test
   public void testGoogleClientBuilder() {
-    String rootUrl = "http://www.testgoogleapis.com/test/";
-    String servicePath = "path/v1/";
+    String rootUrl = "https://test.googleapis.com/";
+    String servicePath = "test/path/v1/";
     GoogleClientRequestInitializer jsonHttpRequestInitializer = new TestRemoteRequestInitializer();
     String applicationName = "Test Application";
 
@@ -82,6 +108,142 @@ public class AbstractGoogleClientTest extends TestCase {
     assertTrue(client.getSuppressRequiredParameterChecks());
   }
 
+  @Test
+  public void testGoogleClientBuilder_setsCorrectRootUrl_nonMtlsUrl() {
+    String rootUrl = "https://test.googleapis.com/";
+    String applicationName = "Test Application";
+    String servicePath = "test/";
+
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null)
+            .setApplicationName(applicationName)
+            .build();
+    assertEquals(rootUrl, client.getRootUrl());
+    assertEquals(Credentials.GOOGLE_DEFAULT_UNIVERSE, client.getUniverseDomain());
+  }
+
+  @Test
+  public void testGoogleClientBuilder_setsCorrectRootUrl_mtlsUrl() {
+    String rootUrl = "https://test.mtls.googleapis.com/";
+    String applicationName = "Test Application";
+    String servicePath = "test/";
+
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null)
+            .setApplicationName(applicationName)
+            .build();
+    assertEquals(rootUrl, client.getRootUrl());
+    assertEquals(Credentials.GOOGLE_DEFAULT_UNIVERSE, client.getUniverseDomain());
+  }
+
+  @Test
+  public void testGoogleClientBuilder_customUniverseDomain_nonMtlsUrl() {
+    String rootUrl = "https://test.googleapis.com/";
+    String applicationName = "Test Application";
+    String servicePath = "test/";
+    String universeDomain = "random.com";
+
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null)
+            .setApplicationName(applicationName)
+            .setUniverseDomain(universeDomain)
+            .build();
+    assertEquals("https://test.random.com/", client.getRootUrl());
+    assertEquals(universeDomain, client.getUniverseDomain());
+  }
+
+  @Test
+  public void testGoogleClientBuilder_customUniverseDomain_mtlsUrl() {
+    String rootUrl = "https://test.mtls.googleapis.com/";
+    String applicationName = "Test Application";
+    String servicePath = "test/";
+    final AbstractGoogleClient.Builder builder =
+        new MockGoogleClient.Builder(TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null)
+            .setApplicationName(applicationName)
+            .setUniverseDomain("random.com");
+
+    IllegalStateException exception =
+        assertThrows(
+            IllegalStateException.class,
+            new ThrowingRunnable() {
+              @Override
+              public void run() {
+                builder.build();
+              }
+            });
+    assertEquals(
+        "mTLS is not supported in any universe other than googleapis.com", exception.getMessage());
+  }
+
+  @Test
+  public void testGoogleClientBuilder_customEndpoint_defaultUniverseDomain() {
+    String rootUrl = "https://test.googleapis.com/";
+    String applicationName = "Test Application";
+    String servicePath = "test/";
+
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null)
+            .setApplicationName(applicationName)
+            .setRootUrl("https://randomendpoint.com/")
+            .build();
+    assertEquals("https://randomendpoint.com/", client.getRootUrl());
+    assertEquals(Credentials.GOOGLE_DEFAULT_UNIVERSE, client.getUniverseDomain());
+  }
+
+  @Test
+  public void testGoogleClientBuilder_customEndpoint_customUniverseDomain() {
+    String rootUrl = "https://test.googleapis.com/";
+    String applicationName = "Test Application";
+    String servicePath = "test/";
+    String universeDomain = "random.com";
+    String customRootUrl = "https://randomendpoint.com/";
+
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null)
+            .setApplicationName(applicationName)
+            .setRootUrl(customRootUrl)
+            .setUniverseDomain(universeDomain)
+            .build();
+    assertEquals(customRootUrl, client.getRootUrl());
+    assertEquals(universeDomain, client.getUniverseDomain());
+  }
+
+  @Test
+  public void testGoogleClientBuilder_noCustomUniverseDomain_universeDomainEnvVar() {
+    String rootUrl = "https://test.googleapis.com/";
+    String applicationName = "Test Application";
+    String servicePath = "test/";
+    // Env Var Universe Domain is `random.com`
+    String envVarUniverseDomain = "random.com";
+    String expectedRootUrl = "https://test.random.com/";
+
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null)
+            .setApplicationName(applicationName)
+            .build();
+    assertEquals(expectedRootUrl, client.getRootUrl());
+    assertEquals(envVarUniverseDomain, client.getUniverseDomain());
+  }
+
+  @Test
+  public void testGoogleClientBuilder_customUniverseDomain_universeDomainEnvVar() {
+    String rootUrl = "https://test.googleapis.com/";
+    String applicationName = "Test Application";
+    String servicePath = "test/";
+    // Env Var Universe Domain is `random.com`
+    String customUniverseDomain = "test.com";
+    String expectedRootUrl = "https://test.test.com/";
+
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, null)
+            .setApplicationName(applicationName)
+            .setUniverseDomain(customUniverseDomain)
+            .build();
+    assertEquals(expectedRootUrl, client.getRootUrl());
+    assertEquals(customUniverseDomain, client.getUniverseDomain());
+  }
+
+  @Test
   public void testGoogleClientSuppressionDefaults() {
     String rootUrl = "http://www.testgoogleapis.com/test/";
     String servicePath = "path/v1/";
@@ -97,6 +259,7 @@ public class AbstractGoogleClientTest extends TestCase {
     assertFalse(googleClient.getSuppressRequiredParameterChecks());
   }
 
+  @Test
   public void testBaseServerAndBasePathBuilder() {
     AbstractGoogleClient client =
         new MockGoogleClient.Builder(
@@ -113,6 +276,7 @@ public class AbstractGoogleClientTest extends TestCase {
     assertEquals("http://www.googleapis.com/test/path/v2/", client.getBaseUrl());
   }
 
+  @Test
   public void testInitialize() throws Exception {
     TestRemoteRequestInitializer remoteRequestInitializer = new TestRemoteRequestInitializer();
     AbstractGoogleClient client =
@@ -123,6 +287,138 @@ public class AbstractGoogleClientTest extends TestCase {
             .build();
     client.initialize(null);
     assertTrue(remoteRequestInitializer.isCalled);
+  }
+
+  @Test
+  public void testParseServiceName_nonMtlsRootUrl() {
+    AbstractGoogleClient.Builder clientBuilder =
+        new MockGoogleClient.Builder(
+                TRANSPORT, "https://random.googleapis.com/", "", JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application");
+    assertEquals(clientBuilder.getServiceName(), "random");
+  }
+
+  @Test
+  public void testParseServiceName_mtlsRootUrl() {
+    AbstractGoogleClient.Builder clientBuilder =
+        new MockGoogleClient.Builder(
+                TRANSPORT, "https://test.mtls.googleapis.com/", "", JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application");
+    assertEquals(clientBuilder.getServiceName(), "test");
+  }
+
+  @Test
+  public void testParseServiceName_nonGDURootUrl() {
+    AbstractGoogleClient.Builder clientBuilder =
+        new MockGoogleClient.Builder(
+                TRANSPORT, "https://test.random.com/", "", JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application");
+    assertNull(clientBuilder.getServiceName());
+  }
+
+  @Test
+  public void testIsUserSetEndpoint_nonMtlsRootUrl() {
+    AbstractGoogleClient.Builder clientBuilder =
+        new MockGoogleClient.Builder(
+                TRANSPORT, "https://random.googleapis.com/", "", JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application");
+    assertFalse(clientBuilder.isUserConfiguredEndpoint);
+  }
+
+  @Test
+  public void testIsUserSetEndpoint_mtlsRootUrl() {
+    AbstractGoogleClient.Builder clientBuilder =
+        new MockGoogleClient.Builder(
+                TRANSPORT, "https://test.mtls.googleapis.com/", "", JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application");
+    assertFalse(clientBuilder.isUserConfiguredEndpoint);
+  }
+
+  @Test
+  public void testIsUserSetEndpoint_nonGDURootUrl() {
+    AbstractGoogleClient.Builder clientBuilder =
+        new MockGoogleClient.Builder(
+                TRANSPORT, "https://test.random.com/", "", JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application");
+    assertTrue(clientBuilder.isUserConfiguredEndpoint);
+  }
+
+  @Test
+  public void testIsUserSetEndpoint_regionalEndpoint() {
+    AbstractGoogleClient.Builder clientBuilder =
+        new MockGoogleClient.Builder(
+                TRANSPORT,
+                "https://us-east-4.coolservice.googleapis.com/",
+                "",
+                JSON_OBJECT_PARSER,
+                null)
+            .setApplicationName("Test Application");
+    assertTrue(clientBuilder.isUserConfiguredEndpoint);
+  }
+
+  @Test
+  public void validateUniverseDomain_validUniverseDomain() throws IOException {
+    String rootUrl = "https://test.googleapis.com/";
+    String applicationName = "Test Application";
+    String servicePath = "test/";
+
+    Mockito.when(httpCredentialsAdapter.getCredentials()).thenReturn(googleCredentials);
+    Mockito.when(googleCredentials.getUniverseDomain())
+        .thenReturn(Credentials.GOOGLE_DEFAULT_UNIVERSE);
+
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(
+                TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, httpCredentialsAdapter)
+            .setApplicationName(applicationName)
+            .build();
+
+    // Nothing throws
+    client.validateUniverseDomain();
+  }
+
+  @Test
+  public void validateUniverseDomain_invalidUniverseDomain() throws IOException {
+    String rootUrl = "https://test.googleapis.com/";
+    String applicationName = "Test Application";
+    String servicePath = "test/";
+
+    Mockito.when(httpCredentialsAdapter.getCredentials()).thenReturn(googleCredentials);
+    Mockito.when(googleCredentials.getUniverseDomain()).thenReturn("invalid.universe.domain");
+
+    final AbstractGoogleClient client =
+        new MockGoogleClient.Builder(
+                TRANSPORT, rootUrl, servicePath, JSON_OBJECT_PARSER, httpCredentialsAdapter)
+            .setApplicationName(applicationName)
+            .build();
+    assertThrows(
+        IllegalStateException.class,
+        new ThrowingRunnable() {
+          @Override
+          public void run() throws IOException {
+            client.validateUniverseDomain();
+          }
+        });
+  }
+
+  @Test
+  public void validateUniverseDomain_notUsingHttpCredentialsAdapter_defaultUniverseDomain()
+      throws IOException {
+    String rootUrl = "https://test.googleapis.com/";
+    String applicationName = "Test Application";
+    String servicePath = "test/";
+
+    AbstractGoogleClient client =
+        new MockGoogleClient.Builder(
+                TRANSPORT,
+                rootUrl,
+                servicePath,
+                JSON_OBJECT_PARSER,
+                new TestHttpRequestInitializer())
+            .setApplicationName(applicationName)
+            .build();
+
+    // Nothing throws
+    client.validateUniverseDomain();
   }
 
   private static final String TEST_RESUMABLE_REQUEST_URL =
