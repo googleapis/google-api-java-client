@@ -19,7 +19,7 @@ The library has the following features:
 
 ## Usage
 
-For detailed instructions on usage, please visit the [guide](https://googleapis.github.io/google-api-java-client/).
+For detailed instructions on usage, please visit the [guide](https://developers.google.com/api-client-library/java).
 
 ## Installation
 
