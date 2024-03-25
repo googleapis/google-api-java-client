@@ -31,6 +31,8 @@ java.common_templates(
         "license-checks.xml",
         ".github/workflows/ci.yaml",
         ".github/workflows/samples.yaml",
-        "clirr-ignored-differences.xml"
+        "clirr-ignored-differences.xml",
+        ".kokoro/requirements.in",
+        ".kokoro/requirements.txt"
     ]
 )

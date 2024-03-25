@@ -626,35 +626,54 @@
         <docletName>java-docfx-doclet-1.9.0</docletName>
         <outputpath>${project.build.directory}/docfx-yml</outputpath>
         <projectname>${project.artifactId}</projectname>
-        <excludeclasses></excludeclasses>
-        <excludePackages></excludePackages>
-        <source>7</source>            
-        <sourceFileExclude></sourceFileExclude>
+        <source>17</source>
       </properties>
       <build>
         <plugins>
           <plugin>
+            <artifactId>exec-maven-plugin</artifactId>
+            <groupId>org.codehaus.mojo</groupId>
+            <executions>
+              <execution>
+                <id>install-artifact</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>bash</executable>
+                  <arguments>
+                    <argument>-c</argument>
+                    <argument><![CDATA[
+                     if [ ! -d "play-services" ]; then
+                       mkdir play-services &&
+                       cd play-services   &&
+                       curl --output play-services-basement-8.3.0.aar https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar &&
+                       unzip play-services-basement-8.3.0.aar &&
+                       mvn install:install-file -Dfile=classes.jar -DgroupId=com.google.android.google-play-services -DartifactId=google-play-services -Dversion=1 -Dpackaging=jar
+                     fi
+                    ]]></argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.6.0</version>
+            <version>3.6.3</version>
             <configuration>
               <doclet>com.microsoft.doclet.DocFxDoclet</doclet>
               <useStandardDocletOptions>false</useStandardDocletOptions>
-               <!-- custom config with -Dproperty=value -->
-              <docletPath>${env.KOKORO_GFILE_DIR}/${docletName}.jar</docletPath>
+              <!-- custom config with -Dproperty=value -->
               <additionalOptions>
-                -outputpath ${outputpath} 
-                -projectname ${projectname} 
-                -excludeclasses ${excludeclasses}: 
-                -excludepackages ${excludePackages}:
+                -outputpath ${outputpath}
+                -projectname ${projectname}
               </additionalOptions>
               <doclint>none</doclint>
               <show>protected</show>
               <nohelp>true</nohelp>
               <source>${source}</source>
-              <sourceFileExcludes>
-                <exclude>${sourceFileExclude}</exclude>
-              </sourceFileExcludes>
             </configuration>
           </plugin>
         </plugins>
