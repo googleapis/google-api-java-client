@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.1](https://github.com/googleapis/google-api-java-client/compare/v2.4.0...v2.4.1) (2024-03-26)
+
+
+### Documentation
+
+* Latest libraries-bom ([#2445](https://github.com/googleapis/google-api-java-client/issues/2445)) ([b484c9b](https://github.com/googleapis/google-api-java-client/commit/b484c9b41ab226e9759c6a71c528158195468ec9))
+
 ## [2.4.0](https://github.com/googleapis/google-api-java-client/compare/v2.3.0...v2.4.0) (2024-03-13)
 
 
