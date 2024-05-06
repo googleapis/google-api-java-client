@@ -37,7 +37,9 @@ import com.google.api.client.http.HttpResponseInterceptor;
 import com.google.api.client.http.UriTemplate;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Preconditions;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -62,7 +64,8 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    */
   public static final String USER_AGENT_SUFFIX = "Google-API-Java-Client";
 
-  private static final String API_VERSION_HEADER = "X-Goog-Api-Client";
+  private static final String API_CLIENT_HEADER = "X-Goog-Api-Client";
+  private static final String API_VERSION_HEADER = "X-Google-Api-Version";
 
   /** Google client. */
   private final AbstractGoogleClient abstractGoogleClient;
@@ -133,7 +136,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       requestHeaders.setUserAgent(USER_AGENT_SUFFIX + "/" + GoogleUtils.VERSION);
     }
     // Set the header for the Api Client version (Java and OS version)
-    requestHeaders.set(API_VERSION_HEADER, ApiClientVersion.DEFAULT_VERSION);
+    requestHeaders.set(API_CLIENT_HEADER, ApiClientVersion.DEFAULT_VERSION);
   }
 
   /**
@@ -310,6 +313,27 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   public AbstractGoogleClientRequest<T> setRequestHeaders(HttpHeaders headers) {
     this.requestHeaders = headers;
     return this;
+  }
+
+  /**
+   * Set the ApiVersion to be set as part of the header
+   *
+   * <p>ApiVersion cannot be null or empty string ("")
+   */
+  protected void setApiVersionHeader(String apiVersion) {
+    Preconditions.checkState(
+        !Strings.isNullOrEmpty(apiVersion), "ApiVersion cannot be null or empty");
+    requestHeaders.set(API_VERSION_HEADER, apiVersion);
+  }
+
+  /**
+   * Returns the ApiVersion that is set in the header.
+   *
+   * <p>If ApiVersion is not set, null is returned
+   */
+  @VisibleForTesting
+  String getApiVersionHeader() {
+    return (String) requestHeaders.get(API_VERSION_HEADER);
   }
 
   /**
