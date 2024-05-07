@@ -12,7 +12,6 @@
 
 package com.google.api.client.googleapis.services;
 
-import static org.junit.Assert.assertThrows;
 
 import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest.ApiClientVersion;
@@ -39,7 +38,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import junit.framework.TestCase;
-import org.junit.function.ThrowingRunnable;
 
 /**
  * Tests {@link AbstractGoogleClientRequest}.
@@ -252,8 +250,8 @@ public class AbstractGoogleClientRequestTest extends TestCase {
         new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null)
             .build();
     AbstractGoogleClientRequest<Void> request =
-        new MockGoogleClientRequest<>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
-    request.setApiVersionHeader(apiVersion);
+        new MockGoogleClientRequest<>(
+            client, HttpMethods.GET, URI_TEMPLATE, null, Void.class, apiVersion);
     assertEquals(apiVersion, request.getApiVersionHeader());
   }
 
@@ -273,15 +271,9 @@ public class AbstractGoogleClientRequestTest extends TestCase {
         new MockGoogleClient.Builder(transport, ROOT_URL, SERVICE_PATH, JSON_OBJECT_PARSER, null)
             .build();
     final AbstractGoogleClientRequest<Void> request =
-        new MockGoogleClientRequest<>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
-    assertThrows(
-        IllegalStateException.class,
-        new ThrowingRunnable() {
-          @Override
-          public void run() {
-            request.setApiVersionHeader(null);
-          }
-        });
+        new MockGoogleClientRequest<>(
+            client, HttpMethods.GET, URI_TEMPLATE, null, Void.class, null);
+    assertNull(request.getApiVersionHeader());
   }
 
   public void testSetsEmptyStringApiVersionHeader() {
@@ -291,14 +283,7 @@ public class AbstractGoogleClientRequestTest extends TestCase {
             .build();
     final AbstractGoogleClientRequest<Void> request =
         new MockGoogleClientRequest<>(client, HttpMethods.GET, URI_TEMPLATE, null, Void.class);
-    assertThrows(
-        IllegalStateException.class,
-        new ThrowingRunnable() {
-          @Override
-          public void run() {
-            request.setApiVersionHeader("");
-          }
-        });
+    assertNull(request.getApiVersionHeader());
   }
 
   public void testSetsApiClientHeader() throws IOException {
