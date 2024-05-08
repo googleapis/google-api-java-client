@@ -12,7 +12,6 @@
 
 package com.google.api.client.googleapis.services;
 
-
 import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest.ApiClientVersion;
 import com.google.api.client.googleapis.testing.services.MockGoogleClient;

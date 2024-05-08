@@ -69,6 +69,7 @@ public class MockGoogleClientRequest<T> extends AbstractGoogleClientRequest<T> {
       Class<T> responseClass,
       String apiVersion) {
     super(client, method, uriTemplate, content, responseClass);
+    // Matches generator code: Null or Empty String is not set to the header
     if (!Strings.isNullOrEmpty(apiVersion)) {
       getRequestHeaders().set(API_VERSION_HEADER, apiVersion);
     }

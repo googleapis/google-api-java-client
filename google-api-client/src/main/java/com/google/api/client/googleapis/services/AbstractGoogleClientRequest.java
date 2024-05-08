@@ -314,11 +314,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
     return this;
   }
 
-  /**
-   * Returns the ApiVersion that is set in the header.
-   *
-   * <p>If ApiVersion is not set, null is returned
-   */
+  /** Returns the ApiVersion set in the headers. If ApiVersion is not set, null is returned. */
   @VisibleForTesting
   String getApiVersionHeader() {
     return (String) requestHeaders.get(API_VERSION_HEADER);
