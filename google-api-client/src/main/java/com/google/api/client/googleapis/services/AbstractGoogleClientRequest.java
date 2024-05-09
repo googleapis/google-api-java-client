@@ -69,7 +69,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    * The generated request class will pass this constant as part of the header if the RPC supports
    * ApiVersion.
    */
-  protected static final String API_VERSION_HEADER = "X-Google-Api-Version";
+  protected static final String API_VERSION_HEADER = "X-Goog-Api-Version";
 
   /** Google client. */
   private final AbstractGoogleClient abstractGoogleClient;
