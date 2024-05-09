@@ -64,6 +64,11 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   public static final String USER_AGENT_SUFFIX = "Google-API-Java-Client";
 
   private static final String API_CLIENT_HEADER = "X-Goog-Api-Client";
+
+  /**
+   * The generated request class will pass this constant as part of the header if the RPC supports
+   * ApiVersion.
+   */
   protected static final String API_VERSION_HEADER = "X-Google-Api-Version";
 
   /** Google client. */
