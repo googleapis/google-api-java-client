@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.5.0](https://github.com/googleapis/google-api-java-client/compare/v2.4.1...v2.5.0) (2024-05-10)
+
+
+### Features
+
+* Add ApiVersion Support ([#2462](https://github.com/googleapis/google-api-java-client/issues/2462)) ([9f3f64c](https://github.com/googleapis/google-api-java-client/commit/9f3f64c42e6e9ecd3715d18582569efa3622a0ea))
+
+
+### Bug Fixes
+
+* **deps:** Update dependency com.google.api-client:google-api-client to v2.4.1 ([#2448](https://github.com/googleapis/google-api-java-client/issues/2448)) ([0ea6c2b](https://github.com/googleapis/google-api-java-client/commit/0ea6c2b0db7a9bc624c442cb7ea9a15f8ec6b21c))
+* **deps:** Update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.27 ([#2468](https://github.com/googleapis/google-api-java-client/issues/2468)) ([ffc0e6d](https://github.com/googleapis/google-api-java-client/commit/ffc0e6d2121a48b603374a43830570b8d8a282bc))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.39.0 ([#2471](https://github.com/googleapis/google-api-java-client/issues/2471)) ([69e6724](https://github.com/googleapis/google-api-java-client/commit/69e6724e51f73cb46524b3a61989639341b10151))
+* **deps:** Update dependency com.google.guava:guava to v33.2.0-jre ([#2449](https://github.com/googleapis/google-api-java-client/issues/2449)) ([252c494](https://github.com/googleapis/google-api-java-client/commit/252c49406108bb402c9f4d8f6cb9116af2b96697))
+* **deps:** Update dependency commons-codec:commons-codec to v1.17.0 ([#2472](https://github.com/googleapis/google-api-java-client/issues/2472)) ([8440f32](https://github.com/googleapis/google-api-java-client/commit/8440f326dd6b5718c433de90707ef599532b58d2))
+* Fix ApiVersion header typo ([#2467](https://github.com/googleapis/google-api-java-client/issues/2467)) ([bd396ca](https://github.com/googleapis/google-api-java-client/commit/bd396ca929c31c54da1d6969ae5917ffaa32a02a))
+
 ## [2.4.1](https://github.com/googleapis/google-api-java-client/compare/v2.4.0...v2.4.1) (2024-03-26)
 
 
