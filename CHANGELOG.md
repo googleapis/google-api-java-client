@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.1](https://github.com/googleapis/google-api-java-client/compare/v2.5.0...v2.5.1) (2024-05-16)
+
+
+### Dependencies
+
+* Downgrading guava version to 33.1.0 for consistency ([#2477](https://github.com/googleapis/google-api-java-client/issues/2477)) ([765d033](https://github.com/googleapis/google-api-java-client/commit/765d0336c40c35b3602020fff613a28f5628bcfa))
+
 ## [2.5.0](https://github.com/googleapis/google-api-java-client/compare/v2.4.1...v2.5.0) (2024-05-10)
 
 
