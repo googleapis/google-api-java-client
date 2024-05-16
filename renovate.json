@@ -7,6 +7,27 @@
     {
       "packagePatterns": ["^com.google.appengine:appengine-"],
       "groupName": "AppEngine packages"
+    },
+    {
+      "matchPackagePatterns": [
+        "^com.google.guava:"
+      ],
+      "versioning": "docker",
+      "enabled": false
+    },
+    {
+      "matchPackagePatterns": [
+        "^com.google.protobuf"
+      ],
+      "groupName": "Protobuf dependencies",
+      "enabled": false
+    },
+    {
+      "matchPackagePatterns": [
+        "^io.grpc"
+      ],
+      "groupName": "gRPC dependencies",
+      "enabled": false
     }
   ]
 }
