@@ -9,6 +9,11 @@
       "groupName": "AppEngine packages"
     },
     {
+      "packagePatterns": ["jakarta.servlet:jakarta.servlet-api"],
+      "groupName": "Jakarta servlet API"
+      "enabled": false,
+    },
+    {
       "matchPackagePatterns": [
         "^com.google.guava:"
       ],
