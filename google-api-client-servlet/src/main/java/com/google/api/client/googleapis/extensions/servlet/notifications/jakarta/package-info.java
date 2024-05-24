@@ -14,8 +14,8 @@
 
 /**
  * {@link com.google.api.client.util.Beta} <br>
- * Support for subscribing to topics and receiving notifications on servlet-based platforms
- * using {@code jakarta.servlet} namespace.
+ * Support for subscribing to topics and receiving notifications on servlet-based platforms using
+ * {@code jakarta.servlet} namespace.
  *
  * @since 2.6.0
  */
