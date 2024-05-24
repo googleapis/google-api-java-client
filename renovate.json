@@ -10,7 +10,7 @@
     },
     {
       "matchPackageNames": ["jakarta.servlet:jakarta.servlet-api"],
-      "groupName": "Jakarta servlet API"
+      "groupName": "Jakarta servlet API",
       "enabled": false,
     },
     {
