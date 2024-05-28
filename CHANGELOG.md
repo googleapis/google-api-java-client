@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.6.0](https://github.com/googleapis/google-api-java-client/compare/v2.5.1...v2.6.0) (2024-05-24)
+
+
+### Features
+
+* WebHookUtil classes using the jakarta namespace ([#2484](https://github.com/googleapis/google-api-java-client/issues/2484)) ([e928cfa](https://github.com/googleapis/google-api-java-client/commit/e928cfa159b9bce81214e0fb94e49ed034f23056))
+
+
+### Bug Fixes
+
+* **deps:** Update dependency com.google.oauth-client:google-oauth-client-bom to v1.36.0 ([#2476](https://github.com/googleapis/google-api-java-client/issues/2476)) ([7556a88](https://github.com/googleapis/google-api-java-client/commit/7556a88547e4ca64e124a7af6699369f92dec7ae))
+
 ## [2.5.1](https://github.com/googleapis/google-api-java-client/compare/v2.5.0...v2.5.1) (2024-05-16)
 
 
