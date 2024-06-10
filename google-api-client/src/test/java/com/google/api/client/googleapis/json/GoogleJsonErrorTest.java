@@ -27,8 +27,10 @@ import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
+import com.google.common.collect.ImmutableMap;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
 import junit.framework.TestCase;
 
 /**
@@ -198,5 +200,26 @@ public class GoogleJsonErrorTest extends TestCase {
     assertEquals(
         JSON_PARSER.parse(DETAILS_ERROR), JSON_PARSER.parse(FACTORY.toString(errorResponse)));
     assertNotNull(errorResponse.getDetails().get(2).getReason());
+  }
+
+  public void testParse_withMetadataInDetails() throws Exception {
+    InputStream errorContent =
+        GoogleJsonErrorTest.class.getResourceAsStream("errorWithMetadataInDetails.json");
+
+    HttpTransport transport =
+        new ErrorTransport(
+            new MockLowLevelHttpResponse()
+                .setContent(errorContent)
+                .setContentType(Json.MEDIA_TYPE)
+                .setStatusCode(HttpStatusCodes.STATUS_CODE_FORBIDDEN));
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    com.google.api.client.googleapis.json.GoogleJsonError errorResponse =
+        com.google.api.client.googleapis.json.GoogleJsonError.parse(FACTORY, response);
+
+    Map<String, String> metadata = errorResponse.getDetails().get(0).getMetadata();
+    assertEquals(metadata, ImmutableMap.of("service", "translate.googleapis.com"));
   }
 }

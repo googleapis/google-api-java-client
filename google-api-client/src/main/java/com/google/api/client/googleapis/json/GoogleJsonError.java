@@ -22,9 +22,11 @@ import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.Key;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Data class representing the Google JSON error response content, as documented for example in <a
@@ -191,6 +193,7 @@ public class GoogleJsonError extends GenericJson {
     @Key private String detail;
     @Key private String reason;
     @Key private List<ParameterViolations> parameterViolations;
+    @Key private Map<String, String> metadata;
 
     public String getType() {
       return type;
@@ -227,6 +230,14 @@ public class GoogleJsonError extends GenericJson {
      */
     public void setParameterViolations(List<ParameterViolations> parameterViolations) {
       this.parameterViolations = ImmutableList.copyOf(parameterViolations);
+    }
+
+    public Map<String, String> getMetadata() {
+      return metadata;
+    }
+
+    public void setMetadata(Map<String, String> metadata) {
+      this.metadata = ImmutableMap.copyOf(metadata);
     }
   }
 
