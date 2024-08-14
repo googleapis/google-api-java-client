@@ -80,6 +80,7 @@
     <module>google-api-client-jackson2</module>
     <module>google-api-client-protobuf</module>
     <module>google-api-client-xml</module>
+    <module>google-api-client-apache-v5</module>
   </modules>
 
   <pluginRepositories>
