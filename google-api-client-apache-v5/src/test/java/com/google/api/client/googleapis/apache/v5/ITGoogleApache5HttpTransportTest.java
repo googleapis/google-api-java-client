@@ -40,7 +40,7 @@ public class ITGoogleApache5HttpTransportTest {
     // https://github.com/mock-server/mockserver/blob/master/mockserver-core/src/main/resources/org/mockserver/socket/CertificateAuthorityCertificate.pem
     ClientAndServer mockServer = ClientAndServer.startClientAndServer(port);
     Apache5HttpTransport apache5HttpTransport = GoogleApache5HttpTransport.newTrustedTransport();
-    HttpGet httpGet = new HttpGet("https://localhost:" + port + "/");
+    HttpGet httpGet = new HttpGet("https://maven.com/");
     Exception exception = null;
     try {
       apache5HttpTransport
