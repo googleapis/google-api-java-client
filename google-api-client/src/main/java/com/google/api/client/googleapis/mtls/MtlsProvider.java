@@ -22,9 +22,10 @@ import java.security.KeyStore;
 /**
  * {@link Beta} <br>
  * Provider interface for mutual TLS. It is used in {@link
- * GoogleApacheHttpTransport#newTrustedTransport(MtlsProvider)} and {@link
- * GoogleNetHttpTransport#newTrustedTransport(MtlsProvider)} to configure the mutual TLS in the
- * transport.
+ * GoogleApacheHttpTransport#newTrustedTransport(MtlsProvider)}, {@link
+ * GoogleApache5HttpTransport#newTrustedTransport(MtlsProvider)} and {@link
+ * GoogleNetHttpTransport#newTrustedTransport(MtlsProvider)}
+ * to configure the mutual TLS in the transport.
  *
  * @since 1.31
  */
