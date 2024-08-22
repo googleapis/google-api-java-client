@@ -76,9 +76,12 @@ public class ITGoogleApache5HttpTransportTest {
         .getHttpClient()
         .execute(
             httpGet,
-            response -> {
-              assertEquals(200, response.getCode());
-              return null;
+            new HttpClientResponseHandler<Void>() {
+              @Override
+              public Void handleResponse(ClassicHttpResponse response) {
+                assertEquals(200, response.getCode());
+                return null;
+              }
             });
   }
 }
