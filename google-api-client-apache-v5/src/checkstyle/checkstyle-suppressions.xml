@@ -4,7 +4,7 @@
         "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 <suppressions>
     <!-- Test checkstyle suppressions -->
-    <suppress checks="MissingJavadocType" files="src/test/"/>
-    <suppress checks="AbbreviationAsWordInName" files="src/test/"/>
-    <suppress checks="VariableDeclarationUsageDistance" files="src/test/"/>
+    <suppress checks="MissingJavadocType" files="GoogleApache5HttpTransportTest.java"/>
+    <suppress checks="AbbreviationAsWordInName" files=".*Test.java"/>
+    <suppress checks="VariableDeclarationUsageDistance" files=".*Test.java"/>
 </suppressions>

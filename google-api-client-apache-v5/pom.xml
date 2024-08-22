@@ -115,7 +115,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
-           <!-- <plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <executions>
@@ -127,14 +127,14 @@
                         </goals>
                         <configuration>
                             <configLocation>google_checks.xml</configLocation>
-                            <suppressionsLocation>${project.basedir}/../src/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
+                            <suppressionsLocation>src/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
                             <includeTestSourceDirectory>true</includeTestSourceDirectory>
                             <failOnViolation>true</failOnViolation>
                             <violationSeverity>warning</violationSeverity>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin> -->
+            </plugin>
         </plugins>
 
         <resources>
@@ -207,18 +207,6 @@
             <type>test-jar</type>
             <scope>test</scope>
             <version>2.6.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mock-server</groupId>
-            <artifactId>mockserver-core</artifactId>
-            <version>5.14.0</version>
-            <scope>test</scope>
-        </dependency>
-       <dependency>
-            <groupId>org.mock-server</groupId>
-            <artifactId>mockserver-netty</artifactId>
-            <version>5.14.0</version>
-           <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
