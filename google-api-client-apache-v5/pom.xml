@@ -157,13 +157,18 @@
             <version>1.45.0</version>
         </dependency>
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${project.guava.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
             <version>5.3.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.core5</groupId>
-            <artifactId>httpcore5-h2</artifactId>
+            <artifactId>httpcore5</artifactId>
             <version>5.2.4</version>
         </dependency>
         <dependency>
@@ -185,11 +190,11 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
+     <!--   <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
@@ -199,8 +204,15 @@
         </dependency>
         <dependency>
             <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-core</artifactId>
+            <version>5.14.0</version>
+            <scope>compile</scope>
+        </dependency>
+       <dependency>
+            <groupId>org.mock-server</groupId>
             <artifactId>mockserver-netty</artifactId>
             <version>5.14.0</version>
+           <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
