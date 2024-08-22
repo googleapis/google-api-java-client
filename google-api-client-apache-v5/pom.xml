@@ -126,13 +126,7 @@
                 <artifactId>junit</artifactId>
                 <scope>test</scope>
             </dependency>
-            <dependency>
-                <!-- google-api-client itself does not touch commons-codec. Its
-                  httpclient's dependency. For security advisories in commons-codec, it
-                  declares a newer commons-codec than the one declared by httpclient. -->
-                <groupId>commons-codec</groupId>
-                <artifactId>commons-codec</artifactId>
-            </dependency>
+
 
             <dependency>
                 <groupId>com.google.api-client</groupId>
@@ -194,7 +188,11 @@
                 <scope>test</scope>
                 <version>2.6.1-SNAPSHOT</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.mock-server</groupId>
+                <artifactId>mockserver-netty</artifactId>
+                <version>5.14.0</version>
+            </dependency>
         </dependencies>
 
 
