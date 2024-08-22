@@ -76,7 +76,7 @@
                     <configuration>
                         <instructions>
                             <Bundle-DocURL>https://developers.google.com/api-client-library/java/</Bundle-DocURL>
-                            <Bundle-Description>Google HTTP transport wrapper for the Apache Http Client.</Bundle-Description>
+                            <Bundle-Description>Google HTTP transport wrapper for the Apache 5 Http Client.</Bundle-Description>
                             <Bundle-SymbolicName>com.google.api.client.googleapis.apache</Bundle-SymbolicName>
                         </instructions>
                     </configuration>
@@ -103,10 +103,26 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                        <!-- These tests require an Env Var to be set. Use -PenvVarTest to ONLY run these tests -->
-                        <test>!AbstractGoogleClientTest#testGoogleClientBuilder_noCustomUniverseDomain_universeDomainEnvVar+testGoogleClientBuilder_customUniverseDomain_universeDomainEnvVar</test>
-                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>validate-google-style</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <configuration>
+                                <configLocation>google_checks.xml</configLocation>
+                                <suppressionsLocation>src/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
+                                <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                                <failOnViolation>true</failOnViolation>
+                                <violationSeverity>warning</violationSeverity>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
 

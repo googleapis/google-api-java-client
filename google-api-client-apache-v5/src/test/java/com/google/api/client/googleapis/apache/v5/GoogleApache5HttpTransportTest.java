@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2024 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,16 +14,15 @@
 
 package com.google.api.client.googleapis.apache.v5;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.google.api.client.googleapis.mtls.MtlsProvider;
 import com.google.api.client.googleapis.mtls.MtlsTransportBaseTest;
 import com.google.api.client.http.HttpTransport;
-import org.junit.Test;
-
-
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class GoogleApache5HttpTransportTest extends MtlsTransportBaseTest {
   @Override
@@ -34,8 +33,10 @@ public class GoogleApache5HttpTransportTest extends MtlsTransportBaseTest {
 
   @Test
   public void socketFactoryRegistryHandlerTest() throws GeneralSecurityException, IOException {
-    MtlsProvider mtlsProvider = new TestMtlsProvider(true, createTestMtlsKeyStore(), "", false);
-    GoogleApache5HttpTransport.SocketFactoryRegistryHandler handler = new GoogleApache5HttpTransport.SocketFactoryRegistryHandler(mtlsProvider);
+    MtlsProvider mtlsProvider = new TestMtlsProvider(true, createTestMtlsKeyStore(),
+            "", false);
+    GoogleApache5HttpTransport.SocketFactoryRegistryHandler handler =
+        new GoogleApache5HttpTransport.SocketFactoryRegistryHandler(mtlsProvider);
     assertNotNull(handler.getSocketFactoryRegistry().lookup("http"));
     assertNotNull(handler.getSocketFactoryRegistry().lookup("https"));
     assertTrue(handler.isMtls());
