@@ -41,7 +41,7 @@ import org.apache.hc.core5.http.config.Registry;
 import org.apache.hc.core5.http.config.RegistryBuilder;
 
 /**
- * Utilities for Google APIs based on {@link ApacheHttpTransport}.
+ * Utilities for Google APIs based on {@link Apache5HttpTransport}.
  *
  * @since 2.6.1
  */
