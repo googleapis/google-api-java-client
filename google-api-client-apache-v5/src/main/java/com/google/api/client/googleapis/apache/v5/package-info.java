@@ -15,6 +15,6 @@
 /**
  * Google APIs support based on the Apache HTTP Client v5.
  *
- * @since 1.31
+ * @since 2.6.1
  */
 package com.google.api.client.googleapis.apache.v5;

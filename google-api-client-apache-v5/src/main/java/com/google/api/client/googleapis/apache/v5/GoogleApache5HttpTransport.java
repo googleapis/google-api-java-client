@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 public final class GoogleApache5HttpTransport {
 
   /**
-   * Returns a new instance of {@link ApacheHttpTransport} that uses {@link
+   * Returns a new instance of {@link Apache5HttpTransport} that uses {@link
    * GoogleUtils#getCertificateTrustStore()} for the trusted certificates. If
    * `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to "true", and the default
    * client certificate key store from {@link Utils#loadDefaultMtlsKeyStore()} is not null, then the
@@ -62,7 +62,7 @@ public final class GoogleApache5HttpTransport {
 
   /**
    * {@link Beta} <br>
-   * Returns a new instance of {@link ApacheHttpTransport} that uses {@link
+   * Returns a new instance of {@link Apache5HttpTransport} that uses {@link
    * GoogleUtils#getCertificateTrustStore()} for the trusted certificates. mtlsProvider can be used
    * to configure mutual TLS for the transport.
    *
