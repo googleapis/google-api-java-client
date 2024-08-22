@@ -31,6 +31,22 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>com.coveo</groupId>
+                <artifactId>fmt-maven-plugin</artifactId>
+                <version>2.13</version>
+                <configuration>
+                    <style>google</style>
+                    <verbose>true</verbose>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.google.googlejavaformat</groupId>
+                        <artifactId>google-java-format</artifactId>
+                        <version>1.13.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
                     <links>
@@ -111,7 +127,7 @@
                         </goals>
                         <configuration>
                             <configLocation>google_checks.xml</configLocation>
-                            <suppressionsLocation>${project.basedir}/src/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
+                            <suppressionsLocation>${project.basedir}/../src/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
                             <includeTestSourceDirectory>true</includeTestSourceDirectory>
                             <failOnViolation>true</failOnViolation>
                             <violationSeverity>warning</violationSeverity>
@@ -186,16 +202,23 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
             <version>2.6.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-core</artifactId>
+            <version>5.14.0</version>
+            <scope>compile</scope>
+        </dependency>
+       <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-netty</artifactId>
+            <version>5.14.0</version>
+           <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

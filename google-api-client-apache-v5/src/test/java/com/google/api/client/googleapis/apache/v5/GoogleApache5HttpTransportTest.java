@@ -27,16 +27,15 @@ import org.junit.Test;
 public class GoogleApache5HttpTransportTest extends MtlsTransportBaseTest {
   @Override
   protected HttpTransport buildTrustedTransport(MtlsProvider mtlsProvider)
-      throws GeneralSecurityException, IOException {
+          throws GeneralSecurityException, IOException {
     return GoogleApache5HttpTransport.newTrustedTransport(mtlsProvider);
   }
 
   @Test
   public void socketFactoryRegistryHandlerTest() throws GeneralSecurityException, IOException {
-    MtlsProvider mtlsProvider = new TestMtlsProvider(true, createTestMtlsKeyStore(),
-            "", false);
+    MtlsProvider mtlsProvider = new TestMtlsProvider(true, createTestMtlsKeyStore(), "", false);
     GoogleApache5HttpTransport.SocketFactoryRegistryHandler handler =
-        new GoogleApache5HttpTransport.SocketFactoryRegistryHandler(mtlsProvider);
+            new GoogleApache5HttpTransport.SocketFactoryRegistryHandler(mtlsProvider);
     assertNotNull(handler.getSocketFactoryRegistry().lookup("http"));
     assertNotNull(handler.getSocketFactoryRegistry().lookup("https"));
     assertTrue(handler.isMtls());

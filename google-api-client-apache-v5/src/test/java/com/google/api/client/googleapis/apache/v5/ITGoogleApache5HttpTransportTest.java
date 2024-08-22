@@ -26,14 +26,21 @@ import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.io.HttpClientResponseHandler;
 import org.junit.Test;
+import org.mockserver.integration.ClientAndServer;
+import org.mockserver.socket.PortFactory;
 
 public class ITGoogleApache5HttpTransportTest {
 
   @Test
   public void testHttpRequestFailsWhenMakingRequestToSiteWithoutGoogleCerts()
       throws GeneralSecurityException, IOException {
+    int port = PortFactory.findFreePort();
+    // MockServer handles all SSL traffic transparently by auto-generating an appropriate SSL
+    // certificate using their own cert
+    // https://github.com/mock-server/mockserver/blob/master/mockserver-core/src/main/resources/org/mockserver/socket/CertificateAuthorityCertificate.pem
+    ClientAndServer mockServer = ClientAndServer.startClientAndServer(port);
     Apache5HttpTransport apache5HttpTransport = GoogleApache5HttpTransport.newTrustedTransport();
-    HttpGet httpGet = new HttpGet("https://bing.com");
+    HttpGet httpGet = new HttpGet("https://localhost:" + port + "/");
     Exception exception = null;
     try {
       apache5HttpTransport
@@ -43,9 +50,7 @@ public class ITGoogleApache5HttpTransportTest {
               new HttpClientResponseHandler<Void>() {
                 @Override
                 public Void handleResponse(ClassicHttpResponse response) {
-                  fail(
-                      "Should not have been able to complete SSL request on non google site."
-                  );
+                  fail("Should not have been able to complete SSL request on non google site.");
                   return null;
                 }
               });
@@ -56,6 +61,8 @@ public class ITGoogleApache5HttpTransportTest {
 
     assertNotNull(exception);
     assertEquals(exception.getClass(), SSLHandshakeException.class);
+
+    mockServer.stop();
   }
 
   @Test
