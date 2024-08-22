@@ -111,7 +111,7 @@
                         </goals>
                         <configuration>
                             <configLocation>google_checks.xml</configLocation>
-                            <suppressionsLocation>src/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
+                            <suppressionsLocation>${project.basedir}/src/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
                             <includeTestSourceDirectory>true</includeTestSourceDirectory>
                             <failOnViolation>true</failOnViolation>
                             <violationSeverity>warning</violationSeverity>
@@ -190,29 +190,12 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-     <!--   <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
-        </dependency> -->
         <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
             <version>2.6.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mock-server</groupId>
-            <artifactId>mockserver-core</artifactId>
-            <version>5.14.0</version>
-            <scope>compile</scope>
-        </dependency>
-       <dependency>
-            <groupId>org.mock-server</groupId>
-            <artifactId>mockserver-netty</artifactId>
-            <version>5.14.0</version>
-           <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
