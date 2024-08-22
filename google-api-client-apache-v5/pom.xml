@@ -212,13 +212,13 @@
             <groupId>org.mock-server</groupId>
             <artifactId>mockserver-core</artifactId>
             <version>5.14.0</version>
-            <scope>compile</scope>
+            <scope>test</scope>
         </dependency>
        <dependency>
             <groupId>org.mock-server</groupId>
             <artifactId>mockserver-netty</artifactId>
             <version>5.14.0</version>
-           <scope>compile</scope>
+           <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
