@@ -54,7 +54,6 @@ public class ITGoogleApache5HttpTransportTest {
 
     assertNotNull(exception);
     assertEquals(exception.getClass(), SSLHandshakeException.class);
-
   }
 
   @Test
