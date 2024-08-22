@@ -35,7 +35,7 @@ public abstract class MtlsTransportBaseTest {
     return SecurityUtils.createMtlsKeyStore(certAndKey);
   }
 
-    public static class TestMtlsProvider implements MtlsProvider {
+  public static class TestMtlsProvider implements MtlsProvider {
     private final boolean useClientCertificate;
     private final KeyStore keyStore;
     private final String keyStorePassword;
