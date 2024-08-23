@@ -43,7 +43,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
                     <links>
-                        <link>https://docs.oracle.com/javase/7/docs/api/</link>
+                        <link>https://docs.oracle.com/javase/8/docs/api/</link>
                         <link>https://cloud.google.com/appengine/docs/standard/java/javadoc/</link>
                         <link>https://googleapis.dev/java/google-http-client/${project.http.version}/</link>
                         <link>https://googleapis.dev/java/google-oauth-client/${project.oauth.version}/</link>
@@ -155,22 +155,18 @@
         <dependency>
             <groupId>com.google.http-client</groupId>
             <artifactId>google-http-client-apache-v5</artifactId>
-            <version>1.45.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>${project.guava.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
-            <version>5.3.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.core5</groupId>
             <artifactId>httpcore5</artifactId>
-            <version>5.2.4</version>
         </dependency>
         <dependency>
             <groupId>com.google.http-client</groupId>
@@ -191,7 +187,7 @@
             <artifactId>google-api-client</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
-            <version>2.6.1-SNAPSHOT</version>
+            <version> ${project.version}</version>
         </dependency>
     </dependencies>
 </project>

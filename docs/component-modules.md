@@ -58,7 +58,10 @@ XML extensions to the Google API Client Library for Java
 ## google-api-client-apache-v5
 
 Provides Apache extension to the Google HTTP Client Library for Java (`google-api-client-apache-v5`) that
-returns an implementation of `HttpTransport` based on the Apache HTTP Client (v5) with Google certificates loaded in truststore. This module depends
-on `google-http-client`.
+returns an implementation of `HttpTransport` based on the Apache HTTP Client (v5) with Google certificates loaded in
+truststore. This module depends on `google-http-client`.
+
+Please note this is the preferred Apache extension to be used, over the GoogleApacheHttpTransport included
+in `google-api-client` module. The previous google transport utilizes the EOL Apache HTTP Client v4.
 
 [protobuf]: https://developers.google.com/protocol-buffers/docs/overview
