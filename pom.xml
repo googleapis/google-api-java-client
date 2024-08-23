@@ -72,6 +72,7 @@
   <modules>
     <module>google-api-client</module>
     <module>google-api-client-servlet</module>
+    <module>google-api-client-android</module>
     <module>google-api-client-appengine</module>
     <module>google-api-client-assembly</module>
     <module>google-api-client-bom</module>
@@ -507,6 +508,22 @@
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>com.coveo</groupId>
+        <artifactId>fmt-maven-plugin</artifactId>
+        <version>2.13</version>
+        <configuration>
+          <style>google</style>
+          <verbose>true</verbose>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>com.google.googlejavaformat</groupId>
+            <artifactId>google-java-format</artifactId>
+            <version>1.13.0</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
