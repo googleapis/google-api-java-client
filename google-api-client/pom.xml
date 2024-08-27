@@ -87,6 +87,18 @@
               <goal>jar</goal>
             </goals>
           </execution>
+          <execution>
+            <id>Jar Tests Package</id>
+            <phase>package</phase>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+            <configuration>
+              <includes>
+                <include>**/Mtls/**</include>
+              </includes>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>

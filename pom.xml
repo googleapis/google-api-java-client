@@ -80,6 +80,7 @@
     <module>google-api-client-jackson2</module>
     <module>google-api-client-protobuf</module>
     <module>google-api-client-xml</module>
+    <module>google-api-client-apache-v5</module>
   </modules>
 
   <pluginRepositories>
@@ -240,6 +241,21 @@
         <artifactId>gson</artifactId>
         <version>${gson.version}</version>
         <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents.client5</groupId>
+        <artifactId>httpclient5</artifactId>
+        <version>${project.httpclient5.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents.core5</groupId>
+        <artifactId>httpcore5</artifactId>
+        <version>${project.httpcore5.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-apache-v5</artifactId>
+        <version>${project.http.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -513,9 +529,11 @@
   </build>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>1.44.2</project.http.version>
+    <project.http.version>1.45.0</project.http.version>
     <project.httpcore.version>4.4.16</project.httpcore.version>
     <project.httpclient.version>4.5.14</project.httpclient.version>
+    <project.httpcore5.version>5.2.4</project.httpcore5.version>
+    <project.httpclient5.version>5.3.1</project.httpclient5.version>
     <project.commons-codec.version>1.17.0</project.commons-codec.version>
     <project.oauth.version>1.36.0</project.oauth.version>
     <project.auth.version>1.23.0</project.auth.version>
