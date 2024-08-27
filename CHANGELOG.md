@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.7.0](https://github.com/googleapis/google-api-java-client/compare/v2.6.0...v2.7.0) (2024-08-27)
+
+
+### Features
+
+* Fixed missing version placeholder for new pom file ([#2506](https://github.com/googleapis/google-api-java-client/issues/2506)) ([b8fa311](https://github.com/googleapis/google-api-java-client/commit/b8fa311bce05acb42c418548d80d5c8d0cf7cf77))
+* Provide HttpTransport support for google certificates with apache HTTP client v5 ([#2497](https://github.com/googleapis/google-api-java-client/issues/2497)) ([#2503](https://github.com/googleapis/google-api-java-client/issues/2503)) ([0d39b43](https://github.com/googleapis/google-api-java-client/commit/0d39b4383ba0c686abb30148b800f7dfdd273cf2))
+
 ## [2.6.0](https://github.com/googleapis/google-api-java-client/compare/v2.5.1...v2.6.0) (2024-05-24)
 
 
