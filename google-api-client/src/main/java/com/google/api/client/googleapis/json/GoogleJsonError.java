@@ -28,7 +28,7 @@ import java.util.List;
 
 /**
  * Data class representing the Google JSON error response content, as documented for example in <a
- * href="https://developers.google.com/url-shortener/v1/getting_started#errors">Error responses</a>.
+ * href="https://cloud.google.com/apis/design/errors">Error responses</a>.
  *
  * @since 1.4
  * @author Yaniv Inbar
