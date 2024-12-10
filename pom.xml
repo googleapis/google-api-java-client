@@ -529,7 +529,7 @@
   </build>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>1.45.0</project.http.version>
+    <project.http.version>1.45.2</project.http.version>
     <project.httpcore.version>4.4.16</project.httpcore.version>
     <project.httpclient.version>4.5.14</project.httpclient.version>
     <project.httpcore5.version>5.2.4</project.httpcore5.version>
