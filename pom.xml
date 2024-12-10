@@ -533,7 +533,7 @@
     <project.httpcore.version>4.4.16</project.httpcore.version>
     <project.httpclient.version>4.5.14</project.httpclient.version>
     <project.httpcore5.version>5.3.1</project.httpcore5.version>
-    <project.httpclient5.version>5.3.1</project.httpclient5.version>
+    <project.httpclient5.version>5.4.1</project.httpclient5.version>
     <project.commons-codec.version>1.17.1</project.commons-codec.version>
     <project.oauth.version>1.36.0</project.oauth.version>
     <project.auth.version>1.30.0</project.auth.version>
