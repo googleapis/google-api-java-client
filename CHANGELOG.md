@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.7.1](https://github.com/googleapis/google-api-java-client/compare/v2.7.0...v2.7.1) (2024-12-10)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency com.google.api-client:google-api-client to v2.7.0 ([#2475](https://github.com/googleapis/google-api-java-client/issues/2475)) ([2fdd3e1](https://github.com/googleapis/google-api-java-client/commit/2fdd3e1818dc59e63a72b1e57049b9368a027826))
+* **deps:** Update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.31 ([#2526](https://github.com/googleapis/google-api-java-client/issues/2526)) ([06d17a7](https://github.com/googleapis/google-api-java-client/commit/06d17a72133da31a95f4fb44fdfe72a72b2b2790))
+* **deps:** Update dependency com.google.auth:google-auth-library-bom to v1.30.0 ([#2521](https://github.com/googleapis/google-api-java-client/issues/2521)) ([0a9461b](https://github.com/googleapis/google-api-java-client/commit/0a9461bc6e8425163351abb297c556100443c873))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.51.0 ([#2491](https://github.com/googleapis/google-api-java-client/issues/2491)) ([b8a3d13](https://github.com/googleapis/google-api-java-client/commit/b8a3d134b768593160608b8323925bbd88ed539a))
+* **deps:** Update dependency commons-codec:commons-codec to v1.17.1 ([#2527](https://github.com/googleapis/google-api-java-client/issues/2527)) ([e797532](https://github.com/googleapis/google-api-java-client/commit/e797532ce1b103c991a106ef3c6ebd3c00665c1f))
+* **deps:** Update dependency org.apache.httpcomponents.client5:httpclient5 to v5.4.1 ([#2534](https://github.com/googleapis/google-api-java-client/issues/2534)) ([9eaf3a8](https://github.com/googleapis/google-api-java-client/commit/9eaf3a80ab715ac537cccfa1d86e4d4929ed47f7))
+* **deps:** Update dependency org.apache.httpcomponents.core5:httpcore5 to v5.3.1 ([#2535](https://github.com/googleapis/google-api-java-client/issues/2535)) ([4c9c37e](https://github.com/googleapis/google-api-java-client/commit/4c9c37e28a21766b6f878e0167f0bc4124386fd7))
+* **deps:** Update project.http.version to v1.45.2 ([#2528](https://github.com/googleapis/google-api-java-client/issues/2528)) ([cba4bca](https://github.com/googleapis/google-api-java-client/commit/cba4bca5b926b045b6e22f348b5f609f8db5576d))
+
+
+### Documentation
+
+* Fix error response format url ([#2514](https://github.com/googleapis/google-api-java-client/issues/2514)) ([42e5533](https://github.com/googleapis/google-api-java-client/commit/42e5533a2b582c2416fe2621dc1f0f3fb0adae2a))
+
 ## [2.7.0](https://github.com/googleapis/google-api-java-client/compare/v2.6.0...v2.7.0) (2024-08-27)
 
 
