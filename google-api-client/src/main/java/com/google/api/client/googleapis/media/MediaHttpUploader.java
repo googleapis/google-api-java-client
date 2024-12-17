@@ -235,7 +235,7 @@ public final class MediaHttpUploader {
    */
   private boolean disableGZipContent;
 
-  /** Sleeper. * */
+  /** Sleeper. */
   Sleeper sleeper = Sleeper.DEFAULT;
 
   /**

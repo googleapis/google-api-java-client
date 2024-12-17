@@ -1,5 +1,133 @@
 # Changelog
 
+## [2.7.1](https://github.com/googleapis/google-api-java-client/compare/v2.7.0...v2.7.1) (2024-12-10)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency com.google.api-client:google-api-client to v2.7.0 ([#2475](https://github.com/googleapis/google-api-java-client/issues/2475)) ([2fdd3e1](https://github.com/googleapis/google-api-java-client/commit/2fdd3e1818dc59e63a72b1e57049b9368a027826))
+* **deps:** Update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.31 ([#2526](https://github.com/googleapis/google-api-java-client/issues/2526)) ([06d17a7](https://github.com/googleapis/google-api-java-client/commit/06d17a72133da31a95f4fb44fdfe72a72b2b2790))
+* **deps:** Update dependency com.google.auth:google-auth-library-bom to v1.30.0 ([#2521](https://github.com/googleapis/google-api-java-client/issues/2521)) ([0a9461b](https://github.com/googleapis/google-api-java-client/commit/0a9461bc6e8425163351abb297c556100443c873))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.51.0 ([#2491](https://github.com/googleapis/google-api-java-client/issues/2491)) ([b8a3d13](https://github.com/googleapis/google-api-java-client/commit/b8a3d134b768593160608b8323925bbd88ed539a))
+* **deps:** Update dependency commons-codec:commons-codec to v1.17.1 ([#2527](https://github.com/googleapis/google-api-java-client/issues/2527)) ([e797532](https://github.com/googleapis/google-api-java-client/commit/e797532ce1b103c991a106ef3c6ebd3c00665c1f))
+* **deps:** Update dependency org.apache.httpcomponents.client5:httpclient5 to v5.4.1 ([#2534](https://github.com/googleapis/google-api-java-client/issues/2534)) ([9eaf3a8](https://github.com/googleapis/google-api-java-client/commit/9eaf3a80ab715ac537cccfa1d86e4d4929ed47f7))
+* **deps:** Update dependency org.apache.httpcomponents.core5:httpcore5 to v5.3.1 ([#2535](https://github.com/googleapis/google-api-java-client/issues/2535)) ([4c9c37e](https://github.com/googleapis/google-api-java-client/commit/4c9c37e28a21766b6f878e0167f0bc4124386fd7))
+* **deps:** Update project.http.version to v1.45.2 ([#2528](https://github.com/googleapis/google-api-java-client/issues/2528)) ([cba4bca](https://github.com/googleapis/google-api-java-client/commit/cba4bca5b926b045b6e22f348b5f609f8db5576d))
+
+
+### Documentation
+
+* Fix error response format url ([#2514](https://github.com/googleapis/google-api-java-client/issues/2514)) ([42e5533](https://github.com/googleapis/google-api-java-client/commit/42e5533a2b582c2416fe2621dc1f0f3fb0adae2a))
+
+## [2.7.0](https://github.com/googleapis/google-api-java-client/compare/v2.6.0...v2.7.0) (2024-08-27)
+
+
+### Features
+
+* Fixed missing version placeholder for new pom file ([#2506](https://github.com/googleapis/google-api-java-client/issues/2506)) ([b8fa311](https://github.com/googleapis/google-api-java-client/commit/b8fa311bce05acb42c418548d80d5c8d0cf7cf77))
+* Provide HttpTransport support for google certificates with apache HTTP client v5 ([#2497](https://github.com/googleapis/google-api-java-client/issues/2497)) ([#2503](https://github.com/googleapis/google-api-java-client/issues/2503)) ([0d39b43](https://github.com/googleapis/google-api-java-client/commit/0d39b4383ba0c686abb30148b800f7dfdd273cf2))
+
+## [2.6.0](https://github.com/googleapis/google-api-java-client/compare/v2.5.1...v2.6.0) (2024-05-24)
+
+
+### Features
+
+* WebHookUtil classes using the jakarta namespace ([#2484](https://github.com/googleapis/google-api-java-client/issues/2484)) ([e928cfa](https://github.com/googleapis/google-api-java-client/commit/e928cfa159b9bce81214e0fb94e49ed034f23056))
+
+
+### Bug Fixes
+
+* **deps:** Update dependency com.google.oauth-client:google-oauth-client-bom to v1.36.0 ([#2476](https://github.com/googleapis/google-api-java-client/issues/2476)) ([7556a88](https://github.com/googleapis/google-api-java-client/commit/7556a88547e4ca64e124a7af6699369f92dec7ae))
+
+## [2.5.1](https://github.com/googleapis/google-api-java-client/compare/v2.5.0...v2.5.1) (2024-05-16)
+
+
+### Dependencies
+
+* Downgrading guava version to 33.1.0 for consistency ([#2477](https://github.com/googleapis/google-api-java-client/issues/2477)) ([765d033](https://github.com/googleapis/google-api-java-client/commit/765d0336c40c35b3602020fff613a28f5628bcfa))
+
+## [2.5.0](https://github.com/googleapis/google-api-java-client/compare/v2.4.1...v2.5.0) (2024-05-10)
+
+
+### Features
+
+* Add ApiVersion Support ([#2462](https://github.com/googleapis/google-api-java-client/issues/2462)) ([9f3f64c](https://github.com/googleapis/google-api-java-client/commit/9f3f64c42e6e9ecd3715d18582569efa3622a0ea))
+
+
+### Bug Fixes
+
+* **deps:** Update dependency com.google.api-client:google-api-client to v2.4.1 ([#2448](https://github.com/googleapis/google-api-java-client/issues/2448)) ([0ea6c2b](https://github.com/googleapis/google-api-java-client/commit/0ea6c2b0db7a9bc624c442cb7ea9a15f8ec6b21c))
+* **deps:** Update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.27 ([#2468](https://github.com/googleapis/google-api-java-client/issues/2468)) ([ffc0e6d](https://github.com/googleapis/google-api-java-client/commit/ffc0e6d2121a48b603374a43830570b8d8a282bc))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.39.0 ([#2471](https://github.com/googleapis/google-api-java-client/issues/2471)) ([69e6724](https://github.com/googleapis/google-api-java-client/commit/69e6724e51f73cb46524b3a61989639341b10151))
+* **deps:** Update dependency com.google.guava:guava to v33.2.0-jre ([#2449](https://github.com/googleapis/google-api-java-client/issues/2449)) ([252c494](https://github.com/googleapis/google-api-java-client/commit/252c49406108bb402c9f4d8f6cb9116af2b96697))
+* **deps:** Update dependency commons-codec:commons-codec to v1.17.0 ([#2472](https://github.com/googleapis/google-api-java-client/issues/2472)) ([8440f32](https://github.com/googleapis/google-api-java-client/commit/8440f326dd6b5718c433de90707ef599532b58d2))
+* Fix ApiVersion header typo ([#2467](https://github.com/googleapis/google-api-java-client/issues/2467)) ([bd396ca](https://github.com/googleapis/google-api-java-client/commit/bd396ca929c31c54da1d6969ae5917ffaa32a02a))
+
+## [2.4.1](https://github.com/googleapis/google-api-java-client/compare/v2.4.0...v2.4.1) (2024-03-26)
+
+
+### Documentation
+
+* Latest libraries-bom ([#2445](https://github.com/googleapis/google-api-java-client/issues/2445)) ([b484c9b](https://github.com/googleapis/google-api-java-client/commit/b484c9b41ab226e9759c6a71c528158195468ec9))
+
+## [2.4.0](https://github.com/googleapis/google-api-java-client/compare/v2.3.0...v2.4.0) (2024-03-13)
+
+
+### Features
+
+* Add Universe Domain Support ([#2435](https://github.com/googleapis/google-api-java-client/issues/2435)) ([4adfed9](https://github.com/googleapis/google-api-java-client/commit/4adfed9e0ce65a82d0d7229611f43a34c5cb3a3d))
+
+
+### Bug Fixes
+
+* **deps:** Update dependency com.google.api-client:google-api-client to v2.3.0 ([#2427](https://github.com/googleapis/google-api-java-client/issues/2427)) ([a075e39](https://github.com/googleapis/google-api-java-client/commit/a075e3914e4ac1de97ee55f2942bf354dfa13fb5))
+* **deps:** Update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.25 ([#2438](https://github.com/googleapis/google-api-java-client/issues/2438)) ([830d021](https://github.com/googleapis/google-api-java-client/commit/830d021a7cf94178d5f9b1a2bc92228654ba5d6e))
+* **deps:** Update dependency com.google.auth:google-auth-library-bom to v1.23.0 ([#2443](https://github.com/googleapis/google-api-java-client/issues/2443)) ([690a21a](https://github.com/googleapis/google-api-java-client/commit/690a21a4435d8af4953b54a9aff5e5fa432cd8d9))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.34.0 ([#2425](https://github.com/googleapis/google-api-java-client/issues/2425)) ([94cd2a3](https://github.com/googleapis/google-api-java-client/commit/94cd2a370df2768dba3d3b902d29fa4f3badddfa))
+* **deps:** Update dependency com.google.guava:guava to v33 ([#2410](https://github.com/googleapis/google-api-java-client/issues/2410)) ([d6adc9b](https://github.com/googleapis/google-api-java-client/commit/d6adc9b64d3d4af688785b3739ab9cdedbc231a5))
+* **deps:** Update dependency commons-codec:commons-codec to v1.16.1 ([#2432](https://github.com/googleapis/google-api-java-client/issues/2432)) ([81bdcd1](https://github.com/googleapis/google-api-java-client/commit/81bdcd156f03c3bc25b81ceb60e74547b36ec759))
+
+## [2.3.0](https://github.com/googleapis/google-api-java-client/compare/v2.2.0...v2.3.0) (2024-01-29)
+
+
+### Features
+
+* Setup 2.2.x lts branch ([#2341](https://github.com/googleapis/google-api-java-client/issues/2341)) ([74e8cdb](https://github.com/googleapis/google-api-java-client/commit/74e8cdb59822a3256b2649d61cbd6927622c9f81))
+
+
+### Bug Fixes
+
+* **deps:** Update dependency com.google.api-client:google-api-client to v2.2.0 ([#2249](https://github.com/googleapis/google-api-java-client/issues/2249)) ([da164c5](https://github.com/googleapis/google-api-java-client/commit/da164c59c01316e949db43053fba6b819ee20ada))
+* **deps:** Update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.11 ([#2259](https://github.com/googleapis/google-api-java-client/issues/2259)) ([f078332](https://github.com/googleapis/google-api-java-client/commit/f078332c65da269a6063202844b104a971217245))
+* **deps:** Update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.12 ([#2284](https://github.com/googleapis/google-api-java-client/issues/2284)) ([ef72f63](https://github.com/googleapis/google-api-java-client/commit/ef72f637c5ae1718f9f16382d356c6649b2073f3))
+* **deps:** Update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.14 ([#2295](https://github.com/googleapis/google-api-java-client/issues/2295)) ([7afaaf5](https://github.com/googleapis/google-api-java-client/commit/7afaaf59f77c4aa10ef477fcb3edc543f513f48a))
+* **deps:** Update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.15 ([#2327](https://github.com/googleapis/google-api-java-client/issues/2327)) ([86dd2a4](https://github.com/googleapis/google-api-java-client/commit/86dd2a442caac44304babbda8f2d2f7d78ad05d9))
+* **deps:** Update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.16 ([#2334](https://github.com/googleapis/google-api-java-client/issues/2334)) ([8150130](https://github.com/googleapis/google-api-java-client/commit/8150130e320da155cdee86b1a04152d5696f5d24))
+* **deps:** Update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.19 ([#2361](https://github.com/googleapis/google-api-java-client/issues/2361)) ([7b675eb](https://github.com/googleapis/google-api-java-client/commit/7b675ebf211f1880564bf67e198b9cb6a4fcc396))
+* **deps:** Update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.21 ([#2371](https://github.com/googleapis/google-api-java-client/issues/2371)) ([4c19205](https://github.com/googleapis/google-api-java-client/commit/4c19205b789f32048ab70639f0ccb730143196c2))
+* **deps:** Update dependency com.google.appengine:appengine-api-1.0-sdk to v2.0.24 ([#2411](https://github.com/googleapis/google-api-java-client/issues/2411)) ([830ac4f](https://github.com/googleapis/google-api-java-client/commit/830ac4f946f5dbbe573adfd7be66084eba0c2aa8))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.10.0 ([#2285](https://github.com/googleapis/google-api-java-client/issues/2285)) ([50b907d](https://github.com/googleapis/google-api-java-client/commit/50b907d0ebdaa093e8a07b7512287cca5b3bc6d1))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.11.0 ([#2286](https://github.com/googleapis/google-api-java-client/issues/2286)) ([5e51f69](https://github.com/googleapis/google-api-java-client/commit/5e51f69faff3379cfee6c69162879db2abc9fdea))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.14.0 ([#2297](https://github.com/googleapis/google-api-java-client/issues/2297)) ([d7f796a](https://github.com/googleapis/google-api-java-client/commit/d7f796acf93c69bdc4507b90f7ce144029605257))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.15.0 ([#2307](https://github.com/googleapis/google-api-java-client/issues/2307)) ([83a886b](https://github.com/googleapis/google-api-java-client/commit/83a886b374d5f85b2699d98303111d8c8dbf4b0a))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.17.0 ([#2321](https://github.com/googleapis/google-api-java-client/issues/2321)) ([42cf1b6](https://github.com/googleapis/google-api-java-client/commit/42cf1b6450b7097790863d1c0b36e32419d11eee))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.18.0 ([#2333](https://github.com/googleapis/google-api-java-client/issues/2333)) ([782e818](https://github.com/googleapis/google-api-java-client/commit/782e818b6b19311100d85bea815b2035205cab93))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.19.0 ([#2340](https://github.com/googleapis/google-api-java-client/issues/2340)) ([981c86a](https://github.com/googleapis/google-api-java-client/commit/981c86a31d2f9bc63c45b722360f1c6b0df0b574))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.20.0 ([#2349](https://github.com/googleapis/google-api-java-client/issues/2349)) ([c6c29a1](https://github.com/googleapis/google-api-java-client/commit/c6c29a151cef78182d48bdacfa7a7ae36cda3376))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.23.0 ([#2363](https://github.com/googleapis/google-api-java-client/issues/2363)) ([c175001](https://github.com/googleapis/google-api-java-client/commit/c175001db8f6901438a06b0f2a22e60f07c029be))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.25.0 ([#2369](https://github.com/googleapis/google-api-java-client/issues/2369)) ([f5848bc](https://github.com/googleapis/google-api-java-client/commit/f5848bcd3c9f4425654b9078b8ff559871037e29))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.26.0 ([#2386](https://github.com/googleapis/google-api-java-client/issues/2386)) ([3511105](https://github.com/googleapis/google-api-java-client/commit/3511105dc27ea4a669a0db1ade061d4f6bb95bfe))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.30.0 ([#2419](https://github.com/googleapis/google-api-java-client/issues/2419)) ([257cd05](https://github.com/googleapis/google-api-java-client/commit/257cd0541a7d6a77ee173743183b6e20d4d888b0))
+* **deps:** Update dependency com.google.cloud:libraries-bom to v26.9.0 ([#2250](https://github.com/googleapis/google-api-java-client/issues/2250)) ([3778401](https://github.com/googleapis/google-api-java-client/commit/3778401ff840851d88cc529fd1152a0e256f0957))
+* **deps:** Update dependency com.google.oauth-client:google-oauth-client-bom to v1.35.0 ([#2420](https://github.com/googleapis/google-api-java-client/issues/2420)) ([65e47bd](https://github.com/googleapis/google-api-java-client/commit/65e47bde8270fab5635bc88822a66c16f4e91223))
+* **deps:** Update dependency commons-codec:commons-codec to v1.16.0 ([#2331](https://github.com/googleapis/google-api-java-client/issues/2331)) ([d3b2a6e](https://github.com/googleapis/google-api-java-client/commit/d3b2a6eb4fe2e72ed79722ed2bd8fd7fbbb535e2))
+* Update to read absolute path of google-api-client.properties ([#2299](https://github.com/googleapis/google-api-java-client/issues/2299)) ([9031b8f](https://github.com/googleapis/google-api-java-client/commit/9031b8fb70cfdfb16254c1185746c32fe47993bd))
+
+
+### Dependencies
+
+* Update doclet version to v1.9.0 ([#2316](https://github.com/googleapis/google-api-java-client/issues/2316)) ([157686e](https://github.com/googleapis/google-api-java-client/commit/157686e03a0ded802f55053d1774055477dec68b))
+
 ## [2.2.0](https://github.com/googleapis/google-api-java-client/compare/v2.1.4...v2.2.0) (2023-01-26)
 
 

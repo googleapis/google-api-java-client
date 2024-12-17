@@ -22,7 +22,7 @@ import java.io.IOException;
 
 /**
  * {@link Beta} <br>
- * A {@link TypedNotificationCallback} which uses an JSON content encoding.
+ * A {@link TypedNotificationCallback} which uses a JSON content encoding.
  *
  * <p>Must NOT be implemented in form of an anonymous class as this will break serialization.
  *

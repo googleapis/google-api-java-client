@@ -132,7 +132,7 @@ jobs:
         - workflow-executions
         - workflows
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
     - uses: actions/setup-java@v3
       with:
         distribution: zulu

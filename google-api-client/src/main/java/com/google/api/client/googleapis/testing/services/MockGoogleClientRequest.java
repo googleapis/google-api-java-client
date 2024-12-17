@@ -18,6 +18,7 @@ import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.UriTemplate;
 import com.google.api.client.util.Beta;
+import com.google.common.base.Strings;
 
 /**
  * {@link Beta} <br>
@@ -46,7 +47,32 @@ public class MockGoogleClientRequest<T> extends AbstractGoogleClientRequest<T> {
       String uriTemplate,
       HttpContent content,
       Class<T> responseClass) {
+    this(client, method, uriTemplate, content, responseClass, null);
+  }
+
+  /**
+   * @param client Google client
+   * @param method HTTP Method
+   * @param uriTemplate URI template for the path relative to the base URL. If it starts with a "/"
+   *     the base path from the base URL will be stripped out. The URI template can also be a full
+   *     URL. URI template expansion is done using {@link UriTemplate#expand(String, String, Object,
+   *     boolean)}
+   * @param content HTTP content or {@code null} for none
+   * @param responseClass response class to parse into
+   * @param apiVersion ApiVersion to be passed to the header
+   */
+  public MockGoogleClientRequest(
+      AbstractGoogleClient client,
+      String method,
+      String uriTemplate,
+      HttpContent content,
+      Class<T> responseClass,
+      String apiVersion) {
     super(client, method, uriTemplate, content, responseClass);
+    // Matches generator code: Null or Empty String is not set to the header
+    if (!Strings.isNullOrEmpty(apiVersion)) {
+      getRequestHeaders().set(API_VERSION_HEADER, apiVersion);
+    }
   }
 
   @Override

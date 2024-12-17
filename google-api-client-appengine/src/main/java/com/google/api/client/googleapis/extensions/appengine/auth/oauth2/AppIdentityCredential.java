@@ -194,7 +194,7 @@ public class AppIdentityCredential implements HttpRequestInitializer, HttpExecut
      * @param transport the transport for Http calls.
      * @param jsonFactory the factory for Json parsing and formatting.
      * @throws IOException if the credential cannot be created for the current environment, such as
-     *     when the AppIndentityService is not available.
+     *     when the AppIdentityService is not available.
      */
     public AppEngineCredentialWrapper(HttpTransport transport, JsonFactory jsonFactory)
         throws IOException {

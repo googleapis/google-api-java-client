@@ -56,9 +56,9 @@ public class CloudShellCredential extends GoogleCredential {
   private static final int READ_TIMEOUT_MS = 5000;
 
   /**
-   * The Cloud Shell back authorization channel uses serialized Javascript Protobufers, preceeded by
+   * The Cloud Shell back authorization channel uses serialized Javascript Protobufers, preceded by
    * the message lengeth and a new line character. However, the request message has no content, so a
-   * token request consists of an empty JsPb, and its 2 character lenth prefix.
+   * token request consists of an empty JsPb, and its 2 character length prefix.
    */
   protected static final String GET_AUTH_TOKEN_REQUEST = "2\n[]";
 

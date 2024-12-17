@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client-parent</artifactId>
-  <version>2.2.0</version><!-- {x-version-update:google-api-client:current} -->
+  <version>2.7.2-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
   <packaging>pom</packaging>
   <name>Parent for the Google API Client Library for Java</name>
   <description>The Google APIs Client Library for Java is a Java client library
@@ -80,6 +80,7 @@
     <module>google-api-client-jackson2</module>
     <module>google-api-client-protobuf</module>
     <module>google-api-client-xml</module>
+    <module>google-api-client-apache-v5</module>
   </modules>
 
   <pluginRepositories>
@@ -102,6 +103,13 @@
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>4.13.2</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>4.11.0</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>com.google.appengine</groupId>
@@ -122,6 +130,11 @@
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>jsr305</artifactId>
         <version>${project.jsr305.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.servlet</groupId>
+        <artifactId>jakarta.servlet-api</artifactId>
+        <version>${project.jakarta-servlet-api.version}</version>
       </dependency>
       <dependency>
         <groupId>javax.jdo</groupId>
@@ -154,6 +167,13 @@
         <groupId>com.google.oauth-client</groupId>
         <artifactId>google-oauth-client-bom</artifactId>
         <version>${project.oauth.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.google.auth</groupId>
+        <artifactId>google-auth-library-bom</artifactId>
+        <version>${project.auth.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -222,6 +242,21 @@
         <version>${gson.version}</version>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents.client5</groupId>
+        <artifactId>httpclient5</artifactId>
+        <version>${project.httpclient5.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents.core5</groupId>
+        <artifactId>httpcore5</artifactId>
+        <version>${project.httpcore5.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-apache-v5</artifactId>
+        <version>${project.http.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -232,7 +267,7 @@
         <plugin>
           <groupId>org.sonatype.plugins</groupId>
           <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>1.6.13</version>
+          <version>1.7.0</version>
           <extensions>true</extensions>
           <configuration>
             <serverId>ossrh</serverId>
@@ -242,11 +277,11 @@
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.4.2</version>
+          <version>3.7.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.10.1</version>
+          <version>3.13.0</version>
           <configuration>
             <source>1.7</source>
             <target>1.7</target>
@@ -269,7 +304,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.4.1</version>
+          <version>3.11.2</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>
@@ -282,7 +317,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.4.2</version>
           <executions>
             <execution>
               <goals>
@@ -293,7 +328,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.0.0-M8</version>
+          <version>3.5.2</version>
           <configuration>
             <argLine>-Xmx1024m</argLine>
             <reportNameSuffix>sponge_log</reportNameSuffix>
@@ -302,7 +337,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>3.2.1</version>
+          <version>3.6.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -317,27 +352,27 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>animal-sniffer-maven-plugin</artifactId>
-          <version>1.22</version>
+          <version>1.24</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.4.2</version>
+          <version>3.8.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.12.1</version>
+          <version>3.21.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.3.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.5.0</version>
+          <version>3.8.1</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -345,7 +380,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.1.0</version><executions>
+        <version>3.5.0</version><executions>
         <execution>
           <id>enforce-maven</id>
           <goals>
@@ -494,24 +529,29 @@
   </build>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>1.42.3</project.http.version>
+    <project.http.version>1.45.2</project.http.version>
     <project.httpcore.version>4.4.16</project.httpcore.version>
     <project.httpclient.version>4.5.14</project.httpclient.version>
-    <project.commons-codec.version>1.15</project.commons-codec.version>
-    <project.oauth.version>1.34.1</project.oauth.version>
+    <project.httpcore5.version>5.3.1</project.httpcore5.version>
+    <project.httpclient5.version>5.4.1</project.httpclient5.version>
+    <project.commons-codec.version>1.17.1</project.commons-codec.version>
+    <project.oauth.version>1.36.0</project.oauth.version>
+    <project.auth.version>1.30.0</project.auth.version>
     <project.jsr305.version>3.0.2</project.jsr305.version>
     <project.gson.version>2.8.6</project.gson.version>
-    <project.protobuf-java.version>3.21.12</project.protobuf-java.version>
-    <project.guava.version>31.1-jre</project.guava.version>
-    <project.appengine.version>2.0.10</project.appengine.version>
+    <project.protobuf-java.version>3.25.3</project.protobuf-java.version>
+    <project.guava.version>33.1.0-jre</project.guava.version>
+    <project.appengine.version>2.0.31</project.appengine.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.jdo2-api.version>2.3-20090302111651</project.jdo2-api.version>
     <project.datanucleus-core.version>3.2.2</project.datanucleus-core.version>
     <project.datanucleus-api-jdo.version>3.2.1</project.datanucleus-api-jdo.version>
     <project.datanucleus-maven-plugin.version>4.0.3</project.datanucleus-maven-plugin.version>
     <project.servlet-api.version>2.5</project.servlet-api.version>
+    <!-- jakarta-servlet-api 5.0.0 is the last version that works with Java 8 -->
+    <project.jakarta-servlet-api.version>5.0.0</project.jakarta-servlet-api.version>
     <deploy.autorelease>false</deploy.autorelease>
-    <gson.version>2.10.1</gson.version>
+    <gson.version>2.11.0</gson.version>
   </properties>
 
   <profiles>
@@ -528,7 +568,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.0.1</version>
+            <version>3.2.7</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -608,38 +648,75 @@
       </activation>
       <properties>
         <!-- default config values -->
-        <docletName>java-docfx-doclet-1.5.0</docletName>
+        <docletName>java-docfx-doclet-1.9.0</docletName>
         <outputpath>${project.build.directory}/docfx-yml</outputpath>
         <projectname>${project.artifactId}</projectname>
-        <excludeclasses></excludeclasses>
-        <excludePackages></excludePackages>
-        <source>7</source>            
-        <sourceFileExclude></sourceFileExclude>
+        <source>17</source>
       </properties>
       <build>
         <plugins>
           <plugin>
+            <artifactId>exec-maven-plugin</artifactId>
+            <groupId>org.codehaus.mojo</groupId>
+            <executions>
+              <execution>
+                <id>install-artifact</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>bash</executable>
+                  <arguments>
+                    <argument>-c</argument>
+                    <argument><![CDATA[
+                     if [ ! -d "play-services" ]; then
+                       mkdir play-services &&
+                       cd play-services   &&
+                       curl --output play-services-basement-8.3.0.aar https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar &&
+                       unzip play-services-basement-8.3.0.aar &&
+                       mvn install:install-file -Dfile=classes.jar -DgroupId=com.google.android.google-play-services -DartifactId=google-play-services -Dversion=1 -Dpackaging=jar
+                     fi
+                    ]]></argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.4.1</version>
+            <version>3.11.2</version>
             <configuration>
               <doclet>com.microsoft.doclet.DocFxDoclet</doclet>
               <useStandardDocletOptions>false</useStandardDocletOptions>
-               <!-- custom config with -Dproperty=value -->
-              <docletPath>${env.KOKORO_GFILE_DIR}/${docletName}.jar</docletPath>
+              <!-- custom config with -Dproperty=value -->
               <additionalOptions>
-                -outputpath ${outputpath} 
-                -projectname ${projectname} 
-                -excludeclasses ${excludeclasses}: 
-                -excludepackages ${excludePackages}:
+                -outputpath ${outputpath}
+                -projectname ${projectname}
               </additionalOptions>
               <doclint>none</doclint>
               <show>protected</show>
               <nohelp>true</nohelp>
               <source>${source}</source>
-              <sourceFileExcludes>
-                <exclude>${sourceFileExclude}</exclude>
-              </sourceFileExcludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>envVarTest</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <!-- Unless overriden in the submodules, this profile run no tests in a submodule -->
+              <excludes>
+                <exclude>**/*.java</exclude>
+              </excludes>
             </configuration>
           </plugin>
         </plugins>

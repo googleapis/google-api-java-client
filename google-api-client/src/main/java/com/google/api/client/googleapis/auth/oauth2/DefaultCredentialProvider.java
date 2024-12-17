@@ -294,7 +294,7 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
     throw OAuth2Utils.exceptionWithCause(
         new RuntimeException(
             String.format(
-                "Unexpcted error trying to determine if runnning on Google App Engine: %s",
+                "Unexpected error trying to determine if running on Google App Engine: %s",
                 cause.getMessage())),
         cause);
   }

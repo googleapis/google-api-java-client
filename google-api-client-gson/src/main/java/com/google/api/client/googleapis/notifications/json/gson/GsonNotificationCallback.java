@@ -22,7 +22,7 @@ import com.google.api.client.util.Beta;
 
 /**
  * {@link Beta} <br>
- * A {@link TypedNotificationCallback} which uses an JSON content encoding with {@link
+ * A {@link TypedNotificationCallback} which uses a JSON content encoding with {@link
  * GsonFactory#getDefaultInstance()}.
  *
  * <p>Must NOT be implemented in form of an anonymous class as this will break serialization.

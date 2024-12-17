@@ -1,12 +1,44 @@
 {
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
-  "ignorePaths": [".kokoro/requirements.txt"],
+  "ignorePaths": [
+    ".kokoro/requirements.txt"
+  ],
   "packageRules": [
     {
-      "packagePatterns": ["^com.google.appengine:appengine-"],
-      "groupName": "AppEngine packages"
+      "groupName": "AppEngine packages",
+      "matchPackageNames": [
+        "/^com.google.appengine:appengine-/"
+      ]
+    },
+    {
+      "matchPackageNames": [
+        "jakarta.servlet:jakarta.servlet-api"
+      ],
+      "groupName": "Jakarta servlet API",
+      "enabled": false
+    },
+    {
+      "versioning": "docker",
+      "enabled": false,
+      "matchPackageNames": [
+        "/^com.google.guava:/"
+      ]
+    },
+    {
+      "groupName": "Protobuf dependencies",
+      "enabled": false,
+      "matchPackageNames": [
+        "/^com.google.protobuf/"
+      ]
+    },
+    {
+      "groupName": "gRPC dependencies",
+      "enabled": false,
+      "matchPackageNames": [
+        "/^io.grpc/"
+      ]
     }
   ]
 }

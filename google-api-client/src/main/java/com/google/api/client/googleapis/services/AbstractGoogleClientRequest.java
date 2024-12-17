@@ -37,6 +37,7 @@ import com.google.api.client.http.HttpResponseInterceptor;
 import com.google.api.client.http.UriTemplate;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Preconditions;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,7 +63,13 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
    */
   public static final String USER_AGENT_SUFFIX = "Google-API-Java-Client";
 
-  private static final String API_VERSION_HEADER = "X-Goog-Api-Client";
+  private static final String API_CLIENT_HEADER = "X-Goog-Api-Client";
+
+  /**
+   * The generated request class will pass this constant as part of the header if the RPC supports
+   * ApiVersion.
+   */
+  protected static final String API_VERSION_HEADER = "X-Goog-Api-Version";
 
   /** Google client. */
   private final AbstractGoogleClient abstractGoogleClient;
@@ -133,7 +140,7 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
       requestHeaders.setUserAgent(USER_AGENT_SUFFIX + "/" + GoogleUtils.VERSION);
     }
     // Set the header for the Api Client version (Java and OS version)
-    requestHeaders.set(API_VERSION_HEADER, ApiClientVersion.DEFAULT_VERSION);
+    requestHeaders.set(API_CLIENT_HEADER, ApiClientVersion.DEFAULT_VERSION);
   }
 
   /**
@@ -310,6 +317,12 @@ public abstract class AbstractGoogleClientRequest<T> extends GenericData {
   public AbstractGoogleClientRequest<T> setRequestHeaders(HttpHeaders headers) {
     this.requestHeaders = headers;
     return this;
+  }
+
+  /** Returns the ApiVersion set in the headers. If ApiVersion is not set, null is returned. */
+  @VisibleForTesting
+  String getApiVersionHeader() {
+    return (String) requestHeaders.get(API_VERSION_HEADER);
   }
 
   /**
