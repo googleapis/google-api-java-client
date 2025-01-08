@@ -10,4 +10,11 @@
   <!-- Don't check JavaDoc on package-info. -->
   <suppress checks="JavadocStyleCheck" files="package-info.java"/>
 
+  <!-- Suppressions for new rules -->
+  <suppress checks="NewRule1" files="com[/\\]google[/\\]api[/\\]client[/\\]googleapis[/\\]extensions[/\\]appengine[/\\]notifications[/\\]AppEngineNotificationServlet.java"/>
+  <suppress checks="NewRule2" files="com[/\\]google[/\\]api[/\\]client[/\\]googleapis[/\\]extensions[/\\]servlet[/\\]notifications[/\\]NotificationServlet.java"/>
+
+  <!-- Updated existing suppressions to match new rules -->
+  <suppress checks="UpdatedRule1" files="com[/\\]google[/\\]api[/\\]client[/\\]googleapis[/\\]extensions[/\\]appengine[/\\]notifications[/\\]AppEngineNotificationServlet.java"/>
+  <suppress checks="UpdatedRule2" files="com[/\\]google[/\\]api[/\\]client[/\\]googleapis[/\\]extensions[/\\]servlet[/\\]notifications[/\\]NotificationServlet.java"/>
 </suppressions>

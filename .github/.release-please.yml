@@ -1,1 +1,24 @@
-
+bumpMinorPreMajor: true
+handleGHRelease: true
+releaseType: java-yoshi
+branches:
+  - bumpMinorPreMajor: true
+    handleGHRelease: true
+    releaseType: java-lts
+    branch: 1.31.3-sp
+  - bumpMinorPreMajor: true
+    handleGHRelease: true
+    releaseType: java-backport
+    branch: 1.32.x
+  - bumpMinorPreMajor: true
+    handleGHRelease: true
+    releaseType: java-backport
+    branch: 1.34.x
+  - bumpMinorPreMajor: true
+    handleGHRelease: true
+    releaseType: java-backport
+    branch: 2.0.x
+  - bumpMinorPreMajor: true
+    handleGHRelease: true
+    releaseType: java-backport
+    branch: 2.2.x
