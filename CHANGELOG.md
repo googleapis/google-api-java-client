@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.2](https://github.com/googleapis/google-api-java-client/compare/v2.7.1...v2.7.2) (2025-01-22)
+
+
+### Bug Fixes
+
+* Add warnings to users about using credentials from external sources ([#2551](https://github.com/googleapis/google-api-java-client/issues/2551)) ([3bb2879](https://github.com/googleapis/google-api-java-client/commit/3bb28796845a62b68a32a9cee7b4c6380b759cc1))
+
 ## [2.7.1](https://github.com/googleapis/google-api-java-client/compare/v2.7.0...v2.7.1) (2024-12-10)
 
 
