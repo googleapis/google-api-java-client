@@ -199,6 +199,13 @@ public class GoogleCredential extends Credential {
    * {@link Beta} <br>
    * Return a credential defined by a Json file.
    *
+   * <p>Important: If you accept a credential configuration (credential JSON/File/Stream) from an
+   * external source for authentication to Google Cloud Platform, you must validate it before
+   * providing it to any Google API or library. Providing an unvalidated credential configuration to
+   * Google APIs can compromise the security of your systems and data. For more information, refer
+   * to {@link <a
+   * href="https://cloud.google.com/docs/authentication/external/externally-sourced-credentials">documentation</a>}.
+   *
    * @param credentialStream the stream with the credential definition.
    * @return the credential defined by the credentialStream.
    * @throws IOException if the credential cannot be created from the stream.
@@ -211,6 +218,13 @@ public class GoogleCredential extends Credential {
   /**
    * {@link Beta} <br>
    * Return a credential defined by a Json file.
+   *
+   * <p>Important: If you accept a credential configuration (credential JSON/File/Stream) from an
+   * external source for authentication to Google Cloud Platform, you must validate it before
+   * providing it to any Google API or library. Providing an unvalidated credential configuration to
+   * Google APIs can compromise the security of your systems and data. For more information, refer
+   * to {@link <a
+   * href="https://cloud.google.com/docs/authentication/external/externally-sourced-credentials">documentation</a>}.
    *
    * @param credentialStream the stream with the credential definition.
    * @param transport the transport for Http calls.
