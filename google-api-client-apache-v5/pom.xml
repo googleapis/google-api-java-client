@@ -29,8 +29,8 @@
                     <links>
                         <link>https://docs.oracle.com/javase/8/docs/api/</link>
                         <link>https://cloud.google.com/appengine/docs/standard/java/javadoc/</link>
-                        <link>https://googleapis.dev/java/google-http-client/${project.http.version}/</link>
-                        <link>https://googleapis.dev/java/google-oauth-client/${project.oauth.version}/</link>
+                        <link>https://javadoc.io/doc/com.google.http-client/google-http-client/${project.http.version}/</link>
+                        <link>https://javadoc.io/doc/com.google.oauth-client/google-oauth-client/${project.oauth.version}/</link>
                     </links>
                     <doctitle>${project.name} ${project.version}</doctitle>
                     <windowtitle>${project.artifactId} ${project.version}</windowtitle>
