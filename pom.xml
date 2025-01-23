@@ -413,8 +413,8 @@
               <links>
                 <link>http://download.oracle.com/javase/7/docs/api/</link>
                 <link>http://cloud.google.com/appengine/docs/java/javadoc</link>
-                <link>https://googleapis.dev/java/google-http-client/${project.http.version}/</link>
-                <link>https://googleapis.dev/java/google-oauth-client/${project.oauth.version}/</link>
+                <link>https://cloud.google.com/java/docs/reference/google-http-client/${project.http.version}/</link>
+                <link>https://cloud.google.com/java/docs/reference/google-oauth-client/${project.oauth.version}/</link>
               </links>
               <doctitle>Google API Client Library for Java ${project.version}</doctitle>
               <overview>${basedir}/overview.html</overview>
