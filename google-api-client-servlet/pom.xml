@@ -16,8 +16,8 @@
         <configuration>
           <links>
             <link>http://download.oracle.com/javase/7/docs/api/</link>
-            <link>https://javadoc.io/doc/com.google.http-client/google-http-client/${project.http.version}/</link>
-            <link>https://javadoc.io/doc/com.google.oauth-client/google-oauth-client/${project.oauth.version}/</link>
+            <link>https://cloud.google.com/java/docs/reference/google-http-client/${project.http.version}/</link>
+            <link>https://cloud.google.com/java/docs/reference/google-oauth-client/${project.oauth.version}/</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
