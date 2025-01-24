@@ -296,23 +296,42 @@ page at http://checkstyle.sourceforge.net/config.html -->
       -->
       <property name="severity" value="warning"/>
     </module>
-  </module>
 
+    <!-- New rules for code style checks -->
+    <module name="AvoidStarImport">
+      <!-- Checks that star imports are not used. -->
+      <property name="severity" value="error"/>
+    </module>
 
-  <module name="LineLength">
-    <!-- Checks if a line is too long. -->
-    <property name="max" value="${com.puppycrawl.tools.checkstyle.checks.sizes.LineLength.max}" default="100"/>
-    <property name="severity" value="error"/>
+    <module name="AvoidInlineConditionals">
+      <!-- Checks that inline conditionals are not used. -->
+      <property name="severity" value="error"/>
+    </module>
 
-    <!--
-      The default ignore pattern exempts the following elements:
-        - import statements
-        - long URLs inside comments
-    -->
+    <module name="AvoidNestedBlocks">
+      <!-- Checks that nested blocks are not used. -->
+      <property name="severity" value="error"/>
+    </module>
 
-    <property name="ignorePattern"
-      value="${com.puppycrawl.tools.checkstyle.checks.sizes.LineLength.ignorePattern}"
-      default="^(package .*;\s*)|(import .*;\s*)|( *(\*|//).*https?://.*)$"/>
+    <module name="AvoidEscapedUnicodeCharacters">
+      <!-- Checks that escaped Unicode characters are not used. -->
+      <property name="severity" value="error"/>
+    </module>
+
+    <!-- Updated existing rules to match new guidelines -->
+    <module name="LineLength">
+      <!-- Checks if a line is too long. -->
+      <property name="max" value="120"/>
+      <property name="severity" value="error"/>
+      <property name="ignorePattern" value="^(package .*;\s*)|(import .*;\s*)|( *(\*|//).*https?://.*)$"/>
+    </module>
+
+    <module name="JavadocMethod">
+      <property name="accessModifiers" value="public, protected"/>
+      <property name="severity" value="warning"/>
+      <property name="allowMissingParamTags" value="false"/>
+      <property name="allowMissingReturnTag" value="false"/>
+    </module>
+
   </module>
 </module>
-
