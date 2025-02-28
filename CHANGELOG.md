@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.0](https://github.com/googleapis/google-api-java-client/compare/v2.7.2...v2.8.0) (2025-02-28)
+
+
+### Features
+
+* Next release from main branch is 2.8.0 ([#2563](https://github.com/googleapis/google-api-java-client/issues/2563)) ([57882ad](https://github.com/googleapis/google-api-java-client/commit/57882adbe0b9c48513642cfe624bb1ac7b842743))
+
 ## [2.7.2](https://github.com/googleapis/google-api-java-client/compare/v2.7.1...v2.7.2) (2025-01-22)
 
 
