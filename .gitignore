@@ -1,30 +1,4 @@
-.gitignore
-
-# Packages
-dist
-bin
-var
-sdist
-target
-
-# Unit test / coverage reports
-.coverage
-.tox
-nosetests.xml
-
-# Translations
-*.mo
-
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
-*.iml
-.idea
-.settings
-.DS_Store
-.classpath
-
-
-# Python utilities
-*.pyc
+######################
+## EPiServer Files
+######################
+*License.config
