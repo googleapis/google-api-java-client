@@ -140,8 +140,8 @@ import java.util.Collections;
  * response handler, take a look at the sample usage for {@link HttpExecuteInterceptor} and {@link
  * HttpUnsuccessfulResponseHandler}, which are interfaces that this class also implements.
  *
- * @since 1.7
  * @author Yaniv Inbar
+ * @since 1.7
  * @deprecated Please use <a href="https://github.com/googleapis/google-auth-library-java">
  *     google-auth-library</a> for handling Application Default Credentials and other non-OAuth2
  *     based authentication.
