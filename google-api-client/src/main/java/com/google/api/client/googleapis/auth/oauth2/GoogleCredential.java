@@ -181,13 +181,16 @@ public class GoogleCredential extends Credential {
    * authorize the whole application. This is the built-in service account if running on Google
    * Compute Engine or the credentials file from the path in the environment variable
    * GOOGLE_APPLICATION_CREDENTIALS.
+   *
    * @param resetCachedCredentials whether to reset the cached credentials
    * @return the credential instance.
    * @throws IOException if the credential cannot be created in the current environment.
    */
   @Beta
-  public static GoogleCredential getApplicationDefault(boolean resetCachedCredentials) throws IOException {
-    return getApplicationDefault(Utils.getDefaultTransport(), Utils.getDefaultJsonFactory(), resetCachedCredentials);
+  public static GoogleCredential getApplicationDefault(boolean resetCachedCredentials)
+      throws IOException {
+    return getApplicationDefault(
+        Utils.getDefaultTransport(), Utils.getDefaultJsonFactory(), resetCachedCredentials);
   }
 
   /**
@@ -207,10 +210,12 @@ public class GoogleCredential extends Credential {
    */
   @Beta
   public static GoogleCredential getApplicationDefault(
-      HttpTransport transport, JsonFactory jsonFactory, boolean resetCachedCredentials) throws IOException {
+      HttpTransport transport, JsonFactory jsonFactory, boolean resetCachedCredentials)
+      throws IOException {
     Preconditions.checkNotNull(transport);
     Preconditions.checkNotNull(jsonFactory);
-    return defaultCredentialProvider.getDefaultCredential(transport, jsonFactory, resetCachedCredentials);
+    return defaultCredentialProvider.getDefaultCredential(
+        transport, jsonFactory, resetCachedCredentials);
   }
 
   /**
@@ -607,7 +612,9 @@ public class GoogleCredential extends Credential {
       return (Builder) super.setJsonFactory(jsonFactory);
     }
 
-    /** @since 1.9 */
+    /**
+     * @since 1.9
+     */
     @Override
     public Builder setClock(Clock clock) {
       return (Builder) super.setClock(clock);

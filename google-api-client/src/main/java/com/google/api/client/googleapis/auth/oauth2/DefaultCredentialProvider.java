@@ -81,8 +81,8 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
    * <p>Returns the Application Default Credentials which are credentials that identify and
    * authorize the whole application. This is the built-in service account if running on Google
    * Compute Engine or the credentials file from the path in the environment variable
-   * GOOGLE_APPLICATION_CREDENTIALS.
-   * If the credentials have been cached, the cached credential will be returned.
+   * GOOGLE_APPLICATION_CREDENTIALS. If the credentials have been cached, the cached credential will
+   * be returned.
    *
    * @param transport the transport for Http calls.
    * @param jsonFactory the factory for Json parsing and formatting.
@@ -109,7 +109,8 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
    * @return the credential instance.
    * @throws IOException if the credential cannot be created in the current environment.
    */
-  final GoogleCredential getDefaultCredential(HttpTransport transport, JsonFactory jsonFactory, boolean resetCachedCredentials)
+  final GoogleCredential getDefaultCredential(
+      HttpTransport transport, JsonFactory jsonFactory, boolean resetCachedCredentials)
       throws IOException {
     synchronized (this) {
       if (cachedCredential == null || resetCachedCredentials) {

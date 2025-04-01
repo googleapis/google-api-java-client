@@ -87,7 +87,6 @@ public class DefaultCredentialProviderTest extends TestCase {
     assertSame(JSON_FACTORY, defaultCredential.getJsonFactory());
   }
 
-
   public void testGetApplicationDefaultResetCacheTrueReturnsNewCredentials() throws IOException {
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
     HttpTransport transport = new MockHttpTransport();
