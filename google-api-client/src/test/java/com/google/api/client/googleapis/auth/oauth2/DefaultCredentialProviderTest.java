@@ -87,6 +87,20 @@ public class DefaultCredentialProviderTest extends TestCase {
     assertSame(JSON_FACTORY, defaultCredential.getJsonFactory());
   }
 
+
+  public void testGetApplicationDefaultResetCacheTrueReturnsNewCredentials() throws IOException {
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    HttpTransport transport = new MockHttpTransport();
+    testProvider.addType(
+        DefaultCredentialProvider.APP_ENGINE_CREDENTIAL_CLASS, MockAppEngineCredential.class);
+    testProvider.addType(GAE_SIGNAL_CLASS, MockAppEngineSystemProperty.class);
+    Credential credential1 = testProvider.getDefaultCredential(transport, JSON_FACTORY, false);
+    Credential credential2 = testProvider.getDefaultCredential(transport, JSON_FACTORY, false);
+    Credential credential3 = testProvider.getDefaultCredential(transport, JSON_FACTORY, true);
+    assertSame(credential1, credential2);
+    assertNotSame(credential2, credential3);
+  }
+
   public void testDefaultCredentialAppEngineComponentOffAppEngineGivesNotFoundError() {
     HttpTransport transport = new MockHttpTransport();
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
