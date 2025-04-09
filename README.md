@@ -13,7 +13,8 @@ The library has the following features:
 
 ## Supported Java environments
 
-- Java 7 (or higher)
+- Java 8 (or higher)
+  - In order to use Java 7, you must use [version 1.32.1](https://github.com/googleapis/google-api-java-client/releases/tag/v1.32.1)
 - Android 1.6 (or higher)
 - [Google App Engine](https://github.com/googleapis/google-api-java-client/wiki/App-Engine)
 
