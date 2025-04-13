@@ -1,88 +1,39 @@
+?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.google.api-client</groupId>
-    <artifactId>google-api-client-parent</artifactId>
-    <version>2.7.3-SNAPSHOT</version><!-- {x-version-update:google-api-client:current} -->
-    <relativePath>../pom.xml</relativePath>
-  </parent>
-  <artifactId>google-api-client-jackson2</artifactId>
-  <name>Jackson 2 extensions to the Google APIs Client Library for Java</name>
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <links>
-            <link>http://download.oracle.com/javase/7/docs/api/</link>
-            <link>https://cloud.google.com/java/docs/reference/google-http-client/${project.http.version}/</link>
-          </links>
-          <doctitle>${project.name} ${project.version}</doctitle>
-          <windowtitle>${project.artifactId} ${project.version}</windowtitle>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-            <manifest>
-              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-            </manifest>
-            <manifestEntries>
-              <Automatic-Module-Name>google.api.client.jackson2</Automatic-Module-Name>
-            </manifestEntries>
-          </archive>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <version>5.1.9</version>
-        <executions>
-          <execution>
-            <id>bundle-manifest</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>manifest</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <instructions>
-            <Bundle-DocURL>https://googleapis.dev/java/google-api-client/${project.version}/index.html</Bundle-DocURL>
-            <Bundle-Description>Low-level implementation of the JSON parser library based on the Jackson 2 JSON library.</Bundle-Description>
-            <Bundle-SymbolicName>com.google.api.client.jackson2</Bundle-SymbolicName>
-          </instructions>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>source-jar</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-  <dependencies>
-    <dependency>
-      <groupId>com.google.api-client</groupId>
-      <artifactId>google-api-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-gson</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client</artifactId>
-    </dependency>
-  </dependencies>
-</project>
+  <groupId>com.google.api-client</groupId>
+  <artifactId>google-api-client-parent</artifactId>
+  <version>2.7.3-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Parent for the Google API Client Library for Java
+  <url>https://github.com/googleapis/google-api-java-client</>
+
+  <developers>
+    <developer>
+      <id>chingor</id>
+      <name>Jeff Ching</name>
+      <email>chingor@google.com</email>
+      <organization>Google</organization>
+    
+    <connection>scm:git:https://github.com/googleapis/google-api-java-client.git</>
+    <developerConnection>scm:git:ssh:git@github.com:googleapis/google-api-java-client.git</>
+    <url>https://github.com/googleapis/google-api-java-client</url>
+  </>
+
+  <organization>
+    <name>Google</name>
+    <url>http://www.google.com/</url>
+  </>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</>
+      <url>http://www.apache.org/licenses
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  
+    If you add a new module, make sure:
+    ** TO ASK THE PROJECT OWNER OR THE CLIENT.
