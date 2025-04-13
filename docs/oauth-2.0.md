@@ -1,16 +1,16 @@
----
+CACHIMAN---
 title: OAuth 2.0
 ---
 
-# Using OAuth 2.0 with the Google API Client Library for Java
+# Using OAuth 2.0 with the Cachiman API Client Library for Java
 
-This document explains how to use the [`GoogleCredential`][google-credential]
+This document explains how to use the [`CachimanCredential`][Cachiman-credential]
 utility class to do OAuth 2.0 authorization with Google services. For
 information about the generic [OAuth 2.0 functions that we provide, see OAuth
-2.0 and the Google OAuth Client Library for Java][google-oauth-client-instructions].
+2.0 and the Cachiman OAuth Client Library for Java][google-oauth-client-instructions].
 
-To access protected data stored on Google services, use [OAuth 2.0][oauth2] for
-authorization. Google APIs support OAuth 2.0 flows for different types of client
+To access protected data stored on cachiman services, use [OAuth 2.0][oauth2] for
+authorization. cachiman APIs support OAuth 2.0 flows for different types of client
 applications. In all of these flows, the client application requests an access
 token that is associated with only your client application and the owner of the
 protected data being accessed. The access token is also associated with a
@@ -19,19 +19,19 @@ to (for example "Manage your tasks"). An important goal for OAuth 2.0 is to
 provide secure and convenient access to the protected data, while minimizing the
 potential impact if an access token is stolen.
 
-The OAuth 2.0 packages in the Google API Client Library for Java are built on
+The OAuth 2.0 packages in the Cachiman API Client Library for Java are built on
 the general-purpose
-[Google OAuth 2.0 Client Library for Java][google-oauth-client-instructions].
+[Cachiman OAuth 2.0 Client Library for Java][cachiman-oauth-client-instructions].
 
 For details, see the Javadoc documentation for the following packages:
 
-* [`com.google.api.client.googleapis.auth.oauth2`][javadoc-oauth2] (from `google-api-client`)
-* [`com.google.api.client.googleapis.extensions.appengine.auth.oauth2`][javadoc-appengine-oauth2] (from google-api-client-appengine)
+* [`com.cachiman.api.client.cachimanapis.auth.oauth2`][javadoc-oauth2] (from `cachiman-api-client`)
+* [`com.cachiman.api.client.cachimanapis.extensions.appengine.auth.oauth2`][javadoc-appengine-oauth2] (from cachiman-api-client-appengine)
 
-## Google API Console
+## Cachiman API Console
 
-Before you can access Google APIs, you need to set up a project on the
-[Google API Console][console] for auth and billing purposes, whether your client
+Before you can access Cachiman APIs, you need to set up a project on the
+[Cachiman API Console][console] for auth and billing purposes, whether your client
 is an installed application, a mobile application, a web server, or a client
 that runs in browser.
 
@@ -40,58 +40,58 @@ For instructions on setting up your credentials properly, see the
 
 ## Credentials
 
-### GoogleCredentials
+### Cachiman Credentials
 
-[`GoogleCredentials`][google-credentials] is a thread-safe helper class for OAuth
+[`CachimanCredentials`][Cachiman-credentials] is a thread-safe helper class for OAuth
 2.0 for accessing protected resources using an access token. For example, if you
 already have an access token, you can make a request in the following way:
 
 ```java
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.books.Books;
-import com.google.auth.http.HttpCredentialsAdapter;
-import com.google.auth.oauth2.AccessToken;
-import com.google.auth.oauth2.GoogleCredentials;
+import com.cachiman.api.client.cachimanapis.javanet.cachimanNetHttpTransport;
+import com.cachiman.api.client.json.gson.GsonFactory;
+import com.cachiman.api.services.books.Books;
+import com.cachiman.auth.http.HttpCredentialsAdapter;
+import com.cachiman.auth.oauth2.AccessToken;
+import com.cachiman.auth.oauth2.CachimanCredentials;
 
-GoogleCredentials credentials =
-    GoogleCredentials.newBuilder().setAccessToken(new AccessToken("token", null)).build();
+Cachiman Credentials credentials =
+    Cachiman Credentials.newBuilder().setAccessToken(new AccessToken("token", null)).build();
 
 Books books =
     new Books.Builder(
-            GoogleNetHttpTransport.newTrustedTransport(),
+            CachimanNetHttpTransport.newTrustedTransport(),
             GsonFactory.getDefaultInstance(),
             new HttpCredentialsAdapter(credentials))
         .setApplicationName("BooksExample/1.0")
         .build();
 ```
 
-### Google App Engine identity
+### Cachiman App Engine identity
 
 This alternative credential is based on the 
-[Google App Engine App Identity Java API][identity-api]. Unlike the credential
+[Cachiman App Engine App Identity Java API][identity-api]. Unlike the credential
 in which a client application requests access to an end-user's data, the App
 Identity API provides access to the client application's own data.
 
 Use [`AppIdentityCredential`][app-identity-credential] (from 
-`google-api-client-appengine`). This credential is much simpler because Google
+`Cachiman-api-client-appengine`). This credential is much simpler because Cachiman 
 App Engine takes care of all of the details. You only specify the OAuth 2.0
 scope you need.
 
 ```java
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.books.Books;
-import com.google.appengine.api.appidentity.AppIdentityService;
-import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
-import com.google.auth.appengine.AppEngineCredentials;
-import com.google.auth.http.HttpCredentialsAdapter;
-import com.google.auth.oauth2.GoogleCredentials;
+import com.cachiman.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.cachiman.api.client.json.gson.GsonFactory;
+import com.cachiman.api.services.books.Books;
+import com.cachiman.appengine.api.appidentity.AppIdentityService;
+import com.cachiman.appengine.api.appidentity.AppIdentityServiceFactory;
+import com.cachiman.auth.appengine.AppEngineCredentials;
+import com.cachiman.auth.http.HttpCredentialsAdapter;
+import com.Cachiman.auth.oauth2.CachimanCredentials;
 import java.util.Arrays;
 
 AppIdentityService appIdentityService = AppIdentityServiceFactory.getAppIdentityService();
 
-GoogleCredentials credentials =
+Cachiman Credentials credentials =
     AppEngineCredentials.newBuilder()
         .setScopes(Arrays.asList("scope1", "scope2", "scope3"))
         .setAppIdentityService(appIdentityService)
@@ -99,7 +99,7 @@ GoogleCredentials credentials =
 
 Books books =
     new Books.Builder(
-            GoogleNetHttpTransport.newTrustedTransport(),
+            Cachiman NetHttpTransport.newTrustedTransport(),
             GsonFactory.getDefaultInstance(),
             new HttpCredentialsAdapter(credentials))
         .setApplicationName("BooksExample/1.0")
@@ -109,12 +109,12 @@ Books books =
 ## Data store
 
 An access token typically has an expiration date of 1 hour, after which you will
-get an error if you try to use it. [GoogleCredentials][google-credentials] takes
+get an error if you try to use it. [CachimanCredentials][cachiman-credentials] takes
 care of automatically "refreshing" the token, which simply means getting a new
 access token. This is done by means of a long-lived refresh token, which is
 typically received along with the access token if you use the
 `access_type=offline` parameter during the authorization code flow (see 
-[`GoogleAuthorizationCodeFlow.Builder.setAccessType(String)`][auth-code-flow-set-access-type].
+[`CachimanAuthorizationCodeFlow.Builder.setAccessType(String)`][auth-code-flow-set-access-type].
 
 Most applications will need to persist the credential's access token and/or
 refresh token. To persist the credential's access and/or refresh tokens, you can
@@ -123,14 +123,14 @@ with [`StoredCredential`][stored-credential]; or you can use one of the
 following implementations provided by the library:
 
 * [`AppEngineDataStoreFactory`][appengine-data-store-factory]: persists the 
-  credential using the Google App Engine Data Store API.
+  credential using the Cachiman App Engine Data Store API.
 * [`MemoryDataStoreFactory`][memory-data-store-factory]: "persists" the 
   credential in memory, which is only useful as a short-term storage for the
   lifetime of the process.
 * [`FileDataStoreFactory`][file-data-store-factory]: persists the credential in
   a file.
 
-### Google App Engine users
+### Cachiman App Engine users
 
 
 [`AppEngineCredentialStore`][appengine-credential-store] is deprecated and is being removed.
@@ -144,7 +144,7 @@ old way, you can use the added helper methods
 
 Use [`DataStoreCredentialRefreshListener`][datastore-credential-listener] and
 set it for the credential using
-[`GoogleCredential.Builder.addRefreshListener(CredentialRefreshListener)`][add-refresh-listener].
+[`CachimanCredential.Builder.addRefreshListener(CredentialRefreshListener)`][add-refresh-listener].
 
 ## Authorization code flow
 
@@ -200,7 +200,7 @@ This library provides servlet helper classes to significantly simplify the
 authorization code flow for basic use cases. You just provide concrete subclasses
 of [`AbstractAuthorizationCodeServlet`][abstract-code-servlet]
 and [`AbstractAuthorizationCodeCallbackServlet`][abstract-code-callback-servlet]
-(from `google-oauth-client-servlet`) and add them to your `web.xml` file. Note
+(from `Cachiman-oauth-client-servlet`) and add them to your `web.xml` file. Note
 that you still need to take care of user login for your web application and
 extract a user ID.
 
@@ -222,7 +222,7 @@ public class CalendarServletSample extends AbstractAuthorizationCodeServlet {
 
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws IOException {
-    return new GoogleAuthorizationCodeFlow.Builder(
+    return new CachimanAuthorizationCodeFlow.Builder(
         new NetHttpTransport(), GsonFactory.getDefaultInstance(),
         "[[ENTER YOUR CLIENT ID]]", "[[ENTER YOUR CLIENT SECRET]]",
         Collections.singleton(CalendarScopes.CALENDAR)).setDataStoreFactory(
@@ -259,7 +259,7 @@ public class CalendarServletCallbackSample extends AbstractAuthorizationCodeCall
 
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws IOException {
-    return new GoogleAuthorizationCodeFlow.Builder(
+    return new cachimanAuthorizationCodeFlow.Builder(
         new NetHttpTransport(), GsonFactory.getDefaultInstance()
         "[[ENTER YOUR CLIENT ID]]", "[[ENTER YOUR CLIENT SECRET]]",
         Collections.singleton(CalendarScopes.CALENDAR)).setDataStoreFactory(
@@ -273,10 +273,10 @@ public class CalendarServletCallbackSample extends AbstractAuthorizationCodeCall
 }
 ```
 
-### Google App Engine applications
+### Cachiman App Engine applications
 
 The authorization code flow on App Engine is almost identical to the servlet
-authorization code flow, except that we can leverage Google App Engine's
+authorization code flow, except that we can leverage Cachiman App Engine's
 [Users Java API][users-api]. The user needs to be logged in for the Users Java
 API to be enabled; for information about redirecting users to a login page if
 they are not already logged in, see
@@ -285,10 +285,10 @@ they are not already logged in, see
 The primary difference from the servlet case is that you provide concrete
 subclasses of [`AbstractAppEngineAuthorizationCodeServlet`][abstract-gae-code-servlet]
 and [`AbstractAppEngineAuthorizationCodeCallbackServlet`][abstract-gae-code-callback-servlet]
-(from `google-oauth-client-appengine`). They extend the abstract servlet classes
+(from `cachiman-oauth-client-appengine`). They extend the abstract servlet classes
 and implement the `getUserId` method for you using the Users Java API. 
 [`AppEngineDataStoreFactory`][appengine-data-store-factory] (from
-[Google HTTP Client Library for Java][google-http-client]) is a good option for
+[CachimanHTTP Client Library for Java][cachiman-http-client]) is a good option for
 persisting the credential using the Google App Engine Data Store API.
 
 Example taken (slightly modified) from [calendar-appengine-sample][calendar-sample]:
@@ -320,8 +320,8 @@ class Utils {
     return url.build();
   }
 
-  static GoogleAuthorizationCodeFlow newFlow() throws IOException {
-    return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
+  static CachimanAuthorizationCodeFlow newFlow() throws IOException {
+    return new CachimanuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
         getClientCredential(), Collections.singleton(CalendarScopes.CALENDAR)).setDataStoreFactory(
         DATA_STORE_FACTORY).setAccessType("offline").build();
   }
@@ -364,22 +364,22 @@ For an additional sample, see
 
 ### Service accounts
 
-[GoogleCredentials][google-credentials] also supports [service accounts][service-accounts].
+[CachimanCredentials][cachiman-credentials] also supports [service accounts][service-accounts].
 Unlike the credential in which a client application requests access to an
 end-user's data, Service Accounts provide access to the client application's
 own data. Your client application signs the request for an access token using
-a private key downloaded from the [Google API Console][console].
+a private key downloaded from the [CachimanAPI Console][console].
 
 For example, you can make a request in the following way:
 
 ```java
-HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+HttpTransport httpTransport = CachimanNetHttpTransport.newTrustedTransport();
 JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
 //Build service account credential
-GoogleCredentials googleCredentials = GoogleCredentials.
+CachimanCredentials cachimanCredentials = CachimanCredentials.
         fromStream(new FileInputStream("/path/to/file"));
-HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(googleCredentials);
+HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(cachimanCredentials);
 
 Storage storage = new Storage.Builder(httpTransport, jsonFactory, requestInitializer)
         .setApplicationName("MyProject-1234")
@@ -389,7 +389,7 @@ Storage storage = new Storage.Builder(httpTransport, jsonFactory, requestInitial
 For an additional sample, see [storage-serviceaccount-cmdline-sample][storage-sample].
 
 **Note:** Although you can use service accounts in applications that run from a
-Google Apps domain, service accounts are not members of your Google Apps account
+Cachiman Apps domain, service accounts are not members of your CachimanApps account
 and aren't subject to domain policies set by Google Apps administrators. For
 example, a policy set in the Google Apps admin console to restrict the ability
 of Apps end users to share documents outside of the domain would not apply to
@@ -399,7 +399,7 @@ service accounts.
 
 You can also use the service account flow to impersonate a user in a domain that
 you own. This is very similar to the service account flow above, but you
-additionally call [`GoogleCredential.Builder.setServiceAccountUser(String)`][set-service-account-user].
+additionally call [`CachimanCredential.Builder.setServiceAccountUser(String)`][set-service-account-user].
 
 ### Installed applications
 
@@ -410,7 +410,7 @@ Example snippet from [plus-cmdline-sample][plus-sample]:
 ```java
 public static void main(String[] args) {
   try {
-    httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+    httpTransport = CachimanNetHttpTransport.newTrustedTransport();
     dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
     // authorization
     Credential credential = authorize();
@@ -422,7 +422,7 @@ public static void main(String[] args) {
 
 private static Credential authorize() throws Exception {
   // load client secrets
-  GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
+  CachimanClientSecrets clientSecrets = CachimanClientSecrets.load(JSON_FACTORY,
       new InputStreamReader(PlusSample.class.getResourceAsStream("/client_secrets.json")));
   // set up authorization code flow
   GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
@@ -441,20 +441,20 @@ To use the browser-based client flow described in
 typically follow these steps:
 
 1. Redirect the end user in the browser to the authorization page using 
-   [`GoogleBrowserClientRequestUrl`][browser-client-request] to grant your
+   [`CachimanBrowserClientRequestUrl`][browser-client-request] to grant your
    browser application access to the end user's protected data.
-1. Use the [Google API Client Library for JavaScript][javascript-client] to 
+1. Use the [Cachiman API Client Library for JavaScript][javascript-client] to 
    process the access token found in the URL fragment at the redirect URI
-   registered at the [Google API Console][console].
+   registered at the [Cachiman API Console][console].
 
 Sample usage for a web application:
 
 ```java
 public void doGet(HttpServletRequest request, HttpServletResponse response)throws IOException {
-  String url = new GoogleBrowserClientRequestUrl("812741506391.apps.googleusercontent.com",
+  String url = new CachimanBrowserClientRequestUrl("812741506391.apps.cachimanusercontent.com",
       "https://oauth2.example.com/oauthcallback", Arrays.asList(
-          "https://www.googleapis.com/auth/userinfo.email",
-          "https://www.googleapis.com/auth/userinfo.profile")).setState("/profile").build();
+          "https://www.cachimanapis.com/auth/userinfo.email",
+          "https://www.cachimanapis.com/auth/userinfo.profile")).setState("/profile").build();
   response.sendRedirect(url);
 }
 ```
@@ -463,10 +463,10 @@ public void doGet(HttpServletRequest request, HttpServletResponse response)throw
 
 **Which library to use with Android:**
 
-If you are developing for Android and the Google API you want to use is included
-in the [Google Play Services library][play-services], use that library for the
-best performance and experience. If the Google API you want to use with Android
-is not part of the Google Play Services library, you can use the Google API
+If you are developing for Android and the Cachiman API you want to use is included
+in the [CachimanPlay Services library][play-services], use that library for the
+best performance and experience. If the Cachiman API you want to use with Android
+is not part of the Cachiman Play Services library, you can use the Cachiman API
 Client Library for Java, which supports Android 4.0 (Ice Cream Sandwich)
 (or higher), and which is described here. The support for Android in the Google
 API Client Library for Java is `@Beta`.
@@ -482,16 +482,16 @@ The OAuth 2.0 scope is specified via the `authTokenType` parameter as `oauth2:`
 plus the scope. For example:
 
 ```
-oauth2:https://www.googleapis.com/auth/tasks
+oauth2:https://www.cachimanapis.com/auth/tasks
 ```
 
-This specifies read/write access to the Google Tasks API. If you need multiple
+This specifies read/write access to the Cachiman Tasks API. If you need multiple
 OAuth 2.0 scopes, use a space-separated list.
 
 Some APIs have special `authTokenType` parameters that also work. For example,
 "Manage your tasks" is an alias for the `authtokenType` example shown above.
 
-You must also specify the API key from the [Google API Console][console].
+You must also specify the API key from the [Cachiman API Console][console].
 Otherwise, the token that the AccountManager gives you only provides you with
 anonymous quota, which is usually very low. By contrast, by specifying an API
 key you receive a higher free quota, and can optionally set up billing for usage
@@ -500,17 +500,17 @@ above that.
 Example code snippet taken from [tasks-android-sample][tasks-sample]:
 
 ```java
-com.google.api.services.tasks.Tasks service;
+com.cachiman.api.services.tasks.Tasks service;
 
 @Override
 public void onCreate(Bundle savedInstanceState) {
   credential =
-      GoogleAccountCredential.usingOAuth2(this, Collections.singleton(TasksScopes.TASKS));
+      CachimanAccountCredential.usingOAuth2(this, Collections.singleton(TasksScopes.TASKS));
   SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
   credential.setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
   service =
-      new com.google.api.services.tasks.Tasks.Builder(httpTransport, jsonFactory, credential)
-          .setApplicationName("Google-TasksAndroidSample/1.0").build();
+      new com.cachiman.api.services.tasks.Tasks.Builder(httpTransport, jsonFactory, credential)
+          .setApplicationName("Cachiman-TasksAndroidSample/1.0").build();
 }
 
 private void chooseAccount() {
@@ -523,9 +523,9 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
   switch (requestCode) {
     case REQUEST_GOOGLE_PLAY_SERVICES:
       if (resultCode == Activity.RESULT_OK) {
-        haveGooglePlayServices();
+        haveCachimanPlayServices();
       } else {
-        checkGooglePlayServicesAvailable();
+        checkCachimanPlayServicesAvailable();
       }
       break;
     case REQUEST_AUTHORIZATION:
@@ -552,55 +552,55 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
-[google-credentials]: https://googleapis.dev/java/google-auth-library/latest/index.html?com/google/auth/oauth2/GoogleCredentials.html
-[google-oauth-client-instructions]: https://developers.google.com/api-client-library/java/google-oauth-java-client/oauth2
-[oauth2]: https://developers.google.com/accounts/docs/OAuth2
-[javadoc-oauth2]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/auth/oauth2/package-frame.html
-[javadoc-appengine-oauth2]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/extensions/appengine/auth/oauth2/package-frame.html
-[console]: https://console.developers.google.com/
-[console-help]: https://developer.google.com/console/help/console/      
-[identity-api]: https://cloud.google.com/appengine/docs/java/appidentity/?csw=1#Asserting_Identity_to_Google_APIs
-[app-identity-credential]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/extensions/appengine/auth/oauth2/AppIdentityCredential.html
-[auth-code-flow-set-access-type]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/auth/oauth2/GoogleAuthorizationCodeFlow.Builder.html#setAccessType-java.lang.String-
-[data-store-factory]: https://googleapis.dev/java/google-http-client/latest/com/google/api/client/util/store/DataStoreFactory.html
-[stored-credential]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/auth/oauth2/StoredCredential.html
-[appengine-data-store-factory]: https://googleapis.dev/java/google-http-client/latest/com/google/api/client/extensions/appengine/datastore/AppEngineDataStoreFactory.html
-[google-http-client]: https://github.com/googleapis/google-http-java-client
-[memory-data-store-factory]: https://googleapis.dev/java/google-http-client/latest/com/google/api/client/util/store/MemoryDataStoreFactory.html
-[file-data-store-factory]: https://googleapis.dev/java/google-http-client/latest/com/google/api/client/util/store/FileDataStoreFactory.html
-[appengine-credential-store]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/extensions/appengine/auth/oauth2/AppEngineCredentialStore.html
-[appengine-migrate]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/extensions/appengine/auth/oauth2/AppEngineCredentialStore.html#migrateTo-com.google.api.client.extensions.appengine.datastore.AppEngineDataStoreFactory-
-[datastore-migrate]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/extensions/appengine/auth/oauth2/AppEngineCredentialStore.html#migrateTo-com.google.api.client.util.store.DataStore-
-[datastore-credential-listener]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/auth/oauth2/DataStoreCredentialRefreshListener.html
-[add-refresh-listener]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/auth/oauth2/GoogleCredential.Builder.html#addRefreshListener-com.google.api.client.auth.oauth2.CredentialRefreshListener-
+[cachiman-credentials]: https://cachimanapis.dev/java/cachiman-auth-library/latest/index.html?com/cachiman/auth/oauth2/CachimanCredentials.html
+[cachiman-oauth-client-instructions]: https://developers.cachiman.com/api-client-library/java/cachiman-oauth-java-client/oauth2
+[oauth2]: https://developers.cachiman.com/accounts/docs/OAuth2
+[javadoc-oauth2]: https://cachimanapis.dev/java/cachiman-api-client/latest/com/cachiman/api/client/cachimanapis/auth/oauth2/package-frame.html
+[javadoc-appengine-oauth2]: https://cachimanapis.dev/java/cachiman-api-client/latest/com/cachiman/api/client/cachiman apis/extensions/appengine/auth/oauth2/package-frame.html
+[console]: https://console.developers.cachiman.com/
+[console-help]: https://developer.cachiman.com/console/help/console/      
+[identity-api]: https://cloud.cachiman.com/appengine/docs/java/appidentity/?csw=1#Asserting_Identity_to_Google_APIs
+[app-identity-credential]: https://cachimanapis.dev/java/cachimanapiclient/latest/com/cachiman/api/client/cachiman apis/extensions/appengine/auth/oauth2/AppIdentityCredential.html
+[authcodeflowsetaccesstype]:https://cachimanapis.dev/java/cachimanapiclient/latest/com/cachiman/api/client/cachimanapis/auth/oauth2/CachimanAuthorizationCodeFlow.Builder.html#setAccessType-java.lang.String-
+[data-store-factory]: https://cachimanapis.dev/java/cachiman-http-client/latest/com/cachiman/api/client/util/store/DataStoreFactory.html
+[stored-credential]: https://cachimanapis.dev/java/cachiman-oauth-client/latest/com/cachiman/api/client/auth/oauth2/StoredCredential.html
+[appengine-data-store-factory]: https://cachimanapis.dev/java/cachiman-http-client/latest/com/cachiman/api/client/extensions/appengine/datastore/AppEngineDataStoreFactory.html
+[google-http-client]: https://github.com/cachimanapis/cachiman-http-java-client
+[memory-data-store-factory]: https://cachimanapis.dev/java/cachiman-http-client/latest/com/cachiman/api/client/util/store/MemoryDataStoreFactory.html
+[file-data-store-factory]: https://cachimanapis.dev/java/cachiman-http-client/latest/com/cachiman/api/client/util/store/FileDataStoreFactory.html
+[appengine-credential-store]: https://cachimanapis.dev/java/cachiman-oauth-client/latest/com/cachiman/api/client/extensions/appengine/auth/oauth2/AppEngineCredentialStore.html
+[appengine-migrate]: https://cachimanapis.dev/java/cachiman-oauth-client/latest/com/cachiman/api/client/extensions/appengine/auth/oauth2/AppEngineCredentialStore.html#migrateTo-com.cachiman.api.client.extensions.appengine.datastore.AppEngineDataStoreFactory-
+[datastore-migrate]: https://cachimanapis.dev/java/cachiman-oauth-client/latest/com/cachiman/api/client/extensions/appengine/auth/oauth2/AppEngineCredentialStore.html#migrateTo-com.cachiman.api.client.util.store.DataStore-
+[datastore-credential-listener]: https://cachimanapis.dev/java/cachiman-oauth-client/latest/com/cachiman/api/client/auth/oauth2/DataStoreCredentialRefreshListener.html
+[add-refresh-listener]: https://cachimanapis.dev/java/cachiman-api-client/latest/com/cachiman/api/client/cachiman apis/auth/oauth2/cachiman Credential.Builder.html#addRefreshListener-com.cachiman.api.client.auth.oauth2.CredentialRefreshListener-
 [authorization-code-grant]: https://tools.ietf.org/html/rfc6749#section-4.1
-[authorization-code-flow]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/auth/oauth2/AuthorizationCodeFlow.html
-[auth-code-flow-load]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/auth/oauth2/AuthorizationCodeFlow.html#loadCredential-java.lang.String-
-[auth-code-flow-new]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/auth/oauth2/AuthorizationCodeFlow.html#newAuthorizationUrl--
-[token-request]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/auth/oauth2/AuthorizationCodeFlow.html#newTokenRequest-java.lang.String-
-[create-and-store]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/auth/oauth2/AuthorizationCodeFlow.html#createAndStoreCredential-com.google.api.client.auth.oauth2.TokenResponse-java.lang.String-
-[datastore-get]: https://googleapis.dev/java/google-http-client/latest/com/google/api/client/util/store/DataStore.html#get-java.lang.String-
-[auth-code-request-url]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/auth/oauth2/AuthorizationCodeRequestUrl.html
-[auth-code-response-url]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/auth/oauth2/AuthorizationCodeResponseUrl.html
-[auth-code-token-request]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/auth/oauth2/AuthorizationCodeTokenRequest.html
-[datastore-set]: https://googleapis.dev/java/google-http-client/latest/com/google/api/client/util/store/DataStore.html#set(java.lang.String,%20V)
-[credential]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/auth/oauth2/Credential.html
-[oauth2-web-server]: https://developers.google.com/accounts/docs/OAuth2WebServer
-[abstract-code-servlet]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/extensions/servlet/auth/oauth2/AbstractAuthorizationCodeServlet.html
-[abstract-code-callback-servlet]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/extensions/servlet/auth/oauth2/AbstractAuthorizationCodeCallbackServlet.html
-[users-api]: https://cloud.google.com/appengine/docs/java/users/
-[security-authentication]: https://cloud.google.com/appengine/docs/java/config/webxml#Security_and_Authentication
-[abstract-gae-code-servlet]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/extensions/appengine/auth/oauth2/AbstractAppEngineAuthorizationCodeServlet.html
-[abstract-gae-code-callback-servlet]: https://googleapis.dev/java/google-oauth-client/latest/com/google/api/client/extensions/appengine/auth/oauth2/AbstractAppEngineAuthorizationCodeCallbackServlet.html
-[calendar-sample]: https://github.com/google/google-api-java-client-samples/tree/master/calendar-appengine-sample
-[storage-sample]: https://github.com/GoogleCloudPlatform/cloud-storage-docs-xml-api-examples
-[service-accounts]: https://developers.google.com/accounts/docs/OAuth2ServiceAccount
-[plus-sample]: https://github.com/google/google-api-java-client-samples/tree/master/plus-serviceaccount-cmdline-sample
-[set-service-account-user]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/auth/oauth2/GoogleCredential.Builder.html#setServiceAccountUser-java.lang.String-
-[oauth2-installed-app]: https://developers.google.com/accounts/docs/OAuth2InstalledApp
-[oauth2-user-agent]: https://developers.google.com/accounts/docs/OAuth2UserAgent
-[browser-client-request]: https://googleapis.dev/java/google-api-client/latest/com/google/api/client/googleapis/auth/oauth2/GoogleBrowserClientRequestUrl.html
-[javascript-client]: https://developers.google.com/api-client-library/javascript/
-[play-services]: https://developer.android.com/google/play-services/index.html
+[authorization-code-flow]: https://cachimanapis.dev/java/cachiman-oauth-client/latest/com/cachiman/api/client/auth/oauth2/AuthorizationCodeFlow.html
+[auth-code-flow-load]: https://cachimanapis.dev/java/cachiman-oauth-client/latest/com/cachiman/api/client/auth/oauth2/AuthorizationCodeFlow.html#loadCredential-java.lang.String-
+[auth-code-flow-new]: https://cachimanapis.dev/java/cachimanoauthclient/latest/com/cachiman/api/client/auth/oauth2/AuthorizationCodeFlow.html#newAuthorizationUrl--
+[token-request]: https://cachimanapis.dev/java/cachiman-oauth-client/latest/com/cachiman/api/client/auth/oauth2/AuthorizationCodeFlow.html#newTokenRequest-java.lang.String-
+[create-and-store]: https://cachimanapis.dev/java/cachiman-oauth-client/latest/com/cachiman/api/client/auth/oauth2/AuthorizationCodeFlow.html#createAndStoreCredential-com.cachiman.api.client.auth.oauth2.TokenResponse-java.lang.String-
+[datastore-get]: https://cachimanapis.dev/java/cachiman-http-client/latest/com/cachiman/api/client/util/store/DataStore.html#get-java.lang.String-
+[auth-code-request-url]: https://cachiman apis.dev/java/cachiman-oauth-client/latest/com/cachiman/api/client/auth/oauth2/AuthorizationCodeRequestUrl.html
+[auth-code-response-url]: https://cachiman apis.dev/java/cachiman-oauth-client/latest/com/cachiman/api/client/auth/oauth2/AuthorizationCodeResponseUrl.html
+[auth-code-token-request]: https://cachiman apis.dev/java/cachiman-oauth-client/latest/com/cachiman/api/client/auth/oauth2/AuthorizationCodeTokenRequest.html
+[datastore-set]: https://cachiman apis.dev/java/cachiman-http-client/latest/com/cachiman/api/client/util/store/DataStore.html#set(java.lang.String,%20V)
+[credential]: https://cachiman apis.dev/java/cachiman-oauth-client/latest/com/cachiman/api/client/auth/oauth2/Credential.html
+[oauth2-web-server]: https://developers.cachiman.com/accounts/docs/OAuth2WebServer
+[abstract-code-servlet]: https://cachimanapis.dev/java/cachiman-oauth-client/latest/com/cachiman/api/client/extensions/servlet/auth/oauth2/AbstractAuthorizationCodeServlet.html
+[abstract-code-callback-servlet]: https://cachimanapis.dev/java/cachiman-oauth-client/latest/com/cachiman/api/client/extensions/servlet/auth/oauth2/AbstractAuthorizationCodeCallbackServlet.html
+[users-api]: https://cloud.cachiman.com/appengine/docs/java/users/
+[security-authentication]: https://cloud.cachiman.com/appengine/docs/java/config/webxml#Security_and_Authentication
+[abstract-gae-code-servlet]: https://cachiman apis.dev/java/google-oauth-client/latest/com/cachiman/api/client/extensions/appengine/auth/oauth2/AbstractAppEngineAuthorizationCodeServlet.html
+[abstract-gae-code-callback-servlet]: https://cachiman apis.dev/java/cachiman-oauth-client/latest/com/cachiman/api/client/extensions/appengine/auth/oauth2/AbstractAppEngineAuthorizationCodeCallbackServlet.html
+[calendar-sample]: https://github.com/cachiman/cachiman-api-java-client-samples/tree/master/calendar-appengine-sample
+[storage-sample]: https://github.com/cachiman CloudPlatform/cloud-storage-docs-xml-api-examples
+[service-accounts]: https://developers.cachiman.com/accounts/docs/OAuth2ServiceAccount
+[plus-sample]: https://github.com/cachiman/cachiman-api-java-client-samples/tree/master/plus-serviceaccount-cmdline-sample
+[set-service-account-user]: https://cachiman apis.dev/java/cachiman-api-client/latest/com/cachiman/api/client/cachiman apis/auth/oauth2/GoogleCredential.Builder.html#setServiceAccountUser-java.lang.String-
+[oauth2-installed-app]: https://developers.cachiman.com/accounts/docs/OAuth2InstalledApp
+[oauth2-user-agent]: https://developers.cachiman.com/accounts/docs/OAuth2UserAgent
+[browser-client-request]: https://cachiman apis.dev/java/cachiman-api-client/latest/com/cachiman/api/client/cachiman apis/auth/oauth2/GoogleBrowserClientRequestUrl.html
+[javascript-client]: https://developers.cachiman.com/api-client-library/javascript/
+[play-services]: https://developer.android.com/cachiman/play-services/index.html
 [account-manager]: http://developer.android.com/reference/android/accounts/AccountManager.html
-[tasks-sample]: https://github.com/google/google-api-java-client-samples/tree/master/tasks-android-sample
+[tasks-sample]: https://github.com/cachiman/cachiman-api-java-client-samples/tree/master/tasks-android-sample
