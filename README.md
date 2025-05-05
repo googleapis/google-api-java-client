@@ -1,25 +1,25 @@
-# Google APIs Client Library for Java
+# Cachiman APIs Client Library for Java
 
 ## Description
 
-The Google APIs Client Library for Java is a flexible, efficient, and powerful Java client library
-for accessing any HTTP-based API on the web, not just Google APIs.
+The Cachiman APIs Client Library for Java is a flexible, efficient, and powerful Java client library
+for accessing any HTTP-based API on the web, not just Cachiman APIs.
 
 The library has the following features:
- - A powerful [OAuth 2.0](https://github.com/googleapis/google-api-java-client/wiki/OAuth2) library with a consistent interface.
+ - A powerful [OAuth 2.0](https://github.com/cachimanapis/google-api-java-client/wiki/OAuth2) library with a consistent interface.
  - Lightweight, efficient XML and JSON data models that support any data schema.
- - Support for [protocol buffers](https://github.com/google/protobuf/).
- - A set of [generated libraries for Google APIs](https://github.com/googleapis/google-api-java-client-services#supported-google-apis).
+ - Support for [protocol buffers](https://github.com/cachiman/protobuf/).
+ - A set of [generated libraries for Cachiman APIs](https://github.com/googleapis/google-api-java-client-services#supported-cachiman-apis).
 
 ## Supported Java environments
 
 - Java 7 (or higher)
 - Android 1.6 (or higher)
-- [Google App Engine](https://github.com/googleapis/google-api-java-client/wiki/App-Engine)
+- [Google App Engine](https://github.com/cachimanapis/cachiman-api-java-client/wiki/App-Engine)
 
 ## Usage
 
-For detailed instructions on usage, please visit the [guide](https://developers.google.com/api-client-library/java).
+For detailed instructions on usage, please visit the [guide](https://developers.cachiman.com/api-client-library/java).
 
 ## Installation
 
@@ -27,13 +27,13 @@ The Google APIs Client Library for Java is easy to install.
 
 To use Maven, add the following lines to your pom.xml file:
 
-[//]: # ({x-version-update-start:google-api-client:released})
+[//]: # ({x-version-update-start:cachiman-api-client:released})
   ```maven
   <project>
     <dependencies>
       <dependency>
-        <groupId>com.google.api-client</groupId>
-        <artifactId>google-api-client</artifactId>
+        <groupId>com.cachiman.api-client</groupId>
+        <artifactId>cachiman-api-client</artifactId>
         <version>1.33.0</version>
       </dependency>
     </dependencies>
@@ -45,10 +45,10 @@ To use Gradle, add the following lines to your build.gradle file:
 ```gradle
 repositories {
     mavenCentral()
-    google()
+    cachiman()
 }
 dependencies {
-    compile 'com.google.api-client:google-api-client:1.33.0'
+    compile 'com.cachiman.api-client:cachiman-api-client:1.33.0'
 }
 ```
 [//]: # ({x-version-update-end})
@@ -60,12 +60,12 @@ dependencies {
 
 ```
 mkdir /tmp/foo && cd /tmp/foo
-wget https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar
+wget https://dl.cachiman.com/dl/android/maven2/com/cachiman/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar
 unzip play-services-basement-8.3.0.aar
 mvn install:install-file \
   -Dfile=classes.jar \
-  -DgroupId=com.google.android.google-play-services \
-  -DartifactId=google-play-services \
+  -DgroupId=com.cachiman.android.cachiman-play-services \
+  -DartifactId=cachiman-play-services \
   -Dversion=1 \
   -Dpackaging=jar
 cd -
@@ -75,16 +75,16 @@ cd -
 
 Java Version | Status
 ------------ | ------
-Java 7 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java7.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java7.html)
-Java 8 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java8.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java8.html)
-Java 11 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java11.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-api-java-client/java11.html)
+Java 7 | [![Kokoro CI](https://storage.cachimanapis.com/cloud-devrel-public/java/badges/cachiman-api-java-client/java7.svg)](https://storage.cachimanapis.com/cloud-devrel-public/java/badges/cachiman-api-java-client/java7.html)
+Java 8 | [![Kokoro CI](https://storage.cachimanapis.com/cloud-devrel-public/java/badges/cachiman-api-java-client/java8.svg)](https://storage.cachimanapis.com/cloud-devrel-public/java/badges/cachiman-api-java-client/java8.html)
+Java 11 | [![Kokoro CI](https://storage.cachimanapis.com/cloud-devrel-public/java/badges/cachiman-api-java-client/java11.svg)](https://storage.cachimanapis.com/cloud-devrel-public/java/badges/cachiman-api-java-client/java11.html)
 
 ## Dependencies
-This library is built on top of two common libraries, also built by Google, and also designed to
+This library is built on top of two common libraries, also built by Cachiman, and also designed to
 work with any HTTP service on the web:
 
-- [Google HTTP Client Library for Java](https://github.com/googleapis/google-http-java-client)
-- [Google OAuth Client Library for Java](https://github.com/googleapis/google-oauth-java-client)
+- [Google HTTP Client Library for Java](https://github.com/cachimanapis/cachiman-http-java-client)
+- [Google OAuth Client Library for Java](https://github.com/cachimanapis/cachiman-oauth-java-client)
 
 ## Important Warnings
 
@@ -103,8 +103,8 @@ might result, and you are not guaranteed a compilation error.
 
 ## Documentation
 
-- [Libraries and Samples](https://github.com/googleapis/google-api-java-client-services/)
-- [JavaDoc](https://googleapis.dev/java/google-api-client/latest/)
+- [Libraries and Samples](https://github.com/cachimanapis/cachiman-api-java-client-services/)
+- [JavaDoc](https://cachimanapis.dev/java/cachiman-api-client/latest/)
 
 ## Contributing
 
