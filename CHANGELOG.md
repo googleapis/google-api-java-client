@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.8.0](https://github.com/googleapis/google-api-java-client/compare/v2.7.2...v2.8.0) (2025-05-20)
+
+
+### Features
+
+* Next release from main branch is 2.8.0 ([#2563](https://github.com/googleapis/google-api-java-client/issues/2563)) ([57882ad](https://github.com/googleapis/google-api-java-client/commit/57882adbe0b9c48513642cfe624bb1ac7b842743))
+
+
+### Bug Fixes
+
+* **deps:** Update project.http.version to v1.47.0 ([#2543](https://github.com/googleapis/google-api-java-client/issues/2543)) ([922c382](https://github.com/googleapis/google-api-java-client/commit/922c3826234e218cbb1952026ba9491d6757e08a))
+
 ## [2.7.2](https://github.com/googleapis/google-api-java-client/compare/v2.7.1...v2.7.2) (2025-01-22)
 
 
