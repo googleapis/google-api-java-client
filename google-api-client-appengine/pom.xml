@@ -41,7 +41,6 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <version>5.1.9</version>
         <executions>
           <execution>
             <id>bundle-manifest</id>
@@ -70,18 +69,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <!--App Engine uses Java 7 and above-->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <configuration>
-          <signature>
-            <groupId>org.codehaus.mojo.signature</groupId>
-            <artifactId>java17</artifactId>
-            <version>1.0</version>
-          </signature>
-        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -128,4 +115,29 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <profiles>
+    <profile>
+      <id>animal-sniffer</id>
+      <activation>
+        <!-- The compatibility check runs by default in CIs -->
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <!--App Engine uses Java 7 and above-->
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>animal-sniffer-maven-plugin</artifactId>
+            <configuration>
+              <signature>
+                <groupId>org.codehaus.mojo.signature</groupId>
+                <artifactId>java17</artifactId>
+                <version>1.0</version>
+              </signature>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
