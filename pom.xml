@@ -525,7 +525,7 @@
   </build>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>1.47.0</project.http.version>
+    <project.http.version>2.0.0</project.http.version>
     <project.httpcore.version>4.4.16</project.httpcore.version>
     <project.httpclient.version>4.5.14</project.httpclient.version>
     <project.httpcore5.version>5.3.1</project.httpcore5.version>
