@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.1](https://github.com/googleapis/google-api-java-client/compare/v2.8.0...v2.8.1) (2025-08-14)
+
+
+### Bug Fixes
+
+* **deps:** Update project.http.version to v2 ([#2598](https://github.com/googleapis/google-api-java-client/issues/2598)) ([4874da1](https://github.com/googleapis/google-api-java-client/commit/4874da1d295868c2249af57973c0c2c1042e426b))
+
 ## [2.8.0](https://github.com/googleapis/google-api-java-client/compare/v2.7.2...v2.8.0) (2025-05-20)
 
 
