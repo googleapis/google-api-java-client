@@ -612,7 +612,9 @@ public class GoogleCredential extends Credential {
       return (Builder) super.setJsonFactory(jsonFactory);
     }
 
-    /** @since 1.9 */
+    /**
+     * @since 1.9
+     */
     @Override
     public Builder setClock(Clock clock) {
       return (Builder) super.setClock(clock);
