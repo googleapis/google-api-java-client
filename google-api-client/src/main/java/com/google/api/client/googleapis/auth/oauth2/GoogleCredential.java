@@ -222,9 +222,7 @@ public class GoogleCredential extends Credential {
    * @param credentialStream the stream with the credential definition.
    * @return the credential defined by the credentialStream.
    * @throws IOException if the credential cannot be created from the stream.
-   * @deprecated Please use <a href="https://github.com/googleapis/google-auth-library-java">
-   *     google-auth-library</a> for handling Application Default Credentials and other non-OAuth2
-   *     based authentication.
+   * @deprecated This method is being deprecated because of a potential security risk.
    */
   @Beta
   @Deprecated
@@ -259,9 +257,7 @@ public class GoogleCredential extends Credential {
    * @param credentialStream the stream with the credential definition.
    * @return the credential defined by the credentialStream.
    * @throws IOException if the credential cannot be created from the stream.
-   * @deprecated Please use <a href="https://github.com/googleapis/google-auth-library-java">
-   *     google-auth-library</a> for handling Application Default Credentials and other non-OAuth2
-   *     based authentication.
+   * @deprecated This method is being deprecated because of a potential security risk.
    */
   @Beta
   @Deprecated
