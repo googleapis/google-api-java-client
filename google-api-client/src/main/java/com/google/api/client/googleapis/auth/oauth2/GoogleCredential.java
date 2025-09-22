@@ -213,11 +213,7 @@ public class GoogleCredential extends Credential {
    * href="https://cloud.google.com/docs/authentication/external/externally-sourced-credentials">documentation</a>}
    * for more details.
    *
-   * <p>Returns credentials defined by a JSON file stream.
-   *
-   * <p>The stream can contain a Service Account key file in JSON format from the Google
-   *
-   * <p>Developers Console or a stored user credential using the format supported by the Cloud SDK.
+   * <p>Returns a credential defined by a Json file.
    *
    * @param credentialStream the stream with the credential definition.
    * @return the credential defined by the credentialStream.
@@ -248,11 +244,7 @@ public class GoogleCredential extends Credential {
    * href="https://cloud.google.com/docs/authentication/external/externally-sourced-credentials">documentation</a>}
    * for more details.
    *
-   * <p>Returns credentials defined by a JSON file stream.
-   *
-   * <p>The stream can contain a Service Account key file in JSON format from the Google
-   *
-   * <p>Developers Console or a stored user credential using the format supported by the Cloud SDK.
+   * <p>Returns a credential defined by a Json file.
    *
    * @param credentialStream the stream with the credential definition.
    * @return the credential defined by the credentialStream.
