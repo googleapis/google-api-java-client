@@ -81,7 +81,8 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
    * <p>Returns the Application Default Credentials which are credentials that identify and
    * authorize the whole application. This is the built-in service account if running on Google
    * Compute Engine or the credentials file from the path in the environment variable
-   * GOOGLE_APPLICATION_CREDENTIALS.
+   * GOOGLE_APPLICATION_CREDENTIALS. If the credentials have been cached, the cached credential will
+   * be returned.
    *
    * @param transport the transport for Http calls.
    * @param jsonFactory the factory for Json parsing and formatting.
@@ -90,8 +91,29 @@ class DefaultCredentialProvider extends SystemEnvironmentProvider {
    */
   final GoogleCredential getDefaultCredential(HttpTransport transport, JsonFactory jsonFactory)
       throws IOException {
+    return getDefaultCredential(transport, jsonFactory, false);
+  }
+
+  /**
+   * {@link Beta} <br>
+   * Returns the Application Default Credentials.
+   *
+   * <p>Returns the Application Default Credentials which are credentials that identify and
+   * authorize the whole application. This is the built-in service account if running on Google
+   * Compute Engine or the credentials file from the path in the environment variable
+   * GOOGLE_APPLICATION_CREDENTIALS.
+   *
+   * @param transport the transport for Http calls.
+   * @param jsonFactory the factory for Json parsing and formatting.
+   * @param resetCachedCredentials if true, the cached credential will be reset.
+   * @return the credential instance.
+   * @throws IOException if the credential cannot be created in the current environment.
+   */
+  final GoogleCredential getDefaultCredential(
+      HttpTransport transport, JsonFactory jsonFactory, boolean resetCachedCredentials)
+      throws IOException {
     synchronized (this) {
-      if (cachedCredential == null) {
+      if (cachedCredential == null || resetCachedCredentials) {
         cachedCredential = getDefaultCredentialUnsynchronized(transport, jsonFactory);
       }
       if (cachedCredential != null) {
