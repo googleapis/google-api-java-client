@@ -22,6 +22,8 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Beta;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -103,9 +105,38 @@ public class OAuth2Utils {
   }
 
   static String getMetadataServerUrl(SystemEnvironmentProvider environment) {
-    String metadataServerAddress = environment.getEnv("GCE_METADATA_HOST");
-    if (metadataServerAddress != null) {
-      return "http://" + metadataServerAddress;
+    String metadataServerHost = environment.getEnv("GCE_METADATA_HOST");
+    if (metadataServerHost != null) {
+      try {
+        int idx = metadataServerHost.indexOf(":");
+        if (idx >= 0 && idx == metadataServerHost.lastIndexOf(":")) {
+          // only one occurrence of ':' indicate this is ipv4/domain and port
+          return new URI(
+                  "http",
+                  null,
+                  metadataServerHost.substring(0, idx),
+                  Integer.parseInt(metadataServerHost.substring(idx + 1)),
+                  null,
+                  null,
+                  null)
+              .toString();
+        }
+        return new URI("http", metadataServerHost, null, null).toString();
+      } catch (NumberFormatException e) {
+        LOGGER.log(
+            Level.WARNING,
+            "Invalid GCE_METADATA_HOST env provided, falling back to '"
+                + DEFAULT_METADATA_SERVER_URL
+                + "'.",
+            e);
+      } catch (URISyntaxException e) {
+        LOGGER.log(
+            Level.WARNING,
+            "Invalid GCE_METADATA_HOST env provided, falling back to '"
+                + DEFAULT_METADATA_SERVER_URL
+                + "'.",
+            e);
+      }
     }
     return DEFAULT_METADATA_SERVER_URL;
   }
