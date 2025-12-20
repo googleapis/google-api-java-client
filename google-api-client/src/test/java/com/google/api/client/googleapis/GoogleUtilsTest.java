@@ -35,7 +35,7 @@ public class GoogleUtilsTest extends TestCase {
     }
     // intentionally check the count of certificates, so it can help us detect if a new certificate
     // has been added or removed
-    assertEquals(70, trustStore.size());
+    assertEquals(71, trustStore.size());
   }
 
   public void testVersionMatcher() {

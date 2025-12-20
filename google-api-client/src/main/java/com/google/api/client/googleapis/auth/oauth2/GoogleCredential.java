@@ -197,28 +197,64 @@ public class GoogleCredential extends Credential {
 
   /**
    * {@link Beta} <br>
-   * Return a credential defined by a Json file.
+   *
+   * <p>Important: This method does not validate the credential configuration. A security risk holds
+   * when a credential configuration is accepted from a source that is not under your control and
+   * used without validation on your side.
+   *
+   * <p>If you are loading your credential configuration from an untrusted source and have not
+   * mitigated the risks (e.g. by validating the configuration yourself), make these changes as soon
+   * as possible to prevent security risks to your environment.
+   *
+   * <p>Regardless of the method used, it is always your responsibility to validate configurations
+   * received from external sources.
+   *
+   * <p>See the {@link <a
+   * href="https://cloud.google.com/docs/authentication/external/externally-sourced-credentials">documentation</a>}
+   * for more details.
+   *
+   * <p>Returns a credential defined by a Json file.
    *
    * @param credentialStream the stream with the credential definition.
    * @return the credential defined by the credentialStream.
    * @throws IOException if the credential cannot be created from the stream.
+   * @deprecated This method is being deprecated because of a potential security risk.
+   *    Please use {@link <a href="https://cloud.google.com/java/docs/reference/google-auth-library/latest/com.google.auth.oauth2.GoogleCredentials">GoogleCredentials</a> instead.
    */
   @Beta
+  @Deprecated
   public static GoogleCredential fromStream(InputStream credentialStream) throws IOException {
     return fromStream(credentialStream, Utils.getDefaultTransport(), Utils.getDefaultJsonFactory());
   }
 
   /**
    * {@link Beta} <br>
-   * Return a credential defined by a Json file.
+   *
+   * <p>Important: This method does not validate the credential configuration. A security risk holds
+   * when a credential configuration is accepted from a source that is not under your control and
+   * used without validation on your side.
+   *
+   * <p>If you are loading your credential configuration from an untrusted source and have not
+   * mitigated the risks (e.g. by validating the configuration yourself), make these changes as soon
+   * as possible to prevent security risks to your environment.
+   *
+   * <p>Regardless of the method used, it is always your responsibility to validate configurations
+   * received from external sources.
+   *
+   * <p>See the {@link <a
+   * href="https://cloud.google.com/docs/authentication/external/externally-sourced-credentials">documentation</a>}
+   * for more details.
+   *
+   * <p>Returns a credential defined by a Json file.
    *
    * @param credentialStream the stream with the credential definition.
-   * @param transport the transport for Http calls.
-   * @param jsonFactory the factory for Json parsing and formatting.
    * @return the credential defined by the credentialStream.
    * @throws IOException if the credential cannot be created from the stream.
+   * @deprecated This method is being deprecated because of a potential security risk.
+   *    Please use {@link <a href="https://cloud.google.com/java/docs/reference/google-auth-library/latest/com.google.auth.oauth2.GoogleCredentials">GoogleCredentials</a> instead.
    */
   @Beta
+  @Deprecated
   public static GoogleCredential fromStream(
       InputStream credentialStream, HttpTransport transport, JsonFactory jsonFactory)
       throws IOException {
