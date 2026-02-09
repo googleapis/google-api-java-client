@@ -40,7 +40,7 @@ public class GoogleUtilsTest extends TestCase {
 
   public void testGetCertificateTrustStore_LoadsBundledKeystoreIfJdkDefaultFails() throws Exception {
     GoogleUtils.certTrustStore = null;
-    GoogleUtils.DEFAULT_CACERTS_PATH = "bad/path";
+    GoogleUtils.defaultCacertsPath = "bad/path";
 
     KeyStore trustStore = GoogleUtils.getCertificateTrustStore();
 

@@ -76,7 +76,7 @@ public final class GoogleUtils {
 
   /** Default JDK cacerts file path relative to java.home. */
   @VisibleForTesting
-  static String DEFAULT_CACERTS_PATH = "lib/security/cacerts";
+  static String defaultCacertsPath = "lib/security/cacerts";
 
   /** Default password for JDK cacerts file. */
   static final String DEFAULT_CACERTS_PASSWORD = "changeit";
@@ -112,7 +112,7 @@ public final class GoogleUtils {
   @VisibleForTesting
   static KeyStore getJdkDefaultKeyStore() throws IOException, GeneralSecurityException {
     String javaHome = System.getProperty(JAVA_HOME_KEY);
-    File file = new File(javaHome, DEFAULT_CACERTS_PATH);
+    File file = new File(javaHome, defaultCacertsPath);
 
     KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
     try (FileInputStream is = new FileInputStream(file)) {
@@ -130,8 +130,9 @@ public final class GoogleUtils {
    * available, it falls back to loading the bundled Google certificate store.
    *
    * @since 1.14
-   * @deprecated This method is deprecated because it relies on a bundled certificate store that is not maintained.
-   *   Please use {@link #getJdkDefaultKeyStore()} to load the JDK default keystore directly, or use your own certificate store as needed.
+   * @deprecated This method is deprecated because it relies on a bundled certificate store
+   *     that is not maintained. Please use {@link #getJdkDefaultTrustStore()} to load the
+   *     JDK default keystore directly, or use your own certificate store as needed.
    */
   @Deprecated
   public static synchronized KeyStore getCertificateTrustStore()
