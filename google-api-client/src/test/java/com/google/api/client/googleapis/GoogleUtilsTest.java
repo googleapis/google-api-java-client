@@ -14,12 +14,11 @@
 
 package com.google.api.client.googleapis;
 
+import static org.junit.Assert.assertNotEquals;
+
 import java.security.KeyStore;
-import java.util.Enumeration;
 import java.util.regex.Matcher;
 import junit.framework.TestCase;
-
-import static org.junit.Assert.assertNotEquals;
 
 /**
  * Tests {@link GoogleUtils}.
@@ -35,10 +34,14 @@ public class GoogleUtilsTest extends TestCase {
     // Load bundled keystore to compare
     KeyStore bundled = GoogleUtils.getBundledKeystore();
 
-    assertNotEquals("Certificate truststore should NOT contain the same amount of certificates as the bundled keystore", bundled.size(), trustStore.size());
+    assertNotEquals(
+        "Certificate truststore should NOT contain the same amount of certificates as the bundled keystore",
+        bundled.size(),
+        trustStore.size());
   }
 
-  public void testGetCertificateTrustStore_LoadsBundledKeystoreIfJdkDefaultFails() throws Exception {
+  public void testGetCertificateTrustStore_LoadsBundledKeystoreIfJdkDefaultLoadFails()
+      throws Exception {
     GoogleUtils.certTrustStore = null;
     GoogleUtils.defaultCacertsPath = "bad/path";
 
@@ -46,13 +49,16 @@ public class GoogleUtilsTest extends TestCase {
 
     // Load bundled keystore to compare
     KeyStore bundled = GoogleUtils.getBundledKeystore();
-    assertEquals("Certificate truststore should contain the same amount of certificates as the bundled keystore", trustStore.size(), bundled.size());
-   }
+    assertEquals(
+        "Certificate truststore should contain the same amount of certificates as the bundled keystore",
+        trustStore.size(),
+        bundled.size());
+  }
 
   public void testGetCertificateTrustStore_IsCached() throws Exception {
     KeyStore trustStore1 = GoogleUtils.getCertificateTrustStore();
     KeyStore trustStore2 = GoogleUtils.getCertificateTrustStore();
-    
+
     // Should return the exact same instance due to caching
     assertSame("Trust store should be cached", trustStore1, trustStore2);
   }

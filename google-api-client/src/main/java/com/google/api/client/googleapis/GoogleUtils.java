@@ -71,12 +71,10 @@ public final class GoogleUtils {
   }
 
   /** Cached value for {@link #getCertificateTrustStore()}. */
-  @VisibleForTesting
-  static KeyStore certTrustStore;
+  @VisibleForTesting static KeyStore certTrustStore;
 
   /** Default JDK cacerts file path relative to java.home. */
-  @VisibleForTesting
-  static String defaultCacertsPath = "lib/security/cacerts";
+  @VisibleForTesting static String defaultCacertsPath = "lib/security/cacerts";
 
   /** Default password for JDK cacerts file. */
   static final String DEFAULT_CACERTS_PASSWORD = "changeit";
@@ -91,9 +89,9 @@ public final class GoogleUtils {
   static final String BUNDLED_KEYSTORE_PASSWORD = "notasecret";
 
   /**
-   * Loads the bundled google.p12 key store containing trusted root certificates.
-   * 
-   * @return the loaded key store
+   * Loads the bundled google.p12 keystore containing trusted root certificates.
+   *
+   * @return the loaded keystore
    */
   @VisibleForTesting
   static KeyStore getBundledKeystore() throws IOException, GeneralSecurityException {
@@ -103,11 +101,11 @@ public final class GoogleUtils {
     return ks;
   }
 
-    /**
-   * Loads the default JDK key store (cacerts) containing trusted root certificates.
-   * Determines the path to the cacerts file based on the java.home system property.
-   * 
-   * @return the loaded key store
+  /**
+   * Loads the default JDK keystore (cacerts) containing trusted root certificates. Determines the
+   * path to the cacerts file based on the java.home system property.
+   *
+   * @return the loaded keystore
    */
   @VisibleForTesting
   static KeyStore getJdkDefaultKeyStore() throws IOException, GeneralSecurityException {
@@ -122,7 +120,7 @@ public final class GoogleUtils {
   }
 
   /**
-   * Returns a key store for trusted root certificates to use for Google APIs.
+   * Returns a keystore for trusted root certificates to use for Google APIs.
    *
    * <p>Value is cached, so subsequent access is fast.
    *
@@ -130,19 +128,18 @@ public final class GoogleUtils {
    * available, it falls back to loading the bundled Google certificate store.
    *
    * @since 1.14
-   * @deprecated This method is deprecated because it relies on a bundled certificate store
-   *     that is not maintained. Please use {@link #getJdkDefaultTrustStore()} to load the
-   *     JDK default keystore directly, or use your own certificate store as needed.
+   * @deprecated This method relies on a a bundled certificate store that is not maintained. Please
+   *     use {@link #getJdkDefaultKeyStore()} to load the JDK default keystore directly, or use your
+   *     own certificate store as needed.
    */
   @Deprecated
   public static synchronized KeyStore getCertificateTrustStore()
       throws IOException, GeneralSecurityException {
     if (certTrustStore == null) {
-      // Try to load JDK default trust store first
       try {
         certTrustStore = getJdkDefaultKeyStore();
       } catch (Exception e) {
-        // If fails to load default, fall through to bundled certificates
+        // If unable to retrieve default JDK keystore, fall through to bundled certificates
       }
 
       if (certTrustStore == null) {
