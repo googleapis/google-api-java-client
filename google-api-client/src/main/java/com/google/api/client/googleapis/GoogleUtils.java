@@ -16,6 +16,8 @@ package com.google.api.client.googleapis;
 
 import com.google.api.client.util.SecurityUtils;
 import com.google.common.annotations.VisibleForTesting;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
@@ -69,21 +71,82 @@ public final class GoogleUtils {
   }
 
   /** Cached value for {@link #getCertificateTrustStore()}. */
+  @VisibleForTesting
   static KeyStore certTrustStore;
 
+  /** Default JDK cacerts file path relative to java.home. */
+  @VisibleForTesting
+  static String DEFAULT_CACERTS_PATH = "lib/security/cacerts";
+
+  /** Default password for JDK cacerts file. */
+  static final String DEFAULT_CACERTS_PASSWORD = "changeit";
+
+  /** Java home system property key. */
+  static final String JAVA_HOME_KEY = "java.home";
+
+  /** Name of bundled keystore. */
+  static final String BUNDLED_KEYSTORE = "google.p12";
+
+  /** Bundled keystore password. */
+  static final String BUNDLED_KEYSTORE_PASSWORD = "notasecret";
+
   /**
-   * Returns the key store for trusted root certificates to use for Google APIs.
+   * Loads the bundled google.p12 key store containing trusted root certificates.
+   * 
+   * @return the loaded key store
+   */
+  @VisibleForTesting
+  static KeyStore getBundledKeystore() throws IOException, GeneralSecurityException {
+    KeyStore ks = SecurityUtils.getPkcs12KeyStore();
+    InputStream is = GoogleUtils.class.getResourceAsStream(BUNDLED_KEYSTORE);
+    SecurityUtils.loadKeyStore(ks, is, BUNDLED_KEYSTORE_PASSWORD);
+    return ks;
+  }
+
+    /**
+   * Loads the default JDK key store (cacerts) containing trusted root certificates.
+   * Determines the path to the cacerts file based on the java.home system property.
+   * 
+   * @return the loaded key store
+   */
+  @VisibleForTesting
+  static KeyStore getJdkDefaultKeyStore() throws IOException, GeneralSecurityException {
+    String javaHome = System.getProperty(JAVA_HOME_KEY);
+    File file = new File(javaHome, DEFAULT_CACERTS_PATH);
+
+    KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+    try (FileInputStream is = new FileInputStream(file)) {
+      trustStore.load(is, DEFAULT_CACERTS_PASSWORD.toCharArray());
+    }
+    return trustStore;
+  }
+
+  /**
+   * Returns a key store for trusted root certificates to use for Google APIs.
    *
    * <p>Value is cached, so subsequent access is fast.
    *
+   * <p>This method first attempts to load the JDK default keystore. If that fails or is not
+   * available, it falls back to loading the bundled Google certificate store.
+   *
    * @since 1.14
+   * @deprecated This method is deprecated because it relies on a bundled certificate store that is not maintained.
+   *   Please use {@link #getJdkDefaultKeyStore()} to load the JDK default keystore directly, or use your own certificate store as needed.
    */
+  @Deprecated
   public static synchronized KeyStore getCertificateTrustStore()
       throws IOException, GeneralSecurityException {
     if (certTrustStore == null) {
-      certTrustStore = SecurityUtils.getPkcs12KeyStore();
-      InputStream keyStoreStream = GoogleUtils.class.getResourceAsStream("google.p12");
-      SecurityUtils.loadKeyStore(certTrustStore, keyStoreStream, "notasecret");
+      // Try to load JDK default trust store first
+      try {
+        certTrustStore = getJdkDefaultKeyStore();
+      } catch (Exception e) {
+        // If fails to load default, fall through to bundled certificates
+      }
+
+      if (certTrustStore == null) {
+        certTrustStore = getBundledKeystore();
+      }
     }
     return certTrustStore;
   }

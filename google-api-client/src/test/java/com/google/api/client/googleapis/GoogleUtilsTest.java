@@ -19,6 +19,8 @@ import java.util.Enumeration;
 import java.util.regex.Matcher;
 import junit.framework.TestCase;
 
+import static org.junit.Assert.assertNotEquals;
+
 /**
  * Tests {@link GoogleUtils}.
  *
@@ -26,16 +28,33 @@ import junit.framework.TestCase;
  */
 public class GoogleUtilsTest extends TestCase {
 
-  public void testGetCertificateTrustStore() throws Exception {
+  public void testGetCertificateTrustStore_LoadsJdkDefaultFirst() throws Exception {
+    GoogleUtils.certTrustStore = null;
     KeyStore trustStore = GoogleUtils.getCertificateTrustStore();
-    Enumeration<String> aliases = trustStore.aliases();
-    while (aliases.hasMoreElements()) {
-      String alias = aliases.nextElement();
-      assertTrue(trustStore.isCertificateEntry(alias));
-    }
-    // intentionally check the count of certificates, so it can help us detect if a new certificate
-    // has been added or removed
-    assertEquals(71, trustStore.size());
+
+    // Load bundled keystore to compare
+    KeyStore bundled = GoogleUtils.getBundledKeystore();
+
+    assertNotEquals("Certificate truststore should NOT contain the same amount of certificates as the bundled keystore", bundled.size(), trustStore.size());
+  }
+
+  public void testGetCertificateTrustStore_LoadsBundledKeystoreIfJdkDefaultFails() throws Exception {
+    GoogleUtils.certTrustStore = null;
+    GoogleUtils.DEFAULT_CACERTS_PATH = "bad/path";
+
+    KeyStore trustStore = GoogleUtils.getCertificateTrustStore();
+
+    // Load bundled keystore to compare
+    KeyStore bundled = GoogleUtils.getBundledKeystore();
+    assertEquals("Certificate truststore should contain the same amount of certificates as the bundled keystore", trustStore.size(), bundled.size());
+   }
+
+  public void testGetCertificateTrustStore_IsCached() throws Exception {
+    KeyStore trustStore1 = GoogleUtils.getCertificateTrustStore();
+    KeyStore trustStore2 = GoogleUtils.getCertificateTrustStore();
+    
+    // Should return the exact same instance due to caching
+    assertSame("Trust store should be cached", trustStore1, trustStore2);
   }
 
   public void testVersionMatcher() {
