@@ -59,7 +59,7 @@ GoogleCredentials credentials =
 
 Books books =
     new Books.Builder(
-            Gnew NetHttpTransport(),
+            new NetHttpTransport(),
             GsonFactory.getDefaultInstance(),
             new HttpCredentialsAdapter(credentials))
         .setApplicationName("BooksExample/1.0")
