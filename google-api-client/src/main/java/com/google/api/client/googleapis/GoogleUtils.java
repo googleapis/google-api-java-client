@@ -82,8 +82,8 @@ public final class GoogleUtils {
   /** Default JDK cacerts file path relative to java.home. */
   @VisibleForTesting
   static String[] possibleJdkPaths = {
-          "lib/security/cacerts", // Java 9+
-          "jre/lib/security/cacerts" // Java 8 and earlier
+    "lib/security/cacerts", // Java 9+
+    "jre/lib/security/cacerts" // Java 8 and earlier
   };
 
   /** Java home system property key. */
@@ -106,8 +106,8 @@ public final class GoogleUtils {
   }
 
   /**
-   * Loads the default JDK keystore (cacerts) containing trusted root certificates.
-   * Uses Java's system properties + known cert locations to locate the default trust store.
+   * Loads the default JDK keystore (cacerts) containing trusted root certificates. Uses Java's
+   * system properties + known cert locations to locate the default trust store.
    *
    * @return the loaded keystore
    */
@@ -141,10 +141,12 @@ public final class GoogleUtils {
    *
    * @since 1.14
    * @deprecated Depending on your build environment this method potentially can contain outdated
-   * certs if loading jdk default certs fails.
-   * Instead of getting trusted certs directly use an HttpTransport wrapper such as {@link <a href="https://docs.cloud.google.com/java/docs/reference/google-http-client/latest/com.google.api.client.http.javanet.NetHttpTransport">NetHttpTransport</a>}
-   * which uses java jdk internal classes to load default jdk certs specifically for your build
-   * environment. If you need to access the keystore directly please create your own keystore file.
+   *     certs if loading jdk default certs fails. Instead of getting trusted certs directly use an
+   *     HttpTransport wrapper such as {@link <a
+   *     href="https://docs.cloud.google.com/java/docs/reference/google-http-client/latest/com.google.api.client.http.javanet.NetHttpTransport">NetHttpTransport</a>}
+   *     which uses java jdk internal classes to load default jdk certs specifically for a build
+   *     environment. If you need to access the keystore directly please create your own keystore
+   *     file.
    */
   @Deprecated
   public static synchronized KeyStore getCertificateTrustStore()
