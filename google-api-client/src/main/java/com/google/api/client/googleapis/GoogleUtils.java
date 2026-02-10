@@ -107,7 +107,7 @@ public final class GoogleUtils {
 
   /**
    * Loads the default JDK keystore (cacerts) containing trusted root certificates.
-   * Uses Java's system properties to locate the default trust store.
+   * Uses Java's system properties + known cert locations to locate the default trust store.
    *
    * @return the loaded keystore
    */
@@ -128,7 +128,7 @@ public final class GoogleUtils {
       }
     }
 
-    throw new IOException("Unable to find JDK cacerts file in java.home: " + javaHome);
+    throw new IOException("Unable to load default JDK cacerts file");
   }
 
   /**
@@ -140,9 +140,8 @@ public final class GoogleUtils {
    * available, it falls back to loading the bundled Google certificate store.
    *
    * @since 1.14
-   * @deprecated This method relies on a a bundled certificate store that is not maintained. Please
-   *     use {@link #getJdkDefaultKeyStore()} to load the JDK default keystore directly, or use your
-   *     own certificate store as needed.
+   * @deprecated Depending on your build environment this method potentially can contain outdated certs if loading jdk default certs fails.
+   * Instead of getting trusted certs directly use an HttpTransport wrapper such as {@link <a href="https://docs.cloud.google.com/java/docs/reference/google-http-client/latest/com.google.api.client.http.javanet.NetHttpTransport">NetHttpTransport</a>} which use java jdk private classes to load default jdk certs specifically for your build environment.  If you need to access the keystore directly please create your own keystore file.
    */
   @Deprecated
   public static synchronized KeyStore getCertificateTrustStore()
