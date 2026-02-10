@@ -140,8 +140,11 @@ public final class GoogleUtils {
    * available, it falls back to loading the bundled Google certificate store.
    *
    * @since 1.14
-   * @deprecated Depending on your build environment this method potentially can contain outdated certs if loading jdk default certs fails.
-   * Instead of getting trusted certs directly use an HttpTransport wrapper such as {@link <a href="https://docs.cloud.google.com/java/docs/reference/google-http-client/latest/com.google.api.client.http.javanet.NetHttpTransport">NetHttpTransport</a>} which use java jdk private classes to load default jdk certs specifically for your build environment.  If you need to access the keystore directly please create your own keystore file.
+   * @deprecated Depending on your build environment this method potentially can contain outdated
+   * certs if loading jdk default certs fails.
+   * Instead of getting trusted certs directly use an HttpTransport wrapper such as {@link <a href="https://docs.cloud.google.com/java/docs/reference/google-http-client/latest/com.google.api.client.http.javanet.NetHttpTransport">NetHttpTransport</a>}
+   * which uses java jdk internal classes to load default jdk certs specifically for your build environment.
+   * If you need to access the keystore directly please create your own keystore file.
    */
   @Deprecated
   public static synchronized KeyStore getCertificateTrustStore()
