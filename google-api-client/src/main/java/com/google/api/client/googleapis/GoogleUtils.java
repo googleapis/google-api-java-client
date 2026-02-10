@@ -79,6 +79,19 @@ public final class GoogleUtils {
   /** Bundled keystore password. */
   static final String BUNDLED_KEYSTORE_PASSWORD = "notasecret";
 
+  /** Default JDK cacerts file path relative to java.home. */
+  @VisibleForTesting
+  static String[] possibleJdkPaths = {
+          "lib/security/cacerts", // Java 9+
+          "jre/lib/security/cacerts" // Java 8 and earlier
+  };
+
+  /** Java home system property key. */
+  static final String JAVA_HOME_KEY = "java.home";
+
+  /** Default password for JDK cacerts file. */
+  static final String DEFAULT_CACERTS_PASSWORD = "changeit";
+
   /**
    * Loads the bundled google.p12 keystore containing trusted root certificates.
    *
@@ -103,16 +116,12 @@ public final class GoogleUtils {
     KeyStore keyStore = SecurityUtils.getDefaultKeyStore();
 
     // Find the default JDK cacerts location
-    String javaHome = System.getProperty("java.home");
-    String[] possiblePaths = {
-      "lib/security/cacerts", // Java 9+
-      "jre/lib/security/cacerts" // Java 8 and earlier
-    };
+    String javaHome = System.getProperty(JAVA_HOME_KEY);
 
-    for (String path : possiblePaths) {
+    for (String path : possibleJdkPaths) {
       File cacertsFile = new File(javaHome, path);
       try (FileInputStream fis = new FileInputStream(cacertsFile)) {
-        keyStore.load(fis, "changeit".toCharArray());
+        keyStore.load(fis, DEFAULT_CACERTS_PASSWORD.toCharArray());
         return keyStore;
       } catch (IOException e) {
         // File doesn't exist or can't be read, try next path
