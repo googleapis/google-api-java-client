@@ -100,48 +100,26 @@ public final class GoogleUtils {
    */
   @VisibleForTesting
   static KeyStore getJdkDefaultKeyStore() throws IOException, GeneralSecurityException {
-    // Get trust store location and type from system properties, or use defaults
-    String trustStoreType =
-        System.getProperty("javax.net.ssl.trustStoreType", KeyStore.getDefaultType());
-    String trustStorePath = System.getProperty("javax.net.ssl.trustStore");
-    String trustStorePassword =
-        System.getProperty("javax.net.ssl.trustStorePassword", "changeit");
-    
-    KeyStore keyStore = KeyStore.getInstance(trustStoreType);
-    
-    if (trustStorePath != null && !trustStorePath.isEmpty()) {
-      // User specified a custom trust store via system property
-      try (FileInputStream fis = new FileInputStream(trustStorePath)) {
-        keyStore.load(fis, trustStorePassword.toCharArray());
-        System.out.println("loaded keystore from truststore path");
-      }
-    } else {
-      // Find the default JDK cacerts location
-      String javaHome = System.getProperty("java.home");
-      String[] possiblePaths = {
-          "lib/security/cacerts",           // Java 9+
-          "jre/lib/security/cacerts"        // Java 8 and earlier
-      };
-      
-      File cacertsFile = null;
-      for (String path : possiblePaths) {
-        File candidate = new File(javaHome, path);
-        if (candidate.exists() && candidate.canRead()) {
-          cacertsFile = candidate;
-          break;
-        }
-      }
-      
-      if (cacertsFile == null) {
-        throw new IOException("Unable to find JDK cacerts file in java.home: " + javaHome);
-      }
-      
+    KeyStore keyStore = SecurityUtils.getDefaultKeyStore();
+
+    // Find the default JDK cacerts location
+    String javaHome = System.getProperty("java.home");
+    String[] possiblePaths = {
+      "lib/security/cacerts", // Java 9+
+      "jre/lib/security/cacerts" // Java 8 and earlier
+    };
+
+    for (String path : possiblePaths) {
+      File cacertsFile = new File(javaHome, path);
       try (FileInputStream fis = new FileInputStream(cacertsFile)) {
-        keyStore.load(fis, trustStorePassword.toCharArray());
+        keyStore.load(fis, "changeit".toCharArray());
+        return keyStore;
+      } catch (IOException e) {
+        // File doesn't exist or can't be read, try next path
       }
     }
-    
-    return keyStore;
+
+    throw new IOException("Unable to find JDK cacerts file in java.home: " + javaHome);
   }
 
   /**
