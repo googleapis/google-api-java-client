@@ -43,6 +43,7 @@ public class GoogleUtilsTest extends TestCase {
   public void testGetCertificateTrustStore_LoadsBundledKeystoreIfJdkDefaultLoadFails()
       throws Exception {
     GoogleUtils.certTrustStore = null;
+    String[] originalPaths = GoogleUtils.possibleJdkPaths;
     GoogleUtils.possibleJdkPaths = new String[0];
 
     KeyStore trustStore = GoogleUtils.getCertificateTrustStore();
@@ -53,6 +54,8 @@ public class GoogleUtilsTest extends TestCase {
         "Certificate truststore should contain the same amount of certificates as the bundled keystore",
         trustStore.size(),
         bundled.size());
+
+    GoogleUtils.possibleJdkPaths = originalPaths;
   }
 
   public void testGetCertificateTrustStore_IsCached() throws Exception {
