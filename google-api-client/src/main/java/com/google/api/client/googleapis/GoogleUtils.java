@@ -101,9 +101,11 @@ public final class GoogleUtils {
   @VisibleForTesting
   static KeyStore getJdkDefaultKeyStore() throws IOException, GeneralSecurityException {
     // Get trust store location and type from system properties, or use defaults
-    String trustStoreType = System.getProperty("javax.net.ssl.trustStoreType", KeyStore.getDefaultType());
+    String trustStoreType =
+        System.getProperty("javax.net.ssl.trustStoreType", KeyStore.getDefaultType());
     String trustStorePath = System.getProperty("javax.net.ssl.trustStore");
-    String trustStorePassword = System.getProperty("javax.net.ssl.trustStorePassword", "changeit");
+    String trustStorePassword =
+        System.getProperty("javax.net.ssl.trustStorePassword", "changeit");
     
     KeyStore keyStore = KeyStore.getInstance(trustStoreType);
     
