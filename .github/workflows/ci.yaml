@@ -1,102 +1,107 @@
-on:
+'on':
   push:
     branches:
-    - main
-  pull_request:
+      - 2.8.x
+  pull_request: null
 name: ci
 jobs:
   units:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [8, 11]
+        java:
+          - 8
+          - 11
     steps:
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-    - uses: actions/setup-java@v1
-      with:
-        java-version: ${{matrix.java}}
-    - run: java -version
-    - run: .kokoro/install_dependencies.sh
-    - run: .kokoro/build.sh
-      env:
-        JOB_TYPE: test
-    # The `envVarTest` profile runs tests that require an environment variable
-    - name: Env Var Tests
-      run: |
-        mvn test -B -ntp -Dclirr.skip=true -Denforcer.skip=true -PenvVarTest
-      # Set the Env Var for this step only
-      env:
-        GOOGLE_CLOUD_UNIVERSE_DOMAIN: random.com
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{matrix.java}}
+      - run: java -version
+      - run: .kokoro/install_dependencies.sh
+      - run: .kokoro/build.sh
+        env:
+          JOB_TYPE: test
+      - name: Env Var Tests
+        run: |
+          mvn test -B -ntp -Dclirr.skip=true -Denforcer.skip=true -PenvVarTest
+        env:
+          GOOGLE_CLOUD_UNIVERSE_DOMAIN: random.com
   windows:
     runs-on: windows-latest
     steps:
-    - name: git configuration to avoid automatic CRLF conversion
-      run: |
-        git config --global core.autocrlf false
-        git config --global core.eol lf
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-    - uses: actions/setup-java@v1
-      with:
-        java-version: 8
-    - run: java -version
-    - name: Install google-play-services artifact
-      shell: bash
-      run: |
-        mkdir play-services
-        cd play-services
-        curl --output play-services-basement-8.3.0.aar https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar
-        unzip play-services-basement-8.3.0.aar
-        mvn install:install-file \
-            -Dfile=classes.jar \
-            -DgroupId=com.google.android.google-play-services \
-            -DartifactId=google-play-services \
-            -Dversion=1 \
-            -Dpackaging=jar
-    - run: .kokoro/build.sh
-      shell: bash
-      env:
-        JOB_TYPE: test
+      - name: git configuration to avoid automatic CRLF conversion
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - run: java -version
+      - name: Install google-play-services artifact
+        shell: bash
+        run: >
+          mkdir play-services
+
+          cd play-services
+
+          curl --output play-services-basement-8.3.0.aar
+          https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar
+
+          unzip play-services-basement-8.3.0.aar
+
+          mvn install:install-file \
+              -Dfile=classes.jar \
+              -DgroupId=com.google.android.google-play-services \
+              -DartifactId=google-play-services \
+              -Dversion=1 \
+              -Dpackaging=jar
+      - run: .kokoro/build.sh
+        shell: bash
+        env:
+          JOB_TYPE: test
   dependencies:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [8, 11]
+        java:
+          - 8
+          - 11
     steps:
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-    - uses: actions/setup-java@v1
-      with:
-        java-version: ${{matrix.java}}
-    - run: java -version
-    - run: .kokoro/install_dependencies.sh
-    - run: .kokoro/dependencies.sh
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{matrix.java}}
+      - run: java -version
+      - run: .kokoro/install_dependencies.sh
+      - run: .kokoro/dependencies.sh
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-    - uses: actions/setup-java@v1
-      with:
-        java-version: 11
-    - run: java -version
-    - run: .kokoro/install_dependencies.sh
-    - run: .kokoro/build.sh
-      env:
-        JOB_TYPE: lint
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - run: java -version
+      - run: .kokoro/install_dependencies.sh
+      - run: .kokoro/build.sh
+        env:
+          JOB_TYPE: lint
   clirr:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-    - uses: actions/setup-java@v1
-      with:
-        java-version: 8
-    - run: java -version
-    - run: .kokoro/install_dependencies.sh
-    - run: .kokoro/build.sh
-      env:
-        JOB_TYPE: clirr
-
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - run: java -version
+      - run: .kokoro/install_dependencies.sh
+      - run: .kokoro/build.sh
+        env:
+          JOB_TYPE: clirr
   units-java21:
-    # Building using Java 8 and run the tests with Java 21 runtime
-    name: "units (21)"
+    name: units (21)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -104,9 +109,9 @@ jobs:
         with:
           java-version: 21
           distribution: temurin
-      - name: "Set jvm system property environment variable for surefire plugin (unit tests)"
-        # Maven surefire plugin (unit tests) allows us to specify JVM to run the tests.
-        # https://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html#jvm
+      - name: >-
+          Set jvm system property environment variable for surefire plugin (unit
+          tests)
         run: echo "SUREFIRE_JVM_OPT=-Djvm=${JAVA_HOME}/bin/java" >> $GITHUB_ENV
         shell: bash
       - uses: actions/setup-java@v3
@@ -117,19 +122,18 @@ jobs:
       - run: .kokoro/build.sh
         env:
           JOB_TYPE: test
-  units-java24:
-    # Building using Java 8 and run the tests with Java 24 runtime
-    name: "units (24)"
+  units-java25:
+    name: units (25)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v3
         with:
-          java-version: 24
+          java-version: 25
           distribution: temurin
-      - name: "Set jvm system property environment variable for surefire plugin (unit tests)"
-        # Maven surefire plugin (unit tests) allows us to specify JVM to run the tests.
-        # https://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html#jvm
+      - name: >-
+          Set jvm system property environment variable for surefire plugin (unit
+          tests)
         run: echo "SUREFIRE_JVM_OPT=-Djvm=${JAVA_HOME}/bin/java" >> $GITHUB_ENV
         shell: bash
       - uses: actions/setup-java@v3
