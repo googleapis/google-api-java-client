@@ -73,15 +73,6 @@ public final class GoogleUtils {
   /** Cached value for {@link #getCertificateTrustStore()}. */
   @VisibleForTesting static KeyStore certTrustStore;
 
-  /** Default JDK cacerts file path relative to java.home. */
-  @VisibleForTesting static String defaultCacertsPath = "lib/security/cacerts";
-
-  /** Default password for JDK cacerts file. */
-  static final String DEFAULT_CACERTS_PASSWORD = "changeit";
-
-  /** Java home system property key. */
-  static final String JAVA_HOME_KEY = "java.home";
-
   /** Name of bundled keystore. */
   static final String BUNDLED_KEYSTORE = "google.p12";
 
@@ -102,21 +93,53 @@ public final class GoogleUtils {
   }
 
   /**
-   * Loads the default JDK keystore (cacerts) containing trusted root certificates. Determines the
-   * path to the cacerts file based on the java.home system property.
+   * Loads the default JDK keystore (cacerts) containing trusted root certificates.
+   * Uses Java's system properties to locate the default trust store.
    *
    * @return the loaded keystore
    */
   @VisibleForTesting
   static KeyStore getJdkDefaultKeyStore() throws IOException, GeneralSecurityException {
-    String javaHome = System.getProperty(JAVA_HOME_KEY);
-    File file = new File(javaHome, defaultCacertsPath);
-
-    KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-    try (FileInputStream is = new FileInputStream(file)) {
-      trustStore.load(is, DEFAULT_CACERTS_PASSWORD.toCharArray());
+    // Get trust store location and type from system properties, or use defaults
+    String trustStoreType = System.getProperty("javax.net.ssl.trustStoreType", KeyStore.getDefaultType());
+    String trustStorePath = System.getProperty("javax.net.ssl.trustStore");
+    String trustStorePassword = System.getProperty("javax.net.ssl.trustStorePassword", "changeit");
+    
+    KeyStore keyStore = KeyStore.getInstance(trustStoreType);
+    
+    if (trustStorePath != null && !trustStorePath.isEmpty()) {
+      // User specified a custom trust store via system property
+      try (FileInputStream fis = new FileInputStream(trustStorePath)) {
+        keyStore.load(fis, trustStorePassword.toCharArray());
+        System.out.println("loaded keystore from truststore path");
+      }
+    } else {
+      // Find the default JDK cacerts location
+      String javaHome = System.getProperty("java.home");
+      String[] possiblePaths = {
+          "lib/security/cacerts",           // Java 9+
+          "jre/lib/security/cacerts"        // Java 8 and earlier
+      };
+      
+      File cacertsFile = null;
+      for (String path : possiblePaths) {
+        File candidate = new File(javaHome, path);
+        if (candidate.exists() && candidate.canRead()) {
+          cacertsFile = candidate;
+          break;
+        }
+      }
+      
+      if (cacertsFile == null) {
+        throw new IOException("Unable to find JDK cacerts file in java.home: " + javaHome);
+      }
+      
+      try (FileInputStream fis = new FileInputStream(cacertsFile)) {
+        keyStore.load(fis, trustStorePassword.toCharArray());
+      }
     }
-    return trustStore;
+    
+    return keyStore;
   }
 
   /**
