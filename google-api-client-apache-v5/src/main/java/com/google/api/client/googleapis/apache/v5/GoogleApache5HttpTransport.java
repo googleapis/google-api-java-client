@@ -57,7 +57,8 @@ public final class GoogleApache5HttpTransport {
   /**
    * {@link Beta} <br>
    * Returns a new instance of {@link Apache5HttpTransport} that uses default jdk certificates
-   * for the trusted certificates. mtlsProvider can be used to configure mutual TLS for the transport.
+   * for the trusted certificates. mtlsProvider can be used to configure mutual TLS for the
+   * transport.
    *
    * @param mtlsProvider MtlsProvider to configure mutual TLS for the transport
    */
