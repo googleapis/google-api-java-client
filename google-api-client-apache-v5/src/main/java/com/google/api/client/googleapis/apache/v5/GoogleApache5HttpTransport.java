@@ -47,9 +47,10 @@ public final class GoogleApache5HttpTransport {
 
   /**
    * Returns a new instance of {@link Apache5HttpTransport} that uses default jdk certificates for
-   * the trusted certificates. If `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set
-   * to "true", and the default client certificate key store from {@link Utils#loadDefaultMtlsKeyStore()}
-   * is not null, then the transport uses the default client certificate and is mutual TLS.
+   * the trusted certificates. If `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to
+   * "true", and the default client certificate key store from {@link
+   * Utils#loadDefaultMtlsKeyStore()} is not null, then the transport uses the default client
+   * certificate and is mutual TLS.
    */
   public static Apache5HttpTransport newTrustedTransport()
       throws GeneralSecurityException, IOException {
@@ -58,9 +59,8 @@ public final class GoogleApache5HttpTransport {
 
   /**
    * {@link Beta} <br>
-   * Returns a new instance of {@link Apache5HttpTransport} that uses default jdk certificates
-   * for the trusted certificates. mtlsProvider can be used to configure mutual TLS for the
-   * transport.
+   * Returns a new instance of {@link Apache5HttpTransport} that uses default jdk certificates for
+   * the trusted certificates. mtlsProvider can be used to configure mutual TLS for the transport.
    *
    * @param mtlsProvider MtlsProvider to configure mutual TLS for the transport
    */
