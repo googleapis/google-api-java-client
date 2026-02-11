@@ -45,8 +45,10 @@ import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 public final class GoogleApacheHttpTransport {
 
   /**
-   * Returns a new instance of {@link ApacheHttpTransport} that uses default jdk certs for the
-   * trusted certificates.
+   * Returns a new instance of {@link ApacheHttpTransport} that uses default jdk certificates for
+   * the trusted certificates. If `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set
+   * to "true", and the default client certificate key store from {@link Utils#loadDefaultMtlsKeyStore()}
+   * is not null, then the transport uses the default client certificate and is mutual TLS.
    */
   public static ApacheHttpTransport newTrustedTransport()
       throws GeneralSecurityException, IOException {
@@ -56,8 +58,7 @@ public final class GoogleApacheHttpTransport {
   /**
    * {@link Beta} <br>
    * Returns a new instance of {@link ApacheHttpTransport} that default jdk certs for the
-   * trusted certificates. mtlsProvider can be used
-   * to configure mutual TLS for the transport.
+   * trusted certificates. mtlsProvider can be used to configure mutual TLS for the transport.
    *
    * @param mtlsProvider MtlsProvider to configure mutual TLS for the transport
    */

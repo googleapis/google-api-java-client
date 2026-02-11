@@ -47,7 +47,9 @@ public final class GoogleApache5HttpTransport {
 
   /**
    * Returns a new instance of {@link Apache5HttpTransport} that uses default jdk certificates for
-   * the trusted certificates.
+   * the trusted certificates. If `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set
+   * to "true", and the default client certificate key store from {@link Utils#loadDefaultMtlsKeyStore()}
+   * is not null, then the transport uses the default client certificate and is mutual TLS.
    */
   public static Apache5HttpTransport newTrustedTransport()
       throws GeneralSecurityException, IOException {
