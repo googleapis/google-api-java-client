@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.9.0](https://github.com/googleapis/google-api-java-client/compare/v2.8.1...v2.9.0) (2026-02-12)
+
+
+### Features
+
+* Next release from main branch is 2.9.0 ([#2614](https://github.com/googleapis/google-api-java-client/issues/2614)) ([857362a](https://github.com/googleapis/google-api-java-client/commit/857362a29c6100fad69ccad3c78ec421ca317c44))
+
+
+### Bug Fixes
+
+* **sec:** Warn users of unsafe credential generation methods ([#2604](https://github.com/googleapis/google-api-java-client/issues/2604)) ([d4c0a33](https://github.com/googleapis/google-api-java-client/commit/d4c0a33ecfd21f049de320c4a078518187862c8a))
+* Use Cloud RAD in deprecation link in GoogleCredential class ([#2606](https://github.com/googleapis/google-api-java-client/issues/2606)) ([f238d59](https://github.com/googleapis/google-api-java-client/commit/f238d59a661cf05ce0a8585c0d00ac50d832f6bc))
+
 ## [2.8.1](https://github.com/googleapis/google-api-java-client/compare/v2.8.0...v2.8.1) (2025-08-14)
 
 
