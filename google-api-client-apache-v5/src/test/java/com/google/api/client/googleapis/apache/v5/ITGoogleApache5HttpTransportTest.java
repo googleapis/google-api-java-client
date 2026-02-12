@@ -30,11 +30,10 @@ import org.junit.Test;
 public class ITGoogleApache5HttpTransportTest {
 
   @Test
-  public void testHttpRequestFailsWhenMakingRequestToSiteWithoutDefaultJdkCerts()
+  public void testHttpRequestFailsWhenMakingRequestToSiteWithoutGoogleCerts()
       throws GeneralSecurityException, IOException {
     Apache5HttpTransport apache5HttpTransport = GoogleApache5HttpTransport.newTrustedTransport();
-    // Use a self-signed certificate site that won't be trusted by default trust store
-    HttpGet httpGet = new HttpGet("https://self-signed.badssl.com/");
+    HttpGet httpGet = new HttpGet("https://maven.com/");
     Exception exception = null;
     try {
       apache5HttpTransport
@@ -44,7 +43,7 @@ public class ITGoogleApache5HttpTransportTest {
               new HttpClientResponseHandler<Void>() {
                 @Override
                 public Void handleResponse(ClassicHttpResponse response) {
-                  fail("Should not have been able to complete SSL request with untrusted cert.");
+                  fail("Should not have been able to complete SSL request on non google site.");
                   return null;
                 }
               });
