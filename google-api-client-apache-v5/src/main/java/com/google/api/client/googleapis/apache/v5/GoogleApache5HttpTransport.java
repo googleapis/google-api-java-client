@@ -14,10 +14,8 @@
 
 package com.google.api.client.googleapis.apache.v5;
 
-import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.googleapis.mtls.MtlsProvider;
 import com.google.api.client.googleapis.mtls.MtlsUtils;
-import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.http.apache.v5.Apache5HttpTransport;
 import com.google.api.client.util.SslUtils;
 import com.google.common.annotations.Beta;
@@ -48,11 +46,11 @@ import org.apache.hc.core5.http.config.RegistryBuilder;
 public final class GoogleApache5HttpTransport {
 
   /**
-   * Returns a new instance of {@link Apache5HttpTransport} that uses {@link
-   * GoogleUtils#getCertificateTrustStore()} for the trusted certificates. If
-   * `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to "true", and the default
-   * client certificate key store from {@link Utils#loadDefaultMtlsKeyStore()} is not null, then the
-   * transport uses the default client certificate and is mutual TLS.
+   * Returns a new instance of {@link Apache5HttpTransport} that uses default jdk certificates for
+   * the trusted certificates. If `GOOGLE_API_USE_CLIENT_CERTIFICATE` environment variable is set to
+   * "true", and the default client certificate key store from {@link
+   * Utils#loadDefaultMtlsKeyStore()} is not null, then the transport uses the default client
+   * certificate and is mutual TLS.
    */
   public static Apache5HttpTransport newTrustedTransport()
       throws GeneralSecurityException, IOException {
@@ -61,9 +59,8 @@ public final class GoogleApache5HttpTransport {
 
   /**
    * {@link Beta} <br>
-   * Returns a new instance of {@link Apache5HttpTransport} that uses {@link
-   * GoogleUtils#getCertificateTrustStore()} for the trusted certificates. mtlsProvider can be used
-   * to configure mutual TLS for the transport.
+   * Returns a new instance of {@link Apache5HttpTransport} that uses default jdk certificates for
+   * the trusted certificates. mtlsProvider can be used to configure mutual TLS for the transport.
    *
    * @param mtlsProvider MtlsProvider to configure mutual TLS for the transport
    */
@@ -109,22 +106,20 @@ public final class GoogleApache5HttpTransport {
         mtlsKeyStorePassword = mtlsProvider.getKeyStorePassword();
       }
 
-      // Use the included trust store
-      KeyStore trustStore = GoogleUtils.getCertificateTrustStore();
       SSLContext sslContext = SslUtils.getTlsSslContext();
 
       if (mtlsKeyStore != null && mtlsKeyStorePassword != null) {
         this.isMtls = true;
         SslUtils.initSslContext(
             sslContext,
-            trustStore,
+            null,
             SslUtils.getPkixTrustManagerFactory(),
             mtlsKeyStore,
             mtlsKeyStorePassword,
             SslUtils.getDefaultKeyManagerFactory());
       } else {
         this.isMtls = false;
-        SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory());
+        SslUtils.initSslContext(sslContext, null, SslUtils.getPkixTrustManagerFactory());
       }
       LayeredConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext);
 

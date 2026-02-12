@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Google LLC
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,38 +12,41 @@
  * the License.
  */
 
-package com.google.api.client.googleapis.apache.v5;
+package com.google.api.client.googleapis.apache.v2;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import com.google.api.client.http.apache.v5.Apache5HttpTransport;
+import com.google.api.client.http.apache.v2.ApacheHttpTransport;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import javax.net.ssl.SSLHandshakeException;
-import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.core5.http.ClassicHttpResponse;
-import org.apache.hc.core5.http.io.HttpClientResponseHandler;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
 import org.junit.Test;
 
-public class ITGoogleApache5HttpTransportTest {
+public class ITGoogleApacheHttpTransportTest {
 
   @Test
   public void testHttpRequestFailsWhenMakingRequestToSiteWithoutDefaultJdkCerts()
       throws GeneralSecurityException, IOException {
-    Apache5HttpTransport apache5HttpTransport = GoogleApache5HttpTransport.newTrustedTransport();
+    ApacheHttpTransport apacheHttpTransport = GoogleApacheHttpTransport.newTrustedTransport();
     // Use a self-signed certificate site that won't be trusted by default trust store
     HttpGet httpGet = new HttpGet("https://self-signed.badssl.com/");
     Exception exception = null;
     try {
-      apache5HttpTransport
+      apacheHttpTransport
           .getHttpClient()
           .execute(
               httpGet,
-              new HttpClientResponseHandler<Void>() {
+              new ResponseHandler<Object>() {
+
                 @Override
-                public Void handleResponse(ClassicHttpResponse response) {
+                public Object handleResponse(HttpResponse httpResponse)
+                    throws ClientProtocolException, IOException {
                   fail("Should not have been able to complete SSL request with untrusted cert.");
                   return null;
                 }
@@ -59,17 +62,18 @@ public class ITGoogleApache5HttpTransportTest {
 
   @Test
   public void testHttpRequestPassesWhenMakingRequestToGoogleSite() throws Exception {
-    Apache5HttpTransport apache5HttpTransport = GoogleApache5HttpTransport.newTrustedTransport();
+    ApacheHttpTransport apacheHttpTransport = GoogleApacheHttpTransport.newTrustedTransport();
     HttpGet httpGet = new HttpGet("https://www.google.com/");
 
-    apache5HttpTransport
+    apacheHttpTransport
         .getHttpClient()
         .execute(
             httpGet,
-            new HttpClientResponseHandler<Void>() {
+            new ResponseHandler<Object>() {
               @Override
-              public Void handleResponse(ClassicHttpResponse response) {
-                assertEquals(200, response.getCode());
+              public Object handleResponse(HttpResponse httpResponse)
+                  throws ClientProtocolException, IOException {
+                assertEquals(200, httpResponse.getStatusLine().getStatusCode());
                 return null;
               }
             });
@@ -78,17 +82,19 @@ public class ITGoogleApache5HttpTransportTest {
   @Test
   public void testHttpRequestPassesWhenMakingRequestToSiteContainedInDefaultCerts()
       throws Exception {
-    Apache5HttpTransport apache5HttpTransport = GoogleApache5HttpTransport.newTrustedTransport();
+
+    ApacheHttpTransport apacheHttpTransport = GoogleApacheHttpTransport.newTrustedTransport();
     HttpGet httpGet = new HttpGet("https://central.sonatype.com/");
 
-    apache5HttpTransport
+    apacheHttpTransport
         .getHttpClient()
         .execute(
             httpGet,
-            new HttpClientResponseHandler<Void>() {
+            new ResponseHandler<Object>() {
               @Override
-              public Void handleResponse(ClassicHttpResponse response) {
-                assertEquals(200, response.getCode());
+              public Object handleResponse(HttpResponse httpResponse)
+                  throws ClientProtocolException, IOException {
+                assertEquals(200, httpResponse.getStatusLine().getStatusCode());
                 return null;
               }
             });
