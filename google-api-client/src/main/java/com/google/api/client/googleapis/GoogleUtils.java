@@ -81,10 +81,7 @@ public final class GoogleUtils {
 
   /** Default JDK cacerts file path relative to java.home. */
   @VisibleForTesting
-  static String[] possibleJdkPaths = {
-    "lib/security/cacerts",
-    "jre/lib/security/cacerts"
-  };
+  static String[] possibleJdkPaths = {"lib/security/cacerts", "jre/lib/security/cacerts"};
 
   /** Java home system property key. */
   static final String JAVA_HOME_KEY = "java.home";
