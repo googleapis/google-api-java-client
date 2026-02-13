@@ -82,8 +82,8 @@ public final class GoogleUtils {
   /** Default JDK cacerts file path relative to java.home. */
   @VisibleForTesting
   static String[] possibleJdkPaths = {
-    "lib/security/cacerts", // Java 9+
-    "jre/lib/security/cacerts" // Java 8 and earlier
+    "lib/security/cacerts",
+    "jre/lib/security/cacerts"
   };
 
   /** Java home system property key. */
@@ -109,7 +109,7 @@ public final class GoogleUtils {
    * Loads the default JDK keystore (cacerts) containing trusted root certificates. Uses Java's
    * system properties + known cert locations to locate the default trust store.
    *
-   * @return the loaded keystore
+   * @return the loaded keystore or null if unable to find/load keystore
    */
   @VisibleForTesting
   static KeyStore getJdkDefaultKeyStore() throws IOException, GeneralSecurityException {
@@ -127,8 +127,7 @@ public final class GoogleUtils {
         // File doesn't exist or can't be read, try next path
       }
     }
-
-    throw new IOException("Unable to load default JDK cacerts file");
+    return null;
   }
 
   /**
@@ -152,12 +151,7 @@ public final class GoogleUtils {
   public static synchronized KeyStore getCertificateTrustStore()
       throws IOException, GeneralSecurityException {
     if (certTrustStore == null) {
-      try {
-        certTrustStore = getJdkDefaultKeyStore();
-      } catch (Exception e) {
-        // If unable to retrieve default JDK keystore, fall through to bundled certificates
-      }
-
+      certTrustStore = getJdkDefaultKeyStore();
       if (certTrustStore == null) {
         certTrustStore = getBundledKeystore();
       }
