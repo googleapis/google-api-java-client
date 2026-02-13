@@ -140,8 +140,8 @@ import java.util.Collections;
  * response handler, take a look at the sample usage for {@link HttpExecuteInterceptor} and {@link
  * HttpUnsuccessfulResponseHandler}, which are interfaces that this class also implements.
  *
- * @since 1.7
  * @author Yaniv Inbar
+ * @since 1.7
  * @deprecated Please use <a href="https://github.com/googleapis/google-auth-library-java">
  *     google-auth-library</a> for handling Application Default Credentials and other non-OAuth2
  *     based authentication.
@@ -153,7 +153,7 @@ public class GoogleCredential extends Credential {
   static final String SERVICE_ACCOUNT_FILE_TYPE = "service_account";
 
   @Beta
-  private static DefaultCredentialProvider defaultCredentialProvider =
+  private static final DefaultCredentialProvider defaultCredentialProvider =
       new DefaultCredentialProvider();
 
   /**
@@ -170,7 +170,52 @@ public class GoogleCredential extends Credential {
    */
   @Beta
   public static GoogleCredential getApplicationDefault() throws IOException {
-    return getApplicationDefault(Utils.getDefaultTransport(), Utils.getDefaultJsonFactory());
+    return getApplicationDefault(Utils.getDefaultTransport(), Utils.getDefaultJsonFactory(), false);
+  }
+
+  /**
+   * {@link Beta} <br>
+   * Returns the Application Default Credentials.
+   *
+   * <p>Returns the Application Default Credentials which are credentials that identify and
+   * authorize the whole application. This is the built-in service account if running on Google
+   * Compute Engine or the credentials file from the path in the environment variable
+   * GOOGLE_APPLICATION_CREDENTIALS.
+   *
+   * @param resetCachedCredentials whether to reset the cached credentials
+   * @return the credential instance.
+   * @throws IOException if the credential cannot be created in the current environment.
+   */
+  @Beta
+  public static GoogleCredential getApplicationDefault(boolean resetCachedCredentials)
+      throws IOException {
+    return getApplicationDefault(
+        Utils.getDefaultTransport(), Utils.getDefaultJsonFactory(), resetCachedCredentials);
+  }
+
+  /**
+   * {@link Beta} <br>
+   * Returns the Application Default Credentials.
+   *
+   * <p>Returns the Application Default Credentials which are credentials that identify and
+   * authorize the whole application. This is the built-in service account if running on Google
+   * Compute Engine or the credentials file from the path in the environment variable
+   * GOOGLE_APPLICATION_CREDENTIALS.
+   *
+   * @param resetCachedCredentials whether to reset the cached credentials.
+   * @param transport the transport for Http calls.
+   * @param jsonFactory the factory for Json parsing and formatting.
+   * @return the credential instance.
+   * @throws IOException if the credential cannot be created in the current environment.
+   */
+  @Beta
+  public static GoogleCredential getApplicationDefault(
+      HttpTransport transport, JsonFactory jsonFactory, boolean resetCachedCredentials)
+      throws IOException {
+    Preconditions.checkNotNull(transport);
+    Preconditions.checkNotNull(jsonFactory);
+    return defaultCredentialProvider.getDefaultCredential(
+        transport, jsonFactory, resetCachedCredentials);
   }
 
   /**
@@ -190,9 +235,7 @@ public class GoogleCredential extends Credential {
   @Beta
   public static GoogleCredential getApplicationDefault(
       HttpTransport transport, JsonFactory jsonFactory) throws IOException {
-    Preconditions.checkNotNull(transport);
-    Preconditions.checkNotNull(jsonFactory);
-    return defaultCredentialProvider.getDefaultCredential(transport, jsonFactory);
+    return getApplicationDefault(transport, jsonFactory, false);
   }
 
   /**
