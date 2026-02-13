@@ -16,6 +16,8 @@ package com.google.api.client.googleapis;
 
 import com.google.api.client.util.SecurityUtils;
 import com.google.common.annotations.VisibleForTesting;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
@@ -69,21 +71,87 @@ public final class GoogleUtils {
   }
 
   /** Cached value for {@link #getCertificateTrustStore()}. */
-  static KeyStore certTrustStore;
+  @VisibleForTesting static KeyStore certTrustStore;
+
+  /** Name of bundled keystore. */
+  static final String BUNDLED_KEYSTORE = "google.p12";
+
+  /** Bundled keystore password. */
+  static final String BUNDLED_KEYSTORE_PASSWORD = "notasecret";
+
+  /** Default JDK cacerts file path relative to java.home. */
+  @VisibleForTesting
+  static String[] possibleJdkPaths = {"lib/security/cacerts", "jre/lib/security/cacerts"};
+
+  /** Java home system property key. */
+  static final String JAVA_HOME_KEY = "java.home";
+
+  /** Default password for JDK cacerts file. */
+  static final String DEFAULT_CACERTS_PASSWORD = "changeit";
 
   /**
-   * Returns the key store for trusted root certificates to use for Google APIs.
+   * Loads the bundled google.p12 keystore containing trusted root certificates.
+   *
+   * @return the loaded keystore
+   */
+  @VisibleForTesting
+  static KeyStore getBundledKeystore() throws IOException, GeneralSecurityException {
+    KeyStore ks = SecurityUtils.getPkcs12KeyStore();
+    InputStream is = GoogleUtils.class.getResourceAsStream(BUNDLED_KEYSTORE);
+    SecurityUtils.loadKeyStore(ks, is, BUNDLED_KEYSTORE_PASSWORD);
+    return ks;
+  }
+
+  /**
+   * Loads the default JDK keystore (cacerts) containing trusted root certificates. Uses Java's
+   * system properties + known cert locations to locate the default trust store.
+   *
+   * @return the loaded keystore or null if unable to find/load keystore
+   */
+  @VisibleForTesting
+  static KeyStore getJdkDefaultKeyStore() throws IOException, GeneralSecurityException {
+    KeyStore keyStore = SecurityUtils.getDefaultKeyStore();
+
+    // Find the default JDK cacerts location
+    String javaHome = System.getProperty(JAVA_HOME_KEY);
+
+    for (String path : possibleJdkPaths) {
+      File cacertsFile = new File(javaHome, path);
+      try (FileInputStream fis = new FileInputStream(cacertsFile)) {
+        keyStore.load(fis, DEFAULT_CACERTS_PASSWORD.toCharArray());
+        return keyStore;
+      } catch (IOException e) {
+        // File doesn't exist or can't be read, try next path
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Returns a keystore for trusted root certificates to use for Google APIs.
    *
    * <p>Value is cached, so subsequent access is fast.
    *
+   * <p>This method first attempts to load the JDK default keystore. If that fails or is not
+   * available, it falls back to loading the bundled Google certificate store.
+   *
    * @since 1.14
+   * @deprecated Depending on your build environment this method potentially can contain outdated
+   *     certs if loading jdk default certs fails. Instead of getting trusted certs directly use an
+   *     HttpTransport wrapper such as {@link <a
+   *     href="https://docs.cloud.google.com/java/docs/reference/google-http-client/latest/com.google.api.client.http.javanet.NetHttpTransport">NetHttpTransport</a>}
+   *     which uses java jdk internal classes to load default jdk certs specifically for a build
+   *     environment. If you need to access the keystore directly please create your own keystore
+   *     file.
    */
+  @Deprecated
   public static synchronized KeyStore getCertificateTrustStore()
       throws IOException, GeneralSecurityException {
     if (certTrustStore == null) {
-      certTrustStore = SecurityUtils.getPkcs12KeyStore();
-      InputStream keyStoreStream = GoogleUtils.class.getResourceAsStream("google.p12");
-      SecurityUtils.loadKeyStore(certTrustStore, keyStoreStream, "notasecret");
+      certTrustStore = getJdkDefaultKeyStore();
+      if (certTrustStore == null) {
+        certTrustStore = getBundledKeystore();
+      }
     }
     return certTrustStore;
   }

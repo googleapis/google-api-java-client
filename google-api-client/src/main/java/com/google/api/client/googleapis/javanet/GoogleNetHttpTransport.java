@@ -29,7 +29,10 @@ import java.security.KeyStore;
  *
  * @since 1.14
  * @author Yaniv Inbar
+ * @deprecated This legacy HttpTransport implementation is no longer being maintained.
+ *    Please use {@link <a href="https://docs.cloud.google.com/java/docs/reference/google-http-client/latest/com.google.api.client.http.javanet.NetHttpTransport">NetHttpTransport</a> instead.
  */
+@Deprecated
 public class GoogleNetHttpTransport {
 
   /**
