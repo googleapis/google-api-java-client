@@ -239,7 +239,33 @@ public class DefaultCredentialProviderTest extends TestCase {
     assertEquals(0, transport.getRequestCount());
   }
 
-  public void testDefaultCredentialWithCustomMetadataServerAddress() throws IOException {
+  public void testDefaultCredentialWithInvalidCustomMetadataServerAddress() throws IOException {
+    MockRequestUrlRecordingTransport transport = new MockRequestUrlRecordingTransport();
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    testProvider.setEnv("GCE_METADATA_HOST", "this::domain.contains.invalid.chars");
+
+    try {
+      testProvider.getDefaultCredential(transport, JSON_FACTORY);
+      fail("No credential expected for default test provider.");
+    } catch (IOException expected) {
+    }
+    assertTrue(transport.urlWasRequested("http://169.254.169.254"));
+  }
+
+  public void testDefaultCredentialWithInvalidCustomMetadataServerPort() throws IOException {
+    MockRequestUrlRecordingTransport transport = new MockRequestUrlRecordingTransport();
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    testProvider.setEnv("GCE_METADATA_HOST", "test.metadata.server.address:portShouldBeANumber");
+
+    try {
+      testProvider.getDefaultCredential(transport, JSON_FACTORY);
+      fail("No credential expected for default test provider.");
+    } catch (IOException expected) {
+    }
+    assertTrue(transport.urlWasRequested("http://169.254.169.254"));
+  }
+
+  public void testDefaultCredentialWithCustomMetadataServerDomainAddress() throws IOException {
     MockRequestUrlRecordingTransport transport = new MockRequestUrlRecordingTransport();
     TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
     testProvider.setEnv("GCE_METADATA_HOST", "test.metadata.server.address");
@@ -250,6 +276,88 @@ public class DefaultCredentialProviderTest extends TestCase {
     } catch (IOException expected) {
     }
     assertTrue(transport.urlWasRequested("http://test.metadata.server.address"));
+  }
+
+  public void testDefaultCredentialWithCustomMetadataServerDomainAddressAndCustomPort()
+      throws IOException {
+    MockRequestUrlRecordingTransport transport = new MockRequestUrlRecordingTransport();
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    testProvider.setEnv("GCE_METADATA_HOST", "test.metadata.server.address:8080");
+
+    try {
+      testProvider.getDefaultCredential(transport, JSON_FACTORY);
+      fail("No credential expected for default test provider.");
+    } catch (IOException expected) {
+    }
+    assertTrue(transport.urlWasRequested("http://test.metadata.server.address:8080"));
+  }
+
+  public void testDefaultCredentialWithCustomMetadataServerIPv4Address() throws IOException {
+    MockRequestUrlRecordingTransport transport = new MockRequestUrlRecordingTransport();
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    testProvider.setEnv("GCE_METADATA_HOST", "169.254.0.1");
+
+    try {
+      testProvider.getDefaultCredential(transport, JSON_FACTORY);
+      fail("No credential expected for default test provider.");
+    } catch (IOException expected) {
+    }
+    assertTrue(transport.urlWasRequested("http://169.254.0.1"));
+  }
+
+  public void testDefaultCredentialWithCustomMetadataServerIPv4AddressAndCustomPort()
+      throws IOException {
+    MockRequestUrlRecordingTransport transport = new MockRequestUrlRecordingTransport();
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    testProvider.setEnv("GCE_METADATA_HOST", "169.254.0.1:8080");
+
+    try {
+      testProvider.getDefaultCredential(transport, JSON_FACTORY);
+      fail("No credential expected for default test provider.");
+    } catch (IOException expected) {
+    }
+    assertTrue(transport.urlWasRequested("http://169.254.0.1:8080"));
+  }
+
+  public void testDefaultCredentialWithCustomMetadataServerIPv6Address() throws IOException {
+    MockRequestUrlRecordingTransport transport = new MockRequestUrlRecordingTransport();
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    testProvider.setEnv("GCE_METADATA_HOST", "fe80::1");
+
+    try {
+      testProvider.getDefaultCredential(transport, JSON_FACTORY);
+      fail("No credential expected for default test provider.");
+    } catch (IOException expected) {
+    }
+    assertTrue(transport.urlWasRequested("http://[fe80::1]"));
+  }
+
+  public void testDefaultCredentialWithCustomMetadataServerIPv6AddressProvidedWithBrackets()
+      throws IOException {
+    MockRequestUrlRecordingTransport transport = new MockRequestUrlRecordingTransport();
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    testProvider.setEnv("GCE_METADATA_HOST", "[fe80::1]");
+
+    try {
+      testProvider.getDefaultCredential(transport, JSON_FACTORY);
+      fail("No credential expected for default test provider.");
+    } catch (IOException expected) {
+    }
+    assertTrue(transport.urlWasRequested("http://[fe80::1]"));
+  }
+
+  public void testDefaultCredentialWithCustomMetadataServerIPv6AddressAndCustomPort()
+      throws IOException {
+    MockRequestUrlRecordingTransport transport = new MockRequestUrlRecordingTransport();
+    TestDefaultCredentialProvider testProvider = new TestDefaultCredentialProvider();
+    testProvider.setEnv("GCE_METADATA_HOST", "[fe80::1]:8080");
+
+    try {
+      testProvider.getDefaultCredential(transport, JSON_FACTORY);
+      fail("No credential expected for default test provider.");
+    } catch (IOException expected) {
+    }
+    assertTrue(transport.urlWasRequested("http://[fe80::1]:8080"));
   }
 
   public void testDefaultCredentialNonExistentFileThrows() throws Exception {
