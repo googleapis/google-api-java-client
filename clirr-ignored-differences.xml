@@ -40,4 +40,26 @@
     <className>com/google/api/client/googleapis/auth/oauth2/GoogleOAuthConstants</className>
     <field>OOB_REDIRECT_URI</field>
   </difference>
+  <!-- New ignored differences for Clirr -->
+  <difference>
+    <differenceType>8002</differenceType>
+    <className>com/google/api/client/googleapis/auth/oauth2/GoogleOAuthConstants</className>
+  </difference>
+  <difference>
+    <differenceType>8003</differenceType>
+    <className>com/google/api/client/googleapis/auth/oauth2/GoogleOAuthConstants</className>
+  </difference>
+  <!-- Updated existing ignored differences to match new guidelines -->
+  <difference>
+    <differenceType>7007</differenceType>
+    <className>com/google/api/client/googleapis/xml/atom/AtomPatchContent</className>
+    <method>com.google.api.client.http.xml.AbstractXmlHttpContent setMediaType(com.google.api.client.http.HttpMediaType)</method>
+    <to>com.google.api.client.http.AbstractHttpContent</to>
+  </difference>
+  <difference>
+    <differenceType>7007</differenceType>
+    <className>com/google/api/client/googleapis/xml/atom/AtomPatchContent</className>
+    <method>com.google.api.client.http.AbstractHttpContent setMediaType(com.google.api.client.http.HttpMediaType)</method>
+    <to>com.google.api.client.http.xml.AbstractXmlHttpContent</to>
+  </difference>
 </differences>

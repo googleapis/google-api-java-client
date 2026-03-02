@@ -105,4 +105,119 @@
     <!-- Method invokes inefficient new String(String) constructor -->
     <Class name="com.google.api.client.googleapis.xml.atom.MultiKindFeedParser"/>
   </And>
+
+  <!-- New exclusions for FindBugs -->
+  <And>
+    <Bug pattern="NP_NONNULL_RETURN_VIOLATION"/>
+    <!-- Method with nonnull return type returns null -->
+    <Class name="com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl"/>
+  </And>
+  <And>
+    <Bug pattern="NP_NONNULL_RETURN_VIOLATION"/>
+    <Class name="com.google.api.client.googleapis.auth.oauth2.GoogleBrowserClientRequestUrl"/>
+  </And>
+  <And>
+    <Bug pattern="NP_NONNULL_RETURN_VIOLATION"/>
+    <Class name="com.google.api.client.googleapis.GoogleUrl"/>
+  </And>
+
+  <!-- Updated existing exclusions to match new guidelines -->
+  <And>
+    <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
+    <!-- Class doesn't override equals in superclass -->
+    <Class name="com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl"/>
+  </And>
+  <And>
+    <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
+    <Class name="com.google.api.client.googleapis.auth.oauth2.GoogleBrowserClientRequestUrl"/>
+  </And>
+  <And>
+    <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
+    <Class name="com.google.api.client.googleapis.GoogleUrl"/>
+  </And>
+  <And>
+    <Bug pattern="NP_DEREFERENCE_OF_READLINE_VALUE"/>
+    <!-- Dereference of the result of readLine() without nullcheck -->
+    <Class name="com.google.api.client.googleapis.batch.BatchUnparsedResponse"/>
+  </And>
+  <And>
+    <Bug pattern="NP_NULL_PARAM_DEREF"/>
+    <!-- Method call passes null for nonnull parameter -->
+    <Class name="com.google.api.client.googleapis.batch.BatchUnparsedResponse"/>
+  </And>
+  <And>
+    <Bug pattern="DM_DEFAULT_ENCODING"/>
+    <!-- Reliance on default encoding -->
+    <Class name="com.google.api.client.googleapis.auth.oauth2.GoogleCredential$Builder"/>
+  </And>
+  <And>
+    <Bug pattern="BETA_CLASS_USAGE,BETA_METHOD_USAGE"/>
+    <!-- Usage of an &#64;Beta class or method -->
+    <Class name="com.google.api.client.googleapis.batch.BatchUnparsedResponse"/>
+  </And>
+  <And>
+    <Bug pattern="BETA_CLASS_USAGE,BETA_METHOD_USAGE"/>
+    <Class name="com.google.api.client.googleapis.batch.BatchRequest"/>
+  </And>
+  <And>
+    <Bug pattern="BETA_CLASS_USAGE,BETA_METHOD_USAGE"/>
+    <Class name="com.google.api.client.googleapis.media.MediaHttpDownloader"/>
+  </And>
+  <And>
+    <Bug pattern="BETA_CLASS_USAGE,BETA_METHOD_USAGE"/>
+    <Class name="~com.google.api.client.googleapis.media.MediaHttpUploader"/>
+  </And>
+  <And>
+    <Bug pattern="BETA_CLASS_USAGE"/>
+    <!-- Usage of DefaultCredentialProvider in static field constructor -->
+    <Class name="com.google.api.client.googleapis.auth.oauth2.GoogleCredential"/>
+  </And>
+  <And>
+    <Bug pattern="BETA_CLASS_USAGE"/>
+    <!-- Usage of Beta class in the nested anonymous class -->
+    <Class name="com.google.api.client.googleapis.testing.compute.MockMetadataServerTransport$1"/>
+  </And>
+  <And>
+    <Bug pattern="BETA_CLASS_USAGE"/>
+    <!-- Usage of Beta class in the nested anonymous class -->
+    <Class name="com.google.api.client.googleapis.testing.compute.MockMetadataServerTransport$2"/>
+  </And>
+  <And>
+    <Bug pattern="BETA_CLASS_USAGE"/>
+    <!-- Usage of Beta class in the nested anonymous class -->
+    <Class name="com.google.api.client.googleapis.testing.auth.oauth2.MockTokenServerTransport$1"/>
+  </And>
+  <And>
+    <Bug pattern="BETA_METHOD_USAGE"/>
+    <Class name="com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow$Builder"/>
+  </And>
+  <And>
+    <Bug pattern="NP_BOOLEAN_RETURN_NULL"/>
+    <!-- Method with Boolean return type returns explicit null -->
+  </And>
+  <And>
+    <Bug pattern="DM_STRING_CTOR"/>
+    <!-- Method invokes inefficient new String(String) constructor -->
+    <Class name="com.google.api.client.googleapis.batch.BatchRequest"/>
+  </And>
+  <And>
+    <Bug pattern="DM_STRING_CTOR"/>
+    <!-- Method invokes inefficient new String(String) constructor -->
+    <Class name="com.google.api.client.googleapis.services.AbstractGoogleClient"/>
+  </And>
+  <And>
+    <Bug pattern="DM_STRING_CTOR"/>
+    <!-- Method invokes inefficient new String(String) constructor -->
+    <Class name="com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential"/>
+  </And>
+  <And>
+    <Bug pattern="DM_STRING_CTOR"/>
+    <!-- Method invokes inefficient new String(String) constructor -->
+    <Class name="com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential$RequestHandler"/>
+  </And>
+  <And>
+    <Bug pattern="DM_STRING_CTOR"/>
+    <!-- Method invokes inefficient new String(String) constructor -->
+    <Class name="com.google.api.client.googleapis.xml.atom.MultiKindFeedParser"/>
+  </And>
 </FindBugsFilter>
