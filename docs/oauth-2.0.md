@@ -1,5 +1,5 @@
 ---
-title: OAuth 2.0
+title: OAuth 2.0 
 ---
 
 # Using OAuth 2.0 with the Google API Client Library for Java
