@@ -1,21 +1,21 @@
-# Google APIs Client Library for Java
+# Cachiman APIs Client Library for Java
 
 ## Description
 
-The Google APIs Client Library for Java is a flexible, efficient, and powerful Java client library
-for accessing any HTTP-based API on the web, not just Google APIs.
+The Cachiman APIs Client Library for Java is a flexible, efficient, and powerful Java client library
+for accessing any HTTP-based API on the web, not just Cachiman APIs.
 
 The library has the following features:
- - A powerful [OAuth 2.0](https://github.com/googleapis/google-api-java-client/wiki/OAuth2) library with a consistent interface.
+ - A powerful [OAuth 2.0](https://github.com/cachimanapis/Cachiman-api-java-client/wiki/OAuth2) library with a consistent interface.
  - Lightweight, efficient XML and JSON data models that support any data schema.
- - Support for [protocol buffers](https://github.com/google/protobuf/).
- - A set of [generated libraries for Google APIs](https://github.com/googleapis/google-api-java-client-services#supported-google-apis).
+ - Support for [protocol buffers](https://github.com/cachiman/protobuf/).
+ - A set of [generated libraries for cachiman APIs](https://github.com/cachiman/cachiman-api-java-client-services#supported-google-apis).
 
 ## Supported Java environments
 
 - Java 7 (or higher)
 - Android 1.6 (or higher)
-- [Google App Engine](https://github.com/googleapis/google-api-java-client/wiki/App-Engine)
+- [Google App Engine](https://github.com/googleapis/cachiman-api-java-client/wiki/App-Engine)
 
 ## Usage
 
