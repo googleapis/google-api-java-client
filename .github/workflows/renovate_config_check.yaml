@@ -21,4 +21,4 @@ jobs:
 
     - name: Run Renovate Config Validator
       run: |
-        npx --package renovate@42.99.0 renovate-config-validator
+        npx --package renovate@43.136.0 renovate-config-validator
