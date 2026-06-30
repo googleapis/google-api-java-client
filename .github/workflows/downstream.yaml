@@ -1,4 +1,7 @@
 on:
+
+permissions:
+  contents: read
   pull_request:
     types: [ labeled ]
     branches:
