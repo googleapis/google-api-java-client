@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.1](https://github.com/googleapis/google-api-java-client/compare/v2.9.0...v2.9.1) (2026-09-01)
+
+
+### Bug Fixes
+
+* Update renovate config check to use npx ([#2622](https://github.com/googleapis/google-api-java-client/issues/2622)) ([81fc9f5](https://github.com/googleapis/google-api-java-client/commit/81fc9f59601f15d89801721773864addb2ed9c7d))
+
 ## [2.9.0](https://github.com/googleapis/google-api-java-client/compare/v2.8.1...v2.9.0) (2026-02-24)
 
 
