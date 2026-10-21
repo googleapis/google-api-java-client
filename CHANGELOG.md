@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.2](https://github.com/googleapis/google-api-java-client/compare/v2.9.1...v2.9.2) (2026-10-21)
+
+
+### Bug Fixes
+
+* Update bundled trust store to Google's current root certificates ([#2636](https://github.com/googleapis/google-api-java-client/issues/2636)) ([d31b5da](https://github.com/googleapis/google-api-java-client/commit/d31b5da7458c5f9170ead1dbe8ffb3cea3387991))
+
 ## [2.9.1](https://github.com/googleapis/google-api-java-client/compare/v2.9.0...v2.9.1) (2026-09-01)
 
 
