@@ -110,7 +110,7 @@ samples)
     fi
     ;;
 clirr)
-    mvn -B -ntp -Denforcer.skip=true clirr:check
+    mvn -B -ntp -Denforcer.skip=true -P=clirr-compatibility-check clirr:check
     RETURN_CODE=$?
     ;;
 *)
