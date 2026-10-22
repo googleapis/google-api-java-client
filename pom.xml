@@ -343,6 +343,81 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>findbugs-maven-plugin</artifactId>
           <version>3.0.5</version>
+          <dependencies>
+            <!--
+              Airlock (maven-3p-trusted) has no approved license for antlr 2.7.2
+              and plexus-i18n 1.0-beta-7, which this plugin pulls in through
+              doxia-site-renderer 1.7.
+            -->
+            <dependency>
+              <groupId>antlr</groupId>
+              <artifactId>antlr</artifactId>
+              <version>2.7.7</version>
+            </dependency>
+            <dependency>
+              <groupId>org.codehaus.plexus</groupId>
+              <artifactId>plexus-i18n</artifactId>
+              <version>1.0-beta-10</version>
+              <exclusions>
+                <!-- Its parent adds old Plexus container JARs that Airlock does not have. Maven core provides them. -->
+                <exclusion>
+                  <groupId>*</groupId>
+                  <artifactId>*</artifactId>
+                </exclusion>
+              </exclusions>
+            </dependency>
+          </dependencies>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>5.1.9</version>
+          <dependencies>
+            <!--
+              Airlock (maven-3p-trusted) has no approved license for plexus-i18n 1.0-beta-7,
+              which this plugin pulls in through doxia-site-renderer 1.0.
+            -->
+            <dependency>
+              <groupId>org.codehaus.plexus</groupId>
+              <artifactId>plexus-i18n</artifactId>
+              <version>1.0-beta-10</version>
+              <exclusions>
+                <!-- Its parent adds old Plexus container JARs that Airlock does not have. Maven core provides them. -->
+                <exclusion>
+                  <groupId>*</groupId>
+                  <artifactId>*</artifactId>
+                </exclusion>
+              </exclusions>
+            </dependency>
+            <!--
+              maven-bundle-plugin 5.1.9 directly depends on org.osgi:org.osgi.core:6.0.0,
+              which evicts the 4.1.0 transitive dependency declared by bundlerepository and utils.
+              Excluding org.osgi.core here stops Maven from probing the evicted 4.1.0 POM,
+              which has no license metadata in Airlock (maven-3p-trusted).
+            -->
+            <dependency>
+              <groupId>org.apache.felix</groupId>
+              <artifactId>org.apache.felix.bundlerepository</artifactId>
+              <version>1.6.6</version>
+              <exclusions>
+                <exclusion>
+                  <groupId>org.osgi</groupId>
+                  <artifactId>org.osgi.core</artifactId>
+                </exclusion>
+              </exclusions>
+            </dependency>
+            <dependency>
+              <groupId>org.apache.felix</groupId>
+              <artifactId>org.apache.felix.utils</artifactId>
+              <version>1.6.0</version>
+              <exclusions>
+                <exclusion>
+                  <groupId>org.osgi</groupId>
+                  <artifactId>org.osgi.core</artifactId>
+                </exclusion>
+              </exclusions>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -470,22 +545,6 @@
             </plugin>
           </plugins>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>clirr-maven-plugin</artifactId>
-        <configuration>
-          <comparisonVersion>1.27.0</comparisonVersion>
-          <ignoredDifferencesFile>${basedir}/../clirr-ignored-differences.xml</ignoredDifferencesFile>
-          <logResults>true</logResults>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -759,6 +818,38 @@
           <url>${artifact-registry-url}</url>
         </snapshotRepository>
       </distributionManagement>
+    </profile>
+    <profile>
+      <id>clirr-compatibility-check</id>
+      <!--
+          https://github.com/googleapis/java-shared-config/issues/956
+          Extracting this plugin declaration as a profile enables us to disable
+          the CLIRR dependency resolution by `mvn -P=-clirr-compatibility-check ...`
+          The profile is opt-in: the CLIRR CI job enables it with
+          `-P=clirr-compatibility-check`. Builds that use only Airlock do not
+          resolve the CLIRR dependencies, such as plexus-components 1.1.4 and
+          classworlds 1.1-alpha-2, which have no approved license in Airlock.
+      -->
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>clirr-maven-plugin</artifactId>
+            <configuration>
+              <comparisonVersion>1.27.0</comparisonVersion>
+              <ignoredDifferencesFile>${basedir}/../clirr-ignored-differences.xml</ignoredDifferencesFile>
+              <logResults>true</logResults>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 </project>
