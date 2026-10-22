@@ -389,6 +389,34 @@
                 </exclusion>
               </exclusions>
             </dependency>
+            <!--
+              maven-bundle-plugin 5.1.9 directly depends on org.osgi:org.osgi.core:6.0.0,
+              which evicts the 4.1.0 transitive dependency declared by bundlerepository and utils.
+              Excluding org.osgi.core here stops Maven from probing the evicted 4.1.0 POM,
+              which has no license metadata in Airlock (maven-3p-trusted).
+            -->
+            <dependency>
+              <groupId>org.apache.felix</groupId>
+              <artifactId>org.apache.felix.bundlerepository</artifactId>
+              <version>1.6.6</version>
+              <exclusions>
+                <exclusion>
+                  <groupId>org.osgi</groupId>
+                  <artifactId>org.osgi.core</artifactId>
+                </exclusion>
+              </exclusions>
+            </dependency>
+            <dependency>
+              <groupId>org.apache.felix</groupId>
+              <artifactId>org.apache.felix.utils</artifactId>
+              <version>1.6.0</version>
+              <exclusions>
+                <exclusion>
+                  <groupId>org.osgi</groupId>
+                  <artifactId>org.osgi.core</artifactId>
+                </exclusion>
+              </exclusions>
+            </dependency>
           </dependencies>
         </plugin>
         <plugin>

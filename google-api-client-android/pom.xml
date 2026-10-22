@@ -42,6 +42,13 @@
       <artifactId>android</artifactId>
       <version>4.1.1.4</version>
       <scope>provided</scope>
+      <exclusions>
+        <!-- Provided by the JDK since Java 1.4; Airlock (maven-3p-trusted) does not have a license for xerces:xmlParserAPIs:2.6.2 -->
+        <exclusion>
+          <groupId>xerces</groupId>
+          <artifactId>xmlParserAPIs</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
