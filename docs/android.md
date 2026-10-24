@@ -35,6 +35,14 @@ public void onCreate(Bundle savedInstanceState) {
 Begin by reading the [Android development instructions][http-client-android] for
 the Google HTTP Client Library for Java.
 
+## R8 and ProGuard
+
+The `google-api-client` artifact includes consumer rules required by the
+library. If your build does not automatically consume rules from dependency
+JARs, include the rules from
+[`google-api-client.pro`][google-api-client-proguard] in your R8 or ProGuard
+configuration.
+
 ## Authentication
 
 As described in the [Android development instructions][http-client-android], the
@@ -75,5 +83,6 @@ if (files == null || files.isEmpty()) {
 [play-services]: https://developer.android.com/google/play-services/index.html
 [account-manager]: http://developer.android.com/reference/android/accounts/AccountManager.html
 [http-client-android]: https://github.com/googleapis/google-http-java-client/wiki/Android
+[google-api-client-proguard]: https://github.com/googleapis/google-api-java-client/blob/main/google-api-client/src/main/resources/META-INF/proguard/google-api-client.pro
 [oauth2-android]: https://github.com/googleapis/google-api-java-client#oauth2-android
 [quickstart]: https://developers.google.com/drive/api/v3/quickstart/java

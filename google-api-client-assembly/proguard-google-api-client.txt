@@ -10,6 +10,13 @@
   @com.google.api.client.util.Key <fields>;
 }
 
+# Data's magic null values rely on reference identity. Keep R8 from replacing
+# wrapper instances with canonical values such as Boolean.TRUE.
+
+-keepclassmembers class com.google.api.client.util.Data {
+  public static final *** NULL_*;
+}
+
 # Needed by google-http-client-android when linking against an older platform version
 
 -dontwarn com.google.api.client.extensions.android.**
