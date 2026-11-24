@@ -353,7 +353,133 @@ public class AbstractGoogleClientTest extends TestCase {
                 JSON_OBJECT_PARSER,
                 null)
             .setApplicationName("Test Application");
-    assertTrue(clientBuilder.isUserConfiguredEndpoint);
+
+    assertFalse(clientBuilder.isUserConfiguredEndpoint);
+    assertEquals("us-east-4.coolservice", clientBuilder.getServiceName());
+  }
+
+  @Test
+  public void testBuild_serviceNameWithDigitsAndCustomUniverseDomain_rewritesRootUrl() {
+    AbstractGoogleClient.Builder builder =
+        new MockGoogleClient.Builder(
+                TRANSPORT, "https://area120tables.googleapis.com/", "", JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application")
+            .setUniverseDomain("random.com");
+
+    AbstractGoogleClient client = builder.build();
+
+    assertEquals("https://area120tables.random.com/", client.getRootUrl());
+  }
+
+  @Test
+  public void testBuild_serviceNameWithHyphensAndCustomUniverseDomain_rewritesRootUrl() {
+    AbstractGoogleClient.Builder builder =
+        new MockGoogleClient.Builder(
+                TRANSPORT,
+                "https://admin-remotebuildexecution.googleapis.com/",
+                "",
+                JSON_OBJECT_PARSER,
+                null)
+            .setApplicationName("Test Application")
+            .setUniverseDomain("random.com");
+
+    AbstractGoogleClient client = builder.build();
+
+    assertEquals("https://admin-remotebuildexecution.random.com/", client.getRootUrl());
+  }
+
+  @Test
+  public void testBuild_multiLabelSubdomainAndCustomUniverseDomain_rewritesRootUrl() {
+    AbstractGoogleClient.Builder builder =
+        new MockGoogleClient.Builder(
+                TRANSPORT,
+                "https://storage.us-central1.rep.googleapis.com/",
+                "",
+                JSON_OBJECT_PARSER,
+                null)
+            .setApplicationName("Test Application")
+            .setUniverseDomain("random.com");
+
+    AbstractGoogleClient client = builder.build();
+
+    assertEquals("https://storage.us-central1.rep.random.com/", client.getRootUrl());
+  }
+
+  @Test
+  public void testBuild_rootUrlWithPortAndCustomUniverseDomain_rewritesHostAndPreservesPort() {
+    AbstractGoogleClient.Builder builder =
+        new MockGoogleClient.Builder(
+                TRANSPORT, "https://searchads360.googleapis.com:443/", "", JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application")
+            .setUniverseDomain("random.com");
+
+    AbstractGoogleClient client = builder.build();
+
+    assertEquals("https://searchads360.random.com:443/", client.getRootUrl());
+  }
+
+  @Test
+  public void testBuild_mtlsSubdomainWithPortInDefaultUniverse_preservesRootUrl() {
+    AbstractGoogleClient.Builder builder =
+        new MockGoogleClient.Builder(
+                TRANSPORT,
+                "https://storage.us-central1.rep.mtls.googleapis.com:443/",
+                "",
+                JSON_OBJECT_PARSER,
+                null)
+            .setApplicationName("Test Application");
+
+    AbstractGoogleClient client = builder.build();
+
+    assertEquals("https://storage.us-central1.rep.mtls.googleapis.com:443/", client.getRootUrl());
+  }
+
+  @Test
+  public void testBuild_emptyServiceNameWithCustomUniverseDomain_doesNotRewriteRootUrl() {
+    AbstractGoogleClient.Builder builder =
+        new MockGoogleClient.Builder(
+                TRANSPORT, "https://.googleapis.com/", "", JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application")
+            .setUniverseDomain("random.com");
+
+    AbstractGoogleClient client = builder.build();
+
+    assertEquals("https://.googleapis.com/", client.getRootUrl());
+  }
+
+  @Test
+  public void testBuild_unescapedDotInRootUrlWithCustomUniverseDomain_doesNotRewriteRootUrl() {
+    AbstractGoogleClient.Builder builder =
+        new MockGoogleClient.Builder(
+                TRANSPORT, "https://test.googleapisXcom/", "", JSON_OBJECT_PARSER, null)
+            .setApplicationName("Test Application")
+            .setUniverseDomain("random.com");
+
+    AbstractGoogleClient client = builder.build();
+
+    assertEquals("https://test.googleapisXcom/", client.getRootUrl());
+  }
+
+  @Test
+  public void testDetermineUniverseDomain_emptyEnvVar_throwsIllegalArgumentException() {
+    IllegalArgumentException exception =
+        assertThrows(
+            IllegalArgumentException.class,
+            new ThrowingRunnable() {
+              @Override
+              public void run() {
+                AbstractGoogleClient.determineUniverseDomain(null, "");
+              }
+            });
+
+    assertEquals("The universe domain value cannot be empty.", exception.getMessage());
+  }
+
+  @Test
+  public void testDetermineUniverseDomain_configuredValueOverridesEmptyEnvVar_returnsConfigured() {
+    String universeDomain = AbstractGoogleClient.determineUniverseDomain("random.com", "");
+
+    assertEquals("random.com", universeDomain);
   }
 
   @Test
