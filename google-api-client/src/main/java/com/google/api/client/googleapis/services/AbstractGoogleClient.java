@@ -109,13 +109,23 @@ public abstract class AbstractGoogleClient {
    * Universe Domain Env Var if set, 3. Default to the Google Default Universe
    */
   private String determineUniverseDomain(Builder builder) {
-    String resolvedUniverseDomain = builder.universeDomain;
+    return determineUniverseDomain(
+        builder.universeDomain, System.getenv(GOOGLE_CLOUD_UNIVERSE_DOMAIN));
+  }
+
+  @VisibleForTesting
+  static String determineUniverseDomain(String configuredUniverseDomain, String envUniverseDomain) {
+    String resolvedUniverseDomain = configuredUniverseDomain;
     if (resolvedUniverseDomain == null) {
-      resolvedUniverseDomain = System.getenv(GOOGLE_CLOUD_UNIVERSE_DOMAIN);
+      resolvedUniverseDomain = envUniverseDomain;
     }
-    return resolvedUniverseDomain == null
-        ? Credentials.GOOGLE_DEFAULT_UNIVERSE
-        : resolvedUniverseDomain;
+    if (resolvedUniverseDomain == null) {
+      return Credentials.GOOGLE_DEFAULT_UNIVERSE;
+    }
+    if (resolvedUniverseDomain.isEmpty()) {
+      throw new IllegalArgumentException("The universe domain value cannot be empty.");
+    }
+    return resolvedUniverseDomain;
   }
 
   /**
@@ -130,14 +140,12 @@ public abstract class AbstractGoogleClient {
           "mTLS is not supported in any universe other than googleapis.com");
     }
     // If the serviceName is null, we cannot construct a valid resolved endpoint. Simply return
-    // the rootUrl as this was custom rootUrl passed in.
-    if (builder.isUserConfiguredEndpoint || builder.serviceName == null) {
+    // the rootUrl as this was custom rootUrl passed in. An mTLS rootUrl is also returned as is
+    // because mTLS is only supported in the default universe.
+    if (builder.isUserConfiguredEndpoint || builder.serviceName == null || mtlsEnabled) {
       return builder.rootUrl;
     }
-    if (mtlsEnabled) {
-      return "https://" + builder.serviceName + ".mtls." + universeDomain + "/";
-    }
-    return "https://" + builder.serviceName + "." + universeDomain + "/";
+    return "https://" + builder.serviceName + "." + universeDomain + builder.port + "/";
   }
 
   /**
@@ -410,10 +418,11 @@ public abstract class AbstractGoogleClient {
 
     /**
      * Regex pattern to check if the URL passed in matches the default endpoint configured from a
-     * discovery doc. Follows the format of `https://{serviceName}(.mtls).googleapis.com/`
+     * discovery doc. Follows the format of `https://{serviceName}(.mtls).googleapis.com(:{port})/`
      */
     Pattern defaultEndpointRegex =
-        Pattern.compile("https://([a-zA-Z]*)(\\.mtls)?\\.googleapis.com/?");
+        Pattern.compile(
+            "https://([a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*?)(\\.mtls)?\\.googleapis\\.com(:\\d+)?/?");
 
     /**
      * Whether the user has configured an endpoint via {@link #setRootUrl(String)}. This is added in
@@ -431,6 +440,9 @@ public abstract class AbstractGoogleClient {
 
     /** The parsed serviceName value from the rootUrl from the Discovery Doc. */
     String serviceName;
+
+    /** Optional port (including leading colon) parsed from the default rootUrl. */
+    String port = "";
 
     /**
      * Returns an instance of a new builder.
@@ -458,6 +470,9 @@ public abstract class AbstractGoogleClient {
       // a custom endpoint
       this.isUserConfiguredEndpoint = !matches;
       this.serviceName = matches ? matcher.group(1) : null;
+      if (matches && matcher.group(3) != null) {
+        this.port = matcher.group(3);
+      }
     }
 
     /** Builds a new instance of {@link AbstractGoogleClient}. */
